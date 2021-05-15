@@ -1,5 +1,5 @@
 #!/bin/bash
-# opensim Version 0.14.50 by Manfred Aabye
+# opensim Version 0.15.52 by Manfred Aabye
 # opensim.sh Basiert auf meinen Einzelscripten, an denen ich bereits 6 Jahre Arbeite und verbessere.
 # Da Server unterschiedlich sind, kann eine einwandfreie fuunktion nicht gewährleistet werden, also bitte mit bedacht verwenden.
 # Die Benutzung dieses Scriptes, oder deren Bestandteile, erfolgt auf eigene Gefahr!!!
@@ -91,6 +91,14 @@ function makeregionsliste()
     done < /$STARTVERZEICHNIS/$REGIONSDATEI
     # Anzahl der Eintraege.    
     ANZAHLREGIONSLISTE=${#REGIONSLISTE[*]}
+}
+
+# Regionskonfigurationen lesen
+function configlesen()
+{
+	echo "$(tput setab $Green)Regionskonfigurationen von $1 $(tput sgr 0)"
+	KONFIGLESEN=$(awk -F":" '// {print $0 }' /$STARTVERZEICHNIS/"$1"/bin/Regions/*.ini)	
+	echo "$KONFIGLESEN"
 }
 
 ### Funktion assetdel, Asset von der Region loeschen.
@@ -594,6 +602,7 @@ echo "restart 		- hat keine Parameter - Startet das gesammte Grid neu."
 echo "autostop 		- hat keine Parameter - Stoppt das gesammte Grid."
 echo "autostart 		- hat keine Parameter - Startet das gesammte Grid."
 echo "works 			- Verzeichnisname - Einzelne screens auf Existens prüfen."
+
 echo "$(tput setab $Yellow)Erweiterte Funktionen$(tput sgr 0)"
 echo "rostart 		- hat keine Parameter - Startet Robust Server."
 echo "rostop 			- hat keine Parameter - Stoppt Robust Server."
@@ -607,7 +616,9 @@ echo "autosimstart 		- hat keine Parameter - Startet alle Regionen."
 echo "autosimstop 		- hat keine Parameter - Beendet alle Regionen. "
 echo "gridstart 		- hat keine Parameter - Startet Robust und Money. "
 echo "gridstop 		- hat keine Parameter - Beendet Robust und Money. "
-echo "$(tput setab 1)Experten Funktionen$(tput sgr 0)"
+echo "configlesen 		- Verzeichnisname - Alle Regionskonfigurationen im Verzeichnis anzeigen. "
+
+echo "$(tput setab $Red)Experten Funktionen$(tput sgr 0)"
 echo "assetdel 		- screen_name Regionsname Objektname - Einzelnes Asset löschen."
 echo "autologdel		- hat keine Parameter - Löscht alle Log Dateien."
 echo "automapdel		- hat keine Parameter - Löscht alle Map Karten."
@@ -663,6 +674,7 @@ case  $KOMMANDO  in
 	oscompi) oscompi ;;
 	osdelete) osdelete ;;
 	osstruktur) osstruktur "$2" "$3" ;;
+	configlesen) configlesen "$2" ;;
     *) hilfe ;;
 esac
 
