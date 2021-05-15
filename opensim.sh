@@ -1,5 +1,5 @@
 #!/bin/bash
-# opensim Version 0.15.52 by Manfred Aabye
+# opensim Version 0.16.53 by Manfred Aabye
 # opensim.sh Basiert auf meinen Einzelscripten, an denen ich bereits 6 Jahre Arbeite und verbessere.
 # Da Server unterschiedlich sind, kann eine einwandfreie fuunktion nicht gewährleistet werden, also bitte mit bedacht verwenden.
 # Die Benutzung dieses Scriptes, oder deren Bestandteile, erfolgt auf eigene Gefahr!!!
@@ -110,6 +110,17 @@ function assetdel()
 		screen -S "$1" -p 0 -X eval "stuff 'alert "Loesche: "$3" von der Region!"'^M" # Mit einer loesch Meldung
 		screen -S "$1" -p 0 -X eval "stuff 'delete object name ""$3""'^M" # Objekt loeschen
 		screen -S "$1" -p 0 -X eval "stuff 'y'^M" # Mit y also yes bestaetigen
+}
+
+### Funktion oscommand, OpenSim Commands senden.
+#oscommand Screen Befehl Parameter
+function oscommand()
+{	
+	Screen=$1 
+	Befehl=$2 
+	Parameter=$3
+	echo "$(tput setab $Green)Sende $Befehl $Parameter an $Screen $(tput sgr 0)"
+	screen -S "$Screen" -p 0 -X eval "stuff '$Befehl $Parameter'^M"
 }
 
 ### Funktion works, screen pruefen ob er laeuft.
@@ -635,6 +646,7 @@ echo "scriptcopy 		- hat keine Parameter - Kopiert die Scripte in den Source."
 echo "moneycopy 		- hat keine Parameter - Kopiert das Money in den Source."
 echo "osdelete 		- hat keine Parameter - Löscht alte OpenSim Version."
 echo "oscompi 		- hat keine Parameter - Kompiliert einen neuen OpenSimulator."
+echo "oscommand 		- screen_name Konsolenbefehl Parameter - OpenSim Konsolenbefehl senden."
 }
 
 ### Eingabeauswertung:
@@ -675,6 +687,7 @@ case  $KOMMANDO  in
 	osdelete) osdelete ;;
 	osstruktur) osstruktur "$2" "$3" ;;
 	configlesen) configlesen "$2" ;;
+	com | oscommand) oscommand "$2" "$3" "$4" ;;
     *) hilfe ;;
 esac
 
