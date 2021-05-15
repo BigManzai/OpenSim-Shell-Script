@@ -1,5 +1,5 @@
 #!/bin/bash
-# opensim Version 0.13.49 by Manfred Aabye
+# opensim Version 0.14.50 by Manfred Aabye
 # opensim.sh Basiert auf meinen Einzelscripten, an denen ich bereits 6 Jahre Arbeite und verbessere.
 # Da Server unterschiedlich sind, kann eine einwandfreie fuunktion nicht gewährleistet werden, also bitte mit bedacht verwenden.
 # Die Benutzung dieses Scriptes, oder deren Bestandteile, erfolgt auf eigene Gefahr!!!
@@ -34,6 +34,9 @@ ROBUSTVERZEICHNIS="robust"
 OPENSIMVERZEICHNIS="opensim"
 SCRIPTSOURCE="ScriptNeu"
 MONEYSOURCE="money48"
+## Dateien
+REGIONSDATEI="RegionList.ini"
+SIMDATEI="SimulatorList.ini"
 ## Die unterschiedlichen wartezeiten bis die Aktion ausgefuehrt wurde.
 WARTEZEIT=30 # Ist eine allgemeine Wartezeit.
 STARTWARTEZEIT=10 # Startwartezeit ist eine Pause, damit nicht alle Simulatoren gleichzeitig starten.
@@ -76,7 +79,7 @@ function makeverzeichnisliste()
     VERZEICHNISSLISTE=()
     while IFS= read -r line; do
     VERZEICHNISSLISTE+=("$line")
-    done < /$STARTVERZEICHNIS/SimulatorList.ini
+    done < /$STARTVERZEICHNIS/$SIMDATEI
     # Anzahl der Eintraege.
     ANZAHLVERZEICHNISSLISTE=${#VERZEICHNISSLISTE[*]}
 }
@@ -85,7 +88,7 @@ function makeregionsliste()
     REGIONSLISTE=()
     while IFS= read -r line; do
     REGIONSLISTE+=("$line")
-    done < /$STARTVERZEICHNIS/RegionList.ini
+    done < /$STARTVERZEICHNIS/$REGIONSDATEI
     # Anzahl der Eintraege.    
     ANZAHLREGIONSLISTE=${#REGIONSLISTE[*]}
 }
@@ -346,6 +349,23 @@ function moneycopy()
 	echo " "
 }
 
+# Legt die Verzeichnisstruktur fuer OpenSim an.
+# Aufruf: osstruktur ersteSIM letzteSIM
+# Beispiel: ./osstruktur.sh 1 10 - erstellt ein Grid Verzeichnis fuer 10 Simulatoren inklusive der SimulatorList.ini.
+function osstruktur()
+{
+	echo "Lege robust an im Verzeichnis $ROBUSTVERZEICHNIS"
+	mkdir -p /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin
+
+	for ((i=$1;i<=$2;i++))
+	do
+	echo "Lege sim$i an"
+	mkdir -p /$STARTVERZEICHNIS/sim"$i"/bin
+	echo "Schreibe sim$i in $SIMDATEI"
+	printf 'sim\t%s\n' "$i" >> /$STARTVERZEICHNIS/$SIMDATEI
+	done
+}
+
 ### Funktion osdelete
 function osdelete()
 {
@@ -393,12 +413,12 @@ function osupgrade()
 
 function restore()
 {	
-	echo "Test gefährlich!!!"
+	echo "ACHTUNG Test gefährlich!!!"
 	RESCREENNAME=$1 
 	REREGIONSNAME=$2
 	PFADDATEINAME=$3
 	screen -S "$RESCREENNAME" -p 0 -X eval "stuff 'change region ${REREGIONSNAME//\"/}'^M"
-	# es muss hier geschaut werden das es nicht root ist sondern wirklich die Region sonst werden alle anderen ueberschrieben!!!
+	# es muss hier geschaut werden, das es nicht root ist, sondern wirklich die Region, sonst werden alle Regionen ueberschrieben!!!
 	screen -S "$RESCREENNAME" -p 0 -X eval "stuff 'load oar $PFADDATEINAME'^M"
 }
 
@@ -408,16 +428,12 @@ function regionbackup()
 {
 	# Backup Verzeichnis anlegen.
 	mkdir -p /$STARTVERZEICHNIS/backup/
-
 	# Datum für die Dateinamen in die Variable DATUM schreiben.
 	#date +%F
 	DATUM=$(date +%F)
-
 	sleep 3
-
 	SCREENNAME=$1
-	REGIONSNAME=$2
-	
+	REGIONSNAME=$2	
 	dateiname=${REGIONSNAME//\"/}
 	nospace=${dateiname// /}
 
@@ -431,19 +447,16 @@ function regionbackup()
 	screen -S "$SCREENNAME" -p 0 -X eval "stuff 'terrain save /$STARTVERZEICHNIS/backup/'$DATUM'-$nospace.raw'^M"
 	echo " "
 	sleep 10
-
 	if [ ! -f /$STARTVERZEICHNIS/"$SCREENNAME"/bin/Regions/"$nospace".ini ]; then
 		cp -r /$STARTVERZEICHNIS/"$SCREENNAME"/bin/Regions/Regions.ini /$STARTVERZEICHNIS/backup/"$DATUM"-"$nospace".ini
 		echo "$(tput setaf 2)Regions.ini wurde als $DATUM-$nospace.ini gespeichert."
 		echo "Bitte alle Regionen bis auf Region ${REGIONSNAME//\"/} aus dieser Datei entfernen.$(tput sgr 0)"
 	fi
-
 	if [ ! -f /$STARTVERZEICHNIS/"$SCREENNAME"/bin/Regions/"${REGIONSNAME//\"/}".ini ]; then
 		cp -r /$STARTVERZEICHNIS/"$SCREENNAME"/bin/Regions/Regions.ini /$STARTVERZEICHNIS/backup/"$DATUM"-"$nospace".ini
 		echo "$(tput setaf 2)Regions.ini wurde als $DATUM-$nospace.ini gespeichert."
 		echo "Bitte alle Regionen bis auf Region ${2//\"/} aus dieser Datei entfernen.$(tput sgr 0)"
 	fi
-
 	if [ ! -f /$STARTVERZEICHNIS/"$SCREENNAME"/bin/Regions/Regions.ini ]; then
 		cp -r /$STARTVERZEICHNIS/"$SCREENNAME"/bin/Regions/"$nospace".ini /$STARTVERZEICHNIS/backup/"$DATUM"-"$nospace".ini	
 	fi
@@ -605,6 +618,7 @@ echo "osupgrade 		- hat keine Parameter - Installiert eine neue OpenSim Version.
 echo "regionbackup 		- Verzeichnisname Regionsname - Backup einer ausgewählten Region."
 echo "autoregionbackup	- hat keine Parameter - Backup aller Regionen."
 echo "oscopy			- Verzeichnisname - Kopiert den Simulator."
+echo "osstruktur		- ersteSIM letzteSIM - Legt die Verzeichnisstruktur an."
 echo "compilieren 		- hat keine Parameter - Kopiert fehlende Dateien und Kompiliert."
 echo "scriptcopy 		- hat keine Parameter - Kopiert die Scripte in den Source."
 echo "moneycopy 		- hat keine Parameter - Kopiert das Money in den Source."
@@ -648,6 +662,7 @@ case  $KOMMANDO  in
 	moneycopy) moneycopy ;;
 	oscompi) oscompi ;;
 	osdelete) osdelete ;;
+	osstruktur) osstruktur "$2" "$3" ;;
     *) hilfe ;;
 esac
 
