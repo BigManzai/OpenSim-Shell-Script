@@ -21,7 +21,7 @@ Bitte beachtet der Verzeichnisname des OpenSimulator ist gleichzeitig der Screen
 Wird kein Robust oder Money Verzeichnis gefunden, werden diese auch nicht gestartet.
 
 ## Test
-Dieses Script läuft auf einem Grid mit 40 Simulatoren genauso wie mit zum Beipiel OsGrid angebundenen Simulatoren.
+Dieses Script läuft auf einem Grid mit 40 Simulatoren genauso, wie mit zum Beipiel OsGrid angebundenen Simulatoren.
 
 ## Funktionsübersicht
 ```
