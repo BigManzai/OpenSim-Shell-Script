@@ -10,11 +10,11 @@ Die Benutzung dieses Scripts, oder deren Bestandteile, erfolgt auf eigene Gefahr
 Erstellt und getestet ist opensim.sh, auf verschiedenen Ubuntu 18.04 Servern, unter verschiedenen Server Anbietern (Contabo, Hetzner ...).
 
 ## Konfiguration
-Es werden zusätzlich 2 Konfigurationsdateien benötigt die für den automatischen Start und stopp benötigt werden.
+Es werden zusätzlich 3 Konfigurationsdateien benötigt die für den automatischen Start und stopp benötigt werden.
 
 Diese Dateien müssen am Ende eine Leerzeile haben. Die Startreihenfolge ergibt sich aus der Aufstellung.
 
-Die Pfade sowie Wartezeiten können im Script einfach angepasst werden.
+Die Pfade sowie Wartezeiten können in der opensim.cnf einfach angepasst werden.
 
 Bitte beachtet der Verzeichnisname des OpenSimulator ist gleichzeitig der Screen Name.
 
