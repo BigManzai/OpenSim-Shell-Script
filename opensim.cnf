@@ -1,0 +1,18 @@
+### Einstellungen ###
+## Das Startverzeichnis home oder opt zum Beispiel.
+STARTVERZEICHNIS="opt"
+MONEYVERZEICHNIS="robust"
+ROBUSTVERZEICHNIS="robust"
+OPENSIMVERZEICHNIS="opensim"
+SCRIPTSOURCE="ScriptNeu"
+MONEYSOURCE="money48"
+## Dateien
+REGIONSDATEI="RegionList.ini"
+SIMDATEI="SimulatorList.ini"
+## Die unterschiedlichen wartezeiten bis die Aktion ausgefuehrt wurde.
+WARTEZEIT=30 # Ist eine allgemeine Wartezeit.
+STARTWARTEZEIT=10 # Startwartezeit ist eine Pause, damit nicht alle Simulatoren gleichzeitig starten.
+STOPWARTEZEIT=30 # Stopwartezeit ist eine Pause, damit nicht alle Simulatoren gleichzeitig herunterfahren.
+MONEYWARTEZEIT=50 # Moneywartezeit ist eine Extra Pause, weil dieser zwischen Robust und Simulatoren gestartet werden muss.
+BACKUPWARTEZEIT=120 # Backupwartezeit ist eine Pause, damit der Server nicht ueberlastet wird.
+AUTOSTOPZEIT=60 # Autostopzeit ist eine Pause, um den Simulatoren zeit zum herunterfahren gegeben wird, bevor haengende Simulatoren gekillt werden.

@@ -1,5 +1,5 @@
 #!/bin/bash
-# opensim Version 0.16.53 by Manfred Aabye
+# opensimMULTITOOL Version 0.26.53 by Manfred Aabye
 # opensim.sh Basiert auf meinen Einzelscripten, an denen ich bereits 6 Jahre Arbeite und verbessere.
 # Da Server unterschiedlich sind, kann eine einwandfreie fuunktion nicht gewährleistet werden, also bitte mit bedacht verwenden.
 # Die Benutzung dieses Scriptes, oder deren Bestandteile, erfolgt auf eigene Gefahr!!!
@@ -26,24 +26,15 @@ unset OPENSIMVERZEICHNIS
 unset SCRIPTSOURCE
 unset MONEYSOURCE
 
-### Einstellungen ###
-## Das Startverzeichnis home oder opt zum Beispiel.
-STARTVERZEICHNIS="opt"
-MONEYVERZEICHNIS="robust"
-ROBUSTVERZEICHNIS="robust"
-OPENSIMVERZEICHNIS="opensim"
-SCRIPTSOURCE="ScriptNeu"
-MONEYSOURCE="money48"
-## Dateien
-REGIONSDATEI="RegionList.ini"
-SIMDATEI="SimulatorList.ini"
-## Die unterschiedlichen wartezeiten bis die Aktion ausgefuehrt wurde.
-WARTEZEIT=30 # Ist eine allgemeine Wartezeit.
-STARTWARTEZEIT=10 # Startwartezeit ist eine Pause, damit nicht alle Simulatoren gleichzeitig starten.
-STOPWARTEZEIT=30 # Stopwartezeit ist eine Pause, damit nicht alle Simulatoren gleichzeitig herunterfahren.
-MONEYWARTEZEIT=50 # Moneywartezeit ist eine Extra Pause, weil dieser zwischen Robust und Simulatoren gestartet werden muss.
-BACKUPWARTEZEIT=120 # Backupwartezeit ist eine Pause, damit der Server nicht ueberlastet wird.
-AUTOSTOPZEIT=60 # Autostopzeit ist eine Pause, um den Simulatoren zeit zum herunterfahren gegeben wird, bevor haengende Simulatoren gekillt werden.
+### Einstellungen aus opensim.cnf laden ###
+# Warum? ganz einfach bei einem Script upgrade gehen so die einstellungen nicht mehr verloren.
+
+# Pfad des opensim.sh Skriptes herausfinden
+SCRIPTPATH=$(cd "$(dirname "$0")" && pwd)
+# Variablen aus config Datei laden opensim.cnf muss sich im gleichen Verzeichnis wie opensim.sh befinden.
+# shellcheck disable=SC1091
+. "$SCRIPTPATH"/opensim.cnf
+
 ## Farben
 # Black=0
 Red=1
@@ -53,11 +44,10 @@ Yellow=3
 # Magenta=5
 # Cyan=6
 White=7
-### Einstellungen Ende ###
 
-cd /$STARTVERZEICHNIS || exit
+cd /"$STARTVERZEICHNIS" || exit
 sleep 1
-KOMMANDO=$1
+KOMMANDO=$1 # Eingabeauswertung
 
 ### Funktion vardel, Variablen loeschen.
 function vardel()
@@ -72,6 +62,11 @@ function vardel()
 	unset Red
 	unset Green
 	unset White
+}
+### mycheckschreck, ShellCheck ueberlisten hat sonst keinerlei Funktion und wird auch nicht aufgerufen.
+function mycheckschreck()
+{
+STARTVERZEICHNIS="opt" MONEYVERZEICHNIS="robust" ROBUSTVERZEICHNIS="robust" OPENSIMVERZEICHNIS="opensim" SCRIPTSOURCE="ScriptNeu" MONEYSOURCE="money48" REGIONSDATEI="RegionList.ini" SIMDATEI="SimulatorList.ini" WARTEZEIT=30 STARTWARTEZEIT=10 STOPWARTEZEIT=30 MONEYWARTEZEIT=50 BACKUPWARTEZEIT=120 AUTOSTOPZEIT=60
 }
 ### Erstellen eines Arrays aus einer Textdatei ###
 function makeverzeichnisliste() 
@@ -175,7 +170,7 @@ function logdel()
 function ossettings()
 {
 	# Hier kommen alle gewünschten Einstellungen rein.
-	echo "$(tput setab $Green)Setze Einstellungen! $(tput sgr 0)"
+	echo "$(tput setab $Green)Setze die Einstellungen! $(tput sgr 0)"
 	echo "ulimit -s 1048576"
 	ulimit -s 1048576
 	echo "minor=split,promotion-age=14,nursery-size=64m"
@@ -593,7 +588,6 @@ function autorestart()
 	echo "$(tput setab 1)Log Dateinen löschen! $(tput sgr 0)"
 	autologdel
 	echo " "
-	echo "$(tput setab $Green)Einstellungen setzen! $(tput sgr 0)"
 	ossettings
 	echo " "
 	echo "$(tput setab $Green)Starte alles! $(tput sgr 0)"
