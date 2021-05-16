@@ -7,15 +7,15 @@
 
 clear
 
-echo "   ____                        _____  _                    _         _               "     
+echo "$(tput setaf 4)   ____                        _____  _                    _         _               "     
 echo "  / __ \                      / ____|(_)                  | |       | |              "
 echo " | |  | | _ __    ___  _ __  | (___   _  _ __ ___   _   _ | |  __ _ | |_  ___   _ __ "
 echo " | |  | ||  _ \  / _ \|  _ \  \___ \ | ||  _   _ \ | | | || | / _  || __|/ _ \ |  __|"
-echo " | |__| || |_) ||  __/| | | | ____) || || | | | | || |_| || || (_| || |_| (_) || |   "
+echo "$(tput setaf 2) | |__| || |_) ||  __/| | | | ____) || || | | | | || |_| || || (_| || |_| (_) || |   "
 echo "  \____/ |  __/  \___||_| |_||_____/ |_||_| |_| |_| \____||_| \____| \__|\___/ |_|   "
 echo "         | |                                                                         "
 echo "         |_|                                                                         "
-echo "	    Virtuelle Welten"
+echo "	    $(tput setaf 2)opensim$(tput setaf 4)MULTITOOL$(tput sgr 0)"
 echo " "
 
 ### Alte Variablen loeschen von eventuellen voherigen sessions ###
