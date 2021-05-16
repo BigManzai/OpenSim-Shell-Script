@@ -1,5 +1,5 @@
 # OpenSim-Shell-Script
-opensimMULTITOOL, Shell Script Version 0.16.53
+opensimMULTITOOL, Shell Script Version 0.26.53
 
 opensim.sh Basiert auf meinen Einzelscripten, an denen ich bereits 6 Jahre Arbeite und verbessere.
 
