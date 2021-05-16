@@ -62,4 +62,5 @@ scriptcopy              - hat keine Parameter - Kopiert die Scripte in den Sourc
 moneycopy               - hat keine Parameter - Kopiert das Money in den Source.
 osdelete                - hat keine Parameter - Löscht alte OpenSim Version.
 oscompi                 - hat keine Parameter - Kompiliert einen neuen OpenSimulator.
+oscommand               - screen_name Konsolenbefehl Parameter - OpenSim Konsolenbefehl senden.
 ```
