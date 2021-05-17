@@ -1,5 +1,5 @@
 # OpenSim-Shell-Script
-![GitHub Logo](/images/logo.png)
+![GitHub Logo](https://github.com/BigManzai/OpenSim-Shell-Script/blob/main/opensimMultitool.jpg)
 opensimMULTITOOL, Shell Script Version 0.26.53
 
 opensim.sh Basiert auf meinen Einzelscripten, an denen ich bereits 6 Jahre Arbeite und verbessere.
