@@ -1,11 +1,13 @@
 #!/bin/bash
-# opensimMULTITOOL Version 0.26.53 by Manfred Aabye
+# @ production environment, remove -x option
+
+# opensimMULTITOOL Version 0.26.54 (c) May 2021 Manfred Aabye
 # opensim.sh Basiert auf meinen Einzelscripten, an denen ich bereits 6 Jahre Arbeite und verbessere.
 # Da Server unterschiedlich sind, kann eine einwandfreie fuunktion nicht gewährleistet werden, also bitte mit bedacht verwenden.
 # Die Benutzung dieses Scriptes, oder deren Bestandteile, erfolgt auf eigene Gefahr!!!
 # Erstellt und getestet ist opensim.sh, auf verschiedenen Ubuntu 18.04 Servern, unter verschiedenen Server Anbietern (Contabo, Hetzner ...).
 
-clear
+clear # Bildschirm loeschen
 
 echo "$(tput setaf 4)   ____                        _____  _                    _         _               "     
 echo "  / __ \                      / ____|(_)                  | |       | |              "
@@ -17,8 +19,13 @@ echo "         | |                                                              
 echo "         |_|                                                                         "
 echo "	    $(tput setaf 2)opensim$(tput setaf 4)MULTITOOL$(tput sgr 0)"
 echo " "
+# BASH_VERSION ist eine System Variable
+DATUM=$(date +%d-%m-%Y)
+UHRZEIT=$(date +%H-%M)
+echo "Datum: $DATUM Uhrzeit: $UHRZEIT"
+echo " "
 
-### Alte Variablen loeschen von eventuellen voherigen sessions ###
+### Alte Variablen loeschen aus eventuellen voherigen sessions ###
 unset STARTVERZEICHNIS
 unset MONEYVERZEICHNIS
 unset ROBUSTVERZEICHNIS
@@ -40,7 +47,7 @@ SCRIPTPATH=$(cd "$(dirname "$0")" && pwd)
 Red=1
 Green=2
 Yellow=3
-# Blue=4
+Blue=4
 # Magenta=5
 # Cyan=6
 White=7
@@ -48,6 +55,27 @@ White=7
 cd /"$STARTVERZEICHNIS" || exit
 sleep 1
 KOMMANDO=$1 # Eingabeauswertung
+
+#DEBUG_IS_ON=no
+
+# Funktion zum Debuggen.
+# Zum debuggen muss hinter bin/bash -x gesetzt sein und die Zeile DEBUG_IS_ON von no auf yes.
+# Verwendung: Befehl: "debug File Is Open" - (gibt oputput aus) -> "Um 11:44:00 Datei ist geoeffnet"
+# Beispiel Hilfe debuggen: debug Procesing 'hilfe'
+function debug()
+{
+  if [ "${DEBUG_IS_ON}" = "yes" ]
+  then
+    NOW=$(date +"%T")
+    echo "At $NOW Debug: ${*}" >&2
+  fi
+}
+function print_help()
+{
+  echo -e "Syntax: $0 [-a] >&2"
+  echo -e "\t[-a]: testdes"
+  exit 1
+}
 
 ### Funktion vardel, Variablen loeschen.
 function vardel()
@@ -63,7 +91,7 @@ function vardel()
 	unset Green
 	unset White
 }
-### mycheckschreck, ShellCheck ueberlisten hat sonst keinerlei Funktion und wird auch nicht aufgerufen.
+### myshellschreck, ShellCheck ueberlisten hat sonst keinerlei Funktion und wird auch nicht aufgerufen.
 function mycheckschreck()
 {
 STARTVERZEICHNIS="opt" MONEYVERZEICHNIS="robust" ROBUSTVERZEICHNIS="robust" OPENSIMVERZEICHNIS="opensim" SCRIPTSOURCE="ScriptNeu" MONEYSOURCE="money48" REGIONSDATEI="RegionList.ini" SIMDATEI="SimulatorList.ini" WARTEZEIT=30 STARTWARTEZEIT=10 STOPWARTEZEIT=30 MONEYWARTEZEIT=50 BACKUPWARTEZEIT=120 AUTOSTOPZEIT=60
@@ -108,7 +136,7 @@ function assetdel()
 }
 
 ### Funktion oscommand, OpenSim Commands senden.
-#oscommand Screen Befehl Parameter
+# oscommand Screen Befehl Parameter
 function oscommand()
 {	
 	Screen=$1 
@@ -274,7 +302,6 @@ function osscreenstop()
 	  echo "$(tput setaf $Red) $(tput setab $White)Screeen $1 nicht vorhanden$(tput sgr 0)"
 	fi
 	echo "No screen session found. Ist hier kein Fehler, sondern ein Beweis, das alles zuvor sauber heruntergefahren wurde."
-	#echo "Exit Status: $?"
 }
 
 ### Funktion gridstart, startet erst Robust und dann Money
@@ -398,11 +425,11 @@ function oscopy()
 	echo "$(tput setab $Green)Kopiere Robust, Money und Simulatoren! $(tput sgr 0)"
 	echo " "
 	sleep 3
-    #Robust
+    # Robust
 		echo "$(tput setaf $Green) $(tput setab $White)Robust und Money kopiert$(tput sgr 0)"
 		cd /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin || exit
 		cp -r /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS
-    #Sim
+    # Sim
 	for (( i = 0 ; i < "$ANZAHLVERZEICHNISSLISTE" ; i++)) do
 		echo "$(tput setaf $Green) $(tput setab $White)OpenSimulator ${VERZEICHNISSLISTE[$i]} kopiert$(tput sgr 0)"
 		cd /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin || exit
@@ -443,7 +470,6 @@ function regionbackup()
 	# Backup Verzeichnis anlegen.
 	mkdir -p /$STARTVERZEICHNIS/backup/
 	# Datum für die Dateinamen in die Variable DATUM schreiben.
-	#date +%F
 	DATUM=$(date +%F)
 	sleep 3
 	SCREENNAME=$1
@@ -601,46 +627,53 @@ function autorestart()
 ### Funktion hilfe
 function hilfe()
 {
-echo "$(tput setab $Green)Funktion:		Parameter:		Informationen: $(tput sgr 0)"
-echo "hilfe 			- hat keine Parameter - Diese Hilfe."
-echo "restart 		- hat keine Parameter - Startet das gesammte Grid neu."
-echo "autostop 		- hat keine Parameter - Stoppt das gesammte Grid."
-echo "autostart 		- hat keine Parameter - Startet das gesammte Grid."
-echo "works 			- Verzeichnisname - Einzelne screens auf Existens prüfen."
+echo "$(tput setab $Blue) Server Name: ${HOSTNAME}"
+echo " Bash Version: ${BASH_VERSION}"
+echo " MONO THREAD Einstellung: ${MONO_THREADS_PER_CPU}"
+echo " Spracheinstellung: ${LANG} $(tput sgr 0)"
+echo " "
+
+	echo "$(tput setab $Green)Funktion:		Parameter:		Informationen: $(tput sgr 0)"
+	echo "hilfe 			- hat keine Parameter - Diese Hilfe."
+	echo "restart 		- hat keine Parameter - Startet das gesammte Grid neu."
+	echo "autostop 		- hat keine Parameter - Stoppt das gesammte Grid."
+	echo "autostart 		- hat keine Parameter - Startet das gesammte Grid."
+	echo "works 			- Verzeichnisname - Einzelne screens auf Existens prüfen."
 
 echo "$(tput setab $Yellow)Erweiterte Funktionen$(tput sgr 0)"
-echo "rostart 		- hat keine Parameter - Startet Robust Server."
-echo "rostop 			- hat keine Parameter - Stoppt Robust Server."
-echo "mostart 		- hat keine Parameter - Startet Money Server."
-echo "mostop 			- hat keine Parameter - Stoppt Money Server."
-echo "osstart 		- Verzeichnisname - Startet einzelnen Simulator."
-echo "osstop 			- Verzeichnisname - Stoppt einzelnen Simulator."
-echo "terminator 		- hat keine Parameter - Killt alle laufenden Screens."
-echo "autoscreenstop		- hat keine Parameter - Killt alle OpenSim Screens."
-echo "autosimstart 		- hat keine Parameter - Startet alle Regionen."
-echo "autosimstop 		- hat keine Parameter - Beendet alle Regionen. "
-echo "gridstart 		- hat keine Parameter - Startet Robust und Money. "
-echo "gridstop 		- hat keine Parameter - Beendet Robust und Money. "
-echo "configlesen 		- Verzeichnisname - Alle Regionskonfigurationen im Verzeichnis anzeigen. "
+	echo "rostart 		- hat keine Parameter - Startet Robust Server."
+	echo "rostop 			- hat keine Parameter - Stoppt Robust Server."
+	echo "mostart 		- hat keine Parameter - Startet Money Server."
+	echo "mostop 			- hat keine Parameter - Stoppt Money Server."
+	echo "osstart 		- Verzeichnisname - Startet einzelnen Simulator."
+	echo "osstop 			- Verzeichnisname - Stoppt einzelnen Simulator."
+	echo "terminator 		- hat keine Parameter - Killt alle laufenden Screens."
+	echo "autoscreenstop		- hat keine Parameter - Killt alle OpenSim Screens."
+	echo "autosimstart 		- hat keine Parameter - Startet alle Regionen."
+	echo "autosimstop 		- hat keine Parameter - Beendet alle Regionen. "
+	echo "gridstart 		- hat keine Parameter - Startet Robust und Money. "
+	echo "gridstop 		- hat keine Parameter - Beendet Robust und Money. "
+	echo "configlesen 		- Verzeichnisname - Alle Regionskonfigurationen im Verzeichnis anzeigen. "
 
 echo "$(tput setab $Red)Experten Funktionen$(tput sgr 0)"
-echo "assetdel 		- screen_name Regionsname Objektname - Einzelnes Asset löschen."
-echo "autologdel		- hat keine Parameter - Löscht alle Log Dateien."
-echo "automapdel		- hat keine Parameter - Löscht alle Map Karten."
-echo "logdel 			- Verzeichnisname - Löscht einzelne Simulator Log Dateien."
-echo "mapdel 			- Verzeichnisname - Löscht einzelne Simulator Map-Karten."
-echo "settings 		- hat keine Parameter - setzt Linux Einstellungen."
-echo "osupgrade 		- hat keine Parameter - Installiert eine neue OpenSim Version."
-echo "regionbackup 		- Verzeichnisname Regionsname - Backup einer ausgewählten Region."
-echo "autoregionbackup	- hat keine Parameter - Backup aller Regionen."
-echo "oscopy			- Verzeichnisname - Kopiert den Simulator."
-echo "osstruktur		- ersteSIM letzteSIM - Legt die Verzeichnisstruktur an."
-echo "compilieren 		- hat keine Parameter - Kopiert fehlende Dateien und Kompiliert."
-echo "scriptcopy 		- hat keine Parameter - Kopiert die Scripte in den Source."
-echo "moneycopy 		- hat keine Parameter - Kopiert das Money in den Source."
-echo "osdelete 		- hat keine Parameter - Löscht alte OpenSim Version."
-echo "oscompi 		- hat keine Parameter - Kompiliert einen neuen OpenSimulator."
-echo "oscommand 		- screen_name Konsolenbefehl Parameter - OpenSim Konsolenbefehl senden."
+	echo "assetdel 		- screen_name Regionsname Objektname - Einzelnes Asset löschen."
+	echo "autologdel		- hat keine Parameter - Löscht alle Log Dateien."
+	echo "automapdel		- hat keine Parameter - Löscht alle Map Karten."
+	echo "logdel 			- Verzeichnisname - Löscht einzelne Simulator Log Dateien."
+	echo "mapdel 			- Verzeichnisname - Löscht einzelne Simulator Map-Karten."
+	echo "settings 		- hat keine Parameter - setzt Linux Einstellungen."
+	echo "osupgrade 		- hat keine Parameter - Installiert eine neue OpenSim Version."
+	echo "regionbackup 		- Verzeichnisname Regionsname - Backup einer ausgewählten Region."
+	echo "autoregionbackup	- hat keine Parameter - Backup aller Regionen."
+	echo "oscopy			- Verzeichnisname - Kopiert den Simulator."
+	echo "osstruktur		- ersteSIM letzteSIM - Legt die Verzeichnisstruktur an."
+	echo "compilieren 		- hat keine Parameter - Kopiert fehlende Dateien und Kompiliert."
+	echo "scriptcopy 		- hat keine Parameter - Kopiert die Scripte in den Source."
+	echo "moneycopy 		- hat keine Parameter - Kopiert das Money in den Source."
+	echo "osdelete 		- hat keine Parameter - Löscht alte OpenSim Version."
+	echo "oscompi 		- hat keine Parameter - Kompiliert einen neuen OpenSimulator."
+	echo "oscommand 		- screen_name Konsolenbefehl Parameter - OpenSim Konsolenbefehl senden."
+# debug Procesing 'hilfe'
 }
 
 ### Eingabeauswertung:
