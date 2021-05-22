@@ -26,13 +26,13 @@ Dieses Script läuft auf einem Grid mit 40 Simulatoren genauso, wie mit zum Beip
 
 ## Funktionsübersicht
 ```
-Funktion:               Parameter:              Informationen:
+#Funktion:               Parameter:              Informationen:
 hilfe                   - hat keine Parameter - Diese Hilfe.
 restart                 - hat keine Parameter - Startet das gesammte Grid neu.
 autostop                - hat keine Parameter - Stoppt das gesammte Grid.
 autostart               - hat keine Parameter - Startet das gesammte Grid.
 works                   - Verzeichnisname - Einzelne screens auf Existens prüfen.
-Erweiterte Funktionen
+##Erweiterte Funktionen
 rostart                 - hat keine Parameter - Startet Robust Server.
 rostop                  - hat keine Parameter - Stoppt Robust Server.
 mostart                 - hat keine Parameter - Startet Money Server.
@@ -46,7 +46,7 @@ autosimstop             - hat keine Parameter - Beendet alle Regionen.
 gridstart               - hat keine Parameter - Startet Robust und Money.
 gridstop                - hat keine Parameter - Beendet Robust und Money.
 configlesen             - Verzeichnisname - Alle Regionskonfigurationen im Verzeichnis anzeigen.
-Experten Funktionen
+##Experten Funktionen
 assetdel                - screen_name Regionsname Objektname - Einzelnes Asset löschen.
 autologdel              - hat keine Parameter - Löscht alle Log Dateien.
 automapdel              - hat keine Parameter - Löscht alle Map Karten.
