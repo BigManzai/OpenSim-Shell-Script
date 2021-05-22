@@ -35,7 +35,7 @@ Crontab anzeigen:
 
     crontab -l
     
-Crontab bearbeiten:
+Crontab bearbeiten oder erstellen:
 
     crontab -e
 
