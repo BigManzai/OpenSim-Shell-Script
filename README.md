@@ -31,6 +31,9 @@ Wird kein Robust oder Money Verzeichnis gefunden, werden diese auch nicht gestar
 ## Test
 Ich teste gerade das automatische erstellen der Konfigurationsdatei RegionList.ini
 
+## TODO
+Backup Zickt.
+
 ## Funktionsübersicht
 ```
 #Funktion:               Parameter:              Informationen:
