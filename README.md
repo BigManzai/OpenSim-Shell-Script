@@ -41,7 +41,7 @@ Crontab bearbeiten oder erstellen:
 
 Nachfolgende 2 Zeilen unten im mit "crontab -e" geöffneten Crontab einfügen.
 
-    # Start um 6 Uhr
+    # Restart um 6 Uhr
     0 6 * * * /opt/opensim.sh restart
     
 (Format: Minute=0, Stunde=6)
