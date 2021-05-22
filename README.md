@@ -29,6 +29,8 @@ Die Struktur baut sich folgendermaßen auf:
     sim2 (Weitere Regionen)
     sim3 (Weitere Regionen)
     ... (Weitere Regionen)
+    
+Es sollten nicht mehr als 15 Regionen pro Sim betrieben werden, ausnahme ist die Welcome Region, diese sollte einzeln laufen und möglichst klein gehalten werden.
 
 Diese Dateien müssen am Ende eine Leerzeile haben. Die Startreihenfolge ergibt sich aus der Aufstellung.
 
