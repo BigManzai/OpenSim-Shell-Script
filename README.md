@@ -44,7 +44,7 @@ Nachfolgende 2 Zeilen unten im mit "crontab -e" geöffneten Crontab einfügen.
     # Start um 6 Uhr
     0 6 * * * /opt/opensim.sh restart
 
-** Crontab speichern: **
+**Crontab speichern:**
 
 STRG o
 
