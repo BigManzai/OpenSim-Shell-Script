@@ -22,6 +22,14 @@ In der opensim.cnf werden zum Beispiel Verzeichnispfade voreingestellt zum Beisp
 
 Bei dem Neuerstellen über "opensim.sh osstruktur" wird nicht nur die Struktur für ein Grid erstellt sondern auch die SimulatorList.ini. 
 
+Die Struktur baut sich folgendermaßen auf:
+
+    robust (Robust Server und Money Server)
+    sim1 (Welcome Region)
+    sim2 (Weitere Regionen)
+    sim3 (Weitere Regionen)
+    ... (Weitere Regionen)
+
 Diese Dateien müssen am Ende eine Leerzeile haben. Die Startreihenfolge ergibt sich aus der Aufstellung.
 
 Bitte beachtet der Verzeichnisname des OpenSimulator ist gleichzeitig der Screen Name.
