@@ -8,21 +8,28 @@ Da Server unterschiedlich sind, kann eine einwandfreie Funktion nicht gewährlei
 
 Die Benutzung dieses Scripts, oder deren Bestandteile, erfolgt auf eigene Gefahr!!!
 
-Erstellt und getestet ist opensim.sh, auf verschiedenen Ubuntu 18.04 Servern, unter verschiedenen Server Anbietern (Contabo, Hetzner ...).
+Erstellt und getestet ist opensim.sh, auf verschiedenen Ubuntu 18.04 Servern, unter verschiedenen Server Anbietern (Contabo, Hetzner etc.).
+
+Dieses Script läuft auf einem Grid mit 40 Simulatoren genauso, wie mit zum Beispiel OsGrid angebundenen Simulatoren.
+
+Es wird automatisch eine DATUM-multitool.log angelegt um nachzuverfolgen ob alles ordnungsgemäß ausgeführt wurde.
 
 ## Konfiguration
-Es werden zusätzlich 3 Konfigurationsdateien benötigt die für den automatischen Start und stopp benötigt werden.
+
+Es werden zusätzlich bis zu 3 Konfigurationsdateien benötigt die für den automatischen Start, stopp und Backup benötigt werden. 
+
+In der opensim.cnf werden zum Beispiel Verzeichnispfade voreingestellt zum Beispiel home oder opt als Hauptverzeichnis. 
+
+Bei dem Neuerstellen über "opensim.sh osstruktur" wird nicht nur die Struktur für ein Grid erstellt sondern auch die SimulatorList.ini. 
 
 Diese Dateien müssen am Ende eine Leerzeile haben. Die Startreihenfolge ergibt sich aus der Aufstellung.
-
-Die Pfade sowie Wartezeiten können in der opensim.cnf einfach angepasst werden.
 
 Bitte beachtet der Verzeichnisname des OpenSimulator ist gleichzeitig der Screen Name.
 
 Wird kein Robust oder Money Verzeichnis gefunden, werden diese auch nicht gestartet.
 
 ## Test
-Dieses Script läuft auf einem Grid mit 40 Simulatoren genauso, wie mit zum Beipiel OsGrid angebundenen Simulatoren.
+Ich teste gerade das automatische erstellen der Konfigurationsdatei RegionList.ini
 
 ## Funktionsübersicht
 ```
