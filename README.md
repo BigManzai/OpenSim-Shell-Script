@@ -30,6 +30,7 @@ Wird kein Robust oder Money Verzeichnis gefunden, werden diese auch nicht gestar
 
 ## Automatisch starten
 Cron so geht es bei mir:
+
 Crontab anzeigen:
 
     crontab -l
@@ -39,6 +40,7 @@ Crontab bearbeiten:
     crontab -e
 
 Nachfolgende 2 Zeilen unten im mit "crontab -e" geöffneten Crontab einfügen.
+
     # Start um 6 Uhr
     0 6 * * * /opt/opensim.sh restart
 
