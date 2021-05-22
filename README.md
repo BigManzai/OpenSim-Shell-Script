@@ -45,8 +45,11 @@ Nachfolgende 2 Zeilen unten im mit "crontab -e" geöffneten Crontab einfügen.
     0 6 * * * /opt/opensim.sh restart
 
 Crontab speichern:
+
 STRG o
+
 Dateinamen mit Return bestätigen
+
 STRG x zum beenden
 
 Crontab zum prüfen noch einmal anzeigen:
