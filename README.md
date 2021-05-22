@@ -22,21 +22,28 @@ In der opensim.cnf werden zum Beispiel Verzeichnispfade voreingestellt zum Beisp
 
 Bei dem Neuerstellen über "opensim.sh osstruktur" wird nicht nur die Struktur für ein Grid erstellt sondern auch die SimulatorList.ini. 
 
-Die Struktur baut sich folgendermaßen auf:
-
-    robust (Robust Server und Money Server)
-    sim1 (Welcome Region)
-    sim2 (Weitere Regionen)
-    sim3 (Weitere Regionen)
-    ... (Weitere Regionen)
-    
-Es sollten nicht mehr als 15 Regionen pro Sim betrieben werden, ausnahme ist die Welcome Region, diese sollte einzeln laufen und möglichst klein gehalten werden.
-
 Diese Dateien müssen am Ende eine Leerzeile haben. Die Startreihenfolge ergibt sich aus der Aufstellung.
 
 Bitte beachtet der Verzeichnisname des OpenSimulator ist gleichzeitig der Screen Name.
 
 Wird kein Robust oder Money Verzeichnis gefunden, werden diese auch nicht gestartet.
+
+## Informationen
+Die Struktur baut sich folgendermaßen auf:
+
+    robust (Robust Server und eventuell Money Server)
+    sim1 (Welcome Region)
+    sim2 (Weitere Regionen)
+    sim3 (Weitere Regionen)
+    ... (Weitere Regionen)
+    
+Es sollten nicht mehr als 15 Regionen pro Sim betrieben werden, Ausnahme ist die Welcome Region, diese sollte einzeln laufen und möglichst klein gehalten werden.
+
+**Systemvoraussetzungen** für den Betrieb des OpenSimulator: 
+
+2 Core Prozessor, 2 GB RAM (1GB OpenSim + 1GB Datenbank) pro Sim zuzüglich eventuell robust und Money welches aber von der Anzahl der Regionen und Avatar Accounts abhängig ist.
+
+Pro Avatar Account sollte man 20-50GB an Robust Datenbankvolumen einkalkulieren.
 
 ## Automatisch starten
 Cron so geht es bei mir:
