@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# opensimMULTITOOL Version 0.27.58 (c) May 2021 Manfred Aabye
+# opensimMULTITOOL Version 0.28.61 (c) May 2021 Manfred Aabye
 # opensim.sh Basiert auf meinen Einzelscripten, an denen ich bereits 6 Jahre Arbeite und verbessere.
 # Da Server unterschiedlich sind, kann eine einwandfreie fuunktion nicht gewährleistet werden, also bitte mit bedacht verwenden.
 # Die Benutzung dieses Scriptes, oder deren Bestandteile, erfolgt auf eigene Gefahr!!!
@@ -18,9 +18,8 @@ echo "         | |                                                              
 echo "         |_|                                                                         "
 echo "	    $(tput setaf 2)opensim$(tput setaf 4)MULTITOOL$(tput sgr 0)"
 echo " "
-# BASH_VERSION ist eine System Variable
+
 DATUM=$(date +%d-%m-%Y)
-# UHRZEIT=$(date +%H-%M-%S)
 echo "Datum: $DATUM Uhrzeit: $(date +%H-%M-%S)"
 echo "Abbruch mit STRG und C"
 echo " "
@@ -121,11 +120,11 @@ function makeregionsliste()
 function assetdel()
 {
 	echo "$(tput setaf $Red) $(tput setab $White)$3 Asset von der Region löschen$(tput sgr 0)"
-		screen -S "$1" -p 0 -X eval "stuff 'change region ""$2""'^M" # Region wechseln
-		screen -S "$1" -p 0 -X eval "stuff 'alert "Loesche: "$3" von der Region!"'^M" # Mit einer loesch Meldung
-		screen -S "$1" -p 0 -X eval "stuff 'delete object name ""$3""'^M" # Objekt loeschen
-		screen -S "$1" -p 0 -X eval "stuff 'y'^M" # Mit y also yes bestaetigen
-		echo "$DATUM $(date +%H-%M-%S) ASSETDEL: $3 Asset von der Region löschen" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+	screen -S "$1" -p 0 -X eval "stuff 'change region ""$2""'^M" # Region wechseln
+	screen -S "$1" -p 0 -X eval "stuff 'alert "Loesche: "$3" von der Region!"'^M" # Mit einer loesch Meldung
+	screen -S "$1" -p 0 -X eval "stuff 'delete object name ""$3""'^M" # Objekt loeschen
+	screen -S "$1" -p 0 -X eval "stuff 'y'^M" # Mit y also yes bestaetigen
+	echo "$DATUM $(date +%H-%M-%S) ASSETDEL: $3 Asset von der Region löschen" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 }
 
 ### Funktion oscommand, OpenSim Commands senden.
@@ -227,14 +226,7 @@ function osstart()
 	  echo "$DATUM $(date +%H-%M-%S) OSSTART: Region $1 Starten" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 	  cd /$STARTVERZEICHNIS/"$1"/bin || return 1
 	  screen -fa -S "$1" -d -U -m mono OpenSim.exe
-	  #screen -fa -S "$1" -d -U -m mono OpenSim.exe && sleep 10 && return 0
-	  #/$STARTVERZEICHNIS/osscreen.sh "$1" "/$STARTVERZEICHNIS/$1/bin/OpenSim.exe"
 	  sleep 10
-	  # -fa nicht den Screen nach dem oeffnen 
-	  # -S Namen Verwenden 
-	  # -d Detach den laufenden screen (und reattach ihn hier)
-	  # -U Weist Screen an, die UTF-8-Codierung zu verwenden
-	  # -m ignoriere die Variable $STY, erstelle eine neue Bildschirmsitzung.
 	else
 	  echo "$(tput setaf $Red) $(tput setab $White)Region $1 nicht vorhanden$(tput sgr 0)"
 	  echo "$DATUM $(date +%H-%M-%S) OSSTART: Region $1 nicht vorhanden" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
@@ -302,7 +294,6 @@ function mostart()
 	  echo "$DATUM $(date +%H-%M-%S) MOSTART: MoneyServer wurde nicht gefunden" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 	fi
 }
-
 ### Funktion mostop, Money Server herunterfahren.
 function mostop()
 {
@@ -316,8 +307,6 @@ function mostop()
 	  echo "$DATUM $(date +%H-%M-%S) MOSTOP: MoneyServer nicht vorhanden" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 	fi	
 }
-
-
 ### Funktion osscreenstop, beendet Screeens.
 # Beispiel-Example: osscreenstop sim1
 function osscreenstop()
@@ -332,7 +321,6 @@ function osscreenstop()
 	fi
 	echo "No screen session found. Ist hier kein Fehler, sondern ein Beweis, das alles zuvor sauber heruntergefahren wurde."
 }
-
 ### Funktion gridstart, startet erst Robust und dann Money
 function gridstart()
 {
@@ -367,7 +355,6 @@ function gridstop()
 		echo "$(tput setaf $Red)RobustServer läuft nicht $(tput sgr 0)"
 	fi
 }
-
 ### Funktion terminator
 function terminator()
 {
@@ -377,7 +364,6 @@ function terminator()
 	screen -ls
 	return 0
 }
-
 ### Funktion oscompi, kompilieren des OpenSimulator.
 function oscompi()
 {
@@ -398,27 +384,34 @@ function oscompi()
 	echo " "
 	echo "$DATUM $(date +%H-%M-%S) OSCOMPI: Kompilierung wurde durchgeführt" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 }
-
 ### Funktion scriptcopy, lsl ossl scripte kopieren.
 function scriptcopy()
 {
-	echo "$(tput setab $Green)Script Assets werden kopiert! $(tput sgr 0)"
-	echo "$DATUM $(date +%H-%M-%S) SCRIPTCOPY: Script Assets werden kopiert" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
-	cp -r /$STARTVERZEICHNIS/$SCRIPTSOURCE/assets /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin
-	cp -r /$STARTVERZEICHNIS/$SCRIPTSOURCE/inventory /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin
-	echo " "	
+	if [ -d /$STARTVERZEICHNIS/$SCRIPTSOURCE/ ]; then
+		echo "$(tput setab $Green)Script Assets werden kopiert! $(tput sgr 0)"
+		echo "$DATUM $(date +%H-%M-%S) SCRIPTCOPY: Script Assets werden kopiert" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+		cp -r /$STARTVERZEICHNIS/$SCRIPTSOURCE/assets /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin
+		cp -r /$STARTVERZEICHNIS/$SCRIPTSOURCE/inventory /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin
+	echo " "
+	else
+		echo "$(tput setab $Green)Script Assets sind nicht vorhanden! $(tput sgr 0)"
+		echo "$DATUM $(date +%H-%M-%S) SCRIPTCOPY: Script Assets sind nicht vorhanden" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+	fi
 }
-
 ### Funktion moneycopy, Money Dateien kopieren.
 function moneycopy()
 {
-	echo "$(tput setab $Green)Money Kopiervorgang startet! $(tput sgr 0)"
-	echo "$DATUM $(date +%H-%M-%S) MONEYCOPY: Money Kopiervorgang" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
-	cp -r /$STARTVERZEICHNIS/$MONEYSOURCE/bin /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS
-	cp -r /$STARTVERZEICHNIS/$MONEYSOURCE/addon-modules /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS
-	echo " "	
+	if [ -d /$STARTVERZEICHNIS/$MONEYSOURCE/ ]; then
+		echo "$(tput setab $Green)Money Kopiervorgang startet! $(tput sgr 0)"
+		echo "$DATUM $(date +%H-%M-%S) MONEYCOPY: Money Kopiervorgang" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+		cp -r /$STARTVERZEICHNIS/$MONEYSOURCE/bin /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS
+		cp -r /$STARTVERZEICHNIS/$MONEYSOURCE/addon-modules /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS
+		echo " "
+	else
+		echo "$(tput setab $Green)Script Assets sind nicht vorhanden! $(tput sgr 0)"
+		echo "$DATUM $(date +%H-%M-%S) SCRIPTCOPY: Script Assets sind nicht vorhanden" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+	fi	
 }
-
 ### Funktion compilieren, kompilieren des OpenSimulator.
 function compilieren()
 {
@@ -428,7 +421,6 @@ function compilieren()
 	moneycopy
 	oscompi	
 }
-
 # Legt die Verzeichnisstruktur fuer OpenSim an.
 # Aufruf: opensim.sh osstruktur ersteSIM letzteSIM
 # Beispiel: ./opensim.sh osstruktur 1 10 - erstellt ein Grid Verzeichnis fuer 10 Simulatoren inklusive der SimulatorList.ini.
@@ -446,32 +438,38 @@ function osstruktur()
 	done
 	echo "$DATUM $(date +%H-%M-%S) OSSTRUKTUR: Lege robust an ,Schreibe sim$i in $SIMDATEI" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 }
-
 ### Funktion osdelete
 function osdelete()
-{
-	echo "$(tput setaf $Red) $(tput setab $White)Lösche alte opensim1 Dateien$(tput sgr 0)"
-	cd /$STARTVERZEICHNIS  || return 1
-	rm -r opensim1
-	echo "$(tput setaf $Red) $(tput setab $White)Umbenennen von opensim nach opensim1 zur sicherung$(tput sgr 0)"
-	mv opensim opensim1
-	echo " "
-	echo "$DATUM $(date +%H-%M-%S) OSDELETE: Lösche alte opensim1 Dateien" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+{	
+	if [ -d /$STARTVERZEICHNIS/opensim/ ]; then
+		echo "$(tput setaf $Red) $(tput setab $White)Lösche alte opensim1 Dateien$(tput sgr 0)"
+		cd /$STARTVERZEICHNIS  || return 1
+		rm -r /$STARTVERZEICHNIS/opensim1
+		echo "$(tput setaf $Red) $(tput setab $White)Umbenennen von opensim nach opensim1 zur sicherung$(tput sgr 0)"
+		mv /$STARTVERZEICHNIS/opensim /$STARTVERZEICHNIS/opensim1
+		echo " "
+		echo "$DATUM $(date +%H-%M-%S) OSDELETE: Lösche alte opensim1 Dateien" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+	else
+		echo "$STARTVERZEICHNIS Verzeichnis existiert nicht"
+	fi
 }
 
 ### Funktion oscopyrobust
 function oscopyrobust()
 {
-    makeverzeichnisliste
-	echo "$(tput setab $Green)Kopiere Robust, Money! $(tput sgr 0)"
-	echo " "
-	sleep 3
-    # Robust
+	if [ -d /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/ ]; then
+		makeverzeichnisliste
+		echo "$(tput setab $Green)Kopiere Robust, Money! $(tput sgr 0)"
+		echo " "
+		sleep 3
 		echo "$(tput setaf $Green) $(tput setab $White)Robust und Money kopiert$(tput sgr 0)"
 		cd /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin || return 1
 		cp -r /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS
-	echo " "
-	echo "$DATUM $(date +%H-%M-%S) OSCOPY: Robust kopieren" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+		echo " "
+		echo "$DATUM $(date +%H-%M-%S) OSCOPY: Robust kopieren" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+	else
+		echo "$ROBUSTVERZEICHNIS Verzeichnis existiert nicht"
+	fi
 }
 ### Funktion oscopysim
 function oscopysim()
@@ -480,7 +478,6 @@ function oscopysim()
 	echo "$(tput setab $Green)Kopiere Simulatoren! $(tput sgr 0)"
 	echo " "
 	sleep 3
-    # Sim
 	for (( i = 0 ; i < "$ANZAHLVERZEICHNISSLISTE" ; i++)) do
 		echo "$(tput setaf $Green) $(tput setab $White)OpenSimulator ${VERZEICHNISSLISTE[$i]} kopiert$(tput sgr 0)"
 		cd /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin || return 1
@@ -490,7 +487,6 @@ function oscopysim()
 	echo " "
 	echo "$DATUM $(date +%H-%M-%S) OSCOPY: OpenSim kopieren" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 }
-
 # Regionskonfigurationen lesen
 function configlesen()
 {
@@ -598,16 +594,23 @@ function regionbackup()
 ### Funktion autosimstart
 function autosimstart()
 {
-	makeverzeichnisliste
-	sleep 3
-	for (( i = 0 ; i < "$ANZAHLVERZEICHNISSLISTE" ; i++)) do
-		echo "$(tput setaf 2) $(tput setab $White)Regionen OpenSimulator ${VERZEICHNISSLISTE[$i]} Starten$(tput sgr 0)"
-		cd /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin || return 1
-		screen -fa -S "${VERZEICHNISSLISTE[$i]}" -d -U -m mono OpenSim.exe
-		#/$STARTVERZEICHNIS/osscreen.sh "${VERZEICHNISSLISTE[$i]}" "/$STARTVERZEICHNIS/${VERZEICHNISSLISTE[$i]}/bin/OpenSim.exe"
-		echo "$DATUM $(date +%H-%M-%S) AUTOSIMSTART: Regionen OpenSimulator ${VERZEICHNISSLISTE[$i]} Starten" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
-		sleep $STARTWARTEZEIT
-	done
+	# shellcheck disable=SC2022
+	if ! screen -list | grep -q 'sim*'; then
+	# es laeuft nicht - not work
+		makeverzeichnisliste
+		sleep 3
+		for (( i = 0 ; i < "$ANZAHLVERZEICHNISSLISTE" ; i++)) do
+			echo "$(tput setaf 2) $(tput setab $White)Regionen OpenSimulator ${VERZEICHNISSLISTE[$i]} Starten$(tput sgr 0)"
+			cd /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin || return 1
+			screen -fa -S "${VERZEICHNISSLISTE[$i]}" -d -U -m mono OpenSim.exe
+			#/$STARTVERZEICHNIS/osscreen.sh "${VERZEICHNISSLISTE[$i]}" "/$STARTVERZEICHNIS/${VERZEICHNISSLISTE[$i]}/bin/OpenSim.exe"
+			echo "$DATUM $(date +%H-%M-%S) AUTOSIMSTART: Regionen OpenSimulator ${VERZEICHNISSLISTE[$i]} Starten" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+			sleep $STARTWARTEZEIT
+		done
+	else
+		echo "$(tput setaf $White)$(tput setab $Green) Regionen laufen bereits! $(tput sgr 0)"
+		echo "$DATUM $(date +%H-%M-%S) WORKS:  Regionen laufen bereits!" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+	fi
 }
 ### Funktion autosimstop
 function autosimstop()
@@ -664,11 +667,31 @@ function autoscreenstop()
 {
 	makeverzeichnisliste
 	sleep 3
-	for (( i = 0 ; i < "$ANZAHLVERZEICHNISSLISTE" ; i++)) do
-    	screen -S "${VERZEICHNISSLISTE[$i]}" -X quit
-	done
+
+	# shellcheck disable=SC2022
+	if ! screen -list | grep -q 'sim*'; then
+	echo "$(tput setaf $White)$(tput setab $Red) SIMs OFFLINE! $(tput sgr 0)"
+	echo "$DATUM $(date +%H-%M-%S) WORKS: SIMs OFFLINE!" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+	else
+		for (( i = 0 ; i < "$ANZAHLVERZEICHNISSLISTE" ; i++)) do
+			screen -S "${VERZEICHNISSLISTE[$i]}" -X quit
+		done
+	fi
+
+	if ! screen -list | grep -q "MO"; then
+	echo "$(tput setaf $White)$(tput setab $Red) MONEY OFFLINE! $(tput sgr 0)"
+	echo "$DATUM $(date +%H-%M-%S) WORKS: MONEY OFFLINE!" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+	else	
 	screen -S MO -X quit
+	fi
+
+	if ! screen -list | grep -q "RO"; then
+	echo "$(tput setaf $White)$(tput setab $Red) ROBUST OFFLINE! $(tput sgr 0)"
+	echo "$DATUM $(date +%H-%M-%S) WORKS: ROBUST OFFLINE!" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+	else
 	screen -S RO -X quit
+	fi
+
 	echo "$DATUM $(date +%H-%M-%S) AUTOSCREENSTOP: Auto Screen Stopp abgeschlossen" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 }
 
@@ -706,7 +729,7 @@ function autorestart()
 	echo "$(tput setab 1)Stoppe alles! $(tput sgr 0)"
 	autosimstop
 	gridstop
-	echo "60 Sekunden warten bis die Simulatoren heruntergefahren sind!"
+	echo "$(tput setaf 2)60 Sekunden warten bis die Simulatoren heruntergefahren sind! $(tput sgr 0)"
 	sleep 60
 	echo " "
 	echo "$(tput setab 1)Beende alle noch offenen Screens! $(tput sgr 0)"
