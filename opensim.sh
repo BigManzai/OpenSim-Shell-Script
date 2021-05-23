@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# opensimMULTITOOL Version 0.27.56 (c) May 2021 Manfred Aabye
+# opensimMULTITOOL Version 0.27.58 (c) May 2021 Manfred Aabye
 # opensim.sh Basiert auf meinen Einzelscripten, an denen ich bereits 6 Jahre Arbeite und verbessere.
 # Da Server unterschiedlich sind, kann eine einwandfreie fuunktion nicht gewährleistet werden, also bitte mit bedacht verwenden.
 # Die Benutzung dieses Scriptes, oder deren Bestandteile, erfolgt auf eigene Gefahr!!!
@@ -459,17 +459,27 @@ function osdelete()
 	echo "$DATUM $(date +%H-%M-%S) OSDELETE: Lösche alte opensim1 Dateien" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 }
 
-### Funktion oscopy
-function oscopy()
+### Funktion oscopyrobust
+function oscopyrobust()
 {
     makeverzeichnisliste
-	echo "$(tput setab $Green)Kopiere Robust, Money und Simulatoren! $(tput sgr 0)"
+	echo "$(tput setab $Green)Kopiere Robust, Money! $(tput sgr 0)"
 	echo " "
 	sleep 3
     # Robust
 		echo "$(tput setaf $Green) $(tput setab $White)Robust und Money kopiert$(tput sgr 0)"
 		cd /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin || return 1
 		cp -r /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS
+	echo " "
+	echo "$DATUM $(date +%H-%M-%S) OSCOPY: Robust kopieren" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+}
+### Funktion oscopysim
+function oscopysim()
+{
+    makeverzeichnisliste
+	echo "$(tput setab $Green)Kopiere Simulatoren! $(tput sgr 0)"
+	echo " "
+	sleep 3
     # Sim
 	for (( i = 0 ; i < "$ANZAHLVERZEICHNISSLISTE" ; i++)) do
 		echo "$(tput setaf $Green) $(tput setab $White)OpenSimulator ${VERZEICHNISSLISTE[$i]} kopiert$(tput sgr 0)"
@@ -526,7 +536,8 @@ function osupgrade()
 	# Grid Stoppen.
 	autostop
 	# Kopieren.
-	oscopy
+	oscopyrobust
+	oscopysim
 	# Grid Starten.
 	autostart
 	echo "$DATUM $(date +%H-%M-%S) OSUPGRADE: Das Grid wird jetzt upgegradet" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
