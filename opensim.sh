@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# opensimMULTITOOL Version 0.28.61 (c) May 2021 Manfred Aabye
+# opensimMULTITOOL Version 0.28.62 (c) May 2021 Manfred Aabye
 # opensim.sh Basiert auf meinen Einzelscripten, an denen ich bereits 6 Jahre Arbeite und verbessere.
 # Da Server unterschiedlich sind, kann eine einwandfreie fuunktion nicht gewährleistet werden, also bitte mit bedacht verwenden.
 # Die Benutzung dieses Scriptes, oder deren Bestandteile, erfolgt auf eigene Gefahr!!!
@@ -46,13 +46,11 @@ SCRIPTPATH=$(cd "$(dirname "$0")" && pwd)
 . "$SCRIPTPATH"/opensim.cnf
 
 ## Farben
-# Black=0
 Red=1
 Green=2
-Yellow=3
+Yello=3
 Blue=4
-# Magenta=5
-# Cyan=6
+Magenta=5
 White=7
 
 cd /"$STARTVERZEICHNIS" || return 1
@@ -61,7 +59,9 @@ KOMMANDO=$1 # Eingabeauswertung
 # MULTITOOLLOG="/$STARTVERZEICHNIS/$DATUM-multitool.log" # Name der Log Datei
 function schreibeinfo() 
 {
-	{	echo "$DATUM $(date +%H-%M-%S) INFO: Server Name: ${HOSTNAME}"
+	{	echo "#######################################################"
+		echo "$DATUM $(date +%H-%M-%S) MULTITOOL: wurde gestartet"
+		echo "$DATUM $(date +%H-%M-%S) INFO: Server Name: ${HOSTNAME}"
 		echo "$DATUM $(date +%H-%M-%S) INFO: Bash Version: ${BASH_VERSION}"
 		echo "$DATUM $(date +%H-%M-%S) INFO: MONO THREAD Einstellung: ${MONO_THREADS_PER_CPU}"
 		echo "$DATUM $(date +%H-%M-%S) INFO: Spracheinstellung: ${LANG}"
@@ -69,8 +69,7 @@ function schreibeinfo()
 		echo " "
 	} >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 }
-echo "#######################################################" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
-echo "$DATUM $(date +%H-%M-%S) MULTITOOL: wurde gestartet" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+# Kopfzeile in die Log Datei schreiben.
 schreibeinfo
 
 ### Funktion vardel, Variablen loeschen.
@@ -131,12 +130,17 @@ function assetdel()
 # oscommand Screen Befehl Parameter
 function oscommand()
 {	
-	Screen=$1 
-	Befehl=$2 
-	Parameter=$3
-	echo "$(tput setab $Green)Sende $Befehl $Parameter an $Screen $(tput sgr 0)"
-	screen -S "$Screen" -p 0 -X eval "stuff '$Befehl $Parameter'^M"
-	echo "$DATUM $(date +%H-%M-%S) OSCOMMAND: Sende $Befehl $Parameter an $Screen" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+	SCREEN=$1 
+	BEFEHL=$2 
+	PARAMETER=$3
+	if screen -list | grep -q "$SCREEN"; then
+	echo "$(tput setab $Green)Sende $BEFEHL $PARAMETER an $SCREEN $(tput sgr 0)"
+	echo "$DATUM $(date +%H-%M-%S) OSCOMMAND: $BEFEHL $PARAMETER an $SCREEN senden" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+	screen -S "$SCREEN" -p 0 -X eval "stuff '$BEFEHL $PARAMETER'^M"
+	else
+	  echo "Der Screen $SCREEN existiert nicht."
+	  echo "$DATUM $(date +%H-%M-%S) OSCOMMAND: Der Screen $SCREEN existiert nicht" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+	fi
 }
 
 ### Funktion works, screen pruefen ob er laeuft.
@@ -759,49 +763,51 @@ function info()
 ### Funktion hilfe
 function hilfe()
 {
-info
-echo " "
+#info
+#echo " "
 
-	echo "$(tput setab $Green)Funktion:		Parameter:		Informationen: $(tput sgr 0)"
-	echo "hilfe 			- hat keine Parameter - Diese Hilfe."
-	echo "restart 		- hat keine Parameter - Startet das gesammte Grid neu."
-	echo "autostop 		- hat keine Parameter - Stoppt das gesammte Grid."
-	echo "autostart 		- hat keine Parameter - Startet das gesammte Grid."
-	echo "works 			- Verzeichnisname - Einzelne screens auf Existens prüfen."
+	echo "$(tput setab $Magenta)Funktion:$(tput sgr 0)		$(tput setab $Green)Parameter:$(tput sgr 0)		$(tput setab $Blue)Informationen:$(tput sgr 0)"
+	echo "hilfe 			- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Diese Hilfe."
+	echo "restart 		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Startet das gesammte Grid neu."
+	echo "autostop 		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Stoppt das gesammte Grid."
+	echo "autostart 		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Startet das gesammte Grid."
+	echo "works 			- $(tput setab $Magenta)Verzeichnisname$(tput sgr 0) - Einzelne screens auf Existens prüfen."
 
-echo "$(tput setab $Yellow)Erweiterte Funktionen$(tput sgr 0)"
-	echo "rostart 		- hat keine Parameter - Startet Robust Server."
-	echo "rostop 			- hat keine Parameter - Stoppt Robust Server."
-	echo "mostart 		- hat keine Parameter - Startet Money Server."
-	echo "mostop 			- hat keine Parameter - Stoppt Money Server."
-	echo "osstart 		- Verzeichnisname - Startet einzelnen Simulator."
-	echo "osstop 			- Verzeichnisname - Stoppt einzelnen Simulator."
-	echo "terminator 		- hat keine Parameter - Killt alle laufenden Screens."
-	echo "autoscreenstop		- hat keine Parameter - Killt alle OpenSim Screens."
-	echo "autosimstart 		- hat keine Parameter - Startet alle Regionen."
-	echo "autosimstop 		- hat keine Parameter - Beendet alle Regionen. "
-	echo "gridstart 		- hat keine Parameter - Startet Robust und Money. "
-	echo "gridstop 		- hat keine Parameter - Beendet Robust und Money. "
-	echo "configlesen 		- Verzeichnisname - Alle Regionskonfigurationen im Verzeichnis anzeigen. "
+echo "$(tput setab $Yello)Erweiterte Funktionen$(tput sgr 0)"
+	echo "rostart 		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Startet Robust Server."
+	echo "rostop 			- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Stoppt Robust Server."
+	echo "mostart 		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Startet Money Server."
+	echo "mostop 			- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Stoppt Money Server."
+	echo "osstart 		- $(tput setab $Magenta)Verzeichnisname$(tput sgr 0) - Startet einen einzelnen Simulator."
+	echo "osstop 			- $(tput setab $Magenta)Verzeichnisname$(tput sgr 0) - Stoppt einen einzelnen Simulator."
+	echo "terminator 		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Killt alle laufenden Screens."
+	echo "autoscreenstop		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Killt alle OpenSim Screens."
+	echo "autosimstart 		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Startet alle Regionen."
+	echo "autosimstop 		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Beendet alle Regionen. "
+	echo "gridstart 		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Startet Robust und Money. "
+	echo "gridstop 		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Beendet Robust und Money. "
+	echo "configlesen 		- $(tput setab $Magenta)Verzeichnisname$(tput sgr 0) - Alle Regionskonfigurationen im Verzeichnis anzeigen. "
 
 echo "$(tput setab $Red)Experten Funktionen$(tput sgr 0)"
-	echo "assetdel 		- screen_name Regionsname Objektname - Einzelnes Asset löschen."
-	echo "autologdel		- hat keine Parameter - Löscht alle Log Dateien."
-	echo "automapdel		- hat keine Parameter - Löscht alle Map Karten."
-	echo "logdel 			- Verzeichnisname - Löscht einzelne Simulator Log Dateien."
-	echo "mapdel 			- Verzeichnisname - Löscht einzelne Simulator Map-Karten."
-	echo "settings 		- hat keine Parameter - setzt Linux Einstellungen."
-	echo "osupgrade 		- hat keine Parameter - Installiert eine neue OpenSim Version."
-	echo "regionbackup 		- Verzeichnisname Regionsname - Backup einer ausgewählten Region."
-	echo "autoregionbackup	- hat keine Parameter - Backup aller Regionen."
-	echo "oscopy			- Verzeichnisname - Kopiert den Simulator."
-	echo "osstruktur		- ersteSIM letzteSIM - Legt die Verzeichnisstruktur an."
-	echo "compilieren 		- hat keine Parameter - Kopiert fehlende Dateien und Kompiliert."
-	echo "scriptcopy 		- hat keine Parameter - Kopiert die Scripte in den Source."
-	echo "moneycopy 		- hat keine Parameter - Kopiert das Money in den Source."
-	echo "osdelete 		- hat keine Parameter - Löscht alte OpenSim Version."
-	echo "oscompi 		- hat keine Parameter - Kompiliert einen neuen OpenSimulator."
-	echo "oscommand 		- screen_name Konsolenbefehl Parameter - OpenSim Konsolenbefehl senden."
+	echo "assetdel 		- $(tput setab $Magenta)screen_name$(tput sgr 0) $(tput setab $Blue)Regionsname$(tput sgr 0) $(tput setab $Green)Objektname$(tput sgr 0) - Einzelnes Asset löschen."
+	echo "autologdel		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Löscht alle Log Dateien."
+	echo "automapdel		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Löscht alle Map Karten."
+	echo "logdel 			- $(tput setab $Magenta)Verzeichnisname$(tput sgr 0) - Löscht alle Simulator Log Dateien im Verzeichnis."
+	echo "mapdel 			- $(tput setab $Magenta)Verzeichnisname$(tput sgr 0) - Löscht alle Simulator Map-Karten im Verzeichnis."
+	echo "settings 		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - setzt Linux Einstellungen."
+	echo "osupgrade 		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Installiert eine neue OpenSim Version."
+	echo "regionbackup 		- $(tput setab $Magenta)Verzeichnisname$(tput sgr 0) Regionsname - Backup einer ausgewählten Region."
+	echo "autoregionbackup	- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Backup aller Regionen."
+	echo "oscopy			- $(tput setab $Magenta)Verzeichnisname$(tput sgr 0) - Kopiert den Simulator."
+	echo "osstruktur		- $(tput setab $Magenta)ersteSIM$(tput sgr 0) $(tput setab $Blue)letzteSIM$(tput sgr 0) - Legt eine Verzeichnisstruktur an."
+	echo "compilieren 		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Kopiert fehlende Dateien und Kompiliert."
+	echo "scriptcopy 		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Kopiert die Scripte in den Source."
+	echo "moneycopy 		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Kopiert das Money in den Source."
+	echo "osdelete 		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Löscht alte OpenSim Version."
+	echo "oscompi 		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Kompiliert einen neuen OpenSimulator."
+	echo "oscommand 		- $(tput setab $Magenta)Verzeichnisname$(tput sgr 0) $(tput setab $Blue)Konsolenbefehl$(tput sgr 0) $(tput setab $Green)Parameter$(tput sgr 0) - OpenSim Konsolenbefehl senden."
+	echo " "
+	echo "$(tput setaf $Yello)  Der Verzeichnisname ist gleichzeitig auch der Screen Name!$(tput sgr 0)"
 	echo "$DATUM $(date +%H-%M-%S) HILFE: Hilfe wurde angefordert" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 }
 
@@ -843,7 +849,7 @@ case  $KOMMANDO  in
 	osdelete) osdelete ;;
 	osstruktur) osstruktur "$2" "$3" ;;
 	configlesen) configlesen "$2" ;;
-	com | oscommand) oscommand "$2" "$3" "$4" ;;
+	osc | com | oscommand) oscommand "$2" "$3" "$4" ;;
     *) hilfe ;;
 esac
 
