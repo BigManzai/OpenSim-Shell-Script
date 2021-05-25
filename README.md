@@ -16,8 +16,6 @@ Es wird automatisch eine DATUM-multitool.log angelegt um nachzuverfolgen ob alle
 
 ## Konfiguration
 
-Es werden zusätzlich bis zu 3 Konfigurationsdateien benötigt die für den automatischen Start, stopp und Backup benötigt werden. 
-
 In der opensim.cnf werden zum Beispiel Verzeichnispfade voreingestellt zum Beispiel home oder opt als Hauptverzeichnis. 
 
 Bei dem Neuerstellen über "opensim.sh osstruktur" wird nicht nur die Struktur für ein Grid erstellt sondern auch die SimulatorList.ini. 
@@ -35,7 +33,7 @@ Die Struktur baut sich folgendermaßen auf:
     sim1 (Welcome Region)
     sim2 (Weitere Regionen)
     sim3 (Weitere Regionen)
-    ... (Weitere Regionen)
+    ... (Alle weiteren Regionen)
     
 Es sollten nicht mehr als 15 Regionen pro Sim betrieben werden, Ausnahme ist die Welcome Region, diese sollte einzeln laufen und möglichst klein gehalten werden.
 
