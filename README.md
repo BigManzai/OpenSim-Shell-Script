@@ -1,6 +1,6 @@
 # OpenSim-Shell-Script
 ![GitHub Logo](https://github.com/BigManzai/OpenSim-Shell-Script/blob/main/opensimMultitool.jpg)
-opensimMULTITOOL, Shell Script Version 0.28.62
+opensimMULTITOOL, Shell Script  Version 0.29.65
 
 opensim.sh Basiert auf meinen Einzelscripten, an denen ich bereits 6 Jahre Arbeite und verbessere.
 
@@ -83,19 +83,20 @@ Backup Zickt.
 
 ## Funktionsübersicht
 ```
-#Funktion:               Parameter:              Informationen:
+Funktion:               Parameter:              Informationen:
 hilfe                   - hat keine Parameter - Diese Hilfe.
 restart                 - hat keine Parameter - Startet das gesammte Grid neu.
 autostop                - hat keine Parameter - Stoppt das gesammte Grid.
 autostart               - hat keine Parameter - Startet das gesammte Grid.
 works                   - Verzeichnisname - Einzelne screens auf Existens prüfen.
-##Erweiterte Funktionen
+meineregionen           - hat keine Parameter - listet alle Regionen aus den Konfigurationen auf.
+Erweiterte Funktionen
 rostart                 - hat keine Parameter - Startet Robust Server.
 rostop                  - hat keine Parameter - Stoppt Robust Server.
 mostart                 - hat keine Parameter - Startet Money Server.
 mostop                  - hat keine Parameter - Stoppt Money Server.
-osstart                 - Verzeichnisname - Startet einzelnen Simulator.
-osstop                  - Verzeichnisname - Stoppt einzelnen Simulator.
+osstart                 - Verzeichnisname - Startet einen einzelnen Simulator.
+osstop                  - Verzeichnisname - Stoppt einen einzelnen Simulator.
 terminator              - hat keine Parameter - Killt alle laufenden Screens.
 autoscreenstop          - hat keine Parameter - Killt alle OpenSim Screens.
 autosimstart            - hat keine Parameter - Startet alle Regionen.
@@ -103,22 +104,24 @@ autosimstop             - hat keine Parameter - Beendet alle Regionen.
 gridstart               - hat keine Parameter - Startet Robust und Money.
 gridstop                - hat keine Parameter - Beendet Robust und Money.
 configlesen             - Verzeichnisname - Alle Regionskonfigurationen im Verzeichnis anzeigen.
-##Experten Funktionen
+RegionListe             - hat keine Parameter - Die RegionList.ini erstellen.
+Regionsdateiliste       - -b Bildschirm oder -d Datei Verzeichnisname - Regionsdateiliste erstellen.
+Experten Funktionen
 assetdel                - screen_name Regionsname Objektname - Einzelnes Asset löschen.
 autologdel              - hat keine Parameter - Löscht alle Log Dateien.
 automapdel              - hat keine Parameter - Löscht alle Map Karten.
-logdel                  - Verzeichnisname - Löscht einzelne Simulator Log Dateien.
-mapdel                  - Verzeichnisname - Löscht einzelne Simulator Map-Karten.
+logdel                  - Verzeichnisname - Löscht alle Simulator Log Dateien im Verzeichnis.
+mapdel                  - Verzeichnisname - Löscht alle Simulator Map-Karten im Verzeichnis.
 settings                - hat keine Parameter - setzt Linux Einstellungen.
 osupgrade               - hat keine Parameter - Installiert eine neue OpenSim Version.
 regionbackup            - Verzeichnisname Regionsname - Backup einer ausgewählten Region.
 autoregionbackup        - hat keine Parameter - Backup aller Regionen.
 oscopy                  - Verzeichnisname - Kopiert den Simulator.
-osstruktur              - ersteSIM letzteSIM - Legt die Verzeichnisstruktur an.
+osstruktur              - ersteSIM letzteSIM - Legt eine Verzeichnisstruktur an.
 compilieren             - hat keine Parameter - Kopiert fehlende Dateien und Kompiliert.
 scriptcopy              - hat keine Parameter - Kopiert die Scripte in den Source.
 moneycopy               - hat keine Parameter - Kopiert das Money in den Source.
 osdelete                - hat keine Parameter - Löscht alte OpenSim Version.
 oscompi                 - hat keine Parameter - Kompiliert einen neuen OpenSimulator.
-oscommand               - screen_name Konsolenbefehl Parameter - OpenSim Konsolenbefehl senden.
+oscommand               - Verzeichnisname Region Konsolenbefehl Parameter - Konsolenbefehl senden.
 ```
