@@ -16,7 +16,7 @@ Es wird automatisch eine DATUM-multitool.log angelegt um nachzuverfolgen ob alle
 
 ## Konfiguration
 
-In der opensim.cnf werden zum Beispiel Verzeichnispfade voreingestellt zum Beispiel home oder opt als Hauptverzeichnis. 
+In der opensim.cnf werden unter anderem Verzeichnispfade voreingestellt zum Beispiel home oder opt als Hauptverzeichnis. 
 
 Bei dem Neuerstellen über "opensim.sh osstruktur" wird nicht nur die Struktur für ein Grid erstellt sondern auch die SimulatorList.ini. 
 
