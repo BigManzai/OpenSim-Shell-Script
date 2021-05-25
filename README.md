@@ -78,6 +78,7 @@ Ich teste gerade das automatische erstellen der Konfigurationsdatei RegionList.i
 
 ## TODO
 Backup Zickt.
+RegionListe erstellen kann keine Regions.ini mit mehr als einer Region verwalten.
 
 ## Funktionsübersicht
 ```
