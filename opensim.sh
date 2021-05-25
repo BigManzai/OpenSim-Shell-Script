@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# opensimMULTITOOL Version 0.28.62 (c) May 2021 Manfred Aabye
+# opensimMULTITOOL Version 0.29.65 (c) May 2021 Manfred Aabye
 # opensim.sh Basiert auf meinen Einzelscripten, an denen ich bereits 6 Jahre Arbeite und verbessere.
 # Da Server unterschiedlich sind, kann eine einwandfreie fuunktion nicht gewährleistet werden, also bitte mit bedacht verwenden.
 # Die Benutzung dieses Scriptes, oder deren Bestandteile, erfolgt auf eigene Gefahr!!!
@@ -59,6 +59,12 @@ KOMMANDO=$1 # Eingabeauswertung
 # MULTITOOLLOG="/$STARTVERZEICHNIS/$DATUM-multitool.log" # Name der Log Datei
 function schreibeinfo() 
 {
+	FILENAME="/$STARTVERZEICHNIS/$DATUM-multitool.log" # Name der Datei
+	FILESIZE=$(stat -c%s "$FILENAME") # Wie Gross ist die Datei.
+	NULL=0
+	# Ist die Datei Groesser als null, dann Kopfzeile nicht erneut schreiben.
+	if [ "$FILESIZE" \< "$NULL" ]
+	then
 	{	echo "#######################################################"
 		echo "$DATUM $(date +%H-%M-%S) MULTITOOL: wurde gestartet"
 		echo "$DATUM $(date +%H-%M-%S) INFO: Server Name: ${HOSTNAME}"
@@ -68,6 +74,7 @@ function schreibeinfo()
 		echo "$DATUM $(date +%H-%M-%S) INFO: Screen Version: $(screen --version)"
 		echo " "
 	} >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+	fi
 }
 # Kopfzeile in die Log Datei schreiben.
 schreibeinfo
@@ -113,28 +120,35 @@ function makeregionsliste()
     ANZAHLREGIONSLISTE=${#REGIONSLISTE[*]}
 	echo "$DATUM $(date +%H-%M-%S) MAKEREGIONSLISTE: Regionsliste wurde angefordert" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 }
-
 ### Funktion assetdel, Asset von der Region loeschen.
 # assetdel screen_name Regionsname Objektname
 function assetdel()
 {
-	echo "$(tput setaf $Red) $(tput setab $White)$3 Asset von der Region löschen$(tput sgr 0)"
-	screen -S "$1" -p 0 -X eval "stuff 'change region ""$2""'^M" # Region wechseln
-	screen -S "$1" -p 0 -X eval "stuff 'alert "Loesche: "$3" von der Region!"'^M" # Mit einer loesch Meldung
-	screen -S "$1" -p 0 -X eval "stuff 'delete object name ""$3""'^M" # Objekt loeschen
-	screen -S "$1" -p 0 -X eval "stuff 'y'^M" # Mit y also yes bestaetigen
-	echo "$DATUM $(date +%H-%M-%S) ASSETDEL: $3 Asset von der Region löschen" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+	SCREEN=$1; REGION=$2; OBJEKT=$3
+	# Nachschauen ob der Screen und die Region existiert. Screen OK
+	if screen -list | grep -q "$SCREEN"; then
+		echo "$(tput setaf $Red) $(tput setab $White)$OBJEKT Asset von der Region $SCREEN löschen$(tput sgr 0)"
+		screen -S "$SCREEN" -p 0 -X eval "stuff 'change region ""$REGION""'^M" # Region wechseln
+		screen -S "$SCREEN" -p 0 -X eval "stuff 'alert "Loesche: "$OBJEKT" von der Region!"'^M" # Mit einer loesch Meldung
+		screen -S "$SCREEN" -p 0 -X eval "stuff 'delete object name ""$OBJEKT""'^M" # Objekt loeschen
+		screen -S "$SCREEN" -p 0 -X eval "stuff 'y'^M" # Mit y also yes bestaetigen
+		echo "$DATUM $(date +%H-%M-%S) ASSETDEL: $OBJEKT Asset von der Region $SCREEN löschen" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+	else
+		echo "$(tput setaf $Red) $(tput setab $White)$OBJEKT Asset von der Region $SCREEN löschen fehlgeschlagen$(tput sgr 0)"
+		echo "$DATUM $(date +%H-%M-%S) ASSETDEL: $OBJEKT Asset von der Region $SCREEN löschen fehlgeschlagen" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+	fi
 }
-
 ### Funktion oscommand, OpenSim Commands senden.
-# oscommand Screen Befehl Parameter
+# oscommand Screen Region Befehl Parameter
 function oscommand()
 {	
-	SCREEN=$1 
-	BEFEHL=$2 
-	PARAMETER=$3
+	SCREEN=$1
+	REGION=$2
+	BEFEHL=$3 
+	PARAMETER=$4
 	if screen -list | grep -q "$SCREEN"; then
 	echo "$(tput setab $Green)Sende $BEFEHL $PARAMETER an $SCREEN $(tput sgr 0)"
+	screen -S "$SCREEN" -p 0 -X eval "stuff 'change region ""$REGION""'^M" # Region wechseln
 	echo "$DATUM $(date +%H-%M-%S) OSCOMMAND: $BEFEHL $PARAMETER an $SCREEN senden" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 	screen -S "$SCREEN" -p 0 -X eval "stuff '$BEFEHL $PARAMETER'^M"
 	else
@@ -142,7 +156,6 @@ function oscommand()
 	  echo "$DATUM $(date +%H-%M-%S) OSCOMMAND: Der Screen $SCREEN existiert nicht" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 	fi
 }
-
 ### Funktion works, screen pruefen ob er laeuft.
 # works screen_name
 function works()
@@ -159,7 +172,6 @@ function works()
 			return 0
 	fi
 }
-
 ### Funktion checkfile, pruefen ob Datei vorhanden ist.
 # checkfile "pfad/name"
 # checkfile /pfad/zur/datei && echo "File exists" || echo "File not found!"
@@ -168,7 +180,6 @@ function checkfile
     [ -f "$1" ]	
     return $?
 }
-
 ### Funktion mapdel, loescht die Map-Karten.
 # mapdel Verzeichnis
 function mapdel()
@@ -196,7 +207,6 @@ function logdel()
 	  echo "$DATUM $(date +%H-%M-%S) LOGDEL: logs nicht gefunden" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 	fi
 }
-
 ### Funktion ossettings, stellt den Linux Server fuer OpenSim ein.
 function ossettings()
 {
@@ -210,7 +220,6 @@ function ossettings()
 	export MONO_GC_PARAMS="minor=split,promotion-age=14,nursery-size=64m"
 	echo " "
 }
-
 ### Funktion screenlist, Laufende Screens auflisten.
 function screenlist()
 {
@@ -219,7 +228,6 @@ function screenlist()
 	echo "$DATUM $(date +%H-%M-%S) SCREENLIST: Alle laufende Screens" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 	screen -ls >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 }
-
 ### Funktion osstart, startet Region Server.
 # osstart screen_name
 # Beispiel-Example: osstart sim1
@@ -252,7 +260,6 @@ function osstop()
 	fi
 	return
 }
-
 ### Funktion rostart, Robust Server starten.
 function rostart()
 {
@@ -268,7 +275,6 @@ function rostart()
 	  echo "$DATUM $(date +%H-%M-%S) ROSTART: Robust wurde nicht gefunden" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 	fi
 }
-
 ### Funktion rostop, Robust Server herunterfahren.
 function rostop()
 {
@@ -282,7 +288,6 @@ function rostop()
 	  echo "$DATUM $(date +%H-%M-%S) ROSTOP: RobustServer nicht vorhanden" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 	fi	
 }
-
 ### Funktion mostart, Money Server starten.
 function mostart()
 {
@@ -421,18 +426,39 @@ function compilieren()
 {
 	echo "$(tput setab $Green)Bauen eines neuen OpenSimulators wird gestartet! $(tput sgr 0)"
 	echo "$DATUM $(date +%H-%M-%S) COMPILIEREN: Bauen eines neuen OpenSimulators" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
-	scriptcopy
-	moneycopy
-	oscompi	
+	# Nachsehen ob Verzeichnis überhaupt existiert.
+	if [ -f "/$STARTVERZEICHNIS/$SCRIPTSOURCE/" ]; then
+		scriptcopy
+	else
+		echo "OSSL Script Verzeichnis existiert nicht."
+		echo "$DATUM $(date +%H-%M-%S) COMPILIEREN: OSSL Script Verzeichnis existiert nicht" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+	fi
+	if [ -f "/$STARTVERZEICHNIS/$MONEYSOURCE/" ]; then
+		moneycopy
+	else
+		echo "MoneyServer Verzeichnis existiert nicht."
+		echo "$DATUM $(date +%H-%M-%S) COMPILIEREN: MoneyServer Verzeichnis existiert nicht" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+	fi
+	if [ -f "/$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/" ]; then
+	oscompi
+	else
+		echo "opensim Verzeichnis existiert nicht."
+		echo "$DATUM $(date +%H-%M-%S) COMPILIEREN: opensim Verzeichnis existiert nicht" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+	fi
 }
 # Legt die Verzeichnisstruktur fuer OpenSim an.
 # Aufruf: opensim.sh osstruktur ersteSIM letzteSIM
 # Beispiel: ./opensim.sh osstruktur 1 10 - erstellt ein Grid Verzeichnis fuer 10 Simulatoren inklusive der SimulatorList.ini.
 function osstruktur()
 {
-	echo "Lege robust an im Verzeichnis $ROBUSTVERZEICHNIS"
-	mkdir -p /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin
-
+	if [ ! -f "/$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/" ]; then
+		echo "Lege robust an im Verzeichnis $ROBUSTVERZEICHNIS"
+		echo "$DATUM $(date +%H-%M-%S) OSSTRUKTUR: Lege robust an im Verzeichnis $ROBUSTVERZEICHNIS" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+		mkdir -p /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin
+	else
+		echo "opensim Verzeichnis existiert bereits."
+		echo "$DATUM $(date +%H-%M-%S) OSSTRUKTUR: Verzeichnis $ROBUSTVERZEICHNIS existiert bereits" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+	fi
 	for ((i=$1;i<=$2;i++))
 	do
 	echo "Lege sim$i an"
@@ -445,11 +471,11 @@ function osstruktur()
 ### Funktion osdelete
 function osdelete()
 {	
-	if [ -d /$STARTVERZEICHNIS/opensim/ ]; then
+	if [ -d /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/ ]; then
 		echo "$(tput setaf $Red) $(tput setab $White)Lösche alte opensim1 Dateien$(tput sgr 0)"
 		cd /$STARTVERZEICHNIS  || return 1
 		rm -r /$STARTVERZEICHNIS/opensim1
-		echo "$(tput setaf $Red) $(tput setab $White)Umbenennen von opensim nach opensim1 zur sicherung$(tput sgr 0)"
+		echo "$(tput setaf $Red) $(tput setab $White)Umbenennen von $OPENSIMVERZEICHNIS nach opensim1 zur sicherung$(tput sgr 0)"
 		mv /$STARTVERZEICHNIS/opensim /$STARTVERZEICHNIS/opensim1
 		echo " "
 		echo "$DATUM $(date +%H-%M-%S) OSDELETE: Lösche alte opensim1 Dateien" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
@@ -457,7 +483,6 @@ function osdelete()
 		echo "$STARTVERZEICHNIS Verzeichnis existiert nicht"
 	fi
 }
-
 ### Funktion oscopyrobust
 function oscopyrobust()
 {
@@ -501,32 +526,86 @@ function configlesen()
 	echo "$KONFIGLESEN" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 }
 
-### Funktion autoregionconf
-# ACHTUNG funktioniert nicht zerstört die Konfigurationen!!!
-# function autoregionconf()
-# {
-# 	makeverzeichnisliste
-# 	rm -f /$STARTVERZEICHNIS/$REGIONSDATEI # Alte Datei loeschen
-# 	sleep 3
-# 	for (( i = 0 ; i < "$ANZAHLVERZEICHNISSLISTE" ; i++)) do
-# 		TEST+=$(ls /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/Regions/*.ini) # Test ob alle Verzeichnisse stimmen.
-# 		REGIONSNAME+=${VERZEICHNISSLISTE[$i]} # simX anhaengen
-# 		REGIONSNAME+=" " # Leerzeichen anhaengen
-# 		REGIONSNAME+=$(grep "['[']" < /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/Regions/*.ini) # Alle Regionskonfigurationen lesen und die Regionsnamen entnehmen.
-		
-# 		REGIONSNAMEb=${REGIONSNAME//\[/} # loesche Zeichen [
-# 		REGIONSNAMEc=${REGIONSNAMEb//\]/} # loesche Zeichen ]    
-# 		echo "$REGIONSNAMEc" >> /$STARTVERZEICHNIS/$REGIONSDATEI # anhaengend schreiben.
-		
-# 	done
-# 	echo "$(tput setab $Green)$TEST $(tput sgr 0)"
+### Funktion regionsconfigdateiliste, schreibt Dateinamen mit Pfad in eine Datei.
+# regionsconfigdateiliste -b(Bildschirm) -d(Datei)  Vereichnis
+function regionsconfigdateiliste() 
+{
+	VERZEICHNIS=$1
+    declare -A Dateien # Array erstellen
+    # shellcheck disable=SC2178
+    Dateien=$(find /$STARTVERZEICHNIS/"$VERZEICHNIS"/bin/Regions/ -name "*.ini") # Alle Regions.ini in das Assoziative Arrays mit der Option -A schreiben oder ein indiziertes mit -a.
+    for i in "${Dateien[@]}"; do # Array abarbeiten
+        if [ "$2" = "-d" ]; then echo "$i" >> RegionsDateiliste.txt; fi  # In die config Datei hinzufuegen.
+        if [ "$2" = "-b" ]; then echo "$i"; fi  # In die config Datei hinzufuegen.
+    done
+}
+### Funktion meineregionen, listet alle Regionen aus den auf.
+function meineregionen() 
+{	
+	makeverzeichnisliste
+	echo "$DATUM $(date +%H-%M-%S) MEINEREGIONEN: Regionsliste" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+	sleep 3
+	for (( i = 0 ; i < "$ANZAHLVERZEICHNISSLISTE" ; i++))
+	do
+	VERZEICHNIS="${VERZEICHNISSLISTE[$i]}"
+		REGIONSAUSGABE=$(awk -F "[" '/\[/ {print $1 $2 $3}' /$STARTVERZEICHNIS/"$VERZEICHNIS"/bin/Regions/*.ini |sed s/'\]'//g) # Zeigt nur die Regionsnamen aus einer Regions.ini an
+		echo "$(tput setaf $Green)$(tput setab $White) $VERZEICHNIS $(tput sgr 0)"
+		echo "$REGIONSAUSGABE"
+		echo "$REGIONSAUSGABE" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+	done
+	echo "$DATUM $(date +%H-%M-%S) MEINEREGIONEN: Regionsliste Ende" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+}
+### Funktion regionsinizerlegen, Die gemeinschaftsdatei Regions.ini in einzelne Regionen teilen 
+# diese dann unter dem Regionsnamen speichern, danach die Alte Regions.ini umbenennen in Regions.ini.old.
+function regionsinizerlegen()
+{
+	# Die mit regionsconfigdateiliste erstellte Datei RegionsDateiliste.txt nach Regions.ini absuchen 
+	# und diese in einzelne nach dem Regionsnamen zerlegen und speichern.
 
-#   # Jetzt simX einfuegen 
-# 	REGIONSNAMEd=$(sed -e '1,99s/^//' /$STARTVERZEICHNIS/$REGIONSDATEI) # letzte massnahme simX vorsetzen.
-# 	echo "$REGIONSNAMEd" > /$STARTVERZEICHNIS/$REGIONSDATEI # ueberschreiben
-# 	echo "$REGIONSNAMEd" # Test Ausgabe
-# 	echo "$DATUM $(date +%H-%M-%S) AUTOREGIONCONF: Autoregionskonfiguration abgeschlossen" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
-# }
+	# Zum schluss RegionsDateiliste.txt loeschen und neu erstellen.
+	makeverzeichnisliste
+	sleep 3
+	for (( i = 0 ; i < "$ANZAHLVERZEICHNISSLISTE" ; i++))
+	do
+		echo "$(tput setaf $Red) $(tput setab $White)Region.ini ${VERZEICHNISSLISTE[$i]} zerlegen$(tput sgr 0)"
+		echo "Keine Funktion!"
+	done
+}
+### Funktion RegionListe, Die RegionListe ermitteln und mit dem Verzeichnisnamen in die RegionList.ini schreiben.
+function regionliste()
+{
+	# Alte RegionList.ini sichern und in RegionList.ini.old umbenennen.
+    if [ -f "/$STARTVERZEICHNIS/RegionList.ini" ]; then
+		if [ -f "/$STARTVERZEICHNIS/RegionList.ini.old" ]; then
+			rm -r /$STARTVERZEICHNIS/RegionList.ini.old
+		fi
+	mv /$STARTVERZEICHNIS/RegionList.ini /$STARTVERZEICHNIS/RegionList.ini.old
+	fi
+	# Die mit regionsconfigdateiliste erstellte Datei RegionList.ini nach sim Verzeichnis und Regionsnamen in die RegionList.ini speichern.
+	declare -A Dateien # Array erstellen
+	makeverzeichnisliste
+	sleep 3
+	for (( i = 0 ; i < "$ANZAHLVERZEICHNISSLISTE" ; i++))
+	do
+		echo "$(tput setaf $Red) $(tput setab $White)Regionnamen ${VERZEICHNISSLISTE[$i]} schreiben$(tput sgr 0)"
+		VERZEICHNIS="${VERZEICHNISSLISTE[$i]}"
+		# shellcheck disable=SC2178
+		Dateien=$(find /$STARTVERZEICHNIS/"$VERZEICHNIS"/bin/Regions/ -name "*.ini")
+		for i2 in "${Dateien[@]}"; do # Array abarbeiten
+        echo "$i2" >> RegionList.ini
+    	done
+	done
+	# Ueberfluessige Zeichen entfernen
+	LOESCHEN=$(sed s/'\/opt\/'//g /$STARTVERZEICHNIS/RegionList.ini) # /opt/ entfernen.
+	echo "$LOESCHEN" > /$STARTVERZEICHNIS/RegionList.ini # Aenderung /opt/ speichern.
+	LOESCHEN=$(sed s/'\/bin\/Regions\/'/' "'/g /$STARTVERZEICHNIS/RegionList.ini) # /bin/Regions/ entfernen.
+	echo "$LOESCHEN" > /$STARTVERZEICHNIS/RegionList.ini # Aenderung /bin/Regions/ speichern.
+	LOESCHEN=$(sed s/'.ini'/'"'/g /$STARTVERZEICHNIS/RegionList.ini) # Endung .ini entfernen.
+	echo "$LOESCHEN" > /$STARTVERZEICHNIS/RegionList.ini # Aenderung .ini entfernen speichern.
+	# Schauen ob da noch Regions.ini bei sind also Regionen mit dem Namen Regions, diese Zeilen loeschen.
+	LOESCHEN=$(sed '/Regions/d' /$STARTVERZEICHNIS/RegionList.ini) # Alle Zeilen mit dem Eintrag Regions entfernen	.
+	echo "$LOESCHEN" > /$STARTVERZEICHNIS/RegionList.ini # Aenderung .ini entfernen speichern.
+}
 
 ### Funktion osupgrade
 function osupgrade()
@@ -772,6 +851,7 @@ function hilfe()
 	echo "autostop 		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Stoppt das gesammte Grid."
 	echo "autostart 		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Startet das gesammte Grid."
 	echo "works 			- $(tput setab $Magenta)Verzeichnisname$(tput sgr 0) - Einzelne screens auf Existens prüfen."
+	echo "meineregionen 		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - listet alle Regionen aus den Konfigurationen auf."
 
 echo "$(tput setab $Yello)Erweiterte Funktionen$(tput sgr 0)"
 	echo "rostart 		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Startet Robust Server."
@@ -786,7 +866,9 @@ echo "$(tput setab $Yello)Erweiterte Funktionen$(tput sgr 0)"
 	echo "autosimstop 		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Beendet alle Regionen. "
 	echo "gridstart 		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Startet Robust und Money. "
 	echo "gridstop 		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Beendet Robust und Money. "
-	echo "configlesen 		- $(tput setab $Magenta)Verzeichnisname$(tput sgr 0) - Alle Regionskonfigurationen im Verzeichnis anzeigen. "
+	echo "configlesen 		- $(tput setab $Magenta)Verzeichnisname$(tput sgr 0) - Alle Regionskonfigurationen im Verzeichnis anzeigen."
+	echo "RegionListe 		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Die RegionList.ini erstellen."
+	echo "Regionsdateiliste 	- $(tput setab $Blue)-b Bildschirm oder -d Datei$(tput sgr 0) $(tput setab $Magenta)Verzeichnisname$(tput sgr 0) - Regionsdateiliste erstellen."
 
 echo "$(tput setab $Red)Experten Funktionen$(tput sgr 0)"
 	echo "assetdel 		- $(tput setab $Magenta)screen_name$(tput sgr 0) $(tput setab $Blue)Regionsname$(tput sgr 0) $(tput setab $Green)Objektname$(tput sgr 0) - Einzelnes Asset löschen."
@@ -805,7 +887,7 @@ echo "$(tput setab $Red)Experten Funktionen$(tput sgr 0)"
 	echo "moneycopy 		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Kopiert das Money in den Source."
 	echo "osdelete 		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Löscht alte OpenSim Version."
 	echo "oscompi 		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Kompiliert einen neuen OpenSimulator."
-	echo "oscommand 		- $(tput setab $Magenta)Verzeichnisname$(tput sgr 0) $(tput setab $Blue)Konsolenbefehl$(tput sgr 0) $(tput setab $Green)Parameter$(tput sgr 0) - OpenSim Konsolenbefehl senden."
+	echo "oscommand 		- $(tput setab $Magenta)Verzeichnisname$(tput sgr 0) $(tput setab $Yello)Region$(tput sgr 0) $(tput setab $Blue)Konsolenbefehl$(tput sgr 0) $(tput setab $Green)Parameter$(tput sgr 0) - Konsolenbefehl senden."
 	echo " "
 	echo "$(tput setaf $Yello)  Der Verzeichnisname ist gleichzeitig auch der Screen Name!$(tput sgr 0)"
 	echo "$DATUM $(date +%H-%M-%S) HILFE: Hilfe wurde angefordert" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
@@ -849,7 +931,11 @@ case  $KOMMANDO  in
 	osdelete) osdelete ;;
 	osstruktur) osstruktur "$2" "$3" ;;
 	configlesen) configlesen "$2" ;;
-	osc | com | oscommand) oscommand "$2" "$3" "$4" ;;
+	osc | com | oscommand) oscommand "$2" "$3" "$4" "$5" ;;
+	rl | Regionsdateiliste | regionsconfigdateiliste) regionsconfigdateiliste "$3" "$2" ;;
+	rn | RegionListe) regionliste ;;
+	regionsinizerlegen) regionsinizerlegen ;;
+	meineregionen) meineregionen ;;
     *) hilfe ;;
 esac
 
