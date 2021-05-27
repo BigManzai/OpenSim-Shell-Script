@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# opensimMULTITOOL Version 0.29.65 (c) May 2021 Manfred Aabye
+# opensimMULTITOOL Version 0.29.67 (c) May 2021 Manfred Aabye
 # opensim.sh Basiert auf meinen Einzelscripten, an denen ich bereits 6 Jahre Arbeite und verbessere.
 # Da Server unterschiedlich sind, kann eine einwandfreie fuunktion nicht gewährleistet werden, also bitte mit bedacht verwenden.
 # Die Benutzung dieses Scriptes, oder deren Bestandteile, erfolgt auf eigene Gefahr!!!
@@ -92,7 +92,7 @@ function vardel()
 	unset Red
 	unset Green
 	unset White
-	echo "$DATUM $(date +%H-%M-%S) VARDEL: Variablen wurden gelöscht" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+	# echo "$DATUM $(date +%H-%M-%S) VARDEL: Variablen wurden gelöscht" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 }
 ### myshellschreck, ShellCheck ueberlisten hat sonst keinerlei Funktion und wird auch nicht aufgerufen.
 function myshellschreck()
@@ -108,7 +108,7 @@ function makeverzeichnisliste()
     done < /$STARTVERZEICHNIS/$SIMDATEI
     # Anzahl der Eintraege.
     ANZAHLVERZEICHNISSLISTE=${#VERZEICHNISSLISTE[*]}
-	echo "$DATUM $(date +%H-%M-%S) MAKEVERZEICHNISLISTE: Verzeichnisliste wurde angefordert" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+	# echo "$DATUM $(date +%H-%M-%S) MAKEVERZEICHNISLISTE: Verzeichnisliste wurde angefordert" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 }
 function makeregionsliste() 
 {
@@ -118,7 +118,7 @@ function makeregionsliste()
     done < /$STARTVERZEICHNIS/$REGIONSDATEI
     # Anzahl der Eintraege.    
     ANZAHLREGIONSLISTE=${#REGIONSLISTE[*]}
-	echo "$DATUM $(date +%H-%M-%S) MAKEREGIONSLISTE: Regionsliste wurde angefordert" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+	# echo "$DATUM $(date +%H-%M-%S) MAKEREGIONSLISTE: Regionsliste wurde angefordert" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 }
 ### Funktion assetdel, Asset von der Region loeschen.
 # assetdel screen_name Regionsname Objektname
@@ -468,7 +468,7 @@ function osstruktur()
 	done
 	echo "$DATUM $(date +%H-%M-%S) OSSTRUKTUR: Lege robust an ,Schreibe sim$i in $SIMDATEI" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 }
-### Funktion osdelete
+### Funktion osdelete, altes opensim loeschen und neues als Backup.
 function osdelete()
 {	
 	if [ -d /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/ ]; then
@@ -555,9 +555,86 @@ function meineregionen()
 	done
 	echo "$DATUM $(date +%H-%M-%S) MEINEREGIONEN: Regionsliste Ende" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 }
-### Funktion regionsinizerlegen, Die gemeinschaftsdatei Regions.ini in einzelne Regionen teilen 
-# diese dann unter dem Regionsnamen speichern, danach die Alte Regions.ini umbenennen in Regions.ini.old.
-function regionsinizerlegen()
+# Gibt ein Array aller Regionsabschnitte zurueck, regionsinizerlegen
+# $1 - Datei
+function get_regionsarray() 
+{
+  # shellcheck disable=SC2207
+  ARRAY=($(grep '\[.*\]' "$1"))
+  FIXED_ARRAY=""
+  for i in "${ARRAY[@]}"; do
+    FIX=$i
+    FIX=$(echo "$FIX" | tr --delete "\r")
+    FIX=$(echo "$FIX" | tr --delete "[")
+    FIX=$(echo "$FIX" | tr --delete "]")
+    FIXED_ARRAY+="${FIX} "
+  done
+  echo "${FIXED_ARRAY}"
+}
+# Gibt den Wert eines bestimmten Schluessels im angegebenen Abschnitt zurueck , regionsinizerlegen
+# $1 - Datei
+# $2 - Schluessel
+# $3 - Sektion
+function get_value_from_Region_key() 
+{
+  # shellcheck disable=SC2005
+  echo "$(sed -nr "/^\[$2\]/ { :l /^$3[ ]*=/ { s/.*=[ ]*//; p; q;}; n; b l;}" "$1")"
+}
+function regionstestausgabe() 
+{
+	INI_FILE="/opt/Regions.ini" # Test Datei
+	echo "== Ausgabe der Sektionen =="
+
+	# shellcheck disable=SC2155
+	declare -a TARGETS="$(get_regionsarray ${INI_FILE})"
+	# shellcheck disable=SC2068
+	for obj in ${TARGETS[@]}; do
+		echo "$obj"
+	done
+
+	SECTION="City1" # Auszulesende Region
+	echo "== Ausgabe der Werte für $SECTION =="
+
+	# shellcheck disable=SC2005
+	echo "$(get_value_from_Region_key ${INI_FILE} "$SECTION" "RegionUUID")"
+	# shellcheck disable=SC2005
+	echo "$(get_value_from_Region_key ${INI_FILE} "$SECTION" "Location")"
+	# shellcheck disable=SC2005
+	echo "$(get_value_from_Region_key ${INI_FILE} "$SECTION" "SizeX")"
+	# shellcheck disable=SC2005
+	echo "$(get_value_from_Region_key ${INI_FILE} "$SECTION" "SizeY")"
+	# shellcheck disable=SC2005
+	echo "$(get_value_from_Region_key ${INI_FILE} "$SECTION" "SizeZ")"
+	# shellcheck disable=SC2005
+	echo "$(get_value_from_Region_key ${INI_FILE} "$SECTION" "InternalAddress")"
+	# shellcheck disable=SC2005
+	echo "$(get_value_from_Region_key ${INI_FILE} "$SECTION" "InternalPort")"
+	# shellcheck disable=SC2005
+	echo "$(get_value_from_Region_key ${INI_FILE} "$SECTION" "AllowAlternatePorts")"
+	#echo "$(get_value_from_Region_key ${INI_FILE} "$SECTION" "ResolveAddress")"
+	# shellcheck disable=SC2005
+	echo "$(get_value_from_Region_key ${INI_FILE} "$SECTION" "ExternalHostName")"
+	# shellcheck disable=SC2005
+	echo "$(get_value_from_Region_key ${INI_FILE} "$SECTION" "MaxPrims")"
+	# shellcheck disable=SC2005
+	echo "$(get_value_from_Region_key ${INI_FILE} "$SECTION" "MaxAgents")"
+	# echo "$(get_value_from_Region_key ${INI_FILE} "$SECTION" "DefaultLanding")"
+	# echo "$(get_value_from_Region_key ${INI_FILE} "$SECTION" "NonPhysicalPrimMax")"
+	# echo "$(get_value_from_Region_key ${INI_FILE} "$SECTION" "PhysicalPrimMax")"
+	# echo "$(get_value_from_Region_key ${INI_FILE} "$SECTION" "ClampPrimSize")"
+	# echo "$(get_value_from_Region_key ${INI_FILE} "$SECTION" "MaxPrimsPerUser")"
+	# echo "$(get_value_from_Region_key ${INI_FILE} "$SECTION" "ScopeID")"
+	# echo "$(get_value_from_Region_key ${INI_FILE} "$SECTION" "RegionType")"
+	# echo "$(get_value_from_Region_key ${INI_FILE} "$SECTION" "MaptileStaticUUID")"
+	# echo "$(get_value_from_Region_key ${INI_FILE} "$SECTION" "MaptileStaticFile")"
+	# echo "$(get_value_from_Region_key ${INI_FILE} "$SECTION" "MasterAvatarFirstName")"
+	# echo "$(get_value_from_Region_key ${INI_FILE} "$SECTION" "MasterAvatarLastName")"
+	# echo "$(get_value_from_Region_key ${INI_FILE} "$SECTION" "MasterAvatarSandboxPassword")"
+}
+
+	### Funktion regionsinizerlegen, Die gemeinschaftsdatei Regions.ini in einzelne Regionen teilen 
+	# diese dann unter dem Regionsnamen speichern, danach die Alte Regions.ini umbenennen in Regions.ini.old.
+	function regionsinizerlegen()
 {
 	# Die mit regionsconfigdateiliste erstellte Datei RegionsDateiliste.txt nach Regions.ini absuchen 
 	# und diese in einzelne nach dem Regionsnamen zerlegen und speichern.
@@ -606,7 +683,31 @@ function regionliste()
 	LOESCHEN=$(sed '/Regions/d' /$STARTVERZEICHNIS/RegionList.ini) # Alle Zeilen mit dem Eintrag Regions entfernen	.
 	echo "$LOESCHEN" > /$STARTVERZEICHNIS/RegionList.ini # Aenderung .ini entfernen speichern.
 }
-
+### Funktion moneydelete, loescht den MoneyServer ohne die OpenSim Config zu veraendern.
+function moneydelete()
+{
+	# ACHTUNG Ungetestet
+	makeverzeichnisliste
+	sleep 3
+	# MoneyServer aus den sims entfernen 
+	for (( i = 0 ; i < "$ANZAHLVERZEICHNISSLISTE" ; i++)) do
+		echo "$(tput setaf $Red) $(tput setab $White)MoneyServer ${VERZEICHNISSLISTE[$i]} geloescht$(tput sgr 0)"
+		cd /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin || return 1 # Pruefen ob Verzeichnis vorhanden ist.
+		rm -r /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/MoneyServer.exe.config # Dateien loeschen.
+		rm -r /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/MoneyServer.ini.example
+		rm -r /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/OpenSim.Data.MySQL.MySQLMoneyDataWrapper.dll
+		rm -r /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/OpenSim.Modules.Currency.dll
+		echo "$DATUM $(date +%H-%M-%S) AUTOMAPDEL: MoneyServer ${VERZEICHNISSLISTE[$i]} geloescht" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+		sleep 3
+	done
+	# MoneyServer aus Robust entfernen
+	cd /$STARTVERZEICHNIS/robust/bin || return 1
+	rm -r /$STARTVERZEICHNIS/robust/bin/MoneyServer.exe.config
+	rm -r /$STARTVERZEICHNIS/robust/bin/MoneyServer.ini.example
+	rm -r /$STARTVERZEICHNIS/robust/bin/OpenSim.Data.MySQL.MySQLMoneyDataWrapper.dll
+	rm -r /$STARTVERZEICHNIS/robust/bin/OpenSim.Modules.Currency.dll
+	echo "$DATUM $(date +%H-%M-%S) AUTOMAPDEL: MoneyServer aus Robust geloescht" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+}
 ### Funktion osupgrade
 function osupgrade()
 {
@@ -640,38 +741,38 @@ function regionbackup()
 {
 	# Backup Verzeichnis anlegen.
 	mkdir -p /$STARTVERZEICHNIS/backup/
-	# Datum für die Dateinamen in die Variable DATUM schreiben.
-	DATUM=$(date +%F)
 	sleep 3
 	SCREENNAME=$1
 	REGIONSNAME=$2	
-	dateiname=${REGIONSNAME//\"/}
-	nospace=${dateiname// /}
+	DATEINAME=${REGIONSNAME//\"/}
+	NSDATEINAME=${DATEINAME// /}
 
-	echo "$(tput setaf 4) $(tput setab 7)Region $nospace speichern$(tput sgr 0)"
+	echo "$(tput setaf 4) $(tput setab 7)Region $NSDATEINAME speichern$(tput sgr 0)"
+	echo "$DATUM $(date +%H-%M-%S) OSBACKUP: Region $NSDATEINAME speichern" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 	cd /$STARTVERZEICHNIS/"$SCREENNAME"/bin || return 1
 	# Ich kann nicht pruefen ob die Region im OpenSimulator vorhanden ist.
 	# Sollte sie nicht vorhanden sein wird root also alle Regionen gespeichert.
 	screen -S "$SCREENNAME" -p 0 -X eval "stuff 'change region ${REGIONSNAME//\"/}'^M"
-	screen -S "$SCREENNAME" -p 0 -X eval "stuff 'save oar /$STARTVERZEICHNIS/backup/'$DATUM'-$nospace.oar'^M"
-	screen -S "$SCREENNAME" -p 0 -X eval "stuff 'terrain save /$STARTVERZEICHNIS/backup/'$DATUM'-$nospace.png'^M"
-	screen -S "$SCREENNAME" -p 0 -X eval "stuff 'terrain save /$STARTVERZEICHNIS/backup/'$DATUM'-$nospace.raw'^M"
+	screen -S "$SCREENNAME" -p 0 -X eval "stuff 'save oar /$STARTVERZEICHNIS/backup/'$DATUM'-$NSDATEINAME.oar'^M"
+	screen -S "$SCREENNAME" -p 0 -X eval "stuff 'terrain save /$STARTVERZEICHNIS/backup/'$DATUM'-$NSDATEINAME.png'^M"
+	screen -S "$SCREENNAME" -p 0 -X eval "stuff 'terrain save /$STARTVERZEICHNIS/backup/'$DATUM'-$NSDATEINAME.raw'^M"
+	echo "$DATUM $(date +%H-%M-%S) OSBACKUP: Region $DATUM-$NSDATEINAME RAW und PNG Terrain gespeichert" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 	echo " "
 	sleep 10
-	if [ ! -f /$STARTVERZEICHNIS/"$SCREENNAME"/bin/Regions/"$nospace".ini ]; then
-		cp -r /$STARTVERZEICHNIS/"$SCREENNAME"/bin/Regions/Regions.ini /$STARTVERZEICHNIS/backup/"$DATUM"-"$nospace".ini
-		echo "$(tput setaf 2)Regions.ini wurde als $DATUM-$nospace.ini gespeichert."
-		echo "Bitte alle Regionen bis auf Region ${REGIONSNAME//\"/} aus dieser Datei entfernen.$(tput sgr 0)"
+	if [ ! -f /$STARTVERZEICHNIS/"$SCREENNAME"/bin/Regions/"$NSDATEINAME".ini ]; then
+		cp -r /$STARTVERZEICHNIS/"$SCREENNAME"/bin/Regions/Regions.ini /$STARTVERZEICHNIS/backup/"$DATUM"-"$NSDATEINAME".ini
+		echo "$(tput setaf 2)Regions.ini wurde als $DATUM-$NSDATEINAME.ini gespeichert."
+		echo "$DATUM $(date +%H-%M-%S) OSBACKUP: Region $DATUM-$NSDATEINAME.ini gespeichert" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 	fi
 	if [ ! -f /$STARTVERZEICHNIS/"$SCREENNAME"/bin/Regions/"${REGIONSNAME//\"/}".ini ]; then
-		cp -r /$STARTVERZEICHNIS/"$SCREENNAME"/bin/Regions/Regions.ini /$STARTVERZEICHNIS/backup/"$DATUM"-"$nospace".ini
-		echo "$(tput setaf 2)Regions.ini wurde als $DATUM-$nospace.ini gespeichert."
-		echo "Bitte alle Regionen bis auf Region ${2//\"/} aus dieser Datei entfernen.$(tput sgr 0)"
+		cp -r /$STARTVERZEICHNIS/"$SCREENNAME"/bin/Regions/Regions.ini /$STARTVERZEICHNIS/backup/"$DATUM"-"$NSDATEINAME".ini
+		echo "$(tput setaf 2)Regions.ini wurde als $DATUM-$NSDATEINAME.ini gespeichert."
+		echo "$DATUM $(date +%H-%M-%S) OSBACKUP: Region $DATUM-$NSDATEINAME.ini gespeichert" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 	fi
 	if [ ! -f /$STARTVERZEICHNIS/"$SCREENNAME"/bin/Regions/Regions.ini ]; then
-		cp -r /$STARTVERZEICHNIS/"$SCREENNAME"/bin/Regions/"$nospace".ini /$STARTVERZEICHNIS/backup/"$DATUM"-"$nospace".ini	
+		cp -r /$STARTVERZEICHNIS/"$SCREENNAME"/bin/Regions/"$NSDATEINAME".ini /$STARTVERZEICHNIS/backup/"$DATUM"-"$NSDATEINAME".ini
+		echo "$DATUM $(date +%H-%M-%S) OSBACKUP: Region $NSDATEINAME.ini gespeichert" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 	fi
-	echo "$DATUM $(date +%H-%M-%S) REGIONBACKUP: Backup wurde gestartet" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 }
 
 ### Funktion autosimstart
@@ -735,13 +836,14 @@ function automapdel()
 ### Funktion autoregionbackup
 function autoregionbackup()
 {
+	echo "$(tput setaf $Red) $(tput setab $White)Automatisches Backup wird gestartet. $(tput sgr 0)"
 	makeregionsliste
+	echo "$DATUM $(date +%H-%M-%S) OSBACKUP: Automatisches Backup wird gestartet" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 	sleep 3
 	for (( i = 0 ; i < "$ANZAHLREGIONSLISTE" ; i++)) do
 		derscreen=$(echo "${REGIONSLISTE[$i]}" | cut -d ' ' -f 1)
 		dieregion=$(echo "${REGIONSLISTE[$i]}" | cut -d ' ' -f 2)
 		regionbackup "$derscreen" "$dieregion"
-		echo "$DATUM $(date +%H-%M-%S) AUTOREGIONBACKUP: Auto Regionsbackup $derscreen - $dieregion" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 		sleep $BACKUPWARTEZEIT
 	done
 }
@@ -884,7 +986,7 @@ echo "$(tput setab $Red)Experten Funktionen$(tput sgr 0)"
 	echo "osstruktur		- $(tput setab $Magenta)ersteSIM$(tput sgr 0) $(tput setab $Blue)letzteSIM$(tput sgr 0) - Legt eine Verzeichnisstruktur an."
 	echo "compilieren 		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Kopiert fehlende Dateien und Kompiliert."
 	echo "scriptcopy 		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Kopiert die Scripte in den Source."
-	echo "moneycopy 		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Kopiert das Money in den Source."
+	echo "moneycopy 		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Kopiert Money Source in den OpenSimulator Source."
 	echo "osdelete 		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Löscht alte OpenSim Version."
 	echo "oscompi 		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Kompiliert einen neuen OpenSimulator."
 	echo "oscommand 		- $(tput setab $Magenta)Verzeichnisname$(tput sgr 0) $(tput setab $Yello)Region$(tput sgr 0) $(tput setab $Blue)Konsolenbefehl$(tput sgr 0) $(tput setab $Green)Parameter$(tput sgr 0) - Konsolenbefehl senden."
@@ -902,15 +1004,15 @@ case  $KOMMANDO  in
     astop | autostop | stop) autostop ;;
     amd | automapdel) automapdel ;;
 	ald | autologdel) autologdel ;;
-	settings)	ossettings ;;
+	s | settings)	ossettings ;;
 	rs | robuststart | rostart) rostart ;;
 	ms | moneystart | mostart) mostart ;;
 	rsto | robuststop | rostop) rostop ;;
 	mstop | moneystop | mostop) mostop ;;
-	osstop) osstop "$2" ;;
-	osstart) osstart "$2" ;;
-	gridstart) gridstart ;;
-	gridstop) gridstop ;;
+	osto | osstop) osstop "$2" ;;
+	osta | osstart) osstart "$2" ;;
+	gsta | gridstart) gridstart ;;
+	gsto | gridstop) gridstop ;;
 	sd | screendel)	autoscreenstop ;;
 	l | list | screenlist) screenlist ;;
 	w | works) works "$2" ;;
@@ -920,25 +1022,27 @@ case  $KOMMANDO  in
 	h | hilfe | help) hilfe ;;
 	asdel | assetdel) assetdel "$2" "$3" "$4" ;;
 	e | terminator) terminator ;;
-	osupgrade) osupgrade ;;
+	ou | osupgrade) osupgrade ;;
 	oscopy) oscopy ;;
-	regionbackup) regionbackup "$2" "$3" ;;
-	autoregionbackup) autoregionbackup ;;
-	compilieren) compilieren ;;
-	scriptcopy) scriptcopy ;;
-	moneycopy) moneycopy ;;
+	rb | regionbackup) regionbackup "$2" "$3" ;;
+	arb | autoregionbackup) autoregionbackup ;;
+	compi | compilieren) compilieren ;;
+	sc | scriptcopy) scriptcopy ;;
+	mc | moneycopy) moneycopy ;;
 	oscompi) oscompi ;;
-	osdelete) osdelete ;;
-	osstruktur) osstruktur "$2" "$3" ;;
-	configlesen) configlesen "$2" ;;
+	od | osdelete) osdelete ;;
+	os | osstruktur) osstruktur "$2" "$3" ;;
+	cl | configlesen) configlesen "$2" ;;
 	osc | com | oscommand) oscommand "$2" "$3" "$4" "$5" ;;
 	rl | Regionsdateiliste | regionsconfigdateiliste) regionsconfigdateiliste "$3" "$2" ;;
 	rn | RegionListe) regionliste ;;
-	regionsinizerlegen) regionsinizerlegen ;;
-	meineregionen) meineregionen ;;
+	riz | regionsinizerlegen) regionsinizerlegen ;;
+	mr | meineregionen) meineregionen ;;
+	moneydelete) moneydelete ;;
+	regionstestausgabe) regionstestausgabe ;;
     *) hilfe ;;
 esac
 
-vardel
-echo "$DATUM $(date +%H-%M-%S) MULTITOOL: Alles wurde beendet" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+echo "$DATUM $(date +%H-%M-%S) MULTITOOL: Aufgabe wurde zufriedenstellend ausgeführt" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 echo "#######################################################" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+vardel
