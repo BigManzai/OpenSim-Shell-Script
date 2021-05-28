@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# opensimMULTITOOL Version 0.29.67 (c) May 2021 Manfred Aabye
+# opensimMULTITOOL Version 0.30.68 (c) May 2021 Manfred Aabye
 # opensim.sh Basiert auf meinen Einzelscripten, an denen ich bereits 6 Jahre Arbeite und verbessere.
 # Da Server unterschiedlich sind, kann eine einwandfreie fuunktion nicht gewährleistet werden, also bitte mit bedacht verwenden.
 # Die Benutzung dieses Scriptes, oder deren Bestandteile, erfolgt auf eigene Gefahr!!!
@@ -555,6 +555,28 @@ function meineregionen()
 	done
 	echo "$DATUM $(date +%H-%M-%S) MEINEREGIONEN: Regionsliste Ende" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 }
+### Regions.ini zerlegen
+### Funktion meineregionen, listet alle Regionen aus den auf.
+function regionsinisuchen() 
+{	
+	makeverzeichnisliste
+	sleep 3
+
+	for (( i = 0 ; i < "$ANZAHLVERZEICHNISSLISTE" ; i++))
+	do
+	VERZEICHNIS="${VERZEICHNISSLISTE[$i]}"
+		REGIONSINIAUSGABE=$(find /$STARTVERZEICHNIS/"$VERZEICHNIS"/bin/Regions/ -name "Regions.ini")
+		#leerzeilen=$(echo "$REGIONSINIAUSGABE" | grep -v '^$')
+		while read -r
+		do
+			[[ -z "$REPLY" ]] && continue
+			#echo "gelesen: '$REPLY'"
+			AUSGABE=$(awk -F "[" '/\[/ {print $1 $2 $3}' "$REPLY" |sed s/'\]'//g)
+			echo "$AUSGABE"
+		done <<<"$REGIONSINIAUSGABE"
+
+	done
+}
 # Gibt ein Array aller Regionsabschnitte zurueck, regionsinizerlegen
 # $1 - Datei
 function get_regionsarray() 
@@ -578,60 +600,65 @@ function get_regionsarray()
 function get_value_from_Region_key() 
 {
   # shellcheck disable=SC2005
-  echo "$(sed -nr "/^\[$2\]/ { :l /^$3[ ]*=/ { s/.*=[ ]*//; p; q;}; n; b l;}" "$1")"
+  #echo "$(sed -nr "/^\[$2\]/ { :l /^$3[ ]*=/ { s/.*=[ ]*//; p; q;}; n; b l;}" "$1")" # Nur Parameter
+  echo "$(sed -nr "/^\[$2\]/ { :l /$3[ ]*=/ { p; q;}; n; b l;}" "$1")" # Komplette eintraege
 }
-function regionstestausgabe() 
+### Regions.ini zerlegen
+### Funktion regionsiniteilen, holt aus der Regions.ini eine Region heraus und speichert sie mit ihrem Regionsnamen.
+# Aufruf: regionsiniteilen Verzeichnis Regionsname
+# opensim.sh regionsiniteilen sim5 MeineRegion
+function regionsiniteilen()
 {
-	INI_FILE="/opt/Regions.ini" # Test Datei
-	echo "== Ausgabe der Sektionen =="
+	INIVERZEICHNIS=$1 # Auszulesendes Verzeichnis
+	RTREGIONSNAME=$2 # Auszulesende Region
+	INI_FILE="/$STARTVERZEICHNIS/$INIVERZEICHNIS/bin/Regions/Regions.ini" # Auszulesende Datei
 
-	# shellcheck disable=SC2155
-	declare -a TARGETS="$(get_regionsarray ${INI_FILE})"
-	# shellcheck disable=SC2068
-	for obj in ${TARGETS[@]}; do
-		echo "$obj"
-	done
+	echo "Empfange1: $INIVERZEICHNIS"
+	echo "Empfange2: $RTREGIONSNAME"
 
-	SECTION="City1" # Auszulesende Region
-	echo "== Ausgabe der Werte für $SECTION =="
+	if [ ! -d "$INI_FILE" ]; then
+	echo "$(tput setaf $Green)$(tput setab $White) REGIONSINITEILEN: Schreiben der Werte für $RTREGIONSNAME"
+	echo "$DATUM $(date +%H-%M-%S) REGIONSINITEILEN: Schreiben der Werte für $RTREGIONSNAME" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 
 	# shellcheck disable=SC2005
-	echo "$(get_value_from_Region_key ${INI_FILE} "$SECTION" "RegionUUID")"
-	# shellcheck disable=SC2005
-	echo "$(get_value_from_Region_key ${INI_FILE} "$SECTION" "Location")"
-	# shellcheck disable=SC2005
-	echo "$(get_value_from_Region_key ${INI_FILE} "$SECTION" "SizeX")"
-	# shellcheck disable=SC2005
-	echo "$(get_value_from_Region_key ${INI_FILE} "$SECTION" "SizeY")"
-	# shellcheck disable=SC2005
-	echo "$(get_value_from_Region_key ${INI_FILE} "$SECTION" "SizeZ")"
-	# shellcheck disable=SC2005
-	echo "$(get_value_from_Region_key ${INI_FILE} "$SECTION" "InternalAddress")"
-	# shellcheck disable=SC2005
-	echo "$(get_value_from_Region_key ${INI_FILE} "$SECTION" "InternalPort")"
-	# shellcheck disable=SC2005
-	echo "$(get_value_from_Region_key ${INI_FILE} "$SECTION" "AllowAlternatePorts")"
-	#echo "$(get_value_from_Region_key ${INI_FILE} "$SECTION" "ResolveAddress")"
-	# shellcheck disable=SC2005
-	echo "$(get_value_from_Region_key ${INI_FILE} "$SECTION" "ExternalHostName")"
-	# shellcheck disable=SC2005
-	echo "$(get_value_from_Region_key ${INI_FILE} "$SECTION" "MaxPrims")"
-	# shellcheck disable=SC2005
-	echo "$(get_value_from_Region_key ${INI_FILE} "$SECTION" "MaxAgents")"
-	# echo "$(get_value_from_Region_key ${INI_FILE} "$SECTION" "DefaultLanding")"
-	# echo "$(get_value_from_Region_key ${INI_FILE} "$SECTION" "NonPhysicalPrimMax")"
-	# echo "$(get_value_from_Region_key ${INI_FILE} "$SECTION" "PhysicalPrimMax")"
-	# echo "$(get_value_from_Region_key ${INI_FILE} "$SECTION" "ClampPrimSize")"
-	# echo "$(get_value_from_Region_key ${INI_FILE} "$SECTION" "MaxPrimsPerUser")"
-	# echo "$(get_value_from_Region_key ${INI_FILE} "$SECTION" "ScopeID")"
-	# echo "$(get_value_from_Region_key ${INI_FILE} "$SECTION" "RegionType")"
-	# echo "$(get_value_from_Region_key ${INI_FILE} "$SECTION" "MaptileStaticUUID")"
-	# echo "$(get_value_from_Region_key ${INI_FILE} "$SECTION" "MaptileStaticFile")"
-	# echo "$(get_value_from_Region_key ${INI_FILE} "$SECTION" "MasterAvatarFirstName")"
-	# echo "$(get_value_from_Region_key ${INI_FILE} "$SECTION" "MasterAvatarLastName")"
-	# echo "$(get_value_from_Region_key ${INI_FILE} "$SECTION" "MasterAvatarSandboxPassword")"
+	{
+	echo "[$RTREGIONSNAME]"
+	echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "RegionUUID")"
+	echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "Location")"
+	echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "SizeX")"
+	echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "SizeY")"
+	echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "SizeZ")"
+	echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "InternalAddress")"
+	echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "InternalPort")"
+	echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "AllowAlternatePorts")"
+	echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "ResolveAddress")"
+	echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "ExternalHostName")"
+	echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "MaxPrims")"
+	echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "MaxAgents")"
+	echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "DefaultLanding")"
+	echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "NonPhysicalPrimMax")"
+	echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "PhysicalPrimMax")"
+	echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "ClampPrimSize")"
+	echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "MaxPrimsPerUser")"
+	echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "ScopeID")"
+	echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "RegionType")"
+	echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "MaptileStaticUUID")"
+	echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "MaptileStaticFile")"
+	echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "MasterAvatarFirstName")"
+	echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "MasterAvatarLastName")"
+	echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "MasterAvatarSandboxPassword")"
+	} >> "/$STARTVERZEICHNIS/$INIVERZEICHNIS/bin/Regions/$RTREGIONSNAME.ini"
+	else
+		echo "$(tput setaf $Red)$(tput setab $White)$INI_FILE wurde nicht gefunden $(tput sgr 0)"
+		echo "$DATUM $(date +%H-%M-%S) REGIONSINITEILEN: $INI_FILE wurde nicht gefunden" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+	fi
 }
-
+	### Funktion regionsiniumbenennen, Die gemeinschaftsdatei Regions.ini sichern. 
+	function regionsiniumbenennen()
+{
+	# Regions.ini umbenennen in DATUM-Regions.ini.old
+	mv /$STARTVERZEICHNIS/"$INIVERZEICHNIS"/bin/Regions/Regions.ini /$STARTVERZEICHNIS/"$INIVERZEICHNIS"/bin/Regions/"$DATUM"-Regions.ini.old
+}
 	### Funktion regionsinizerlegen, Die gemeinschaftsdatei Regions.ini in einzelne Regionen teilen 
 	# diese dann unter dem Regionsnamen speichern, danach die Alte Regions.ini umbenennen in Regions.ini.old.
 	function regionsinizerlegen()
@@ -645,8 +672,22 @@ function regionstestausgabe()
 	for (( i = 0 ; i < "$ANZAHLVERZEICHNISSLISTE" ; i++))
 	do
 		echo "$(tput setaf $Red) $(tput setab $White)Region.ini ${VERZEICHNISSLISTE[$i]} zerlegen$(tput sgr 0)"
-		echo "Keine Funktion!"
+		echo " "
+		VERZEICHNIS="${VERZEICHNISSLISTE[$i]}"
+		# Regions.ini teilen:
+		echo "$VERZEICHNIS" # OK geht
+		INI_FILE="/$STARTVERZEICHNIS/$VERZEICHNIS/bin/Regions/Regions.ini" # Auszulesende Datei
+			# shellcheck disable=SC2155
+			declare -a TARGETS="$(get_regionsarray "${INI_FILE}")"
+			# shellcheck disable=SC2068
+			for MeineRegion in ${TARGETS[@]}; do
+				regionsiniteilen "$VERZEICHNIS" "$MeineRegion"
+				sleep 3
+				echo "regionsiniteilen $VERZEICHNIS $MeineRegion"
+			done			
 	done
+	#  Dann umbenennen:
+	mv /$STARTVERZEICHNIS/"$INIVERZEICHNIS"/bin/Regions/Regions.ini /$STARTVERZEICHNIS/"$INIVERZEICHNIS"/bin/Regions/"$DATUM"-Regions.ini.old
 }
 ### Funktion RegionListe, Die RegionListe ermitteln und mit dem Verzeichnisnamen in die RegionList.ini schreiben.
 function regionliste()
@@ -1039,7 +1080,8 @@ case  $KOMMANDO  in
 	riz | regionsinizerlegen) regionsinizerlegen ;;
 	mr | meineregionen) meineregionen ;;
 	moneydelete) moneydelete ;;
-	regionstestausgabe) regionstestausgabe ;;
+	regionsiniteilen) regionsiniteilen "$2" "$3" ;;
+	regionsinisuchen) regionsinisuchen ;;
     *) hilfe ;;
 esac
 
