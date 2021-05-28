@@ -76,11 +76,6 @@ Crontab zum prüfen noch einmal anzeigen:
 ## Test
 Ich teste gerade das automatische erstellen der Konfigurationsdatei RegionList.ini
 
-## TODO
-Backup Zickt.
-
-RegionListe erstellen kann keine Regions.ini mit mehr als einer Region verarbeiten.
-
 ## Funktionsübersicht
 ```
 #Funktion:               Parameter:              Informationen:
