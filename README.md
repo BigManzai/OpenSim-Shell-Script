@@ -120,8 +120,10 @@ oscopy                  - Verzeichnisname - Kopiert den Simulator.
 osstruktur              - ersteSIM letzteSIM - Legt eine Verzeichnisstruktur an.
 compilieren             - hat keine Parameter - Kopiert fehlende Dateien und Kompiliert.
 scriptcopy              - hat keine Parameter - Kopiert die Scripte in den Source.
-moneycopy               - hat keine Parameter - Kopiert das Money in den Source.
+moneycopy               - hat keine Parameter - Kopiert Money Source in den OpenSimulator Source.
 osdelete                - hat keine Parameter - Löscht alte OpenSim Version.
 oscompi                 - hat keine Parameter - Kompiliert einen neuen OpenSimulator.
+regionsiniteilen        - Verzeichnisname Region - kopiert aus der Regions.ini eine Region heraus.
+autoregionsiniteilen    - hat keine Parameter - aus allen Regions.ini alle Regionen vereinzeln.
 oscommand               - Verzeichnisname Region Konsolenbefehl Parameter - Konsolenbefehl senden.
 ```
