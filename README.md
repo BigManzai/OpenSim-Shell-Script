@@ -83,14 +83,14 @@ RegionListe erstellen kann keine Regions.ini mit mehr als einer Region verarbeit
 
 ## Funktionsübersicht
 ```
-Funktion:               Parameter:              Informationen:
+#Funktion:               Parameter:              Informationen:
 hilfe                   - hat keine Parameter - Diese Hilfe.
 restart                 - hat keine Parameter - Startet das gesammte Grid neu.
 autostop                - hat keine Parameter - Stoppt das gesammte Grid.
 autostart               - hat keine Parameter - Startet das gesammte Grid.
 works                   - Verzeichnisname - Einzelne screens auf Existens prüfen.
 meineregionen           - hat keine Parameter - listet alle Regionen aus den Konfigurationen auf.
-Erweiterte Funktionen
+#Erweiterte Funktionen
 rostart                 - hat keine Parameter - Startet Robust Server.
 rostop                  - hat keine Parameter - Stoppt Robust Server.
 mostart                 - hat keine Parameter - Startet Money Server.
@@ -106,7 +106,7 @@ gridstop                - hat keine Parameter - Beendet Robust und Money.
 configlesen             - Verzeichnisname - Alle Regionskonfigurationen im Verzeichnis anzeigen.
 RegionListe             - hat keine Parameter - Die RegionList.ini erstellen.
 Regionsdateiliste       - -b Bildschirm oder -d Datei Verzeichnisname - Regionsdateiliste erstellen.
-Experten Funktionen
+#Experten Funktionen
 assetdel                - screen_name Regionsname Objektname - Einzelnes Asset löschen.
 autologdel              - hat keine Parameter - Löscht alle Log Dateien.
 automapdel              - hat keine Parameter - Löscht alle Map Karten.
