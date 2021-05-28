@@ -581,32 +581,31 @@ function regionsinisuchen()
 # $1 - Datei
 function get_regionsarray() 
 {
-  # shellcheck disable=SC2207
-  ARRAY=($(grep '\[.*\]' "$1"))
-  FIXED_ARRAY=""
-  for i in "${ARRAY[@]}"; do
-    FIX=$i
-    FIX=$(echo "$FIX" | tr --delete "\r")
-    FIX=$(echo "$FIX" | tr --delete "[")
-    FIX=$(echo "$FIX" | tr --delete "]")
-    FIXED_ARRAY+="${FIX} "
-  done
-  echo "${FIXED_ARRAY}"
+	# Es fehlt eine pruefung ob Datei vorhanden ist.
+	# shellcheck disable=SC2207
+	ARRAY=($(grep '\[.*\]' "$1"))
+	FIXED_ARRAY=""
+	for i in "${ARRAY[@]}"; do
+		FIX=$i
+		FIX=$(echo "$FIX" | tr --delete "\r")
+		FIX=$(echo "$FIX" | tr --delete "[")
+		FIX=$(echo "$FIX" | tr --delete "]")
+		FIXED_ARRAY+="${FIX} "
+	done
+	echo "${FIXED_ARRAY}"
 }
 # Gibt den Wert eines bestimmten Schluessels im angegebenen Abschnitt zurueck , regionsinizerlegen
-# $1 - Datei
-# $2 - Schluessel
-# $3 - Sektion
+# $1 - Datei - $2 - Schluessel - $3 - Sektion
 function get_value_from_Region_key() 
 {
-  # shellcheck disable=SC2005
-  #echo "$(sed -nr "/^\[$2\]/ { :l /^$3[ ]*=/ { s/.*=[ ]*//; p; q;}; n; b l;}" "$1")" # Nur Parameter
-  echo "$(sed -nr "/^\[$2\]/ { :l /$3[ ]*=/ { p; q;}; n; b l;}" "$1")" # Komplette eintraege
+	# Es fehlt eine pruefung ob Datei vorhanden ist.
+	# shellcheck disable=SC2005
+	#echo "$(sed -nr "/^\[$2\]/ { :l /^$3[ ]*=/ { s/.*=[ ]*//; p; q;}; n; b l;}" "$1")" # Nur Parameter
+	echo "$(sed -nr "/^\[$2\]/ { :l /$3[ ]*=/ { p; q;}; n; b l;}" "$1")" # Komplette eintraege
 }
 ### Regions.ini zerlegen
 ### Funktion regionsiniteilen, holt aus der Regions.ini eine Region heraus und speichert sie mit ihrem Regionsnamen.
 # Aufruf: regionsiniteilen Verzeichnis Regionsname
-# opensim.sh regionsiniteilen sim5 MeineRegion
 function regionsiniteilen()
 {
 	INIVERZEICHNIS=$1 # Auszulesendes Verzeichnis
@@ -619,7 +618,7 @@ function regionsiniteilen()
 	if [ ! -d "$INI_FILE" ]; then
 	echo "$(tput setaf $Green)$(tput setab $White) REGIONSINITEILEN: Schreiben der Werte für $RTREGIONSNAME"
 	echo "$DATUM $(date +%H-%M-%S) REGIONSINITEILEN: Schreiben der Werte für $RTREGIONSNAME" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
-
+	# Schreiben der einzelnen Punkte nur wenn vorhanden ist.
 	# shellcheck disable=SC2005
 	{
 	echo "[$RTREGIONSNAME]"
@@ -653,20 +652,10 @@ function regionsiniteilen()
 		echo "$DATUM $(date +%H-%M-%S) REGIONSINITEILEN: $INI_FILE wurde nicht gefunden" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 	fi
 }
-	### Funktion regionsiniumbenennen, Die gemeinschaftsdatei Regions.ini sichern. 
-	function regionsiniumbenennen()
+### Funktion regionsinizerlegen, Die gemeinschaftsdatei Regions.ini in einzelne Regionen teilen 
+# diese dann unter dem Regionsnamen speichern, danach die Alte Regions.ini umbenennen in Regions.ini.old.
+function autoregionsiniteilen()
 {
-	# Regions.ini umbenennen in DATUM-Regions.ini.old
-	mv /$STARTVERZEICHNIS/"$INIVERZEICHNIS"/bin/Regions/Regions.ini /$STARTVERZEICHNIS/"$INIVERZEICHNIS"/bin/Regions/"$DATUM"-Regions.ini.old
-}
-	### Funktion regionsinizerlegen, Die gemeinschaftsdatei Regions.ini in einzelne Regionen teilen 
-	# diese dann unter dem Regionsnamen speichern, danach die Alte Regions.ini umbenennen in Regions.ini.old.
-	function autoregionsiniteilen()
-{
-	# Die mit regionsconfigdateiliste erstellte Datei RegionsDateiliste.txt nach Regions.ini absuchen 
-	# und diese in einzelne nach dem Regionsnamen zerlegen und speichern.
-
-	# Zum schluss RegionsDateiliste.txt loeschen und neu erstellen.
 	makeverzeichnisliste
 	sleep 3
 	for (( i = 0 ; i < "$ANZAHLVERZEICHNISSLISTE" ; i++))
@@ -677,17 +666,20 @@ function regionsiniteilen()
 		# Regions.ini teilen:
 		echo "$VERZEICHNIS" # OK geht
 		INI_FILE="/$STARTVERZEICHNIS/$VERZEICHNIS/bin/Regions/Regions.ini" # Auszulesende Datei
-			# shellcheck disable=SC2155
-			declare -a TARGETS="$(get_regionsarray "${INI_FILE}")"
+		# shellcheck disable=SC2155
+		declare -a TARGETS="$(get_regionsarray "${INI_FILE}")"
 			# shellcheck disable=SC2068
 			for MeineRegion in ${TARGETS[@]}; do
 				regionsiniteilen "$VERZEICHNIS" "$MeineRegion"
 				sleep 3
 				echo "regionsiniteilen $VERZEICHNIS $MeineRegion"
-			done			
-	done
+			done
 	#  Dann umbenennen:
-	mv /$STARTVERZEICHNIS/"$INIVERZEICHNIS"/bin/Regions/Regions.ini /$STARTVERZEICHNIS/"$INIVERZEICHNIS"/bin/Regions/"$DATUM"-Regions.ini.old
+	# Pruefung ob Datei vorhanden ist, wenn ja umbenennen.
+	if [ ! -d "$INI_FILE" ]; then
+		mv /$STARTVERZEICHNIS/"$INIVERZEICHNIS"/bin/Regions/Regions.ini /$STARTVERZEICHNIS/"$INIVERZEICHNIS"/bin/Regions/"$DATUM"-Regions.ini.old
+	fi
+	done	
 }
 ### Funktion RegionListe, Die RegionListe ermitteln und mit dem Verzeichnisnamen in die RegionList.ini schreiben.
 function regionliste()
