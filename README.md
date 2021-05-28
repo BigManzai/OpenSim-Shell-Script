@@ -73,9 +73,6 @@ Crontab zum prüfen noch einmal anzeigen:
 
      crontab -l
 
-## Test
-Ich teste gerade das automatische erstellen der Konfigurationsdatei RegionList.ini
-
 ## Funktionsübersicht
 ```
 #Funktion:               Parameter:              Informationen:
