@@ -661,7 +661,7 @@ function regionsiniteilen()
 }
 	### Funktion regionsinizerlegen, Die gemeinschaftsdatei Regions.ini in einzelne Regionen teilen 
 	# diese dann unter dem Regionsnamen speichern, danach die Alte Regions.ini umbenennen in Regions.ini.old.
-	function regionsinizerlegen()
+	function autoregionsiniteilen()
 {
 	# Die mit regionsconfigdateiliste erstellte Datei RegionsDateiliste.txt nach Regions.ini absuchen 
 	# und diese in einzelne nach dem Regionsnamen zerlegen und speichern.
@@ -1030,6 +1030,8 @@ echo "$(tput setab $Red)Experten Funktionen$(tput sgr 0)"
 	echo "moneycopy 		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Kopiert Money Source in den OpenSimulator Source."
 	echo "osdelete 		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Löscht alte OpenSim Version."
 	echo "oscompi 		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Kompiliert einen neuen OpenSimulator."
+	echo "regionsiniteilen 	- $(tput setab $Magenta)Verzeichnisname$(tput sgr 0) $(tput setab $Yello)Region$(tput sgr 0) - kopiert aus der Regions.ini eine Region heraus."
+	echo "autoregionsiniteilen 	- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - aus allen Regions.ini alle Regionen vereinzeln."
 	echo "oscommand 		- $(tput setab $Magenta)Verzeichnisname$(tput sgr 0) $(tput setab $Yello)Region$(tput sgr 0) $(tput setab $Blue)Konsolenbefehl$(tput sgr 0) $(tput setab $Green)Parameter$(tput sgr 0) - Konsolenbefehl senden."
 	echo " "
 	echo "$(tput setaf $Yello)  Der Verzeichnisname ist gleichzeitig auch der Screen Name!$(tput sgr 0)"
@@ -1077,10 +1079,10 @@ case  $KOMMANDO  in
 	osc | com | oscommand) oscommand "$2" "$3" "$4" "$5" ;;
 	rl | Regionsdateiliste | regionsconfigdateiliste) regionsconfigdateiliste "$3" "$2" ;;
 	rn | RegionListe) regionliste ;;
-	riz | regionsinizerlegen) regionsinizerlegen ;;
 	mr | meineregionen) meineregionen ;;
 	moneydelete) moneydelete ;;
-	regionsiniteilen) regionsiniteilen "$2" "$3" ;;
+	rit | regionsiniteilen) regionsiniteilen "$2" "$3" ;;
+	arit | autoregionsiniteilen) autoregionsiniteilen ;;
 	regionsinisuchen) regionsinisuchen ;;
     *) hilfe ;;
 esac
