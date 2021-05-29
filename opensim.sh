@@ -46,12 +46,7 @@ SCRIPTPATH=$(cd "$(dirname "$0")" && pwd)
 . "$SCRIPTPATH"/opensim.cnf
 
 ## Farben
-Red=1
-Green=2
-Yello=3
-Blue=4
-Magenta=5
-White=7
+Red=1; Green=2; Yello=3; Blue=4; Magenta=5; White=7
 
 cd /"$STARTVERZEICHNIS" || return 1
 sleep 1
@@ -81,8 +76,7 @@ schreibeinfo
 
 ### Funktion vardel, Variablen loeschen.
 function vardel()
-{
-	unset STARTVERZEICHNIS
+{	unset STARTVERZEICHNIS
 	unset MONEYVERZEICHNIS
 	unset ROBUSTVERZEICHNIS
 	unset WARTEZEIT
@@ -102,22 +96,22 @@ STARTVERZEICHNIS="opt" MONEYVERZEICHNIS="robust" ROBUSTVERZEICHNIS="robust" OPEN
 ### Erstellen eines Arrays aus einer Textdatei ###
 function makeverzeichnisliste() 
 {
-    VERZEICHNISSLISTE=()
-    while IFS= read -r line; do
-    VERZEICHNISSLISTE+=("$line")
-    done < /$STARTVERZEICHNIS/$SIMDATEI
-    # Anzahl der Eintraege.
-    ANZAHLVERZEICHNISSLISTE=${#VERZEICHNISSLISTE[*]}
+	VERZEICHNISSLISTE=()
+	while IFS= read -r line; do
+	VERZEICHNISSLISTE+=("$line")
+	done < /$STARTVERZEICHNIS/$SIMDATEI
+	# Anzahl der Eintraege.
+	ANZAHLVERZEICHNISSLISTE=${#VERZEICHNISSLISTE[*]}
 	# echo "$DATUM $(date +%H-%M-%S) MAKEVERZEICHNISLISTE: Verzeichnisliste wurde angefordert" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 }
 function makeregionsliste() 
 {
-    REGIONSLISTE=()
-    while IFS= read -r line; do
-    REGIONSLISTE+=("$line")
-    done < /$STARTVERZEICHNIS/$REGIONSDATEI
-    # Anzahl der Eintraege.    
-    ANZAHLREGIONSLISTE=${#REGIONSLISTE[*]}
+	REGIONSLISTE=()
+	while IFS= read -r line; do
+	REGIONSLISTE+=("$line")
+	done < /$STARTVERZEICHNIS/$REGIONSDATEI
+	# Anzahl der Eintraege.    
+	ANZAHLREGIONSLISTE=${#REGIONSLISTE[*]}
 	# echo "$DATUM $(date +%H-%M-%S) MAKEREGIONSLISTE: Regionsliste wurde angefordert" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 }
 ### Funktion assetdel, Asset von der Region loeschen.
@@ -152,8 +146,8 @@ function oscommand()
 	echo "$DATUM $(date +%H-%M-%S) OSCOMMAND: $BEFEHL $PARAMETER an $SCREEN senden" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 	screen -S "$SCREEN" -p 0 -X eval "stuff '$BEFEHL $PARAMETER'^M"
 	else
-	  echo "Der Screen $SCREEN existiert nicht."
-	  echo "$DATUM $(date +%H-%M-%S) OSCOMMAND: Der Screen $SCREEN existiert nicht" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+		echo "Der Screen $SCREEN existiert nicht."
+		echo "$DATUM $(date +%H-%M-%S) OSCOMMAND: Der Screen $SCREEN existiert nicht" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 	fi
 }
 ### Funktion works, screen pruefen ob er laeuft.
@@ -177,21 +171,21 @@ function works()
 # checkfile /pfad/zur/datei && echo "File exists" || echo "File not found!"
 function checkfile 
 {
-    [ -f "$1" ]	
-    return $?
+	[ -f "$1" ]	
+	return $?
 }
 ### Funktion mapdel, loescht die Map-Karten.
 # mapdel Verzeichnis
 function mapdel()
 {
 	if [ -d "$1" ]; then
-	  echo "$(tput setaf $Red) $(tput setab $White)OpenSimulator maptile $1 geloescht$(tput sgr 0)"
-	  cd /$STARTVERZEICHNIS/"$1"/bin || return 1
-	  rm -r maptiles/*
-	  echo "$DATUM $(date +%H-%M-%S) MAPDEL: OpenSimulator maptile $1 geloescht" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+		echo "$(tput setaf $Red) $(tput setab $White)OpenSimulator maptile $1 geloescht$(tput sgr 0)"
+		cd /$STARTVERZEICHNIS/"$1"/bin || return 1
+		rm -r maptiles/*
+		echo "$DATUM $(date +%H-%M-%S) MAPDEL: OpenSimulator maptile $1 geloescht" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 	else
-	  echo "$(tput setaf $Red)maptile $1 nicht gefunden $(tput sgr 0)"
-	  echo "$DATUM $(date +%H-%M-%S) MAPDEL: maptile $1 nicht gefunden" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+		echo "$(tput setaf $Red)maptile $1 nicht gefunden $(tput sgr 0)"
+		echo "$DATUM $(date +%H-%M-%S) MAPDEL: maptile $1 nicht gefunden" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 	fi
 }
 ### Funktion logdel, loescht die Log Dateien.
@@ -199,12 +193,12 @@ function mapdel()
 function logdel()
 {
 	if [ -d "$1" ]; then
-	  echo "$(tput setaf $Red) $(tput setab $White)OpenSimulator log $1 geloescht$(tput sgr 0)"
-	  rm /$STARTVERZEICHNIS/"$1"/bin/*.log
-	  echo "$DATUM $(date +%H-%M-%S) LOGDEL: OpenSimulator log $1 geloescht" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+		echo "$(tput setaf $Red) $(tput setab $White)OpenSimulator log $1 geloescht$(tput sgr 0)"
+		rm /$STARTVERZEICHNIS/"$1"/bin/*.log
+		echo "$DATUM $(date +%H-%M-%S) LOGDEL: OpenSimulator log $1 geloescht" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 	else
-	  echo "$(tput setaf $Red)logs nicht gefunden $(tput sgr 0)"
-	  echo "$DATUM $(date +%H-%M-%S) LOGDEL: logs nicht gefunden" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+		echo "$(tput setaf $Red)logs nicht gefunden $(tput sgr 0)"
+		echo "$DATUM $(date +%H-%M-%S) LOGDEL: logs nicht gefunden" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 	fi
 }
 ### Funktion ossettings, stellt den Linux Server fuer OpenSim ein.
@@ -234,14 +228,14 @@ function screenlist()
 function osstart()
 {
 	if [ -d "$1" ]; then
-	  echo "$(tput setaf 2) $(tput setab $White)Region $1 Starten$(tput sgr 0)"
-	  echo "$DATUM $(date +%H-%M-%S) OSSTART: Region $1 Starten" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
-	  cd /$STARTVERZEICHNIS/"$1"/bin || return 1
-	  screen -fa -S "$1" -d -U -m mono OpenSim.exe
-	  sleep 10
+		echo "$(tput setaf 2) $(tput setab $White)Region $1 Starten$(tput sgr 0)"
+		echo "$DATUM $(date +%H-%M-%S) OSSTART: Region $1 Starten" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+		cd /$STARTVERZEICHNIS/"$1"/bin || return 1
+		screen -fa -S "$1" -d -U -m mono OpenSim.exe
+		sleep 10
 	else
-	  echo "$(tput setaf $Red) $(tput setab $White)Region $1 nicht vorhanden$(tput sgr 0)"
-	  echo "$DATUM $(date +%H-%M-%S) OSSTART: Region $1 nicht vorhanden" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+		echo "$(tput setaf $Red) $(tput setab $White)Region $1 nicht vorhanden$(tput sgr 0)"
+		echo "$DATUM $(date +%H-%M-%S) OSSTART: Region $1 nicht vorhanden" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 	fi
 	return
 }
@@ -250,13 +244,13 @@ function osstart()
 function osstop()
 {
 	if screen -list | grep -q "$1"; then
-	  echo "$(tput setaf $Red) $(tput setab $White)Region $1 Beenden$(tput sgr 0)"
-	  echo "$DATUM $(date +%H-%M-%S) OSSTOP: Region $1 Beenden" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
-	  screen -S "$1" -p 0 -X eval "stuff 'shutdown'^M"
-	  sleep 10
+		echo "$(tput setaf $Red) $(tput setab $White)Region $1 Beenden$(tput sgr 0)"
+		echo "$DATUM $(date +%H-%M-%S) OSSTOP: Region $1 Beenden" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+		screen -S "$1" -p 0 -X eval "stuff 'shutdown'^M"
+		sleep 10
 	else
-	  echo "$(tput setaf $Red) $(tput setab $White)Region $1 nicht vorhanden$(tput sgr 0)"
-	  echo "$DATUM $(date +%H-%M-%S) OSSTOP: Region $1 nicht vorhanden" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+		echo "$(tput setaf $Red) $(tput setab $White)Region $1 nicht vorhanden$(tput sgr 0)"
+		echo "$DATUM $(date +%H-%M-%S) OSSTOP: Region $1 nicht vorhanden" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 	fi
 	return
 }
@@ -264,56 +258,56 @@ function osstop()
 function rostart()
 {
 	if checkfile /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/Robust.exe; then
-	  echo "$(tput setaf 2) $(tput setab $White)Robust Start$(tput sgr 0)"
-	  cd /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin || return 1
-	  echo "$DATUM $(date +%H-%M-%S) ROSTART: Robust Start" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
-	  screen -fa -S RO -d -U -m mono Robust.exe 
-	  #/$STARTVERZEICHNIS/osscreen.sh "RO" "/$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/Robust.exe"
-	  sleep $WARTEZEIT
+		echo "$(tput setaf 2) $(tput setab $White)Robust Start$(tput sgr 0)"
+		cd /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin || return 1
+		echo "$DATUM $(date +%H-%M-%S) ROSTART: Robust Start" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+		screen -fa -S RO -d -U -m mono Robust.exe 
+		#/$STARTVERZEICHNIS/osscreen.sh "RO" "/$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/Robust.exe"
+		sleep $WARTEZEIT
 	else
-	  echo "$(tput setaf 2)Robust wurde nicht gefunden.$(tput sgr 0)"
-	  echo "$DATUM $(date +%H-%M-%S) ROSTART: Robust wurde nicht gefunden" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+		echo "$(tput setaf 2)Robust wurde nicht gefunden.$(tput sgr 0)"
+		echo "$DATUM $(date +%H-%M-%S) ROSTART: Robust wurde nicht gefunden" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 	fi
 }
 ### Funktion rostop, Robust Server herunterfahren.
 function rostop()
 {
 	if screen -list | grep -q "RO"; then
-	  echo "$(tput setaf $Red) $(tput setab $White)RobustServer Beenden$(tput sgr 0)"
-	  screen -S RO -p 0 -X eval "stuff 'shutdown'^M"
-	  echo "$DATUM $(date +%H-%M-%S) ROSTOP: RobustServer Beenden" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
-	  sleep $WARTEZEIT	  
+		echo "$(tput setaf $Red) $(tput setab $White)RobustServer Beenden$(tput sgr 0)"
+		screen -S RO -p 0 -X eval "stuff 'shutdown'^M"
+		echo "$DATUM $(date +%H-%M-%S) ROSTOP: RobustServer Beenden" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+		sleep $WARTEZEIT	  
 	else
-	  echo "$(tput setaf $Red) $(tput setab $White)RobustServer nicht vorhanden$(tput sgr 0)"
-	  echo "$DATUM $(date +%H-%M-%S) ROSTOP: RobustServer nicht vorhanden" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+		echo "$(tput setaf $Red) $(tput setab $White)RobustServer nicht vorhanden$(tput sgr 0)"
+		echo "$DATUM $(date +%H-%M-%S) ROSTOP: RobustServer nicht vorhanden" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 	fi	
 }
 ### Funktion mostart, Money Server starten.
 function mostart()
 {
 	if checkfile /$STARTVERZEICHNIS/$MONEYVERZEICHNIS/bin/MoneyServer.exe; then
-	  echo "$(tput setaf 2) $(tput setab $White)MoneyServer Start$(tput sgr 0)"
-	  cd /$STARTVERZEICHNIS/$MONEYVERZEICHNIS/bin || return 1
-	  echo "$DATUM $(date +%H-%M-%S) MOSTART: MoneyServer Start" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
-	  screen -fa -S MO -d -U -m mono MoneyServer.exe
-	  #/$STARTVERZEICHNIS/osscreen.sh "MO" "/$STARTVERZEICHNIS/$MONEYVERZEICHNIS/bin/MoneyServer.exe"
-	  sleep $MONEYWARTEZEIT
+		echo "$(tput setaf 2) $(tput setab $White)MoneyServer Start$(tput sgr 0)"
+		cd /$STARTVERZEICHNIS/$MONEYVERZEICHNIS/bin || return 1
+		echo "$DATUM $(date +%H-%M-%S) MOSTART: MoneyServer Start" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+		screen -fa -S MO -d -U -m mono MoneyServer.exe
+		#/$STARTVERZEICHNIS/osscreen.sh "MO" "/$STARTVERZEICHNIS/$MONEYVERZEICHNIS/bin/MoneyServer.exe"
+		sleep $MONEYWARTEZEIT
 	else
-	  echo "$(tput setaf 2)MoneyServer wurde nicht gefunden.$(tput sgr 0)"
-	  echo "$DATUM $(date +%H-%M-%S) MOSTART: MoneyServer wurde nicht gefunden" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+		echo "$(tput setaf 2)MoneyServer wurde nicht gefunden.$(tput sgr 0)"
+		echo "$DATUM $(date +%H-%M-%S) MOSTART: MoneyServer wurde nicht gefunden" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 	fi
 }
 ### Funktion mostop, Money Server herunterfahren.
 function mostop()
 {
 	if screen -list | grep -q "MO"; then
-	  echo "$(tput setaf $Red) $(tput setab $White)MoneyServer Beenden$(tput sgr 0)"
-	  screen -S MO -p 0 -X eval "stuff 'shutdown'^M"
-	  echo "$DATUM $(date +%H-%M-%S) MOSTOP: MoneyServer Beenden" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+		echo "$(tput setaf $Red) $(tput setab $White)MoneyServer Beenden$(tput sgr 0)"
+		screen -S MO -p 0 -X eval "stuff 'shutdown'^M"
+		echo "$DATUM $(date +%H-%M-%S) MOSTOP: MoneyServer Beenden" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 	  sleep $MONEYWARTEZEIT	  
 	else
-	  echo "$(tput setaf $Red) $(tput setab $White)MoneyServer nicht vorhanden$(tput sgr 0)"
-	  echo "$DATUM $(date +%H-%M-%S) MOSTOP: MoneyServer nicht vorhanden" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+		echo "$(tput setaf $Red) $(tput setab $White)MoneyServer nicht vorhanden$(tput sgr 0)"
+		echo "$DATUM $(date +%H-%M-%S) MOSTOP: MoneyServer nicht vorhanden" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 	fi	
 }
 ### Funktion osscreenstop, beendet Screeens.
@@ -321,12 +315,12 @@ function mostop()
 function osscreenstop()
 {
 	if screen -list | grep -q "$1"; then
-	  echo "$(tput setaf $Red) $(tput setab $White)Screeen $1 Beenden$(tput sgr 0)"
-	  echo "$DATUM $(date +%H-%M-%S) OSSCREENSTOP: Screeen $1 Beenden" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
-	  screen -S "$1" -X quit	  
+		echo "$(tput setaf $Red) $(tput setab $White)Screeen $1 Beenden$(tput sgr 0)"
+		echo "$DATUM $(date +%H-%M-%S) OSSCREENSTOP: Screeen $1 Beenden" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+		screen -S "$1" -X quit	  
 	else
-	  echo "$(tput setaf $Red) $(tput setab $White)Screeen $1 nicht vorhanden$(tput sgr 0)"
-	  echo "$DATUM $(date +%H-%M-%S) OSSCREENSTOP: Screeen $1 nicht vorhanden" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+		echo "$(tput setaf $Red) $(tput setab $White)Screeen $1 nicht vorhanden$(tput sgr 0)"
+		echo "$DATUM $(date +%H-%M-%S) OSSCREENSTOP: Screeen $1 nicht vorhanden" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 	fi
 	echo "No screen session found. Ist hier kein Fehler, sondern ein Beweis, das alles zuvor sauber heruntergefahren wurde."
 }
@@ -337,7 +331,7 @@ function gridstart()
 		echo "$(tput setaf $Red) $(tput setab $White)RobustServer läuft bereits $(tput sgr 0)"
 	else
 		echo "$DATUM $(date +%H-%M-%S) ROSTART: Start" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
-	  	rostart
+		rostart
 	fi
 
 	if screen -list | grep -q MO; then
@@ -503,7 +497,7 @@ function oscopyrobust()
 ### Funktion oscopysim
 function oscopysim()
 {
-    makeverzeichnisliste
+	makeverzeichnisliste
 	echo "$(tput setab $Green)Kopiere Simulatoren! $(tput sgr 0)"
 	echo " "
 	sleep 3
@@ -531,13 +525,13 @@ function configlesen()
 function regionsconfigdateiliste() 
 {
 	VERZEICHNIS=$1
-    declare -A Dateien # Array erstellen
-    # shellcheck disable=SC2178
-    Dateien=$(find /$STARTVERZEICHNIS/"$VERZEICHNIS"/bin/Regions/ -name "*.ini") # Alle Regions.ini in das Assoziative Arrays mit der Option -A schreiben oder ein indiziertes mit -a.
-    for i in "${Dateien[@]}"; do # Array abarbeiten
-        if [ "$2" = "-d" ]; then echo "$i" >> RegionsDateiliste.txt; fi  # In die config Datei hinzufuegen.
-        if [ "$2" = "-b" ]; then echo "$i"; fi  # In die config Datei hinzufuegen.
-    done
+	declare -A Dateien # Array erstellen
+	# shellcheck disable=SC2178
+	Dateien=$(find /$STARTVERZEICHNIS/"$VERZEICHNIS"/bin/Regions/ -name "*.ini") # Alle Regions.ini in das Assoziative Arrays mit der Option -A schreiben oder ein indiziertes mit -a.
+	for i in "${Dateien[@]}"; do # Array abarbeiten
+		if [ "$2" = "-d" ]; then echo "$i" >> RegionsDateiliste.txt; fi  # In die config Datei hinzufuegen.
+		if [ "$2" = "-b" ]; then echo "$i"; fi  # In die config Datei hinzufuegen.
+	done
 }
 ### Funktion meineregionen, listet alle Regionen aus den auf.
 function meineregionen() 
@@ -620,32 +614,31 @@ function regionsiniteilen()
 	echo "$DATUM $(date +%H-%M-%S) REGIONSINITEILEN: Schreiben der Werte für $RTREGIONSNAME" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 	# Schreiben der einzelnen Punkte nur wenn vorhanden ist.
 	# shellcheck disable=SC2005
-	{
-	echo "[$RTREGIONSNAME]"
-	echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "RegionUUID")"
-	echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "Location")"
-	echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "SizeX")"
-	echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "SizeY")"
-	echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "SizeZ")"
-	echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "InternalAddress")"
-	echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "InternalPort")"
-	echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "AllowAlternatePorts")"
-	echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "ResolveAddress")"
-	echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "ExternalHostName")"
-	echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "MaxPrims")"
-	echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "MaxAgents")"
-	echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "DefaultLanding")"
-	echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "NonPhysicalPrimMax")"
-	echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "PhysicalPrimMax")"
-	echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "ClampPrimSize")"
-	echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "MaxPrimsPerUser")"
-	echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "ScopeID")"
-	echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "RegionType")"
-	echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "MaptileStaticUUID")"
-	echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "MaptileStaticFile")"
-	echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "MasterAvatarFirstName")"
-	echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "MasterAvatarLastName")"
-	echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "MasterAvatarSandboxPassword")"
+	{	echo "[$RTREGIONSNAME]"
+		echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "RegionUUID")"
+		echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "Location")"
+		echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "SizeX")"
+		echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "SizeY")"
+		echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "SizeZ")"
+		echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "InternalAddress")"
+		echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "InternalPort")"
+		echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "AllowAlternatePorts")"
+		echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "ResolveAddress")"
+		echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "ExternalHostName")"
+		echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "MaxPrims")"
+		echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "MaxAgents")"
+		echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "DefaultLanding")"
+		echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "NonPhysicalPrimMax")"
+		echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "PhysicalPrimMax")"
+		echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "ClampPrimSize")"
+		echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "MaxPrimsPerUser")"
+		echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "ScopeID")"
+		echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "RegionType")"
+		echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "MaptileStaticUUID")"
+		echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "MaptileStaticFile")"
+		echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "MasterAvatarFirstName")"
+		echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "MasterAvatarLastName")"
+		echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "MasterAvatarSandboxPassword")"
 	} >> "/$STARTVERZEICHNIS/$INIVERZEICHNIS/bin/Regions/$RTREGIONSNAME.ini"
 	else
 		echo "$(tput setaf $Red)$(tput setab $White)$INI_FILE wurde nicht gefunden $(tput sgr 0)"
@@ -685,7 +678,7 @@ function autoregionsiniteilen()
 function regionliste()
 {
 	# Alte RegionList.ini sichern und in RegionList.ini.old umbenennen.
-    if [ -f "/$STARTVERZEICHNIS/RegionList.ini" ]; then
+	if [ -f "/$STARTVERZEICHNIS/RegionList.ini" ]; then
 		if [ -f "/$STARTVERZEICHNIS/RegionList.ini.old" ]; then
 			rm -r /$STARTVERZEICHNIS/RegionList.ini.old
 		fi
@@ -702,8 +695,8 @@ function regionliste()
 		# shellcheck disable=SC2178
 		Dateien=$(find /$STARTVERZEICHNIS/"$VERZEICHNIS"/bin/Regions/ -name "*.ini")
 		for i2 in "${Dateien[@]}"; do # Array abarbeiten
-        echo "$i2" >> RegionList.ini
-    	done
+		echo "$i2" >> RegionList.ini
+		done
 	done
 	# Ueberfluessige Zeichen entfernen
 	LOESCHEN=$(sed s/'\/opt\/'//g /$STARTVERZEICHNIS/RegionList.ini) # /opt/ entfernen.
@@ -807,7 +800,6 @@ function regionbackup()
 		echo "$DATUM $(date +%H-%M-%S) OSBACKUP: Region $NSDATEINAME.ini gespeichert" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 	fi
 }
-
 ### Funktion autosimstart
 function autosimstart()
 {
@@ -912,7 +904,6 @@ function autoscreenstop()
 
 	echo "$DATUM $(date +%H-%M-%S) AUTOSCREENSTOP: Auto Screen Stopp abgeschlossen" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 }
-
 ### Funktion autostart
 function autostart()
 {
@@ -964,7 +955,6 @@ function autorestart()
 	echo " "
 	echo "$DATUM $(date +%H-%M-%S) AUTORESTART: Auto Restart abgeschlossen" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 }
-
 ### Funktion info
 function info()
 {
@@ -973,13 +963,9 @@ function info()
 	echo " MONO THREAD Einstellung: ${MONO_THREADS_PER_CPU}"
 	echo " Spracheinstellung: ${LANG} $(tput sgr 0)"
 }
-
 ### Funktion hilfe
 function hilfe()
 {
-#info
-#echo " "
-
 	echo "$(tput setab $Magenta)Funktion:$(tput sgr 0)		$(tput setab $Green)Parameter:$(tput sgr 0)		$(tput setab $Blue)Informationen:$(tput sgr 0)"
 	echo "hilfe 			- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Diese Hilfe."
 	echo "restart 		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Startet das gesammte Grid neu."
@@ -1029,15 +1015,14 @@ echo "$(tput setab $Red)Experten Funktionen$(tput sgr 0)"
 	echo "$(tput setaf $Yello)  Der Verzeichnisname ist gleichzeitig auch der Screen Name!$(tput sgr 0)"
 	echo "$DATUM $(date +%H-%M-%S) HILFE: Hilfe wurde angefordert" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 }
-
 ### Eingabeauswertung:
 case  $KOMMANDO  in
-    r | restart) autorestart ;;
-    sta | autosimstart | simstart) autosimstart ;;
-    sto | autosimstop | simstop) autosimstop ;;
-    astart | autostart | start) autotart ;;
-    astop | autostop | stop) autostop ;;
-    amd | automapdel) automapdel ;;
+	r | restart) autorestart ;;
+	sta | autosimstart | simstart) autosimstart ;;
+	sto | autosimstop | simstop) autosimstop ;;
+	astart | autostart | start) autotart ;;
+	astop | autostop | stop) autostop ;;
+	amd | automapdel) automapdel ;;
 	ald | autologdel) autologdel ;;
 	s | settings)	ossettings ;;
 	rs | robuststart | rostart) rostart ;;
@@ -1076,7 +1061,7 @@ case  $KOMMANDO  in
 	rit | regionsiniteilen) regionsiniteilen "$2" "$3" ;;
 	arit | autoregionsiniteilen) autoregionsiniteilen ;;
 	regionsinisuchen) regionsinisuchen ;;
-    *) hilfe ;;
+	*) hilfe ;;
 esac
 
 echo "$DATUM $(date +%H-%M-%S) MULTITOOL: Aufgabe wurde zufriedenstellend ausgeführt" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
