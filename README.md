@@ -86,7 +86,9 @@ osstop                  - Verzeichnisname       - Stoppt einen einzelnen Simulat
 meineregionen           - hat keine Parameter - listet alle Regionen aus den Konfigurationen auf.
 autologdel              - hat keine Parameter   - Löscht alle Log Dateien.
 automapdel              - hat keine Parameter   - Löscht alle Map Karten.
+```
 
+```
 #Erweiterte Funktionen
 regionbackup            - Verzeichnisname Regionsname - Backup einer ausgewählten Region.
 assetdel                - screen_name Regionsname Objektname - Einzelnes Asset löschen.
@@ -104,7 +106,9 @@ logdel                  - Verzeichnisname - Löscht alle Simulator Log Dateien i
 mapdel                  - Verzeichnisname - Löscht alle Simulator Map-Karten im Verzeichnis.
 settings                - hat keine Parameter - setzt Linux Einstellungen.
 configlesen             - Verzeichnisname - Alle Regionskonfigurationen im Verzeichnis anzeigen.
+```
 
+```
 #Experten Funktionen
 osupgrade               - hat keine Parameter - Installiert eine neue OpenSim Version.
 autoregionbackup        - hat keine Parameter - Backup aller Regionen.
