@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# opensimMULTITOOL Version 0.31.73 (c) May 2021 Manfred Aabye
+# opensimMULTITOOL Version 0.31.75 (c) May 2021 Manfred Aabye
 # opensim.sh Basiert auf meinen Einzelscripten, an denen ich bereits 6 Jahre Arbeite und verbessere.
 # Da Server unterschiedlich sind, kann eine einwandfreie fuunktion nicht gewährleistet werden, also bitte mit bedacht verwenden.
 # Die Benutzung dieses Scriptes, oder deren Bestandteile, erfolgt auf eigene Gefahr!!!
@@ -265,7 +265,7 @@ function rostart()
 		#/$STARTVERZEICHNIS/osscreen.sh "RO" "/$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/Robust.exe"
 		sleep $WARTEZEIT
 	else
-		echo "$(tput setaf 2)Robust wurde nicht gefunden.$(tput sgr 0)"
+		echo "$(tput setaf $Red)Robust wurde nicht gefunden.$(tput sgr 0)"
 		echo "$DATUM $(date +%H-%M-%S) ROSTART: Robust wurde nicht gefunden" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 	fi
 }
@@ -293,7 +293,7 @@ function mostart()
 		#/$STARTVERZEICHNIS/osscreen.sh "MO" "/$STARTVERZEICHNIS/$MONEYVERZEICHNIS/bin/MoneyServer.exe"
 		sleep $MONEYWARTEZEIT
 	else
-		echo "$(tput setaf 2)MoneyServer wurde nicht gefunden.$(tput sgr 0)"
+		echo "$(tput setaf $Red)MoneyServer wurde nicht gefunden.$(tput sgr 0)"
 		echo "$DATUM $(date +%H-%M-%S) MOSTART: MoneyServer wurde nicht gefunden" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 	fi
 }
@@ -477,7 +477,7 @@ function osdelete()
 		echo " "
 		echo "$DATUM $(date +%H-%M-%S) OSDELETE: Lösche alte opensim1 Dateien" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 	else
-		echo "$STARTVERZEICHNIS Verzeichnis existiert nicht"
+		echo "$(tput setaf $Red) $(tput setab $White) $STARTVERZEICHNIS Verzeichnis existiert nicht$(tput sgr 0)"
 	fi
 }
 ### Funktion oscopyrobust
@@ -494,7 +494,7 @@ function oscopyrobust()
 		echo " "
 		echo "$DATUM $(date +%H-%M-%S) OSCOPY: Robust kopieren" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 	else
-		echo "$ROBUSTVERZEICHNIS Verzeichnis existiert nicht"
+		echo " "
 	fi
 }
 ### Funktion oscopysim
@@ -609,9 +609,6 @@ function regionsiniteilen()
 	RTREGIONSNAME=$2 # Auszulesende Region
 	INI_FILE="/$STARTVERZEICHNIS/$INIVERZEICHNIS/bin/Regions/Regions.ini" # Auszulesende Datei
 
-	echo "Empfange1: $INIVERZEICHNIS"
-	echo "Empfange2: $RTREGIONSNAME"
-
 	if [ ! -d "$INI_FILE" ]; then
 	echo "$(tput setaf $Green)$(tput setab $White) REGIONSINITEILEN: Schreiben der Werte für $RTREGIONSNAME"
 	echo "$DATUM $(date +%H-%M-%S) REGIONSINITEILEN: Schreiben der Werte für $RTREGIONSNAME" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
@@ -715,7 +712,6 @@ function regionliste()
 ### Funktion moneydelete, loescht den MoneyServer ohne die OpenSim Config zu veraendern.
 function moneydelete()
 {
-	# ACHTUNG Ungetestet
 	makeverzeichnisliste
 	sleep 3
 	# MoneyServer aus den sims entfernen 
@@ -726,16 +722,19 @@ function moneydelete()
 		rm -r /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/MoneyServer.ini.example
 		rm -r /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/OpenSim.Data.MySQL.MySQLMoneyDataWrapper.dll
 		rm -r /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/OpenSim.Modules.Currency.dll
-		echo "$DATUM $(date +%H-%M-%S) AUTOMAPDEL: MoneyServer ${VERZEICHNISSLISTE[$i]} geloescht" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+		echo "$DATUM $(date +%H-%M-%S) MONEYDELETE: MoneyServer ${VERZEICHNISSLISTE[$i]} geloescht" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 		sleep 3
 	done
 	# MoneyServer aus Robust entfernen
-	cd /$STARTVERZEICHNIS/robust/bin || return 1
-	rm -r /$STARTVERZEICHNIS/robust/bin/MoneyServer.exe.config
-	rm -r /$STARTVERZEICHNIS/robust/bin/MoneyServer.ini.example
-	rm -r /$STARTVERZEICHNIS/robust/bin/OpenSim.Data.MySQL.MySQLMoneyDataWrapper.dll
-	rm -r /$STARTVERZEICHNIS/robust/bin/OpenSim.Modules.Currency.dll
-	echo "$DATUM $(date +%H-%M-%S) AUTOMAPDEL: MoneyServer aus Robust geloescht" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+	if [ -d /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/ ]
+	then
+		cd /$STARTVERZEICHNIS/robust/bin || return 1
+		rm -r /$STARTVERZEICHNIS/robust/bin/MoneyServer.exe.config
+		rm -r /$STARTVERZEICHNIS/robust/bin/MoneyServer.ini.example
+		rm -r /$STARTVERZEICHNIS/robust/bin/OpenSim.Data.MySQL.MySQLMoneyDataWrapper.dll
+		rm -r /$STARTVERZEICHNIS/robust/bin/OpenSim.Modules.Currency.dll
+		echo "$DATUM $(date +%H-%M-%S) MONEYDELETE: MoneyServer aus Robust geloescht" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+	fi
 }
 ### Funktion osgitholen, kopiert eine Entwicklerversion.
 function osgitholen()
@@ -747,26 +746,31 @@ function osgitholen()
 		rm -r /$STARTVERZEICHNIS/opensim1
 		mv /$STARTVERZEICHNIS/opensim /$STARTVERZEICHNIS/opensim1
         git clone git://opensimulator.org/git/opensim opensim
-		echo "$DATUM $(date +%H-%M-%S) OPENSIMHOLEN: Kopieren der Entwicklungsversion des OpenSimulator aus dem Git" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+		echo "$DATUM $(date +%H-%M-%S) OPENSIMHOLEN: Git klonen" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 	else
 		echo "$(tput setaf 1) $(tput setab 7)Kopieren der Entwicklungsversion des OpenSimulator aus dem Git$(tput sgr 0)"
 		git clone git://opensimulator.org/git/opensim opensim
-		echo "$DATUM $(date +%H-%M-%S) OPENSIMHOLEN: Kopieren der Entwicklungsversion des OpenSimulator aus dem Git" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+		echo "$DATUM $(date +%H-%M-%S) OPENSIMHOLEN: Git klonen" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 	fi 
 }
 ### Funktion osupgrade
 function osupgrade()
 {
 	echo "$(tput setab $Green)Das Grid wird jetzt upgegradet! $(tput sgr 0)"
+	echo "$DATUM $(date +%H-%M-%S) OSUPGRADE: Das Grid wird jetzt upgegradet" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 	echo " "
 	# Grid Stoppen.
+	echo "$DATUM $(date +%H-%M-%S) OSUPGRADE: Alles Beenden" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 	autostop
 	# Kopieren.
-	oscopyrobust
+	echo "$DATUM $(date +%H-%M-%S) OSUPGRADE: Neue Version Installieren" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+	oscopyrobust	
 	oscopysim
+	# MoneyServer eventuell loeschen.	
+	if [ "$MONEYVERZEICHNIS" = "keins" ] || [ "$MONEYVERZEICHNIS" = "no" ] || [ "$MONEYVERZEICHNIS" = "nein" ]; then moneydelete; fi
 	# Grid Starten.
+	echo "$DATUM $(date +%H-%M-%S) OSUPGRADE: Das Grid wird jetzt gestartet" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 	autostart
-	echo "$DATUM $(date +%H-%M-%S) OSUPGRADE: Das Grid wird jetzt upgegradet" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 }
 
 # function restore()
