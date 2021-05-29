@@ -123,5 +123,6 @@ regionsiniteilen        - Verzeichnisname Region - kopiert aus der Regions.ini e
 autoregionsiniteilen    - hat keine Parameter - aus allen Regions.ini alle Regionen vereinzeln.
 RegionListe             - hat keine Parameter - Die RegionList.ini erstellen.
 Regionsdateiliste       - -b Bildschirm oder -d Datei Verzeichnisname - Regionsdateiliste erstellen.
+osgitholen              - hat keine Parameter - kopiert eine OpenSimulator Entwicklerversion.
 terminator              - hat keine Parameter - Killt alle laufenden Screens.
 ```
