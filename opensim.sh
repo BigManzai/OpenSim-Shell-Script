@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# opensimMULTITOOL Version 0.30.68 (c) May 2021 Manfred Aabye
+# opensimMULTITOOL Version 0.30.71 (c) May 2021 Manfred Aabye
 # opensim.sh Basiert auf meinen Einzelscripten, an denen ich bereits 6 Jahre Arbeite und verbessere.
 # Da Server unterschiedlich sind, kann eine einwandfreie fuunktion nicht gewährleistet werden, also bitte mit bedacht verwenden.
 # Die Benutzung dieses Scriptes, oder deren Bestandteile, erfolgt auf eigene Gefahr!!!
@@ -217,7 +217,7 @@ function ossettings()
 ### Funktion screenlist, Laufende Screens auflisten.
 function screenlist()
 {
-	echo "$(tput setaf 2) Alle laufende Screens! $(tput sgr 0)"
+	echo "$(tput setaf 2)$(tput setab $White) Alle laufende Screens! $(tput sgr 0)"
 	screen -ls
 	echo "$DATUM $(date +%H-%M-%S) SCREENLIST: Alle laufende Screens" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 	screen -ls >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
@@ -371,15 +371,18 @@ function terminator()
 function oscompi()
 {
 	echo "$(tput setab $Green)Kompilierungsvorgang startet! $(tput sgr 0)"
+	echo "$DATUM $(date +%H-%M-%S) OSCOMPI: Kompilierungsvorgang startet" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 	# In das opensim Verzeichnis wechseln wenn es das gibt ansonsten beenden.
 	cd /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS || return 1
 	
 	echo 'Prebuildvorgang startet!'
+	echo "$DATUM $(date +%H-%M-%S) OSCOMPI: Prebuildvorgang startet" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 	# runprebuild19.sh startbar machen und starten.
 	chmod +x runprebuild19.sh
 	./runprebuild19.sh
 
 	echo 'Kompilierungsvorgang startet!'
+	echo "$DATUM $(date +%H-%M-%S) OSCOMPI: Kompilierungsvorgang startet" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 	# ohne log Datei.
 	msbuild /p:Configuration=Release
 	# mit log Datei.
@@ -406,7 +409,7 @@ function moneycopy()
 {
 	if [ -d /$STARTVERZEICHNIS/$MONEYSOURCE/ ]; then
 		echo "$(tput setab $Green)Money Kopiervorgang startet! $(tput sgr 0)"
-		echo "$DATUM $(date +%H-%M-%S) MONEYCOPY: Money Kopiervorgang" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+		echo "$DATUM $(date +%H-%M-%S) MONEYCOPY: Money Kopiervorgang gestartet" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 		cp -r /$STARTVERZEICHNIS/$MONEYSOURCE/bin /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS
 		cp -r /$STARTVERZEICHNIS/$MONEYSOURCE/addon-modules /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS
 		echo " "
@@ -419,22 +422,22 @@ function moneycopy()
 function compilieren()
 {
 	echo "$(tput setab $Green)Bauen eines neuen OpenSimulators wird gestartet! $(tput sgr 0)"
-	echo "$DATUM $(date +%H-%M-%S) COMPILIEREN: Bauen eines neuen OpenSimulators" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+	echo "$DATUM $(date +%H-%M-%S) COMPILIEREN: Bauen eines neuen OpenSimulators wird gestartet" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 	# Nachsehen ob Verzeichnis überhaupt existiert.
-	if [ -f "/$STARTVERZEICHNIS/$SCRIPTSOURCE/" ]; then
+	if [ ! -f "/$STARTVERZEICHNIS/$SCRIPTSOURCE/" ]; then
 		scriptcopy
 	else
 		echo "OSSL Script Verzeichnis existiert nicht."
 		echo "$DATUM $(date +%H-%M-%S) COMPILIEREN: OSSL Script Verzeichnis existiert nicht" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 	fi
-	if [ -f "/$STARTVERZEICHNIS/$MONEYSOURCE/" ]; then
+	if [ ! -f "/$STARTVERZEICHNIS/$MONEYSOURCE/" ]; then
 		moneycopy
 	else
 		echo "MoneyServer Verzeichnis existiert nicht."
 		echo "$DATUM $(date +%H-%M-%S) COMPILIEREN: MoneyServer Verzeichnis existiert nicht" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 	fi
-	if [ -f "/$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/" ]; then
-	oscompi
+	if [ ! -f "/$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/" ]; then
+		oscompi
 	else
 		echo "opensim Verzeichnis existiert nicht."
 		echo "$DATUM $(date +%H-%M-%S) COMPILIEREN: opensim Verzeichnis existiert nicht" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
@@ -922,13 +925,13 @@ function autostop()
 	echo "$(tput setab 1)Stoppe alles! $(tput sgr 0)"
 	autosimstop
 	gridstop
-	echo "$AUTOSTOPZEIT Sekunden warten bis die Simulatoren heruntergefahren sind!"
+	# echo "$AUTOSTOPZEIT Sekunden warten bis die Simulatoren heruntergefahren sind!"
 	sleep $AUTOSTOPZEIT
 	echo " "
 	echo "$(tput setab 1)Beende alle noch offenen Screens! $(tput sgr 0)"
 	autoscreenstop
-	echo " "
-	screenlist
+	# echo " "
+	# screenlist
 	echo " "
 	echo "$DATUM $(date +%H-%M-%S) AUTOSTOP: Auto Stopp abgeschlossen" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 }
@@ -938,7 +941,6 @@ function autorestart()
 	echo "$(tput setab 1)Stoppe alles! $(tput sgr 0)"
 	autosimstop
 	gridstop
-	echo "$(tput setaf 2)60 Sekunden warten bis die Simulatoren heruntergefahren sind! $(tput sgr 0)"
 	sleep 60
 	echo " "
 	echo "$(tput setab 1)Beende alle noch offenen Screens! $(tput sgr 0)"
