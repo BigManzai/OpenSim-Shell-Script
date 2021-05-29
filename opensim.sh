@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# opensimMULTITOOL Version 0.30.72 (c) May 2021 Manfred Aabye
+# opensimMULTITOOL Version 0.31.73 (c) May 2021 Manfred Aabye
 # opensim.sh Basiert auf meinen Einzelscripten, an denen ich bereits 6 Jahre Arbeite und verbessere.
 # Da Server unterschiedlich sind, kann eine einwandfreie fuunktion nicht gewährleistet werden, also bitte mit bedacht verwenden.
 # Die Benutzung dieses Scriptes, oder deren Bestandteile, erfolgt auf eigene Gefahr!!!
@@ -737,10 +737,11 @@ function moneydelete()
 	rm -r /$STARTVERZEICHNIS/robust/bin/OpenSim.Modules.Currency.dll
 	echo "$DATUM $(date +%H-%M-%S) AUTOMAPDEL: MoneyServer aus Robust geloescht" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 }
-### Funktion opensimgitholen, kopiert eine Entwicklerversion.
-function opensimgitholen()
+### Funktion osgitholen, kopiert eine Entwicklerversion.
+function osgitholen()
 {
-	if [ -d /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/ ]; then
+	if [ -d /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/ ]
+	then
 		echo "$(tput setaf 1) $(tput setab 7)Kopieren der Entwicklungsversion des OpenSimulator aus dem Git$(tput sgr 0)"
 		cd /$STARTVERZEICHNIS  || return 1
 		rm -r /$STARTVERZEICHNIS/opensim1
@@ -748,7 +749,9 @@ function opensimgitholen()
         git clone git://opensimulator.org/git/opensim opensim
 		echo "$DATUM $(date +%H-%M-%S) OPENSIMHOLEN: Kopieren der Entwicklungsversion des OpenSimulator aus dem Git" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 	else
-		echo "$STARTVERZEICHNIS Verzeichnis existiert nicht"
+		echo "$(tput setaf 1) $(tput setab 7)Kopieren der Entwicklungsversion des OpenSimulator aus dem Git$(tput sgr 0)"
+		git clone git://opensimulator.org/git/opensim opensim
+		echo "$DATUM $(date +%H-%M-%S) OPENSIMHOLEN: Kopieren der Entwicklungsversion des OpenSimulator aus dem Git" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 	fi 
 }
 ### Funktion osupgrade
@@ -1026,7 +1029,7 @@ echo "$(tput setab $Red)Experten Funktionen$(tput sgr 0)"
 	echo "autoregionsiniteilen 	- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - aus allen Regions.ini alle Regionen vereinzeln."
 	echo "RegionListe 		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Die RegionList.ini erstellen."
 	echo "Regionsdateiliste 	- $(tput setab $Blue)-b Bildschirm oder -d Datei$(tput sgr 0) $(tput setab $Magenta)Verzeichnisname$(tput sgr 0) - Regionsdateiliste erstellen."
-	echo "opensimgitholen 		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - kopiert eine OpenSimulator Entwicklerversion aus dem Git."
+	echo "osgitholen 		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - kopiert eine OpenSimulator Entwicklerversion."
 	echo "terminator 		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Killt alle laufenden Screens."
 	echo " "
 	echo "$(tput setaf $Yello)  Der Verzeichnisname ist gleichzeitig auch der Screen Name!$(tput sgr 0)"
@@ -1078,7 +1081,7 @@ case  $KOMMANDO  in
 	rit | regionsiniteilen) regionsiniteilen "$2" "$3" ;;
 	arit | autoregionsiniteilen) autoregionsiniteilen ;;
 	regionsinisuchen) regionsinisuchen ;;
-	osg | opensimgitholen) opensimgitholen ;;
+	osg | osgitholen) osgitholen ;;
 	*) hilfe ;;
 esac
 
