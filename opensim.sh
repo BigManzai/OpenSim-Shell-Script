@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# opensimMULTITOOL Version 0.31.75 (c) May 2021 Manfred Aabye
+# opensimMULTITOOL Version 0.32.77 (c) May 2021 Manfred Aabye
 # opensim.sh Basiert auf meinen Einzelscripten, an denen ich bereits 6 Jahre Arbeite und verbessere.
 # Da Server unterschiedlich sind, kann eine einwandfreie fuunktion nicht gewährleistet werden, also bitte mit bedacht verwenden.
 # Die Benutzung dieses Scriptes, oder deren Bestandteile, erfolgt auf eigene Gefahr!!!
@@ -16,7 +16,7 @@ echo "$(tput setaf 2) | |__| || |_) ||  __/| | | | ____) || || | | | | || |_| ||
 echo "  \____/ |  __/  \___||_| |_||_____/ |_||_| |_| |_| \____||_| \____| \__|\___/ |_|   "
 echo "         | |                                                                         "
 echo "         |_|                                                                         "
-echo "	    $(tput setaf 2)opensim$(tput setaf 4)MULTITOOL$(tput sgr 0)"
+echo "	    $(tput setaf 2)opensim$(tput setaf 4)MULTITOOL$(tput sgr 0) 0.32.77"
 echo " "
 
 DATUM=$(date +%d-%m-%Y)
@@ -443,9 +443,28 @@ function compilieren()
 		echo "$DATUM $(date +%H-%M-%S) COMPILIEREN: opensim Verzeichnis existiert nicht" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 	fi
 }
-# Legt die Verzeichnisstruktur fuer OpenSim an.
-# Aufruf: opensim.sh osstruktur ersteSIM letzteSIM
-# Beispiel: ./opensim.sh osstruktur 1 10 - erstellt ein Grid Verzeichnis fuer 10 Simulatoren inklusive der SimulatorList.ini.
+### Funktion prebuild, Aufruf Beispiel: opensim.sh prebuild 1160.
+function osprebuild()
+{
+	NUMMER=$1
+	echo "$(tput setab $Green)Version umbenennen und Release einstellen. $(tput sgr 0)"
+	echo "$DATUM $(date +%H-%M-%S) PREBUILD: Version umbenennen und Release einstellen" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+	#unzip opensim-0.9.2.0Dev-"$NUMMER"-*.zip
+
+	# Ist Zip installiert wenn nicht installieren.
+
+	# schauen wie die nummer ist von opensim-0.9.2.0Dev-1160-g4e8c87f.zip
+	
+	# oeffne text und ändere Version, Release und Namen
+	# sed -i schreibt sofort - s/Suchwort/Ersatzwort/g - Verzeichnis/Dateiname.Endung
+	sed -i s/0.9.2.0/0.9.2."$NUMMER"/g /$STARTVERZEICHNIS/opensim/OpenSim/Framework/VersionInfo.cs
+	sed -i s/Flavour.Dev/Flavour.Release/g /$STARTVERZEICHNIS/opensim/OpenSim/Framework/VersionInfo.cs
+	sed -i s/Yeti//g /$STARTVERZEICHNIS/opensim/OpenSim/Framework/VersionInfo.cs
+	sed -i s/' + flavour'//g /$STARTVERZEICHNIS/opensim/OpenSim/Framework/VersionInfo.cs
+	}
+	# Legt die Verzeichnisstruktur fuer OpenSim an.
+	# Aufruf: opensim.sh osstruktur ersteSIM letzteSIM
+	# Beispiel: ./opensim.sh osstruktur 1 10 - erstellt ein Grid Verzeichnis fuer 10 Simulatoren inklusive der SimulatorList.ini.
 function osstruktur()
 {
 	if [ ! -f "/$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/" ]; then
@@ -1024,6 +1043,7 @@ echo "$(tput setab $Red)Experten Funktionen$(tput sgr 0)"
 	echo "autoregionbackup	- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Backup aller Regionen."
 	echo "oscopy			- $(tput setab $Magenta)Verzeichnisname$(tput sgr 0) - Kopiert den Simulator."
 	echo "osstruktur		- $(tput setab $Magenta)ersteSIM$(tput sgr 0) $(tput setab $Blue)letzteSIM$(tput sgr 0) - Legt eine Verzeichnisstruktur an."
+	echo "osprebuild		- $(tput setab $Green)Versionsnummer$(tput sgr 0) - Aendert die Versionseinstellungen 0.9.2.XXXX"
 	echo "compilieren 		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Kopiert fehlende Dateien und Kompiliert."
 	echo "oscompi 		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Kompiliert einen neuen OpenSimulator ohne kopieren."
 	echo "scriptcopy 		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Kopiert die Scripte in den Source."
@@ -1086,6 +1106,7 @@ case  $KOMMANDO  in
 	arit | autoregionsiniteilen) autoregionsiniteilen ;;
 	regionsinisuchen) regionsinisuchen ;;
 	osg | osgitholen) osgitholen ;;
+	osprebuild) osprebuild "$2" ;;
 	*) hilfe ;;
 esac
 
