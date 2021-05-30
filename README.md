@@ -1,6 +1,6 @@
 # OpenSim-Shell-Script
 ![GitHub Logo](https://github.com/BigManzai/OpenSim-Shell-Script/blob/main/opensimMultitool.jpg)
-opensimMULTITOOL, Shell Script,  Version 0.31.75
+opensimMULTITOOL, Shell Script, Version 0.32.77
 
 opensim.sh Basiert auf meinen Einzelscripten, an denen ich bereits 6 Jahre Arbeite und verbessere.
 
@@ -114,6 +114,7 @@ osupgrade               - hat keine Parameter - Installiert eine neue OpenSim Ve
 autoregionbackup        - hat keine Parameter - Backup aller Regionen.
 oscopy                  - Verzeichnisname - Kopiert den Simulator.
 osstruktur              - ersteSIM letzteSIM - Legt eine Verzeichnisstruktur an.
+osprebuild              - Versionsnummer - Aendert die Versionseinstellungen 0.9.2.XXXX
 compilieren             - hat keine Parameter - Kopiert fehlende Dateien und Kompiliert.
 oscompi                 - hat keine Parameter - Kompiliert einen neuen OpenSimulator ohne kopieren.
 scriptcopy              - hat keine Parameter - Kopiert die Scripte in den Source.
