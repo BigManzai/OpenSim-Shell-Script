@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# opensimMULTITOOL Version 0.32.77 (c) May 2021 Manfred Aabye
+# opensimMULTITOOL Version 0.32.79 (c) May 2021 Manfred Aabye
 # opensim.sh Basiert auf meinen Einzelscripten, an denen ich bereits 6 Jahre Arbeite und verbessere.
 # Da Server unterschiedlich sind, kann eine einwandfreie fuunktion nicht gewährleistet werden, also bitte mit bedacht verwenden.
 # Die Benutzung dieses Scriptes, oder deren Bestandteile, erfolgt auf eigene Gefahr!!!
@@ -418,6 +418,33 @@ function moneycopy()
 		echo "$DATUM $(date +%H-%M-%S) SCRIPTCOPY: Script Assets sind nicht vorhanden" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 	fi	
 }
+### Funktion pythoncopy kopieren.
+function pythoncopy()
+{
+	if [ -d /$STARTVERZEICHNIS/OpensimPython/ ]; then
+		echo "$(tput setab $Green)python wird kopiert! $(tput sgr 0)"
+		echo "$DATUM $(date +%H-%M-%S) PYTHONCOPY: python wird kopiert" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+		cp -r /$STARTVERZEICHNIS/OpensimPython /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/addon-modules
+	echo " "
+	else
+		echo "$(tput setab $Green)python ist nicht vorhanden! $(tput sgr 0)"
+		echo "$DATUM $(date +%H-%M-%S) PYTHONCOPY: python ist nicht vorhanden" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+	fi
+}
+### Funktion chrisoscopy, Money Dateien kopieren.
+function chrisoscopy()
+{
+	# /opt/Chris.OS.Additions
+	if [ -d /$STARTVERZEICHNIS/$MONEYSOURCE/ ]; then
+		echo "$(tput setab $Green)Chris.OS.Additions Kopiervorgang startet! $(tput sgr 0)"
+		echo "$DATUM $(date +%H-%M-%S) CHRISOSCOPY: Chris.OS.Additions Kopiervorgang gestartet" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+		cp -r /$STARTVERZEICHNIS/Chris.OS.Additions /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/addon-modules
+		echo " "
+	else
+		echo "$(tput setab $Green)Chris.OS.Additions ist nicht vorhanden! $(tput sgr 0)"
+		echo "$DATUM $(date +%H-%M-%S) CHRISOSCOPY: Chris.OS.Additions ist nicht vorhanden" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+	fi	
+}
 ### Funktion compilieren, kompilieren des OpenSimulator.
 function compilieren()
 {
@@ -430,12 +457,21 @@ function compilieren()
 		echo "OSSL Script Verzeichnis existiert nicht."
 		echo "$DATUM $(date +%H-%M-%S) COMPILIEREN: OSSL Script Verzeichnis existiert nicht" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 	fi
+
 	if [ ! -f "/$STARTVERZEICHNIS/$MONEYSOURCE/" ]; then
 		moneycopy
 	else
 		echo "MoneyServer Verzeichnis existiert nicht."
 		echo "$DATUM $(date +%H-%M-%S) COMPILIEREN: MoneyServer Verzeichnis existiert nicht" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 	fi
+
+	if [ ! -f "/$STARTVERZEICHNIS/OpensimPython/" ]; then
+		pythoncopy
+	else
+		echo "MoneyServer Verzeichnis existiert nicht."
+		echo "$DATUM $(date +%H-%M-%S) COMPILIEREN: OpensimPython Verzeichnis existiert nicht" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+	fi
+
 	if [ ! -f "/$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/" ]; then
 		oscompi
 	else
@@ -507,7 +543,7 @@ function oscopyrobust()
 		echo "$(tput setab $Green)Kopiere Robust, Money! $(tput sgr 0)"
 		echo " "
 		sleep 3
-		echo "$(tput setaf $Green)Robust und Money kopiert$(tput sgr 0)"
+		echo "$(tput setaf $Green) $(tput setab $White)Robust und Money kopiert$(tput sgr 0)"
 		cd /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin || return 1
 		cp -r /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS
 		echo " "
@@ -785,6 +821,11 @@ function osupgrade()
 	echo "$DATUM $(date +%H-%M-%S) OSUPGRADE: Neue Version Installieren" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 	oscopyrobust	
 	oscopysim
+	echo " "
+	echo "$DATUM $(date +%H-%M-%S) OSUPGRADE: Log Dateien loeschen!" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+	echo "$(tput setab 1)Log Dateien löschen! $(tput sgr 0)"
+	autologdel
+	echo " "
 	# MoneyServer eventuell loeschen.	
 	if [ "$MONEYVERZEICHNIS" = "keins" ] || [ "$MONEYVERZEICHNIS" = "no" ] || [ "$MONEYVERZEICHNIS" = "nein" ]; then moneydelete; fi
 	# Grid Starten.
@@ -900,6 +941,27 @@ function automapdel()
 		echo "$DATUM $(date +%H-%M-%S) AUTOMAPDEL: OpenSimulator maptile ${VERZEICHNISSLISTE[$i]} geloescht" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 		sleep 3
 	done
+	autorobustmapdel
+}
+### Funktion autorobustmapdel
+function autorobustmapdel()
+{
+	echo "$(tput setaf $Red) $(tput setab $White)OpenSimulator maptile aus $ROBUSTVERZEICHNIS geloescht$(tput sgr 0)"
+	cd /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin || return 1
+	rm -r maptiles/*
+	echo "$DATUM $(date +%H-%M-%S) AUTOMAPDEL: OpenSimulator maptile aus $ROBUSTVERZEICHNIS geloescht" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+}
+### Funktion cleaninstal
+function cleaninstal()
+{
+
+	if [ ! -f "/$STARTVERZEICHNIS/opensim/addon-modules/" ]; then
+		rm -r $STARTVERZEICHNIS/opensim/addon-modules/*
+	else
+		echo "addon-modules Verzeichnis existiert nicht."
+		echo "$DATUM $(date +%H-%M-%S) CLEANINSTAL: addon-modules Verzeichnis existiert nicht" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+	fi
+
 }
 ### Funktion autoregionbackup
 function autoregionbackup()
@@ -996,6 +1058,28 @@ function autorestart()
 	screenlist
 	echo " "
 	echo "$DATUM $(date +%H-%M-%S) AUTORESTART: Auto Restart abgeschlossen" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+}
+function manniversion() 
+{
+    VERSIONSNUMMER=$1
+    cd /$STARTVERZEICHNIS || exit
+	echo "$DATUM $(date +%H-%M-%S) MANNIVERSION: cd /$STARTVERZEICHNIS" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+    #apt update
+    #apt upgrade
+    osdelete
+	echo "$DATUM $(date +%H-%M-%S) MANNIVERSION: osdelete" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+    unzip opensim-0.9.2.0Dev-"$VERSIONSNUMMER"-*.zip
+	echo "$DATUM $(date +%H-%M-%S) MANNIVERSION: entpacken" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+
+    mv /$STARTVERZEICHNIS/opensim-0.9.2.0Dev-1169-*/ /$STARTVERZEICHNIS/opensim/
+	echo "$DATUM $(date +%H-%M-%S) MANNIVERSION: umbenennen " >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+
+    osprebuild "$VERSIONSNUMMER"
+	echo "$DATUM $(date +%H-%M-%S) MANNIVERSION: Konfigurieren" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+    compilieren
+	echo "$DATUM $(date +%H-%M-%S) MANNIVERSION: compilieren" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+
+    #/$STARTVERZEICHNIS/opensim.sh osupgrade
 }
 ### Funktion info
 function info()
@@ -1107,6 +1191,9 @@ case  $KOMMANDO  in
 	regionsinisuchen) regionsinisuchen ;;
 	osg | osgitholen) osgitholen ;;
 	osprebuild) osprebuild "$2" ;;
+	chrisoscopy) chrisoscopy ;;
+	manniversion) manniversion "$2" ;;
+	cleaninstal) cleaninstal ;;
 	*) hilfe ;;
 esac
 
