@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# opensimMULTITOOL Version 0.32.79 (c) May 2021 Manfred Aabye
+# opensimMULTITOOL Version 0.33.80 (c) May 2021 Manfred Aabye
 # opensim.sh Basiert auf meinen Einzelscripten, an denen ich bereits 6 Jahre Arbeite und verbessere.
 # Da Server unterschiedlich sind, kann eine einwandfreie fuunktion nicht gewährleistet werden, also bitte mit bedacht verwenden.
 # Die Benutzung dieses Scriptes, oder deren Bestandteile, erfolgt auf eigene Gefahr!!!
@@ -963,6 +963,59 @@ function cleaninstal()
 	fi
 
 }
+### Funktion allclean, loescht Log, dll, so, exe Dateien fuer einen clean install.
+# allclean Verzeichnis
+function allclean()
+{
+	if [ -d "$1" ]; then
+		echo "$(tput setaf $Red) $(tput setab $White)OpenSimulator log $1 geloescht$(tput sgr 0)"
+		rm /$STARTVERZEICHNIS/"$1"/bin/*.log
+		rm /$STARTVERZEICHNIS/"$1"/bin/*.dll
+		rm /$STARTVERZEICHNIS/"$1"/bin/*.exe
+		rm /$STARTVERZEICHNIS/"$1"/bin/*.so		
+		rm /$STARTVERZEICHNIS/"$1"/bin/*.xml
+		rm /$STARTVERZEICHNIS/"$1"/bin/*.dylib
+		rm /$STARTVERZEICHNIS/"$1"/bin/*.example
+		rm /$STARTVERZEICHNIS/"$1"/bin/*.sample
+		rm /$STARTVERZEICHNIS/"$1"/bin/*.txt
+		rm /$STARTVERZEICHNIS/"$1"/bin/*.config
+		rm /$STARTVERZEICHNIS/"$1"/bin/*.py
+		rm /$STARTVERZEICHNIS/"$1"/bin/*.old
+		echo "$DATUM $(date +%H-%M-%S) clean: OpenSimulator log $1 geloescht" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+	else
+		echo "$(tput setaf $Red)logs nicht gefunden $(tput sgr 0)"
+		echo "$DATUM $(date +%H-%M-%S) clean: logs nicht gefunden" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+	fi
+}
+### Funktion autoallclean
+function autoallclean()
+{
+	makeverzeichnisliste
+	sleep 3
+	for (( i = 0 ; i < "$ANZAHLVERZEICHNISSLISTE" ; i++)) do
+		echo "$(tput setaf $Red) $(tput setab $White)OpenSimulator alles ${VERZEICHNISSLISTE[$i]} geloescht$(tput sgr 0)"
+		rm /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/*.log
+		rm /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/*.dll
+		rm /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/*.exe
+		rm /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/*.so		
+		rm /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/*.xml
+		rm /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/*.dylib
+		rm /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/*.example
+		rm /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/*.sample
+		rm /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/*.txt
+		rm /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/*.config
+		rm /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/*.py
+		rm /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/*.old
+
+		rm -r /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/assetcache/*
+		rm -r /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/maptiles/*
+		rm -r /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/MeshCache/*
+		rm -r /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/j2kDecodeCache/*
+		rm -r /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/ScriptEngines/*
+		echo "$DATUM $(date +%H-%M-%S) autoallclean: OpenSimulator alles ${VERZEICHNISSLISTE[$i]} geloescht" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+		sleep 3
+	done
+}
 ### Funktion autoregionbackup
 function autoregionbackup()
 {
@@ -1194,6 +1247,8 @@ case  $KOMMANDO  in
 	chrisoscopy) chrisoscopy ;;
 	manniversion) manniversion "$2" ;;
 	cleaninstal) cleaninstal ;;
+	autoallclean) autoallclean ;;
+	allclean) allclean "$2" ;;
 	*) hilfe ;;
 esac
 
