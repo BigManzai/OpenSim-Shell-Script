@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# opensimMULTITOOL Version 0.33.80 (c) May 2021 Manfred Aabye
+# opensimMULTITOOL Version 0.33.81 (c) May 2021 Manfred Aabye
 # opensim.sh Basiert auf meinen Einzelscripten, an denen ich bereits 6 Jahre Arbeite und verbessere.
 # Da Server unterschiedlich sind, kann eine einwandfreie fuunktion nicht gewährleistet werden, also bitte mit bedacht verwenden.
 # Die Benutzung dieses Scriptes, oder deren Bestandteile, erfolgt auf eigene Gefahr!!!
@@ -16,7 +16,7 @@ echo "$(tput setaf 2) | |__| || |_) ||  __/| | | | ____) || || | | | | || |_| ||
 echo "  \____/ |  __/  \___||_| |_||_____/ |_||_| |_| |_| \____||_| \____| \__|\___/ |_|   "
 echo "         | |                                                                         "
 echo "         |_|                                                                         "
-echo "	    $(tput setaf 2)opensim$(tput setaf 4)MULTITOOL$(tput sgr 0) 0.33.80" # Versionsausgabe
+echo "	    $(tput setaf 2)opensim$(tput setaf 4)MULTITOOL$(tput sgr 0) 0.33.81" # Versionsausgabe
 echo " "
 
 DATUM=$(date +%d-%m-%Y)
@@ -477,6 +477,30 @@ function compilieren()
 	else
 		echo "opensim Verzeichnis existiert nicht."
 		echo "$DATUM $(date +%H-%M-%S) COMPILIEREN: opensim Verzeichnis existiert nicht" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+	fi
+}
+### Funktion makeaot.
+function makeaot()
+{
+	if [ ! -f "/$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/" ]; then
+	cd /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin || exit
+	mono --aot=mcpu=native,bind-to-runtime-version -O=all Nini.dll
+	mono --aot=mcpu=native,bind-to-runtime-version -O=all DotNetOpen*.dll
+	mono --aot=mcpu=native,bind-to-runtime-version -O=all Ionic.Zip.dll
+	mono --aot=mcpu=native,bind-to-runtime-version -O=all Newtonsoft.Json.dll
+	mono --aot=mcpu=native,bind-to-runtime-version -O=all C5.dll
+	mono --aot=mcpu=native,bind-to-runtime-version -O=all CSJ2K.dll
+	mono --aot=mcpu=native,bind-to-runtime-version -O=all Npgsql.dll
+	mono --aot=mcpu=native,bind-to-runtime-version -O=all RestSharp.dll
+	mono --aot=mcpu=native,bind-to-runtime-version -O=all Mono*.dll
+	mono --aot=mcpu=native,bind-to-runtime-version -O=all MySql*.dll
+	mono --aot=mcpu=native,bind-to-runtime-version -O=all OpenMetaverse*.dll
+	mono --aot=mcpu=native,bind-to-runtime-version -O=all OpenSim*.dll
+	mono --aot=mcpu=native,bind-to-runtime-version -O=all OpenSim*.exe
+	mono --aot=mcpu=native,bind-to-runtime-version -O=all Robust*.exe
+	else
+		echo "opensim Verzeichnis existiert nicht."
+		echo "$DATUM $(date +%H-%M-%S) MAKEAOT: opensim Verzeichnis existiert nicht" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 	fi
 }
 ### Funktion prebuild, Aufruf Beispiel: opensim.sh prebuild 1160.
@@ -1286,6 +1310,7 @@ case  $KOMMANDO  in
 	cleaninstal) cleaninstal ;;
 	autoallclean) autoallclean ;;
 	allclean) allclean "$2" ;;
+	makeaot) makeaot ;;
 	*) hilfe ;;
 esac
 
