@@ -16,7 +16,7 @@ echo "$(tput setaf 2) | |__| || |_) ||  __/| | | | ____) || || | | | | || |_| ||
 echo "  \____/ |  __/  \___||_| |_||_____/ |_||_| |_| |_| \____||_| \____| \__|\___/ |_|   "
 echo "         | |                                                                         "
 echo "         |_|                                                                         "
-echo "	    $(tput setaf 2)opensim$(tput setaf 4)MULTITOOL$(tput sgr 0) 0.32.77"
+echo "	    $(tput setaf 2)opensim$(tput setaf 4)MULTITOOL$(tput sgr 0) 0.33.80" # Versionsausgabe
 echo " "
 
 DATUM=$(date +%d-%m-%Y)
@@ -906,15 +906,31 @@ function autosimstart()
 	fi
 }
 ### Funktion autosimstop
+# function autosimstop()
+# {
+# 	makeverzeichnisliste
+# 	sleep 3
+# 	for (( i = 0 ; i < "$ANZAHLVERZEICHNISSLISTE" ; i++)) do
+# 		echo "$(tput setaf $Red) $(tput setab $White)Regionen OpenSimulator ${VERZEICHNISSLISTE[$i]} Beenden$(tput sgr 0)"
+# 		screen -S "${VERZEICHNISSLISTE[$i]}" -p 0 -X eval "stuff 'shutdown'^M"
+# 		echo "$DATUM $(date +%H-%M-%S) AUTOSIMSTOP: Regionen OpenSimulator ${VERZEICHNISSLISTE[$i]} Beenden" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+# 		sleep $STOPWARTEZEIT
+# 	done
+# }
+### Funktion autosimstop
 function autosimstop()
 {
 	makeverzeichnisliste
 	sleep 3
 	for (( i = 0 ; i < "$ANZAHLVERZEICHNISSLISTE" ; i++)) do
-		echo "$(tput setaf $Red) $(tput setab $White)Regionen OpenSimulator ${VERZEICHNISSLISTE[$i]} Beenden$(tput sgr 0)"
-		screen -S "${VERZEICHNISSLISTE[$i]}" -p 0 -X eval "stuff 'shutdown'^M"
-		echo "$DATUM $(date +%H-%M-%S) AUTOSIMSTOP: Regionen OpenSimulator ${VERZEICHNISSLISTE[$i]} Beenden" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
-		sleep $STOPWARTEZEIT
+		if screen -list | grep -q "${VERZEICHNISSLISTE[$i]}"; then
+			echo "$(tput setaf $Red) $(tput setab $White)Regionen OpenSimulator ${VERZEICHNISSLISTE[$i]} Beenden$(tput sgr 0)"
+			screen -S "${VERZEICHNISSLISTE[$i]}" -p 0 -X eval "stuff 'shutdown'^M"
+			echo "$DATUM $(date +%H-%M-%S) AUTOSIMSTOP: Regionen OpenSimulator ${VERZEICHNISSLISTE[$i]} Beenden" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+			sleep $STOPWARTEZEIT
+		else
+			echo "$(tput setaf $Red)${VERZEICHNISSLISTE[$i]} läuft nicht $(tput sgr 0)"
+		fi
 	done
 }
 ### Funktion autologdel
