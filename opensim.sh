@@ -465,12 +465,12 @@ function compilieren()
 		echo "$DATUM $(date +%H-%M-%S) COMPILIEREN: MoneyServer Verzeichnis existiert nicht" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 	fi
 
-	if [ ! -f "/$STARTVERZEICHNIS/OpensimPython/" ]; then
-		pythoncopy
-	else
-		echo "MoneyServer Verzeichnis existiert nicht."
-		echo "$DATUM $(date +%H-%M-%S) COMPILIEREN: OpensimPython Verzeichnis existiert nicht" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
-	fi
+	#if [ ! -f "/$STARTVERZEICHNIS/OpensimPython/" ]; then
+	#	pythoncopy
+	#else
+	#	echo "MoneyServer Verzeichnis existiert nicht."
+	#	echo "$DATUM $(date +%H-%M-%S) COMPILIEREN: OpensimPython Verzeichnis existiert nicht" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+	#fi
 
 	if [ ! -f "/$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/" ]; then
 		oscompi
@@ -1015,6 +1015,27 @@ function autoallclean()
 		echo "$DATUM $(date +%H-%M-%S) autoallclean: OpenSimulator alles ${VERZEICHNISSLISTE[$i]} geloescht" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 		sleep 3
 	done
+
+	echo "$(tput setaf $Red) $(tput setab $White)OpenSimulator alles in $ROBUSTVERZEICHNIS geloescht$(tput sgr 0)"
+	rm /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/*.log
+	rm /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/*.dll
+	rm /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/*.exe
+	rm /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/*.so		
+	rm /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/*.xml
+	rm /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/*.dylib
+	rm /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/*.example
+	rm /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/*.sample
+	rm /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/*.txt
+	rm /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/*.config
+	rm /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/*.py
+	rm /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/*.old
+
+	rm -r /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/assetcache/*
+	rm -r /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/maptiles/*
+	rm -r /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/MeshCache/*
+	rm -r /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/j2kDecodeCache/*
+	rm -r /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/ScriptEngines/*
+	echo "$DATUM $(date +%H-%M-%S) autoallclean: OpenSimulator alles in $ROBUSTVERZEICHNIS geloescht" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 }
 ### Funktion autoregionbackup
 function autoregionbackup()
