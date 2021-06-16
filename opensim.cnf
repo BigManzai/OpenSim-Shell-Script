@@ -1,4 +1,6 @@
 ### Einstellungen ###
+## Sprache
+	SPRACHE="de.cnf"
 ## Das Startverzeichnis home oder opt zum Beispiel.
 	STARTVERZEICHNIS="opt"
 	MONEYVERZEICHNIS="robust"

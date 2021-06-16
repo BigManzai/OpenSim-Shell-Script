@@ -44,6 +44,9 @@ SCRIPTPATH=$(cd "$(dirname "$0")" && pwd)
 # Variablen aus config Datei laden opensim.cnf muss sich im gleichen Verzeichnis wie opensim.sh befinden.
 # shellcheck disable=SC1091
 . "$SCRIPTPATH"/opensim.cnf
+# Sprache laden z.B. de.cnf muss sich im gleichen Verzeichnis wie opensim.sh befinden.
+# shellcheck disable=SC1091
+. "$SCRIPTPATH"/"$SPRACHE"
 
 ## Farben
 Red=1; Green=2; Yello=3; Blue=4; Magenta=5; White=7
@@ -61,12 +64,12 @@ function schreibeinfo()
 	if [ "$FILESIZE" \< "$NULL" ]
 	then
 	{	echo "#######################################################"
-		echo "$DATUM $(date +%H-%M-%S) MULTITOOL: wurde gestartet"
-		echo "$DATUM $(date +%H-%M-%S) INFO: Server Name: ${HOSTNAME}"
-		echo "$DATUM $(date +%H-%M-%S) INFO: Bash Version: ${BASH_VERSION}"
-		echo "$DATUM $(date +%H-%M-%S) INFO: MONO THREAD Einstellung: ${MONO_THREADS_PER_CPU}"
-		echo "$DATUM $(date +%H-%M-%S) INFO: Spracheinstellung: ${LANG}"
-		echo "$DATUM $(date +%H-%M-%S) INFO: Screen Version: $(screen --version)"
+		echo "$DATUM $(date +%H-%M-%S) $A10001"
+		echo "$DATUM $(date +%H-%M-%S) $A10002 ${HOSTNAME}"
+		echo "$DATUM $(date +%H-%M-%S) $A10003 ${BASH_VERSION}"
+		echo "$DATUM $(date +%H-%M-%S) $A10004 ${MONO_THREADS_PER_CPU}"
+		echo "$DATUM $(date +%H-%M-%S) $A10005 ${LANG}"
+		echo "$DATUM $(date +%H-%M-%S) $A10006 $(screen --version)"
 		echo " "
 	} >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 	fi
@@ -1254,8 +1257,9 @@ echo "$(tput setab $Red)Experten Funktionen$(tput sgr 0)"
 	echo "osgitholen 		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - kopiert eine OpenSimulator Git Entwicklerversion."
 	echo "terminator 		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Killt alle laufenden Screens."
 	echo " "
-	echo "$(tput setaf $Yello)  Der Verzeichnisname ist gleichzeitig auch der Screen Name!$(tput sgr 0)"
-	echo "$DATUM $(date +%H-%M-%S) HILFE: Hilfe wurde angefordert" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+	#echo "$(tput setaf $Yello)  Der Verzeichnisname ist gleichzeitig auch der Screen Name!$(tput sgr 0)"
+	echo "$(tput setaf $Yello)  $Z10001 $(tput sgr 0)"
+	echo "$DATUM $(date +%H-%M-%S) $Z10000" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 }
 ### Eingabeauswertung:
 case  $KOMMANDO  in
@@ -1314,6 +1318,6 @@ case  $KOMMANDO  in
 	*) hilfe ;;
 esac
 
-echo "$DATUM $(date +%H-%M-%S) MULTITOOL: Aufgabe wurde zufriedenstellend ausgeführt" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+echo "$DATUM $(date +%H-%M-%S) $Z10002" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 echo "#######################################################" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 vardel
