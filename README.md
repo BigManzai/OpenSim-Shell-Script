@@ -129,3 +129,4 @@ Regionsdateiliste       - -b Bildschirm oder -d Datei Verzeichnisname - Regionsd
 osgitholen              - hat keine Parameter - kopiert eine OpenSimulator Entwicklerversion.
 terminator              - hat keine Parameter - Killt alle laufenden Screens.
 ```
+Eine Funktionsliste gibt es hier in der Wiki.
