@@ -142,4 +142,4 @@ oscompiaot	        - hat keine Parameter   - Kompiliert einen neuen OpenSimulato
 makeaot	            - hat keine Parameter   - makeaot aot.
 ```
 
-Eine Funktionsliste gibt es hier in der Wiki.
+Eine Funktionsliste aller Funktionen gibt es hier in der Wiki.
