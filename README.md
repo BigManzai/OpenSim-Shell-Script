@@ -14,6 +14,8 @@ Dieses Script läuft auf einem Grid mit 40 Simulatoren genauso, wie mit zum Beis
 
 Es wird automatisch eine DATUM-multitool.log angelegt um nachzuverfolgen ob alles ordnungsgemäß ausgeführt wurde.
 
+Eine Funktionsliste gibt es hier in der Wiki.
+
 ## Konfiguration
 
 In der opensim.cnf werden unter anderem Verzeichnispfade voreingestellt zum Beispiel home oder opt als Hauptverzeichnis. 
