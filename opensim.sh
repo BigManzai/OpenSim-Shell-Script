@@ -1,10 +1,80 @@
 #!/bin/bash
 
-# opensimMULTITOOL Version 0.33.81 (c) May 2021 Manfred Aabye
+# opensimMULTITOOL Version 0.33.84 (c) May 2021 Manfred Aabye
 # opensim.sh Basiert auf meinen Einzelscripten, an denen ich bereits 6 Jahre Arbeite und verbessere.
 # Da Server unterschiedlich sind, kann eine einwandfreie fuunktion nicht gewährleistet werden, also bitte mit bedacht verwenden.
 # Die Benutzung dieses Scriptes, oder deren Bestandteile, erfolgt auf eigene Gefahr!!!
 # Erstellt und getestet ist opensim.sh, auf verschiedenen Ubuntu 18.04 Servern, unter verschiedenen Server Anbietern (Contabo, Hetzner ...).
+
+### Funktionsliste:
+# schreibeinfo : schreibt infos in die log datei.
+# makeverzeichnisliste : Erstellen eines Arrays aus einer Textdatei.
+# makeregionsliste : Erstellen eines Arrays aus einer Textdatei.
+# assetdel :  Asset von der Region loeschen.
+# oscommand : OpenSim Command senden.
+# works : screen pruefen ob er laeuft.
+# checkfile : pruefen ob Datei vorhanden ist.
+# mapdel, loescht die Map-Karten.
+# logdel, loescht die Log Dateien.
+# ossettings, stellt den Linux Server fuer OpenSim ein.
+# screenlist, Laufende Screens auflisten.
+# osstart, startet Region Server.
+# osstop, stoppt Region Server.
+# rostart, Robust Server starten.
+# rostartaot, Robust Server mit der Option aot starten.
+# rostop, Robust Server herunterfahren.
+# mostart, Money Server starten.
+# mostartaot, Money Server mit der Option aot starten.
+# mostop, Money Server herunterfahren.
+# osscreenstop, beendet ein Screeen.
+# gridstart, startet erst Robust und dann Money.
+# gridstartaot, startet erst Robust und dann Money mit aot.
+# gridstop, stoppt erst Money dann Robust.
+# terminator, killt alle noch offene Screens.
+# oscompi, kompilieren des OpenSimulator.
+# oscompiaot, kompilieren des OpenSimulator mit aot.
+# scriptcopy, lsl ossl scripte kopieren.
+# moneycopy, Money Dateien kopieren.
+# pythoncopy, Plugin Daten kopieren.
+# chrisoscopy, Plugin Dateien kopieren.
+# compilieren, kompilieren des OpenSimulator.
+# compilierenaot, kompilieren des OpenSimulator mit aot.
+# makeaot, aot generieren.
+# osprebuild, Prebuild einstellen - Aufruf Beispiel: opensim.sh prebuild 1175.
+# osstruktur, legt die Verzeichnisstruktur fuer OpenSim an.
+# osdelete, altes opensim loeschen und letztes opensim als Backup umbenennen.
+# oscopyrobust, Robust Daten kopieren.
+# oscopysim, Simulatoren kopieren aus dem Verzeichnis opensim.
+# configlesen, Regionskonfigurationen lesen.
+# regionsconfigdateiliste, schreibt Dateinamen mit Pfad in eine Datei.
+# meineregionen, listet alle Regionen aus den Konfigurationen auf.
+# regionsinisuchen, sucht alle Regionen.
+# get_regionsarray, gibt ein Array aller Regionsabschnitte zurueck.
+# get_value_from_Region_key, gibt den Wert eines bestimmten Schluessels im angegebenen Abschnitt zurueck.
+# regionsiniteilen, holt aus der Regions.ini eine Region heraus und speichert sie mit ihrem Regionsnamen.
+# autoregionsiniteilen, Die gemeinschaftsdatei Regions.ini in einzelne Regionen teilen.
+# regionliste, Die RegionListe ermitteln und mit dem Verzeichnisnamen in die RegionList.ini schreiben.
+# moneydelete, loescht den MoneyServer ohne die OpenSim Config zu veraendern.
+# osgitholen, kopiert eine Entwicklerversion in das opensim Verzeichnis.
+# osupgrade, automatisches upgrade des opensimulator aus dem verzeichnis opensim.
+# regionbackup, backup einer Region.
+# autosimstart, automatischer sim start ohne Robust und Money.
+# autosimstartaot, automatischer sim start ohne Robust und Money fuer aot.
+# autosimstop, stoppen aller laufenden Simulatoren.
+# autologdel, automatisches loeschen aller log Dateien.
+# automapdel, automatisches loeschen aller Map/Karten Dateien.
+# autorobustmapdel, automatisches loeschen aller Map/Karten Dateien in Robust.
+# cleaninstal, loeschen aller externen addon Module.
+# allclean, loescht Log, dll, so, exe, aot Dateien fuer einen saubere neue installation, ohne Robust.
+# autoallclean, loescht Log, dll, so, exe, aot Dateien fuer einen saubere neue installation, mit Robust.
+# autoregionbackup, automatischer Backup aller Regionen die in der Regionsliste eingetragen sind.
+# autoscreenstop, beendet alle laufenden simX screens.
+# autostart, startet das komplette Grid mit allen sims.
+# autostop, stoppt das komplette Grid mit allen sims.
+# autorestart, startet das gesamte Grid neu und loescht die log Dateien.
+# manniversion, test automatition.
+# info, Informationen auf den Bildschirm ausgeben.
+# hilfe, Hilfe auf dem Bildschirm anzeigen.
 
 clear # Bildschirm loeschen
 
@@ -16,7 +86,7 @@ echo "$(tput setaf 2) | |__| || |_) ||  __/| | | | ____) || || | | | | || |_| ||
 echo "  \____/ |  __/  \___||_| |_||_____/ |_||_| |_| |_| \____||_| \____| \__|\___/ |_|   "
 echo "         | |                                                                         "
 echo "         |_|                                                                         "
-echo "	    $(tput setaf 2)opensim$(tput setaf 4)MULTITOOL$(tput sgr 0) 0.33.81" # Versionsausgabe
+echo "	    $(tput setaf 2)opensim$(tput setaf 4)MULTITOOL$(tput sgr 0) 0.33.84" # Versionsausgabe
 echo " "
 
 DATUM=$(date +%d-%m-%Y)
@@ -43,9 +113,11 @@ unset REGIONSNAMEd
 SCRIPTPATH=$(cd "$(dirname "$0")" && pwd)
 # Variablen aus config Datei laden opensim.cnf muss sich im gleichen Verzeichnis wie opensim.sh befinden.
 # shellcheck disable=SC1091
+# shellcheck source=opensim.cnf
 . "$SCRIPTPATH"/opensim.cnf
 # Sprache laden z.B. de.cnf muss sich im gleichen Verzeichnis wie opensim.sh befinden.
 # shellcheck disable=SC1091
+# shellcheck source=de.cnf
 . "$SCRIPTPATH"/"$SPRACHE"
 
 ## Farben
@@ -135,7 +207,7 @@ function assetdel()
 		echo "$DATUM $(date +%H-%M-%S) ASSETDEL: $OBJEKT Asset von der Region $SCREEN löschen fehlgeschlagen" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 	fi
 }
-### Funktion oscommand, OpenSim Commands senden.
+### Funktion oscommand, OpenSim Command senden.
 # oscommand Screen Region Befehl Parameter
 function oscommand()
 {	
@@ -272,6 +344,21 @@ function rostart()
 		echo "$DATUM $(date +%H-%M-%S) ROSTART: Robust wurde nicht gefunden" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 	fi
 }
+### Funktion rostartaot, Robust Server mit der Option aot starten.
+function rostartaot()
+{
+	if checkfile /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/Robust.exe; then
+		echo "$(tput setaf 2) $(tput setab $White)Robust Start aot$(tput sgr 0)"
+		cd /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin || return 1
+		echo "$DATUM $(date +%H-%M-%S) ROSTART: Robust Start aot" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+		screen -fa -S RO -d -U -m mono --desktop -O=all Robust.exe 
+		#/$STARTVERZEICHNIS/osscreen.sh "RO" "/$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/Robust.exe"
+		sleep $WARTEZEIT
+	else
+		echo "$(tput setaf $Red)Robust wurde nicht gefunden.$(tput sgr 0)"
+		echo "$DATUM $(date +%H-%M-%S) ROSTART: Robust wurde nicht gefunden" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+	fi
+}
 ### Funktion rostop, Robust Server herunterfahren.
 function rostop()
 {
@@ -300,6 +387,21 @@ function mostart()
 		echo "$DATUM $(date +%H-%M-%S) MOSTART: MoneyServer wurde nicht gefunden" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 	fi
 }
+### Funktion mostartaot, Money Server mit der Option aot starten.
+function mostartaot()
+{
+	if checkfile /$STARTVERZEICHNIS/$MONEYVERZEICHNIS/bin/MoneyServer.exe; then
+		echo "$(tput setaf 2) $(tput setab $White)MoneyServer Start aot$(tput sgr 0)"
+		cd /$STARTVERZEICHNIS/$MONEYVERZEICHNIS/bin || return 1
+		echo "$DATUM $(date +%H-%M-%S) MOSTART: MoneyServer Start aot" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+		screen -fa -S MO -d -U -m mono --desktop -O=all MoneyServer.exe
+		#/$STARTVERZEICHNIS/osscreen.sh "MO" "/$STARTVERZEICHNIS/$MONEYVERZEICHNIS/bin/MoneyServer.exe"
+		sleep $MONEYWARTEZEIT
+	else
+		echo "$(tput setaf $Red)MoneyServer wurde nicht gefunden.$(tput sgr 0)"
+		echo "$DATUM $(date +%H-%M-%S) MOSTART: MoneyServer wurde nicht gefunden" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+	fi
+}
 ### Funktion mostop, Money Server herunterfahren.
 function mostop()
 {
@@ -313,7 +415,7 @@ function mostop()
 		echo "$DATUM $(date +%H-%M-%S) MOSTOP: MoneyServer nicht vorhanden" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 	fi	
 }
-### Funktion osscreenstop, beendet Screeens.
+### Funktion osscreenstop, beendet ein Screeen.
 # Beispiel-Example: osscreenstop sim1
 function osscreenstop()
 {
@@ -327,7 +429,7 @@ function osscreenstop()
 	fi
 	echo "No screen session found. Ist hier kein Fehler, sondern ein Beweis, das alles zuvor sauber heruntergefahren wurde."
 }
-### Funktion gridstart, startet erst Robust und dann Money
+### Funktion gridstart, startet erst Robust und dann Money.
 function gridstart()
 {
 	if screen -list | grep -q RO; then
@@ -344,7 +446,24 @@ function gridstart()
 		mostart
 	fi
 }
-### Funktion gridstop, stoppt erst Money dann Robust
+### Funktion gridstartaot, startet erst Robust und dann Money mit aot.
+function gridstartaot()
+{
+	if screen -list | grep -q RO; then
+		echo "$(tput setaf $Red) $(tput setab $White)RobustServer läuft bereits $(tput sgr 0)"
+	else
+		echo "$DATUM $(date +%H-%M-%S) ROSTART: Start aot" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+		rostartaot
+	fi
+
+	if screen -list | grep -q MO; then
+		echo "$(tput setaf $Red) $(tput setab $White)MoneyServer läuft bereits $(tput sgr 0)"
+	else
+		echo "$DATUM $(date +%H-%M-%S) MOSTART: Start aot" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+		mostartaot
+	fi
+}
+### Funktion gridstop, stoppt erst Money dann Robust.
 function gridstop()
 {
 	if screen -list | grep -q MO; then
@@ -361,7 +480,7 @@ function gridstop()
 		echo "$(tput setaf $Red)RobustServer läuft nicht $(tput sgr 0)"
 	fi
 }
-### Funktion terminator
+### Funktion terminator, killt alle noch offene Screens.
 function terminator()
 {
 	echo "hasta la vista baby"
@@ -388,6 +507,30 @@ function oscompi()
 	echo "$DATUM $(date +%H-%M-%S) OSCOMPI: Kompilierungsvorgang startet" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 	# ohne log Datei.
 	msbuild /p:Configuration=Release
+	# mit log Datei.
+	# msbuild /p:Configuration=Release /fileLogger /flp:logfile=opensimbuild.log /v:d
+	echo " "
+	echo "$DATUM $(date +%H-%M-%S) OSCOMPI: Kompilierung wurde durchgeführt" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+}
+### Funktion oscompiaot, kompilieren des OpenSimulator mit aot.
+function oscompiaot()
+{
+	echo "$(tput setab $Green)Kompilierungsvorgang startet! $(tput sgr 0)"
+	echo "$DATUM $(date +%H-%M-%S) OSCOMPI: Kompilierungsvorgang startet" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+	# In das opensim Verzeichnis wechseln wenn es das gibt ansonsten beenden.
+	cd /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS || return 1
+	
+	echo 'Prebuildvorgang startet!'
+	echo "$DATUM $(date +%H-%M-%S) OSCOMPI: Prebuildvorgang startet" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+	# runprebuild19.sh startbar machen und starten.
+	chmod +x runprebuild19.sh
+	./runprebuild19.sh
+
+	echo 'Kompilierungsvorgang startet!'
+	echo "$DATUM $(date +%H-%M-%S) OSCOMPI: Kompilierungsvorgang startet" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+	# ohne log Datei.
+	msbuild /p:Configuration=Release
+	makeaot
 	# mit log Datei.
 	# msbuild /p:Configuration=Release /fileLogger /flp:logfile=opensimbuild.log /v:d
 	echo " "
@@ -421,7 +564,7 @@ function moneycopy()
 		echo "$DATUM $(date +%H-%M-%S) SCRIPTCOPY: Script Assets sind nicht vorhanden" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 	fi	
 }
-### Funktion pythoncopy kopieren.
+### Funktion pythoncopy, Plugin Daten kopieren.
 function pythoncopy()
 {
 	if [ -d /$STARTVERZEICHNIS/OpensimPython/ ]; then
@@ -434,7 +577,7 @@ function pythoncopy()
 		echo "$DATUM $(date +%H-%M-%S) PYTHONCOPY: python ist nicht vorhanden" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 	fi
 }
-### Funktion chrisoscopy, Money Dateien kopieren.
+### Funktion chrisoscopy, Plugin Dateien kopieren.
 function chrisoscopy()
 {
 	# /opt/Chris.OS.Additions
@@ -482,7 +625,41 @@ function compilieren()
 		echo "$DATUM $(date +%H-%M-%S) COMPILIEREN: opensim Verzeichnis existiert nicht" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 	fi
 }
-### Funktion makeaot.
+### Funktion compilierenaot, kompilieren des OpenSimulator mit aot.
+function compilierenaot()
+{
+	echo "$(tput setab $Green)Bauen eines neuen OpenSimulators aot wird gestartet! $(tput sgr 0)"
+	echo "$DATUM $(date +%H-%M-%S) COMPILIEREN: Bauen eines neuen OpenSimulators aot wird gestartet" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+	# Nachsehen ob Verzeichnis überhaupt existiert.
+	if [ ! -f "/$STARTVERZEICHNIS/$SCRIPTSOURCE/" ]; then
+		scriptcopy
+	else
+		echo "OSSL Script Verzeichnis existiert nicht."
+		echo "$DATUM $(date +%H-%M-%S) COMPILIEREN: OSSL Script Verzeichnis existiert nicht" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+	fi
+
+	if [ ! -f "/$STARTVERZEICHNIS/$MONEYSOURCE/" ]; then
+		moneycopy
+	else
+		echo "MoneyServer Verzeichnis existiert nicht."
+		echo "$DATUM $(date +%H-%M-%S) COMPILIEREN: MoneyServer Verzeichnis existiert nicht" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+	fi
+
+	#if [ ! -f "/$STARTVERZEICHNIS/OpensimPython/" ]; then
+	#	pythoncopy
+	#else
+	#	echo "MoneyServer Verzeichnis existiert nicht."
+	#	echo "$DATUM $(date +%H-%M-%S) COMPILIEREN: OpensimPython Verzeichnis existiert nicht" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+	#fi
+
+	if [ ! -f "/$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/" ]; then
+		oscompiaot
+	else
+		echo "opensim Verzeichnis existiert nicht."
+		echo "$DATUM $(date +%H-%M-%S) COMPILIEREN: opensim Verzeichnis existiert nicht" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+	fi
+}
+### Funktion makeaot, aot generieren.
 function makeaot()
 {
 	if [ ! -f "/$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/" ]; then
@@ -506,7 +683,7 @@ function makeaot()
 		echo "$DATUM $(date +%H-%M-%S) MAKEAOT: opensim Verzeichnis existiert nicht" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 	fi
 }
-### Funktion prebuild, Aufruf Beispiel: opensim.sh prebuild 1160.
+### Funktion osprebuild, Prebuild einstellen - Aufruf Beispiel: opensim.sh prebuild 1175.
 function osprebuild()
 {
 	NUMMER=$1
@@ -516,7 +693,7 @@ function osprebuild()
 
 	# Ist Zip installiert wenn nicht installieren.
 
-	# schauen wie die nummer ist von opensim-0.9.2.0Dev-1160-g4e8c87f.zip
+	# schauen wie die nummer ist von opensim-0.9.2.0Dev-1175-g4e8c87f.zip
 	
 	# oeffne text und ändere Version, Release und Namen
 	# sed -i schreibt sofort - s/Suchwort/Ersatzwort/g - Verzeichnis/Dateiname.Endung
@@ -525,7 +702,7 @@ function osprebuild()
 	sed -i s/Yeti//g /$STARTVERZEICHNIS/opensim/OpenSim/Framework/VersionInfo.cs
 	sed -i s/' + flavour'//g /$STARTVERZEICHNIS/opensim/OpenSim/Framework/VersionInfo.cs
 	}
-	# Legt die Verzeichnisstruktur fuer OpenSim an.
+	# Funktion osstruktur, legt die Verzeichnisstruktur fuer OpenSim an.
 	# Aufruf: opensim.sh osstruktur ersteSIM letzteSIM
 	# Beispiel: ./opensim.sh osstruktur 1 10 - erstellt ein Grid Verzeichnis fuer 10 Simulatoren inklusive der SimulatorList.ini.
 function osstruktur()
@@ -547,7 +724,7 @@ function osstruktur()
 	done
 	echo "$DATUM $(date +%H-%M-%S) OSSTRUKTUR: Lege robust an ,Schreibe sim$i in $SIMDATEI" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 }
-### Funktion osdelete, altes opensim loeschen und neues als Backup.
+### Funktion osdelete, altes opensim loeschen und letztes opensim als Backup umbenennen.
 function osdelete()
 {	
 	if [ -d /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/ ]; then
@@ -562,7 +739,7 @@ function osdelete()
 		echo "$(tput setaf $Red) $(tput setab $White) $STARTVERZEICHNIS Verzeichnis existiert nicht$(tput sgr 0)"
 	fi
 }
-### Funktion oscopyrobust
+### Funktion oscopyrobust, Robust Daten kopieren.
 function oscopyrobust()
 {
 	if [ -d /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/ ]; then
@@ -579,7 +756,7 @@ function oscopyrobust()
 		echo " "
 	fi
 }
-### Funktion oscopysim
+### Funktion oscopysim, Simulatoren kopieren aus dem Verzeichnis opensim.
 function oscopysim()
 {
 	makeverzeichnisliste
@@ -595,7 +772,7 @@ function oscopysim()
 	echo " "
 	echo "$DATUM $(date +%H-%M-%S) OSCOPY: OpenSim kopieren" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 }
-# Regionskonfigurationen lesen
+# Funktion configlesen, Regionskonfigurationen lesen.
 function configlesen()
 {
 	echo "$(tput setab $Green)Regionskonfigurationen von $1 $(tput sgr 0)"
@@ -618,7 +795,7 @@ function regionsconfigdateiliste()
 		if [ "$2" = "-b" ]; then echo "$i"; fi  # In die config Datei hinzufuegen.
 	done
 }
-### Funktion meineregionen, listet alle Regionen aus den auf.
+### Funktion meineregionen, listet alle Regionen aus den Konfigurationen auf.
 function meineregionen() 
 {	
 	makeverzeichnisliste
@@ -634,8 +811,7 @@ function meineregionen()
 	done
 	echo "$DATUM $(date +%H-%M-%S) MEINEREGIONEN: Regionsliste Ende" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 }
-### Regions.ini zerlegen
-### Funktion meineregionen, listet alle Regionen aus den auf.
+### Funktion regionsinisuchen, sucht alle Regionen.
 function regionsinisuchen() 
 {	
 	makeverzeichnisliste
@@ -656,7 +832,7 @@ function regionsinisuchen()
 
 	done
 }
-# Gibt ein Array aller Regionsabschnitte zurueck, regionsinizerlegen
+# Funktion get_regionsarray, gibt ein Array aller Regionsabschnitte zurueck.
 # $1 - Datei
 function get_regionsarray() 
 {
@@ -673,7 +849,7 @@ function get_regionsarray()
 	done
 	echo "${FIXED_ARRAY}"
 }
-# Gibt den Wert eines bestimmten Schluessels im angegebenen Abschnitt zurueck , regionsinizerlegen
+# Funktion get_value_from_Region_key, gibt den Wert eines bestimmten Schluessels im angegebenen Abschnitt zurueck.
 # $1 - Datei - $2 - Schluessel - $3 - Sektion
 function get_value_from_Region_key() 
 {
@@ -727,7 +903,7 @@ function regionsiniteilen()
 		echo "$DATUM $(date +%H-%M-%S) REGIONSINITEILEN: $INI_FILE wurde nicht gefunden" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 	fi
 }
-### Funktion regionsinizerlegen, Die gemeinschaftsdatei Regions.ini in einzelne Regionen teilen 
+### Funktion autoregionsiniteilen, Die gemeinschaftsdatei Regions.ini in einzelne Regionen teilen.
 # diese dann unter dem Regionsnamen speichern, danach die Alte Regions.ini umbenennen in Regions.ini.old.
 function autoregionsiniteilen()
 {
@@ -756,7 +932,7 @@ function autoregionsiniteilen()
 	fi
 	done	
 }
-### Funktion RegionListe, Die RegionListe ermitteln und mit dem Verzeichnisnamen in die RegionList.ini schreiben.
+### Funktion regionliste, Die RegionListe ermitteln und mit dem Verzeichnisnamen in die RegionList.ini schreiben.
 function regionliste()
 {
 	# Alte RegionList.ini sichern und in RegionList.ini.old umbenennen.
@@ -818,7 +994,7 @@ function moneydelete()
 		echo "$DATUM $(date +%H-%M-%S) MONEYDELETE: MoneyServer aus Robust geloescht" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 	fi
 }
-### Funktion osgitholen, kopiert eine Entwicklerversion.
+### Funktion osgitholen, kopiert eine Entwicklerversion in das opensim Verzeichnis.
 function osgitholen()
 {
 	if [ -d /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/ ]
@@ -835,7 +1011,7 @@ function osgitholen()
 		echo "$DATUM $(date +%H-%M-%S) OPENSIMHOLEN: Git klonen" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 	fi 
 }
-### Funktion osupgrade
+### Funktion osupgrade, automatisches upgrade des opensimulator aus dem verzeichnis opensim.
 function osupgrade()
 {
 	echo "$(tput setab $Green)Das Grid wird jetzt upgegradet! $(tput sgr 0)"
@@ -872,7 +1048,7 @@ function osupgrade()
 # 	echo "$DATUM $(date +%H-%M-%S) DEBUG: Start von MULTITOOL" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 # }
 
-### Funktion regionbackup
+### Funktion regionbackup, backup einer Region.
 # regionbackup Screenname "Der Regionsname"
 function regionbackup()
 {
@@ -911,7 +1087,7 @@ function regionbackup()
 		echo "$DATUM $(date +%H-%M-%S) OSBACKUP: Region $NSDATEINAME.ini gespeichert" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 	fi
 }
-### Funktion autosimstart
+### Funktion autosimstart, automatischer sim start ohne Robust und Money.
 function autosimstart()
 {
 	# shellcheck disable=SC2022
@@ -932,19 +1108,28 @@ function autosimstart()
 		echo "$DATUM $(date +%H-%M-%S) WORKS:  Regionen laufen bereits!" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 	fi
 }
-### Funktion autosimstop
-# function autosimstop()
-# {
-# 	makeverzeichnisliste
-# 	sleep 3
-# 	for (( i = 0 ; i < "$ANZAHLVERZEICHNISSLISTE" ; i++)) do
-# 		echo "$(tput setaf $Red) $(tput setab $White)Regionen OpenSimulator ${VERZEICHNISSLISTE[$i]} Beenden$(tput sgr 0)"
-# 		screen -S "${VERZEICHNISSLISTE[$i]}" -p 0 -X eval "stuff 'shutdown'^M"
-# 		echo "$DATUM $(date +%H-%M-%S) AUTOSIMSTOP: Regionen OpenSimulator ${VERZEICHNISSLISTE[$i]} Beenden" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
-# 		sleep $STOPWARTEZEIT
-# 	done
-# }
-### Funktion autosimstop
+### Funktion autosimstartaot, automatischer sim start ohne Robust und Money fuer aot.
+function autosimstartaot()
+{
+	# shellcheck disable=SC2022
+	if ! screen -list | grep -q 'sim*'; then
+	# es laeuft nicht - not work
+		makeverzeichnisliste
+		sleep 3
+		for (( i = 0 ; i < "$ANZAHLVERZEICHNISSLISTE" ; i++)) do
+			echo "$(tput setaf 2) $(tput setab $White)Regionen OpenSimulator ${VERZEICHNISSLISTE[$i]} Starten aot$(tput sgr 0)"
+			cd /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin || return 1
+			screen -fa -S "${VERZEICHNISSLISTE[$i]}" -d -U -m mono --desktop -O=all OpenSim.exe
+			#/$STARTVERZEICHNIS/osscreen.sh "${VERZEICHNISSLISTE[$i]}" "/$STARTVERZEICHNIS/${VERZEICHNISSLISTE[$i]}/bin/OpenSim.exe"
+			echo "$DATUM $(date +%H-%M-%S) AUTOSIMSTART: Regionen OpenSimulator ${VERZEICHNISSLISTE[$i]} Starten aot" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+			sleep $STARTWARTEZEIT
+		done
+	else
+		echo "$(tput setaf $White)$(tput setab $Green) Regionen laufen bereits! $(tput sgr 0)"
+		echo "$DATUM $(date +%H-%M-%S) WORKS:  Regionen laufen bereits!" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+	fi
+}
+### Funktion autosimstop, stoppen aller laufenden Simulatoren.
 function autosimstop()
 {
 	makeverzeichnisliste
@@ -960,7 +1145,8 @@ function autosimstop()
 		fi
 	done
 }
-### Funktion autologdel
+### Funktion autologdel, automatisches loeschen aller log Dateien.
+# Die Dateien samt neuer Daten werden beim naechsten start des opensimulator neu geschrieben.
 function autologdel()
 {
 	makeverzeichnisliste
@@ -972,7 +1158,8 @@ function autologdel()
 		sleep 3
 	done
 }
-### Funktion automapdel
+### Funktion automapdel, automatisches loeschen aller Map/Karten Dateien.
+# Die Dateien samt neuer Daten werden beim naechsten start des opensimulator neu geschrieben.
 function automapdel()
 {
 	makeverzeichnisliste
@@ -986,7 +1173,8 @@ function automapdel()
 	done
 	autorobustmapdel
 }
-### Funktion autorobustmapdel
+### Funktion autorobustmapdel, automatisches loeschen aller Map/Karten Dateien in Robust.
+# Die Dateien samt neuer Daten werden beim naechsten start des opensimulator neu geschrieben.
 function autorobustmapdel()
 {
 	echo "$(tput setaf $Red) $(tput setab $White)OpenSimulator maptile aus $ROBUSTVERZEICHNIS geloescht$(tput sgr 0)"
@@ -994,7 +1182,7 @@ function autorobustmapdel()
 	rm -r maptiles/*
 	echo "$DATUM $(date +%H-%M-%S) AUTOMAPDEL: OpenSimulator maptile aus $ROBUSTVERZEICHNIS geloescht" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 }
-### Funktion cleaninstal
+### Funktion cleaninstal, loeschen aller externen addon Module.
 function cleaninstal()
 {
 
@@ -1006,7 +1194,8 @@ function cleaninstal()
 	fi
 
 }
-### Funktion allclean, loescht Log, dll, so, exe Dateien fuer einen clean install.
+### Funktion allclean, loescht Log, dll, so, exe, aot Dateien fuer einen saubere neue installation, ohne Robust.
+# Hierbei werden keine Datenbanken oder Konfigurationen geloescht.
 # allclean Verzeichnis
 function allclean()
 {
@@ -1030,7 +1219,8 @@ function allclean()
 		echo "$DATUM $(date +%H-%M-%S) clean: logs nicht gefunden" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 	fi
 }
-### Funktion autoallclean
+### Funktion autoallclean, loescht Log, dll, so, exe, aot Dateien fuer einen saubere neue installation, mit Robust.
+# Hierbei werden keine Datenbanken oder Konfigurationen geloescht.
 function autoallclean()
 {
 	makeverzeichnisliste
@@ -1080,7 +1270,7 @@ function autoallclean()
 	rm -r /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/ScriptEngines/*
 	echo "$DATUM $(date +%H-%M-%S) autoallclean: OpenSimulator alles in $ROBUSTVERZEICHNIS geloescht" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 }
-### Funktion autoregionbackup
+### Funktion autoregionbackup, automatischer Backup aller Regionen die in der Regionsliste eingetragen sind.
 function autoregionbackup()
 {
 	echo "$(tput setaf $Red) $(tput setab $White)Automatisches Backup wird gestartet. $(tput sgr 0)"
@@ -1094,7 +1284,7 @@ function autoregionbackup()
 		sleep $BACKUPWARTEZEIT
 	done
 }
-### Funktion autoscreenstop
+### Funktion autoscreenstop, beendet alle laufenden simX screens.
 function autoscreenstop()
 {
 	makeverzeichnisliste
@@ -1126,7 +1316,7 @@ function autoscreenstop()
 
 	echo "$DATUM $(date +%H-%M-%S) AUTOSCREENSTOP: Auto Screen Stopp abgeschlossen" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 }
-### Funktion autostart
+### Funktion autostart, startet das komplette Grid mit allen sims.
 function autostart()
 {
 	echo "$(tput setab $Green)Starte das Grid! $(tput sgr 0)"
@@ -1138,7 +1328,7 @@ function autostart()
 	echo " "
 	echo "$DATUM $(date +%H-%M-%S) AUTOSTART: Auto Start abgeschlossen" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 }
-### Funktion autostop
+### Funktion autostop, stoppt das komplette Grid mit allen sims.
 function autostop()
 {
 	echo "$(tput setab 1)Stoppe alles! $(tput sgr 0)"
@@ -1154,7 +1344,7 @@ function autostop()
 	echo " "
 	echo "$DATUM $(date +%H-%M-%S) AUTOSTOP: Auto Stopp abgeschlossen" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 }
-### Funktion autorestart
+### Funktion autorestart, startet das gesamte Grid neu und loescht die log Dateien.
 function autorestart()
 {
 	echo "$(tput setab 1)Stoppe alles! $(tput sgr 0)"
@@ -1176,6 +1366,7 @@ function autorestart()
 	echo " "
 	echo "$DATUM $(date +%H-%M-%S) AUTORESTART: Auto Restart abgeschlossen" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 }
+### Funktion manniversion, test automatition.
 function manniversion() 
 {
     VERSIONSNUMMER=$1
@@ -1188,7 +1379,7 @@ function manniversion()
     unzip opensim-0.9.2.0Dev-"$VERSIONSNUMMER"-*.zip
 	echo "$DATUM $(date +%H-%M-%S) MANNIVERSION: entpacken" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 
-    mv /$STARTVERZEICHNIS/opensim-0.9.2.0Dev-1169-*/ /$STARTVERZEICHNIS/opensim/
+    mv /$STARTVERZEICHNIS/opensim-0.9.2.0Dev-"$VERSIONSNUMMER"-*/ /$STARTVERZEICHNIS/opensim/
 	echo "$DATUM $(date +%H-%M-%S) MANNIVERSION: umbenennen " >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 
     osprebuild "$VERSIONSNUMMER"
@@ -1198,7 +1389,7 @@ function manniversion()
 
     #/$STARTVERZEICHNIS/opensim.sh osupgrade
 }
-### Funktion info
+### Funktion info, Informationen auf den Bildschirm ausgeben.
 function info()
 {
 	echo "$(tput setab $Blue) Server Name: ${HOSTNAME}"
@@ -1206,7 +1397,7 @@ function info()
 	echo " MONO THREAD Einstellung: ${MONO_THREADS_PER_CPU}"
 	echo " Spracheinstellung: ${LANG} $(tput sgr 0)"
 }
-### Funktion hilfe
+### Funktion hilfe, Hilfe auf dem Bildschirm anzeigen.
 function hilfe()
 {
 	echo "$(tput setab $Magenta)Funktion:$(tput sgr 0)		$(tput setab $Green)Parameter:$(tput sgr 0)		$(tput setab $Blue)Informationen:$(tput sgr 0)"
@@ -1256,6 +1447,17 @@ echo "$(tput setab $Red)Experten Funktionen$(tput sgr 0)"
 	echo "Regionsdateiliste 	- $(tput setab $Blue)-b Bildschirm oder -d Datei$(tput sgr 0) $(tput setab $Magenta)Verzeichnisname$(tput sgr 0) - Regionsdateiliste erstellen."
 	echo "osgitholen 		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - kopiert eine OpenSimulator Git Entwicklerversion."
 	echo "terminator 		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Killt alle laufenden Screens."
+
+echo "$(tput setab $Red)Ungetestete Funktionen$(tput sgr 0)"
+echo "rostartaot		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Startet Robust aot Server."
+echo "mostartaot		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Startet Money aot Server."
+echo "gridstartaot		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Startet Robust und Money aot. "
+echo "autostartaot		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0)	- Startet das gesamte Grid aot."
+echo "autosimstartaot		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Startet alle Regionen aot."
+echo "compilierenaot		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Kopiert fehlende Dateien und Kompiliert aot."
+echo "oscompiaot	- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Kompiliert einen neuen OpenSimulator ohne kopieren mit aot."
+echo "makeaot	- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - makeaot aot."
+
 	echo " "
 	#echo "$(tput setaf $Yello)  Der Verzeichnisname ist gleichzeitig auch der Screen Name!$(tput sgr 0)"
 	echo "$(tput setaf $Yello)  $Z10001 $(tput sgr 0)"
@@ -1263,10 +1465,14 @@ echo "$(tput setab $Red)Experten Funktionen$(tput sgr 0)"
 }
 ### Eingabeauswertung:
 case  $KOMMANDO  in
+	schreibeinfo) schreibeinfo ;;
+	makeverzeichnisliste) makeverzeichnisliste ;;
+	makeregionsliste) makeregionsliste ;;
+	checkfile) checkfile "$2" ;;
 	r | restart) autorestart ;;
 	sta | autosimstart | simstart) autosimstart ;;
 	sto | autosimstop | simstop) autosimstop ;;
-	astart | autostart | start) autotart ;;
+	astart | autostart | start) autostart ;;
 	astop | autostop | stop) autostop ;;
 	amd | automapdel) automapdel ;;
 	ald | autologdel) autologdel ;;
@@ -1289,7 +1495,8 @@ case  $KOMMANDO  in
 	asdel | assetdel) assetdel "$2" "$3" "$4" ;;
 	e | terminator) terminator ;;
 	ou | osupgrade) osupgrade ;;
-	oscopy) oscopy ;;
+	oscopyrobust) oscopyrobust ;;
+	oscopysim) oscopysim ;;
 	rb | regionbackup) regionbackup "$2" "$3" ;;
 	arb | autoregionbackup) autoregionbackup ;;
 	compi | compilieren) compilieren ;;
@@ -1315,6 +1522,17 @@ case  $KOMMANDO  in
 	autoallclean) autoallclean ;;
 	allclean) allclean "$2" ;;
 	makeaot) makeaot ;;
+	rostartaot) rostartaot ;;
+	mostartaot) mostartaot ;;
+	gridstartaot) gridstartaot ;;
+	autosimstartaot) autosimstartaot ;;
+	oscompiaot) oscompiaot ;;
+	pythoncopy) pythoncopy ;;
+	compilierenaot) get_regionsarray ;;
+	get_regionsarray) oscompiaot ;;
+	get_value_from_Region_key) get_value_from_Region_key ;;
+	autorobustmapdel) autorobustmapdel ;;
+	info) info ;;
 	*) hilfe ;;
 esac
 
