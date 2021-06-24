@@ -1,6 +1,10 @@
 ### Einstellungen ###
 ## Sprache
 	SPRACHE="de.cnf"
+	LANGUAGE=de_DE
+	#LANGUAGE=fr_FR
+	#LANGUAGE=es_ES
+	#LANGUAGE=en_EN
 ## Das Startverzeichnis home oder opt zum Beispiel.
 	STARTVERZEICHNIS="opt"
 	MONEYVERZEICHNIS="robust"
@@ -11,6 +15,13 @@
 ## Dateien
 	REGIONSDATEI="RegionList.ini"
 	SIMDATEI="SimulatorList.ini"
+## Inklusive
+	SCRIPTCOPY="yes"
+	MONEYCOPY="yes"
+	PYTHONCOPY="no"
+	MUTELISTCOPY="no"
+	SEARCHCOPY="no"
+	CHRISOSCOPY="no"
 ## Die unterschiedlichen wartezeiten bis die Aktion ausgefuehrt wurde.
 	WARTEZEIT=30 # Ist eine allgemeine Wartezeit.
 	STARTWARTEZEIT=10 # Startwartezeit ist eine Pause, damit nicht alle Simulatoren gleichzeitig starten.

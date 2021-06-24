@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# opensimMULTITOOL Version 0.33.84 (c) May 2021 Manfred Aabye
+# opensimMULTITOOL Version 0.33.85 (c) May 2021 Manfred Aabye
 # opensim.sh Basiert auf meinen Einzelscripten, an denen ich bereits 6 Jahre Arbeite und verbessere.
 # Da Server unterschiedlich sind, kann eine einwandfreie fuunktion nicht gewährleistet werden, also bitte mit bedacht verwenden.
 # Die Benutzung dieses Scriptes, oder deren Bestandteile, erfolgt auf eigene Gefahr!!!
@@ -86,7 +86,7 @@ echo "$(tput setaf 2) | |__| || |_) ||  __/| | | | ____) || || | | | | || |_| ||
 echo "  \____/ |  __/  \___||_| |_||_____/ |_||_| |_| |_| \____||_| \____| \__|\___/ |_|   "
 echo "         | |                                                                         "
 echo "         |_|                                                                         "
-echo "	    $(tput setaf 2)opensim$(tput setaf 4)MULTITOOL$(tput sgr 0) 0.33.84" # Versionsausgabe
+echo "	    $(tput setaf 2)opensim$(tput setaf 4)MULTITOOL$(tput sgr 0) 0.33.85" # Versionsausgabe
 echo " "
 
 DATUM=$(date +%d-%m-%Y)
@@ -115,10 +115,6 @@ SCRIPTPATH=$(cd "$(dirname "$0")" && pwd)
 # shellcheck disable=SC1091
 # shellcheck source=opensim.cnf
 . "$SCRIPTPATH"/opensim.cnf
-# Sprache laden z.B. de.cnf muss sich im gleichen Verzeichnis wie opensim.sh befinden.
-# shellcheck disable=SC1091
-# shellcheck source=de.cnf
-. "$SCRIPTPATH"/"$SPRACHE"
 
 ## Farben
 Red=1; Green=2; Yello=3; Blue=4; Magenta=5; White=7
@@ -136,12 +132,12 @@ function schreibeinfo()
 	if [ "$FILESIZE" \< "$NULL" ]
 	then
 	{	echo "#######################################################"
-		echo "$DATUM $(date +%H-%M-%S) $A10001"
-		echo "$DATUM $(date +%H-%M-%S) $A10002 ${HOSTNAME}"
-		echo "$DATUM $(date +%H-%M-%S) $A10003 ${BASH_VERSION}"
-		echo "$DATUM $(date +%H-%M-%S) $A10004 ${MONO_THREADS_PER_CPU}"
-		echo "$DATUM $(date +%H-%M-%S) $A10005 ${LANG}"
-		echo "$DATUM $(date +%H-%M-%S) $A10006 $(screen --version)"
+		echo "$DATUM $(date +%H-%M-%S) MULTITOOL: wurde gestartet"
+		echo "$DATUM $(date +%H-%M-%S) INFO: Server Name: ${HOSTNAME}"
+		echo "$DATUM $(date +%H-%M-%S) INFO: Bash Version: ${BASH_VERSION}"
+		echo "$DATUM $(date +%H-%M-%S) INFO: MONO THREAD Einstellung: ${MONO_THREADS_PER_CPU}"
+		echo "$DATUM $(date +%H-%M-%S) INFO: Spracheinstellung: ${LANG}"
+		echo "$DATUM $(date +%H-%M-%S) INFO: Screen Version: $(screen --version)"
 		echo " "
 	} >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 	fi
@@ -539,57 +535,119 @@ function oscompiaot()
 ### Funktion scriptcopy, lsl ossl scripte kopieren.
 function scriptcopy()
 {
-	if [ -d /$STARTVERZEICHNIS/$SCRIPTSOURCE/ ]; then
-		echo "$(tput setab $Green)Script Assets werden kopiert! $(tput sgr 0)"
-		echo "$DATUM $(date +%H-%M-%S) SCRIPTCOPY: Script Assets werden kopiert" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
-		cp -r /$STARTVERZEICHNIS/$SCRIPTSOURCE/assets /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin
-		cp -r /$STARTVERZEICHNIS/$SCRIPTSOURCE/inventory /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin
-	echo " "
+	if [[ $SCRIPTCOPY = "yes" ]]
+	then
+		if [ -d /$STARTVERZEICHNIS/$SCRIPTSOURCE/ ]; then
+			echo "$(tput setab $Green)Script Assets werden kopiert! $(tput sgr 0)"
+			echo "$DATUM $(date +%H-%M-%S) SCRIPTCOPY: Script Assets werden kopiert" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+			cp -r /$STARTVERZEICHNIS/$SCRIPTSOURCE/assets /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin
+			cp -r /$STARTVERZEICHNIS/$SCRIPTSOURCE/inventory /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin
+		echo " "
+		else
+			echo "$(tput setab $Green)Script Assets sind nicht vorhanden! $(tput sgr 0)"
+			echo "$DATUM $(date +%H-%M-%S) SCRIPTCOPY: Script Assets sind nicht vorhanden" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+		fi
 	else
-		echo "$(tput setab $Green)Script Assets sind nicht vorhanden! $(tput sgr 0)"
-		echo "$DATUM $(date +%H-%M-%S) SCRIPTCOPY: Script Assets sind nicht vorhanden" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+    	echo "Skripte werden nicht kopiert."
+		echo "$DATUM $(date +%H-%M-%S) SCRIPTCOPY: Skripte werden nicht kopiert." >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 	fi
 }
 ### Funktion moneycopy, Money Dateien kopieren.
 function moneycopy()
 {
-	if [ -d /$STARTVERZEICHNIS/$MONEYSOURCE/ ]; then
-		echo "$(tput setab $Green)Money Kopiervorgang startet! $(tput sgr 0)"
-		echo "$DATUM $(date +%H-%M-%S) MONEYCOPY: Money Kopiervorgang gestartet" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
-		cp -r /$STARTVERZEICHNIS/$MONEYSOURCE/bin /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS
-		cp -r /$STARTVERZEICHNIS/$MONEYSOURCE/addon-modules /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS
-		echo " "
+	if [[ $MONEYCOPY = "yes" ]]
+	then
+		if [ -d /$STARTVERZEICHNIS/$MONEYSOURCE/ ]; then
+			echo "$(tput setab $Green)Money Kopiervorgang startet! $(tput sgr 0)"
+			echo "$DATUM $(date +%H-%M-%S) MONEYCOPY: Money Kopiervorgang gestartet" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+			cp -r /$STARTVERZEICHNIS/$MONEYSOURCE/bin /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS
+			cp -r /$STARTVERZEICHNIS/$MONEYSOURCE/addon-modules /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS
+			echo " "
+		else
+			echo "$(tput setab $Green)Script Assets sind nicht vorhanden! $(tput sgr 0)"
+			echo "$DATUM $(date +%H-%M-%S) SCRIPTCOPY: Script Assets sind nicht vorhanden" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+		fi
 	else
-		echo "$(tput setab $Green)Script Assets sind nicht vorhanden! $(tput sgr 0)"
-		echo "$DATUM $(date +%H-%M-%S) SCRIPTCOPY: Script Assets sind nicht vorhanden" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
-	fi	
+    	echo "Money wird nicht kopiert."
+		echo "$DATUM $(date +%H-%M-%S) SCRIPTCOPY: Money wird nicht kopiert." >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+	fi
 }
 ### Funktion pythoncopy, Plugin Daten kopieren.
 function pythoncopy()
 {
-	if [ -d /$STARTVERZEICHNIS/OpensimPython/ ]; then
-		echo "$(tput setab $Green)python wird kopiert! $(tput sgr 0)"
-		echo "$DATUM $(date +%H-%M-%S) PYTHONCOPY: python wird kopiert" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
-		cp -r /$STARTVERZEICHNIS/OpensimPython /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/addon-modules
-	echo " "
+	if [[ $PYTHONCOPY = "yes" ]]
+	then
+		if [ -d /$STARTVERZEICHNIS/OpensimPython/ ]; then
+			echo "$(tput setab $Green)python wird kopiert! $(tput sgr 0)"
+			echo "$DATUM $(date +%H-%M-%S) PYTHONCOPY: python wird kopiert" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+			cp -r /$STARTVERZEICHNIS/OpensimPython /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/addon-modules
+		echo " "
+		else
+			echo "$(tput setab $Green)python ist nicht vorhanden! $(tput sgr 0)"
+			echo "$DATUM $(date +%H-%M-%S) PYTHONCOPY: python ist nicht vorhanden" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+		fi
 	else
-		echo "$(tput setab $Green)python ist nicht vorhanden! $(tput sgr 0)"
-		echo "$DATUM $(date +%H-%M-%S) PYTHONCOPY: python ist nicht vorhanden" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+    	echo "Python wird nicht kopiert."
+		echo "$DATUM $(date +%H-%M-%S) PYTHONCOPY: Python wird nicht kopiert." >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+	fi
+}
+### Funktion searchcopy, Plugin Daten kopieren.
+function searchcopy()
+{
+	if [[ $SEARCHCOPY = "yes" ]]
+	then
+		if [ -d /$STARTVERZEICHNIS/OpenSimSearch/ ]; then
+			echo "$(tput setab $Green)OpenSimSearch wird kopiert! $(tput sgr 0)"
+			echo "$DATUM $(date +%H-%M-%S) OpenSimSearch: python wird kopiert" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+			cp -r /$STARTVERZEICHNIS/OpenSimSearch /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/addon-modules
+		echo " "
+		else
+			echo "$(tput setab $Green)OpenSimSearch ist nicht vorhanden! $(tput sgr 0)"
+			echo "$DATUM $(date +%H-%M-%S) OpenSimSearch: python ist nicht vorhanden" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+		fi
+	else
+    	echo "OpenSimSearch wird nicht kopiert."
+		echo "$DATUM $(date +%H-%M-%S) OpenSimSearch: OpenSimSearch wird nicht kopiert." >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+	fi
+}
+### Funktion mutelistcopy, Plugin Daten kopieren.
+function mutelistcopy()
+{
+	if [[ $MUTELISTCOPY = "yes" ]]
+	then
+		if [ -d /$STARTVERZEICHNIS/OpenSimMutelist/ ]; then
+			echo "$(tput setab $Green)OpenSimMutelist wird kopiert! $(tput sgr 0)"
+			echo "$DATUM $(date +%H-%M-%S) OpenSimMutelist: python wird kopiert" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+			cp -r /$STARTVERZEICHNIS/OpenSimMutelist /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/addon-modules
+		echo " "
+		else
+			echo "$(tput setab $Green)OpenSimMutelist ist nicht vorhanden! $(tput sgr 0)"
+			echo "$DATUM $(date +%H-%M-%S) OpenSimMutelist: python ist nicht vorhanden" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+		fi
+	else
+    	echo "OpenSimMutelist wird nicht kopiert."
+		echo "$DATUM $(date +%H-%M-%S) OpenSimMutelist: OpenSimMutelist wird nicht kopiert." >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 	fi
 }
 ### Funktion chrisoscopy, Plugin Dateien kopieren.
 function chrisoscopy()
 {
-	# /opt/Chris.OS.Additions
-	if [ -d /$STARTVERZEICHNIS/$MONEYSOURCE/ ]; then
-		echo "$(tput setab $Green)Chris.OS.Additions Kopiervorgang startet! $(tput sgr 0)"
-		echo "$DATUM $(date +%H-%M-%S) CHRISOSCOPY: Chris.OS.Additions Kopiervorgang gestartet" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
-		cp -r /$STARTVERZEICHNIS/Chris.OS.Additions /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/addon-modules
-		echo " "
+	if [[ $CHRISOSCOPY = "yes" ]]
+	then
+		# /opt/Chris.OS.Additions
+		if [ -d /$STARTVERZEICHNIS/Chris.OS.Additions/ ]; then
+			echo "$(tput setab $Green)Chris.OS.Additions Kopiervorgang startet! $(tput sgr 0)"
+			echo "$DATUM $(date +%H-%M-%S) CHRISOSCOPY: Chris.OS.Additions Kopiervorgang gestartet" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+			cp -r /$STARTVERZEICHNIS/Chris.OS.Additions /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/addon-modules
+			echo " "
+		else
+			echo "$(tput setab $Green)Chris.OS.Additions ist nicht vorhanden! $(tput sgr 0)"
+			echo "$DATUM $(date +%H-%M-%S) CHRISOSCOPY: Chris.OS.Additions ist nicht vorhanden" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+		fi	
 	else
-		echo "$(tput setab $Green)Chris.OS.Additions ist nicht vorhanden! $(tput sgr 0)"
-		echo "$DATUM $(date +%H-%M-%S) CHRISOSCOPY: Chris.OS.Additions ist nicht vorhanden" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
-	fi	
+    	echo "Chris.OS.Additions werden nicht kopiert."
+		echo "$DATUM $(date +%H-%M-%S) CHRISOSCOPY: Chris.OS.Additions werden nicht kopiert." >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+	fi
 }
 ### Funktion compilieren, kompilieren des OpenSimulator.
 function compilieren()
@@ -611,12 +669,33 @@ function compilieren()
 		echo "$DATUM $(date +%H-%M-%S) COMPILIEREN: MoneyServer Verzeichnis existiert nicht" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 	fi
 
-	#if [ ! -f "/$STARTVERZEICHNIS/OpensimPython/" ]; then
-	#	pythoncopy
-	#else
-	#	echo "MoneyServer Verzeichnis existiert nicht."
-	#	echo "$DATUM $(date +%H-%M-%S) COMPILIEREN: OpensimPython Verzeichnis existiert nicht" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
-	#fi
+	if [ ! -f "/$STARTVERZEICHNIS/OpensimPython/" ]; then
+		pythoncopy
+	else
+		echo "OpensimPython Verzeichnis existiert nicht."
+		echo "$DATUM $(date +%H-%M-%S) COMPILIEREN: OpensimPython Verzeichnis existiert nicht" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+	fi
+
+	if [ ! -f "/$STARTVERZEICHNIS/OpenSimSearch/" ]; then
+		searchcopy
+	else
+		echo "OpenSimSearch Verzeichnis existiert nicht."
+		echo "$DATUM $(date +%H-%M-%S) COMPILIEREN: OpenSimSearch Verzeichnis existiert nicht" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+	fi
+
+		if [ ! -f "/$STARTVERZEICHNIS/OpenSimMutelist/" ]; then
+		mutelistcopy
+	else
+		echo "OpenSimMutelist Verzeichnis existiert nicht."
+		echo "$DATUM $(date +%H-%M-%S) COMPILIEREN: OpenSimMutelist Verzeichnis existiert nicht" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+	fi
+
+		if [ ! -f "/$STARTVERZEICHNIS/Chris.OS.Additions/" ]; then
+		chrisoscopy
+	else
+		echo "Chris.OS.Additions Verzeichnis existiert nicht."
+		echo "$DATUM $(date +%H-%M-%S) COMPILIEREN: Chris.OS.Additions Verzeichnis existiert nicht" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+	fi
 
 	if [ ! -f "/$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/" ]; then
 		oscompi
@@ -1459,9 +1538,8 @@ echo "oscompiaot	- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Kompil
 echo "makeaot	- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - makeaot aot."
 
 	echo " "
-	#echo "$(tput setaf $Yello)  Der Verzeichnisname ist gleichzeitig auch der Screen Name!$(tput sgr 0)"
-	echo "$(tput setaf $Yello)  $Z10001 $(tput sgr 0)"
-	echo "$DATUM $(date +%H-%M-%S) $Z10000" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+	echo "$(tput setaf $Yello)  Der Verzeichnisname ist gleichzeitig auch der Screen Name!$(tput sgr 0)"
+	echo "$DATUM $(date +%H-%M-%S) HILFE: Hilfe wurde angefordert" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 }
 ### Eingabeauswertung:
 case  $KOMMANDO  in
@@ -1533,9 +1611,11 @@ case  $KOMMANDO  in
 	get_value_from_Region_key) get_value_from_Region_key ;;
 	autorobustmapdel) autorobustmapdel ;;
 	info) info ;;
+	mutelistcopy) mutelistcopy ;;
+	searchcopy) searchcopy ;;
 	*) hilfe ;;
 esac
 
-echo "$DATUM $(date +%H-%M-%S) $Z10002" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+echo "$DATUM $(date +%H-%M-%S) MULTITOOL: Aufgabe wurde zufriedenstellend ausgeführt" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 echo "#######################################################" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 vardel
