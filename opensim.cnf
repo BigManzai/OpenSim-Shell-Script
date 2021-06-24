@@ -16,8 +16,8 @@
 	REGIONSDATEI="RegionList.ini"
 	SIMDATEI="SimulatorList.ini"
 ## Inklusive
-	SCRIPTCOPY="yes"
-	MONEYCOPY="yes"
+	SCRIPTCOPY="no"
+	MONEYCOPY="no"
 	PYTHONCOPY="no"
 	MUTELISTCOPY="no"
 	SEARCHCOPY="no"
