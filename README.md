@@ -146,4 +146,5 @@ Eine Funktionsliste aller Funktionen gibt es hier in der Wiki.
 
 ## TODO
 Translation Deutsch, Englisch, Französisch, Spanisch einfügen.
+
 Neue Funktionen ausgiebig testen.
