@@ -1,6 +1,6 @@
 # OpenSim-Shell-Script
 ![GitHub Logo](https://github.com/BigManzai/OpenSim-Shell-Script/blob/main/opensimMultitool.jpg)
-opensimMULTITOOL, Shell Script, Version 0.33.85
+opensimMULTITOOL, Shell Script, Version 0.34.91
 
 opensim.sh Basiert auf meinen Einzelscripten, an denen ich bereits 6 Jahre Arbeite und verbessere.
 
@@ -145,4 +145,5 @@ makeaot	            - hat keine Parameter   - makeaot aot.
 Eine Funktionsliste aller Funktionen gibt es hier in der Wiki.
 
 ## TODO
-Translation Deutsch, Englisch, Französisch, Spanisch
+Translation Deutsch, Englisch, Französisch, Spanisch einfügen.
+Neue Funktionen ausgiebig testen.
