@@ -1722,8 +1722,11 @@ echo "gridstartaot		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Sta
 echo "autostartaot		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0)	- Startet das gesamte Grid aot."
 echo "autosimstartaot		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Startet alle Regionen aot."
 echo "compilierenaot		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Kopiert fehlende Dateien und Kompiliert aot."
-echo "oscompiaot	- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Kompiliert einen neuen OpenSimulator ohne kopieren mit aot."
-echo "makeaot	- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - makeaot aot."
+echo "oscompiaot		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Kompiliert einen neuen OpenSimulator ohne kopieren mit aot."
+echo "makeaot			- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - makeaot aot."
+echo "monoinstall		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - mono install."
+echo "installationen		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - installationen aufisten."
+echo "serverinstall		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - serverinstall alle Pakete installieren."
 
 	echo " "
 	echo "$(tput setaf $Yello)  Der Verzeichnisname ist gleichzeitig auch der Screen Name!$(tput sgr 0)"
