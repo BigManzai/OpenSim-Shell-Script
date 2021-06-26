@@ -1724,7 +1724,7 @@ echo "autosimstartaot		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - 
 echo "compilierenaot		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Kopiert fehlende Dateien und Kompiliert aot."
 echo "oscompiaot		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Kompiliert einen neuen OpenSimulator ohne kopieren mit aot."
 echo "makeaot			- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - makeaot aot."
-echo "monoinstall		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - mono install."
+echo "monoinstall		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - mono 6.x installation."
 echo "installationen		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - installationen aufisten."
 echo "serverinstall		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - serverinstall alle Pakete installieren."
 
