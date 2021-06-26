@@ -148,3 +148,12 @@ Eine Funktionsliste aller Funktionen gibt es hier in der Wiki.
 Translation Deutsch, Englisch, Französisch, Spanisch einfügen.
 
 Neue Funktionen ausgiebig testen.
+
+```
+Test
+Installiert alle Pakete die für OpenSim benötigt werden, 
+dazu mono 6.x vom mono-project, 
+alle Webabhängigkeiten für eine Homepage 
+und alles um den OpenSimulator zu kompilieren.
+```
+./opensim.sh serverinstall
