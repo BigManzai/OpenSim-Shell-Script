@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# opensimMULTITOOL Version 0.34.91 (c) May 2021 Manfred Aabye
+# opensimMULTITOOL Version 0.34.92 (c) May 2021 Manfred Aabye
 # opensim.sh Basiert auf meinen Einzelscripten, an denen ich bereits 6 Jahre Arbeite und verbessere.
 # Da Server unterschiedlich sind, kann eine einwandfreie fuunktion nicht gewährleistet werden, also bitte mit bedacht verwenden.
 # Die Benutzung dieses Scriptes, oder deren Bestandteile, erfolgt auf eigene Gefahr!!!
@@ -1445,14 +1445,12 @@ function autorestart()
 	echo " "
 	echo "$DATUM $(date +%H-%M-%S) AUTORESTART: Auto Restart abgeschlossen" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 }
-### Dieses Installationsbeispiel installiert alles für OpenSim mit Web, sowie alles um einen OpenSimulator zu Kompilieren.
-
+### Dieses Installationsbeispiel installiert alles für OpenSim inkusive Web, sowie alles um einen OpenSimulator zu Kompilieren.
 ### Funktion monoinstall, mono 6.x installieren.
 function monoinstall() 
 {
 	if dpkg-query -s mono-complete 2>/dev/null|grep -q installed; then
 		echo "$(tput setaf 2)mono-complete ist installiert.$(tput sgr0)"
-		mono -V
 	else
 		echo "$(tput setaf 1)mono-complete ist nicht installiert.$(tput sgr0)"
 		echo "$(tput setaf 2)Installation von mono 6.x fuer Ubuntu 18.$(tput sgr0)"
@@ -1463,7 +1461,7 @@ function monoinstall()
 		sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
 		echo "deb https://download.mono-project.com/repo/ubuntu stable-bionic main" | sudo tee /etc/apt/sources.list.d/mono-official-stable.list
 		sudo apt update
-		sudo apt-get install mono-complete
+		sudo apt-get -y install mono-complete
 		sudo apt-get upgrade
 	fi
 }
@@ -1479,13 +1477,13 @@ sudo apt-get upgrade
 			echo "$(tput setaf 2)apache2 ist installiert.$(tput sgr0)"
 		else
 			echo "$(tput setaf 1)Ich installiere jetzt apache2.$(tput sgr0)"
-			sudo apt-get install apache2
+			sudo apt-get -y install apache2
 	fi
 	if dpkg-query -s libapache2-mod-php 2>/dev/null|grep -q installed; then
 			echo "$(tput setaf 2)libapache2-mod-php ist installiert.$(tput sgr0)"
 		else
 			echo "$(tput setaf 1)Ich installiere jetzt libapache2-mod-php.$(tput sgr0)"
-			sudo apt-get install libapache2-mod-php
+			sudo apt-get -y install libapache2-mod-php
 	fi
 
 ##PHP, mysql und Erweiterungen installieren.
@@ -1493,61 +1491,61 @@ sudo apt-get upgrade
 			echo "$(tput setaf 2)php ist installiert.$(tput sgr0)"
 		else
 			echo "$(tput setaf 1)Ich installiere jetzt php.$(tput sgr0)"
-			sudo apt-get install php
+			sudo apt-get -y install php
 	fi
 	if dpkg-query -s mysql-server 2>/dev/null|grep -q installed; then
 			echo "$(tput setaf 2)mysql-server ist installiert.$(tput sgr0)"
 		else
 			echo "$(tput setaf 1)Ich installiere jetzt mysql-server.$(tput sgr0)"
-			sudo apt-get install mysql-server
+			sudo apt-get -y install mysql-server
 	fi
 	if dpkg-query -s php-mysql 2>/dev/null|grep -q installed; then
 			echo "$(tput setaf 2)php-mysql ist installiert.$(tput sgr0)"
 		else
 			echo "$(tput setaf 1)Ich installiere jetzt php-mysql.$(tput sgr0)"
-			sudo apt-get install php-mysql
+			sudo apt-get -y install php-mysql
 	fi
 	if dpkg-query -s php-common 2>/dev/null|grep -q installed; then
 			echo "$(tput setaf 2)php-common ist installiert.$(tput sgr0)"
 		else
 			echo "$(tput setaf 1)Ich installiere jetzt php-common.$(tput sgr0)"
-			sudo apt-get install php-common
+			sudo apt-get -y install php-common
 	fi
 	if dpkg-query -s php-gd 2>/dev/null|grep -q installed; then
 			echo "$(tput setaf 2)php-gd ist installiert.$(tput sgr0)"
 		else
 			echo "$(tput setaf 1)Ich installiere jetzt php-gd.$(tput sgr0)"
-			sudo apt-get install php-gd
+			sudo apt-get -y install php-gd
 	fi
 	if dpkg-query -s php-pear 2>/dev/null|grep -q installed; then
 			echo "$(tput setaf 2)php-pear ist installiert.$(tput sgr0)"
 		else
 			echo "$(tput setaf 1)Ich installiere jetzt php-pear.$(tput sgr0)"
-			sudo apt-get install php-pear
+			sudo apt-get -y install php-pear
 	fi
 	if dpkg-query -s php-xmlrpc 2>/dev/null|grep -q installed; then
 			echo "$(tput setaf 2)php-xmlrpc ist installiert.$(tput sgr0)"
 		else
 			echo "$(tput setaf 1)Ich installiere jetzt php-xmlrpc.$(tput sgr0)"
-			sudo apt-get install php-xmlrpc
+			sudo apt-get -y install php-xmlrpc
 	fi
 	if dpkg-query -s php-curl 2>/dev/null|grep -q installed; then
 			echo "$(tput setaf 2)php-curl ist installiert.$(tput sgr0)"
 		else
 			echo "$(tput setaf 1)Ich installiere jetzt php-curl.$(tput sgr0)"
-			sudo apt-get install php-curl
+			sudo apt-get -y install php-curl
 	fi
 	if dpkg-query -s php-mbstring 2>/dev/null|grep -q installed; then
 			echo "$(tput setaf 2)php-mbstring ist installiert.$(tput sgr0)"
 		else
 			echo "$(tput setaf 1)Ich installiere jetzt php-mbstring.$(tput sgr0)"
-			sudo apt-get install php-mbstring
+			sudo apt-get -y install php-mbstring
 	fi
 	if dpkg-query -s php-gettext 2>/dev/null|grep -q installed; then
 			echo "$(tput setaf 2)php-gettext ist installiert.$(tput sgr0)"
 		else
 			echo "$(tput setaf 1)Ich installiere jetzt php-gettext.$(tput sgr0)"
-			sudo apt-get install php-gettext
+			sudo apt-get -y install php-gettext
 	fi
 
 ##Mono Installieren um OpenSim ausführen zu können.
@@ -1558,61 +1556,61 @@ sudo apt-get upgrade
 			echo "$(tput setaf 2)zip ist installiert.$(tput sgr0)"
 		else
 			echo "$(tput setaf 1)Ich installiere jetzt zip.$(tput sgr0)"
-			sudo apt-get install zip
+			sudo apt-get -y install zip
 	fi
 	if dpkg-query -s screen 2>/dev/null|grep -q installed; then
 			echo "$(tput setaf 2)screen ist installiert.$(tput sgr0)"
 		else
 			echo "$(tput setaf 1)Ich installiere jetzt screen.$(tput sgr0)"
-			sudo apt-get install screen
+			sudo apt-get -y install screen
 	fi
 	if dpkg-query -s git 2>/dev/null|grep -q installed; then
 			echo "$(tput setaf 2)git ist installiert.$(tput sgr0)"
 		else
 			echo "$(tput setaf 1)Ich installiere jetzt git.$(tput sgr0)"
-			sudo apt-get install git
+			sudo apt-get -y install git
 	fi
 	if dpkg-query -s nant 2>/dev/null|grep -q installed; then
 			echo "$(tput setaf 2)nant ist installiert.$(tput sgr0)"
 		else
 			echo "$(tput setaf 1)Ich installiere jetzt nant.$(tput sgr0)"
-			sudo apt-get install nant
+			sudo apt-get -y install nant
 	fi
 	if dpkg-query -s libopenjp2-tools 2>/dev/null|grep -q installed; then
 			echo "$(tput setaf 2)libopenjp2-tools ist installiert.$(tput sgr0)"
 		else
 			echo "$(tput setaf 1)Ich installiere jetzt libopenjp2-tools.$(tput sgr0)"
-			sudo apt-get install libopenjp2-tools
+			sudo apt-get -y install libopenjp2-tools
 	fi
 	if dpkg-query -s graphicsmagick 2>/dev/null|grep -q installed; then
 			echo "$(tput setaf 2)graphicsmagick ist installiert.$(tput sgr0)"
 		else
 			echo "$(tput setaf 1)Ich installiere jetzt graphicsmagick.$(tput sgr0)"
-			sudo apt-get install graphicsmagick
+			sudo apt-get -y install graphicsmagick
 	fi
 	if dpkg-query -s imagemagick 2>/dev/null|grep -q installed; then
 			echo "$(tput setaf 2)imagemagick ist installiert.$(tput sgr0)"
 		else
 			echo "$(tput setaf 1)Ich installiere jetzt imagemagick.$(tput sgr0)"
-			sudo apt-get install imagemagick
+			sudo apt-get -y install imagemagick
 	fi
 	if dpkg-query -s curl 2>/dev/null|grep -q installed; then
 			echo "$(tput setaf 2)curl ist installiert.$(tput sgr0)"
 		else
 			echo "$(tput setaf 1)Ich installiere jetzt curl.$(tput sgr0)"
-			sudo apt-get install curl
+			sudo apt-get -y install curl
 	fi
 	if dpkg-query -s php-cli 2>/dev/null|grep -q installed; then
 			echo "$(tput setaf 2)php-cli ist installiert.$(tput sgr0)"
 		else
 			echo "$(tput setaf 1)Ich installiere jetzt php-cli.$(tput sgr0)"
-			sudo apt-get install php-cli
+			sudo apt-get -y install php-cli
 	fi
 	if dpkg-query -s php-bcmath 2>/dev/null|grep -q installed; then
 			echo "$(tput setaf 2)php-bcmath ist installiert.$(tput sgr0)"
 		else
 			echo "$(tput setaf 1)Ich installiere jetzt php-bcmath.$(tput sgr0)"
-			sudo apt-get install php-bcmath
+			sudo apt-get -y install php-bcmath
 	fi
 
 ##Zeitsteuerung
@@ -1620,7 +1618,7 @@ sudo apt-get upgrade
 			echo "$(tput setaf 2)at ist installiert.$(tput sgr0)"
 		else
 			echo "$(tput setaf 1)Ich installiere jetzt at.$(tput sgr0)"
-			sudo apt-get install at
+			sudo apt-get -y install at
 	fi
 
 ##Als letzte Maßnahmen noch Updaten und Upgraden und Server neu starten wegen Mono Threads.
