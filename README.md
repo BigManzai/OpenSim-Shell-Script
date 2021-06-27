@@ -131,7 +131,7 @@ terminator              - hat keine Parameter - Killt alle laufenden Screens.
 ```
 
 ```
-#Ungetestete Funktionen
+#Ungetestete oder neue Funktionen
 rostartaot		    - hat keine Parameter   - Startet Robust aot Server.
 mostartaot		    - hat keine Parameter   - Startet Money aot Server.
 gridstartaot		- hat keine Parameter   - Startet Robust und Money aot.
