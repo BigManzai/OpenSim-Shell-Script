@@ -165,5 +165,5 @@ und alles um den OpenSimulator zu kompilieren.
 ```
 # simstats screen_name
 # Beispiel-Example: opensim.sh simstats sim1
-# erzeugt im Hauptverzeichnis eine Datei namens sim1.log in dieser Datei ist die Statistik zu finden.
+# erzeugt im Hauptverzeichnis eine Datei namens sim1.log in dieser Datei ist die Statistik für sim1 zu finden.
 ```
