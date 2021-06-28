@@ -1,6 +1,6 @@
 # OpenSim-Shell-Script
 ![GitHub Logo](https://github.com/BigManzai/OpenSim-Shell-Script/blob/main/opensimMultitool.jpg)
-opensimMULTITOOL, Shell Script, Version 0.34.93
+opensimMULTITOOL, Shell Script, Version 0.35.94
 
 opensim.sh Basiert auf meinen Einzelscripten, an denen ich bereits 6 Jahre Arbeite und verbessere.
 
@@ -161,3 +161,9 @@ alle Webabhängigkeiten für eine Homepage
 und alles um den OpenSimulator zu kompilieren.
 ```
 ./opensim.sh serverinstall
+
+```
+# simstats screen_name
+# Beispiel-Example: opensim.sh simstats sim1
+# erzeugt im Hauptverzeichnis eine Datei namens sim1.log in dieser Datei ist die Statistik zu finden.
+```
