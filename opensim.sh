@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# opensimMULTITOOL Version 0.34.92 (c) May 2021 Manfred Aabye
+# opensimMULTITOOL Version 0.34.93 (c) May 2021 Manfred Aabye
 # opensim.sh Basiert auf meinen Einzelscripten, an denen ich bereits 6 Jahre Arbeite und verbessere.
 # Da Server unterschiedlich sind, kann eine einwandfreie fuunktion nicht gewährleistet werden, also bitte mit bedacht verwenden.
 # Die Benutzung dieses Scriptes, oder deren Bestandteile, erfolgt auf eigene Gefahr!!!
@@ -86,7 +86,7 @@ echo "$(tput setaf 2) | |__| || |_) ||  __/| | | | ____) || || | | | | || |_| ||
 echo "  \____/ |  __/  \___||_| |_||_____/ |_||_| |_| |_| \____||_| \____| \__|\___/ |_|   "
 echo "         | |                                                                         "
 echo "         |_|                                                                         "
-echo "	    $(tput setaf 2)opensim$(tput setaf 4)MULTITOOL$(tput sgr 0) 0.34.91" # Versionsausgabe
+echo "	    $(tput setaf 2)opensim$(tput setaf 4)MULTITOOL$(tput sgr 0) 0.34.93" # Versionsausgabe
 echo " "
 
 DATUM=$(date +%d-%m-%Y)
@@ -1669,6 +1669,7 @@ function hilfe()
 {
 	echo "$(tput setab $Magenta)Funktion:$(tput sgr 0)		$(tput setab $Green)Parameter:$(tput sgr 0)		$(tput setab $Blue)Informationen:$(tput sgr 0)"
 	echo "hilfe 			- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0)	- Diese Hilfe."
+	echo "konsolenhilfe 		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0)	- konsolenhilfe ist eine Hilfe für Putty oder Xterm."
 	echo "restart 		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0)	- Startet das gesamte Grid neu."
 	echo "autostop 		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0)	- Stoppt das gesamte Grid."
 	echo "autostart 		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0)	- Startet das gesamte Grid."
@@ -1731,6 +1732,27 @@ echo "serverinstall		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - se
 	echo " "
 	echo "$(tput setaf $Yello)  Der Verzeichnisname ist gleichzeitig auch der Screen Name!$(tput sgr 0)"
 	echo "$DATUM $(date +%H-%M-%S) HILFE: Hilfe wurde angefordert" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+}
+### Funktion konsolenhilfe, konsolenhilfe auf dem Bildschirm anzeigen.
+function konsolenhilfe()
+{
+	echo "$(tput setab $Magenta)Funktion:$(tput sgr 0) $(tput setab $Blue)Informationen:$(tput sgr 0)"
+	echo "Tab - Dateien und Ordnernamen automatisch vervollständigen."
+	echo "Strg + W - Löscht das word vor dem Cursor."
+	echo "Strg + K - Löscht die Zeile hinter dem Cursor."
+	echo "Strg + T - Vertauscht die letzten beiden Zeichen vor dem Cursor."
+	echo "Esc + T - Vertauscht die letzten beiden Wörter vor dem Cursor."
+	echo "Alt + F - Bewegt den Cursor Wortweise vorwährts."
+	echo "Alt + B - Bewegt den Cursor Wortweise rückwärts."
+	echo "Strg + A - Gehe zum Anfang der Zeile."
+	echo "Strg + E - Zum Ende der Zeile gehen."
+	echo "Strg + L - Bildschirm löschen."
+	echo "Strg + U - Löscht die Zeile vor der cursor Position. Am Ende wird die gesamte Zeile gelöscht."
+	echo "Strg + H - Wie Rücktaste"
+	echo "Strg + R - Ermöglicht die Suche nach zuvor verwendeten Befehlen"
+	echo "Strg + C - Beendet was auch immer gerade läuft."
+	echo "Strg + D - Beendet Putty oder Xterm."
+	echo "Strg + Z - Setzt alles, was Sie ausführen, in einen angehaltenen Hintergrundprozess."
 }
 ### Eingabeauswertung:
 case  $KOMMANDO  in
@@ -1807,6 +1829,7 @@ case  $KOMMANDO  in
 	monoinstall) monoinstall ;;
 	installationen) installationen ;;
 	serverinstall) serverinstall ;;
+	konsolenhilfe) konsolenhilfe ;;
 	*) hilfe ;;
 esac
 
