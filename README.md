@@ -136,7 +136,7 @@ terminator              - hat keine Parameter - Killt alle laufenden Screens.
 rostartaot          - hat keine Parameter   - Startet Robust aot Server.
 mostartaot          - hat keine Parameter   - Startet Money aot Server.
 gridstartaot        - hat keine Parameter   - Startet Robust und Money aot.
-utostartaot         - hat keine Parameter	- Startet das gesamte Grid aot.
+utostartaot         - hat keine Parameter   - Startet das gesamte Grid aot.
 autosimstartaot     - hat keine Parameter   - Startet alle Regionen aot.
 compilierenaot      - hat keine Parameter   - Kopiert fehlende Dateien und Kompiliert aot.
 oscompiaot          - hat keine Parameter   - Kompiliert einen neuen OpenSimulator ohne kopieren mit aot.
