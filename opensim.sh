@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# opensimMULTITOOL Version 0.35.94 (c) May 2021 Manfred Aabye
+# opensimMULTITOOL Version 0.35.95 (c) May 2021 Manfred Aabye
 # opensim.sh Basiert auf meinen Einzelscripten, an denen ich bereits 6 Jahre Arbeite und verbessere.
 # Da Server unterschiedlich sind, kann eine einwandfreie fuunktion nicht gewährleistet werden, also bitte mit bedacht verwenden.
 # Die Benutzung dieses Scriptes, oder deren Bestandteile, erfolgt auf eigene Gefahr!!!
@@ -86,7 +86,7 @@ echo "$(tput setaf 2) | |__| || |_) ||  __/| | | | ____) || || | | | | || |_| ||
 echo "  \____/ |  __/  \___||_| |_||_____/ |_||_| |_| |_| \____||_| \____| \__|\___/ |_|   "
 echo "         | |                                                                         "
 echo "         |_|                                                                         "
-echo "	    $(tput setaf 2)opensim$(tput setaf 4)MULTITOOL$(tput sgr 0) 0.35.94" # Versionsausgabe
+echo "	    $(tput setaf 2)opensim$(tput setaf 4)MULTITOOL$(tput sgr 0) 0.35.95" # Versionsausgabe
 echo " "
 
 DATUM=$(date +%d-%m-%Y)
@@ -132,7 +132,7 @@ function schreibeinfo()
 	if [ "$FILESIZE" \< "$NULL" ]
 	then
 	{	echo "#######################################################"
-		echo "$DATUM $(date +%H-%M-%S) MULTITOOL: wurde gestartet"
+		echo "$DATUM $(date +%H-%M-%S) MULTITOOL: wurde gestartet am $(date +%d.%m.%Y) um $(date +%H:%M:%S) Uhr"
 		echo "$DATUM $(date +%H-%M-%S) INFO: Server Name: ${HOSTNAME}"
 		echo "$DATUM $(date +%H-%M-%S) INFO: Bash Version: ${BASH_VERSION}"
 		echo "$DATUM $(date +%H-%M-%S) INFO: MONO THREAD Einstellung: ${MONO_THREADS_PER_CPU}"
@@ -466,10 +466,16 @@ function gridstartaot()
 function simstats()
 {
 	if screen -list | grep -q $1; then
+		if checkfile /$STARTVERZEICHNIS/$1.log; then
+			rm /$STARTVERZEICHNIS/$1.log
+		fi
 		echo "$(tput setaf 2) $(tput setab $White)OpenSimulator $1 Simstatistik anzeigen$(tput sgr 0)"
 		echo "$DATUM $(date +%H-%M-%S) simstat: Region $1 Simstatistik anzeigen" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 		screen -S $1 -p 0 -X eval "stuff 'stats save /$STARTVERZEICHNIS/$1.log'^M"
 		sleep 3
+		echo "$(tput setaf 2) "
+		cat /$STARTVERZEICHNIS/$1.log
+		echo "$(tput sgr 0) "
 	else
 		echo "$(tput setaf $Red) $(tput setab $White)Simulator $1 nicht vorhanden$(tput sgr 0)"
 		echo "$DATUM $(date +%H-%M-%S) simstat: Simulator $1 nicht vorhanden" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
