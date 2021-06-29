@@ -164,8 +164,8 @@ und alles um den OpenSimulator zu kompilieren.
 
 ```
 Neu in 0.35.94
-# simstats screen_name funktioniert beim RobustServer, MoneyServer und allen Regionsserver.
-# Beispiel-Example: opensim.sh simstats sim1
-# erzeugt im Hauptverzeichnis eine Datei namens sim1.log in dieser Datei ist die Statistik für sim1 zu finden.
-
+simstats screen_name funktioniert beim RobustServer, MoneyServer und allen Regionsserver.
+Beispiel-Example: opensim.sh simstats sim1
+erzeugt im Hauptverzeichnis eine Datei namens sim1.log in dieser Datei ist die Statistik für sim1 zu finden.
+Diese Datei wird jetzt auch direkt angezeigt und die alte Datei wird gleichzeitig gelöscht.
 ```
