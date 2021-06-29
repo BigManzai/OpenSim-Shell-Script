@@ -144,6 +144,7 @@ makeaot	            - hat keine Parameter   - makeaot aot.
 monoinstall		    - hat keine Parameter - mono 6.x installation."
 installationen		- hat keine Parameter - installationen aufisten."
 serverinstall		- hat keine Parameter - serverinstall, alle Pakete inklusive mono 6.x installieren (Neuinstallation)."
+simstats    		- Screen              - erzeugt im Hauptverzeichnis eine log Datei."
 ```
 
 Eine Funktionsliste aller Funktionen gibt es hier in der Wiki.
