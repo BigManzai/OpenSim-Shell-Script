@@ -170,3 +170,9 @@ Beispiel-Example: opensim.sh simstats sim1
 erzeugt im Hauptverzeichnis eine Datei namens sim1.log in dieser Datei ist die Statistik für sim1 zu finden.
 Diese Datei wird jetzt auch direkt angezeigt und die alte Datei wird gleichzeitig gelöscht.
 ```
+
+```
+In 0.35.97 Programmablaufbeschleunigung um etwa 30%.
+Einige Fehler behoben
+Einige doppelter Bildschirmausgaben entfernt.
+```
