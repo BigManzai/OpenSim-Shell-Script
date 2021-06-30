@@ -29,3 +29,5 @@
 	MONEYWARTEZEIT=50 # Moneywartezeit ist eine Extra Pause, weil dieser zwischen Robust und Simulatoren gestartet werden muss.
 	BACKUPWARTEZEIT=120 # Backupwartezeit ist eine Pause, damit der Server nicht ueberlastet wird.
 	AUTOSTOPZEIT=60 # Autostopzeit ist eine Pause, um den Simulatoren zeit zum herunterfahren gegeben wird, bevor haengende Simulatoren gekillt werden.
+## Einstellungen
+SETMONOTHREADS=800

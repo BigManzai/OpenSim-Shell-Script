@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# opensimMULTITOOL Version 0.35.97 (c) May 2021 Manfred Aabye
+# opensimMULTITOOL Version 0.35.98 (c) May 2021 Manfred Aabye
 # opensim.sh Basiert auf meinen Einzelscripten, an denen ich bereits 6 Jahre Arbeite und verbessere.
 # Da Server unterschiedlich sind, kann eine einwandfreie fuunktion nicht gewährleistet werden, also bitte mit bedacht verwenden.
 # Die Benutzung dieses Scriptes, oder deren Bestandteile, erfolgt auf eigene Gefahr!!!
@@ -17,7 +17,7 @@ echo "$(tput setaf 2) | |__| || |_) ||  __/| | | | ____) || || | | | | || |_| ||
 echo "  \____/ |  __/  \___||_| |_||_____/ |_||_| |_| |_| \____||_| \____| \__|\___/ |_|   "
 echo "         | |                                                                         "
 echo "         |_|                                                                         "
-echo "	    $(tput setaf 2)opensim$(tput setaf 4)MULTITOOL$(tput sgr 0) 0.35.97" # Versionsausgabe
+echo "	    $(tput setaf 2)opensim$(tput setaf 4)MULTITOOL$(tput sgr 0) 0.35.98" # Versionsausgabe
 echo " "
 
 # Datum und Uhrzeit
@@ -93,7 +93,7 @@ function vardel()
 ### myshellschreck, ShellCheck ueberlisten hat sonst keinerlei Funktion und wird auch nicht aufgerufen.
 function myshellschreck()
 {
-STARTVERZEICHNIS="opt" MONEYVERZEICHNIS="robust" ROBUSTVERZEICHNIS="robust" OPENSIMVERZEICHNIS="opensim" SCRIPTSOURCE="ScriptNeu" MONEYSOURCE="money48" REGIONSDATEI="RegionList.ini" SIMDATEI="SimulatorList.ini" WARTEZEIT=30 STARTWARTEZEIT=10 STOPWARTEZEIT=30 MONEYWARTEZEIT=50 BACKUPWARTEZEIT=120 AUTOSTOPZEIT=60
+STARTVERZEICHNIS="opt" MONEYVERZEICHNIS="robust" ROBUSTVERZEICHNIS="robust" OPENSIMVERZEICHNIS="opensim" SCRIPTSOURCE="ScriptNeu" MONEYSOURCE="money48" REGIONSDATEI="RegionList.ini" SIMDATEI="SimulatorList.ini" WARTEZEIT=30 STARTWARTEZEIT=10 STOPWARTEZEIT=30 MONEYWARTEZEIT=50 BACKUPWARTEZEIT=120 AUTOSTOPZEIT=60 SETMONOTHREADS=800
 }
 ### Erstellen eines Arrays aus einer Textdatei ###
 function makeverzeichnisliste() 
@@ -211,6 +211,9 @@ function ossettings()
 	echo "$DATUM $(date +%H-%M-%S) OSSETTINGS: Setze die Einstellung: ulimit -s 1048576" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 	echo "ulimit -s 1048576"
 	ulimit -s 1048576
+	echo "$DATUM $(date +%H-%M-%S) OSSETTINGS: Setze die Mono Threads auf $SETMONOTHREADS" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
+	echo "Setze die Setze Mono Threads auf $SETMONOTHREADS"
+	MONO_THREADS_PER_CPU=$SETMONOTHREADS
 	echo "$DATUM $(date +%H-%M-%S) OSSETTINGS: Setze die Einstellung: minor=split,promotion-age=14,nursery-size=64m" >> "/$STARTVERZEICHNIS/$DATUM-multitool.log"
 	echo "minor=split,promotion-age=14,nursery-size=64m"
 	export MONO_GC_PARAMS="minor=split,promotion-age=14,nursery-size=64m"
@@ -359,6 +362,8 @@ function osscreenstop()
 ### Funktion gridstart, startet erst Robust und dann Money.
 function gridstart()
 {
+	ossettings
+	echo " "
 	if screen -list | grep -q RO; then
 		echo "$(tput setaf $Red) $(tput setab $White)RobustServer läuft bereits $(tput sgr 0)"
 	else
@@ -376,6 +381,8 @@ function gridstart()
 ### Funktion gridstartaot, startet erst Robust und dann Money mit aot.
 function gridstartaot()
 {
+	ossettings
+	echo " "
 	if screen -list | grep -q RO; then
 		echo "$(tput setaf $Red) $(tput setab $White)RobustServer läuft bereits $(tput sgr 0)"
 	else
