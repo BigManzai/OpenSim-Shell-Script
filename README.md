@@ -176,3 +176,8 @@ In 0.35.97 Programmablaufbeschleunigung um etwa 30%.
 Einige Fehler behoben
 Einige doppelter Bildschirmausgaben entfernt.
 ```
+
+```
+In 0.35.98 vergessene Einstellungen aktiviert.
+Mono Threads können jetzt in der Konfigurationsdatei eingestellt werden.
+```
