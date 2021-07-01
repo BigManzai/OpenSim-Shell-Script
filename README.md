@@ -1,6 +1,6 @@
 # OpenSim-Shell-Script
 ![GitHub Logo](https://github.com/BigManzai/OpenSim-Shell-Script/blob/main/opensimMultitool.jpg)
-opensimMULTITOOL, Shell Script, Version 0.35.97
+opensimMULTITOOL, Shell Script, Version 0.35.103
 
 opensim.sh Basiert auf meinen Einzelscripten, an denen ich bereits 6 Jahre Arbeite und verbessere.
 
@@ -178,4 +178,9 @@ Einige doppelter Bildschirmausgaben entfernt.
 ```
 In 0.35.98 vergessene Einstellungen aktiviert.
 Mono Threads können jetzt in der Konfigurationsdatei eingestellt werden.
+```
+
+```
+Version 0.35.103 aot geht jetzt über die Konfigurationsdatei.
+Habe angefangen aufzuräumen und unnütze Sachen raus zu werfen.
 ```
