@@ -75,7 +75,7 @@ Crontab zum prüfen noch einmal anzeigen:
 
      crontab -l
 
-## Funktion:               Parameter:              Informationen:
+## Funktion:     Parameter:     Informationen:
 ```
 hilfe                   - hat keine Parameter   - Diese Hilfe.
 konsolenhilfe           - hat keine Parameter   - konsolenhilfe ist eine Hilfe für Putty oder Xterm.
