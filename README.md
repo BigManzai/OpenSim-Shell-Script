@@ -75,24 +75,22 @@ Crontab zum prüfen noch einmal anzeigen:
 
      crontab -l
 
-## Funktionsübersicht
+## Funktion:               Parameter:              Informationen:
 ```
-#Funktion:               Parameter:              Informationen:
 hilfe                   - hat keine Parameter   - Diese Hilfe.
-konsolenhilfe           - hat keine Parameter   - Konsolen Hilfe zu Putty oder Xterm.
-restart                 - hat keine Parameter   - Startet das gesammte Grid neu.
-autostop                - hat keine Parameter   - Stoppt das gesammte Grid.
-autostart               - hat keine Parameter   - Startet das gesammte Grid.
-works                   - Verzeichnisname       - Einzelne screens auf Existens prüfen.
+konsolenhilfe           - hat keine Parameter   - konsolenhilfe ist eine Hilfe für Putty oder Xterm.
+restart                 - hat keine Parameter   - Startet das gesamte Grid neu.
+autostop                - hat keine Parameter   - Stoppt das gesamte Grid.
+autostart               - hat keine Parameter   - Startet das gesamte Grid.
+works                   - Verzeichnisname       - Einzelne screens auf Existenz prüfen.
 osstart                 - Verzeichnisname       - Startet einen einzelnen Simulator.
 osstop                  - Verzeichnisname       - Stoppt einen einzelnen Simulator.
-meineregionen           - hat keine Parameter - listet alle Regionen aus den Konfigurationen auf.
+meineregionen           - hat keine Parameter   - listet alle Regionen aus den Konfigurationen auf.
 autologdel              - hat keine Parameter   - Löscht alle Log Dateien.
 automapdel              - hat keine Parameter   - Löscht alle Map Karten.
 ```
-
+## Erweiterte Funktionen
 ```
-#Erweiterte Funktionen
 regionbackup            - Verzeichnisname Regionsname - Backup einer ausgewählten Region.
 assetdel                - screen_name Regionsname Objektname - Einzelnes Asset löschen.
 oscommand               - Verzeichnisname Region Konsolenbefehl Parameter - Konsolenbefehl senden.
@@ -105,19 +103,18 @@ mostop                  - hat keine Parameter - Stoppt Money Server.
 autosimstart            - hat keine Parameter - Startet alle Regionen.
 autosimstop             - hat keine Parameter - Beendet alle Regionen.
 autoscreenstop          - hat keine Parameter - Killt alle OpenSim Screens.
-logdel                  - Verzeichnisname - Löscht alle Simulator Log Dateien im Verzeichnis.
-mapdel                  - Verzeichnisname - Löscht alle Simulator Map-Karten im Verzeichnis.
+logdel                  - Verzeichnisname     - Löscht alle Simulator Log Dateien im Verzeichnis.
+mapdel                  - Verzeichnisname     - Löscht alle Simulator Map-Karten im Verzeichnis.
 settings                - hat keine Parameter - setzt Linux Einstellungen.
-configlesen             - Verzeichnisname - Alle Regionskonfigurationen im Verzeichnis anzeigen.
+configlesen             - Verzeichnisname     - Alle Regionskonfigurationen im Verzeichnis anzeigen.
 ```
-
+## Experten Funktionen
 ```
-#Experten Funktionen
 osupgrade               - hat keine Parameter - Installiert eine neue OpenSim Version.
 autoregionbackup        - hat keine Parameter - Backup aller Regionen.
-oscopy                  - Verzeichnisname - Kopiert den Simulator.
-osstruktur              - ersteSIM letzteSIM - Legt eine Verzeichnisstruktur an.
-osprebuild              - Versionsnummer - Aendert die Versionseinstellungen 0.9.2.XXXX
+oscopy                  - Verzeichnisname     - Kopiert den Simulator.
+osstruktur              - ersteSIM letzteSIM  - Legt eine Verzeichnisstruktur an.
+osprebuild              - Versionsnummer      - Aendert die Versionseinstellungen 0.9.2.XXXX
 compilieren             - hat keine Parameter - Kopiert fehlende Dateien und Kompiliert.
 oscompi                 - hat keine Parameter - Kompiliert einen neuen OpenSimulator ohne kopieren.
 scriptcopy              - hat keine Parameter - Kopiert die Scripte in den Source.
@@ -127,25 +124,21 @@ regionsiniteilen        - Verzeichnisname Region - kopiert aus der Regions.ini e
 autoregionsiniteilen    - hat keine Parameter - aus allen Regions.ini alle Regionen vereinzeln.
 RegionListe             - hat keine Parameter - Die RegionList.ini erstellen.
 Regionsdateiliste       - -b Bildschirm oder -d Datei Verzeichnisname - Regionsdateiliste erstellen.
-osgitholen              - hat keine Parameter - kopiert eine OpenSimulator Entwicklerversion.
+osgitholen              - hat keine Parameter - kopiert eine OpenSimulator Git Entwicklerversion.
 terminator              - hat keine Parameter - Killt alle laufenden Screens.
 ```
-
+## Ungetestete Funktionen
 ```
-#Ungetestete oder neue Funktionen
-rostartaot          - hat keine Parameter   - Startet Robust aot Server.
-mostartaot          - hat keine Parameter   - Startet Money aot Server.
-gridstartaot        - hat keine Parameter   - Startet Robust und Money aot.
-utostartaot         - hat keine Parameter   - Startet das gesamte Grid aot.
-autosimstartaot     - hat keine Parameter   - Startet alle Regionen aot.
-makeaot             - hat keine Parameter   - makeaot aot.
-monoinstall         - hat keine Parameter   - mono 6.x installation.
-installationen      - hat keine Parameter   - installationen aufisten.
-serverinstall       - hat keine Parameter   - serverinstall, alle Pakete inklusive mono 6.x installieren (Neuinstallation).
-simstats            - Screen                - erzeugt im Hauptverzeichnis eine log Datei.
+makeaot                 - hat keine Parameter - aot Dateien erstellen.
+cleanaot                - hat keine Parameter - aot Dateien entfernen.
+monoinstall             - hat keine Parameter - mono 6.x installation.
+installationen          - hat keine Parameter - installationen aufisten.
+serverinstall           - hat keine Parameter - serverinstall alle Pakete installieren.
 ```
 
-Eine Funktionsliste aller Funktionen gibt es hier in der Wiki.
+```
+  Der Verzeichnisname ist gleichzeitig auch der Screen Name!
+```
 
 ## TODO
 Translation Deutsch, Englisch, Französisch, Spanisch einfügen.
