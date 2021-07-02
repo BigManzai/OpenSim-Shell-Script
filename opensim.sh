@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# opensimMULTITOOL Version 0.35.103 (c) May 2021 Manfred Aabye
+# opensimMULTITOOL Version 0.36.108 (c) May 2021 Manfred Aabye
 # opensim.sh Basiert auf meinen Einzelscripten, an denen ich bereits 6 Jahre Arbeite und verbessere.
 # Da Server unterschiedlich sind, kann eine einwandfreie fuunktion nicht gewährleistet werden, also bitte mit bedacht verwenden.
 # Die Benutzung dieses Scriptes, oder deren Bestandteile, erfolgt auf eigene Gefahr!!!
@@ -17,7 +17,7 @@ echo "$(tput setaf 2) | |__| || |_) ||  __/| | | | ____) || || | | | | || |_| ||
 echo "  \____/ |  __/  \___||_| |_||_____/ |_||_| |_| |_| \____||_| \____| \__|\___/ |_|   "
 echo "         | |                                                                         "
 echo "         |_|                                                                         "
-echo "	    $(tput setaf 2)opensim$(tput setaf 4)MULTITOOL$(tput sgr 0) 0.35.103" # Versionsausgabe
+echo "	    $(tput setaf 2)opensim$(tput setaf 4)MULTITOOL$(tput sgr 0) 0.36.108" # Versionsausgabe
 echo " "
 
 # Datum und Uhrzeit
@@ -101,7 +101,7 @@ STARTVERZEICHNIS="opt" MONEYVERZEICHNIS="robust" ROBUSTVERZEICHNIS="robust" OPEN
 REGIONSDATEI="RegionList.ini" SIMDATEI="SimulatorList.ini" WARTEZEIT=30 STARTWARTEZEIT=10 STOPWARTEZEIT=30 MONEYWARTEZEIT=50 BACKUPWARTEZEIT=120 AUTOSTOPZEIT=60 SETMONOTHREADS=800
 }
 
-### Erstellen eines Arrays aus einer Textdatei ###
+### Erstellen eines Arrays aus einer Textdatei - Verzeichnisse und Regionen ###
 function makeverzeichnisliste() 
 {
 	VERZEICHNISSLISTE=()
@@ -246,7 +246,6 @@ function ossettings()
 	echo "Setze Mono GC Parameter auf minor=split,promotion-age=14,nursery-size=64m"
 	export MONO_GC_PARAMS="minor=split,promotion-age=14,nursery-size=64m"
 	fi
-
 	echo " "
 }
 
@@ -266,10 +265,21 @@ function osstart()
 {
 	SCREEN=$1 # OpenSimulator, Verzeichnis und Screen Name
 	if [ -d "$SCREEN" ]; then
-		echo "$(tput setaf 2) $(tput setab $White)OpenSimulator $SCREEN Starten$(tput sgr 0)"
-		echo "$DATUM $(date +%H:%M:%S) OSSTART: OpenSimulator $SCREEN Starten" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+		
 		cd /$STARTVERZEICHNIS/"$SCREEN"/bin || return 1
-		screen -fa -S "$1" -d -U -m mono OpenSim.exe
+
+		# AOT Aktiveren oder Deaktivieren.
+		if [[ $SETAOTON = "yes" ]]
+		then
+			echo "$(tput setaf 2) $(tput setab $White)OpenSimulator $SCREEN Starten aot $(tput sgr 0)"
+			echo "$DATUM $(date +%H:%M:%S) OSSTART: OpenSimulator $SCREEN Starten aot" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+			screen -fa -S "$1" -d -U -m mono --desktop -O=all OpenSim.exe
+		else
+			echo "$(tput setaf 2) $(tput setab $White)OpenSimulator $SCREEN Starten$(tput sgr 0)"
+			echo "$DATUM $(date +%H:%M:%S) OSSTART: OpenSimulator $SCREEN Starten" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+			screen -fa -S "$1" -d -U -m mono OpenSim.exe
+		fi
+		
 		sleep 10
 	else
 		echo "$(tput setaf $Red) $(tput setab $White)OpenSimulator $SCREEN nicht vorhanden$(tput sgr 0)"
@@ -298,26 +308,21 @@ function osstop()
 ### Funktion rostart, Robust Server starten.
 function rostart()
 {
-	if checkfile /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/Robust.exe; then
-		echo "$(tput setaf 2) $(tput setab $White)RobustServer Start$(tput sgr 0)"
+	if checkfile /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/Robust.exe; then		
 		cd /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin || return 1
-		echo "$DATUM $(date +%H:%M:%S) ROSTART: RobustServer Start" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-		screen -fa -S RO -d -U -m mono Robust.exe 
-		sleep $WARTEZEIT
-	else
-		echo "$(tput setaf $Red)RobustServer wurde nicht gefunden.$(tput sgr 0)"
-		echo "$DATUM $(date +%H:%M:%S) ROSTART: RobustServer wurde nicht gefunden" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-	fi
-}
 
-### Funktion rostartaot, Robust Server mit der Option aot starten.
-function rostartaot()
-{
-	if checkfile /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/Robust.exe; then
-		echo "$(tput setaf 2) $(tput setab $White)RobustServer Start aot$(tput sgr 0)"
-		cd /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin || return 1
-		echo "$DATUM $(date +%H:%M:%S) ROSTART: RobustServer Start aot" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-		screen -fa -S RO -d -U -m mono --desktop -O=all Robust.exe 
+		# AOT Aktiveren oder Deaktivieren.
+		if [[ $SETAOTON = "yes" ]]
+		then
+			echo "$(tput setaf 2) $(tput setab $White)RobustServer Start aot$(tput sgr 0)"
+			echo "$DATUM $(date +%H:%M:%S) ROSTART: RobustServer Start aot" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+			screen -fa -S RO -d -U -m mono --desktop -O=all Robust.exe 
+		else
+			echo "$(tput setaf 2) $(tput setab $White)RobustServer Start$(tput sgr 0)"
+			echo "$DATUM $(date +%H:%M:%S) ROSTART: RobustServer Start" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+			screen -fa -S RO -d -U -m mono Robust.exe
+		fi
+		
 		sleep $WARTEZEIT
 	else
 		echo "$(tput setaf $Red)RobustServer wurde nicht gefunden.$(tput sgr 0)"
@@ -343,25 +348,20 @@ function rostop()
 function mostart()
 {
 	if checkfile /$STARTVERZEICHNIS/$MONEYVERZEICHNIS/bin/MoneyServer.exe; then
-		echo "$(tput setaf 2) $(tput setab $White)Money Server Start$(tput sgr 0)"
 		cd /$STARTVERZEICHNIS/$MONEYVERZEICHNIS/bin || return 1
-		echo "$DATUM $(date +%H:%M:%S) MOSTART: Money Server Start" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-		screen -fa -S MO -d -U -m mono MoneyServer.exe
-		sleep $MONEYWARTEZEIT
-	else
-		echo "$(tput setaf $Red)Money Server wurde nicht gefunden.$(tput sgr 0)"
-		echo "$DATUM $(date +%H:%M:%S) MOSTART: Money Server wurde nicht gefunden" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-	fi
-}
 
-### Funktion mostartaot, Money Server mit der Option aot starten. Dies ist ungetestet und ich weis garnicht ob es möglich ist.
-function mostartaot()
-{
-	if checkfile /$STARTVERZEICHNIS/$MONEYVERZEICHNIS/bin/MoneyServer.exe; then
-		echo "$(tput setaf 2) $(tput setab $White)Money Server Start aot$(tput sgr 0)"
-		cd /$STARTVERZEICHNIS/$MONEYVERZEICHNIS/bin || return 1
-		echo "$DATUM $(date +%H:%M:%S) MOSTART: Money Server Start aot" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-		screen -fa -S MO -d -U -m mono --desktop -O=all MoneyServer.exe
+		# AOT Aktiveren oder Deaktivieren.
+		if [[ $SETAOTON = "yes" ]]
+		then
+			echo "$(tput setaf 2) $(tput setab $White)Money Server Start aot $(tput sgr 0)"
+			echo "$DATUM $(date +%H:%M:%S) MOSTART: Money Server Start aot" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+			screen -fa -S MO -d -U -m mono --desktop -O=all MoneyServer.exe
+		else
+			echo "$(tput setaf 2) $(tput setab $White)Money Server Start$(tput sgr 0)"
+			echo "$DATUM $(date +%H:%M:%S) MOSTART: Money Server Start" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+			screen -fa -S MO -d -U -m mono MoneyServer.exe
+		fi
+
 		sleep $MONEYWARTEZEIT
 	else
 		echo "$(tput setaf $Red)Money Server wurde nicht gefunden.$(tput sgr 0)"
@@ -406,35 +406,13 @@ function gridstart()
 	if screen -list | grep -q RO; then
 		echo "$(tput setaf $Red) $(tput setab $White)RobustServer läuft bereits $(tput sgr 0)"
 	else
-		echo "$DATUM $(date +%H:%M:%S) ROSTART: Start" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 		rostart
 	fi
 
 	if screen -list | grep -q MO; then
 		echo "$(tput setaf $Red) $(tput setab $White)MoneyServer läuft bereits $(tput sgr 0)"
 	else
-		echo "$DATUM $(date +%H:%M:%S) MOSTART: Start" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 		mostart
-	fi
-}
-
-### Funktion gridstartaot, startet erst Robust und dann Money mit aot.
-function gridstartaot()
-{
-	ossettings
-	echo " "
-	if screen -list | grep -q RO; then
-		echo "$(tput setaf $Red) $(tput setab $White)RobustServer läuft bereits $(tput sgr 0)"
-	else
-		echo "$DATUM $(date +%H:%M:%S) ROSTART: Start aot" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-		rostartaot
-	fi
-
-	if screen -list | grep -q MO; then
-		echo "$(tput setaf $Red) $(tput setab $White)MoneyServer läuft bereits $(tput sgr 0)"
-	else
-		echo "$DATUM $(date +%H:%M:%S) MOSTART: Start aot" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-		mostartaot
 	fi
 }
 
@@ -466,14 +444,12 @@ function simstats()
 function gridstop()
 {
 	if screen -list | grep -q MO; then
-		echo "$DATUM $(date +%H:%M:%S) ROSTOP: Stopp" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 		mostop		
 	else
 		echo "$(tput setaf $Red)MoneyServer läuft nicht $(tput sgr 0)"
 	fi
 
 	if screen -list | grep -q RO; then
-		echo "$DATUM $(date +%H:%M:%S) MOSTOP: Stopp" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 		rostop		
 	else
 		echo "$(tput setaf $Red)RobustServer läuft nicht $(tput sgr 0)"
@@ -516,15 +492,13 @@ function oscompi()
 	then
 		msbuild /p:Configuration=Release /fileLogger /flp:logfile=opensimbuild.log /v:d
 	fi
+	# AOT Aktiveren oder Deaktivieren.
+	if [[ $SETAOTON = "yes" ]]
+	then		
+		makeaot
+	fi
 	echo " "
 	echo "$DATUM $(date +%H:%M:%S) OSCOMPI: Kompilierung wurde durchgeführt" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-}
-
-### Funktion oscompiaot, kompilieren des OpenSimulator mit aot.
-function oscompiaot()
-{
-	# makeaot nur ausführen wenn oscompi fehlerfrei ausgeführt beziehungsweise mit Exit-Status 0 beendet wurde.
-	oscompi && makeaot
 }
 
 ### Funktion scriptcopy, lsl ossl scripte kopieren.
@@ -700,7 +674,7 @@ function compilieren()
 
 	if [ ! -f "/$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/" ]; then
 
-		# SETAOTON
+		# AOT Aktiveren oder Deaktivieren.
 		if [[ $SETAOTON = "yes" ]]
 		then		
 			oscompiaot
@@ -733,6 +707,33 @@ function makeaot()
 	mono --aot=mcpu=native,bind-to-runtime-version -O=all OpenSim*.dll
 	mono --aot=mcpu=native,bind-to-runtime-version -O=all OpenSim*.exe
 	mono --aot=mcpu=native,bind-to-runtime-version -O=all Robust*.exe
+	else
+		echo "opensim Verzeichnis existiert nicht."
+		echo "$DATUM $(date +%H:%M:%S) MAKEAOT: opensim Verzeichnis existiert nicht" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+	fi
+}
+
+### Funktion cleanaot, aot entfernen. Test
+function cleanaot()
+{
+	if [ ! -f "/$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/" ]; then
+	cd /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin || exit
+	
+	rm Nini.dll.so
+	rm DotNetOpen*.dll.so
+	rm Ionic.Zip.dll.so
+	rm Newtonsoft.Json.dll.so
+	rm C5.dll.so
+	rm CSJ2K.dll.so
+	rm Npgsql.dll.so
+	rm RestSharp.dll.so
+	rm Mono*.dll.so
+	rm MySql*.dll.so
+	rm OpenMetaverse*.dll.so
+	rm OpenSim*.dll.so
+	rm OpenSim*.exe.so
+	rm Robust*.exe.so
+
 	else
 		echo "opensim Verzeichnis existiert nicht."
 		echo "$DATUM $(date +%H:%M:%S) MAKEAOT: opensim Verzeichnis existiert nicht" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
@@ -964,6 +965,7 @@ function regionsiniteilen()
 		echo "$DATUM $(date +%H:%M:%S) REGIONSINITEILEN: $INI_FILE wurde nicht gefunden" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 	fi
 }
+
 ### Funktion autoregionsiniteilen, Die gemeinschaftsdatei Regions.ini in einzelne Regionen teilen.
 # diese dann unter dem Regionsnamen speichern, danach die Alte Regions.ini umbenennen in Regions.ini.old.
 function autoregionsiniteilen()
@@ -993,6 +995,7 @@ function autoregionsiniteilen()
 	fi
 	done	
 }
+
 ### Funktion regionliste, Die RegionListe ermitteln und mit dem Verzeichnisnamen in die RegionList.ini schreiben.
 function regionliste()
 {
@@ -1028,6 +1031,7 @@ function regionliste()
 	LOESCHEN=$(sed '/Regions/d' /$STARTVERZEICHNIS/RegionList.ini) # Alle Zeilen mit dem Eintrag Regions entfernen	.
 	echo "$LOESCHEN" > /$STARTVERZEICHNIS/RegionList.ini # Aenderung .ini entfernen speichern.
 }
+
 ### Funktion moneydelete, loescht den MoneyServer ohne die OpenSim Config zu veraendern.
 function moneydelete()
 {
@@ -1055,6 +1059,7 @@ function moneydelete()
 		echo "$DATUM $(date +%H:%M:%S) MONEYDELETE: MoneyServer aus Robust geloescht" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 	fi
 }
+
 ### Funktion osgitholen, kopiert eine Entwicklerversion in das opensim Verzeichnis.
 function osgitholen()
 {
@@ -1072,6 +1077,7 @@ function osgitholen()
 		echo "$DATUM $(date +%H:%M:%S) OPENSIMHOLEN: Git klonen" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 	fi 
 }
+
 ### Funktion osupgrade, automatisches upgrade des opensimulator aus dem verzeichnis opensim.
 function osupgrade()
 {
@@ -1147,6 +1153,7 @@ function regionbackup()
 		echo "$DATUM $(date +%H:%M:%S) OSBACKUP: Region $NSDATEINAME.ini gespeichert" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 	fi
 }
+
 ### Funktion autosimstart, automatischer sim start ohne Robust und Money.
 function autosimstart()
 {
@@ -1158,8 +1165,15 @@ function autosimstart()
 		for (( i = 0 ; i < "$ANZAHLVERZEICHNISSLISTE" ; i++)) do
 			echo "$(tput setaf 2) $(tput setab $White)Regionen OpenSimulator ${VERZEICHNISSLISTE[$i]} Starten$(tput sgr 0)"
 			cd /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin || return 1
-			screen -fa -S "${VERZEICHNISSLISTE[$i]}" -d -U -m mono OpenSim.exe
-			#/$STARTVERZEICHNIS/osscreen.sh "${VERZEICHNISSLISTE[$i]}" "/$STARTVERZEICHNIS/${VERZEICHNISSLISTE[$i]}/bin/OpenSim.exe"
+			
+			# AOT Aktiveren oder Deaktivieren.
+			if [[ $SETAOTON = "yes" ]]
+			then		
+				screen -fa -S "${VERZEICHNISSLISTE[$i]}" -d -U -m mono --desktop -O=all OpenSim.exe
+			else
+				screen -fa -S "${VERZEICHNISSLISTE[$i]}" -d -U -m mono OpenSim.exe
+			fi
+
 			echo "$DATUM $(date +%H:%M:%S) AUTOSIMSTART: Regionen OpenSimulator ${VERZEICHNISSLISTE[$i]} Starten" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 			sleep $STARTWARTEZEIT
 		done
@@ -1168,27 +1182,7 @@ function autosimstart()
 		echo "$DATUM $(date +%H:%M:%S) WORKS:  Regionen laufen bereits!" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 	fi
 }
-### Funktion autosimstartaot, automatischer sim start ohne Robust und Money fuer aot.
-function autosimstartaot()
-{
-	# shellcheck disable=SC2022
-	if ! screen -list | grep -q 'sim*'; then
-	# es laeuft nicht - not work
-		makeverzeichnisliste
-		sleep 2
-		for (( i = 0 ; i < "$ANZAHLVERZEICHNISSLISTE" ; i++)) do
-			echo "$(tput setaf 2) $(tput setab $White)Regionen OpenSimulator ${VERZEICHNISSLISTE[$i]} Starten aot$(tput sgr 0)"
-			cd /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin || return 1
-			screen -fa -S "${VERZEICHNISSLISTE[$i]}" -d -U -m mono --desktop -O=all OpenSim.exe
-			#/$STARTVERZEICHNIS/osscreen.sh "${VERZEICHNISSLISTE[$i]}" "/$STARTVERZEICHNIS/${VERZEICHNISSLISTE[$i]}/bin/OpenSim.exe"
-			echo "$DATUM $(date +%H:%M:%S) AUTOSIMSTART: Regionen OpenSimulator ${VERZEICHNISSLISTE[$i]} Starten aot" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-			sleep $STARTWARTEZEIT
-		done
-	else
-		echo "$(tput setaf $White)$(tput setab $Green) Regionen laufen bereits! $(tput sgr 0)"
-		echo "$DATUM $(date +%H:%M:%S) WORKS:  Regionen laufen bereits!" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-	fi
-}
+
 ### Funktion autosimstop, stoppen aller laufenden Simulatoren.
 function autosimstop()
 {
@@ -1205,6 +1199,7 @@ function autosimstop()
 		fi
 	done
 }
+
 ### Funktion autologdel, automatisches loeschen aller log Dateien.
 # Die Dateien samt neuer Daten werden beim naechsten start des opensimulator neu geschrieben.
 function autologdel()
@@ -1219,6 +1214,7 @@ function autologdel()
 		sleep 2
 	done
 }
+
 ### Funktion automapdel, automatisches loeschen aller Map/Karten Dateien.
 # Die Dateien samt neuer Daten werden beim naechsten start des opensimulator neu geschrieben.
 function automapdel()
@@ -1234,6 +1230,7 @@ function automapdel()
 	done
 	autorobustmapdel
 }
+
 ### Funktion autorobustmapdel, automatisches loeschen aller Map/Karten Dateien in Robust.
 # Die Dateien samt neuer Daten werden beim naechsten start des opensimulator neu geschrieben.
 function autorobustmapdel()
@@ -1243,20 +1240,23 @@ function autorobustmapdel()
 	rm -r maptiles/*
 	echo "$DATUM $(date +%H:%M:%S) AUTOMAPDEL: OpenSimulator maptile aus $ROBUSTVERZEICHNIS geloescht" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 }
-### Funktion cleaninstal, loeschen aller externen addon Module.
-function cleaninstal()
+
+### Funktion cleaninstall, loeschen aller externen addon Module.
+function cleaninstall()
 {
 
 	if [ ! -f "/$STARTVERZEICHNIS/opensim/addon-modules/" ]; then
 		rm -r $STARTVERZEICHNIS/opensim/addon-modules/*
 	else
 		echo "addon-modules Verzeichnis existiert nicht."
-		echo "$DATUM $(date +%H:%M:%S) CLEANINSTAL: addon-modules Verzeichnis existiert nicht" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+		echo "$DATUM $(date +%H:%M:%S) cleaninstall: addon-modules Verzeichnis existiert nicht" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 	fi
 
 }
+
 ### Funktion allclean, loescht Log, dll, so, exe, aot Dateien fuer einen saubere neue installation, ohne Robust.
-# Hierbei werden keine Datenbanken oder Konfigurationen geloescht.
+# Hierbei werden keine Datenbanken oder Konfigurationen geloescht aber opensim ist anschliessend nicht mehr startbereit.
+# Um opensim wieder Funktionsbereit zu machen muss ein Upgrade oder ein oscopy vorgang ausgeführt werden.
 # allclean Verzeichnis
 function allclean()
 {
@@ -1280,8 +1280,11 @@ function allclean()
 		echo "$DATUM $(date +%H:%M:%S) clean: Dateien in $1 nicht gefunden" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 	fi
 }
+
 ### Funktion autoallclean, loescht Log, dll, so, exe, aot Dateien fuer einen saubere neue installation, mit Robust.
 # Hierbei werden keine Datenbanken oder Konfigurationen geloescht.
+# Hierbei werden keine Datenbanken oder Konfigurationen geloescht aber opensim ist anschliessend nicht mehr startbereit.
+# Um opensim wieder Funktionsbereit zu machen muss ein Upgrade oder ein oscopy vorgang ausgeführt werden.
 function autoallclean()
 {
 	makeverzeichnisliste
@@ -1333,6 +1336,7 @@ function autoallclean()
 	rm -r /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/ScriptEngines/*
 	echo "$DATUM $(date +%H:%M:%S) autoallclean: OpenSimulator alles in $ROBUSTVERZEICHNIS geloescht" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 }
+
 ### Funktion autoregionbackup, automatischer Backup aller Regionen die in der Regionsliste eingetragen sind.
 function autoregionbackup()
 {
@@ -1347,6 +1351,7 @@ function autoregionbackup()
 		sleep $BACKUPWARTEZEIT
 	done
 }
+
 ### Funktion autoscreenstop, beendet alle laufenden simX screens.
 function autoscreenstop()
 {
@@ -1376,9 +1381,8 @@ function autoscreenstop()
 	else
 	screen -S RO -X quit
 	fi
-
-	echo "$DATUM $(date +%H:%M:%S) AUTOSCREENSTOP: Auto Screen Stopp abgeschlossen" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 }
+
 ### Funktion autostart, startet das komplette Grid mit allen sims.
 function autostart()
 {
@@ -1391,6 +1395,7 @@ function autostart()
 	echo " "
 	echo "$DATUM $(date +%H:%M:%S) AUTOSTART: Auto Start abgeschlossen" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 }
+
 ### Funktion autostop, stoppt das komplette Grid mit allen sims.
 function autostop()
 {
@@ -1421,8 +1426,8 @@ function autostop()
 	echo "$(tput setab 1)Beende alle noch offenen Screens! $(tput sgr 0)"
 	autoscreenstop
 	echo " "
-	echo "$DATUM $(date +%H:%M:%S) AUTOSTOP: Auto Stopp abgeschlossen" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 }
+
 ### Funktion autorestart, startet das gesamte Grid neu und loescht die log Dateien.
 function autorestart()
 {
@@ -1439,6 +1444,7 @@ function autorestart()
 	echo " "
 	echo "$DATUM $(date +%H:%M:%S) AUTORESTART: Auto Restart abgeschlossen" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 }
+
 ### Dieses Installationsbeispiel installiert alles für OpenSim inkusive Web, sowie alles um einen OpenSimulator zu Kompilieren.
 ### Funktion monoinstall, mono 6.x installieren.
 function monoinstall() 
@@ -1459,6 +1465,7 @@ function monoinstall()
 		sudo apt-get upgrade
 	fi
 }
+
 ### Funktion serverinstall, Ubuntu 18 Server zum Betrieb von OpenSim vorbereiten.
 function serverinstall() 
 {
@@ -1620,14 +1627,17 @@ sudo apt-get upgrade
 	apt upgrade
 	apt -f install
 
-	echo "$(tput setaf 1)Zum Abschluss sollte der ganze Server neu gestartet werden mit dem Kommando: reboot now $(tput sgr0)"
+	echo "$(tput setaf 1)Zum Abschluss sollte der ganze Server neu gestartet werden mit dem Kommando: $(tput sgr0) reboot now"
 }
+
 ### Funktion installationen, Ubuntu 18 Server, Was habe ich alles auf meinem Server Installiert? sortiert auflisten.
 function installationen() 
 {
+	echo "$(tput setaf 1)Liste aller Installierten Pakete unter Linux: $(tput sgr0)"
 	dpkg-query -Wf '${Package;-40}${Priority}\n' | sort -b -k2,2 -k1,1
 }
-### Funktion manniversion, test automatition.
+
+### Funktion manniversion, test automation.
 function manniversion() 
 {
     VERSIONSNUMMER=$1
@@ -1647,9 +1657,8 @@ function manniversion()
 	echo "$DATUM $(date +%H:%M:%S) MANNIVERSION: Konfigurieren" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
     compilieren
 	echo "$DATUM $(date +%H:%M:%S) MANNIVERSION: compilieren" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-
-    #/$STARTVERZEICHNIS/opensim.sh osupgrade
 }
+
 ### Funktion info, Informationen auf den Bildschirm ausgeben.
 function info()
 {
@@ -1658,10 +1667,11 @@ function info()
 	echo " MONO THREAD Einstellung: ${MONO_THREADS_PER_CPU}"
 	echo " Spracheinstellung: ${LANG} $(tput sgr 0)"
 }
+
 ### Funktion hilfe, Hilfe auf dem Bildschirm anzeigen.
 function hilfe()
 {
-	echo "$(tput setab $Magenta)Funktion:$(tput sgr 0)		$(tput setab $Green)Parameter:$(tput sgr 0)		$(tput setab $Blue)Informationen:$(tput sgr 0)"
+echo "$(tput setab $Magenta)Funktion:$(tput sgr 0)		$(tput setab $Green)Parameter:$(tput sgr 0)		$(tput setab $Blue)Informationen:$(tput sgr 0)"
 	echo "hilfe 			- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0)	- Diese Hilfe."
 	echo "konsolenhilfe 		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0)	- konsolenhilfe ist eine Hilfe für Putty oder Xterm."
 	echo "restart 		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0)	- Startet das gesamte Grid neu."
@@ -1711,20 +1721,17 @@ echo "$(tput setab $Red)Experten Funktionen$(tput sgr 0)"
 	echo "terminator 		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Killt alle laufenden Screens."
 
 echo "$(tput setab $Red)Ungetestete Funktionen$(tput sgr 0)"
-echo "rostartaot		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Startet Robust aot Server."
-echo "mostartaot		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Startet Money aot Server."
-echo "gridstartaot		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Startet Robust und Money aot. "
-echo "autostartaot		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0)	- Startet das gesamte Grid aot."
-echo "autosimstartaot		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Startet alle Regionen aot."
-echo "makeaot			- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - makeaot aot."
-echo "monoinstall		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - mono 6.x installation."
-echo "installationen		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - installationen aufisten."
-echo "serverinstall		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - serverinstall alle Pakete installieren."
+	echo "makeaot			- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - aot Dateien erstellen."
+	echo "cleanaot		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - aot Dateien entfernen."
+	echo "monoinstall		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - mono 6.x installation."
+	echo "installationen		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - installationen aufisten."
+	echo "serverinstall		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - alle benötigten Linux Pakete installieren."
 
 	echo " "
 	echo "$(tput setaf $Yello)  Der Verzeichnisname ist gleichzeitig auch der Screen Name!$(tput sgr 0)"
 	echo "$DATUM $(date +%H:%M:%S) HILFE: Hilfe wurde angefordert" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 }
+
 ### Funktion konsolenhilfe, konsolenhilfe auf dem Bildschirm anzeigen.
 function konsolenhilfe()
 {
@@ -1801,15 +1808,11 @@ case  $KOMMANDO  in
 	osprebuild) osprebuild "$2" ;;
 	chrisoscopy) chrisoscopy ;;
 	manniversion) manniversion "$2" ;;
-	cleaninstal) cleaninstal ;;
+	cleaninstall) cleaninstall ;;
 	autoallclean) autoallclean ;;
 	allclean) allclean "$2" ;;
 	makeaot) makeaot ;;
-	rostartaot) rostartaot ;;
-	mostartaot) mostartaot ;;
-	gridstartaot) gridstartaot ;;
-	autosimstartaot) autosimstartaot ;;
-	oscompiaot) oscompiaot ;;
+	cleanaot) cleanaot ;;
 	pythoncopy) pythoncopy ;;
 	get_value_from_Region_key) get_value_from_Region_key ;;
 	autorobustmapdel) autorobustmapdel ;;
@@ -1824,6 +1827,6 @@ case  $KOMMANDO  in
 	*) hilfe ;;
 esac
 
-echo "$DATUM $(date +%H:%M:%S) MULTITOOL: Aufgabe wurde zufriedenstellend ausgeführt" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+echo "$DATUM $(date +%H:%M:%S) opensimMULTITOOL wurde beendet." >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 echo "#######################################################" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 vardel
