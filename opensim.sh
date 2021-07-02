@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# opensimMULTITOOL Version 0.36.108 (c) May 2021 Manfred Aabye
+# opensimMULTITOOL Version 0.36.109 (c) May 2021 Manfred Aabye
 # opensim.sh Basiert auf meinen Einzelscripten, an denen ich bereits 6 Jahre Arbeite und verbessere.
 # Da Server unterschiedlich sind, kann eine einwandfreie fuunktion nicht gewährleistet werden, also bitte mit bedacht verwenden.
 # Die Benutzung dieses Scriptes, oder deren Bestandteile, erfolgt auf eigene Gefahr!!!
@@ -17,7 +17,7 @@ echo "$(tput setaf 2) | |__| || |_) ||  __/| | | | ____) || || | | | | || |_| ||
 echo "  \____/ |  __/  \___||_| |_||_____/ |_||_| |_| |_| \____||_| \____| \__|\___/ |_|   "
 echo "         | |                                                                         "
 echo "         |_|                                                                         "
-echo "	    $(tput setaf 2)opensim$(tput setaf 4)MULTITOOL$(tput sgr 0) 0.36.108" # Versionsausgabe
+echo "	    $(tput setaf 2)opensim$(tput setaf 4)MULTITOOL$(tput sgr 0) 0.36.109" # Versionsausgabe
 echo " "
 
 # Datum und Uhrzeit
@@ -98,7 +98,7 @@ function vardel()
 function myshellschreck()
 {
 STARTVERZEICHNIS="opt" MONEYVERZEICHNIS="robust" ROBUSTVERZEICHNIS="robust" OPENSIMVERZEICHNIS="opensim" SCRIPTSOURCE="ScriptNeu" MONEYSOURCE="money48" 
-REGIONSDATEI="RegionList.ini" SIMDATEI="SimulatorList.ini" WARTEZEIT=30 STARTWARTEZEIT=10 STOPWARTEZEIT=30 MONEYWARTEZEIT=50 BACKUPWARTEZEIT=120 AUTOSTOPZEIT=60 SETMONOTHREADS=800
+REGIONSDATEI="RegionList.ini" SIMDATEI="SimulatorList.ini" WARTEZEIT=30 STARTWARTEZEIT=10 STOPWARTEZEIT=30 MONEYWARTEZEIT=50 BACKUPWARTEZEIT=120 AUTOSTOPZEIT=60 SETMONOTHREADS=800 SETMONOTHREADSON="yes"
 }
 
 ### Erstellen eines Arrays aus einer Textdatei - Verzeichnisse und Regionen ###
@@ -126,14 +126,14 @@ function makeregionsliste()
 # Aufruf: assetdel screen_name Regionsname Objektname
 function assetdel()
 {
-	SCREEN=$1; REGION=$2; OBJEKT=$3
+	VERZEICHNISSCREEN=$1; REGION=$2; OBJEKT=$3
 	# Nachschauen ob der Screen und die Region existiert.
-	if screen -list | grep -q "$SCREEN"; then
+	if screen -list | grep -q "$VERZEICHNISSCREEN"; then
 		echo "$(tput setaf $Red) $(tput setab $White)$OBJEKT Asset von der Region $REGION löschen$(tput sgr 0)"
-		screen -S "$SCREEN" -p 0 -X eval "stuff 'change region ""$REGION""'^M" # Region wechseln
-		screen -S "$SCREEN" -p 0 -X eval "stuff 'alert "Loesche: "$OBJEKT" von der Region!"'^M" # Mit einer loesch Meldung
-		screen -S "$SCREEN" -p 0 -X eval "stuff 'delete object name ""$OBJEKT""'^M" # Objekt loeschen
-		screen -S "$SCREEN" -p 0 -X eval "stuff 'y'^M" # Mit y also yes bestaetigen
+		screen -S "$VERZEICHNISSCREEN" -p 0 -X eval "stuff 'change region ""$REGION""'^M" # Region wechseln
+		screen -S "$VERZEICHNISSCREEN" -p 0 -X eval "stuff 'alert "Loesche: "$OBJEKT" von der Region!"'^M" # Mit einer loesch Meldung
+		screen -S "$VERZEICHNISSCREEN" -p 0 -X eval "stuff 'delete object name ""$OBJEKT""'^M" # Objekt loeschen
+		screen -S "$VERZEICHNISSCREEN" -p 0 -X eval "stuff 'y'^M" # Mit y also yes bestaetigen
 		echo "$DATUM $(date +%H:%M:%S) ASSETDEL: $OBJEKT Asset von der Region $REGION löschen" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 	else
 		echo "$(tput setaf $Red) $(tput setab $White)$OBJEKT Asset von der Region $REGION löschen fehlgeschlagen$(tput sgr 0)"
@@ -145,15 +145,15 @@ function assetdel()
 # Aufruf: oscommand Screen Region Befehl Parameter
 function oscommand()
 {	
-	SCREEN=$1; REGION=$2; BEFEHL=$3; PARAMETER=$4
-	if screen -list | grep -q "$SCREEN"; then
-	echo "$(tput setab $Green)Sende $BEFEHL $PARAMETER an $SCREEN $(tput sgr 0)"
-	screen -S "$SCREEN" -p 0 -X eval "stuff 'change region ""$REGION""'^M" # Region wechseln
-	echo "$DATUM $(date +%H:%M:%S) OSCOMMAND: $BEFEHL $PARAMETER an $SCREEN senden" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-	screen -S "$SCREEN" -p 0 -X eval "stuff '$BEFEHL $PARAMETER'^M"
+	VERZEICHNISSCREEN=$1; REGION=$2; BEFEHL=$3; PARAMETER=$4
+	if screen -list | grep -q "$VERZEICHNISSCREEN"; then
+	echo "$(tput setab $Green)Sende $BEFEHL $PARAMETER an $VERZEICHNISSCREEN $(tput sgr 0)"
+	screen -S "$VERZEICHNISSCREEN" -p 0 -X eval "stuff 'change region ""$REGION""'^M" # Region wechseln
+	echo "$DATUM $(date +%H:%M:%S) OSCOMMAND: $BEFEHL $PARAMETER an $VERZEICHNISSCREEN senden" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+	screen -S "$VERZEICHNISSCREEN" -p 0 -X eval "stuff '$BEFEHL $PARAMETER'^M"
 	else
-		echo "Der Screen $SCREEN existiert nicht."
-		echo "$DATUM $(date +%H:%M:%S) OSCOMMAND: Der Screen $SCREEN existiert nicht" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+		echo "Der Screen $VERZEICHNISSCREEN existiert nicht."
+		echo "$DATUM $(date +%H:%M:%S) OSCOMMAND: Der Screen $VERZEICHNISSCREEN existiert nicht" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 	fi
 }
 
@@ -161,16 +161,16 @@ function oscommand()
 # Aufruf: works screen_name
 function works()
 {
-	SCREEN=$1  # OpenSimulator, Verzeichnis und Screen Name
-	if ! screen -list | grep -q "$1"; then
+	VERZEICHNISSCREEN=$1  # OpenSimulator, Verzeichnis und Screen Name
+	if ! screen -list | grep -q "$VERZEICHNISSCREEN"; then
 		# es laeuft nicht - not work
-			echo "$(tput setaf $White)$(tput setab $Red) $SCREEN OFFLINE! $(tput sgr 0)"
-			echo "$DATUM $(date +%H:%M:%S) WORKS: $SCREEN OFFLINE!" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+			echo "$(tput setaf $White)$(tput setab $Red) $VERZEICHNISSCREEN OFFLINE! $(tput sgr 0)"
+			echo "$DATUM $(date +%H:%M:%S) WORKS: $VERZEICHNISSCREEN OFFLINE!" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 			return 1
 		else
 		# es laeuft - work
-			echo "$(tput setaf $White)$(tput setab $Green) $SCREEN ONLINE! $(tput sgr 0)"
-			echo "$DATUM $(date +%H:%M:%S) WORKS: $SCREEN ONLINE!" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+			echo "$(tput setaf $White)$(tput setab $Green) $VERZEICHNISSCREEN ONLINE! $(tput sgr 0)"
+			echo "$DATUM $(date +%H:%M:%S) WORKS: $VERZEICHNISSCREEN ONLINE!" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 			return 0
 	fi
 }
@@ -263,27 +263,27 @@ function screenlist()
 # Beispiel-Example: osstart sim1
 function osstart()
 {
-	SCREEN=$1 # OpenSimulator, Verzeichnis und Screen Name
-	if [ -d "$SCREEN" ]; then
+	VERZEICHNISSCREEN=$1 # OpenSimulator, Verzeichnis und Screen Name
+	if [ -d "$VERZEICHNISSCREEN" ]; then
 		
-		cd /$STARTVERZEICHNIS/"$SCREEN"/bin || return 1
+		cd /$STARTVERZEICHNIS/"$VERZEICHNISSCREEN"/bin || return 1
 
 		# AOT Aktiveren oder Deaktivieren.
 		if [[ $SETAOTON = "yes" ]]
 		then
-			echo "$(tput setaf 2) $(tput setab $White)OpenSimulator $SCREEN Starten aot $(tput sgr 0)"
-			echo "$DATUM $(date +%H:%M:%S) OSSTART: OpenSimulator $SCREEN Starten aot" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-			screen -fa -S "$1" -d -U -m mono --desktop -O=all OpenSim.exe
+			echo "$(tput setaf 2) $(tput setab $White)OpenSimulator $VERZEICHNISSCREEN Starten aot $(tput sgr 0)"
+			echo "$DATUM $(date +%H:%M:%S) OSSTART: OpenSimulator $VERZEICHNISSCREEN Starten aot" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+			screen -fa -S "$VERZEICHNISSCREEN" -d -U -m mono --desktop -O=all OpenSim.exe
 		else
-			echo "$(tput setaf 2) $(tput setab $White)OpenSimulator $SCREEN Starten$(tput sgr 0)"
-			echo "$DATUM $(date +%H:%M:%S) OSSTART: OpenSimulator $SCREEN Starten" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-			screen -fa -S "$1" -d -U -m mono OpenSim.exe
+			echo "$(tput setaf 2) $(tput setab $White)OpenSimulator $VERZEICHNISSCREEN Starten$(tput sgr 0)"
+			echo "$DATUM $(date +%H:%M:%S) OSSTART: OpenSimulator $VERZEICHNISSCREEN Starten" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+			screen -fa -S "$VERZEICHNISSCREEN" -d -U -m mono OpenSim.exe
 		fi
 		
 		sleep 10
 	else
-		echo "$(tput setaf $Red) $(tput setab $White)OpenSimulator $SCREEN nicht vorhanden$(tput sgr 0)"
-		echo "$DATUM $(date +%H:%M:%S) OSSTART: OpenSimulator $SCREEN nicht vorhanden" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+		echo "$(tput setaf $Red) $(tput setab $White)OpenSimulator $VERZEICHNISSCREEN nicht vorhanden$(tput sgr 0)"
+		echo "$DATUM $(date +%H:%M:%S) OSSTART: OpenSimulator $VERZEICHNISSCREEN nicht vorhanden" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 	fi
 	return
 }
@@ -292,15 +292,15 @@ function osstart()
 # Beispiel-Example: osstop sim1
 function osstop()
 {
-	SCREEN=$1 # OpenSimulator, Verzeichnis und Screen Name
-	if screen -list | grep -q "$SCREEN"; then
-		echo "$(tput setaf $Red) $(tput setab $White)OpenSimulator $SCREEN Beenden$(tput sgr 0)"
-		echo "$DATUM $(date +%H:%M:%S) OSSTOP: OpenSimulator $SCREEN Beenden" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-		screen -S "$SCREEN" -p 0 -X eval "stuff 'shutdown'^M"
+	VERZEICHNISSCREEN=$1 # OpenSimulator, Verzeichnis und Screen Name
+	if screen -list | grep -q "$VERZEICHNISSCREEN"; then
+		echo "$(tput setaf $Red) $(tput setab $White)OpenSimulator $VERZEICHNISSCREEN Beenden$(tput sgr 0)"
+		echo "$DATUM $(date +%H:%M:%S) OSSTOP: OpenSimulator $VERZEICHNISSCREEN Beenden" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+		screen -S "$VERZEICHNISSCREEN" -p 0 -X eval "stuff 'shutdown'^M"
 		sleep 10
 	else
-		echo "$(tput setaf $Red) $(tput setab $White)OpenSimulator $SCREEN nicht vorhanden$(tput sgr 0)"
-		echo "$DATUM $(date +%H:%M:%S) OSSTOP: OpenSimulator $SCREEN nicht vorhanden" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+		echo "$(tput setaf $Red) $(tput setab $White)OpenSimulator $VERZEICHNISSCREEN nicht vorhanden$(tput sgr 0)"
+		echo "$DATUM $(date +%H:%M:%S) OSSTOP: OpenSimulator $VERZEICHNISSCREEN nicht vorhanden" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 	fi
 	return
 }
@@ -387,13 +387,14 @@ function mostop()
 # Beispiel-Example: osscreenstop sim1
 function osscreenstop()
 {
-	if screen -list | grep -q "$1"; then
-		echo "$(tput setaf $Red) $(tput setab $White)Screeen $1 Beenden$(tput sgr 0)"
-		echo "$DATUM $(date +%H:%M:%S) OSSCREENSTOP: Screeen $1 Beenden" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-		screen -S "$1" -X quit	  
+	VERZEICHNISSCREEN=$1
+	if screen -list | grep -q "$VERZEICHNISSCREEN"; then
+		echo "$(tput setaf $Red) $(tput setab $White)Screeen $VERZEICHNISSCREEN Beenden$(tput sgr 0)"
+		echo "$DATUM $(date +%H:%M:%S) OSSCREENSTOP: Screeen $VERZEICHNISSCREEN Beenden" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+		screen -S "$VERZEICHNISSCREEN" -X quit	  
 	else
-		echo "$(tput setaf $Red) $(tput setab $White)Screeen $1 nicht vorhanden$(tput sgr 0)"
-		echo "$DATUM $(date +%H:%M:%S) OSSCREENSTOP: Screeen $1 nicht vorhanden" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+		echo "$(tput setaf $Red) $(tput setab $White)Screeen $VERZEICHNISSCREEN nicht vorhanden$(tput sgr 0)"
+		echo "$DATUM $(date +%H:%M:%S) OSSCREENSTOP: Screeen $VERZEICHNISSCREEN nicht vorhanden" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 	fi
 	echo "No screen session found. Ist hier kein Fehler, sondern ein Beweis, das alles zuvor sauber heruntergefahren wurde."
 }
@@ -422,20 +423,21 @@ function gridstart()
 # erzeugt im Hauptverzeichnis eine Datei namens sim1.log in dieser Datei ist die Statistik zu finden.
 function simstats()
 {
-	if screen -list | grep -q $1; then
-		if checkfile /$STARTVERZEICHNIS/$1.log; then
-			rm /$STARTVERZEICHNIS/$1.log
+	VERZEICHNISSCREEN=$1 # OpenSimulator, Verzeichnis und Screen Name
+	if screen -list | grep -q "$VERZEICHNISSCREEN"; then
+		if checkfile /$STARTVERZEICHNIS/"$VERZEICHNISSCREEN".log; then
+			rm /$STARTVERZEICHNIS/"$VERZEICHNISSCREEN".log
 		fi
-		echo "$(tput setaf 2) $(tput setab $White)OpenSimulator $1 Simstatistik anzeigen$(tput sgr 0)"
-		echo "$DATUM $(date +%H:%M:%S) simstat: Region $1 Simstatistik anzeigen" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-		screen -S $1 -p 0 -X eval "stuff 'stats save /$STARTVERZEICHNIS/$1.log'^M"
+		echo "$(tput setaf 2) $(tput setab $White)OpenSimulator $VERZEICHNISSCREEN Simstatistik anzeigen$(tput sgr 0)"
+		echo "$DATUM $(date +%H:%M:%S) simstat: Region $VERZEICHNISSCREEN Simstatistik anzeigen" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+		screen -S "$VERZEICHNISSCREEN" -p 0 -X eval "stuff 'stats save /$STARTVERZEICHNIS/$VERZEICHNISSCREEN.log'^M"
 		sleep 2
 		echo "$(tput setaf 2) "
-		cat /$STARTVERZEICHNIS/$1.log
+		cat /$STARTVERZEICHNIS/"$VERZEICHNISSCREEN".log
 		echo "$(tput sgr 0) "
 	else
-		echo "$(tput setaf $Red) $(tput setab $White)Simulator $1 nicht vorhanden$(tput sgr 0)"
-		echo "$DATUM $(date +%H:%M:%S) simstat: Simulator $1 nicht vorhanden" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+		echo "$(tput setaf $Red) $(tput setab $White)Simulator $VERZEICHNISSCREEN nicht vorhanden$(tput sgr 0)"
+		echo "$DATUM $(date +%H:%M:%S) simstat: Simulator $VERZEICHNISSCREEN nicht vorhanden" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 	fi
 	return
 }
@@ -834,12 +836,14 @@ function oscopysim()
 }
 
 # Funktion configlesen, Regionskonfigurationen lesen.
+## Beispiel: configlesen sim1
 function configlesen()
 {
-	echo "$(tput setab $Green)Regionskonfigurationen von $1 $(tput sgr 0)"
-	KONFIGLESEN=$(awk -F":" '// {print $0 }' /$STARTVERZEICHNIS/"$1"/bin/Regions/*.ini)	# Regionskonfigurationen aus einem Verzeichnis lesen.
+	VERZEICHNISSCREEN=$1
+	echo "$(tput setab $Green)Regionskonfigurationen von $VERZEICHNISSCREEN $(tput sgr 0)"
+	KONFIGLESEN=$(awk -F":" '// {print $0 }' /$STARTVERZEICHNIS/"$VERZEICHNISSCREEN"/bin/Regions/*.ini)	# Regionskonfigurationen aus einem Verzeichnis lesen.
 	echo "$KONFIGLESEN"
-	echo "$DATUM $(date +%H:%M:%S) CONFIGLESEN: Regionskonfigurationen von $1" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+	echo "$DATUM $(date +%H:%M:%S) CONFIGLESEN: Regionskonfigurationen von $VERZEICHNISSCREEN" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 	echo "$KONFIGLESEN" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 }
 
@@ -1121,35 +1125,35 @@ function regionbackup()
 	# Backup Verzeichnis anlegen.
 	mkdir -p /$STARTVERZEICHNIS/backup/
 	sleep 2
-	SCREENNAME=$1
+	VERZEICHNISSCREENNAME=$1
 	REGIONSNAME=$2	
 	DATEINAME=${REGIONSNAME//\"/}
 	NSDATEINAME=${DATEINAME// /}
 
 	echo "$(tput setaf 4) $(tput setab 7)Region $NSDATEINAME speichern$(tput sgr 0)"
 	echo "$DATUM $(date +%H:%M:%S) OSBACKUP: Region $NSDATEINAME speichern" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-	cd /$STARTVERZEICHNIS/"$SCREENNAME"/bin || return 1
+	cd /$STARTVERZEICHNIS/"$VERZEICHNISSCREENNAME"/bin || return 1
 	# Ich kann nicht pruefen ob die Region im OpenSimulator vorhanden ist.
 	# Sollte sie nicht vorhanden sein wird root also alle Regionen gespeichert.
-	screen -S "$SCREENNAME" -p 0 -X eval "stuff 'change region ${REGIONSNAME//\"/}'^M"
-	screen -S "$SCREENNAME" -p 0 -X eval "stuff 'save oar /$STARTVERZEICHNIS/backup/'$DATUM'-$NSDATEINAME.oar'^M"
-	screen -S "$SCREENNAME" -p 0 -X eval "stuff 'terrain save /$STARTVERZEICHNIS/backup/'$DATUM'-$NSDATEINAME.png'^M"
-	screen -S "$SCREENNAME" -p 0 -X eval "stuff 'terrain save /$STARTVERZEICHNIS/backup/'$DATUM'-$NSDATEINAME.raw'^M"
+	screen -S "$VERZEICHNISSCREENNAME" -p 0 -X eval "stuff 'change region ${REGIONSNAME//\"/}'^M"
+	screen -S "$VERZEICHNISSCREENNAME" -p 0 -X eval "stuff 'save oar /$STARTVERZEICHNIS/backup/'$DATUM'-$NSDATEINAME.oar'^M"
+	screen -S "$VERZEICHNISSCREENNAME" -p 0 -X eval "stuff 'terrain save /$STARTVERZEICHNIS/backup/'$DATUM'-$NSDATEINAME.png'^M"
+	screen -S "$VERZEICHNISSCREENNAME" -p 0 -X eval "stuff 'terrain save /$STARTVERZEICHNIS/backup/'$DATUM'-$NSDATEINAME.raw'^M"
 	echo "$DATUM $(date +%H:%M:%S) OSBACKUP: Region $DATUM-$NSDATEINAME RAW und PNG Terrain gespeichert" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 	echo " "
 	sleep 10
-	if [ ! -f /$STARTVERZEICHNIS/"$SCREENNAME"/bin/Regions/"$NSDATEINAME".ini ]; then
-		cp -r /$STARTVERZEICHNIS/"$SCREENNAME"/bin/Regions/Regions.ini /$STARTVERZEICHNIS/backup/"$DATUM"-"$NSDATEINAME".ini
+	if [ ! -f /$STARTVERZEICHNIS/"$VERZEICHNISSCREENNAME"/bin/Regions/"$NSDATEINAME".ini ]; then
+		cp -r /$STARTVERZEICHNIS/"$VERZEICHNISSCREENNAME"/bin/Regions/Regions.ini /$STARTVERZEICHNIS/backup/"$DATUM"-"$NSDATEINAME".ini
 		echo "$(tput setaf 2)Regions.ini wurde als $DATUM-$NSDATEINAME.ini gespeichert."
 		echo "$DATUM $(date +%H:%M:%S) OSBACKUP: Region $DATUM-$NSDATEINAME.ini gespeichert" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 	fi
-	if [ ! -f /$STARTVERZEICHNIS/"$SCREENNAME"/bin/Regions/"${REGIONSNAME//\"/}".ini ]; then
-		cp -r /$STARTVERZEICHNIS/"$SCREENNAME"/bin/Regions/Regions.ini /$STARTVERZEICHNIS/backup/"$DATUM"-"$NSDATEINAME".ini
+	if [ ! -f /$STARTVERZEICHNIS/"$VERZEICHNISSCREENNAME"/bin/Regions/"${REGIONSNAME//\"/}".ini ]; then
+		cp -r /$STARTVERZEICHNIS/"$VERZEICHNISSCREENNAME"/bin/Regions/Regions.ini /$STARTVERZEICHNIS/backup/"$DATUM"-"$NSDATEINAME".ini
 		echo "$(tput setaf 2)Regions.ini wurde als $DATUM-$NSDATEINAME.ini gespeichert."
 		echo "$DATUM $(date +%H:%M:%S) OSBACKUP: Region $DATUM-$NSDATEINAME.ini gespeichert" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 	fi
-	if [ ! -f /$STARTVERZEICHNIS/"$SCREENNAME"/bin/Regions/Regions.ini ]; then
-		cp -r /$STARTVERZEICHNIS/"$SCREENNAME"/bin/Regions/"$NSDATEINAME".ini /$STARTVERZEICHNIS/backup/"$DATUM"-"$NSDATEINAME".ini
+	if [ ! -f /$STARTVERZEICHNIS/"$VERZEICHNISSCREENNAME"/bin/Regions/Regions.ini ]; then
+		cp -r /$STARTVERZEICHNIS/"$VERZEICHNISSCREENNAME"/bin/Regions/"$NSDATEINAME".ini /$STARTVERZEICHNIS/backup/"$DATUM"-"$NSDATEINAME".ini
 		echo "$DATUM $(date +%H:%M:%S) OSBACKUP: Region $NSDATEINAME.ini gespeichert" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 	fi
 }
@@ -1401,6 +1405,7 @@ function autostop()
 {
 	echo "$(tput setab 1)Stoppe alles! $(tput sgr 0)"
 	# schauen ob screens laufen wenn ja beenden.
+	# shellcheck disable=SC2022
 	if ! screen -list | grep -q 'sim*'; then
 		echo "$(tput setaf $White)$(tput setab $Red) SIMs OFFLINE! $(tput sgr 0)"
 	else
@@ -1417,6 +1422,7 @@ function autostop()
 		gridstop
 	fi
 	# schauen ob screens laufen wenn ja warten.
+	# shellcheck disable=SC2022
 	if ! screen -list | grep -q 'sim*'; then
 		echo " "
 	else
@@ -1724,7 +1730,7 @@ echo "$(tput setab $Red)Ungetestete Funktionen$(tput sgr 0)"
 	echo "makeaot			- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - aot Dateien erstellen."
 	echo "cleanaot		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - aot Dateien entfernen."
 	echo "monoinstall		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - mono 6.x installation."
-	echo "installationen		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - installationen aufisten."
+	echo "installationen		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Linux Pakete - installationen aufisten."
 	echo "serverinstall		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - alle benötigten Linux Pakete installieren."
 
 	echo " "
