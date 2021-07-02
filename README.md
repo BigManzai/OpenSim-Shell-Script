@@ -177,3 +177,9 @@ Mono Threads können jetzt in der Konfigurationsdatei eingestellt werden.
 Version 0.35.103 aot geht jetzt über die Konfigurationsdatei.
 Habe angefangen aufzuräumen und unnütze Sachen raus zu werfen.
 ```
+
+```
+Version 0.36.108 aot geht jetzt nur noch über die Konfigurationsdatei automatisch.
+Habe aufgeräumt und unnütze Sachen raus geworfen.
+Log Datei Einträge verringert.
+```
