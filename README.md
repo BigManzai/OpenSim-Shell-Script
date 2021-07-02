@@ -1,6 +1,6 @@
 # OpenSim-Shell-Script
 ![GitHub Logo](https://github.com/BigManzai/OpenSim-Shell-Script/blob/main/opensimMultitool.jpg)
-opensimMULTITOOL, Shell Script, Version 0.35.103
+opensimMULTITOOL, Shell Script, Version 0.36.108
 
 opensim.sh Basiert auf meinen Einzelscripten, an denen ich bereits 6 Jahre Arbeite und verbessere.
 
@@ -133,7 +133,7 @@ makeaot                 - hat keine Parameter - aot Dateien erstellen.
 cleanaot                - hat keine Parameter - aot Dateien entfernen.
 monoinstall             - hat keine Parameter - mono 6.x installation.
 installationen          - hat keine Parameter - installationen aufisten.
-serverinstall           - hat keine Parameter - serverinstall alle Pakete installieren.
+serverinstall           - hat keine Parameter - alle benötigten Linux Pakete installieren.
 ```
 
 ```
