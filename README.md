@@ -1,6 +1,6 @@
 # OpenSim-Shell-Script
 ![GitHub Logo](https://github.com/BigManzai/OpenSim-Shell-Script/blob/main/opensimMultitool.jpg)
-opensimMULTITOOL, Shell Script, Version 0.36.108
+opensimMULTITOOL, Shell Script, Version 0.36.109
 
 opensim.sh Basiert auf meinen Einzelscripten, an denen ich bereits 6 Jahre Arbeite und verbessere.
 
@@ -189,4 +189,11 @@ Habe angefangen aufzuräumen und unnütze Sachen raus zu werfen.
 Version 0.36.108 aot geht jetzt nur noch über die Konfigurationsdatei automatisch.
 Habe aufgeräumt und unnütze Sachen raus geworfen.
 Log Datei Einträge verringert.
+```
+
+```
+Version 0.36.109
+SC2027: The surrounding quotes actually unquote this. Remove or escape them.
+SC2086: Double quote to prevent globbing and word splitting.
+behoben
 ```
