@@ -1,10 +1,20 @@
 #!/bin/bash
 
-# opensimMULTITOOL Version 0.36.109 (c) May 2021 Manfred Aabye
+# opensimMULTITOOL Version 0.37.113 Copyright (c) 2021 BigManzai Manfred Aabye
 # opensim.sh Basiert auf meinen Einzelscripten, an denen ich bereits 6 Jahre Arbeite und verbessere.
 # Da Server unterschiedlich sind, kann eine einwandfreie fuunktion nicht gewährleistet werden, also bitte mit bedacht verwenden.
 # Die Benutzung dieses Scriptes, oder deren Bestandteile, erfolgt auf eigene Gefahr!!!
 # Erstellt und getestet ist opensim.sh, auf verschiedenen Ubuntu 18.04 Servern, unter verschiedenen Server Anbietern (Contabo, Hetzner ...).
+
+# Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+# The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 clear # Bildschirm loeschen
 
@@ -17,7 +27,7 @@ echo "$(tput setaf 2) | |__| || |_) ||  __/| | | | ____) || || | | | | || |_| ||
 echo "  \____/ |  __/  \___||_| |_||_____/ |_||_| |_| |_| \____||_| \____| \__|\___/ |_|   "
 echo "         | |                                                                         "
 echo "         |_|                                                                         "
-echo "	    $(tput setaf 2)opensim$(tput setaf 4)MULTITOOL$(tput sgr 0) 0.36.109" # Versionsausgabe
+echo "	    $(tput setaf 2)opensim$(tput setaf 4)MULTITOOL$(tput sgr 0) 0.37.113" # Versionsausgabe
 echo " "
 
 # Datum und Uhrzeit
@@ -97,7 +107,7 @@ function vardel()
 ### myshellschreck, ShellCheck ueberlisten, hat sonst keinerlei Funktion und wird auch nicht aufgerufen.
 function myshellschreck()
 {
-STARTVERZEICHNIS="opt" MONEYVERZEICHNIS="robust" ROBUSTVERZEICHNIS="robust" OPENSIMVERZEICHNIS="opensim" SCRIPTSOURCE="ScriptNeu" MONEYSOURCE="money48" 
+STARTVERZEICHNIS="opt" MONEYVERZEICHNIS="robust" ROBUSTVERZEICHNIS="robust" OPENSIMVERZEICHNIS="opensim" SCRIPTSOURCE="ScriptNeu" MONEYSOURCE="money48" OSVERSION="opensim-0.9.2.0Dev"
 REGIONSDATEI="RegionList.ini" SIMDATEI="SimulatorList.ini" WARTEZEIT=30 STARTWARTEZEIT=10 STOPWARTEZEIT=30 MONEYWARTEZEIT=50 BACKUPWARTEZEIT=120 AUTOSTOPZEIT=60 SETMONOTHREADS=800 SETMONOTHREADSON="yes"
 }
 
@@ -278,8 +288,7 @@ function osstart()
 			echo "$(tput setaf 2) $(tput setab $White)OpenSimulator $VERZEICHNISSCREEN Starten$(tput sgr 0)"
 			echo "$DATUM $(date +%H:%M:%S) OSSTART: OpenSimulator $VERZEICHNISSCREEN Starten" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 			screen -fa -S "$VERZEICHNISSCREEN" -d -U -m mono OpenSim.exe
-		fi
-		
+		fi		
 		sleep 10
 	else
 		echo "$(tput setaf $Red) $(tput setab $White)OpenSimulator $VERZEICHNISSCREEN nicht vorhanden$(tput sgr 0)"
@@ -321,8 +330,7 @@ function rostart()
 			echo "$(tput setaf 2) $(tput setab $White)RobustServer Start$(tput sgr 0)"
 			echo "$DATUM $(date +%H:%M:%S) ROSTART: RobustServer Start" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 			screen -fa -S RO -d -U -m mono Robust.exe
-		fi
-		
+		fi		
 		sleep $WARTEZEIT
 	else
 		echo "$(tput setaf $Red)RobustServer wurde nicht gefunden.$(tput sgr 0)"
@@ -361,7 +369,6 @@ function mostart()
 			echo "$DATUM $(date +%H:%M:%S) MOSTART: Money Server Start" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 			screen -fa -S MO -d -U -m mono MoneyServer.exe
 		fi
-
 		sleep $MONEYWARTEZEIT
 	else
 		echo "$(tput setaf $Red)Money Server wurde nicht gefunden.$(tput sgr 0)"
@@ -485,12 +492,12 @@ function oscompi()
 	# ohne log Datei.
 	if [[ $SETOSCOMPION = "no" ]]
 	then
-		msbuild /p:Configuration=Release
+		msbuild /p:Configuration=Release || return 1
 	fi
 	# mit log Datei.
 	if [[ $SETOSCOMPION = "yes" ]]
 	then
-		msbuild /p:Configuration=Release /fileLogger /flp:logfile=opensimbuild.log /v:d
+		msbuild /p:Configuration=Release /fileLogger /flp:logfile=opensimbuild.log /v:d || return 1
 	fi
 	# AOT Aktiveren oder Deaktivieren.
 	if [[ $SETAOTON = "yes" ]]
@@ -786,8 +793,8 @@ function osstruktur()
 function osdelete()
 {	
 	if [ -d /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/ ]; then
-		echo "$(tput setaf $Red) $(tput setab $White)Lösche alte opensim1 Dateien$(tput sgr 0)"
-		echo "$DATUM $(date +%H:%M:%S) OSDELETE: Lösche alte opensim1 Dateien" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+		echo "$(tput setaf $Red) $(tput setab $White)Lösche altes opensim1 Verzeichnis$(tput sgr 0)"
+		echo "$DATUM $(date +%H:%M:%S) OSDELETE: Lösche altes opensim1 Verzeichnis" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 		cd /$STARTVERZEICHNIS  || return 1
 		rm -r /$STARTVERZEICHNIS/opensim1
 		echo "$(tput setaf $Red) $(tput setab $White)Umbenennen von $OPENSIMVERZEICHNIS nach opensim1 zur sicherung$(tput sgr 0)"
@@ -877,6 +884,7 @@ function meineregionen()
 	done
 	echo "$DATUM $(date +%H:%M:%S) MEINEREGIONEN: Regionsliste Ende" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 }
+
 ### Funktion regionsinisuchen, sucht alle Regionen.
 function regionsinisuchen() 
 {	
@@ -898,6 +906,7 @@ function regionsinisuchen()
 
 	done
 }
+
 # Funktion get_regionsarray, gibt ein Array aller Regionsabschnitte zurueck.
 # $1 - Datei
 function get_regionsarray() 
@@ -915,6 +924,7 @@ function get_regionsarray()
 	done
 	echo "${FIXED_ARRAY}"
 }
+
 # Funktion get_value_from_Region_key, gibt den Wert eines bestimmten Schluessels im angegebenen Abschnitt zurueck.
 # $1 - Datei - $2 - Schluessel - $3 - Sektion
 function get_value_from_Region_key() 
@@ -924,6 +934,7 @@ function get_value_from_Region_key()
 	#echo "$(sed -nr "/^\[$2\]/ { :l /^$3[ ]*=/ { s/.*=[ ]*//; p; q;}; n; b l;}" "$1")" # Nur Parameter
 	echo "$(sed -nr "/^\[$2\]/ { :l /$3[ ]*=/ { p; q;}; n; b l;}" "$1")" # Komplette eintraege
 }
+
 ### Regions.ini zerlegen
 ### Funktion regionsiniteilen, holt aus der Regions.ini eine Region heraus und speichert sie mit ihrem Regionsnamen.
 # Aufruf: regionsiniteilen Verzeichnis Regionsname
@@ -1665,6 +1676,53 @@ function manniversion()
 	echo "$DATUM $(date +%H:%M:%S) MANNIVERSION: compilieren" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 }
 
+### Funktion osbuilding, test automation.
+# Beispiel: opensim-0.9.2.0Dev-1187-gcf0b1b1.zip
+# /opt/opensim.sh osbuilding 1187
+function osbuilding() 
+{
+    VERSIONSNUMMER=$1
+	
+    cd /$STARTVERZEICHNIS || exit
+
+	echo "$(tput setaf $Magenta)Alten OpenSimulator sichern$(tput sgr0)"
+	echo "$DATUM $(date +%H:%M:%S) OSBUILDING: Alten OpenSimulator sichern" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+    osdelete
+
+	echo " "
+
+	echo "$(tput setaf $Magenta)Neuen OpenSimulator entpacken$(tput sgr0)"
+	echo "$DATUM $(date +%H:%M:%S) OSBUILDING: Neuen OpenSimulator entpacken" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+    unzip $OSVERSION-"$VERSIONSNUMMER"-*.zip
+
+	echo " "
+
+	echo "$(tput setaf $Magenta)Neuen OpenSimulator umbenennen$(tput sgr0)"
+	echo "$DATUM $(date +%H:%M:%S) OSBUILDING: Neuen OpenSimulator umbenennen" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+    mv /$STARTVERZEICHNIS/$OSVERSION-"$VERSIONSNUMMER"-*/ /$STARTVERZEICHNIS/opensim/
+
+	echo " "
+
+	echo "$(tput setaf $Magenta)Prebuild des neuen OpenSimulator starten$(tput sgr0)"
+	echo "$DATUM $(date +%H:%M:%S) OSBUILDING: Prebuild des neuen OpenSimulator starten" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+    osprebuild "$VERSIONSNUMMER"
+
+	echo " "
+
+	echo "$(tput setaf $Magenta)Compilieren des neuen OpenSimulator$(tput sgr0)"
+	echo "$DATUM $(date +%H:%M:%S) OSBUILDING: Compilieren des neuen OpenSimulator" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+    compilieren
+    
+    echo " " 
+	
+	# Hier darf erst weitergemacht werden wenn geprüft wurde ob das kompilieren ohne Fehler geschehen ist.
+	#  msbuild /p:Configuration=Release || return 1 sollte bei Fehler mit return 1 beenden.
+
+	echo "$(tput setaf $Magenta)Neuen OpenSimulator upgraden$(tput sgr0)"
+	echo "$DATUM $(date +%H:%M:%S) OSBUILDING: Neuen OpenSimulator upgraden" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+    osupgrade
+}
+
 ### Funktion info, Informationen auf den Bildschirm ausgeben.
 function info()
 {
@@ -1732,6 +1790,7 @@ echo "$(tput setab $Red)Ungetestete Funktionen$(tput sgr 0)"
 	echo "monoinstall		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - mono 6.x installation."
 	echo "installationen		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Linux Pakete - installationen aufisten."
 	echo "serverinstall		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - alle benötigten Linux Pakete installieren."
+	echo "osbuilding 			- $(tput setab $Magenta)Versionsnummer$(tput sgr 0)	- Upgrade des OpenSimulator aus einer Source ZIP Datei."
 
 	echo " "
 	echo "$(tput setaf $Yello)  Der Verzeichnisname ist gleichzeitig auch der Screen Name!$(tput sgr 0)"
@@ -1759,6 +1818,7 @@ function konsolenhilfe()
 	echo "Strg + D - Beendet Putty oder Xterm."
 	echo "Strg + Z - Setzt alles, was Sie ausführen, in einen angehaltenen Hintergrundprozess."
 }
+
 ### Eingabeauswertung:
 case  $KOMMANDO  in
 	schreibeinfo) schreibeinfo ;;
@@ -1830,6 +1890,7 @@ case  $KOMMANDO  in
 	serverinstall) serverinstall ;;
 	konsolenhilfe) konsolenhilfe ;;
 	simstats) simstats "$2" ;;
+	osbuilding) osbuilding "$2" ;;
 	*) hilfe ;;
 esac
 
