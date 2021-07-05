@@ -216,7 +216,7 @@ Gestartet wird das ganze so:
 
 Anschließend wird der alte OpenSimulator gesichert in opensim1, 
 der neue OpenSimulator entpackt, 
-umbenannt, 
+umbenannt in opensim, 
 die Versionsnummer eingestellt, 
 Prebuild erstellt und Kompiliert.
 Danach wenn alles ordnungsgemäß ausgeführt wurde, 
