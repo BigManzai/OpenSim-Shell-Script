@@ -208,6 +208,8 @@ in euer /opt Verzeichnis.
 Der Name ist folgendermaßen aufgebaut opensim-0.9.2.0Dev-1187-gcf0b1b1.zip
 opensim-0.9.2.0Dev wird in der Konfigurationsdatei angegeben und ändert sich nur ab und zu mal.
 1187 ist die Versionsnummer die ihr angeben müsst und der Rest dahinter ist uns egal.
+Bei opensim-0.9.2.0Dev-1183-g2c9f299.zip müssten wir also 1183 angeben.
+Bei opensim-0.9.2.0Dev-1184-g2b6a869.zip müssten wir also 1184 angeben.
 
 Gestartet wird das ganze so:
 /opt/opensim.sh osbuilding 1187
