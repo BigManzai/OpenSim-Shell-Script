@@ -1,6 +1,6 @@
 # OpenSim-Shell-Script
 ![GitHub Logo](https://github.com/BigManzai/OpenSim-Shell-Script/blob/main/opensimMultitool.jpg)
-opensimMULTITOOL, Shell Script, Version 0.36.109
+opensimMULTITOOL, Shell Script, Version 0.37.113
 
 opensim.sh Basiert auf meinen Einzelscripten, an denen ich bereits 6 Jahre Arbeite und verbessere.
 
@@ -141,6 +141,7 @@ cleanaot                - hat keine Parameter - aot Dateien entfernen.
 monoinstall             - hat keine Parameter - mono 6.x installation.
 installationen          - hat keine Parameter - installationen aufisten.
 serverinstall           - hat keine Parameter - alle benötigten Linux Pakete installieren.
+osbuilding 			    - Versionsnummer      - Upgrade des OpenSimulator aus einer Source ZIP Datei.
 ```
 
 ```
@@ -196,4 +197,18 @@ Version 0.36.109
 SC2027: The surrounding quotes actually unquote this. Remove or escape them.
 SC2086: Double quote to prevent globbing and word splitting.
 behoben
+```
+
+```
+Neu in der Version 0.37.113
+Vollautomatisches Upgrade aus einer OpenSimulator Dev Master Zip Datei.
+Ihr kopiert den OpenSimulator von hier: http://opensimulator.org/viewgit/?a=shortlog&p=opensim in euer /opt Verzeichnis.
+Der Name ist folgendermaßen aufgebaut opensim-0.9.2.0Dev-1187-gcf0b1b1.zip
+opensim-0.9.2.0Dev wird in der Konfigurationsdatei angegeben und ändert sich nur ab und zu mal.
+1187 ist die Versionsnummer die ihr angeben müsst und der Rest dahinter ist uns egal.
+Starten tut ihr das ganze so:
+/opt/opensim.sh osbuilding 1187
+Anschließend wird der alte OpenSimulator gesichert in opensim1 der neue OpenSimulator entpackt, 
+umbenannt, die Versionsnummer eingestellt, Prebuild und Kompiliert.
+Danach wenn alles ordnungsgemäß ausgeführt wurde, wird das Upgrade des Grids und/oder Simulatoren ausgeführt.
 ```
