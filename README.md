@@ -141,7 +141,7 @@ cleanaot                - hat keine Parameter - aot Dateien entfernen.
 monoinstall             - hat keine Parameter - mono 6.x installation.
 installationen          - hat keine Parameter - installationen aufisten.
 serverinstall           - hat keine Parameter - alle benötigten Linux Pakete installieren.
-osbuilding 			    - Versionsnummer      - Upgrade des OpenSimulator aus einer Source ZIP Datei.
+osbuilding              - Versionsnummer      - Upgrade des OpenSimulator aus einer Source ZIP Datei.
 ```
 
 ```
