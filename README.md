@@ -202,7 +202,9 @@ behoben
 ```
 Neu in der Version 0.37.113
 Vollautomatisches Upgrade aus einer OpenSimulator Dev Master Zip Datei.
-Ihr kopiert den OpenSimulator von hier: "http://opensimulator.org/viewgit/?a=shortlog&p=opensim" in euer /opt Verzeichnis.
+Ihr kopiert den OpenSimulator von hier: "http://opensimulator.org/viewgit/?a=shortlog&p=opensim" 
+in euer /opt Verzeichnis.
+
 Der Name ist folgendermaßen aufgebaut opensim-0.9.2.0Dev-1187-gcf0b1b1.zip
 opensim-0.9.2.0Dev wird in der Konfigurationsdatei angegeben und ändert sich nur ab und zu mal.
 1187 ist die Versionsnummer die ihr angeben müsst und der Rest dahinter ist uns egal.
@@ -215,5 +217,6 @@ der neue OpenSimulator entpackt,
 umbenannt, 
 die Versionsnummer eingestellt, 
 Prebuild erstellt und Kompiliert.
-Danach wenn alles ordnungsgemäß ausgeführt wurde, wird das Upgrade des Grids und/oder Simulatoren ausgeführt.
+Danach wenn alles ordnungsgemäß ausgeführt wurde, 
+wird das Upgrade des Grids und/oder Simulatoren ausgeführt.
 ```
