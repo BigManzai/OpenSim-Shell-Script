@@ -206,9 +206,14 @@ Ihr kopiert den OpenSimulator von hier: "http://opensimulator.org/viewgit/?a=sho
 Der Name ist folgendermaßen aufgebaut opensim-0.9.2.0Dev-1187-gcf0b1b1.zip
 opensim-0.9.2.0Dev wird in der Konfigurationsdatei angegeben und ändert sich nur ab und zu mal.
 1187 ist die Versionsnummer die ihr angeben müsst und der Rest dahinter ist uns egal.
-Starten tut ihr das ganze so:
+
+Gestartet wird das ganze so:
 /opt/opensim.sh osbuilding 1187
-Anschließend wird der alte OpenSimulator gesichert in opensim1 der neue OpenSimulator entpackt, 
-umbenannt, die Versionsnummer eingestellt, Prebuild und Kompiliert.
+
+Anschließend wird der alte OpenSimulator gesichert in opensim1, 
+der neue OpenSimulator entpackt, 
+umbenannt, 
+die Versionsnummer eingestellt, 
+Prebuild erstellt und Kompiliert.
 Danach wenn alles ordnungsgemäß ausgeführt wurde, wird das Upgrade des Grids und/oder Simulatoren ausgeführt.
 ```
