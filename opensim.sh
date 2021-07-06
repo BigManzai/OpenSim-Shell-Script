@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# opensimMULTITOOL Version 0.37.113 Copyright (c) 2021 BigManzai Manfred Aabye
+# opensimMULTITOOL Version 0.38.115 Copyright (c) 2021 BigManzai Manfred Aabye
 # opensim.sh Basiert auf meinen Einzelscripten, an denen ich bereits 6 Jahre Arbeite und verbessere.
 # Da Server unterschiedlich sind, kann eine einwandfreie fuunktion nicht gewährleistet werden, also bitte mit bedacht verwenden.
 # Die Benutzung dieses Scriptes, oder deren Bestandteile, erfolgt auf eigene Gefahr!!!
@@ -27,7 +27,7 @@ echo "$(tput setaf 2) | |__| || |_) ||  __/| | | | ____) || || | | | | || |_| ||
 echo "  \____/ |  __/  \___||_| |_||_____/ |_||_| |_| |_| \____||_| \____| \__|\___/ |_|   "
 echo "         | |                                                                         "
 echo "         |_|                                                                         "
-echo "	    $(tput setaf 2)opensim$(tput setaf 4)MULTITOOL$(tput sgr 0) 0.37.113" # Versionsausgabe
+echo "	    $(tput setaf 2)opensim$(tput setaf 4)MULTITOOL$(tput sgr 0) 0.38.115" # Versionsausgabe
 echo " "
 
 # Datum und Uhrzeit
@@ -107,7 +107,7 @@ function vardel()
 ### myshellschreck, ShellCheck ueberlisten, hat sonst keinerlei Funktion und wird auch nicht aufgerufen.
 function myshellschreck()
 {
-STARTVERZEICHNIS="opt" MONEYVERZEICHNIS="robust" ROBUSTVERZEICHNIS="robust" OPENSIMVERZEICHNIS="opensim" SCRIPTSOURCE="ScriptNeu" MONEYSOURCE="money48" OSVERSION="opensim-0.9.2.0Dev"
+STARTVERZEICHNIS="opt" MONEYVERZEICHNIS="robust" ROBUSTVERZEICHNIS="robust" OPENSIMVERZEICHNIS="opensim" SCRIPTSOURCE="ScriptNeu" MONEYSOURCE="money48" OSVERSION="opensim-0.9.2.0Dev" GRIDSTART="5000 5000"
 REGIONSDATEI="RegionList.ini" SIMDATEI="SimulatorList.ini" WARTEZEIT=30 STARTWARTEZEIT=10 STOPWARTEZEIT=30 MONEYWARTEZEIT=50 BACKUPWARTEZEIT=120 AUTOSTOPZEIT=60 SETMONOTHREADS=800 SETMONOTHREADSON="yes"
 }
 
@@ -151,8 +151,9 @@ function assetdel()
 	fi
 }
 
-### Funktion oscommand, OpenSim Command senden.
+### Funktion oscommand, OpenSim Command direkt in den screen senden.
 # Aufruf: oscommand Screen Region Befehl Parameter
+# Beispiel: /opt/opensim.sh sim1 Welcome alert "Hallo liebe Leute dies ist eine Nachricht"
 function oscommand()
 {	
 	VERZEICHNISSCREEN=$1; REGION=$2; BEFEHL=$3; PARAMETER=$4
@@ -259,7 +260,7 @@ function ossettings()
 	echo " "
 }
 
-### Funktion screenlist, Laufende Screens auflisten.
+### Funktion screenlist, Laufende Screens auflisten und auch in die Log Datei schreiben.
 function screenlist()
 {
 	echo "$(tput setaf $White)$(tput setab $Green) Alle laufende Screens! $(tput sgr 0)"
@@ -270,7 +271,7 @@ function screenlist()
 
 ### Funktion osstart, startet Region Server.
 # osstart screen_name
-# Beispiel-Example: osstart sim1
+# Beispiel-Example: /opt/opensim.sh osstart sim1
 function osstart()
 {
 	VERZEICHNISSCREEN=$1 # OpenSimulator, Verzeichnis und Screen Name
@@ -298,7 +299,7 @@ function osstart()
 }
 
 ### Funktion osstop, stoppt Region Server.
-# Beispiel-Example: osstop sim1
+# Beispiel-Example: /opt/opensim.sh osstop sim1
 function osstop()
 {
 	VERZEICHNISSCREEN=$1 # OpenSimulator, Verzeichnis und Screen Name
@@ -1654,28 +1655,6 @@ function installationen()
 	dpkg-query -Wf '${Package;-40}${Priority}\n' | sort -b -k2,2 -k1,1
 }
 
-### Funktion manniversion, test automation.
-function manniversion() 
-{
-    VERSIONSNUMMER=$1
-    cd /$STARTVERZEICHNIS || exit
-	echo "$DATUM $(date +%H:%M:%S) MANNIVERSION: cd /$STARTVERZEICHNIS" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-    #apt update
-    #apt upgrade
-    osdelete
-	echo "$DATUM $(date +%H:%M:%S) MANNIVERSION: osdelete" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-    unzip opensim-0.9.2.0Dev-"$VERSIONSNUMMER"-*.zip
-	echo "$DATUM $(date +%H:%M:%S) MANNIVERSION: entpacken" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-
-    mv /$STARTVERZEICHNIS/opensim-0.9.2.0Dev-"$VERSIONSNUMMER"-*/ /$STARTVERZEICHNIS/opensim/
-	echo "$DATUM $(date +%H:%M:%S) MANNIVERSION: umbenennen " >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-
-    osprebuild "$VERSIONSNUMMER"
-	echo "$DATUM $(date +%H:%M:%S) MANNIVERSION: Konfigurieren" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-    compilieren
-	echo "$DATUM $(date +%H:%M:%S) MANNIVERSION: compilieren" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-}
-
 ### Funktion osbuilding, test automation.
 # Beispiel: opensim-0.9.2.0Dev-1187-gcf0b1b1.zip
 # /opt/opensim.sh osbuilding 1187
@@ -1721,6 +1700,43 @@ function osbuilding()
 	echo "$(tput setaf $Magenta)Neuen OpenSimulator upgraden$(tput sgr0)"
 	echo "$DATUM $(date +%H:%M:%S) OSBUILDING: Neuen OpenSimulator upgraden" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
     osupgrade
+}
+
+# create user [first] [last] [passw] [RegionX] [RegionY] [Email] - creates a new user and password 
+function createuser()
+{	
+	VORNAME=$1; NACHNAME=$2; PASSWORT=$3; EMAIL=$4;
+
+	if [ -z "$VORNAME" ]; then echo "Der VORNAME fehlt!"; fi
+	if [ -z "$NACHNAME" ]; then echo "Der NACHNAME fehlt!"; fi
+	if [ -z "$PASSWORT" ]; then echo "Das PASSWORT fehlt!"; fi
+	if [ -z "$EMAIL" ]; then echo "Die EMAIL Adresse fehlt!"; fi
+	
+	if screen -list | grep -q "RO"; then
+		# Befehlskette
+		# First name [Default]: OK
+		# Last name [User]: OK
+		# Passwort: OK
+		# Email []: OK
+		# User ID (enter for random) []: bestaetigen
+		# Model name []: bestaetigen
+
+		echo "Kontrollausgabe: $VORNAME $NACHNAME $PASSWORT $EMAIL"
+
+		# Befehl starten
+		screen -S RO -p 0 -X eval "stuff 'create user'^M"
+		# Abfragen beantworten
+		screen -S RO -p 0 -X eval "stuff '$VORNAME'^M"
+		screen -S RO -p 0 -X eval "stuff '$NACHNAME'^M"
+		screen -S RO -p 0 -X eval "stuff '$PASSWORT'^M"
+		screen -S RO -p 0 -X eval "stuff '$EMAIL'^M"
+		screen -S RO -p 0 -X eval "stuff ^M" # bestaetigen
+		screen -S RO -p 0 -X eval "stuff ^M" # bestaetigen
+
+	else
+		echo "CREATEUSER: Robust existiert nicht."
+		echo "$DATUM $(date +%H:%M:%S) CREATEUSER: Robust existiert nicht" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+	fi
 }
 
 ### Funktion info, Informationen auf den Bildschirm ausgeben.
@@ -1790,7 +1806,8 @@ echo "$(tput setab $Red)Ungetestete Funktionen$(tput sgr 0)"
 	echo "monoinstall		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - mono 6.x installation."
 	echo "installationen		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Linux Pakete - installationen aufisten."
 	echo "serverinstall		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - alle benötigten Linux Pakete installieren."
-	echo "osbuilding 			- $(tput setab $Magenta)Versionsnummer$(tput sgr 0)	- Upgrade des OpenSimulator aus einer Source ZIP Datei."
+	echo "osbuilding		- $(tput setab $Magenta)Versionsnummer$(tput sgr 0) - Upgrade des OpenSimulator aus einer Source ZIP Datei."
+	echo "createuser 		- $(tput setab $Magenta) Vorname $(tput sgr 0) $(tput setab $Blue) Nachname $(tput sgr 0) $(tput setab $Green) Passwort $(tput sgr 0) $(tput setab $Yello) E-Mail $(tput sgr 0) - Grid Benutzer anlegen."
 
 	echo " "
 	echo "$(tput setaf $Yello)  Der Verzeichnisname ist gleichzeitig auch der Screen Name!$(tput sgr 0)"
@@ -1873,7 +1890,6 @@ case  $KOMMANDO  in
 	osg | osgitholen) osgitholen ;;
 	osprebuild) osprebuild "$2" ;;
 	chrisoscopy) chrisoscopy ;;
-	manniversion) manniversion "$2" ;;
 	cleaninstall) cleaninstall ;;
 	autoallclean) autoallclean ;;
 	allclean) allclean "$2" ;;
@@ -1891,6 +1907,7 @@ case  $KOMMANDO  in
 	konsolenhilfe) konsolenhilfe ;;
 	simstats) simstats "$2" ;;
 	osbuilding) osbuilding "$2" ;;
+	createuser) createuser "$2" "$3" "$4" "$5" ;;
 	*) hilfe ;;
 esac
 
