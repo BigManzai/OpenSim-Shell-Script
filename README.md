@@ -134,7 +134,7 @@ Regionsdateiliste       - -b Bildschirm oder -d Datei Verzeichnisname - Regionsd
 osgitholen              - hat keine Parameter - kopiert eine OpenSimulator Git Entwicklerversion.
 terminator              - hat keine Parameter - Killt alle laufenden Screens.
 ```
-## Ungetestete Funktionen
+## Ungetestete oder neue Funktionen die noch nicht ausreichend getestet sind
 ```
 makeaot                 - hat keine Parameter - aot Dateien erstellen.
 cleanaot                - hat keine Parameter - aot Dateien entfernen.
