@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# opensimMULTITOOL Version 0.38.115 Copyright (c) 2021 BigManzai Manfred Aabye
+# opensimMULTITOOL Version 0.41.137 Copyright (c) 2021 BigManzai Manfred Aabye
 # opensim.sh Basiert auf meinen Einzelscripten, an denen ich bereits 6 Jahre Arbeite und verbessere.
 # Da Server unterschiedlich sind, kann eine einwandfreie fuunktion nicht gewährleistet werden, also bitte mit bedacht verwenden.
 # Die Benutzung dieses Scriptes, oder deren Bestandteile, erfolgt auf eigene Gefahr!!!
@@ -27,7 +27,7 @@ echo "$(tput setaf 2) | |__| || |_) ||  __/| | | | ____) || || | | | | || |_| ||
 echo "  \____/ |  __/  \___||_| |_||_____/ |_||_| |_| |_| \____||_| \____| \__|\___/ |_|   "
 echo "         | |                                                                         "
 echo "         |_|                                                                         "
-echo "	    $(tput setaf 2)opensim$(tput setaf 4)MULTITOOL$(tput sgr 0) 0.38.115" # Versionsausgabe
+echo "	    $(tput setaf 2)opensim$(tput setaf 4)MULTITOOL$(tput sgr 0) 0.41.137" # Versionsausgabe
 echo " "
 
 # Datum und Uhrzeit
@@ -107,7 +107,7 @@ function vardel()
 ### myshellschreck, ShellCheck ueberlisten, hat sonst keinerlei Funktion und wird auch nicht aufgerufen.
 function myshellschreck()
 {
-STARTVERZEICHNIS="opt" MONEYVERZEICHNIS="robust" ROBUSTVERZEICHNIS="robust" OPENSIMVERZEICHNIS="opensim" SCRIPTSOURCE="ScriptNeu" MONEYSOURCE="money48" OSVERSION="opensim-0.9.2.0Dev" GRIDSTART="5000 5000"
+STARTVERZEICHNIS="opt" MONEYVERZEICHNIS="robust" ROBUSTVERZEICHNIS="robust" OPENSIMVERZEICHNIS="opensim" SCRIPTSOURCE="ScriptNeu" MONEYSOURCE="money48" OSVERSION="opensim-0.9.2.0Dev"
 REGIONSDATEI="RegionList.ini" SIMDATEI="SimulatorList.ini" WARTEZEIT=30 STARTWARTEZEIT=10 STOPWARTEZEIT=30 MONEYWARTEZEIT=50 BACKUPWARTEZEIT=120 AUTOSTOPZEIT=60 SETMONOTHREADS=800 SETMONOTHREADSON="yes"
 }
 
@@ -1739,6 +1739,182 @@ function createuser()
 	fi
 }
 
+# Datenbank Befehle Achtung alles noch nicht ausgereift!!!
+
+# function db_anzeigen, listt alle erstellten Datenbanken auf.
+function db_anzeigen()
+{
+	DBBENUTZER=$1; DBPASSWORT=$2;
+
+	echo "$(tput setaf $Magenta)PRINT DATABASE: Alle Datenbanken anzeigen. $(tput sgr0)"
+	echo "$DATUM $(date +%H:%M:%S) PRINT DATABASE: Alle Datenbanken anzeigen" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+
+	# 2>/dev/null verhindert die Fehlerausgabe - mysql warning using a password on the command line interface can be insecure. disable.
+	mysql -u"$DBBENUTZER" -p"$DBPASSWORT" -e "show databases" 2>/dev/null
+	mysql -u"$DBBENUTZER" -p"$DBPASSWORT" -e "show databases" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log" 2>/dev/null
+
+	# Eingabe Variablen löschen
+	unset DBBENUTZER
+	unset DBPASSWORT
+}
+
+# function db_benutzer_anzeigen, alle angelegten Benutzer von mySQL anzeigen.
+function db_benutzer_anzeigen()
+{
+	DBBENUTZER=$1; DBPASSWORT=$2;
+
+	echo "$(tput setaf $Magenta)PRINT DATABASE USER: Alle Datenbankbenutzer anzeigen. $(tput sgr0)"
+	echo "$DATUM $(date +%H:%M:%S) PRINT DATABASE USER: Alle Datenbankbenutzer anzeigen" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+
+	# 2>/dev/null verhindert die Fehlerausgabe - mysql warning using a password on the command line interface can be insecure. disable.
+	mysql -u"$DBBENUTZER" -p"$DBPASSWORT" -e "SELECT User FROM mysql.user" 2>/dev/null
+	mysql -u"$DBBENUTZER" -p"$DBPASSWORT" -e "SELECT User FROM mysql.user" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log" 2>/dev/null
+
+	# Eingabe Variablen löschen
+	unset DBBENUTZER
+	unset DBPASSWORT
+}
+
+# function create_db, erstellt eine neue Datenbank.
+function create_db()
+{
+	DBBENUTZER=$1; DBPASSWORT=$2; DATENBANKNAME=$3;
+
+	echo "$(tput setaf $Magenta)CREATE DATABASE: Datenbanken anlegen. $(tput sgr0)"
+	echo "$DATUM $(date +%H:%M:%S) CREATE DATABASE: Datenbanken anlegen" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+	echo "$DBBENUTZER, ********, $DATENBANKNAME" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+
+	# 2>/dev/null verhindert die Fehlerausgabe - mysql warning using a password on the command line interface can be insecure. disable.
+	mysql -u"$DBBENUTZER" -p"$DBPASSWORT" -e "CREATE DATABASE IF NOT EXISTS $DATENBANKNAME CHARACTER SET utf8 COLLATE utf8_general_ci" 2>/dev/null
+
+	echo "$(tput setaf $Magenta)CREATE DATABASE: Datenbanken $DATENBANKNAME wurde angelegt. $(tput sgr0)"
+	echo "$DATUM $(date +%H:%M:%S) CREATE DATABASE: Datenbanken $DATENBANKNAME wurde angelegt" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+
+	# Eingabe Variablen löschen
+	unset DBBENUTZER
+	unset DBPASSWORT
+	unset DATENBANKNAME
+}
+
+# function create_db_user - Operation CREATE USER failed - Fehler.
+function create_db_user()
+{
+	DBBENUTZER=$1; DBPASSWORT=$2; NEUERNAME=$3; NEUESPASSWORT=$4;
+
+	echo "$(tput setaf $Magenta)CREATE DATABASE USER: Datenbankbenutzer anlegen. $(tput sgr0)"
+	echo "$DATUM $(date +%H:%M:%S) CREATE DATABASE USER: Datenbankbenutzer anlegen" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+	echo "$DBBENUTZER, ********, $NEUERNAME, ********" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+
+	mysql -u"$DBBENUTZER" -p"$DBPASSWORT" -e "CREATE USER '$NEUERNAME'@'localhost' IDENTIFIED BY '$NEUESPASSWORT'"
+	mysql -u"$DBBENUTZER" -p"$DBPASSWORT" -e "GRANT ALL PRIVILEGES ON * . * TO '$NEUERNAME'@'localhost'"
+	mysql -u"$DBBENUTZER" -p"$DBPASSWORT" -e "flush privileges"
+
+	# Eingabe Variablen löschen
+	unset DBBENUTZER
+	unset DBPASSWORT
+	unset NEUERNAME
+	unset NEUESPASSWORT
+}
+
+# function delete_db, löscht eine Datenbank.
+function delete_db()
+{
+	DBBENUTZER=$1; DBPASSWORT=$2; DATENBANKNAME=$3;
+
+	echo "$(tput setaf $Magenta)DELETE DATABASE: Datenbank löschen. $(tput sgr0)"
+	echo "$DATUM $(date +%H:%M:%S) DELETE DATABASE: Datenbank löschen" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+
+	echo "$DBBENUTZER, ********, $DATENBANKNAME" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+	# 2>/dev/null verhindert die Fehlerausgabe - mysql warning using a password on the command line interface can be insecure. disable.
+	mysql -u"$DBBENUTZER" -p"$DBPASSWORT" -e "DROP DATABASE $DATENBANKNAME" 2>/dev/null
+
+	# Eingabe Variablen löschen
+	unset DBBENUTZER
+	unset DBPASSWORT
+	unset DATENBANKNAME
+}
+
+# function leere_db, löscht eine Datenbank und erstellt diese anschließend neu.
+function leere_db()
+{
+	DBBENUTZER=$1; DBPASSWORT=$2; DATENBANKNAME=$3;
+
+	echo "$(tput setaf $Magenta)EMPTY DATABASE: Datenbank leeren. $(tput sgr0)"
+	echo "$DATUM $(date +%H:%M:%S) EMPTY DATABASE: Datenbank leeren" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+
+	# 2>/dev/null verhindert die Fehlerausgabe - mysql warning using a password on the command line interface can be insecure. disable.
+
+	# loesche
+	mysql -u"$DBBENUTZER" -p"$DBPASSWORT" -e "DROP DATABASE $DATENBANKNAME" 2>/dev/null
+	sleep 10	
+	# erstelle neu
+	mysql -u"$DBBENUTZER" -p"$DBPASSWORT" -e "CREATE DATABASE IF NOT EXISTS $DATENBANKNAME CHARACTER SET utf8 COLLATE utf8_general_ci" 2>/dev/null
+	echo "$DATENBANKNAME geleert" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+
+	# Eingabe Variablen löschen
+	unset DBBENUTZER
+	unset DBPASSWORT
+	unset DATENBANKNAME
+}
+
+# function allrepair_db, CHECK – REPAIR – ANALYZE – OPTIMIZE, alle Datenbanken.
+function allrepair_db()
+{
+	DBBENUTZER=$1; DBPASSWORT=$2;
+
+	echo "$(tput setaf $Magenta)ALL REPAIR DATABASE: Alle Datenbanken Checken, Reparieren und Optimieren. $(tput sgr0)"
+	echo "$DATUM $(date +%H:%M:%S) ALL REPAIR DATABASE: Alle Datenbanken Checken, Reparieren und Optimieren" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+
+	mysqlcheck -u"$DBBENUTZER" -p"$DBPASSWORT" --auto-repair --all-databases
+	mysqlcheck -u"$DBBENUTZER" -p"$DBPASSWORT" --check --all-databases
+	mysqlcheck -u"$DBBENUTZER" -p"$DBPASSWORT" --optimize --all-databases
+	# Danach werden automatisiert folgende SQL Statements ausgeführt:
+	# – CHECK TABLE
+	# – REPAIR TABLE
+	# – ANALYZE TABLE
+	# – OPTIMIZE TABLE
+	echo "$(tput setaf $Magenta)ALL REPAIR DATABASE: Fertig. $(tput sgr0)"
+	echo "$DATUM $(date +%H:%M:%S) ALL REPAIR DATABASE: Fertig" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+
+	# Eingabe Variablen löschen
+	unset DBBENUTZER
+	unset DBPASSWORT
+}
+
+# function mysql_neustart, startet mySQL neu.
+function mysql_neustart()
+{
+	echo "$(tput setaf $Magenta)MYSQL RESTART: MySQL Neu starten. $(tput sgr0)"
+	echo "$DATUM $(date +%H:%M:%S) MYSQL RESTART: MySQL Neu starten" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+
+	echo "$(tput setaf $Red)MYSQL RESTART: Stoppen. $(tput sgr0)"
+	service mysql stop
+	sleep 2
+	echo "$(tput setaf $Green)MYSQL RESTART: Starten. $(tput sgr0)"
+	service mysql start
+	echo "$(tput setaf $Magenta)MYSQL RESTART: Fertig. $(tput sgr0)"
+}
+
+# function db_sichern, sichert eine einzelne Datenbank.
+function db_sichern()
+{
+	DBBENUTZER=$1; DBPASSWORT=$2; DATENBANKNAME=$3;
+
+	echo "$(tput setaf $Magenta)SAVE DATABASE: Datenbank $DATENBANKNAME sichern. $(tput sgr0)"
+	echo "$DATUM $(date +%H:%M:%S) SAVE DATABASE: Datenbank $DATENBANKNAME sichern" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+
+	# 2>/dev/null verhindert die Fehlerausgabe - mysql warning using a password on the command line interface can be insecure. disable.
+	mysqldump -u"$DBBENUTZER" -p"$DBPASSWORT" "$DATENBANKNAME" > /$STARTVERZEICHNIS/"$DATENBANKNAME".sql 2>/dev/null
+
+	echo "$(tput setaf $Magenta)SAVE DATABASE: Im Hintergrund wird die Datenbank $DATENBANKNAME jetzt gesichert. $(tput sgr0)"
+	echo "$DATUM $(date +%H:%M:%S) SAVE DATABASE: Im Hintergrund wird die Datenbank $DATENBANKNAME jetzt gesichert" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+
+	# Eingabe Variablen löschen
+	unset DBBENUTZER
+	unset DBPASSWORT
+	unset DATENBANKNAME
+}
+
 ### Funktion info, Informationen auf den Bildschirm ausgeben.
 function info()
 {
@@ -1808,6 +1984,15 @@ echo "$(tput setab $Red)Ungetestete Funktionen$(tput sgr 0)"
 	echo "serverinstall		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - alle benötigten Linux Pakete installieren."
 	echo "osbuilding		- $(tput setab $Magenta)Versionsnummer$(tput sgr 0) - Upgrade des OpenSimulator aus einer Source ZIP Datei."
 	echo "createuser 		- $(tput setab $Magenta) Vorname $(tput sgr 0) $(tput setab $Blue) Nachname $(tput sgr 0) $(tput setab $Green) Passwort $(tput sgr 0) $(tput setab $Yello) E-Mail $(tput sgr 0) - Grid Benutzer anlegen."
+echo " "
+	echo "db_anzeigen	- $(tput setab $Magenta) DBBENUTZER $(tput sgr 0) $(tput setab $Blue) DBDATENBANKNAME $(tput sgr 0) - Alle Datenbanken anzeigen."
+	echo "create_db	- $(tput setab $Magenta) DBBENUTZER $(tput sgr 0) $(tput setab $Blue) DBPASSWORT $(tput sgr 0) $(tput setab $Green) DATENBANKNAME $(tput sgr 0) - Datenbank anlegen."
+	#echo "create_db_user	- $(tput setab $Magenta) DBBENUTZER $(tput sgr 0) $(tput setab $Blue) DBDATENBANKNAME $(tput sgr 0) $(tput setab $Green) NEUERNAME $(tput sgr 0) $(tput setab $Yello) NEUESPASSWORT $(tput sgr 0) - DB Benutzer anlegen."
+	echo "delete_db	- $(tput setab $Magenta) DBBENUTZER $(tput sgr 0) $(tput setab $Blue) DBPASSWORT $(tput sgr 0) $(tput setab $Green) DATENBANKNAME $(tput sgr 0) - Datenbank löschen."
+	echo "leere_db	- $(tput setab $Magenta) DBBENUTZER $(tput sgr 0) $(tput setab $Blue) DBPASSWORT $(tput sgr 0) $(tput setab $Green) DATENBANKNAME $(tput sgr 0) - Datenbank leeren."
+	echo "allrepair_db	- $(tput setab $Magenta) DBBENUTZER $(tput sgr 0) $(tput setab $Blue) DBPASSWORT $(tput sgr 0) $(tput setab $Green) DATENBANKNAME $(tput sgr 0) - Datenbanken Reparieren und Optimieren."
+	echo "db_sichern	- $(tput setab $Magenta) DBBENUTZER $(tput sgr 0) $(tput setab $Blue) DBPASSWORT $(tput sgr 0) $(tput setab $Green) DATENBANKNAME $(tput sgr 0) - Datenbank sichern."
+	echo "mysql_neustart	- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - MySQL neu starten."
 
 	echo " "
 	echo "$(tput setaf $Yello)  Der Verzeichnisname ist gleichzeitig auch der Screen Name!$(tput sgr 0)"
@@ -1908,6 +2093,15 @@ case  $KOMMANDO  in
 	simstats) simstats "$2" ;;
 	osbuilding) osbuilding "$2" ;;
 	createuser) createuser "$2" "$3" "$4" "$5" ;;
+	db_anzeigen) db_anzeigen "$2" "$3" ;;
+	db_benutzer_anzeigen) db_benutzer_anzeigen "$2" "$3" ;;
+	create_db) create_db "$2" "$3" "$4" ;;
+	create_db_user) create_db_user "$2" "$3" "$4" "$5" ;;
+	delete_db) delete_db "$2" "$3" "$4" ;;
+	leere_db) leere_db "$2" "$3" "$4" ;;
+	allrepair_db) allrepair_db "$2" "$3" ;;
+	mysql_neustart) mysql_neustart ;;
+	db_sichern) db_sichern "$2" "$3" "$4" ;;
 	*) hilfe ;;
 esac
 
