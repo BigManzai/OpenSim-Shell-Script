@@ -231,80 +231,9 @@ die Versionsnummer eingestellt,
 Prebuild erstellt und Kompiliert.
 Danach wenn alles ordnungsgemäß ausgeführt wurde, 
 wird das Upgrade des Grids und/oder Simulatoren ausgeführt.
+```
 
-Meine Log Datei:
-
-#######################################################
-05.07.2021 15:40:47 OSBUILDING: Alten OpenSimulator sichern
-05.07.2021 15:40:47 OSDELETE: Lösche altes opensim1 Verzeichnis
-05.07.2021 15:40:48 OSDELETE: Umbenennen von opensim nach opensim1 zur sicherung
-05.07.2021 15:40:48 OSBUILDING: Neuen OpenSimulator entpacken
-05.07.2021 15:40:51 OSBUILDING: Neuen OpenSimulator umbenennen
-05.07.2021 15:40:51 OSBUILDING: Prebuild des neuen OpenSimulator starten
-05.07.2021 15:40:51 PREBUILD: Version umbenennen und Release einstellen
-05.07.2021 15:40:51 OSBUILDING: Compilieren des neuen OpenSimulator
-05.07.2021 15:40:51 COMPILIEREN: Bauen eines neuen OpenSimulators wird gestartet
-05.07.2021 15:40:51 SCRIPTCOPY: Script Assets werden kopiert
-05.07.2021 15:40:51 MONEYCOPY: Money Kopiervorgang gestartet
-05.07.2021 15:40:51 PYTHONCOPY: Python wird nicht kopiert.
-05.07.2021 15:40:51 OpenSimSearch: OpenSimSearch wird nicht kopiert.
-05.07.2021 15:40:51 OpenSimMutelist: OpenSimMutelist wird nicht kopiert.
-05.07.2021 15:40:51 CHRISOSCOPY: Chris.OS.Additions werden nicht kopiert.
-05.07.2021 15:40:51 OSCOMPI: Kompilierungsvorgang startet
-05.07.2021 15:40:51 OSCOMPI: Prebuildvorgang startet
-05.07.2021 15:42:00 OSCOMPI: Kompilierung wurde durchgeführt
-05.07.2021 15:42:00 OSBUILDING: Neuen OpenSimulator upgraden
-05.07.2021 15:42:00 OSUPGRADE: Das Grid wird jetzt upgegradet
-05.07.2021 15:42:00 OSUPGRADE: Alles Beenden
-05.07.2021 15:42:02 AUTOSIMSTOP: Regionen OpenSimulator sim1 Beenden
-05.07.2021 15:42:32 AUTOSIMSTOP: Regionen OpenSimulator sim2 Beenden
-05.07.2021 15:43:02 AUTOSIMSTOP: Regionen OpenSimulator sim3 Beenden
-05.07.2021 15:43:32 AUTOSIMSTOP: Regionen OpenSimulator sim4 Beenden
-05.07.2021 15:44:02 AUTOSIMSTOP: Regionen OpenSimulator sim5 Beenden
-05.07.2021 15:44:32 AUTOSIMSTOP: Regionen OpenSimulator sim6 Beenden
-05.07.2021 15:45:02 AUTOSIMSTOP: Regionen OpenSimulator sim7 Beenden
-05.07.2021 15:45:32 MOSTOP: Money Server Beenden
-05.07.2021 15:46:22 ROSTOP: RobustServer Beenden
-05.07.2021 15:46:54 WORKS: SIMs OFFLINE!
-05.07.2021 15:46:54 WORKS: MONEY OFFLINE!
-05.07.2021 15:46:54 WORKS: ROBUST OFFLINE!
-05.07.2021 15:46:54 OSUPGRADE: Neue Version Installieren
-05.07.2021 15:46:58 OSCOPY: Robust kopieren
-05.07.2021 15:47:22 OSCOPY: OpenSim kopieren
-05.07.2021 15:47:22 OSUPGRADE: Log Dateien loeschen!
-05.07.2021 15:47:24 AUTOLOGDEL: OpenSimulator log sim1 geloescht
-05.07.2021 15:47:26 AUTOLOGDEL: OpenSimulator log sim2 geloescht
-05.07.2021 15:47:28 AUTOLOGDEL: OpenSimulator log sim3 geloescht
-05.07.2021 15:47:30 AUTOLOGDEL: OpenSimulator log sim4 geloescht
-05.07.2021 15:47:32 AUTOLOGDEL: OpenSimulator log sim5 geloescht
-05.07.2021 15:47:34 AUTOLOGDEL: OpenSimulator log sim6 geloescht
-05.07.2021 15:47:36 AUTOLOGDEL: OpenSimulator log sim7 geloescht
-05.07.2021 15:47:38 OSUPGRADE: Das Grid wird jetzt gestartet
-05.07.2021 15:47:38 OSSETTINGS: Setze die Einstellung: ulimit -s 1048576
-05.07.2021 15:47:38 OSSETTINGS: Setze die Mono Threads auf 800
-05.07.2021 15:47:38 OSSETTINGS: Setze die Einstellung: minor=split,promotion-age=14,nursery-size=64m
-05.07.2021 15:47:39 ROSTART: RobustServer Start
-05.07.2021 15:48:09 MOSTART: Money Server Start
-05.07.2021 15:49:01 AUTOSIMSTART: Regionen OpenSimulator sim1 Starten
-05.07.2021 15:49:11 AUTOSIMSTART: Regionen OpenSimulator sim2 Starten
-05.07.2021 15:49:21 AUTOSIMSTART: Regionen OpenSimulator sim3 Starten
-05.07.2021 15:49:31 AUTOSIMSTART: Regionen OpenSimulator sim4 Starten
-05.07.2021 15:49:41 AUTOSIMSTART: Regionen OpenSimulator sim5 Starten
-05.07.2021 15:49:51 AUTOSIMSTART: Regionen OpenSimulator sim6 Starten
-05.07.2021 15:50:01 AUTOSIMSTART: Regionen OpenSimulator sim7 Starten
-05.07.2021 15:50:11 SCREENLIST: Alle laufende Screens
-There are screens on:
-	10285.sim7	(07/05/2021 03:50:01 PM)	(Detached)
-	10236.sim6	(07/05/2021 03:49:51 PM)	(Detached)
-	10194.sim5	(07/05/2021 03:49:41 PM)	(Detached)
-	10140.sim4	(07/05/2021 03:49:31 PM)	(Detached)
-	10099.sim3	(07/05/2021 03:49:21 PM)	(Detached)
-	10059.sim2	(07/05/2021 03:49:11 PM)	(Detached)
-	10020.sim1	(07/05/2021 03:49:01 PM)	(Detached)
-	9980.MO	(07/05/2021 03:48:09 PM)	(Detached)
-	9951.RO	(07/05/2021 03:47:39 PM)	(Detached)
-9 Sockets in /run/screen/S-root.
-05.07.2021 15:50:11 AUTOSTART: Auto Start abgeschlossen
-05.07.2021 15:50:11 opensimMULTITOOL wurde beendet.
-#######################################################
+```
+opensimMULTITOOL Version 0.41.137
+Neu diverse mySQL Funktionen.
 ```
