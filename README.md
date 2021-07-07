@@ -1,6 +1,6 @@
 # OpenSim-Shell-Script
 ![GitHub Logo](https://github.com/BigManzai/OpenSim-Shell-Script/blob/main/opensimMultitool.jpg)
-opensimMULTITOOL, Shell Script, Version 0.37.113
+opensimMULTITOOL, Shell Script, Version 0.41.137
 
 opensim.sh Basiert auf meinen Einzelscripten, an denen ich bereits 6 Jahre Arbeite und verbessere.
 
@@ -143,6 +143,15 @@ installationen          - hat keine Parameter - installationen aufisten.
 serverinstall           - hat keine Parameter - alle benötigten Linux Pakete installieren.
 osbuilding              - Versionsnummer      - Upgrade des OpenSimulator aus einer Source ZIP Datei.
 createuser 		- Vorname, Nachname, Passwort, E-Mail - Grid Benutzer anlegen.
+
+db_anzeigen	-  DBBENUTZER   DBDATENBANKNAME  - Alle Datenbanken anzeigen.
+create_db	-  DBBENUTZER   DBDATENBANKNAME   DATENBANKNAME  - Datenbank anlegen.
+delete_db	-  DBBENUTZER   DBPASSWORT   DATENBANKNAME  - Datenbank löschen.
+leere_db	-  DBBENUTZER   DBPASSWORT   DATENBANKNAME  - Datenbank leeren.
+allrepair_db	-  DBBENUTZER   DBPASSWORT   DATENBANKNAME  - Datenbanken Reparieren und Optimieren.
+db_sichern	-  DBBENUTZER   DBPASSWORT   DATENBANKNAME  - Datenbank sichern.
+mysql_neustart	- hat keine Parameter - MySQL neu starten.
+
 ```
 
 ```
