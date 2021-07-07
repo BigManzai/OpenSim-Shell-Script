@@ -2,9 +2,9 @@
 ![GitHub Logo](https://github.com/BigManzai/OpenSim-Shell-Script/blob/main/opensimMultitool.jpg)
 
 ![example workflow](https://github.com/BigManzai/OpenSim-Shell-Script/actions/workflows/main.yml/badge.svg)
-![example workflow](https://github.com/github/docs/actions/workflows/main.yml/badge.svg)
-![example branch parameter](https://github.com/github/docs/actions/workflows/main.yml/badge.svg?branch=feature-1)
-![example event parameter](https://github.com/github/docs/actions/workflows/main.yml/badge.svg?event=pull_request)
+![example workflow](https://github.com/github/BigManzai/OpenSim-Shell-Script/actions/workflows/main.yml/badge.svg)
+![example branch parameter](https://github.com/github/BigManzai/OpenSim-Shell-Script/actions/workflows/main.yml/badge.svg?branch=feature-1)
+![example event parameter](https://github.com/github/BigManzai/OpenSim-Shell-Script/actions/workflows/main.yml/badge.svg?event=pull_request)
 
 on: push
 on: [push, pull_request]
