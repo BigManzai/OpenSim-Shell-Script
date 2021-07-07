@@ -1990,7 +1990,7 @@ echo " "
 	#echo "create_db_user	- $(tput setab $Magenta) DBBENUTZER $(tput sgr 0) $(tput setab $Blue) DBDATENBANKNAME $(tput sgr 0) $(tput setab $Green) NEUERNAME $(tput sgr 0) $(tput setab $Yello) NEUESPASSWORT $(tput sgr 0) - DB Benutzer anlegen."
 	echo "delete_db	- $(tput setab $Magenta) DBBENUTZER $(tput sgr 0) $(tput setab $Blue) DBPASSWORT $(tput sgr 0) $(tput setab $Green) DATENBANKNAME $(tput sgr 0) - Datenbank löschen."
 	echo "leere_db	- $(tput setab $Magenta) DBBENUTZER $(tput sgr 0) $(tput setab $Blue) DBPASSWORT $(tput sgr 0) $(tput setab $Green) DATENBANKNAME $(tput sgr 0) - Datenbank leeren."
-	echo "allrepair_db	- $(tput setab $Magenta) DBBENUTZER $(tput sgr 0) $(tput setab $Blue) DBPASSWORT $(tput sgr 0) $(tput setab $Green) DATENBANKNAME $(tput sgr 0) - Datenbanken Reparieren und Optimieren."
+	echo "allrepair_db	- $(tput setab $Magenta) DBBENUTZER $(tput sgr 0) $(tput setab $Blue) DBPASSWORT $(tput sgr 0) - Alle Datenbanken Reparieren und Optimieren."
 	echo "db_sichern	- $(tput setab $Magenta) DBBENUTZER $(tput sgr 0) $(tput setab $Blue) DBPASSWORT $(tput sgr 0) $(tput setab $Green) DATENBANKNAME $(tput sgr 0) - Datenbank sichern."
 	echo "mysql_neustart	- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - MySQL neu starten."
 
