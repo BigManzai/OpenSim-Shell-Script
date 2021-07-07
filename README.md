@@ -159,81 +159,10 @@ mysql_neustart	- hat keine Parameter - MySQL neu starten.
 ```
 
 ## TODO
-Translation Deutsch, Englisch, Französisch, Spanisch einfügen.
 
 Neue Funktionen ausgiebig testen.
 
 ```
-Test Ubuntu Server 18.04
-Installieren alle Pakete die für OpenSim benötigt werden, 
-dazu mono 6.x vom mono-project, 
-alle Webabhängigkeiten für eine Homepage 
-und alles um den OpenSimulator zu kompilieren.
-```
-./opensim.sh serverinstall
-
-```
-Neu in 0.35.94
-simstats screen_name funktioniert beim RobustServer, MoneyServer und allen Regionsserver.
-Beispiel-Example: opensim.sh simstats sim1
-erzeugt im Hauptverzeichnis eine Datei namens sim1.log in dieser Datei ist die Statistik für sim1 zu finden.
-Diese Datei wird jetzt auch direkt angezeigt und die alte Datei wird gleichzeitig gelöscht.
-```
-
-```
-In 0.35.97 Programmablaufbeschleunigung um etwa 30%.
-Einige Fehler behoben
-Einige doppelter Bildschirmausgaben entfernt.
-```
-
-```
-In 0.35.98 vergessene Einstellungen aktiviert.
-Mono Threads können jetzt in der Konfigurationsdatei eingestellt werden.
-```
-
-```
-Version 0.35.103 aot geht jetzt über die Konfigurationsdatei.
-Habe angefangen aufzuräumen und unnütze Sachen raus zu werfen.
-```
-
-```
-Version 0.36.108 aot geht jetzt nur noch über die Konfigurationsdatei automatisch.
-Habe aufgeräumt und unnütze Sachen raus geworfen.
-Log Datei Einträge verringert.
-```
-
-```
-Version 0.36.109
-SC2027: The surrounding quotes actually unquote this. Remove or escape them.
-SC2086: Double quote to prevent globbing and word splitting.
-behoben
-```
-
-```
-Neu in der Version 0.37.113
-Vollautomatisches Upgrade aus einer OpenSimulator Dev Master Zip Datei.
-Ihr kopiert den OpenSimulator von hier: "http://opensimulator.org/viewgit/?a=shortlog&p=opensim" 
-in euer /opt Verzeichnis.
-
-Der Name ist folgendermaßen aufgebaut opensim-0.9.2.0Dev-1187-gcf0b1b1.zip
-opensim-0.9.2.0Dev wird in der Konfigurationsdatei angegeben und ändert sich nur ab und zu mal.
-1187 ist die Versionsnummer die ihr angeben müsst und der Rest dahinter ist uns egal.
-Bei opensim-0.9.2.0Dev-1183-g2c9f299.zip müssten wir also 1183 angeben.
-Bei opensim-0.9.2.0Dev-1184-g2b6a869.zip müssten wir also 1184 angeben.
-
-Gestartet wird das ganze so:
-/opt/opensim.sh osbuilding 1187
-
-Anschließend wird der alte OpenSimulator gesichert in opensim1, 
-der neue OpenSimulator entpackt, 
-umbenannt in opensim, 
-die Versionsnummer eingestellt, 
-Prebuild erstellt und Kompiliert.
-Danach wenn alles ordnungsgemäß ausgeführt wurde, 
-wird das Upgrade des Grids und/oder Simulatoren ausgeführt.
-```
-
-```
 opensimMULTITOOL Version 0.41.137
-Neu diverse mySQL Funktionen.
+Diverse neue mySQL Funktionen.
 ```
