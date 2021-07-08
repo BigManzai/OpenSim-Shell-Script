@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# opensimMULTITOOL Version 0.41.137 Copyright (c) 2021 BigManzai Manfred Aabye
+# opensimMULTITOOL Version 0.42.143 Copyright (c) 2021 BigManzai Manfred Aabye
 # opensim.sh Basiert auf meinen Einzelscripten, an denen ich bereits 6 Jahre Arbeite und verbessere.
 # Da Server unterschiedlich sind, kann eine einwandfreie fuunktion nicht gewährleistet werden, also bitte mit bedacht verwenden.
 # Die Benutzung dieses Scriptes, oder deren Bestandteile, erfolgt auf eigene Gefahr!!!
@@ -27,7 +27,7 @@ echo "$(tput setaf 2) | |__| || |_) ||  __/| | | | ____) || || | | | | || |_| ||
 echo "  \____/ |  __/  \___||_| |_||_____/ |_||_| |_| |_| \____||_| \____| \__|\___/ |_|   "
 echo "         | |                                                                         "
 echo "         |_|                                                                         "
-echo "	    $(tput setaf 2)opensim$(tput setaf 4)MULTITOOL$(tput sgr 0) 0.41.137" # Versionsausgabe
+echo "	    $(tput setaf 2)opensim$(tput setaf 4)MULTITOOL$(tput sgr 0) 0.42.143" # Versionsausgabe
 echo " "
 
 # Datum und Uhrzeit
@@ -1915,6 +1915,48 @@ function db_sichern()
 	unset DATENBANKNAME
 }
 
+# function tabellenabfrage, listet alle Tabellen in einer Datenbank auf.
+# Es geht hier um die machbarkeit und nicht den Sinn.
+function tabellenabfrage()
+{
+	DBBENUTZER=$1; DBPASSWORT=$2; DATENBANKNAME=$3;
+	
+mysql -u"$DBBENUTZER" -p"$DBPASSWORT" <<MEINE_ABFRAGE_ENDE 2>/dev/null
+USE $DATENBANKNAME
+SHOW tables
+MEINE_ABFRAGE_ENDE
+}
+
+# function regionsabfrage, Alle Regionen listen (Dies geht nur im Grid (Grid Datenbank) oder Standalone Modus).
+function regionsabfrage()
+{
+	DBBENUTZER=$1; DBPASSWORT=$2; DATENBANKNAME=$3;	
+mysql -u"$DBBENUTZER" -p"$DBPASSWORT" <<MEIN_ABFRAGE_ENDE 2>/dev/null
+USE $DATENBANKNAME
+SELECT regionName FROM regions
+MEIN_ABFRAGE_ENDE
+}
+
+# function regionsuri, Region URI prüfen sortiert nach URI (Dies geht nur im Grid (Grid Datenbank) oder Standalone Modus).
+function regionsuri()
+{
+	DBBENUTZER=$1; DBPASSWORT=$2; DATENBANKNAME=$3;	
+mysql -u"$DBBENUTZER" -p"$DBPASSWORT" <<MEIN_ABFRAGE_ENDE 2>/dev/null
+USE $DATENBANKNAME
+SELECT regionName , serverURI FROM regions ORDER BY serverURI
+MEIN_ABFRAGE_ENDE
+}
+
+# function regionsport, Ports prüfen sortiert nach Ports (Dies geht nur im Grid (Grid Datenbank) oder Standalone Modus).
+function regionsport()
+{
+	DBBENUTZER=$1; DBPASSWORT=$2; DATENBANKNAME=$3;	
+mysql -u"$DBBENUTZER" -p"$DBPASSWORT" <<MEIN_ABFRAGE_ENDE 2>/dev/null
+USE $DATENBANKNAME
+SELECT regionName , serverPort FROM regions ORDER BY serverPort
+MEIN_ABFRAGE_ENDE
+}
+
 ### Funktion info, Informationen auf den Bildschirm ausgeben.
 function info()
 {
@@ -1993,6 +2035,10 @@ echo " "
 	echo "allrepair_db	- $(tput setab $Magenta) DBBENUTZER $(tput sgr 0) $(tput setab $Blue) DBPASSWORT $(tput sgr 0) - Alle Datenbanken Reparieren und Optimieren."
 	echo "db_sichern	- $(tput setab $Magenta) DBBENUTZER $(tput sgr 0) $(tput setab $Blue) DBPASSWORT $(tput sgr 0) $(tput setab $Green) DATENBANKNAME $(tput sgr 0) - Datenbank sichern."
 	echo "mysql_neustart	- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - MySQL neu starten."
+
+	echo "regionsabfrage	- $(tput setab $Magenta) DBBENUTZER $(tput sgr 0) $(tput setab $Blue) DBPASSWORT $(tput sgr 0) $(tput setab $Green) DATENBANKNAME $(tput sgr 0) - Regionsliste."
+	echo "regionsuri	- $(tput setab $Magenta) DBBENUTZER $(tput sgr 0) $(tput setab $Blue) DBPASSWORT $(tput sgr 0) $(tput setab $Green) DATENBANKNAME $(tput sgr 0) - URI prüfen sortiert nach URI."
+	echo "regionsport	- $(tput setab $Magenta) DBBENUTZER $(tput sgr 0) $(tput setab $Blue) DBPASSWORT $(tput sgr 0) $(tput setab $Green) DATENBANKNAME $(tput sgr 0) - Ports prüfen sortiert nach Ports."
 
 	echo " "
 	echo "$(tput setaf $Yello)  Der Verzeichnisname ist gleichzeitig auch der Screen Name!$(tput sgr 0)"
@@ -2102,6 +2148,10 @@ case  $KOMMANDO  in
 	allrepair_db) allrepair_db "$2" "$3" ;;
 	mysql_neustart) mysql_neustart ;;
 	db_sichern) db_sichern "$2" "$3" "$4" ;;
+	tabellenabfrage) tabellenabfrage "$2" "$3" "$4" ;;
+	regionsabfrage) regionsabfrage "$2" "$3" "$4" ;;
+	regionsuri) regionsuri "$2" "$3" "$4" ;;
+	regionsport) regionsport "$2" "$3" "$4" ;;
 	*) hilfe ;;
 esac
 
