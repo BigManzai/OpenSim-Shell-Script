@@ -3,7 +3,7 @@
 
 ![example workflow](https://github.com/opensim-org/opensim-gui/workflows/opensim-application/badge.svg)
 
-opensimMULTITOOL, Shell Script, Version 0.41.137
+opensimMULTITOOL, Shell Script, Version 0.42.143
 
 opensim.sh Basiert auf meinen Einzelscripten, an denen ich bereits 6 Jahre Arbeite und verbessere.
 
