@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# opensimMULTITOOL Version 0.42.143 Copyright (c) 2021 BigManzai Manfred Aabye
+# opensimMULTITOOL Version 0.43.144 Copyright (c) 2021 BigManzai Manfred Aabye
 # opensim.sh Basiert auf meinen Einzelscripten, an denen ich bereits 6 Jahre Arbeite und verbessere.
 # Da Server unterschiedlich sind, kann eine einwandfreie fuunktion nicht gewährleistet werden, also bitte mit bedacht verwenden.
 # Die Benutzung dieses Scriptes, oder deren Bestandteile, erfolgt auf eigene Gefahr!!!
@@ -27,7 +27,7 @@ echo "$(tput setaf 2) | |__| || |_) ||  __/| | | | ____) || || | | | | || |_| ||
 echo "  \____/ |  __/  \___||_| |_||_____/ |_||_| |_| |_| \____||_| \____| \__|\___/ |_|   "
 echo "         | |                                                                         "
 echo "         |_|                                                                         "
-echo "	    $(tput setaf 2)opensim$(tput setaf 4)MULTITOOL$(tput sgr 0) 0.42.143" # Versionsausgabe
+echo "	    $(tput setaf 2)opensim$(tput setaf 4)MULTITOOL$(tput sgr 0) 0.43.144" # Versionsausgabe
 echo " "
 
 # Datum und Uhrzeit
@@ -1957,6 +1957,26 @@ SELECT regionName , serverPort FROM regions ORDER BY serverPort
 MEIN_ABFRAGE_ENDE
 }
 
+# function setpartner, Partner setzen bei einer Person. Also bei beiden Partnern muss dies gemacht werden.
+# opensim.sh setpartner Datenbankbenutzer Datenbankpasswort Robustdatenbank "AvatarUUID" "PartnerUUID"
+function setpartner()
+{
+	DBBENUTZER=$1; DBPASSWORT=$2; DATENBANKNAME=$3; 
+	AVATARUUID=$4; NEUERPARTNER=$5;
+	
+	LEEREMPTY="00000000-0000-0000-0000-000000000000";
+	echo "$LEEREMPTY"
+
+	#  2>/dev/null
+mysql -u"$DBBENUTZER" -p"$DBPASSWORT" <<MEIN_ABFRAGE_ENDE 2>/dev/null
+USE $DATENBANKNAME
+UPDATE userprofile SET profilePartner = '$NEUERPARTNER' WHERE userprofile.useruuid = '$AVATARUUID'
+MEIN_ABFRAGE_ENDE
+
+	echo "$(tput setaf $Magenta)SETPARTNER: $NEUERPARTNER ist jetzt Partner von $AVATARUUID. $(tput sgr0)"
+	echo "$DATUM $(date +%H:%M:%S) SETPARTNER: $NEUERPARTNER ist jetzt Partner von $AVATARUUID" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+}
+
 ### Funktion info, Informationen auf den Bildschirm ausgeben.
 function info()
 {
@@ -2152,6 +2172,7 @@ case  $KOMMANDO  in
 	regionsabfrage) regionsabfrage "$2" "$3" "$4" ;;
 	regionsuri) regionsuri "$2" "$3" "$4" ;;
 	regionsport) regionsport "$2" "$3" "$4" ;;
+	setpartner) setpartner "$2" "$3" "$4" "$5" "$6" ;;
 	*) hilfe ;;
 esac
 
