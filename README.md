@@ -31,6 +31,8 @@ Bitte beachtet der Verzeichnisname des OpenSimulator ist gleichzeitig der Screen
 
 Wird kein Robust oder Money Verzeichnis gefunden, werden diese auch nicht gestartet.
 
+Das Skript ausführbar machen mit "chmod +x opensim.sh" danach kann es mit "./opensim.sh" oder "/verzeichnis/opensim.sh" ausgeführt werden.
+
 ## Informationen
 Die Struktur baut sich folgendermaßen auf:
 
