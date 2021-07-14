@@ -156,6 +156,7 @@ leere_db	-  DBBENUTZER   DBPASSWORT   DATENBANKNAME  - Datenbank leeren.
 allrepair_db	-  DBBENUTZER   DBPASSWORT  - Alle Datenbanken Reparieren und Optimieren.
 db_sichern	-  DBBENUTZER   DBPASSWORT   DATENBANKNAME  - Datenbank sichern.
 mysql_neustart	- hat keine Parameter - MySQL neu starten.
+opensimholen	- hat keine Parameter - Lädt eine Reguläre OpenSimulator Version herunter.
 
 ```
 
