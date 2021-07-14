@@ -3,7 +3,7 @@
 
 ![example workflow](https://github.com/opensim-org/opensim-gui/workflows/opensim-application/badge.svg)
 
-opensimMULTITOOL, Shell Script, Version 0.42.143
+opensimMULTITOOL, Shell Script, Version 0.43.145
 
 opensim.sh Basiert auf meinen Einzelscripten, an denen ich bereits 6 Jahre Arbeite und verbessere.
 
@@ -171,4 +171,11 @@ Neue Funktionen ausgiebig testen.
 ```
 opensimMULTITOOL Version 0.41.137
 Diverse neue mySQL Funktionen.
+```
+
+```
+opensimMULTITOOL Version 0.43.145
+Opensimholen holt aus dem Distributionsverzeichnis der opensimulator.org, 
+die in der Konfigurationsdatei voreingestellte Version des OpenSimulator auf den Server, 
+entpackt sie und benennt sie um in opensim.
 ```
