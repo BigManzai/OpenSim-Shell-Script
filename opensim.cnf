@@ -7,10 +7,12 @@
 	OPENSIMVERZEICHNIS="opensim"
 	SCRIPTSOURCE="ScriptNeu"
 	MONEYSOURCE="money48"
-
+	
 ## Dateien
 	REGIONSDATEI="RegionList.ini"
 	SIMDATEI="SimulatorList.ini"
+	OPENSIMDOWNLOAD="http://opensimulator.org/dist/"
+	OPENSIMVERSION="opensim-0.9.1.1"
 
 ## Inklusive
 	SCRIPTCOPY="yes"

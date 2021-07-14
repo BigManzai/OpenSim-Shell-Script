@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# opensimMULTITOOL Version 0.43.144 Copyright (c) 2021 BigManzai Manfred Aabye
+# opensimMULTITOOL Version 0.43.145 Copyright (c) 2021 BigManzai Manfred Aabye
 # opensim.sh Basiert auf meinen Einzelscripten, an denen ich bereits 6 Jahre Arbeite und verbessere.
 # Da Server unterschiedlich sind, kann eine einwandfreie fuunktion nicht gewährleistet werden, also bitte mit bedacht verwenden.
 # Die Benutzung dieses Scriptes, oder deren Bestandteile, erfolgt auf eigene Gefahr!!!
@@ -27,7 +27,7 @@ echo "$(tput setaf 2) | |__| || |_) ||  __/| | | | ____) || || | | | | || |_| ||
 echo "  \____/ |  __/  \___||_| |_||_____/ |_||_| |_| |_| \____||_| \____| \__|\___/ |_|   "
 echo "         | |                                                                         "
 echo "         |_|                                                                         "
-echo "	    $(tput setaf 2)opensim$(tput setaf 4)MULTITOOL$(tput sgr 0) 0.43.144" # Versionsausgabe
+echo "	    $(tput setaf 2)opensim$(tput setaf 4)MULTITOOL$(tput sgr 0) 0.43.145" # Versionsausgabe
 echo " "
 
 # Datum und Uhrzeit
@@ -109,6 +109,7 @@ function myshellschreck()
 {
 STARTVERZEICHNIS="opt" MONEYVERZEICHNIS="robust" ROBUSTVERZEICHNIS="robust" OPENSIMVERZEICHNIS="opensim" SCRIPTSOURCE="ScriptNeu" MONEYSOURCE="money48" OSVERSION="opensim-0.9.2.0Dev"
 REGIONSDATEI="RegionList.ini" SIMDATEI="SimulatorList.ini" WARTEZEIT=30 STARTWARTEZEIT=10 STOPWARTEZEIT=30 MONEYWARTEZEIT=50 BACKUPWARTEZEIT=120 AUTOSTOPZEIT=60 SETMONOTHREADS=800 SETMONOTHREADSON="yes"
+OPENSIMDOWNLOAD="http://opensimulator.org/dist/" OPENSIMVERSION="opensim-0.9.1.1.zip"
 }
 
 ### Erstellen eines Arrays aus einer Textdatei - Verzeichnisse und Regionen ###
@@ -1048,6 +1049,17 @@ function regionliste()
 	echo "$LOESCHEN" > /$STARTVERZEICHNIS/RegionList.ini # Aenderung .ini entfernen speichern.
 }
 
+function makewebmaps()
+{
+	MAPTILEVERZEICHNIS="maptiles"
+	echo "$DATUM $(date +%H:%M:%S) MAKEWEBMAPS: Kopiere Maptile"
+	echo "$DATUM $(date +%H:%M:%S) MAKEWEBMAPS: Kopiere Maptile" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+	# Verzeichnis erstellen wenn es noch nicht vorhanden ist.
+	mkdir -p /var/www/html/$MAPTILEVERZEICHNIS/
+	# Maptiles kopieren
+	find /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/maptiles -type f -exec cp -a -t /var/www/html/$MAPTILEVERZEICHNIS/ {} +
+}
+
 ### Funktion moneydelete, loescht den MoneyServer ohne die OpenSim Config zu veraendern.
 function moneydelete()
 {
@@ -1091,6 +1103,36 @@ function osgitholen()
 		echo "$(tput setaf 1) $(tput setab 7)Kopieren der Entwicklungsversion des OpenSimulator aus dem Git$(tput sgr 0)"
 		git clone git://opensimulator.org/git/opensim opensim
 		echo "$DATUM $(date +%H:%M:%S) OPENSIMHOLEN: Git klonen" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+	fi 
+}
+
+### Funktion opensimholen, holt den OpenSimulator in das Arbeitsverzeichnis.
+function opensimholen()
+{
+	if [ -d /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/ ]
+	then
+		echo "$(tput setaf 1) $(tput setab 7)Kopieren des OpenSimulator in das Arbeitsverzeichnis$(tput sgr 0)"
+		cd /$STARTVERZEICHNIS  || return 1
+		rm -r /$STARTVERZEICHNIS/opensim1
+		mv /$STARTVERZEICHNIS/opensim /$STARTVERZEICHNIS/opensim1
+
+		echo "$OPENSIMDOWNLOAD$OPENSIMVERSION"
+        wget $OPENSIMDOWNLOAD$OPENSIMVERSION.zip
+		echo "$OPENSIMVERSION"
+		unzip $OPENSIMVERSION
+		mv /$STARTVERZEICHNIS/$OPENSIMVERSION /$STARTVERZEICHNIS/opensim
+
+		echo "$DATUM $(date +%H:%M:%S) OPENSIMHOLEN: Download" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+	else
+		echo "$(tput setaf 1) $(tput setab 7)Kopieren des OpenSimulator in das Arbeitsverzeichnis$(tput sgr 0)"
+
+		echo "$OPENSIMDOWNLOAD$OPENSIMVERSION"
+        wget $OPENSIMDOWNLOAD$OPENSIMVERSION.zip
+		echo "$OPENSIMVERSION"
+		unzip $OPENSIMVERSION
+		mv /$STARTVERZEICHNIS/$OPENSIMVERSION /$STARTVERZEICHNIS/opensim
+
+		echo "$DATUM $(date +%H:%M:%S) OPENSIMHOLEN: Download" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 	fi 
 }
 
@@ -2059,6 +2101,7 @@ echo " "
 	echo "regionsabfrage	- $(tput setab $Magenta) DBBENUTZER $(tput sgr 0) $(tput setab $Blue) DBPASSWORT $(tput sgr 0) $(tput setab $Green) DATENBANKNAME $(tput sgr 0) - Regionsliste."
 	echo "regionsuri	- $(tput setab $Magenta) DBBENUTZER $(tput sgr 0) $(tput setab $Blue) DBPASSWORT $(tput sgr 0) $(tput setab $Green) DATENBANKNAME $(tput sgr 0) - URI prüfen sortiert nach URI."
 	echo "regionsport	- $(tput setab $Magenta) DBBENUTZER $(tput sgr 0) $(tput setab $Blue) DBPASSWORT $(tput sgr 0) $(tput setab $Green) DATENBANKNAME $(tput sgr 0) - Ports prüfen sortiert nach Ports."
+echo "opensimholen	- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Lädt eine Reguläre OpenSimulator Version herunter."
 
 	echo " "
 	echo "$(tput setaf $Yello)  Der Verzeichnisname ist gleichzeitig auch der Screen Name!$(tput sgr 0)"
@@ -2173,6 +2216,8 @@ case  $KOMMANDO  in
 	regionsuri) regionsuri "$2" "$3" "$4" ;;
 	regionsport) regionsport "$2" "$3" "$4" ;;
 	setpartner) setpartner "$2" "$3" "$4" "$5" "$6" ;;
+	makewebmaps) makewebmaps ;;
+	opensimholen) opensimholen ;;
 	*) hilfe ;;
 esac
 
