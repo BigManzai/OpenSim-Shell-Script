@@ -28,6 +28,7 @@ ConnectionString = "Data Source=localhost;Database=opensim;User ID=opensim;Passw
 Jeder Simulator benötigt eine eigene Datenbank in dieser Zeile  bitte euren Datenbankzugang eintragen.
 
 ## Const einstellen Robust.ini:
+( Robust.ini ist eine umbenannte Robust.HG.ini so könnt ihr Robust.exe direkt starten.)
 
 BaseURL = "http://127.0.0.1"
 
