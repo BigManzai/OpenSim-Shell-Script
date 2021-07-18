@@ -57,3 +57,20 @@ password = passwd
 MoneyScriptIPaddress = "153.412.335.204"
 
 Es sind nur die 4 Zeilen die geändert werden müssen  MoneyScriptIPaddress ist die IP des Servers.
+
+## MySQL Einstellungen
+Beispiel Einstellungen für einen Server mit 4-6 Core und 8-16GB RAM
+```
+# OpenSim Einstellungen
+innodb_buffer_pool_size = 2G  # (Hier sollte man etwa 50% des gesamten RAM nutzen) von 1G auf 2G erhöht
+innodb_log_file_size = 512M  # (128M – 2G muss nicht größer als der Pufferpool sein) von 256 auf 512 erhöht
+innodb_log_buffer_size = 256M # Normal 0 oder 1MB
+innodb_flush_log_at_trx_commit = 1  # (0/2 mehr Leistung, weniger Zuverlässigkeit, 1 Standard)
+innodb_flush_method = O_DIRECT  # (Vermeidet doppelte Pufferung)
+sync_binlog = 0
+binlog_format=ROW  # oder MIXED
+innodb_autoinc_lock_mode = 2 # Notwendigkeit einer AUTO-INC-Sperre auf Tabellenebene wird beseitigt und die Leistung kann erhöht werden.
+innodb_io_capacity_max = 2G # (50% des Maximums festlegen)
+innodb_io_capacity = 1G # (50% des Maximums festlegen)
+# OpenSim Einstellungen Ende
+```
