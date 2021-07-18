@@ -2,10 +2,10 @@
 
 ## Das Startverzeichnis home oder opt zum Beispiel.
 	STARTVERZEICHNIS="opt"
-	MONEYVERZEICHNIS="robust"
+	MONEYVERZEICHNIS="no"
 	ROBUSTVERZEICHNIS="robust"
 	OPENSIMVERZEICHNIS="opensim"
-	SCRIPTSOURCE="ScriptNeu"
+	SCRIPTSOURCE="no"
 	MONEYSOURCE="money48"
 	
 ## Dateien
@@ -15,8 +15,8 @@
 	OPENSIMVERSION="opensim-0.9.1.1"
 
 ## Inklusive
-	SCRIPTCOPY="yes"
-	MONEYCOPY="yes"
+	SCRIPTCOPY="no"
+	MONEYCOPY="no"
 	PYTHONCOPY="no"
 	MUTELISTCOPY="no"
 	SEARCHCOPY="no"
