@@ -23,7 +23,9 @@ Simulatorgridname = "opensimMULTITOOL"  Hier kommt euer gewünschter Gridname re
 BaseHostname = "127.0.0.1" Die Adresse 127.0.0.1 müst ihr gegen eure DNS also meinserver.de oder gegen eure externe IP austauschen.
 
 [DatabaseService] 
-ConnectionString = "Data Source=localhost;Database=opensim;User ID=opensim;Password=opensim;Old Guids=true;"  Jeder Simulator benötigt eine eigene Datenbank in dieser Zeile  bitte euren Datenbankzugang eintragen.
+ConnectionString = "Data Source=localhost;Database=opensim;User ID=opensim;Password=opensim;Old Guids=true;"  
+
+Jeder Simulator benötigt eine eigene Datenbank in dieser Zeile  bitte euren Datenbankzugang eintragen.
 
 ## Const einstellen Robust.ini:
 
@@ -46,7 +48,11 @@ Das ist eigentlich wie oben bereits beschrieben.
 ## MoneyServer.ini falls dieser installiert ist:
 
 database = money
+
 username = user
+
 password = passwd 
+
 MoneyScriptIPaddress = "153.412.335.204"
+
 Es sind nur die 4 Zeilen die geändert werden müssen  MoneyScriptIPaddress ist die IP des Servers.
