@@ -60,6 +60,11 @@ Es sind nur die 4 Zeilen die geändert werden müssen  MoneyScriptIPaddress ist 
 
 ## MySQL Einstellungen
 Beispiel Einstellungen für einen Server mit 4-6 Core und 8-16GB RAM
+
+Verzeichnis: /etc/mysql/mysql.conf.d
+
+Datei: mysqld.cnf
+
 ```
 # OpenSim Einstellungen
 innodb_buffer_pool_size = 2G  # (Hier sollte man etwa 50% des gesamten RAM nutzen) von 1G auf 2G erhöht
