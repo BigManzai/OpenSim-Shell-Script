@@ -1,8 +1,6 @@
 # OpenSim-Shell-Script
 ![GitHub Logo](https://github.com/BigManzai/OpenSim-Shell-Script/blob/main/opensimMultitool.jpg)
 
-![example workflow](https://github.com/opensim-org/opensim-gui/workflows/opensim-application/badge.svg)
-
 opensimMULTITOOL, Shell Script
 
 opensim.sh Basiert auf meinen Einzelscripten, an denen ich bereits 6 Jahre Arbeite und verbessere.
