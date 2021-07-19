@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# opensimMULTITOOL Version 0.43.145 Copyright (c) 2021 BigManzai Manfred Aabye
+# opensimMULTITOOL Version 0.45.151 Copyright (c) 2021 BigManzai Manfred Aabye
 # opensim.sh Basiert auf meinen Einzelscripten, an denen ich bereits 6 Jahre Arbeite und verbessere.
 # Da Server unterschiedlich sind, kann eine einwandfreie fuunktion nicht gewährleistet werden, also bitte mit bedacht verwenden.
 # Die Benutzung dieses Scriptes, oder deren Bestandteile, erfolgt auf eigene Gefahr!!!
@@ -16,6 +16,14 @@
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+### myshellschreck, ShellCheck ueberlisten, hat sonst keinerlei Funktion und wird auch nicht aufgerufen.
+function myshellschreck()
+{
+STARTVERZEICHNIS="opt" MONEYVERZEICHNIS="robust" ROBUSTVERZEICHNIS="robust" OPENSIMVERZEICHNIS="opensim" SCRIPTSOURCE="ScriptNeu" MONEYSOURCE="money48" OSVERSION="opensim-0.9.2.0Dev"
+REGIONSDATEI="RegionList.ini" SIMDATEI="SimulatorList.ini" WARTEZEIT=30 STARTWARTEZEIT=10 STOPWARTEZEIT=30 MONEYWARTEZEIT=50 BACKUPWARTEZEIT=120 AUTOSTOPZEIT=60 SETMONOTHREADS=800 SETMONOTHREADSON="yes"
+OPENSIMDOWNLOAD="http://opensimulator.org/dist/" OPENSIMVERSION="opensim-0.9.1.1.zip" SEARCHADRES="icanhazip.com" AUTOCONFIG="no" 
+}
+
 clear # Bildschirm loeschen
 
 # LOGO
@@ -27,7 +35,7 @@ echo "$(tput setaf 2) | |__| || |_) ||  __/| | | | ____) || || | | | | || |_| ||
 echo "  \____/ |  __/  \___||_| |_||_____/ |_||_| |_| |_| \____||_| \____| \__|\___/ |_|   "
 echo "         | |                                                                         "
 echo "         |_|                                                                         "
-echo "	    $(tput setaf 2)opensim$(tput setaf 4)MULTITOOL$(tput sgr 0) 0.43.145" # Versionsausgabe
+echo "	    $(tput setaf 2)opensim$(tput setaf 4)MULTITOOL$(tput sgr 0) 0.45.151" # Versionsausgabe
 echo " "
 
 # Datum und Uhrzeit
@@ -59,6 +67,9 @@ SCRIPTPATH=$(cd "$(dirname "$0")" && pwd)
 # shellcheck source=opensim.cnf
 . "$SCRIPTPATH"/opensim.cnf
 
+# Aktuelle IP über Suchadresse ermitteln und hochstriche anhängen.
+AKTUELLEIP='"'$(wget -O - -q $SEARCHADRES)'"'
+
 ## Farben Color
 Red=1; Green=2; Yello=3; Blue=4; Magenta=5; White=7
 
@@ -78,6 +89,7 @@ function schreibeinfo()
 	{	echo "#######################################################"
 		echo "$DATUM $(date +%H:%M:%S) MULTITOOL: wurde gestartet am $(date +%d.%m.%Y) um $(date +%H:%M:%S) Uhr"
 		echo "$DATUM $(date +%H:%M:%S) INFO: Server Name: ${HOSTNAME}"
+		echo "$DATUM $(date +%H:%M:%S) INFO: Server IP: ${AKTUELLEIP}"
 		echo "$DATUM $(date +%H:%M:%S) INFO: Bash Version: ${BASH_VERSION}"
 		echo "$DATUM $(date +%H:%M:%S) INFO: MONO THREAD Einstellung: ${MONO_THREADS_PER_CPU}"
 		echo "$DATUM $(date +%H:%M:%S) INFO: Spracheinstellung: ${LANG}"
@@ -102,14 +114,6 @@ function vardel()
 	unset Red
 	unset Green
 	unset White
-}
-
-### myshellschreck, ShellCheck ueberlisten, hat sonst keinerlei Funktion und wird auch nicht aufgerufen.
-function myshellschreck()
-{
-STARTVERZEICHNIS="opt" MONEYVERZEICHNIS="robust" ROBUSTVERZEICHNIS="robust" OPENSIMVERZEICHNIS="opensim" SCRIPTSOURCE="ScriptNeu" MONEYSOURCE="money48" OSVERSION="opensim-0.9.2.0Dev"
-REGIONSDATEI="RegionList.ini" SIMDATEI="SimulatorList.ini" WARTEZEIT=30 STARTWARTEZEIT=10 STOPWARTEZEIT=30 MONEYWARTEZEIT=50 BACKUPWARTEZEIT=120 AUTOSTOPZEIT=60 SETMONOTHREADS=800 SETMONOTHREADSON="yes"
-OPENSIMDOWNLOAD="http://opensimulator.org/dist/" OPENSIMVERSION="opensim-0.9.1.1.zip"
 }
 
 ### Erstellen eines Arrays aus einer Textdatei - Verzeichnisse und Regionen ###
@@ -2019,11 +2023,105 @@ MEIN_ABFRAGE_ENDE
 	echo "$DATUM $(date +%H:%M:%S) SETPARTNER: $NEUERPARTNER ist jetzt Partner von $AVATARUUID" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 }
 
+# Aktuelle IP in die Robust.ini schreiben. UNGETESTET
+function robustini()
+{
+	BaseURL=$1; MysqlDatabase=$2; MysqlUser=$3; MysqlPassword=$4; StartRegion=$5; Simulatorgridname=$6; Simulatorgridnick=$7;
+	echo "$BaseURL $MysqlDatabase $MysqlUser $MysqlPassword $StartRegion $Simulatorgridname $Simulatorgridnick"
+
+	sed -i 's/BaseURL =.*$/BaseURL = '"$AKTUELLEIP"'/' /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/Robust.ini
+
+	sed -i 's/MysqlDatabase =.*$/MysqlDatabase = '"$2"'/' /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/Robust.ini
+	sed -i 's/MysqlUser =.*$/MysqlUser = '"$3"'/' /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/Robust.ini
+	sed -i 's/MysqlPassword =.*$/MysqlPassword = '"$4"'/' /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/Robust.ini
+	sed -i 's/StartRegion =.*$/StartRegion = '"$5"'/' /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/Robust.ini
+	sed -i 's/Simulatorgridname =.*$/Simulatorgridname = '"$6"'/' /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/Robust.ini
+	sed -i 's/Simulatorgridnick =.*$/Simulatorgridnick = '"$7"'/' /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/Robust.ini
+	echo "Aktuelle Daten wurden in die Robust.ini geschrieben!"
+}
+# Aktuelle IP in die MoneyServer.ini schreiben. UNGETESTET
+function moneyserverini()
+{	
+	MoneyScriptIPaddress=$1; database=$2; username=$3; password=$4;
+	echo "$MoneyScriptIPaddress $database $username $password"
+	sed -i 's/MoneyScriptIPaddress  =.*$/MoneyScriptIPaddress  = '"$AKTUELLEIP"'/' /$STARTVERZEICHNIS/$MONEYVERZEICHNIS/bin/MoneyServer.ini
+
+	sed -i 's/database =.*$/database = '"$database"'/' /$STARTVERZEICHNIS/$MONEYVERZEICHNIS/bin/MoneyServer.ini
+	sed -i 's/username =.*$/username = '"$username"'/' /$STARTVERZEICHNIS/$MONEYVERZEICHNIS/bin/MoneyServer.ini
+	sed -i 's/password =.*$/password = '"$password"'/' /$STARTVERZEICHNIS/$MONEYVERZEICHNIS/bin/MoneyServer.ini
+	echo "Aktuelle IP wurde in die MoneyServer.ini geschrieben!"
+}
+# Aktuelle IP in die OpenSim.ini schreiben.
+function opensimini()
+{	
+	VERZEICHNIS=$1; BaseHostname=$2; SimulatorPort=$3; SimulatorXmlRpcPort=$4; Simulatorgridname=$5;
+	echo "$BaseHostname $SimulatorPort $SimulatorXmlRpcPort $Simulatorgridname"
+	sed -i 's/BaseHostname =.*$/BaseHostname = '"$AKTUELLEIP"'/' /$STARTVERZEICHNIS/"$VERZEICHNIS"/bin/OpenSim.ini
+
+	sed -i 's/SimulatorPort =.*$/SimulatorPort = '"$SimulatorPort"'/' /$STARTVERZEICHNIS/"$VERZEICHNIS"/bin/OpenSim.ini
+	sed -i 's/SimulatorXmlRpcPort =.*$/SimulatorXmlRpcPort = '"$SimulatorXmlRpcPort"'/' /$STARTVERZEICHNIS/"$VERZEICHNIS"/bin/OpenSim.ini
+	sed -i 's/Simulatorgridname =.*$/Simulatorgridname = '"$Simulatorgridname"'/' /$STARTVERZEICHNIS/"$VERZEICHNIS"/bin/OpenSim.ini
+	echo "Aktuelle IP wurde in die OpenSim.ini geschrieben!"
+}
+# Aktuelle IP in die GridCommon.ini schreiben. UNGETESTET
+function gridcommonini()
+{	
+	VERZEICHNIS=$1; BaseHostname=$2; MysqlDatabase=$3; MysqlUser=$4; MysqlPassword=$5;
+	sed -i 's/BaseHostname =.*$/BaseHostname = '"$AKTUELLEIP"'/' /$STARTVERZEICHNIS/"$VERZEICHNIS"/bin/config-include/GridCommon.ini
+
+	sed -i 's/MysqlDatabase =.*$/MysqlDatabase = '"$MysqlDatabase"'/' /$STARTVERZEICHNIS/"$VERZEICHNIS"/bin/config-include/GridCommon.ini
+	sed -i 's/MysqlUser =.*$/MysqlUser = '"$MysqlUser"'/' /$STARTVERZEICHNIS/"$VERZEICHNIS"/bin/config-include/GridCommon.ini
+	sed -i 's/MysqlPassword =.*$/MysqlPassword = '"$MysqlPassword"'/' /$STARTVERZEICHNIS/"$VERZEICHNIS"/bin/config-include/GridCommon.ini
+
+	#ConnectionString = "Data Source=localhost;Database=opensim;User ID=opensim;Password=opensim;Old Guids=true;"
+	echo "Aktuelle IP wurde in die GridCommon.ini geschrieben!"
+}
+# regionini Simulator Dateiname
+# Aktuelle IP in die Regions.ini schreiben. UNGETESTET
+function regionini()
+{	
+	VERZEICHNIS=$1; REGIONSINI=$1;
+	sed -i 's/BaseHostname =.*$/BaseHostname = '"$AKTUELLEIP"'/' /$STARTVERZEICHNIS/"$VERZEICHNIS"/bin/Regions/"$REGIONSINI"
+	# Es fehlt noch:
+	# [Welcome]
+	# RegionUUID = c79be541-c6c3-2772-9dd7-bc45301addc4
+	# Location = 4000,4000
+	# SizeX = 256
+	# SizeY = 256
+	# SizeZ = 256
+	# InternalAddress = 0.0.0.0
+	# InternalPort = 9200
+	# AllowAlternatePorts = False
+	# ;ResolveAddress = False
+	# ExternalHostName = SYSTEMIP
+	# MaxPrims = 45000
+	# MaxAgents = 40
+	# ;DefaultLanding = <128,128,21>
+	# ;NonPhysicalPrimMax = 1024
+	# ;PhysicalPrimMax = 64
+	# ;ClampPrimSize = False
+	# ;MaxPrimsPerUser = -1
+	# ;ScopeID = c79be541-c6c3-2772-9dd7-bc45301addc4
+	# ;RegionType = Mainland
+	# ;MaptileStaticUUID = c79be541-c6c3-2772-9dd7-bc45301addc4
+	# ;MaptileStaticFile = "water.jpg"
+	# ;MasterAvatarFirstName = Max
+	# ;MasterAvatarLastName = Mustermann
+	# ;MasterAvatarSandboxPassword = passwd
+	echo "Aktuelle IP wurde in die $REGIONSINI geschrieben!"
+}
+# Hier entsteht die Automatische Konfiguration. UNGETESTET
+function autoconfig()
+{
+	$AUTOCONFIG # yes oder no
+	echo "ohne Funktion!"
+}
 ### Funktion info, Informationen auf den Bildschirm ausgeben.
 function info()
 {
 	echo "$(tput setab $Blue) Server Name: ${HOSTNAME}"
 	echo " Bash Version: ${BASH_VERSION}"
+	echo " Server IP: ${AKTUELLEIP}"
 	echo " MONO THREAD Einstellung: ${MONO_THREADS_PER_CPU}"
 	echo " Spracheinstellung: ${LANG} $(tput sgr 0)"
 }
@@ -2218,6 +2316,12 @@ case  $KOMMANDO  in
 	setpartner) setpartner "$2" "$3" "$4" "$5" "$6" ;;
 	makewebmaps) makewebmaps ;;
 	opensimholen) opensimholen ;;
+	robustini) robustini "$2" "$3" "$4" "$5" "$6" "$7" ;;
+	moneyserverini) moneyserverini "$2" "$3" "$4" "$5" ;;
+	opensimini) opensimini "$2" "$3" "$4" "$5" "$6" ;;
+	gridcommonini) gridcommonini "$2" "$3" "$4" "$5" "$6" ;;
+	regionini) regionini "$2" "$3" ;;
+	autoconfig) autoconfig ;;
 	*) hilfe ;;
 esac
 

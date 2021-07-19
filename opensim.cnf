@@ -2,10 +2,10 @@
 
 ## Das Startverzeichnis home oder opt zum Beispiel.
 	STARTVERZEICHNIS="opt"
-	MONEYVERZEICHNIS="no"
+	MONEYVERZEICHNIS="robust"
 	ROBUSTVERZEICHNIS="robust"
 	OPENSIMVERZEICHNIS="opensim"
-	SCRIPTSOURCE="no"
+	SCRIPTSOURCE="ScriptNeu"
 	MONEYSOURCE="money48"
 	
 ## Dateien
@@ -13,14 +13,16 @@
 	SIMDATEI="SimulatorList.ini"
 	OPENSIMDOWNLOAD="http://opensimulator.org/dist/"
 	OPENSIMVERSION="opensim-0.9.1.1"
+	SEARCHADRES="icanhazip.com" # Suchadresse
 
 ## Inklusive
-	SCRIPTCOPY="no"
-	MONEYCOPY="no"
+	SCRIPTCOPY="yes"
+	MONEYCOPY="yes"
 	PYTHONCOPY="no"
 	MUTELISTCOPY="no"
 	SEARCHCOPY="no"
 	CHRISOSCOPY="no"
+	AUTOCONFIG="no"
 
 ## Die unterschiedlichen wartezeiten bis die Aktion ausgefuehrt wurde.
 	WARTEZEIT=30 # Ist eine allgemeine Wartezeit.
