@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# opensimMULTITOOL Version 0.45.151 Copyright (c) 2021 BigManzai Manfred Aabye
+# opensimMULTITOOL Version 0.45.157 Copyright (c) 2021 BigManzai Manfred Aabye
 # opensim.sh Basiert auf meinen Einzelscripten, an denen ich bereits 6 Jahre Arbeite und verbessere.
 # Da Server unterschiedlich sind, kann eine einwandfreie fuunktion nicht gewährleistet werden, also bitte mit bedacht verwenden.
 # Die Benutzung dieses Scriptes, oder deren Bestandteile, erfolgt auf eigene Gefahr!!!
@@ -35,7 +35,7 @@ echo "$(tput setaf 2) | |__| || |_) ||  __/| | | | ____) || || | | | | || |_| ||
 echo "  \____/ |  __/  \___||_| |_||_____/ |_||_| |_| |_| \____||_| \____| \__|\___/ |_|   "
 echo "         | |                                                                         "
 echo "         |_|                                                                         "
-echo "	    $(tput setaf 2)opensim$(tput setaf 4)MULTITOOL$(tput sgr 0) 0.45.151" # Versionsausgabe
+echo "	    $(tput setaf 2)opensim$(tput setaf 4)MULTITOOL$(tput sgr 0) 0.45.157" # Versionsausgabe
 echo " "
 
 # Datum und Uhrzeit
@@ -67,7 +67,7 @@ SCRIPTPATH=$(cd "$(dirname "$0")" && pwd)
 # shellcheck source=opensim.cnf
 . "$SCRIPTPATH"/opensim.cnf
 
-# Aktuelle IP über Suchadresse ermitteln und hochstriche anhängen.
+# Aktuelle IP über Suchadresse ermitteln und Ausführungszeichen anhängen.
 AKTUELLEIP='"'$(wget -O - -q $SEARCHADRES)'"'
 
 ## Farben Color
@@ -262,6 +262,11 @@ function ossettings()
 	echo "Setze Mono GC Parameter auf minor=split,promotion-age=14,nursery-size=64m"
 	export MONO_GC_PARAMS="minor=split,promotion-age=14,nursery-size=64m"
 	fi
+	echo " "
+
+	# Manual page auf Deutsch
+	alias man="man -L de_DE.utf8"
+	echo "Setze manual page auf Deutsch alias man=man -L de_DE.utf8"
 	echo " "
 }
 
@@ -1540,76 +1545,100 @@ sudo apt-get upgrade
 ##Apache2 und Erweiterung installieren.
 	if dpkg-query -s apache2 2>/dev/null|grep -q installed; then
 			echo "$(tput setaf 2)apache2 ist installiert.$(tput sgr0)"
+			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: apache2 ist installiert" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 		else
 			echo "$(tput setaf 1)Ich installiere jetzt apache2.$(tput sgr0)"
+			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: Ich installiere jetzt apache2" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 			sudo apt-get -y install apache2
 	fi
 	if dpkg-query -s libapache2-mod-php 2>/dev/null|grep -q installed; then
 			echo "$(tput setaf 2)libapache2-mod-php ist installiert.$(tput sgr0)"
+			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: libapache2-mod-php ist installiert" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 		else
 			echo "$(tput setaf 1)Ich installiere jetzt libapache2-mod-php.$(tput sgr0)"
+			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: Ich installiere jetzt libapache2-mod-php" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 			sudo apt-get -y install libapache2-mod-php
 	fi
 
 ##PHP, mysql und Erweiterungen installieren.
 	if dpkg-query -s php 2>/dev/null|grep -q installed; then
 			echo "$(tput setaf 2)php ist installiert.$(tput sgr0)"
+			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: php ist installiert" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 		else
 			echo "$(tput setaf 1)Ich installiere jetzt php.$(tput sgr0)"
+			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: Ich installiere jetzt php" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 			sudo apt-get -y install php
 	fi
 	if dpkg-query -s mysql-server 2>/dev/null|grep -q installed; then
 			echo "$(tput setaf 2)mysql-server ist installiert.$(tput sgr0)"
+			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: mysql-server ist installiert" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 		else
 			echo "$(tput setaf 1)Ich installiere jetzt mysql-server.$(tput sgr0)"
+			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: Ich installiere jetzt mysql-server" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 			sudo apt-get -y install mysql-server
 	fi
 	if dpkg-query -s php-mysql 2>/dev/null|grep -q installed; then
 			echo "$(tput setaf 2)php-mysql ist installiert.$(tput sgr0)"
+			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: php-mysql ist installiert" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 		else
 			echo "$(tput setaf 1)Ich installiere jetzt php-mysql.$(tput sgr0)"
+			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: Ich installiere jetzt php-mysql" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 			sudo apt-get -y install php-mysql
 	fi
 	if dpkg-query -s php-common 2>/dev/null|grep -q installed; then
 			echo "$(tput setaf 2)php-common ist installiert.$(tput sgr0)"
+			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: php-common ist installiert" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 		else
 			echo "$(tput setaf 1)Ich installiere jetzt php-common.$(tput sgr0)"
+			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: Ich installiere jetzt php-common" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 			sudo apt-get -y install php-common
 	fi
 	if dpkg-query -s php-gd 2>/dev/null|grep -q installed; then
 			echo "$(tput setaf 2)php-gd ist installiert.$(tput sgr0)"
+			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: php-gd ist installiert" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 		else
 			echo "$(tput setaf 1)Ich installiere jetzt php-gd.$(tput sgr0)"
+			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: Ich installiere jetzt php-gd" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 			sudo apt-get -y install php-gd
 	fi
 	if dpkg-query -s php-pear 2>/dev/null|grep -q installed; then
 			echo "$(tput setaf 2)php-pear ist installiert.$(tput sgr0)"
+			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: php-pear ist installiert" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 		else
 			echo "$(tput setaf 1)Ich installiere jetzt php-pear.$(tput sgr0)"
+			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: Ich installiere jetzt php-pear" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 			sudo apt-get -y install php-pear
 	fi
 	if dpkg-query -s php-xmlrpc 2>/dev/null|grep -q installed; then
 			echo "$(tput setaf 2)php-xmlrpc ist installiert.$(tput sgr0)"
+			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: php-xmlrpc ist installiert" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 		else
 			echo "$(tput setaf 1)Ich installiere jetzt php-xmlrpc.$(tput sgr0)"
+			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: Ich installiere jetzt php-xmlrpc" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 			sudo apt-get -y install php-xmlrpc
 	fi
 	if dpkg-query -s php-curl 2>/dev/null|grep -q installed; then
 			echo "$(tput setaf 2)php-curl ist installiert.$(tput sgr0)"
+			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: php-curl ist installiert" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 		else
 			echo "$(tput setaf 1)Ich installiere jetzt php-curl.$(tput sgr0)"
+			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: Ich installiere jetzt php-curl" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 			sudo apt-get -y install php-curl
 	fi
 	if dpkg-query -s php-mbstring 2>/dev/null|grep -q installed; then
 			echo "$(tput setaf 2)php-mbstring ist installiert.$(tput sgr0)"
+			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: php-mbstring ist installiert" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 		else
 			echo "$(tput setaf 1)Ich installiere jetzt php-mbstring.$(tput sgr0)"
+			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: Ich installiere jetzt php-mbstring" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 			sudo apt-get -y install php-mbstring
 	fi
 	if dpkg-query -s php-gettext 2>/dev/null|grep -q installed; then
 			echo "$(tput setaf 2)php-gettext ist installiert.$(tput sgr0)"
+			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: php-gettext ist installiert" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 		else
 			echo "$(tput setaf 1)Ich installiere jetzt php-gettext.$(tput sgr0)"
+			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: Ich installiere jetzt php-gettext" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 			sudo apt-get -y install php-gettext
 	fi
 
@@ -1619,71 +1648,105 @@ sudo apt-get upgrade
 ##Hilfsprogramme zum entpacken, Hintergrunddienste, Git, NAnt und Grafiktools installieren.
 	if dpkg-query -s zip 2>/dev/null|grep -q installed; then
 			echo "$(tput setaf 2)zip ist installiert.$(tput sgr0)"
+			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: zip ist installiert" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 		else
 			echo "$(tput setaf 1)Ich installiere jetzt zip.$(tput sgr0)"
+			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: Ich installiere jetzt zip" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 			sudo apt-get -y install zip
 	fi
 	if dpkg-query -s screen 2>/dev/null|grep -q installed; then
 			echo "$(tput setaf 2)screen ist installiert.$(tput sgr0)"
+			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: screen ist installiert" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 		else
 			echo "$(tput setaf 1)Ich installiere jetzt screen.$(tput sgr0)"
+			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: Ich installiere jetzt screen" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 			sudo apt-get -y install screen
 	fi
 	if dpkg-query -s git 2>/dev/null|grep -q installed; then
 			echo "$(tput setaf 2)git ist installiert.$(tput sgr0)"
+			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: git ist installiert" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 		else
 			echo "$(tput setaf 1)Ich installiere jetzt git.$(tput sgr0)"
+			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: Ich installiere jetzt git" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 			sudo apt-get -y install git
 	fi
 	if dpkg-query -s nant 2>/dev/null|grep -q installed; then
 			echo "$(tput setaf 2)nant ist installiert.$(tput sgr0)"
+			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: nant ist installiert" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 		else
 			echo "$(tput setaf 1)Ich installiere jetzt nant.$(tput sgr0)"
+			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: Ich installiere jetzt nant" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 			sudo apt-get -y install nant
 	fi
 	if dpkg-query -s libopenjp2-tools 2>/dev/null|grep -q installed; then
 			echo "$(tput setaf 2)libopenjp2-tools ist installiert.$(tput sgr0)"
+			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: libopenjp2-tools ist installiert" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 		else
 			echo "$(tput setaf 1)Ich installiere jetzt libopenjp2-tools.$(tput sgr0)"
+			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: Ich installiere jetzt libopenjp2-tools" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 			sudo apt-get -y install libopenjp2-tools
 	fi
 	if dpkg-query -s graphicsmagick 2>/dev/null|grep -q installed; then
 			echo "$(tput setaf 2)graphicsmagick ist installiert.$(tput sgr0)"
+			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: graphicsmagick ist installiert" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 		else
 			echo "$(tput setaf 1)Ich installiere jetzt graphicsmagick.$(tput sgr0)"
+			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: Ich installiere jetzt graphicsmagick" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 			sudo apt-get -y install graphicsmagick
 	fi
 	if dpkg-query -s imagemagick 2>/dev/null|grep -q installed; then
 			echo "$(tput setaf 2)imagemagick ist installiert.$(tput sgr0)"
+			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: imagemagick ist installiert" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 		else
 			echo "$(tput setaf 1)Ich installiere jetzt imagemagick.$(tput sgr0)"
+			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: Ich installiere jetzt imagemagick" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 			sudo apt-get -y install imagemagick
 	fi
 	if dpkg-query -s curl 2>/dev/null|grep -q installed; then
 			echo "$(tput setaf 2)curl ist installiert.$(tput sgr0)"
+			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: curl ist installiert" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 		else
 			echo "$(tput setaf 1)Ich installiere jetzt curl.$(tput sgr0)"
+			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: Ich installiere jetzt curl" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 			sudo apt-get -y install curl
 	fi
 	if dpkg-query -s php-cli 2>/dev/null|grep -q installed; then
 			echo "$(tput setaf 2)php-cli ist installiert.$(tput sgr0)"
+			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: php-cli ist installiert" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 		else
 			echo "$(tput setaf 1)Ich installiere jetzt php-cli.$(tput sgr0)"
+			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: Ich installiere jetzt php-cli" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 			sudo apt-get -y install php-cli
 	fi
 	if dpkg-query -s php-bcmath 2>/dev/null|grep -q installed; then
 			echo "$(tput setaf 2)php-bcmath ist installiert.$(tput sgr0)"
+			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: php-bcmath ist installiert" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 		else
 			echo "$(tput setaf 1)Ich installiere jetzt php-bcmath.$(tput sgr0)"
+			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: Ich installiere jetzt php-bcmath" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 			sudo apt-get -y install php-bcmath
 	fi
 
 ##Zeitsteuerung
 	if dpkg-query -s at 2>/dev/null|grep -q installed; then
 			echo "$(tput setaf 2)at ist installiert.$(tput sgr0)"
+			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: at ist installiert" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 		else
 			echo "$(tput setaf 1)Ich installiere jetzt at.$(tput sgr0)"
+			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: Ich installiere jetzt at" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 			sudo apt-get -y install at
+	fi
+
+##Linux Handbuch in Deutsch
+	if dpkg-query -s manpages-de 2>/dev/null|grep -q installed; then
+			echo "$(tput setaf 2)Manual page DE ist installiert.$(tput sgr0)"
+			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: Manual page DE ist installiert" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+		else
+			echo "$(tput setaf 1)Ich installiere jetzt manual page DE.$(tput sgr0)"
+			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: Ich installiere jetzt manual page DE" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+			sudo apt-get -y install manpages-de
+			# Deutsch aktivieren
+			alias man="man -L de_DE.utf8"
 	fi
 
 ##Als letzte Maßnahmen noch Updaten und Upgraden und Server neu starten wegen Mono Threads.
@@ -1692,6 +1755,7 @@ sudo apt-get upgrade
 	apt -f install
 
 	echo "$(tput setaf 1)Zum Abschluss sollte der ganze Server neu gestartet werden mit dem Kommando: $(tput sgr0) reboot now"
+	echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: Zum Abschluss sollte der ganze Server neu gestartet werden" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 }
 
 ### Funktion installationen, Ubuntu 18 Server, Was habe ich alles auf meinem Server Installiert? sortiert auflisten.
@@ -1709,6 +1773,8 @@ function osbuilding()
     VERSIONSNUMMER=$1
 	
     cd /$STARTVERZEICHNIS || exit
+
+	# Konfigurationsabfrage Neues Grid oder Upgrade.
 
 	echo "$(tput setaf $Magenta)Alten OpenSimulator sichern$(tput sgr0)"
 	echo "$DATUM $(date +%H:%M:%S) OSBUILDING: Alten OpenSimulator sichern" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
@@ -2023,14 +2089,160 @@ MEIN_ABFRAGE_ENDE
 	echo "$DATUM $(date +%H:%M:%S) SETPARTNER: $NEUERPARTNER ist jetzt Partner von $AVATARUUID" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 }
 
+# function conf_write, Konfiguration schreiben ersatz für alle UNGETESTETEN ini Funktionen.
+# ./opensim.sh conf_write Einstellung NeuerParameter Verzeichnis Dateiname
+function conf_write()
+{
+	CONF_SEARCH=$1; CONF_ERSATZ=$2; CONF_PFAD=$3; CONF_DATEINAME=$4;
+	sed -i 's/'"$CONF_SEARCH"' =.*$/'"$CONF_SEARCH"' = '"$CONF_ERSATZ"'/' /"$CONF_PFAD"/"$CONF_DATEINAME"
+	echo "Einstellung $CONF_SEARCH auf Parameter $CONF_ERSATZ geändert in Datei /$CONF_PFAD/$CONF_DATEINAME"
+	echo "$DATUM $(date +%H:%M:%S) CONF_WRITE: Einstellung $CONF_SEARCH auf Parameter $CONF_ERSATZ geändert in Datei /$CONF_PFAD/$CONF_DATEINAME" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+}
+# function conf_read, ganze Zeile aus der Konfigurationsdatei anzeigen.
+# ./opensim.sh conf_read Einstellungsbereich Verzeichnis Dateiname
+function conf_read()
+{
+    CONF_SEARCH=$1; CONF_PFAD=$2; CONF_DATEINAME=$3;
+	sed -n -e '/'"$CONF_SEARCH"'/p' /"$CONF_PFAD"/"$CONF_DATEINAME"
+    echo "Einstellung $CONF_SEARCH suchen in Datei /$CONF_PFAD/$CONF_DATEINAME"
+	echo "$DATUM $(date +%H:%M:%S) CONF_WRITE: Einstellung $CONF_SEARCH suchen in Datei /$CONF_PFAD/$CONF_DATEINAME" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+}
+function conf_verify()
+{
+    echo "ohne funktion"
+}
+# function conf_delete, ganze Zeile aus der Konfigurationsdatei löschen.
+# ./opensim.sh conf_delete Einstellungsbereich Verzeichnis Dateiname
+function conf_delete()
+{
+    CONF_SEARCH=$1; CONF_PFAD=$2; CONF_DATEINAME=$3;
+	sed -i 's/'"$CONF_SEARCH"' =.*$/''/' /"$CONF_PFAD"/"$CONF_DATEINAME"
+    echo "Zeile $CONF_SEARCH gelöscht in Datei /$CONF_PFAD/$CONF_DATEINAME"
+	echo "$DATUM $(date +%H:%M:%S) CONF_DELETE: Zeile $CONF_SEARCH gelöscht in Datei /$CONF_PFAD/$CONF_DATEINAME" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+}
+
+# function ramspeicher, den echten RAM Speicher auslesen.
+function ramspeicher()
+{
+# RAM größe auslesen
+dmidecode --type 17 > /tmp/raminfo.inf
+RAMSPEICHER=$(awk -F ":" '/Size/ {print $2}' /tmp/raminfo.inf)
+rm /tmp/raminfo.inf
+# Zeichen löschen
+RAMSPEICHER="${RAMSPEICHER:1}" # erstes Zeichen löschen
+RAMSPEICHER="${RAMSPEICHER::-3}" # letzten 3 Zeichen löschen
+}
+
+# function mysqleinstellen, ermitteln wieviel RAM Speicher vorhanden ist und mySQL Einstellen.
+function mysqleinstellen()
+{
+	echo "mySQL Konfiguration Einstellen und neu starten"
+	# Ermitteln wie viel RAM Speicher der Server hat
+	ramspeicher
+	# Speicher Berechnung
+	echo "Echter Speicher: $RAMSPEICHER"
+	mysqlspeicher=$((RAMSPEICHER/4)) # Ich nehme hier einfach 25% des RAM Speichers.
+	echo "Speicher für mySQL: $mysqlspeicher"
+
+	# Hier wird die my.cnf neu geschrieben es wird nichts angehängt
+	{	echo "# Meine Einstellungen"
+		echo "innodb_buffer_pool_size = $mysqlspeicher MB  # (Hier sollte man etwa 50% des gesamten RAM nutzen) von 1G auf 2G erhöht"
+		echo "innodb_log_file_size = 512M  # (128M – 2G muss nicht größer als der Pufferpool sein) von 256 auf 512 erhöht"
+		echo "innodb_log_buffer_size = 256M # Normal 0 oder 1MB"
+		echo "innodb_flush_log_at_trx_commit = 1  # (0/2 mehr Leistung, weniger Zuverlässigkeit, 1 Standard)"
+		echo "innodb_flush_method = O_DIRECT  # (Vermeidet doppelte Pufferung)"
+		echo "sync_binlog = 0"
+		echo "binlog_format=ROW  # oder MIXED"
+		echo "innodb_autoinc_lock_mode = 2 # Notwendigkeit einer AUTO-INC-Sperre auf Tabellenebene wird beseitigt und die Leistung kann erhöht werden."
+		echo "innodb_io_capacity_max = $mysqlspeicher MB # (50% des Maximums festlegen)"
+		echo "innodb_io_capacity = $mysqlspeicher MB # (50% des Maximums festlegen)"
+		echo "# Meine Einstellungen Ende"
+		echo " "
+		echo "!includedir /etc/mysql/conf.d/"
+		echo "!includedir /etc/mysql/mysql.conf.d/"
+		echo " "
+	} > "/etc/mysql/my.cnf"
+
+	# MySQL neu starten
+	mysql_neustart
+}
+
+# In Arbeit
+function neuegridconfig()
+{
+	echo "$(tput setaf $Green)NEUEGRIDCONFIG: Konfigurationsdateien holen und in das ExampleConfig Verzeichnis kopieren. $(tput sgr0)"
+	echo "$DATUM $(date +%H:%M:%S) NEUEGRIDCONFIG: Konfigurationsdateien holen und in das ExampleConfig Verzeichnis kopieren" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+
+	cd /$STARTVERZEICHNIS || exit
+	git clone https://github.com/BigManzai/OpenSim-Shell-Script
+	mv /$STARTVERZEICHNIS/OpenSim-Shell-Script/ExampleConfig /$STARTVERZEICHNIS/ExampleConfig
+	rm -r /$STARTVERZEICHNIS/OpenSim-Shell-Script
+
+	echo "IP eintragen"
+	ipsetzen
+
+	#echo "Konfigurationen kopieren nach opensim"
+	cp /$STARTVERZEICHNIS/ExampleConfig/robust/ /$STARTVERZEICHNIS/opensim/bin
+	cp /$STARTVERZEICHNIS/ExampleConfig/sim/ /$STARTVERZEICHNIS/opensim/bin
+
+	#echo "mySQL Einstellen und neu starten"
+	#mysqleinstellen
+
+	# Hier sind die gemeinsamkeiten zu ende.
+
+	#echo "opensim kopieren in alle Verzeichnisse"
+	
+	#echo "Datenbanken erstellen und in allen Konfigurationen eintragen"
+
+}
+
+# function ipsetzen, setzt nach Abfrage die IP in die Konfigurationen. OK
+function ipsetzen()
+{
+	cd /"$STARTVERZEICHNIS/ExampleConfig" || return 1 # gibt es das ExampleConfig Verzeichnis wenn nicht abbruch.
+
+	EINGABEIP=""
+	echo "$(tput setaf $Green)IPSETZEN: Bitte geben Sie ihre externe IP ein oder drücken sie Enter für $(tput sgr0) $AKTUELLEIP"
+	
+	# Eingabe einlesen in Variable EINGABEIP
+	read -r EINGABEIP 
+	
+	# Prüfen ob Variableninhalt Enter oder eine IP ist 
+	if test "$EINGABEIP" = ""
+	then
+	# ENTER wurde gewählt
+	# Robust ändern
+	sed -i 's/BaseURL =.*$/BaseURL = '"$AKTUELLEIP"'/' /$STARTVERZEICHNIS/ExampleConfig/robust/Robust.ini
+	# OpenSim ändern
+	sed -i 's/BaseHostname =.*$/BaseHostname = '"$AKTUELLEIP"'/' /$STARTVERZEICHNIS/ExampleConfig/sim/OpenSim.ini
+	# MoneyServer ändern
+	sed -i 's/MoneyScriptIPaddress  =.*$/MoneyScriptIPaddress  = '"$AKTUELLEIP"'/' /$STARTVERZEICHNIS/ExampleConfig/robust/MoneyServer.ini
+	# GridCommon ändern
+	sed -i 's/BaseHostname =.*$/BaseHostname = '"$AKTUELLEIP"'/' /$STARTVERZEICHNIS/ExampleConfig/sim/config-include/GridCommon.ini
+	else
+	# IP wurde gewählt
+	# Ausführungszeichen anhängen
+	EINGABEIP='"'$EINGABEIP'"'
+	# Robust ändern
+	sed -i 's/BaseURL =.*$/BaseURL = '"$EINGABEIP"'/' /$STARTVERZEICHNIS/ExampleConfig/robust/Robust.ini
+	# OpenSim ändern
+	sed -i 's/BaseHostname =.*$/BaseHostname = '"$EINGABEIP"'/' /$STARTVERZEICHNIS/ExampleConfig/sim/OpenSim.ini
+	# MoneyServer ändern
+	sed -i 's/MoneyScriptIPaddress  =.*$/MoneyScriptIPaddress  = '"$EINGABEIP"'/' /$STARTVERZEICHNIS/ExampleConfig/robust/MoneyServer.ini
+	# GridCommon ändern
+	sed -i 's/BaseHostname =.*$/BaseHostname = '"$EINGABEIP"'/' /$STARTVERZEICHNIS/ExampleConfig/sim/config-include/GridCommon.ini
+	fi
+
+	echo "$(tput setaf $Green)IPSETZEN: IP oder DNS Einstellungen geändert. $(tput sgr0)"
+	echo "$DATUM $(date +%H:%M:%S) IPSETZEN: IP oder DNS Einstellungen geändert" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+}
+
 # Aktuelle IP in die Robust.ini schreiben. UNGETESTET
 function robustini()
 {
 	BaseURL=$1; MysqlDatabase=$2; MysqlUser=$3; MysqlPassword=$4; StartRegion=$5; Simulatorgridname=$6; Simulatorgridnick=$7;
 	echo "$BaseURL $MysqlDatabase $MysqlUser $MysqlPassword $StartRegion $Simulatorgridname $Simulatorgridnick"
-
-	sed -i 's/BaseURL =.*$/BaseURL = '"$AKTUELLEIP"'/' /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/Robust.ini
-
+	
 	sed -i 's/MysqlDatabase =.*$/MysqlDatabase = '"$2"'/' /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/Robust.ini
 	sed -i 's/MysqlUser =.*$/MysqlUser = '"$3"'/' /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/Robust.ini
 	sed -i 's/MysqlPassword =.*$/MysqlPassword = '"$4"'/' /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/Robust.ini
@@ -2044,8 +2256,7 @@ function moneyserverini()
 {	
 	MoneyScriptIPaddress=$1; database=$2; username=$3; password=$4;
 	echo "$MoneyScriptIPaddress $database $username $password"
-	sed -i 's/MoneyScriptIPaddress  =.*$/MoneyScriptIPaddress  = '"$AKTUELLEIP"'/' /$STARTVERZEICHNIS/$MONEYVERZEICHNIS/bin/MoneyServer.ini
-
+	
 	sed -i 's/database =.*$/database = '"$database"'/' /$STARTVERZEICHNIS/$MONEYVERZEICHNIS/bin/MoneyServer.ini
 	sed -i 's/username =.*$/username = '"$username"'/' /$STARTVERZEICHNIS/$MONEYVERZEICHNIS/bin/MoneyServer.ini
 	sed -i 's/password =.*$/password = '"$password"'/' /$STARTVERZEICHNIS/$MONEYVERZEICHNIS/bin/MoneyServer.ini
@@ -2056,8 +2267,7 @@ function opensimini()
 {	
 	VERZEICHNIS=$1; BaseHostname=$2; SimulatorPort=$3; SimulatorXmlRpcPort=$4; Simulatorgridname=$5;
 	echo "$BaseHostname $SimulatorPort $SimulatorXmlRpcPort $Simulatorgridname"
-	sed -i 's/BaseHostname =.*$/BaseHostname = '"$AKTUELLEIP"'/' /$STARTVERZEICHNIS/"$VERZEICHNIS"/bin/OpenSim.ini
-
+	
 	sed -i 's/SimulatorPort =.*$/SimulatorPort = '"$SimulatorPort"'/' /$STARTVERZEICHNIS/"$VERZEICHNIS"/bin/OpenSim.ini
 	sed -i 's/SimulatorXmlRpcPort =.*$/SimulatorXmlRpcPort = '"$SimulatorXmlRpcPort"'/' /$STARTVERZEICHNIS/"$VERZEICHNIS"/bin/OpenSim.ini
 	sed -i 's/Simulatorgridname =.*$/Simulatorgridname = '"$Simulatorgridname"'/' /$STARTVERZEICHNIS/"$VERZEICHNIS"/bin/OpenSim.ini
@@ -2067,8 +2277,7 @@ function opensimini()
 function gridcommonini()
 {	
 	VERZEICHNIS=$1; BaseHostname=$2; MysqlDatabase=$3; MysqlUser=$4; MysqlPassword=$5;
-	sed -i 's/BaseHostname =.*$/BaseHostname = '"$AKTUELLEIP"'/' /$STARTVERZEICHNIS/"$VERZEICHNIS"/bin/config-include/GridCommon.ini
-
+	
 	sed -i 's/MysqlDatabase =.*$/MysqlDatabase = '"$MysqlDatabase"'/' /$STARTVERZEICHNIS/"$VERZEICHNIS"/bin/config-include/GridCommon.ini
 	sed -i 's/MysqlUser =.*$/MysqlUser = '"$MysqlUser"'/' /$STARTVERZEICHNIS/"$VERZEICHNIS"/bin/config-include/GridCommon.ini
 	sed -i 's/MysqlPassword =.*$/MysqlPassword = '"$MysqlPassword"'/' /$STARTVERZEICHNIS/"$VERZEICHNIS"/bin/config-include/GridCommon.ini
@@ -2322,6 +2531,12 @@ case  $KOMMANDO  in
 	gridcommonini) gridcommonini "$2" "$3" "$4" "$5" "$6" ;;
 	regionini) regionini "$2" "$3" ;;
 	autoconfig) autoconfig ;;
+	conf_write) conf_write "$2" "$3" "$4" "$5" ;;
+	conf_delete) conf_delete "$2" "$3" "$4" ;;
+	ipsetzen) ipsetzen ;;
+	neuegridconfig) neuegridconfig ;;
+	ramspeicher) ramspeicher ;;
+	mysqleinstellen) mysqleinstellen ;;
 	*) hilfe ;;
 esac
 
