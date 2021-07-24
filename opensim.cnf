@@ -37,6 +37,7 @@
 	SETMONOTHREADS=800
 	SETULIMITON="yes"
 	SETMONOGCPARAMSON="yes"
+	SETMANUALPAGES="yes"
 
 ## Divers
 	SETOSCOMPION="no" # Mit oder ohne log Datei kompilieren. yes oder no.

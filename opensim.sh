@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# opensimMULTITOOL Version 0.45.157 Copyright (c) 2021 BigManzai Manfred Aabye
+# opensimMULTITOOL Version 0.45.161 Copyright (c) 2021 BigManzai Manfred Aabye
 # opensim.sh Basiert auf meinen Einzelscripten, an denen ich bereits 6 Jahre Arbeite und verbessere.
 # Da Server unterschiedlich sind, kann eine einwandfreie fuunktion nicht gewährleistet werden, also bitte mit bedacht verwenden.
 # Die Benutzung dieses Scriptes, oder deren Bestandteile, erfolgt auf eigene Gefahr!!!
@@ -21,7 +21,7 @@ function myshellschreck()
 {
 STARTVERZEICHNIS="opt" MONEYVERZEICHNIS="robust" ROBUSTVERZEICHNIS="robust" OPENSIMVERZEICHNIS="opensim" SCRIPTSOURCE="ScriptNeu" MONEYSOURCE="money48" OSVERSION="opensim-0.9.2.0Dev"
 REGIONSDATEI="RegionList.ini" SIMDATEI="SimulatorList.ini" WARTEZEIT=30 STARTWARTEZEIT=10 STOPWARTEZEIT=30 MONEYWARTEZEIT=50 BACKUPWARTEZEIT=120 AUTOSTOPZEIT=60 SETMONOTHREADS=800 SETMONOTHREADSON="yes"
-OPENSIMDOWNLOAD="http://opensimulator.org/dist/" OPENSIMVERSION="opensim-0.9.1.1.zip" SEARCHADRES="icanhazip.com" AUTOCONFIG="no" 
+OPENSIMDOWNLOAD="http://opensimulator.org/dist/" OPENSIMVERSION="opensim-0.9.1.1.zip" SEARCHADRES="icanhazip.com" AUTOCONFIG="no" SETMONOGCPARAMSON="yes"
 }
 
 clear # Bildschirm loeschen
@@ -35,7 +35,7 @@ echo "$(tput setaf 2) | |__| || |_) ||  __/| | | | ____) || || | | | | || |_| ||
 echo "  \____/ |  __/  \___||_| |_||_____/ |_||_| |_| |_| \____||_| \____| \__|\___/ |_|   "
 echo "         | |                                                                         "
 echo "         |_|                                                                         "
-echo "	    $(tput setaf 2)opensim$(tput setaf 4)MULTITOOL$(tput sgr 0) 0.45.157" # Versionsausgabe
+echo "	    $(tput setaf 2)opensim$(tput setaf 4)MULTITOOL$(tput sgr 0) 0.45.161" # Versionsausgabe
 echo " "
 
 # Datum und Uhrzeit
@@ -262,20 +262,25 @@ function ossettings()
 	echo "Setze Mono GC Parameter auf minor=split,promotion-age=14,nursery-size=64m"
 	export MONO_GC_PARAMS="minor=split,promotion-age=14,nursery-size=64m"
 	fi
-	echo " "
 
 	# Manual page auf Deutsch
+	if [[ $SETMANUALPAGES = "yes" ]]
+	then
+	echo "$DATUM $(date +%H:%M:%S) OSSETTINGS: Setze manual pages auf Deutsch" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+	echo "Setze manual pages auf Deutsch"
 	alias man="man -L de_DE.utf8"
-	echo "Setze manual page auf Deutsch alias man=man -L de_DE.utf8"
+	fi
+
+	# Zum schluss eine Leerzeile.
 	echo " "
 }
 
 ### Funktion screenlist, Laufende Screens auflisten und auch in die Log Datei schreiben.
 function screenlist()
 {
-	echo "$(tput setaf $White)$(tput setab $Green) Alle laufende Screens! $(tput sgr 0)"
+	echo "$(tput setaf $White)$(tput setab $Green) Alle laufende Screens anzeigen! $(tput sgr 0)"
 	screen -ls
-	echo "$DATUM $(date +%H:%M:%S) SCREENLIST: Alle laufende Screens" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+	echo "$DATUM $(date +%H:%M:%S) SCREENLIST: Alle laufende Screens anzeigen" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 	screen -ls >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 }
 
@@ -764,8 +769,8 @@ function cleanaot()
 function osprebuild()
 {
 	NUMMER=$1
-	echo "$(tput setab $Green)Version umbenennen und Release einstellen. $(tput sgr 0)"
-	echo "$DATUM $(date +%H:%M:%S) PREBUILD: Version umbenennen und Release einstellen" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+	echo "$(tput setab $Green)Version umbenennen und Release auf $NUMMER einstellen. $(tput sgr 0)"
+	echo "$DATUM $(date +%H:%M:%S) PREBUILD: Version umbenennen und Release auf $NUMMER einstellen" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 
 	# Nummer einfügen
 	sed -i s/0.9.2.0/0.9.2."$NUMMER"/g /$STARTVERZEICHNIS/opensim/OpenSim/Framework/VersionInfo.cs
@@ -2107,10 +2112,6 @@ function conf_read()
     echo "Einstellung $CONF_SEARCH suchen in Datei /$CONF_PFAD/$CONF_DATEINAME"
 	echo "$DATUM $(date +%H:%M:%S) CONF_WRITE: Einstellung $CONF_SEARCH suchen in Datei /$CONF_PFAD/$CONF_DATEINAME" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 }
-function conf_verify()
-{
-    echo "ohne funktion"
-}
 # function conf_delete, ganze Zeile aus der Konfigurationsdatei löschen.
 # ./opensim.sh conf_delete Einstellungsbereich Verzeichnis Dateiname
 function conf_delete()
@@ -2124,29 +2125,36 @@ function conf_delete()
 # function ramspeicher, den echten RAM Speicher auslesen.
 function ramspeicher()
 {
-# RAM größe auslesen
-dmidecode --type 17 > /tmp/raminfo.inf
-RAMSPEICHER=$(awk -F ":" '/Size/ {print $2}' /tmp/raminfo.inf)
-rm /tmp/raminfo.inf
-# Zeichen löschen
-RAMSPEICHER="${RAMSPEICHER:1}" # erstes Zeichen löschen
-RAMSPEICHER="${RAMSPEICHER::-3}" # letzten 3 Zeichen löschen
+	# RAM größe auslesen
+	dmidecode --type 17 > /tmp/raminfo.inf
+	RAMSPEICHER=$(awk -F ":" '/Size/ {print $2}' /tmp/raminfo.inf)
+	rm /tmp/raminfo.inf
+	# Zeichen löschen
+	RAMSPEICHER="${RAMSPEICHER:1}" # erstes Zeichen löschen
+	RAMSPEICHER="${RAMSPEICHER::-3}" # letzten 3 Zeichen löschen
 }
 
-# function mysqleinstellen, ermitteln wieviel RAM Speicher vorhanden ist und mySQL Einstellen.
+# function mysqleinstellen, ermitteln wieviel RAM Speicher vorhanden ist und anschließend mySQL Einstellen.
+# Einstellungen sind in der my.cnf nicht möglich es muss in die /etc/mysql/mysql.conf.d/mysqld.cnf
+# Hier wird nicht geprüft ob die Einstellungen schon vorhanden sind sondern nur angehängt.
 function mysqleinstellen()
 {
-	echo "mySQL Konfiguration Einstellen und neu starten"
 	# Ermitteln wie viel RAM Speicher der Server hat
 	ramspeicher
 	# Speicher Berechnung
 	echo "Echter Speicher: $RAMSPEICHER"
-	mysqlspeicher=$((RAMSPEICHER/4)) # Ich nehme hier einfach 25% des RAM Speichers.
+	# Ich nehme hier einfach 25% des RAM Speichers weil OpenSim schon so speicherhungrig ist.
+	mysqlspeicher=$((RAMSPEICHER/4)) 
 	echo "Speicher für mySQL: $mysqlspeicher"
+	MEGABYTE="M"
 
-	# Hier wird die my.cnf neu geschrieben es wird nichts angehängt
-	{	echo "# Meine Einstellungen"
-		echo "innodb_buffer_pool_size = $mysqlspeicher MB  # (Hier sollte man etwa 50% des gesamten RAM nutzen) von 1G auf 2G erhöht"
+    echo "mySQL Konfiguration auf $mysqlspeicher$MEGABYTE Einstellen und neu starten"
+	echo "$DATUM $(date +%H:%M:%S) MYSQLEINSTELLEN: mySQL Konfiguration auf $mysqlspeicher$MEGABYTE Einstellen und neu starten" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+
+	# Hier wird die config geschrieben es wird angehängt
+	{	echo "#"
+		echo "# Meine Einstellungen $mysqlspeicher"
+		echo "innodb_buffer_pool_size = $mysqlspeicher$MEGABYTE  # (Hier sollte man etwa 50% des gesamten RAM nutzen) von 1G auf 2G erhöht"
 		echo "innodb_log_file_size = 512M  # (128M – 2G muss nicht größer als der Pufferpool sein) von 256 auf 512 erhöht"
 		echo "innodb_log_buffer_size = 256M # Normal 0 oder 1MB"
 		echo "innodb_flush_log_at_trx_commit = 1  # (0/2 mehr Leistung, weniger Zuverlässigkeit, 1 Standard)"
@@ -2154,14 +2162,13 @@ function mysqleinstellen()
 		echo "sync_binlog = 0"
 		echo "binlog_format=ROW  # oder MIXED"
 		echo "innodb_autoinc_lock_mode = 2 # Notwendigkeit einer AUTO-INC-Sperre auf Tabellenebene wird beseitigt und die Leistung kann erhöht werden."
-		echo "innodb_io_capacity_max = $mysqlspeicher MB # (50% des Maximums festlegen)"
-		echo "innodb_io_capacity = $mysqlspeicher MB # (50% des Maximums festlegen)"
-		echo "# Meine Einstellungen Ende"
-		echo " "
-		echo "!includedir /etc/mysql/conf.d/"
-		echo "!includedir /etc/mysql/mysql.conf.d/"
-		echo " "
-	} > "/etc/mysql/my.cnf"
+		echo "innodb_io_capacity_max = $mysqlspeicher$MEGABYTE # (50% des Maximums festlegen)"
+		echo "innodb_io_capacity = $mysqlspeicher$MEGABYTE # (50% des Maximums festlegen)"
+		echo "# Meine Einstellungen $mysqlspeicher Ende"
+		echo "#"
+	} >> "/etc/mysql/mysql.conf.d/mysqld.cnf"
+	# /etc/mysql/mysql.conf.d/mysqld.cnf
+	# /etc/mysql/my.cnf
 
 	# MySQL neu starten
 	mysql_neustart
@@ -2240,6 +2247,14 @@ function ipsetzen()
 # Aktuelle IP in die Robust.ini schreiben. UNGETESTET
 function robustini()
 {
+	# Eingabe einlesen in Variablen
+	#echo "Bitte geben sie den Namen der Robust Datenbank ein"	
+	#read -r MysqlDatabase
+	#echo "Bitte geben sie den Namen des Benutzers der Datenbank ein"	
+	#read -r MysqlUser
+	#echo "Bitte geben sie das Passwort des Benutzers der Datenbank ein"	
+	#read -r MysqlPassword
+
 	BaseURL=$1; MysqlDatabase=$2; MysqlUser=$3; MysqlPassword=$4; StartRegion=$5; Simulatorgridname=$6; Simulatorgridnick=$7;
 	echo "$BaseURL $MysqlDatabase $MysqlUser $MysqlPassword $StartRegion $Simulatorgridname $Simulatorgridnick"
 	
@@ -2409,6 +2424,10 @@ echo " "
 	echo "regionsuri	- $(tput setab $Magenta) DBBENUTZER $(tput sgr 0) $(tput setab $Blue) DBPASSWORT $(tput sgr 0) $(tput setab $Green) DATENBANKNAME $(tput sgr 0) - URI prüfen sortiert nach URI."
 	echo "regionsport	- $(tput setab $Magenta) DBBENUTZER $(tput sgr 0) $(tput setab $Blue) DBPASSWORT $(tput sgr 0) $(tput setab $Green) DATENBANKNAME $(tput sgr 0) - Ports prüfen sortiert nach Ports."
 echo "opensimholen	- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Lädt eine Reguläre OpenSimulator Version herunter."
+echo "mysqleinstellen	- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - mySQL Konfiguration auf Server Einstellen und neu starten."
+echo "conf_write	- $(tput setab $Magenta) SUCHWORT $(tput sgr 0) $(tput setab $Blue) ERSATZWORT $(tput sgr 0) $(tput setab $Green) PFAD $(tput sgr 0) $(tput setab $Yello) DATEINAME $(tput sgr 0) - Konfigurationszeile schreiben."
+echo "conf_delete	- $(tput setab $Magenta) SUCHWORT $(tput sgr 0) $(tput setab $Blue) PFAD $(tput sgr 0) $(tput setab $Green) DATEINAME $(tput sgr 0) - Konfigurationszeile löschen."
+echo "conf_read	- $(tput setab $Magenta) SUCHWORT $(tput sgr 0) $(tput setab $Blue) PFAD $(tput sgr 0) $(tput setab $Green) DATEINAME $(tput sgr 0) - Konfigurationszeile lesen."
 
 	echo " "
 	echo "$(tput setaf $Yello)  Der Verzeichnisname ist gleichzeitig auch der Screen Name!$(tput sgr 0)"
@@ -2533,6 +2552,7 @@ case  $KOMMANDO  in
 	autoconfig) autoconfig ;;
 	conf_write) conf_write "$2" "$3" "$4" "$5" ;;
 	conf_delete) conf_delete "$2" "$3" "$4" ;;
+	conf_read) conf_read "$2" "$3" "$4" ;;
 	ipsetzen) ipsetzen ;;
 	neuegridconfig) neuegridconfig ;;
 	ramspeicher) ramspeicher ;;
