@@ -152,8 +152,12 @@ leere_db	-  DBBENUTZER   DBPASSWORT   DATENBANKNAME  - Datenbank leeren.
 allrepair_db	-  DBBENUTZER   DBPASSWORT  - Alle Datenbanken Reparieren und Optimieren.
 db_sichern	-  DBBENUTZER   DBPASSWORT   DATENBANKNAME  - Datenbank sichern.
 mysql_neustart	- hat keine Parameter - MySQL neu starten.
-opensimholen	- hat keine Parameter - Lädt eine Reguläre OpenSimulator Version herunter.
 
+opensimholen	- hat keine Parameter - Lädt eine Reguläre OpenSimulator Version herunter.
+mysqleinstellen	- hat keine Parameter - mySQL Konfiguration auf Server Einstellen und neu starten.
+conf_write	- SUCHWORT ERSATZWORT PFAD DATEINAME - Konfigurationszeile schreiben.
+conf_delete	- SUCHWORT PFAD DATEINAME - Konfigurationszeile löschen.
+conf_read	- SUCHWORT PFAD DATEINAME - Konfigurationszeile lesen.
 ```
 
 ```
