@@ -169,18 +169,5 @@ conf_read	- SUCHWORT PFAD DATEINAME - Konfigurationszeile lesen.
 Neue Funktionen ausgiebig testen.
 
 ```
-opensimMULTITOOL Version 0.41.137
-Diverse neue mySQL Funktionen.
-```
-
-```
-opensimMULTITOOL Version 0.43.145
-Opensimholen holt aus dem Distributionsverzeichnis der opensimulator.org, 
-die in der Konfigurationsdatei voreingestellte Version des OpenSimulator auf den Server, 
-entpackt sie und benennt sie um in opensim.
-```
-
-```
-opensimMULTITOOL Version 0.45.151
-Automatische Konfiguration Test.
+Leerzeichen aus SimulatorList.ini entfernt.
 ```
