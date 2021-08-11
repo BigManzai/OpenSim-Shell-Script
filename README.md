@@ -15,6 +15,10 @@ Es wird automatisch eine DATUM-multitool.log angelegt um nachzuverfolgen ob alle
 
 Eine Funktionsliste gibt es hier in der Wiki.
 
+OpenSimulator Testversion:
+
+https://www.mediafire.com/file/p3xn11hb5xldaak/opensim-0.9.2.1235.zip/file
+
 ## Konfiguration
 
 In der opensim.cnf werden unter anderem Verzeichnispfade voreingestellt zum Beispiel home oder opt als Hauptverzeichnis. 
