@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# opensimMULTITOOL Version 0.45.162 Copyright (c) 2021 BigManzai Manfred Aabye
+# opensimMULTITOOL Version 0.46.163 Copyright (c) 2021 BigManzai Manfred Aabye
 # opensim.sh Basiert auf meinen Einzelscripten, an denen ich bereits 6 Jahre Arbeite und verbessere.
 # Da Server unterschiedlich sind, kann eine einwandfreie fuunktion nicht gewährleistet werden, also bitte mit bedacht verwenden.
 # Die Benutzung dieses Scriptes, oder deren Bestandteile, erfolgt auf eigene Gefahr!!!
@@ -35,7 +35,7 @@ echo "$(tput setaf 2) | |__| || |_) ||  __/| | | | ____) || || | | | | || |_| ||
 echo "  \____/ |  __/  \___||_| |_||_____/ |_||_| |_| |_| \____||_| \____| \__|\___/ |_|   "
 echo "         | |                                                                         "
 echo "         |_|                                                                         "
-echo "	    $(tput setaf 2)opensim$(tput setaf 4)MULTITOOL$(tput sgr 0) 0.45.162" # Versionsausgabe
+echo "	    $(tput setaf 2)opensim$(tput setaf 4)MULTITOOL$(tput sgr 0) 0.46.163" # Versionsausgabe
 echo " "
 
 # Datum und Uhrzeit
@@ -153,6 +153,25 @@ function assetdel()
 	else
 		echo "$(tput setaf $Red) $(tput setab $White)$OBJEKT Asset von der Region $REGION löschen fehlgeschlagen$(tput sgr 0)"
 		echo "$DATUM $(date +%H:%M:%S) ASSETDEL: $OBJEKT Asset von der Region $REGION löschen fehlgeschlagen" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+	fi
+}
+
+### Funktion landclear, Land clear - Löscht alle Parzellen auf dem Land. 
+# Aufruf: landclear screen_name Regionsname Objektname
+function landclear()
+{
+	VERZEICHNISSCREEN=$1; REGION=$2
+	# Nachschauen ob der Screen und die Region existiert.
+	if screen -list | grep -q "$VERZEICHNISSCREEN"; then
+		echo "$(tput setaf $Red) $(tput setab $White)$OBJEKT Parzellen von der Region $REGION löschen$(tput sgr 0)"
+		screen -S "$VERZEICHNISSCREEN" -p 0 -X eval "stuff 'change region ""$REGION""'^M" # Region wechseln
+		screen -S "$VERZEICHNISSCREEN" -p 0 -X eval "stuff 'alert "Loesche Parzellen von der Region!"'^M" # Mit einer loesch Meldung
+		screen -S "$VERZEICHNISSCREEN" -p 0 -X eval "stuff 'land clear'^M" # Objekt loeschen
+		screen -S "$VERZEICHNISSCREEN" -p 0 -X eval "stuff 'y'^M" # Mit y also yes bestaetigen
+		echo "$DATUM $(date +%H:%M:%S) LANDCLEAR: $OBJEKT Parzellen von der Region $REGION löschen" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+	else
+		echo "$(tput setaf $Red) $(tput setab $White)$OBJEKT Parzellen von der Region $REGION löschen fehlgeschlagen$(tput sgr 0)"
+		echo "$DATUM $(date +%H:%M:%S) LANDCLEAR: $OBJEKT Parzellen von der Region $REGION löschen fehlgeschlagen" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 	fi
 }
 
@@ -2402,7 +2421,7 @@ echo "$(tput setab $Red)Experten Funktionen$(tput sgr 0)"
 	echo "osgitholen 		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - kopiert eine OpenSimulator Git Entwicklerversion."
 	echo "terminator 		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Killt alle laufenden Screens."
 
-echo "$(tput setab $Red)Ungetestete Funktionen$(tput sgr 0)"
+echo "$(tput setab $Red)Ungetestete oder zu testende Funktionen$(tput sgr 0)"
 	echo "makeaot			- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - aot Dateien erstellen."
 	echo "cleanaot		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - aot Dateien entfernen."
 	echo "monoinstall		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - mono 6.x installation."
@@ -2429,6 +2448,7 @@ echo " "
 	echo "conf_write	- $(tput setab $Magenta) SUCHWORT $(tput sgr 0) $(tput setab $Blue) ERSATZWORT $(tput sgr 0) $(tput setab $Green) PFAD $(tput sgr 0) $(tput setab $Yello) DATEINAME $(tput sgr 0) - Konfigurationszeile schreiben."
 	echo "conf_delete	- $(tput setab $Magenta) SUCHWORT $(tput sgr 0) $(tput setab $Blue) PFAD $(tput sgr 0) $(tput setab $Green) DATEINAME $(tput sgr 0) - Konfigurationszeile löschen."
 	echo "conf_read	- $(tput setab $Magenta) SUCHWORT $(tput sgr 0) $(tput setab $Blue) PFAD $(tput sgr 0) $(tput setab $Green) DATEINAME $(tput sgr 0) - Konfigurationszeile lesen."
+	echo "landclear 	- $(tput setab $Magenta)screen_name$(tput sgr 0) $(tput setab $Blue)Regionsname$(tput sgr 0) - Land clear - Löscht alle Parzellen auf dem Land."
 
 	echo " "
 	echo "$(tput setaf $Yello)  Der Verzeichnisname ist gleichzeitig auch der Screen Name!$(tput sgr 0)"
@@ -2558,6 +2578,7 @@ case  $KOMMANDO  in
 	neuegridconfig) neuegridconfig ;;
 	ramspeicher) ramspeicher ;;
 	mysqleinstellen) mysqleinstellen ;;
+	landclear) landclear "$2" "$3" ;;
 	*) hilfe ;;
 esac
 
