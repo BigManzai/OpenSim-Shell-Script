@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# opensimMULTITOOL Version 0.46.163 Copyright (c) 2021 BigManzai Manfred Aabye
+# opensimMULTITOOL Version 0.46.164 Copyright (c) 2021 BigManzai Manfred Aabye
 # opensim.sh Basiert auf meinen Einzelscripten, an denen ich bereits 6 Jahre Arbeite und verbessere.
 # Da Server unterschiedlich sind, kann eine einwandfreie fuunktion nicht gewährleistet werden, also bitte mit bedacht verwenden.
 # Die Benutzung dieses Scriptes, oder deren Bestandteile, erfolgt auf eigene Gefahr!!!
@@ -35,7 +35,7 @@ echo "$(tput setaf 2) | |__| || |_) ||  __/| | | | ____) || || | | | | || |_| ||
 echo "  \____/ |  __/  \___||_| |_||_____/ |_||_| |_| |_| \____||_| \____| \__|\___/ |_|   "
 echo "         | |                                                                         "
 echo "         |_|                                                                         "
-echo "	    $(tput setaf 2)opensim$(tput setaf 4)MULTITOOL$(tput sgr 0) 0.46.163" # Versionsausgabe
+echo "	    $(tput setaf 2)opensim$(tput setaf 4)MULTITOOL$(tput sgr 0) 0.46.164" # Versionsausgabe
 echo " "
 
 # Datum und Uhrzeit
@@ -177,8 +177,8 @@ function landclear()
 
 ### Funktion oscommand, OpenSim Command direkt in den screen senden.
 # Aufruf: oscommand Screen Region Befehl Parameter
-# Beispiel: /opt/opensim.sh sim1 Welcome alert "Hallo liebe Leute dies ist eine Nachricht"
-function oscommand()
+# Beispiel: /opt/opensim.sh oscommand sim1 Welcome alert "Hallo liebe Leute dies ist eine Nachricht"
+function oscommand2()
 {	
 	VERZEICHNISSCREEN=$1; REGION=$2; BEFEHL=$3; PARAMETER=$4
 	if screen -list | grep -q "$VERZEICHNISSCREEN"; then
@@ -186,6 +186,23 @@ function oscommand()
 	screen -S "$VERZEICHNISSCREEN" -p 0 -X eval "stuff 'change region ""$REGION""'^M" # Region wechseln
 	echo "$DATUM $(date +%H:%M:%S) OSCOMMAND: $BEFEHL $PARAMETER an $VERZEICHNISSCREEN senden" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 	screen -S "$VERZEICHNISSCREEN" -p 0 -X eval "stuff '$BEFEHL $PARAMETER'^M"
+	else
+		echo "Der Screen $VERZEICHNISSCREEN existiert nicht."
+		echo "$DATUM $(date +%H:%M:%S) OSCOMMAND: Der Screen $VERZEICHNISSCREEN existiert nicht" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+	fi
+}
+### Funktion oscommand, OpenSim Command direkt in den screen senden.
+# Aufruf: oscommand Screen Region Befehl Parameter
+# Beispiel: /opt/opensim.sh oscommand sim1 Welcome "alert Hallo liebe Leute dies ist eine Nachricht"
+# Beispiel: /opt/opensim.sh oscommand sim1 Welcome "alert-user John Doe Hallo John Doe"
+function oscommand()
+{	
+	VERZEICHNISSCREEN=$1; REGION=$2; COMMAND=$3
+	if screen -list | grep -q "$VERZEICHNISSCREEN"; then
+	echo "$(tput setab $Green)Sende $COMMAND an $VERZEICHNISSCREEN $(tput sgr 0)"
+	screen -S "$VERZEICHNISSCREEN" -p 0 -X eval "stuff 'change region ""$REGION""'^M" # Region wechseln
+	echo "$DATUM $(date +%H:%M:%S) OSCOMMAND: $COMMAND an $VERZEICHNISSCREEN senden" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+	screen -S "$VERZEICHNISSCREEN" -p 0 -X eval "stuff '$COMMAND'^M"
 	else
 		echo "Der Screen $VERZEICHNISSCREEN existiert nicht."
 		echo "$DATUM $(date +%H:%M:%S) OSCOMMAND: Der Screen $VERZEICHNISSCREEN existiert nicht" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
@@ -2388,7 +2405,7 @@ echo "$(tput setab $Magenta)Funktion:$(tput sgr 0)		$(tput setab $Green)Paramete
 echo "$(tput setab $Yello)Erweiterte Funktionen$(tput sgr 0)"
 	echo "regionbackup 		- $(tput setab $Magenta)Verzeichnisname$(tput sgr 0) $(tput setab $Blue)Regionsname$(tput sgr 0) - Backup einer ausgewählten Region."
 	echo "assetdel 		- $(tput setab $Magenta)screen_name$(tput sgr 0) $(tput setab $Blue)Regionsname$(tput sgr 0) $(tput setab $Green)Objektname$(tput sgr 0) - Einzelnes Asset löschen."
-	echo "oscommand 		- $(tput setab $Magenta)Verzeichnisname$(tput sgr 0) $(tput setab $Yello)Region$(tput sgr 0) $(tput setab $Blue)Konsolenbefehl$(tput sgr 0) $(tput setab $Green)Parameter$(tput sgr 0) - Konsolenbefehl senden."
+	echo "oscommand 		- $(tput setab $Magenta)Verzeichnisname$(tput sgr 0) $(tput setab $Yello)Region$(tput sgr 0) $(tput setab $Blue)Konsolenbefehl Parameter$(tput sgr 0) - Konsolenbefehl senden."
 	echo "gridstart 		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Startet Robust und Money. "
 	echo "gridstop 		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Beendet Robust und Money. "
 	echo "rostart 		- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Startet Robust Server."
@@ -2477,6 +2494,185 @@ function konsolenhilfe()
 	echo "Strg + Z - Setzt alles, was Sie ausführen, in einen angehaltenen Hintergrundprozess."
 }
 
+function commandhelp()
+{
+cat << eof
+Help OpenSim Commands:
+Aufruf: oscommand Screen Region "Befehl mit Parameter in Hochstrichen"
+Beispiel: /opt/opensim.sh oscommand sim1 Welcome "alert Hallo liebe Leute dies ist eine Nachricht"
+
+A
+alert <message> - Send an alert to everyone
+alert-user <first> <last> <message> - Send an alert to a user
+appearance find <uuid-or-start-of-uuid> - Find out which avatar uses the given asset as a baked texture, if any.
+appearance rebake <first-name> <last-name> - Send a request to the user's viewer for it to rebake and reupload its appearance textures.
+appearance send [<first-name> <last-name>] - Send appearance data for each avatar in the simulator to other viewers.
+
+B
+backup - Persist currently unsaved object changes immediately instead of waiting for the normal persistence call.
+bypass permissions <true / false> - Bypass permission checks
+
+C
+change region <region name> - Change current console region
+clear image queues <first-name> <last-name> - Clear the image queues (textures downloaded via UDP) for a particular client.
+command-script <script> - Run a command script from file
+config save <path> - Save current configuration to a file at the given path
+config set <section> <key> <value> - Set a config option.  In most cases this is not useful since changed parameters are not dynamically reloaded.  Neither do changed parameters persist - you will have to change a config file manually and restart.
+create region ["region name"] <region_file.ini> - Create a new region.
+
+D
+debug attachments log [0|1] - Turn on attachments debug logging
+debug eq [0|1|2] - Turn on event queue debugging
+  <= 0 - turns off all event queue logging
+  >= 1 - turns on event queue setup and outgoing event logging
+  >= 2 - turns on poll notification
+debug groups messaging verbose <true|false> - This setting turns on very verbose groups messaging debugging
+debug groups verbose <true|false> - This setting turns on very verbose groups debugging
+debug http <in|out|all> [<level>] - Turn on http request logging.
+debug jobengine <start|stop|status|log> - Start, stop, get status or set logging level of the job engine.
+debug permissions <true / false> - Turn on permissions debugging
+debug scene get - List current scene options.
+debug scene set <param> <value> - Turn on scene debugging options.
+debug threadpool level 0..3 - Turn on logging of activity in the main thread pool.
+debug threadpool set worker|iocp min|max <n> - Set threadpool parameters.  For debug purposes.
+delete object creator <UUID> - Delete scene objects by creator
+delete object id <UUID-or-localID> - Delete a scene object by uuid or localID
+delete object name [--regex] <name> - Delete a scene object by name.
+delete object outside - Delete all scene objects outside region boundaries
+delete object owner <UUID> - Delete scene objects by owner
+delete object pos <start x, start y , start z> <end x, end y, end z> - Delete scene objects within the given volume.
+delete-region <name> - Delete a region from disk
+dump asset <id> - Dump an asset
+dump object id <UUID-or-localID> - Dump the formatted serialization of the given object to the file <UUID>.xml
+
+E
+edit scale <name> <x> <y> <z> - Change the scale of a named prim
+estate create <owner UUID> <estate name> - Creates a new estate with the specified name, owned by the specified user. Estate name must be unique.
+estate link region <estate ID> <region ID> - Attaches the specified region to the specified estate.
+estate set name <estate-id> <new name> - Sets the name of the specified estate to the specified value. New name must be unique.
+estate set owner <estate-id>[ <UUID> | <Firstname> <Lastname> ] - Sets the owner of the specified estate to the specified UUID or user.
+export-map [<path>] - Save an image of the world map
+
+F
+fcache assets - Attempt a deep scan and cache of all assets in all scenes
+fcache cachedefaultassets - loads local default assets to cache. This may override grid ones. use with care
+fcache clear [file] [memory] - Remove all assets in the cache.  If file or memory is specified then only this cache is cleared.
+fcache deletedefaultassets - deletes default local assets from cache so they can be refreshed from grid. use with care
+fcache expire <datetime(mm/dd/YYYY)> - Purge cached assets older than the specified date/time
+fcache status - Display cache status
+force gc - Manually invoke runtime garbage collection.  For debugging purposes
+force permissions <true / false> - Force permissions on or off
+force update - Force the update of all objects on clients
+
+G
+generate map - Generates and stores a new maptile.
+get log level - Get the current console logging level
+
+J
+j2k decode <ID> - Do JPEG2000 decoding of an asset.
+
+K
+kick user <first> <last> [--force] [message] - Kick a user off the simulator
+
+L
+land clear - Clear all the parcels from the region.
+link-mapping [<x> <y>] - Set local coordinate to map HG regions to
+link-region <Xloc> <Yloc> <ServerURI> [<RemoteRegionName>] - Link a HyperGrid Region. Examples for <ServerURI>: http://grid.net:8002/ or http://example.org/path/foo.php
+load iar [-m|--merge] <first> <last> <inventory path> <password> [<IAR path>] - Load user inventory archive (IAR).
+load oar [-m|--merge] [-s|--skip-assets] [--default-user "User Name"] [--merge-terrain] [--merge-parcels] [--mergeReplaceObjects] [--no-objects] [--rotation degrees] [--bounding-origin "<x,y,z>"] [--bounding-size "<x,y,z>"] [--displacement "<x,y,z>"] [-d|--debug] [<OAR path>] - Load a region's data from an OAR archive.
+load xml [<file name> [-newUID [<x> <y> <z>]]] - Load a region's data from XML format
+load xml2 [<file name>] - Load a region's data from XML2 format
+login disable - Disable simulator logins
+login enable - Enable simulator logins
+
+M
+monitor report - Returns a variety of statistics about the current region and/or simulator
+
+P
+physics get [<param>|ALL] - Get physics parameter from currently selected region
+physics list - List settable physics parameters
+physics set <param> [<value>|TRUE|FALSE] [localID|ALL] - Set physics parameter from currently selected region
+quit - Quit the application
+
+R
+region restart abort [<message>] - Abort a region restart
+region restart bluebox <message> <delta seconds>+ - Schedule a region restart
+region restart notice <message> <delta seconds>+ - Schedule a region restart
+region set - Set control information for the currently selected region.
+remove-region <name> - Remove a region from this simulator
+reset user cache - reset user cache to allow changed settings to be applied
+restart - Restart the currently selected region(s) in this instance
+rotate scene <degrees> [centerX, centerY] - Rotates all scene objects around centerX, centerY (default 128, 128) (please back up your region before using)
+
+S
+save iar [-h|--home=<url>] [--noassets] <first> <last> <inventory path> <password> [<IAR path>] [-c|--creators] [-e|--exclude=<name/uuid>] [-f|--excludefolder=<foldername/uuid>] [-v|--verbose] - Save user inventory archive (IAR).
+save oar [-h|--home=<url>] [--noassets] [--publish] [--perm=<permissions>] [--all] [<OAR path>] - Save a region's data to an OAR archive.
+save prims xml2 [<prim name> <file name>] - Save named prim to XML2
+save xml [<file name>] - Save a region's data in XML format
+save xml2 [<file name>] - Save a region's data in XML2 format
+scale scene <factor> - Scales the scene objects (please back up your region before using)
+set log level <level> - Set the console logging level for this session.
+set terrain heights <corner> <min> <max> [<x>] [<y>] - Sets the terrain texture heights on corner #<corner> to <min>/<max>, if <x> or <y> are specified, it will only set it on regions with a matching coordinate. Specify -1 in <x> or <y> to wildcard that coordinate. Corner # SW = 0, NW = 1, SE = 2, NE = 3, all corners = -1.
+set terrain texture <number> <uuid> [<x>] [<y>] - Sets the terrain <number> to <uuid>, if <x> or <y> are specified, it will only set it on regions with a matching coordinate. Specify -1 in <x> or <y> to wildcard that coordinate.
+set water height <height> [<x>] [<y>] - Sets the water height in meters.  If <x> and <y> are specified, it will only set it on regions with a matching coordinate. Specify -1 in <x> or <y> to wildcard that coordinate.
+shutdown - Quit the application
+sit user name [--regex] <first-name> <last-name> - Sit the named user on an unoccupied object with a sit target.
+stand user name [--regex] <first-name> <last-name> - Stand the named user.
+stats record start|stop - Control whether stats are being regularly recorded to a separate file.
+stats save <path> - Save stats snapshot to a file.  If the file already exists, then the report is appended.
+
+T
+teleport user <first-name> <last-name> <destination> - Teleport a user in this simulator to the given destination
+terrain bake -
+terrain effect <name> -
+terrain elevate <amount> -
+terrain fill <value> -
+terrain flip <direction> -
+terrain load <filename> -
+terrain load-tile <filename> <file width> <file height> <minimum X tile> <minimum Y tile> -
+terrain lower <amount> -
+terrain max <min> -
+terrain min <min> -
+terrain modify <operation> <value> [<area>] [<taper>] - Modifies the terrain as instructed.
+Each operation can be limited to an area of effect:
+ * -ell=x,y,rx[,ry] constrains the operation to an ellipse centred at x,y
+ * -rec=x,y,dx[,dy] constrains the operation to a rectangle based at x,y
+Each operation can have its effect tapered based on distance from centre:
+ * elliptical operations taper as cones
+ * rectangular operations taper as pyramids
+terrain multiply <value> -
+terrain rescale <min> <max> -
+terrain revert -
+terrain save <filename> -
+terrain save-tile <filename> <file width> <file height> <minimum X tile> <minimum Y tile> -
+translate scene xOffset yOffset zOffset - translates the scene objects (please back up your region before using)
+tree active <activeTF> -
+tree freeze <copse> <freezeTF> -
+tree load <filename> -
+tree plant <copse> -
+tree rate <updateRate> -
+tree reload -
+tree remove <copse> -
+tree statistics -
+
+U
+unlink-region <local name> - Unlink a hypergrid region
+
+V
+vivox debug <on>|<off> - Set vivox debugging
+
+W
+wind base wind_update_rate [<value>] - Get or set the wind update rate.
+wind ConfigurableWind avgDirection [<value>] - average wind direction in degrees
+wind ConfigurableWind avgStrength [<value>] - average wind strength
+wind ConfigurableWind rateChange [<value>] - rate of change
+wind ConfigurableWind varDirection [<value>] - allowable variance in wind direction in +/- degrees
+wind ConfigurableWind varStrength [<value>] - allowable variance in wind strength
+wind SimpleRandomWind strength [<value>] - wind strength
+
+eof
+}
+
 ### Eingabeauswertung:
 case  $KOMMANDO  in
 	schreibeinfo) schreibeinfo ;;
@@ -2520,7 +2716,8 @@ case  $KOMMANDO  in
 	od | osdelete) osdelete ;;
 	os | osstruktur) osstruktur "$2" "$3" ;;
 	cl | configlesen) configlesen "$2" ;;
-	osc | com | oscommand) oscommand "$2" "$3" "$4" "$5" ;;
+	osc | com | oscommand) oscommand "$2" "$3" "$4" ;;
+	osc2 | com2 | oscommand2) oscommand2 "$2" "$3" "$4" "$5" ;;
 	rl | Regionsdateiliste | regionsconfigdateiliste) regionsconfigdateiliste "$3" "$2" ;;
 	rn | RegionListe) regionliste ;;
 	mr | meineregionen) meineregionen ;;
@@ -2579,6 +2776,7 @@ case  $KOMMANDO  in
 	ramspeicher) ramspeicher ;;
 	mysqleinstellen) mysqleinstellen ;;
 	landclear) landclear "$2" "$3" ;;
+	commandhelp) commandhelp ;;
 	*) hilfe ;;
 esac
 
