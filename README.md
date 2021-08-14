@@ -19,6 +19,22 @@ Eine Funktionsliste gibt es hier in der Wiki.
 
 https://www.mediafire.com/file/p3xn11hb5xldaak/opensim-0.9.2.1235.zip/file
 
+## Hilfe
+
+    /opt/opensim.sh
+    
+oder
+
+    /opt/opensim.sh hilfe
+
+dazu gibt es noch die
+
+    /opt/opensim.sh konsolenhilfe
+    
+und
+
+    /opt/opensim.sh commandhelp
+
 ## Konfiguration
 
 In der opensim.cnf werden unter anderem Verzeichnispfade voreingestellt zum Beispiel home oder opt als Hauptverzeichnis. 
