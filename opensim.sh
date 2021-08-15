@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# opensimMULTITOOL Version 0.46.164 Copyright (c) 2021 BigManzai Manfred Aabye
+# opensimMULTITOOL Version 0.47.168 Copyright (c) 2021 BigManzai Manfred Aabye
 # opensim.sh Basiert auf meinen Einzelscripten, an denen ich bereits 6 Jahre Arbeite und verbessere.
 # Da Server unterschiedlich sind, kann eine einwandfreie fuunktion nicht gewährleistet werden, also bitte mit bedacht verwenden.
 # Die Benutzung dieses Scriptes, oder deren Bestandteile, erfolgt auf eigene Gefahr!!!
@@ -35,7 +35,7 @@ echo "$(tput setaf 2) | |__| || |_) ||  __/| | | | ____) || || | | | | || |_| ||
 echo "  \____/ |  __/  \___||_| |_||_____/ |_||_| |_| |_| \____||_| \____| \__|\___/ |_|   "
 echo "         | |                                                                         "
 echo "         |_|                                                                         "
-echo "	    $(tput setaf 2)opensim$(tput setaf 4)MULTITOOL$(tput sgr 0) 0.46.164" # Versionsausgabe
+echo "	    $(tput setaf 2)opensim$(tput setaf 4)MULTITOOL$(tput sgr 0) 0.47.168" # Versionsausgabe
 echo " "
 
 # Datum und Uhrzeit
@@ -2497,178 +2497,171 @@ function konsolenhilfe()
 function commandhelp()
 {
 cat << eof
+$(tput setab $Red)
 Help OpenSim Commands:
 Aufruf: oscommand Screen Region "Befehl mit Parameter in Hochstrichen"
 Beispiel: /opt/opensim.sh oscommand sim1 Welcome "alert Hallo liebe Leute dies ist eine Nachricht"
+$(tput sgr 0)
 
-A
-alert <message> - Send an alert to everyone
-alert-user <first> <last> <message> - Send an alert to a user
-appearance find <uuid-or-start-of-uuid> - Find out which avatar uses the given asset as a baked texture, if any.
-appearance rebake <first-name> <last-name> - Send a request to the user's viewer for it to rebake and reupload its appearance textures.
-appearance send [<first-name> <last-name>] - Send appearance data for each avatar in the simulator to other viewers.
+$(tput setab $Red)A$(tput sgr 0)
+alert <Nachricht> - sendet eine Nachricht an alle.
+alert-user <Vorname> <Nachname> <Nachricht> - sendet eine Nachricht an eine bestimmte Person. 
+appearance find <uuid-oder-start-der-uuid> - herausfinden welcher Avatar das angegebene Asset als gebackene Textur verwendet, falls vorhanden.
+appearance rebake <Vorname> <Nachname> - Sendet eine Anfrage an den Viewer des Benutzers, damit er seine Aussehenstexturen neu backen und hochladen kann.
+appearance send <Vorname> <Nachname> - Sendet Aussehensdaten für jeden Avatar im Simulator an andere Viewer. 
 
-B
-backup - Persist currently unsaved object changes immediately instead of waiting for the normal persistence call.
-bypass permissions <true / false> - Bypass permission checks
+$(tput setab $Red)B$(tput sgr 0)
+backup - Das momentan nicht gespeicherte Objekt wird sofort geändert, anstatt auf den normalen Speicheraufruf zu warten.
+bypass permissions <true / false> - Berechtigungsprüfungen umgehen.
 
-C
-change region <region name> - Change current console region
-clear image queues <first-name> <last-name> - Clear the image queues (textures downloaded via UDP) for a particular client.
-command-script <script> - Run a command script from file
-config save <path> - Save current configuration to a file at the given path
-config set <section> <key> <value> - Set a config option.  In most cases this is not useful since changed parameters are not dynamically reloaded.  Neither do changed parameters persist - you will have to change a config file manually and restart.
-create region ["region name"] <region_file.ini> - Create a new region.
+$(tput setab $Red)C$(tput sgr 0)
+change region <Regionsname> - Ändere die aktuelle Region in der Konsole.
+clear image queues <Vorname> <Nachname> - Löscht die Bildwarteschlangen (über UDP heruntergeladene Texturen) für einen bestimmten Client.
+command-script <Skript> - Ausführen eines Befehlsskripts aus einer Datei.
+config save <Pfad> - Speichert die aktuelle Konfiguration in einer Datei unter dem angegebenen Pfad.
+config set <Sektion> <key> <value> - Legt eine Konfigurationsoption fest. Dies ist in den meisten Fällen nicht sinnvoll, da geänderte Parameter nicht dynamisch nachgeladen werden. Geänderte Parameter bleiben auch nicht bestehen - Sie müssen eine Konfigurationsdatei manuell ändern und neu starten.
+create region ["Regionsname"] <Regionsdatei.ini> - Erstellt eine neue Region. 
 
-D
-debug attachments log [0|1] - Turn on attachments debug logging
-debug eq [0|1|2] - Turn on event queue debugging
-  <= 0 - turns off all event queue logging
-  >= 1 - turns on event queue setup and outgoing event logging
-  >= 2 - turns on poll notification
-debug groups messaging verbose <true|false> - This setting turns on very verbose groups messaging debugging
-debug groups verbose <true|false> - This setting turns on very verbose groups debugging
-debug http <in|out|all> [<level>] - Turn on http request logging.
-debug jobengine <start|stop|status|log> - Start, stop, get status or set logging level of the job engine.
-debug permissions <true / false> - Turn on permissions debugging
-debug scene get - List current scene options.
-debug scene set <param> <value> - Turn on scene debugging options.
-debug threadpool level 0..3 - Turn on logging of activity in the main thread pool.
-debug threadpool set worker|iocp min|max <n> - Set threadpool parameters.  For debug purposes.
-delete object creator <UUID> - Delete scene objects by creator
-delete object id <UUID-or-localID> - Delete a scene object by uuid or localID
-delete object name [--regex] <name> - Delete a scene object by name.
-delete object outside - Delete all scene objects outside region boundaries
-delete object owner <UUID> - Delete scene objects by owner
-delete object pos <start x, start y , start z> <end x, end y, end z> - Delete scene objects within the given volume.
-delete-region <name> - Delete a region from disk
-dump asset <id> - Dump an asset
-dump object id <UUID-or-localID> - Dump the formatted serialization of the given object to the file <UUID>.xml
+$(tput setab $Red)D$(tput sgr 0)
+debug attachments log [0|1] - Debug Protokollierung für Anhänge aktivieren.
+debug eq [0|1|2] - Aktiviert das Debuggen der Ereigniswarteschlange.
+  <= 0 - deaktiviert die gesamte Protokollierung der Ereigniswarteschlange.
+  >= 1 - aktiviert die Einrichtung der Ereigniswarteschlange und die Protokollierung ausgehender Ereignisse.
+  >= 2 - schaltet die Umfragebenachrichtigung ein.
+debug groups messaging verbose <true|false> - Diese Einstellung aktiviert das Debuggen von sehr ausführlichen Gruppennachrichten.
+debug groups verbose <true|false> – Diese Einstellung aktiviert das Debuggen von sehr ausführlichen Gruppen.
+debug http <in|out|all> [<level>] - Aktiviert die Protokollierung von HTTP-Anfragen.
+debug jobengine <start|stop|status|log> - Start, Stopp, Status abrufen oder Logging Level der Job-Engine festlegen.
+debug permissions <true / false> - Berechtigungs Debugging aktivieren.
+debug scene get - Listet die aktuellen Szenenoptionen auf.
+debug scene set <param> <value> - Aktiviert die Debugging-Optionen für die Szene.
+debug threadpool level 0..3 - Aktiviert die Protokollierung der Aktivität im Hauptthreadpool.
+debug threadpool set worker|iocp min|max <n> - Legt die Threadpool-Parameter fest. Für Debugzwecke.
+delete object creator <UUID> - Szenenobjekte nach Ersteller löschen.
+delete object id <UUID-or-localID> - Löschen eines Szenenobjekts nach uuid oder localID.
+delete object name [--regex] <name> - Löscht ein Szenenobjekt nach Namen.
+delete object outside - Alle Szenenobjekte außerhalb der Regionsgrenzen löschen.
+delete object owner <UUID> - Szenenobjekte nach Besitzer löschen.
+delete object pos <start x, start y , start z> <end x, end y, end z> - Löscht Szenenobjekte innerhalb des angegebenen Volumens.
+delete-region <name> - Löschen einer Region von der Festplatte.
+dump asset <id> - Ein Asset ausgeben.
+dump object id <UUID-oder-localID> - Dump der formatierten Serialisierung des angegebenen Objekts in die Datei <UUID>.xml 
+ 
+$(tput setab $Red)E$(tput sgr 0)
+edit scale <name> <x> <y> <z> - Ändert die Größe des benannten Prim.
+estate create <owner UUID> <estate name> - Erstellt ein neues Anwesen mit dem angegebenen Namen, das dem angegebenen Benutzer gehört. Der Name des Anwesens muss eindeutig sein.
+estate link region <estate ID> <region ID> - Hängt die angegebene Region an die angegebene Domain an.
+estate set name <estate-id> <new name> - Setzt den Namen des angegebenen Anwesens auf den angegebenen Wert. Der neue Name muss eindeutig sein.
+estate set owner <estate-id>[ <UUID> | <Vorname> <Nachname> ] - Setzt den Besitzer des angegebenen Anwesens auf die angegebene UUID oder den angegebenen Benutzer.
+export-map [<Pfad>] - Speichert ein Bild der Karte.
 
-E
-edit scale <name> <x> <y> <z> - Change the scale of a named prim
-estate create <owner UUID> <estate name> - Creates a new estate with the specified name, owned by the specified user. Estate name must be unique.
-estate link region <estate ID> <region ID> - Attaches the specified region to the specified estate.
-estate set name <estate-id> <new name> - Sets the name of the specified estate to the specified value. New name must be unique.
-estate set owner <estate-id>[ <UUID> | <Firstname> <Lastname> ] - Sets the owner of the specified estate to the specified UUID or user.
-export-map [<path>] - Save an image of the world map
+$(tput setab $Red)F$(tput sgr 0)
+fcache assets - Versucht alle Assets in allen Szenen gründlich zu scannen und zwischenzuspeichern.
+fcache cachedefaultassets - lädt lokale Standardassets in den Cache. Dies kann Rasterfelder überschreiben, mit Vorsicht verwenden.
+fcache clear [file] [memory] - Entfernt alle Assets im Cache. Wenn Datei oder Speicher angegeben ist, wird nur dieser Cache geleert.
+fcache deletedefaultassets - löscht standardmäßige lokale Assets aus dem Cache, damit sie aus dem Raster aktualisiert werden können, mit Vorsicht verwenden.
+fcache expire <datetime(mm/dd/YYYY)> - Löscht zwischengespeicherte Assets, die älter als das angegebene Datum oder die angegebene Uhrzeit sind.
+force gc - Ruft die Garbage Collection zur Laufzeit manuell auf. Für Debugging-Zwecke.
+force permissions <true / false> - Berechtigungen ein- oder ausschalten.
+force update - Erzwinge die Aktualisierung aller Objekte auf Clients.
 
-F
-fcache assets - Attempt a deep scan and cache of all assets in all scenes
-fcache cachedefaultassets - loads local default assets to cache. This may override grid ones. use with care
-fcache clear [file] [memory] - Remove all assets in the cache.  If file or memory is specified then only this cache is cleared.
-fcache deletedefaultassets - deletes default local assets from cache so they can be refreshed from grid. use with care
-fcache expire <datetime(mm/dd/YYYY)> - Purge cached assets older than the specified date/time
-fcache status - Display cache status
-force gc - Manually invoke runtime garbage collection.  For debugging purposes
-force permissions <true / false> - Force permissions on or off
-force update - Force the update of all objects on clients
+$(tput setab $Red)G$(tput sgr 0)
+generate map - Erzeugt und speichert ein neues Kartenstück.
 
-G
-generate map - Generates and stores a new maptile.
-get log level - Get the current console logging level
+$(tput setab $Red)J$(tput sgr 0)
+j2k decode <ID> - Führt die JPEG2000 Decodierung eines Assets durch.
 
-J
-j2k decode <ID> - Do JPEG2000 decoding of an asset.
+$(tput setab $Red)K$(tput sgr 0)
+kick user <first> <last> [--force] [message] - Einen Benutzer aus dem Simulator werfen.
 
-K
-kick user <first> <last> [--force] [message] - Kick a user off the simulator
+$(tput setab $Red)L$(tput sgr 0)
+land clear - Löscht alle Parzellen aus der Region.
+link-mapping [<x> <y>] - Stellt lokale Koordinaten ein, um HG Regionen abzubilden.
+link-region <Xloc> <Yloc> <ServerURI> [<RemoteRegionName>] - Verknüpft eine HyperGrid Region.
+load iar [-m|--merge] <first> <last> <inventory path> <password> [<IAR path>] - Benutzerinventararchiv (IAR) laden.
+load oar [-m|--merge] [-s|--skip-assets] [--default-user "User Name"] [--merge-terrain] [--merge-parcels] [--mergeReplaceObjects] [--no-objects] [--rotation degrees] [--bounding-origin "<x,y,z>"] [--bounding-size "<x,y,z>"] [--displacement "<x,y,z>"] [-d|--debug] [<OAR path>] - Laden der Daten einer Region aus einem OAR Archiv.
+load xml [<file name> [-newUID [<x> <y> <z>]]] - Laden der Daten einer Region aus dem XML-Format.
+load xml2 [<file name>] - Laden Sie die Daten einer Region aus dem XML2-Format.
+login disable - Simulator Logins deaktivieren.
+login enable - Simulator Logins aktivieren.
 
-L
-land clear - Clear all the parcels from the region.
-link-mapping [<x> <y>] - Set local coordinate to map HG regions to
-link-region <Xloc> <Yloc> <ServerURI> [<RemoteRegionName>] - Link a HyperGrid Region. Examples for <ServerURI>: http://grid.net:8002/ or http://example.org/path/foo.php
-load iar [-m|--merge] <first> <last> <inventory path> <password> [<IAR path>] - Load user inventory archive (IAR).
-load oar [-m|--merge] [-s|--skip-assets] [--default-user "User Name"] [--merge-terrain] [--merge-parcels] [--mergeReplaceObjects] [--no-objects] [--rotation degrees] [--bounding-origin "<x,y,z>"] [--bounding-size "<x,y,z>"] [--displacement "<x,y,z>"] [-d|--debug] [<OAR path>] - Load a region's data from an OAR archive.
-load xml [<file name> [-newUID [<x> <y> <z>]]] - Load a region's data from XML format
-load xml2 [<file name>] - Load a region's data from XML2 format
-login disable - Disable simulator logins
-login enable - Enable simulator logins
+$(tput setab $Red)P$(tput sgr 0)
+physics set <param> [<value>|TRUE|FALSE] [localID|ALL] - Setzt Physikparameter aus der aktuell ausgewählten Region.
 
-M
-monitor report - Returns a variety of statistics about the current region and/or simulator
+$(tput setab $Red)Q$(tput sgr 0)
+quit - Beenden Sie die Anwendung.
 
-P
-physics get [<param>|ALL] - Get physics parameter from currently selected region
-physics list - List settable physics parameters
-physics set <param> [<value>|TRUE|FALSE] [localID|ALL] - Set physics parameter from currently selected region
-quit - Quit the application
+$(tput setab $Red)R$(tput sgr 0)
+region restart abort [<message>] - Einen Neustart der Region abbrechen.
+region restart bluebox <message> <delta seconds>+ - Planen eines Regionsneustart.
+region restart notice <message> <delta seconds>+ - Planen eines Neustart der Region.
+region set - Stellt Steuerinformationen für die aktuell ausgewählte Region ein.
+remove-region <name> - Entferne eine Region aus diesem Simulator.
+reset user cache - Benutzercache zurücksetzen, damit geänderte Einstellungen übernommen werden können.
+restart - Startet die aktuell ausgewählte(n) Region(en) in dieser Instanz neu.
+rotate scene <degrees> [centerX, centerY] - Dreht alle Szenenobjekte um centerX, centerY (Standard 128, 128) (bitte sichern Sie Ihre Region vor der Verwendung).
 
-R
-region restart abort [<message>] - Abort a region restart
-region restart bluebox <message> <delta seconds>+ - Schedule a region restart
-region restart notice <message> <delta seconds>+ - Schedule a region restart
-region set - Set control information for the currently selected region.
-remove-region <name> - Remove a region from this simulator
-reset user cache - reset user cache to allow changed settings to be applied
-restart - Restart the currently selected region(s) in this instance
-rotate scene <degrees> [centerX, centerY] - Rotates all scene objects around centerX, centerY (default 128, 128) (please back up your region before using)
+$(tput setab $Red)S$(tput sgr 0)
+save iar [-h|--home=<url>] [--noassets] <first> <last> <inventory path> <password> [<IAR path>] [-c|--creators] [-e|--exclude=<name/uuid>] [-f|--excludefolder=<foldername/uuid>] [-v|--verbose] - Benutzerinventararchiv (IAR) speichern.
+save oar [-h|--home=<url>] [--noassets] [--publish] [--perm=<permissions>] [--all] [<OAR path>] - Speichert die Daten einer Region in ein OAR-Archiv.
+save prims xml2 [<prim name> <file name>] - Speichern Sie das benannte Prim in XML2
+save xml [<file name>] - Speichern Sie die Daten einer Region im XML-Format
+save xml2 [<file name>] - Speichern Sie die Daten einer Region im XML2-Format
+scale scene <factor> - Skaliert die Szenenobjekte (bitte sichern Sie Ihre Region vor der Verwendung)
+set log level <level> - Legt die Konsolenprotokollierungsebene für diese Sitzung fest.
+set terrain heights <corner> <min> <max> [<x>] [<y>] - Setzt die Terrain Texturhöhen an Ecke #<corner> auf <min>/<max>, wenn <x> oder <y > angegeben sind, wird es nur auf Regionen mit einer übereinstimmenden Koordinate gesetzt. Geben Sie -1 in <x> oder <y> an, um diese Koordinate mit Platzhaltern zu versehen. Ecke # SW = 0, NW = 1, SE = 2, NE = 3, alle Ecken = -1.
+set terrain texture <number> <uuid> [<x>] [<y>] - Setzt das Terrain <number> auf <uuid>, wenn <x> oder <y> angegeben ist, wird es nur auf Regionen mit . gesetzt eine passende Koordinate. Geben Sie -1 in <x> oder <y> an, um diese Koordinate mit Platzhaltern zu versehen.
+set water height <height> [<x>] [<y>] - Legt die Wasserhöhe in Metern fest. Wenn <x> und <y> angegeben sind, wird es nur auf Regionen mit einer übereinstimmenden Koordinate gesetzt. Geben Sie -1 in <x> oder <y> an, um diese Koordinate mit Platzhaltern zu versehen.
+shutdown - Beendet die Anwendung
+sit user name [--regex] <first-name> <last-name> - Setzet den benannten Benutzer auf ein unbesetztes Objekt mit einem Sit-Target.
+stand user name [--regex] <first-name> <last-name> - Nutzer zum aufstehen zwingen.
+stats record start|stop - Steuert ob Statistiken regelmäßig in einer separaten Datei aufgezeichnet werden.
+stats save <path> - Statistik Snapshot in einer Datei speichern. Wenn die Datei bereits existiert, wird der Bericht angehängt.
 
-S
-save iar [-h|--home=<url>] [--noassets] <first> <last> <inventory path> <password> [<IAR path>] [-c|--creators] [-e|--exclude=<name/uuid>] [-f|--excludefolder=<foldername/uuid>] [-v|--verbose] - Save user inventory archive (IAR).
-save oar [-h|--home=<url>] [--noassets] [--publish] [--perm=<permissions>] [--all] [<OAR path>] - Save a region's data to an OAR archive.
-save prims xml2 [<prim name> <file name>] - Save named prim to XML2
-save xml [<file name>] - Save a region's data in XML format
-save xml2 [<file name>] - Save a region's data in XML2 format
-scale scene <factor> - Scales the scene objects (please back up your region before using)
-set log level <level> - Set the console logging level for this session.
-set terrain heights <corner> <min> <max> [<x>] [<y>] - Sets the terrain texture heights on corner #<corner> to <min>/<max>, if <x> or <y> are specified, it will only set it on regions with a matching coordinate. Specify -1 in <x> or <y> to wildcard that coordinate. Corner # SW = 0, NW = 1, SE = 2, NE = 3, all corners = -1.
-set terrain texture <number> <uuid> [<x>] [<y>] - Sets the terrain <number> to <uuid>, if <x> or <y> are specified, it will only set it on regions with a matching coordinate. Specify -1 in <x> or <y> to wildcard that coordinate.
-set water height <height> [<x>] [<y>] - Sets the water height in meters.  If <x> and <y> are specified, it will only set it on regions with a matching coordinate. Specify -1 in <x> or <y> to wildcard that coordinate.
-shutdown - Quit the application
-sit user name [--regex] <first-name> <last-name> - Sit the named user on an unoccupied object with a sit target.
-stand user name [--regex] <first-name> <last-name> - Stand the named user.
-stats record start|stop - Control whether stats are being regularly recorded to a separate file.
-stats save <path> - Save stats snapshot to a file.  If the file already exists, then the report is appended.
+$(tput setab $Red)T$(tput sgr 0)
+teleport user <first-name> <last-name> <destination> - Teleportiert einen Benutzer in diesem Simulator zum angegebenen Ziel.
+terrain load - Lädt ein Terrain aus einer angegebenen Datei.
+terrain load-tile - Lädt ein Terrain aus einem Abschnitt einer größeren Datei.
+terrain save - Speichert die aktuelle Heightmap in einer bestimmten Datei.
+terrain save-tile - Speichert die aktuelle Heightmap in der größeren Datei.
+terrain fill - Füllt die aktuelle Heightmap mit einem bestimmten Wert.
+terrain elevate - Erhöht die aktuelle Heightmap um den angegebenen Betrag.
+terrain lower - Senkt die aktuelle Höhenmap um den angegebenen Wert.
+terrain multiply - Multipliziert die Heightmap mit dem angegebenen Wert.
+terrain bake - Speichert das aktuelle Terrain in der Regions-Back-Map.
+terrain revert - Lädt das gebackene Kartengelände in die Regions-Höhenmap.
+terrain newbrushes - Aktiviert experimentelle Pinsel, die die Standard-Terrain-Pinsel ersetzen. WARNUNG: Dies ist eine Debug-Einstellung und kann jederzeit entfernt werden.
+terrain show - Zeigt die Geländehöhe an einer bestimmten Koordinate an.
+terrain stats - Zeigt Informationen über die Regions-Heightmap für Debugging-Zwecke an.
+terrain effect - Führt einen angegebenen Plugin-Effekt aus.
+terrain flip - Flippt das aktuelle Gelände um die X- oder Y-Achse.
+terrain rescale - Skaliert das aktuelle Terrain so, dass es zwischen die angegebenen Min- und Max-Höhen passt
+terrain min - Legt die minimale Geländehöhe auf den angegebenen Wert fest.
+terrain max - Legt die maximale Geländehöhe auf den angegebenen Wert fest.
+translate scene <x,y,z> - Verschiebe die gesamte Szene in eine neue Koordinate. Nützlich zum Verschieben einer Szene an einen anderen Ort in einem Mega- oder variablen Bereich.
+tree active - Aktivitätsstatus für das Baummodul ändern.
+tree freeze - einfrieren und weiterbauen eines Waldes.
+tree load - Laden Sie eine Wald-Definition aus einer XML-Datei.
+tree plant - Beginn mit dem bepflanzen eines Waldes.
+tree rate - Zurücksetzen der Baumaktualisierungsrate (mSec).
+tree reload - Erneutes Laden von Copse-Definitionen aus den In-Scene-Bäumen.
+tree remove - Entfert eine Wald-Definition und alle ihrer bereits gepflanzten Bäume.
+tree statistics - Log-Statistik über die Bäume.
 
-T
-teleport user <first-name> <last-name> <destination> - Teleport a user in this simulator to the given destination
-terrain bake -
-terrain effect <name> -
-terrain elevate <amount> -
-terrain fill <value> -
-terrain flip <direction> -
-terrain load <filename> -
-terrain load-tile <filename> <file width> <file height> <minimum X tile> <minimum Y tile> -
-terrain lower <amount> -
-terrain max <min> -
-terrain min <min> -
-terrain modify <operation> <value> [<area>] [<taper>] - Modifies the terrain as instructed.
-Each operation can be limited to an area of effect:
- * -ell=x,y,rx[,ry] constrains the operation to an ellipse centred at x,y
- * -rec=x,y,dx[,dy] constrains the operation to a rectangle based at x,y
-Each operation can have its effect tapered based on distance from centre:
- * elliptical operations taper as cones
- * rectangular operations taper as pyramids
-terrain multiply <value> -
-terrain rescale <min> <max> -
-terrain revert -
-terrain save <filename> -
-terrain save-tile <filename> <file width> <file height> <minimum X tile> <minimum Y tile> -
-translate scene xOffset yOffset zOffset - translates the scene objects (please back up your region before using)
-tree active <activeTF> -
-tree freeze <copse> <freezeTF> -
-tree load <filename> -
-tree plant <copse> -
-tree rate <updateRate> -
-tree reload -
-tree remove <copse> -
-tree statistics -
+$(tput setab $Red)U$(tput sgr 0)
+unlink-region <local name> - Verknüpfung einer Hypergrid-Region aufheben
 
-U
-unlink-region <local name> - Unlink a hypergrid region
+$(tput setab $Red)V$(tput sgr 0)
+vivox debug <on>|<off> - Einstellen des vivox-Debuggings
 
-V
-vivox debug <on>|<off> - Set vivox debugging
-
-W
-wind base wind_update_rate [<value>] - Get or set the wind update rate.
-wind ConfigurableWind avgDirection [<value>] - average wind direction in degrees
-wind ConfigurableWind avgStrength [<value>] - average wind strength
-wind ConfigurableWind rateChange [<value>] - rate of change
-wind ConfigurableWind varDirection [<value>] - allowable variance in wind direction in +/- degrees
-wind ConfigurableWind varStrength [<value>] - allowable variance in wind strength
-wind SimpleRandomWind strength [<value>] - wind strength
+$(tput setab $Red)W$(tput sgr 0)
+wind base wind_update_rate [<value>] - Abrufen oder Festlegen der Windaktualisierungsrate.
+wind ConfigurableWind avgDirection [<value>] - durchschnittliche Windrichtung in Grad.
+wind ConfigurableWind avgStrength [<value>] - durchschnittliche Windstärke.
+wind ConfigurableWind rateChange [<value>] - Änderungsrate.
+wind ConfigurableWind varDirection [<value>] - zulässige Abweichung der Windrichtung in +/- Grad.
+wind ConfigurableWind varStrength [<value>] - zulässige Abweichung der Windstärke.
+wind SimpleRandomWind strength [<value>] - Windstärke.
 
 eof
 }
