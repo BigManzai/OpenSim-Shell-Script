@@ -27,11 +27,11 @@ oder
 
     /opt/opensim.sh hilfe
 
-dazu gibt es noch die
+dazu gibt es noch die Konsolenhilfe für Putty oder Bitvise-Xterm
 
     /opt/opensim.sh konsolenhilfe
     
-und
+und die OpenSim Commands Hilfe in Deutsch
 
     /opt/opensim.sh commandhelp
 
