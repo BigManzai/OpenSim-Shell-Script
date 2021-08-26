@@ -191,3 +191,12 @@ Neue Funktionen ausgiebig testen.
 ```
 Leerzeichen aus SimulatorList.ini entfernt.
 ```
+
+Test Konfigurationsdateien automatisiert zu erstellen:
+```
+gridcommonini
+robustini
+opensimini
+moneyserverini
+regionini
+```
