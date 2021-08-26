@@ -192,7 +192,7 @@ Neue Funktionen ausgiebig testen.
 Leerzeichen aus SimulatorList.ini entfernt.
 ```
 
-Test Konfigurationsdateien automatisiert zu erstellen:
+Test - Konfigurationsdateien automatisiert zu erstellen:
 ```
 gridcommonini
 robustini
