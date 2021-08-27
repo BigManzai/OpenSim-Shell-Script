@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# opensimMULTITOOL Version 0.48.173 Copyright (c) 2021 BigManzai Manfred Aabye
+# opensimMULTITOOL Version 0.48.174 Copyright (c) 2021 BigManzai Manfred Aabye
 # opensim.sh Basiert auf meinen Einzelscripten, an denen ich bereits 6 Jahre Arbeite und verbessere.
 # Da Server unterschiedlich sind, kann eine einwandfreie fuunktion nicht gewährleistet werden, also bitte mit bedacht verwenden.
 # Die Benutzung dieses Scriptes, oder deren Bestandteile, erfolgt auf eigene Gefahr!!!
@@ -35,7 +35,7 @@ echo "$(tput setaf 2) | |__| || |_) ||  __/| | | | ____) || || | | | | || |_| ||
 echo "  \____/ |  __/  \___||_| |_||_____/ |_||_| |_| |_| \____||_| \____| \__|\___/ |_|   "
 echo "         | |                                                                         "
 echo "         |_|                                                                         "
-echo "	    $(tput setaf 2)opensim$(tput setaf 4)MULTITOOL$(tput sgr 0) 0.48.173" # Versionsausgabe
+echo "	    $(tput setaf 2)opensim$(tput setaf 4)MULTITOOL$(tput sgr 0) 0.48.174" # Versionsausgabe
 echo " "
 
 # Datum und Uhrzeit
@@ -2890,7 +2890,7 @@ function gridcommonini()
 # Aktuelle IP in die Regions.ini schreiben. UNGETESTET
 function regionini()
 {	
-		# Aktuelle IP über Suchadresse ermitteln und Ausführungszeichen anhängen.
+	# Aktuelle IP über Suchadresse ermitteln und Ausführungszeichen anhängen.
 	DNAAKTUELLEIP="$(wget -O - -q $SEARCHADRES)"
 
 	echo "Gebe deine Server Adresse ein: (Beispiel meinserver.de oder 192.168.2.106)"
@@ -2919,6 +2919,153 @@ function regionini()
 		echo 'ExternalHostName = '"$DNANAME"
 		echo 'MaptileStaticUUID = '"$UUID"
 	} > "/$STARTVERZEICHNIS/$DATEIDATUM-welcome.ini"
+}
+
+function osslenableini()
+{	
+	#osslEnable.ini
+	echo "OSFunctionThreatLevel Möglichkeiten: None, VeryLow, Low, Moderate, High, VeryHigh, Severe"
+	echo "Enter = Severe"
+	read -r OSFUNCTION
+	if [ -z "$OSFUNCTION" ]; then OSFUNCTION="Severe" ; fi
+
+	# shellcheck disable=SC2016
+	{	echo '[OSSL]'
+		echo 'OSFunctionThreatLevel = '$OSFUNCTION
+		echo 'osslParcelO = "PARCEL_OWNER,"' 
+		echo 'osslParcelOG = "PARCEL_GROUP_MEMBER,PARCEL_OWNER,"' 
+		echo 'osslNPC = ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER'
+		echo ' '
+		echo 'Allow_osGetAgents = true' 
+		echo 'Allow_osGetAvatarList = true' 
+		echo 'Allow_osGetGender = true' 
+		echo 'Allow_osGetHealth = true' 
+		echo 'Allow_osGetHealRate = true' 
+		echo 'Allow_osGetNPCList =true' 
+		echo 'Allow_osGetRezzingObject =true' 
+		echo 'Allow_osGetSunParam = true' 
+		echo 'Allow_osNpcGetOwner = true' 
+		echo 'Allow_osSetSunParam = ESTATE_MANAGER,ESTATE_OWNER' 
+		echo 'Allow_osTeleportOwner = ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER' 
+		echo 'Allow_osWindActiveModelPluginName = true' 
+		echo 'Allow_osSetEstateSunSettings =ESTATE_MANAGER,ESTATE_OWNER' 
+		echo 'Allow_osSetRegionSunSettings =ESTATE_MANAGER,ESTATE_OWNER' 
+		echo 'Allow_osEjectFromGroup =${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER' 
+		echo 'Allow_osForceBreakAllLinks =${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER' 
+		echo 'Allow_osForceBreakLink =${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER' 
+		echo 'Allow_osGetWindParam =true' 
+		echo 'Allow_osInviteToGroup = ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER' 
+		echo 'Allow_osReplaceString = true' 
+		echo 'Allow_osSetDynamicTextureData = true' 
+		echo 'Allow_osSetDynamicTextureDataFace = true' 
+		echo 'Allow_osSetDynamicTextureDataBlend =true' 
+		echo 'Allow_osSetDynamicTextureDataBlendFace = true' 
+		echo 'Allow_osSetParcelMediaURL = true' 
+		echo 'Allow_osSetParcelMusicURL = true' 
+		echo 'Allow_osSetParcelSIPAddress = ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER' 
+		echo 'Allow_osSetPrimFloatOnWater = true' 
+		echo 'Allow_osSetWindParam =${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER' 
+		echo 'Allow_osTerrainFlush =ESTATE_MANAGER,ESTATE_OWNER' 
+		echo 'Allow_osUnixTimeToTimestamp = true' 
+		echo 'Allow_osAvatarName2Key =true' 
+		echo 'Allow_osFormatString =true' 
+		echo 'Allow_osKey2Name =true' 
+		echo 'Allow_osListenRegex = true' 
+		echo 'Allow_osLoadedCreationDate =true' 
+		echo 'Allow_osLoadedCreationID =true' 
+		echo 'Allow_osLoadedCreationTime =true' 
+		echo 'Allow_osMessageObject = true' 
+		echo 'Allow_osRegexIsMatch =true' 
+		echo 'Allow_osGetAvatarHomeURI =true' 
+		echo 'Allow_osNpcSetProfileAbout =true' 
+		echo 'Allow_osNpcSetProfileImage =true' 
+		echo 'Allow_osDie = true' 
+		echo 'Allow_osDetectedCountry = true' 
+		echo 'Allow_osDropAttachment =true' 
+		echo 'Allow_osDropAttachmentAt =true' 
+		echo 'Allow_osGetAgentCountry = true' 
+		echo 'Allow_osGetGridCustom = true' 
+		echo 'Allow_osGetGridGatekeeperURI =true' 
+		echo 'Allow_osGetGridHomeURI =true' 
+		echo 'Allow_osGetGridLoginURI = true' 
+		echo 'Allow_osGetGridName = true' 
+		echo 'Allow_osGetGridNick = true' 
+		echo 'Allow_osGetNumberOfAttachments =true' 
+		echo 'Allow_osGetRegionStats =true' 
+		echo 'Allow_osGetSimulatorMemory =true' 
+		echo 'Allow_osGetSimulatorMemoryKB =true' 
+		echo 'Allow_osMessageAttachments =true' 
+		echo 'Allow_osReplaceAgentEnvironment = true' 
+		echo 'Allow_osSetSpeed =true' 
+		echo 'Allow_osSetOwnerSpeed = true' 
+		echo 'Allow_osRequestURL =true' 
+		echo 'Allow_osRequestSecureURL =true' 
+		echo 'Allow_osCauseDamage = ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER' 
+		echo 'Allow_osCauseHealing =${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER' 
+		echo 'Allow_osSetHealth = ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER' 
+		echo 'Allow_osSetHealRate = ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER' 
+		echo 'Allow_osForceAttachToAvatar = ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER' 
+		echo 'Allow_osForceAttachToAvatarFromInventory = ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER' 
+		echo 'Allow_osForceCreateLink = ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER' 
+		echo 'Allow_osForceDropAttachment = ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER' 
+		echo 'Allow_osForceDropAttachmentAt = ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER' 
+		echo 'Allow_osGetLinkPrimitiveParams =${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER' 
+		echo 'Allow_osGetPhysicsEngineType =true' 
+		echo 'Allow_osGetRegionMapTexture = true' 
+		echo 'Allow_osGetScriptEngineName = true' 
+		echo 'Allow_osGetSimulatorVersion = true' 
+		echo 'Allow_osMakeNotecard =true' 
+		echo 'Allow_osMatchString = true' 
+		echo 'Allow_osNpcCreate = true' 
+		echo 'Allow_osNpcGetPos = true' 
+		echo 'Allow_osNpcGetRot = true' 
+		echo 'Allow_osNpcLoadAppearance = true' 
+		echo 'Allow_osNpcMoveTo = true' 
+		echo 'Allow_osNpcMoveToTarget = true' 
+		echo 'Allow_osNpcPlayAnimation =true' 
+		echo 'Allow_osNpcRemove = true' 
+		echo 'Allow_osNpcSaveAppearance = true' 
+		echo 'Allow_osNpcSay =true' 
+		echo 'Allow_osNpcSayTo =true' 
+		echo 'Allow_osNpcSetRot = true' 
+		echo 'Allow_osNpcShout =true' 
+		echo 'Allow_osNpcSit =true' 
+		echo 'Allow_osNpcStand =true' 
+		echo 'Allow_osNpcStopAnimation =true' 
+		echo 'Allow_osNpcStopMoveToTarget = true' 
+		echo 'Allow_osNpcTouch =true' 
+		echo 'Allow_osNpcWhisper =true' 
+		echo 'Allow_osOwnerSaveAppearance = ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER' 
+		echo 'Allow_osParcelJoin =ESTATE_MANAGER,ESTATE_OWNER' 
+		echo 'Allow_osParcelSubdivide = ESTATE_MANAGER,ESTATE_OWNER' 
+		echo 'Allow_osRegionRestart = ESTATE_MANAGER,ESTATE_OWNER' 
+		echo 'Allow_osRegionNotice =ESTATE_MANAGER,ESTATE_OWNER' 
+		echo 'Allow_osSetProjectionParams = ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER' 
+		echo 'Allow_osSetRegionWaterHeight =ESTATE_MANAGER,ESTATE_OWNER' 
+		echo 'Allow_osSetTerrainHeight =ESTATE_MANAGER,ESTATE_OWNER' 
+		echo 'Allow_osSetTerrainTexture = ESTATE_MANAGER,ESTATE_OWNER' 
+		echo 'Allow_osSetTerrainTextureHeight = ESTATE_MANAGER,ESTATE_OWNER' 
+		echo 'Allow_osAgentSaveAppearance = true' 
+		echo 'Allow_osAvatarPlayAnimation = true' 
+		echo 'Allow_osAvatarStopAnimation = true' 
+		echo 'Allow_osForceAttachToOtherAvatarFromInventory = ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER' 
+		echo 'Allow_osForceDetachFromAvatar = ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER' 
+		echo 'Allow_osForceOtherSit = true' 
+		echo 'Allow_osGetNotecard = true' 
+		echo 'Allow_osGetNotecardLine = true' 
+		echo 'Allow_osGetNumberOfNotecardLines = true' 
+		echo 'Allow_osSetDynamicTextureURL =true' 
+		echo 'Allow_osSetDynamicTextureURLBlend = true' 
+		echo 'Allow_osSetDynamicTextureURLBlendFace = true' 
+		echo 'Allow_osSetRot= ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER' 
+		echo 'Allow_osSetParcelDetails =${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER' 
+		echo 'Allow_osConsoleCommand =false' 
+		echo 'Allow_osKickAvatar =${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER' 
+		echo 'Allow_osTeleportAgent = ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER' 
+		echo 'Allow_osTeleportObject =${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER' 
+		echo 'Allow_osGetAgentIP =true' 
+		echo 'Allow_osSetContentType =${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER'
+	} > "/$STARTVERZEICHNIS/$DATEIDATUM-osslEnable.ini"
 }
 # Hier entsteht die Automatische Konfiguration. UNGETESTET
 function autoconfig()
@@ -3324,6 +3471,7 @@ case  $KOMMANDO  in
 	opensimini) opensimini ;;
 	moneyserverini) moneyserverini ;;
 	regionini) regionini ;;
+	osslenableini) osslenableini ;;
 	*) hilfe ;;
 esac
 
