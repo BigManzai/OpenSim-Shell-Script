@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# opensimMULTITOOL Version 0.48.174 Copyright (c) 2021 BigManzai Manfred Aabye
+# opensimMULTITOOL Version 0.49.178 Copyright (c) 2021 BigManzai Manfred Aabye
 # opensim.sh Basiert auf meinen Einzelscripten, an denen ich bereits 6 Jahre Arbeite und verbessere.
 # Da Server unterschiedlich sind, kann eine einwandfreie fuunktion nicht gewährleistet werden, also bitte mit bedacht verwenden.
 # Die Benutzung dieses Scriptes, oder deren Bestandteile, erfolgt auf eigene Gefahr!!!
@@ -35,7 +35,7 @@ echo "$(tput setaf 2) | |__| || |_) ||  __/| | | | ____) || || | | | | || |_| ||
 echo "  \____/ |  __/  \___||_| |_||_____/ |_||_| |_| |_| \____||_| \____| \__|\___/ |_|   "
 echo "         | |                                                                         "
 echo "         |_|                                                                         "
-echo "	    $(tput setaf 2)opensim$(tput setaf 4)MULTITOOL$(tput sgr 0) 0.48.174" # Versionsausgabe
+echo "	    $(tput setaf 2)opensim$(tput setaf 4)MULTITOOL$(tput sgr 0) 0.49.178" # Versionsausgabe
 echo " "
 
 # Datum und Uhrzeit
@@ -104,16 +104,12 @@ schreibeinfo
 
 ### Funktion vardel, Variablen loeschen.
 function vardel()
-{	unset STARTVERZEICHNIS
-	unset MONEYVERZEICHNIS
-	unset ROBUSTVERZEICHNIS
-	unset WARTEZEIT
-	unset STARTWARTEZEIT
-	unset STOPWARTEZEIT
-	unset MONEYWARTEZEIT
-	unset Red
-	unset Green
-	unset White
+{	unset STARTVERZEICHNIS; unset MONEYVERZEICHNIS; unset ROBUSTVERZEICHNIS
+	unset WARTEZEIT; unset STARTWARTEZEIT; unset STOPWARTEZEIT
+	unset MONEYWARTEZEIT; unset Red; unset Green; unset White
+	unset NAME; unset VERZEICHNIS; unset PASSWORD; unset DATEI
+	unset OPENSIMVERZEICHNIS; unset SCRIPTSOURCE; unset MONEYSOURCE
+	unset REGIONSNAME; unset REGIONSNAMEb; unset REGIONSNAMEc; unset REGIONSNAMEd
 }
 
 ### Erstellen eines Arrays aus einer Textdatei - Verzeichnisse und Regionen ###
@@ -175,17 +171,27 @@ function landclear()
 	fi
 }
 
-### Funktion oscommand, OpenSim Command direkt in den screen senden.
-# Aufruf: oscommand Screen Region Befehl Parameter
-# Beispiel: /opt/opensim.sh oscommand sim1 Welcome alert "Hallo liebe Leute dies ist eine Nachricht"
-function oscommand2()
+### Funktion loadinventar, saveinventar
+# Aufruf: load oder saveinventar "NAME" "VERZEICHNIS" "PASSWORD" "DATEImitPFAD"
+function loadinventar()
 {	
-	VERZEICHNISSCREEN=$1; REGION=$2; BEFEHL=$3; PARAMETER=$4
+	VERZEICHNISSCREEN="sim1"; NAME=$1; VERZEICHNIS=$2; PASSWORD=$3; DATEI=$4
 	if screen -list | grep -q "$VERZEICHNISSCREEN"; then
-	echo "$(tput setab $Green)Sende $BEFEHL $PARAMETER an $VERZEICHNISSCREEN $(tput sgr 0)"
-	screen -S "$VERZEICHNISSCREEN" -p 0 -X eval "stuff 'change region ""$REGION""'^M" # Region wechseln
-	echo "$DATUM $(date +%H:%M:%S) OSCOMMAND: $BEFEHL $PARAMETER an $VERZEICHNISSCREEN senden" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-	screen -S "$VERZEICHNISSCREEN" -p 0 -X eval "stuff '$BEFEHL $PARAMETER'^M"
+	echo "$(tput setab $Green)load iar $NAME $VERZEICHNIS ***** $DATEI $(tput sgr 0)"
+	echo "$DATUM $(date +%H:%M:%S) OSCOMMAND: load iar $NAME $VERZEICHNIS ***** $DATEI " >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+	screen -S "$VERZEICHNISSCREEN" -p 0 -X eval "stuff 'load iar $NAME $VERZEICHNIS $PASSWORD $DATEI'^M"
+	else
+		echo "Der Screen $VERZEICHNISSCREEN existiert nicht."
+		echo "$DATUM $(date +%H:%M:%S) OSCOMMAND: Der Screen $VERZEICHNISSCREEN existiert nicht" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+	fi
+}
+function saveinventar()
+{	
+	VERZEICHNISSCREEN="sim1"; NAME=$1; VERZEICHNIS=$2; PASSWORD=$3; DATEI=$4
+	if screen -list | grep -q "$VERZEICHNISSCREEN"; then
+	echo "$(tput setab $Green)save iar $NAME $VERZEICHNIS ***** $DATEI $(tput sgr 0)"
+	echo "$DATUM $(date +%H:%M:%S) OSCOMMAND: save iar $NAME $VERZEICHNIS ***** $DATEI " >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+	screen -S "$VERZEICHNISSCREEN" -p 0 -X eval "stuff 'save iar $NAME $VERZEICHNIS $PASSWORD $DATEI'^M"
 	else
 		echo "Der Screen $VERZEICHNISSCREEN existiert nicht."
 		echo "$DATUM $(date +%H:%M:%S) OSCOMMAND: Der Screen $VERZEICHNISSCREEN existiert nicht" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
@@ -3165,6 +3171,10 @@ echo " "
 	echo "landclear 	- $(tput setab $Magenta)screen_name$(tput sgr 0) $(tput setab $Blue)Regionsname$(tput sgr 0) - Land clear - Löscht alle Parzellen auf dem Land."
 
 	echo " "
+	echo "loadinventar - $(tput setab $Magenta)NAME VERZEICHNIS PASSWORD DATEINAMEmitPFAD $(tput sgr 0) - lädt Inventar aus einer iar"
+	echo "saveinventar - $(tput setab $Magenta)NAME VERZEICHNIS PASSWORD DATEINAMEmitPFAD $(tput sgr 0) - speichert Inventar in einer iar"
+
+	echo " "
 	echo "$(tput setaf $Yello)  Der Verzeichnisname ist gleichzeitig auch der Screen Name!$(tput sgr 0)"
 	echo "$DATUM $(date +%H:%M:%S) HILFE: Hilfe wurde angefordert" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 }
@@ -3472,6 +3482,8 @@ case  $KOMMANDO  in
 	moneyserverini) moneyserverini ;;
 	regionini) regionini ;;
 	osslenableini) osslenableini ;;
+	loadinventar) loadinventar "$2" "$3" "$4" "$5" ;;
+	saveinventar) saveinventar "$2" "$3" "$4" "$5" ;;
 	*) hilfe ;;
 esac
 
