@@ -186,19 +186,14 @@ conf_read	- SUCHWORT PFAD DATEINAME - Konfigurationszeile lesen.
 
 ## TODO
 
-```
-
 Neue Menü Funktionen, um diese nutzen zu können muss dialog nachinstalliert werden.
+```
 sudo apt-get install dialog
-
 ```
 
 Neue Funktionen ausgiebig testen.
 
-```
 Leerzeichen aus SimulatorList.ini entfernt.
-
-```
 
 Test - Konfigurationsdateien automatisiert zu erstellen:
 ```
