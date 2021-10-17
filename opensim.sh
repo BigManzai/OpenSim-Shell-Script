@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# opensimMULTITOOL Version 0.49.178 Copyright (c) 2021 BigManzai Manfred Aabye
+# opensimMULTITOOL Copyright (c) 2021 BigManzai Manfred Aabye
 # opensim.sh Basiert auf meinen Einzelscripten, an denen ich bereits 6 Jahre Arbeite und verbessere.
 # Da Server unterschiedlich sind, kann eine einwandfreie fuunktion nicht gewährleistet werden, also bitte mit bedacht verwenden.
 # Die Benutzung dieses Scriptes, oder deren Bestandteile, erfolgt auf eigene Gefahr!!!
@@ -23,7 +23,7 @@ STARTVERZEICHNIS="opt" MONEYVERZEICHNIS="robust" ROBUSTVERZEICHNIS="robust" OPEN
 REGIONSDATEI="RegionList.ini" SIMDATEI="SimulatorList.ini" WARTEZEIT=30 STARTWARTEZEIT=10 STOPWARTEZEIT=30 MONEYWARTEZEIT=50 BACKUPWARTEZEIT=120 AUTOSTOPZEIT=60 SETMONOTHREADS=800 SETMONOTHREADSON="yes"
 OPENSIMDOWNLOAD="http://opensimulator.org/dist/" OPENSIMVERSION="opensim-0.9.1.1.zip" SEARCHADRES="icanhazip.com" AUTOCONFIG="no" SETMONOGCPARAMSON="yes"
 }
-
+VERSION="V0.50.189" # opensimMULTITOOL Versionsausgabe
 clear # Bildschirm loeschen
 
 # LOGO
@@ -35,7 +35,7 @@ echo "$(tput setaf 2) | |__| || |_) ||  __/| | | | ____) || || | | | | || |_| ||
 echo "  \____/ |  __/  \___||_| |_||_____/ |_||_| |_| |_| \____||_| \____| \__|\___/ |_|   "
 echo "         | |                                                                         "
 echo "         |_|                                                                         "
-echo "	    $(tput setaf 2)opensim$(tput setaf 4)MULTITOOL$(tput sgr 0) 0.49.178" # Versionsausgabe
+echo "	    $(tput setaf 2)opensim$(tput setaf 4)MULTITOOL$(tput sgr 0) $VERSION" # Versionsausgabe
 echo " "
 
 # Datum und Uhrzeit
@@ -1773,6 +1773,15 @@ sudo apt-get upgrade
 			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: Ich installiere jetzt php-bcmath" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 			sudo apt-get -y install php-bcmath
 	fi
+	# Neu , dialog ist für dialogboxen und ungetestet.
+	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+			echo "$(tput setaf 2)dialog ist installiert.$(tput sgr0)"
+			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: dialog ist installiert" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+		else
+			echo "$(tput setaf 1)Ich installiere jetzt dialog.$(tput sgr0)"
+			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: Ich installiere jetzt dialog" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+			sudo apt-get -y install dialog
+	fi
 
 ##Zeitsteuerung
 	if dpkg-query -s at 2>/dev/null|grep -q installed; then
@@ -3377,6 +3386,174 @@ eof
 echo "$DATUM $(date +%H:%M:%S) HILFE: Commands Hilfe wurde angefordert" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 }
 
+function hauptmenu()
+{
+	# zuerst schauen ob dialog installiert ist
+	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+		# dialog --menu
+		mauswahl=$(dialog --menu "OPENSIM MULTITOOL $VERSION" 0 35 0 \
+		Start ""\
+		Stop ""\
+		Restart ""\
+		Kalender ""\
+		"Weitere Funktionen" ""\
+		Hilfe "" 3>&1 1>&2 2>&3)
+		dialog --clear
+		clear
+		if [[ $mauswahl = "Kalender" ]]; then kalender; fi
+		if [[ $mauswahl = "Start" ]]; then autostart; fi
+		if [[ $mauswahl = "Stop" ]]; then autostop; fi
+		if [[ $mauswahl = "Restart" ]]; then autorestart; fi
+		if [[ $mauswahl = "Weitere Funktionen" ]]; then funktionenmenu; fi
+		if [[ $mauswahl = "Hilfe" ]]; then hilfemenu; fi
+	else
+		# wenn dialog nicht installiert ist die Hilfe anzeigen.
+		hilfe
+	fi
+}
+function hilfemenu()
+{
+	# zuerst schauen ob dialog installiert ist
+	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+		# dialog --radiolist
+		# Name : menu1
+		hauswahl=$(dialog --menu "OPENSIM MULTITOOL $VERSION" 0 45 0 \
+		Hilfe ""\
+		Konsolenhilfe ""\
+		Kommandohilfe "" 3>&1 1>&2 2>&3)
+		dialog --clear
+		clear
+		if [[ $hauswahl = "Hilfe" ]]; then hilfe; fi
+		if [[ $hauswahl = "Konsolenhilfe" ]]; then konsolenhilfe; fi
+		if [[ $hauswahl = "Kommandohilfe" ]]; then commandhelp; fi
+	else
+		# wenn dialog nicht installiert ist die Hilfe anzeigen.
+		hilfe
+	fi
+}
+function funktionenmenu()
+{
+	# zuerst schauen ob dialog installiert ist
+	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+		# dialog --menu
+		fauswahl=$(dialog --defaultno --menu "OPENSIM MULTITOOL $VERSION" 0 45 0 \
+		"Grid starten" ""\
+		"Grid stoppen" ""\
+		"Robust starten" ""\
+		"Robust stoppen" ""\
+		"Money starten" ""\
+		"Money stoppen" ""\
+		"Automatischer Sim start" ""\
+		"Automatischer Sim stop" ""\
+		"Automatischer Screen stop" ""\
+		"Regionen anzeigen" ""\
+		"Log Dateien löschen" ""\
+		"Map Karten löschen" ""\
+		"Experten Funktionen" ""\
+		Hilfe "" 3>&1 1>&2 2>&3)
+		dialog --clear
+		clear
+		if [[ $fauswahl = "Grid starten" ]]; then gridstart; fi
+		if [[ $fauswahl = "Grid stoppen" ]]; then gridstop; fi
+		if [[ $fauswahl = "Robust starten" ]]; then rostart; fi
+		if [[ $fauswahl = "Robust stoppen" ]]; then rostop; fi
+		if [[ $fauswahl = "Money starten" ]]; then mostart; fi
+		if [[ $fauswahl = "Money stoppen" ]]; then mostop; fi
+		if [[ $fauswahl = "Automatischer Sim start" ]]; then autosimstart; fi
+		if [[ $fauswahl = "Automatischer Sim stop" ]]; then autosimstop; fi
+		if [[ $fauswahl = "Automatischer Screen stop" ]]; then autoscreenstop; fi
+		if [[ $fauswahl = "Regionen anzeigen" ]]; then meineregionen; fi
+		if [[ $fauswahl = "Log Dateien löschen" ]]; then autologdel; fi
+		if [[ $fauswahl = "Map Karten löschen" ]]; then automapdel; fi
+		if [[ $fauswahl = "Experten Funktionen" ]]; then expertenmenu; fi
+		if [[ $fauswahl = "Hilfe" ]]; then hilfemenu; fi
+	else
+		# wenn dialog nicht installiert ist die Hilfe anzeigen.
+		hilfe
+	fi
+}
+function expertenmenu()
+{
+	# zuerst schauen ob dialog installiert ist
+	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+		# dialog --menu
+		feauswahl=$(dialog --defaultno --menu "OPENSIM MULTITOOL $VERSION" 0 45 0 \
+		"Voreinstellungen setzen" ""\
+		"Opensimulator upgraden" ""\
+		"Automatischer Regionsbackup" ""\
+		"Kompilieren" ""\
+		"oscompi" ""\
+		"autoregionsiniteilen" ""\
+		"RegionListe" ""\
+		"Opensim aus dem git holen" ""\
+		"terminator" ""\
+		"makeaot" ""\
+		"cleanaot" ""\
+		"Installationen anzeigen" ""\
+		"Server Installation" ""\
+		Hilfe "" 3>&1 1>&2 2>&3)
+		dialog --clear
+		clear
+		if [[ $feauswahl = "Voreinstellungen setzen" ]]; then settings; fi
+		if [[ $feauswahl = "Opensimulator upgraden" ]]; then osupgrade; fi
+		if [[ $feauswahl = "Automatischer Regionsbackup" ]]; then autoregionbackup; fi
+		if [[ $feauswahl = "Kompilieren" ]]; then compilieren; fi
+		if [[ $feauswahl = "oscompi" ]]; then oscompi; fi
+		if [[ $feauswahl = "autoregionsiniteilen" ]]; then autoregionsiniteilen; fi
+		if [[ $feauswahl = "RegionListe" ]]; then RegionListe; fi
+		if [[ $feauswahl = "Opensim aus dem git holen" ]]; then osgitholen; fi
+		if [[ $feauswahl = "terminator" ]]; then terminator; fi
+		if [[ $feauswahl = "makeaot" ]]; then makeaot; fi
+		if [[ $feauswahl = "cleanaot" ]]; then cleanaot; fi
+		if [[ $feauswahl = "Installationen anzeigen" ]]; then installationen; fi
+		if [[ $feauswahl = "Server Installation" ]]; then serverinstall; fi
+		if [[ $feauswahl = "Hilfe" ]]; then hilfemenu; fi
+	else
+		# wenn dialog nicht installiert ist die Hilfe anzeigen.
+		hilfe
+	fi
+}
+function kalender()
+{
+	# zuerst schauen ob dialog installiert ist
+	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+		CDATUM=$(date +%d %m %Y)
+		# dialog --calendar
+		dialog --no-cancel --calendar Calendar 0 0 "$CDATUM"
+		dialog --clear
+		clear
+	else
+		# wenn dialog nicht installiert ist die Hilfe anzeigen.
+		hilfe
+	fi
+}
+function fortschritsanzeige()
+{
+	# zuerst schauen ob dialog installiert ist
+	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+        # Demonstriert dialog --gauge für eine Fortschritsanzeige
+        DIALOG=dialog
+        (
+        echo "10" ; sleep 1
+        echo "XXX" ; echo "Alle Daten werden gesichert"; echo "XXX"
+        echo "20" ; sleep 1
+        echo "50" ; sleep 1
+        echo "XXX" ; echo "Alle Daten werden archiviert"; echo "XXX"
+        echo "75" ; sleep 1
+        echo "XXX" ; echo "Daten werden ins Webverzeichnis hochgeladen";
+        echo "XXX"
+        echo "100" ; sleep 3
+        ) |
+        $DIALOG --title "Fortschrittszustand" --gauge "Starte Backup-Script" 8 30
+        $DIALOG --clear
+        $DIALOG --msgbox "Arbeit erfolgreich beendet ..." 0 0
+        $DIALOG --clear
+        clear
+	else
+		# wenn dialog nicht installiert ist die Hilfe anzeigen.
+		hilfe
+	fi
+}
 ### Eingabeauswertung:
 case  $KOMMANDO  in
 	schreibeinfo) schreibeinfo ;;
@@ -3484,7 +3661,7 @@ case  $KOMMANDO  in
 	osslenableini) osslenableini ;;
 	loadinventar) loadinventar "$2" "$3" "$4" "$5" ;;
 	saveinventar) saveinventar "$2" "$3" "$4" "$5" ;;
-	*) hilfe ;;
+	*) hauptmenu ;;
 esac
 
 echo "$DATUM $(date +%H:%M:%S) opensimMULTITOOL wurde beendet." >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
