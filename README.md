@@ -191,6 +191,8 @@ Neue Menü Funktionen, um diese nutzen zu können muss dialog nachinstalliert we
 Ich habe jetzt Restart nach oben gesetzt und Informationen hinzugefügt.
 
 Vom Kalender und den Informationen gelangt man wieder in das Hauptmenü.
+
+Das Hilfemenü hat jetzt einen eigenen Button.
 ```
 sudo apt-get install dialog
 ```
