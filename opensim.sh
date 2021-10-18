@@ -23,7 +23,7 @@ STARTVERZEICHNIS="opt" MONEYVERZEICHNIS="robust" ROBUSTVERZEICHNIS="robust" OPEN
 REGIONSDATEI="RegionList.ini" SIMDATEI="SimulatorList.ini" WARTEZEIT=30 STARTWARTEZEIT=10 STOPWARTEZEIT=30 MONEYWARTEZEIT=50 BACKUPWARTEZEIT=120 AUTOSTOPZEIT=60 SETMONOTHREADS=800 SETMONOTHREADSON="yes"
 OPENSIMDOWNLOAD="http://opensimulator.org/dist/" OPENSIMVERSION="opensim-0.9.1.1.zip" SEARCHADRES="icanhazip.com" AUTOCONFIG="no" SETMONOGCPARAMSON="yes"
 }
-VERSION="V0.50.189" # opensimMULTITOOL Versionsausgabe
+VERSION="V0.50.193" # opensimMULTITOOL Versionsausgabe
 clear # Bildschirm loeschen
 
 # LOGO
@@ -3391,21 +3391,25 @@ function hauptmenu()
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
 		# dialog --menu
-		mauswahl=$(dialog --menu "OPENSIM MULTITOOL $VERSION" 0 35 0 \
-		Start ""\
-		Stop ""\
+		mauswahl=$(dialog --backtitle "opensimMULTITOOL $VERSION" --help-button --menu "OPENSIM MULTITOOL $VERSION" 0 35 0 \
 		Restart ""\
+		Stop ""\
+		Start ""\
+		"Server Informationen" ""\
 		Kalender ""\
-		"Weitere Funktionen" ""\
-		Hilfe "" 3>&1 1>&2 2>&3)
+		"Weitere Funktionen" "" 3>&1 1>&2 2>&3)
+		antwort=$?
 		dialog --clear
-		clear
+		clear		
+		if [[ $mauswahl = "Server Informationen" ]]; then infodialog; fi
 		if [[ $mauswahl = "Kalender" ]]; then kalender; fi
 		if [[ $mauswahl = "Start" ]]; then autostart; fi
 		if [[ $mauswahl = "Stop" ]]; then autostop; fi
 		if [[ $mauswahl = "Restart" ]]; then autorestart; fi
 		if [[ $mauswahl = "Weitere Funktionen" ]]; then funktionenmenu; fi
 		if [[ $mauswahl = "Hilfe" ]]; then hilfemenu; fi
+		if [[ $antwort = 2 ]]; then hilfemenu ; fi
+		if [[ $antwort = 1 ]]; then exit ; fi
 	else
 		# wenn dialog nicht installiert ist die Hilfe anzeigen.
 		hilfe
@@ -3417,15 +3421,18 @@ function hilfemenu()
 	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
 		# dialog --radiolist
 		# Name : menu1
-		hauswahl=$(dialog --menu "OPENSIM MULTITOOL $VERSION" 0 45 0 \
+		hauswahl=$(dialog --backtitle "opensimMULTITOOL $VERSION" --help-button --menu "OPENSIM MULTITOOL $VERSION" 0 45 0 \
 		Hilfe ""\
 		Konsolenhilfe ""\
 		Kommandohilfe "" 3>&1 1>&2 2>&3)
+		antwort=$?
 		dialog --clear
 		clear
 		if [[ $hauswahl = "Hilfe" ]]; then hilfe; fi
 		if [[ $hauswahl = "Konsolenhilfe" ]]; then konsolenhilfe; fi
 		if [[ $hauswahl = "Kommandohilfe" ]]; then commandhelp; fi
+		if [[ $antwort = 2 ]]; then hilfemenu ; fi
+		if [[ $antwort = 1 ]]; then exit ; fi
 	else
 		# wenn dialog nicht installiert ist die Hilfe anzeigen.
 		hilfe
@@ -3436,7 +3443,7 @@ function funktionenmenu()
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
 		# dialog --menu
-		fauswahl=$(dialog --defaultno --menu "OPENSIM MULTITOOL $VERSION" 0 45 0 \
+		fauswahl=$(dialog --backtitle "opensimMULTITOOL $VERSION" --help-button --defaultno --menu "OPENSIM MULTITOOL $VERSION" 0 45 0 \
 		"Grid starten" ""\
 		"Grid stoppen" ""\
 		"Robust starten" ""\
@@ -3449,8 +3456,8 @@ function funktionenmenu()
 		"Regionen anzeigen" ""\
 		"Log Dateien löschen" ""\
 		"Map Karten löschen" ""\
-		"Experten Funktionen" ""\
-		Hilfe "" 3>&1 1>&2 2>&3)
+		"Experten Funktionen" "" 3>&1 1>&2 2>&3)
+		antwort=$?
 		dialog --clear
 		clear
 		if [[ $fauswahl = "Grid starten" ]]; then gridstart; fi
@@ -3467,6 +3474,8 @@ function funktionenmenu()
 		if [[ $fauswahl = "Map Karten löschen" ]]; then automapdel; fi
 		if [[ $fauswahl = "Experten Funktionen" ]]; then expertenmenu; fi
 		if [[ $fauswahl = "Hilfe" ]]; then hilfemenu; fi
+		if [[ $antwort = 2 ]]; then hilfemenu ; fi
+		if [[ $antwort = 1 ]]; then exit ; fi
 	else
 		# wenn dialog nicht installiert ist die Hilfe anzeigen.
 		hilfe
@@ -3477,7 +3486,7 @@ function expertenmenu()
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
 		# dialog --menu
-		feauswahl=$(dialog --defaultno --menu "OPENSIM MULTITOOL $VERSION" 0 45 0 \
+		feauswahl=$(dialog --backtitle "opensimMULTITOOL $VERSION" --help-button --defaultno --menu "OPENSIM MULTITOOL $VERSION" 0 45 0 \
 		"Voreinstellungen setzen" ""\
 		"Opensimulator upgraden" ""\
 		"Automatischer Regionsbackup" ""\
@@ -3490,8 +3499,8 @@ function expertenmenu()
 		"makeaot" ""\
 		"cleanaot" ""\
 		"Installationen anzeigen" ""\
-		"Server Installation" ""\
-		Hilfe "" 3>&1 1>&2 2>&3)
+		"Server Installation" "" 3>&1 1>&2 2>&3)
+		antwort=$?
 		dialog --clear
 		clear
 		if [[ $feauswahl = "Voreinstellungen setzen" ]]; then settings; fi
@@ -3508,10 +3517,30 @@ function expertenmenu()
 		if [[ $feauswahl = "Installationen anzeigen" ]]; then installationen; fi
 		if [[ $feauswahl = "Server Installation" ]]; then serverinstall; fi
 		if [[ $feauswahl = "Hilfe" ]]; then hilfemenu; fi
+		if [[ $antwort = 2 ]]; then hilfemenu ; fi
+		if [[ $antwort = 1 ]]; then exit ; fi
 	else
 		# wenn dialog nicht installiert ist die Hilfe anzeigen.
 		hilfe
 	fi
+}
+### Funktion infodialog, Informationen auf den Bildschirm ausgeben.
+function infodialog()
+{
+	TEXT1=(" Server Name: ${HOSTNAME}")
+	TEXT2=(" Bash Version: ${BASH_VERSION}")
+	TEXT3=(" Server IP: ${AKTUELLEIP}")
+	TEXT4=(" MONO THREAD Einstellung: ${MONO_THREADS_PER_CPU}")
+	TEXT5=(" Spracheinstellung: ${LANG}")
+	TEXT0=(" MULTITOOL: wurde gestartet am $(date +%d.%m.%Y) um $(date +%H:%M:%S) Uhr")
+	TEXT6=(" $(screen --version)")
+	# shellcheck disable=SC2128
+	dialog --backtitle "opensimMULTITOOL $VERSION" --msgbox "$TEXT0\n$TEXT1\n$TEXT2\n$TEXT3\n$TEXT4\n$TEXT5\n$TEXT6" 0 0
+	# Dialog-Bildschirm löschen
+	dialog --clear
+	# Bildschirm löschen
+	#clear
+	hauptmenu
 }
 function kalender()
 {
@@ -3519,9 +3548,10 @@ function kalender()
 	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
 		CDATUM=$(date +%d %m %Y)
 		# dialog --calendar
-		dialog --no-cancel --calendar Calendar 0 0 "$CDATUM"
+		dialog --backtitle "opensimMULTITOOL $VERSION" --no-cancel --calendar Calendar 0 0 "$CDATUM"
 		dialog --clear
-		clear
+		#clear
+		hauptmenu
 	else
 		# wenn dialog nicht installiert ist die Hilfe anzeigen.
 		hilfe
@@ -3661,6 +3691,7 @@ case  $KOMMANDO  in
 	osslenableini) osslenableini ;;
 	loadinventar) loadinventar "$2" "$3" "$4" "$5" ;;
 	saveinventar) saveinventar "$2" "$3" "$4" "$5" ;;
+	infodialog) infodialog ;;
 	*) hauptmenu ;;
 esac
 
