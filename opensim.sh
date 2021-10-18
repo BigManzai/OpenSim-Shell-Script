@@ -23,7 +23,7 @@ STARTVERZEICHNIS="opt" MONEYVERZEICHNIS="robust" ROBUSTVERZEICHNIS="robust" OPEN
 REGIONSDATEI="RegionList.ini" SIMDATEI="SimulatorList.ini" WARTEZEIT=30 STARTWARTEZEIT=10 STOPWARTEZEIT=30 MONEYWARTEZEIT=50 BACKUPWARTEZEIT=120 AUTOSTOPZEIT=60 SETMONOTHREADS=800 SETMONOTHREADSON="yes"
 OPENSIMDOWNLOAD="http://opensimulator.org/dist/" OPENSIMVERSION="opensim-0.9.1.1.zip" SEARCHADRES="icanhazip.com" AUTOCONFIG="no" SETMONOGCPARAMSON="yes"
 }
-VERSION="V0.50.194" # opensimMULTITOOL Versionsausgabe
+VERSION="V0.51.195" # opensimMULTITOOL Versionsausgabe
 clear # Bildschirm loeschen
 
 # LOGO
@@ -241,6 +241,29 @@ function works()
 			return 0
 	fi
 }
+function inputworks()
+{
+    VERZEICHNISSCREEN=$(\
+    dialog --backtitle "opensimMULTITOOL $VERSION" --title "opensimMULTITOOL Eingabe" \
+            --inputbox "Simulator:" 8 40 \
+    3>&1 1>&2 2>&3 3>&- \
+    )
+    dialog --clear
+    clear
+
+	if ! screen -list | grep -q "$VERZEICHNISSCREEN"; then
+		# es laeuft nicht - not work
+			dialog --backtitle "opensimMULTITOOL $VERSION" --msgbox "OpenSimulator $VERZEICHNISSCREEN OFFLINE!" 5 40
+            dialog --clear
+            clear
+		else
+		# es laeuft - work
+			dialog --backtitle "opensimMULTITOOL $VERSION" --msgbox "OpenSimulator $VERZEICHNISSCREEN ONLINE!" 5 40
+            dialog --clear
+            clear
+	fi
+	hauptmenu
+}
 
 ### Funktion checkfile, pruefen ob Datei vorhanden ist.
 # Aufruf: checkfile "pfad/name"
@@ -379,6 +402,54 @@ function osstop()
 		echo "$DATUM $(date +%H:%M:%S) OSSTOP: OpenSimulator $VERZEICHNISSCREEN nicht vorhanden" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 	fi
 	return
+}
+
+function inputosstart()
+{
+    VERZEICHNISSCREEN=$(\
+    dialog --backtitle "opensimMULTITOOL $VERSION" --title "opensimMULTITOOL Eingabe" \
+            --inputbox "Simulator:" 8 40 \
+    3>&1 1>&2 2>&3 3>&- \
+    )
+    dialog --clear
+    clear
+
+	if [ -d "$VERZEICHNISSCREEN" ]; then
+		
+		cd /$STARTVERZEICHNIS/"$VERZEICHNISSCREEN"/bin || return 1
+
+		# AOT Aktiveren oder Deaktivieren.
+		if [[ $SETAOTON = "yes" ]]
+		then
+			screen -fa -S "$VERZEICHNISSCREEN" -d -U -m mono --desktop -O=all OpenSim.exe
+		else
+			screen -fa -S "$VERZEICHNISSCREEN" -d -U -m mono OpenSim.exe
+		fi		
+		sleep 10
+	else
+		echo "OpenSimulator $VERZEICHNISSCREEN nicht vorhanden"
+	fi
+	hauptmenu
+}
+
+function inputosstop()
+{
+    VERZEICHNISSCREEN=$(\
+    dialog --backtitle "opensimMULTITOOL $VERSION" --title "opensimMULTITOOL Eingabe" \
+            --inputbox "Simulator:" 8 40 \
+    3>&1 1>&2 2>&3 3>&- \
+    )
+    dialog --clear
+    clear
+
+	if screen -list | grep -q "$VERZEICHNISSCREEN"; then
+
+		screen -S "$VERZEICHNISSCREEN" -p 0 -X eval "stuff 'shutdown'^M"
+		sleep 10
+	else
+		echo "OpenSimulator $VERZEICHNISSCREEN nicht vorhanden"
+	fi
+	hauptmenu
 }
 
 ### Funktion rostart, Robust Server starten.
@@ -3404,12 +3475,22 @@ function hauptmenu()
 		Restart ""\
 		Stop ""\
 		Start ""\
+		"--------------------------" ""\
+		"Einzelner Simulator Stop" ""\
+		"Einzelner Simulator Start" ""\
+		"Einzelner Simulator Status" ""\
+		"--------------------------" ""\
 		"Server Informationen" ""\
 		Kalender ""\
+		"--------------------------" ""\
 		"Weitere Funktionen" "" 3>&1 1>&2 2>&3)
 		antwort=$?
 		dialog --clear
-		clear		
+		clear
+		if [[ $mauswahl = "Einzelner Simulator Stop" ]]; then inputosstop; fi
+		if [[ $mauswahl = "Einzelner Simulator Start" ]]; then inputosstart; fi
+		if [[ $mauswahl = "Einzelner Simulator Status" ]]; then inputworks; fi
+
 		if [[ $mauswahl = "Server Informationen" ]]; then infodialog; fi
 		if [[ $mauswahl = "Kalender" ]]; then kalender; fi
 		if [[ $mauswahl = "Start" ]]; then autostart; fi
