@@ -23,7 +23,7 @@ STARTVERZEICHNIS="opt" MONEYVERZEICHNIS="robust" ROBUSTVERZEICHNIS="robust" OPEN
 REGIONSDATEI="RegionList.ini" SIMDATEI="SimulatorList.ini" WARTEZEIT=30 STARTWARTEZEIT=10 STOPWARTEZEIT=30 MONEYWARTEZEIT=50 BACKUPWARTEZEIT=120 AUTOSTOPZEIT=60 SETMONOTHREADS=800 SETMONOTHREADSON="yes"
 OPENSIMDOWNLOAD="http://opensimulator.org/dist/" OPENSIMVERSION="opensim-0.9.1.1.zip" SEARCHADRES="icanhazip.com" AUTOCONFIG="no" SETMONOGCPARAMSON="yes"
 }
-VERSION="V0.50.193" # opensimMULTITOOL Versionsausgabe
+VERSION="V0.50.194" # opensimMULTITOOL Versionsausgabe
 clear # Bildschirm loeschen
 
 # LOGO
@@ -31,8 +31,7 @@ function logo()
 {
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
-		# Dummy ausgabe wenn dialog installiert ist.
-		echo " "
+		clear # Bildschirm loeschen
 	else
 		# Datum und Uhrzeit
 		DATUM=$(date +%d.%m.%Y)
@@ -40,7 +39,7 @@ function logo()
 		echo "Datum: $DATUM Uhrzeit: $(date +%H:%M:%S)"
 		echo "Abbruch mit STRG und C"
 		echo " "
-		
+
 		echo "$(tput setaf 4)   ____                        _____  _                    _         _               "     
 		echo "  / __ \                      / ____|(_)                  | |       | |              "
 		echo " | |  | | _ __    ___  _ __  | (___   _  _ __ ___   _   _ | |  __ _ | |_  ___   _ __ "
@@ -54,8 +53,6 @@ function logo()
 	fi
 }
 logo
-
-
 
 ### Alte Variablen loeschen aus eventuellen voherigen sessions ###
 unset STARTVERZEICHNIS
