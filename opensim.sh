@@ -27,23 +27,35 @@ VERSION="V0.50.193" # opensimMULTITOOL Versionsausgabe
 clear # Bildschirm loeschen
 
 # LOGO
-echo "$(tput setaf 4)   ____                        _____  _                    _         _               "     
-echo "  / __ \                      / ____|(_)                  | |       | |              "
-echo " | |  | | _ __    ___  _ __  | (___   _  _ __ ___   _   _ | |  __ _ | |_  ___   _ __ "
-echo " | |  | ||  _ \  / _ \|  _ \  \___ \ | ||  _   _ \ | | | || | / _  || __|/ _ \ |  __|"
-echo "$(tput setaf 2) | |__| || |_) ||  __/| | | | ____) || || | | | | || |_| || || (_| || |_| (_) || |   "
-echo "  \____/ |  __/  \___||_| |_||_____/ |_||_| |_| |_| \____||_| \____| \__|\___/ |_|   "
-echo "         | |                                                                         "
-echo "         |_|                                                                         "
-echo "	    $(tput setaf 2)opensim$(tput setaf 4)MULTITOOL$(tput sgr 0) $VERSION" # Versionsausgabe
-echo " "
+function logo()
+{
+	# zuerst schauen ob dialog installiert ist
+	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+		# Dummy ausgabe wenn dialog installiert ist.
+		echo " "
+	else
+		# Datum und Uhrzeit
+		DATUM=$(date +%d.%m.%Y)
+		DATEIDATUM=$(date +%d_%m_%Y)
+		echo "Datum: $DATUM Uhrzeit: $(date +%H:%M:%S)"
+		echo "Abbruch mit STRG und C"
+		echo " "
+		
+		echo "$(tput setaf 4)   ____                        _____  _                    _         _               "     
+		echo "  / __ \                      / ____|(_)                  | |       | |              "
+		echo " | |  | | _ __    ___  _ __  | (___   _  _ __ ___   _   _ | |  __ _ | |_  ___   _ __ "
+		echo " | |  | ||  _ \  / _ \|  _ \  \___ \ | ||  _   _ \ | | | || | / _  || __|/ _ \ |  __|"
+		echo "$(tput setaf 2) | |__| || |_) ||  __/| | | | ____) || || | | | | || |_| || || (_| || |_| (_) || |   "
+		echo "  \____/ |  __/  \___||_| |_||_____/ |_||_| |_| |_| \____||_| \____| \__|\___/ |_|   "
+		echo "         | |                                                                         "
+		echo "         |_|                                                                         "
+		echo "	    $(tput setaf 2)opensim$(tput setaf 4)MULTITOOL$(tput sgr 0) $VERSION" # Versionsausgabe
+		echo " "
+	fi
+}
+logo
 
-# Datum und Uhrzeit
-DATUM=$(date +%d.%m.%Y)
-DATEIDATUM=$(date +%d_%m_%Y)
-echo "Datum: $DATUM Uhrzeit: $(date +%H:%M:%S)"
-echo "Abbruch mit STRG und C"
-echo " "
+
 
 ### Alte Variablen loeschen aus eventuellen voherigen sessions ###
 unset STARTVERZEICHNIS
