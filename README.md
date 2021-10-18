@@ -187,6 +187,10 @@ conf_read	- SUCHWORT PFAD DATEINAME - Konfigurationszeile lesen.
 ## TODO
 
 Neue Menü Funktionen, um diese nutzen zu können muss dialog nachinstalliert werden.
+
+Ich habe jetzt Restart nach oben gesetzt und Informationen hinzugefügt.
+
+Vom Kalender und den Informationen gelangt man wieder in das Hauptmenü.
 ```
 sudo apt-get install dialog
 ```
