@@ -23,7 +23,7 @@ STARTVERZEICHNIS="opt" MONEYVERZEICHNIS="robust" ROBUSTVERZEICHNIS="robust" OPEN
 REGIONSDATEI="RegionList.ini" SIMDATEI="SimulatorList.ini" WARTEZEIT=30 STARTWARTEZEIT=10 STOPWARTEZEIT=30 MONEYWARTEZEIT=50 BACKUPWARTEZEIT=120 AUTOSTOPZEIT=60 SETMONOTHREADS=800 SETMONOTHREADSON="yes"
 OPENSIMDOWNLOAD="http://opensimulator.org/dist/" OPENSIMVERSION="opensim-0.9.1.1.zip" SEARCHADRES="icanhazip.com" AUTOCONFIG="no" SETMONOGCPARAMSON="yes"
 }
-VERSION="V0.51.195" # opensimMULTITOOL Versionsausgabe
+VERSION="V0.52.201" # opensimMULTITOOL Versionsausgabe
 clear # Bildschirm loeschen
 
 # LOGO
@@ -228,30 +228,15 @@ function oscommand()
 # Aufruf: works screen_name
 function works()
 {
-	VERZEICHNISSCREEN=$1  # OpenSimulator, Verzeichnis und Screen Name
-	if ! screen -list | grep -q "$VERZEICHNISSCREEN"; then
-		# es laeuft nicht - not work
-			echo "$(tput setaf $White)$(tput setab $Red) $VERZEICHNISSCREEN OFFLINE! $(tput sgr 0)"
-			echo "$DATUM $(date +%H:%M:%S) WORKS: $VERZEICHNISSCREEN OFFLINE!" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-			return 1
-		else
-		# es laeuft - work
-			echo "$(tput setaf $White)$(tput setab $Green) $VERZEICHNISSCREEN ONLINE! $(tput sgr 0)"
-			echo "$DATUM $(date +%H:%M:%S) WORKS: $VERZEICHNISSCREEN ONLINE!" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-			return 0
-	fi
-}
-function inputworks()
-{
-    VERZEICHNISSCREEN=$(\
-    dialog --backtitle "opensimMULTITOOL $VERSION" --title "opensimMULTITOOL Eingabe" \
-            --inputbox "Simulator:" 8 40 \
-    3>&1 1>&2 2>&3 3>&- \
-    )
-    dialog --clear
-    clear
-
-	if ! screen -list | grep -q "$VERZEICHNISSCREEN"; then
+	### dialog Aktionen
+	# zuerst schauen ob dialog installiert ist
+	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+		# Alle Aktionen mit dialog
+		boxtitel="opensimMULTITOOL Eingabe"; boxtext="Screen Name:"; 
+		VERSIONSNUMMER=$( dialog --backtitle "opensimMULTITOOL $VERSION" --title "$boxtitel" --inputbox "$boxtext" 8 40 3>&1 1>&2 2>&3 3>&- )
+		dialog --clear
+		clear
+		if ! screen -list | grep -q "$VERZEICHNISSCREEN"; then
 		# es laeuft nicht - not work
 			dialog --backtitle "opensimMULTITOOL $VERSION" --msgbox "OpenSimulator $VERZEICHNISSCREEN OFFLINE!" 5 40
             dialog --clear
@@ -261,10 +246,26 @@ function inputworks()
 			dialog --backtitle "opensimMULTITOOL $VERSION" --msgbox "OpenSimulator $VERZEICHNISSCREEN ONLINE!" 5 40
             dialog --clear
             clear
-	fi
-	hauptmenu
-}
+		fi
+		hauptmenu
+	else
+		# Alle Aktionen ohne dialog
+		VERZEICHNISSCREEN=$1  # OpenSimulator, Verzeichnis und Screen Name
+		
+		if ! screen -list | grep -q "$VERZEICHNISSCREEN"; then
+			# es laeuft nicht - not work
+				echo "$(tput setaf $White)$(tput setab $Red) $VERZEICHNISSCREEN OFFLINE! $(tput sgr 0)"
+				echo "$DATUM $(date +%H:%M:%S) WORKS: $VERZEICHNISSCREEN OFFLINE!" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+				return 1
+			else
+			# es laeuft - work
+				echo "$(tput setaf $White)$(tput setab $Green) $VERZEICHNISSCREEN ONLINE! $(tput sgr 0)"
+				echo "$DATUM $(date +%H:%M:%S) WORKS: $VERZEICHNISSCREEN ONLINE!" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+				return 0
+		fi
 
+	fi
+}
 ### Funktion checkfile, pruefen ob Datei vorhanden ist.
 # Aufruf: checkfile "pfad/name"
 # Verwendung als Einzeiler: checkfile /pfad/zur/datei && echo "File exists" || echo "File not found!"
@@ -296,6 +297,57 @@ function mapdel()
 function logdel()
 {
 	VERZEICHNIS=$1
+	if [ -d "$VERZEICHNIS" ]; then
+		echo "$(tput setaf $Red) $(tput setab $White)OpenSimulator log $VERZEICHNIS geloescht$(tput sgr 0)"
+		rm /$STARTVERZEICHNIS/"$VERZEICHNIS"/bin/*.log
+		echo "$DATUM $(date +%H:%M:%S) LOGDEL: OpenSimulator log $VERZEICHNIS geloescht" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+	else
+		echo "$(tput setaf $Red)logs nicht gefunden $(tput sgr 0)"
+		echo "$DATUM $(date +%H:%M:%S) LOGDEL: logs nicht gefunden" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+	fi
+}
+function menumapdel()
+{
+	### dialog Aktionen
+	# zuerst schauen ob dialog installiert ist
+	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+		# Alle Aktionen mit dialog
+		boxtitel="opensimMULTITOOL Eingabe"; boxtext="Verzeichnis:"; 
+		VERZEICHNIS=$( dialog --backtitle "opensimMULTITOOL $VERSION" --title "$boxtitel" --inputbox "$boxtext" 8 40 3>&1 1>&2 2>&3 3>&- )
+		dialog --clear
+		clear
+	else
+		# Alle Aktionen ohne dialog
+		VERZEICHNIS=$1
+	fi
+	# dialog Aktionen Ende
+	
+	if [ -d "$VERZEICHNIS" ]; then
+		echo "$(tput setaf $Red) $(tput setab $White)OpenSimulator maptile $VERZEICHNIS geloescht$(tput sgr 0)"
+		cd /$STARTVERZEICHNIS/"$VERZEICHNIS"/bin || return 1
+		rm -r maptiles/*
+		echo "$DATUM $(date +%H:%M:%S) MAPDEL: OpenSimulator maptile $VERZEICHNIS geloescht" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+	else
+		echo "$(tput setaf $Red)maptile $VERZEICHNIS nicht gefunden $(tput sgr 0)"
+		echo "$DATUM $(date +%H:%M:%S) MAPDEL: maptile $VERZEICHNIS nicht gefunden" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+	fi
+}
+function menulogdel()
+{
+	### dialog Aktionen
+	# zuerst schauen ob dialog installiert ist
+	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+		# Alle Aktionen mit dialog
+		boxtitel="opensimMULTITOOL Eingabe"; boxtext="Verzeichnis:"; 
+		VERZEICHNIS=$( dialog --backtitle "opensimMULTITOOL $VERSION" --title "$boxtitel" --inputbox "$boxtext" 8 40 3>&1 1>&2 2>&3 3>&- )
+		dialog --clear
+		clear
+	else
+		# Alle Aktionen ohne dialog
+		VERZEICHNIS=$1
+	fi
+	# dialog Aktionen Ende
+	
 	if [ -d "$VERZEICHNIS" ]; then
 		echo "$(tput setaf $Red) $(tput setab $White)OpenSimulator log $VERZEICHNIS geloescht$(tput sgr 0)"
 		rm /$STARTVERZEICHNIS/"$VERZEICHNIS"/bin/*.log
@@ -421,11 +473,25 @@ function inputosstart()
 		# AOT Aktiveren oder Deaktivieren.
 		if [[ $SETAOTON = "yes" ]]
 		then
-			screen -fa -S "$VERZEICHNISSCREEN" -d -U -m mono --desktop -O=all OpenSim.exe
+		DIALOG=dialog
+		(echo "10" ; screen -fa -S "$VERZEICHNISSCREEN" -d -U -m mono --desktop -O=all OpenSim.exe ; sleep 3
+		echo "100" ; sleep 2) |
+		$DIALOG --title "$VERZEICHNISSCREEN" --gauge "Start" 8 30
+		$DIALOG --clear
+		$DIALOG --msgbox "$VERZEICHNISSCREEN gestartet!" 5 20
+		$DIALOG --clear
+		clear
 		else
-			screen -fa -S "$VERZEICHNISSCREEN" -d -U -m mono OpenSim.exe
+		DIALOG=dialog
+		(echo "10" ; screen -fa -S "$VERZEICHNISSCREEN" -d -U -m mono OpenSim.exe ; sleep 3
+		echo "100" ; sleep 2) |
+		$DIALOG --title "$VERZEICHNISSCREEN" --gauge "Start" 8 30
+		$DIALOG --clear
+		$DIALOG --msgbox "$VERZEICHNISSCREEN gestartet!" 5 20
+		$DIALOG --clear
+		clear
 		fi		
-		sleep 10
+		#sleep 10
 	else
 		echo "OpenSimulator $VERZEICHNISSCREEN nicht vorhanden"
 	fi
@@ -443,9 +509,14 @@ function inputosstop()
     clear
 
 	if screen -list | grep -q "$VERZEICHNISSCREEN"; then
-
-		screen -S "$VERZEICHNISSCREEN" -p 0 -X eval "stuff 'shutdown'^M"
-		sleep 10
+		DIALOG=dialog
+		(echo "10" ; screen -S "$VERZEICHNISSCREEN" -p 0 -X eval "stuff 'shutdown'^M" ; sleep 3
+		echo "100" ; sleep 2) |
+		$DIALOG --title "$VERZEICHNISSCREEN" --gauge "Stop" 8 30
+		$DIALOG --clear
+		$DIALOG --msgbox "$VERZEICHNISSCREEN beendet!" 5 20
+		$DIALOG --clear
+		clear
 	else
 		echo "OpenSimulator $VERZEICHNISSCREEN nicht vorhanden"
 	fi
@@ -1906,7 +1977,18 @@ function installationen()
 # /opt/opensim.sh osbuilding 1187
 function osbuilding() 
 {
-    VERSIONSNUMMER=$1
+	### dialog Aktionen
+	# zuerst schauen ob dialog installiert ist
+	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+		# Alle Aktionen mit dialog
+		VERSIONSNUMMER=$( dialog --backtitle "opensimMULTITOOL $VERSION" --title "opensimMULTITOOL Eingabe" --inputbox "Versionsnummer:" 8 40 3>&1 1>&2 2>&3 3>&- )
+		dialog --clear
+		clear
+	else
+		# Alle Aktionen ohne dialog
+		VERSIONSNUMMER=$1
+	fi
+	# dialog Aktionen Ende
 	
     cd /$STARTVERZEICHNIS || exit
 
@@ -3489,7 +3571,7 @@ function hauptmenu()
 		clear
 		if [[ $mauswahl = "Einzelner Simulator Stop" ]]; then inputosstop; fi
 		if [[ $mauswahl = "Einzelner Simulator Start" ]]; then inputosstart; fi
-		if [[ $mauswahl = "Einzelner Simulator Status" ]]; then inputworks; fi
+		if [[ $mauswahl = "Einzelner Simulator Status" ]]; then works; fi
 
 		if [[ $mauswahl = "Server Informationen" ]]; then infodialog; fi
 		if [[ $mauswahl = "Kalender" ]]; then kalender; fi
@@ -3497,7 +3579,7 @@ function hauptmenu()
 		if [[ $mauswahl = "Stop" ]]; then autostop; fi
 		if [[ $mauswahl = "Restart" ]]; then autorestart; fi
 		if [[ $mauswahl = "Weitere Funktionen" ]]; then funktionenmenu; fi
-		if [[ $mauswahl = "Hilfe" ]]; then hilfemenu; fi
+		#if [[ $mauswahl = "Hilfe" ]]; then hilfemenu; fi
 		if [[ $antwort = 2 ]]; then hilfemenu ; fi
 		if [[ $antwort = 1 ]]; then exit ; fi
 	else
@@ -3511,7 +3593,7 @@ function hilfemenu()
 	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
 		# dialog --radiolist
 		# Name : menu1
-		hauswahl=$(dialog --backtitle "opensimMULTITOOL $VERSION" --help-button --menu "OPENSIM MULTITOOL $VERSION" 0 45 0 \
+		hauswahl=$(dialog --backtitle "opensimMULTITOOL $VERSION" --menu "OPENSIM MULTITOOL $VERSION" 0 45 0 \
 		Hilfe ""\
 		Konsolenhilfe ""\
 		Kommandohilfe "" 3>&1 1>&2 2>&3)
@@ -3521,7 +3603,7 @@ function hilfemenu()
 		if [[ $hauswahl = "Hilfe" ]]; then hilfe; fi
 		if [[ $hauswahl = "Konsolenhilfe" ]]; then konsolenhilfe; fi
 		if [[ $hauswahl = "Kommandohilfe" ]]; then commandhelp; fi
-		if [[ $antwort = 2 ]]; then hilfemenu ; fi
+		#if [[ $antwort = 2 ]]; then hilfemenu ; fi
 		if [[ $antwort = 1 ]]; then exit ; fi
 	else
 		# wenn dialog nicht installiert ist die Hilfe anzeigen.
@@ -3579,6 +3661,7 @@ function expertenmenu()
 		feauswahl=$(dialog --backtitle "opensimMULTITOOL $VERSION" --help-button --defaultno --menu "OPENSIM MULTITOOL $VERSION" 0 45 0 \
 		"Voreinstellungen setzen" ""\
 		"Opensimulator upgraden" ""\
+		"Opensimulator bauen und upgraden" ""\
 		"Automatischer Regionsbackup" ""\
 		"Kompilieren" ""\
 		"oscompi" ""\
@@ -3595,6 +3678,7 @@ function expertenmenu()
 		clear
 		if [[ $feauswahl = "Voreinstellungen setzen" ]]; then settings; fi
 		if [[ $feauswahl = "Opensimulator upgraden" ]]; then osupgrade; fi
+		if [[ $feauswahl = "Opensimulator bauen und upgraden" ]]; then osbuilding; fi
 		if [[ $feauswahl = "Automatischer Regionsbackup" ]]; then autoregionbackup; fi
 		if [[ $feauswahl = "Kompilieren" ]]; then compilieren; fi
 		if [[ $feauswahl = "oscompi" ]]; then oscompi; fi
@@ -3651,24 +3735,16 @@ function fortschritsanzeige()
 {
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
-        # Demonstriert dialog --gauge für eine Fortschritsanzeige
-        DIALOG=dialog
-        (
-        echo "10" ; sleep 1
-        echo "XXX" ; echo "Alle Daten werden gesichert"; echo "XXX"
-        echo "20" ; sleep 1
-        echo "50" ; sleep 1
-        echo "XXX" ; echo "Alle Daten werden archiviert"; echo "XXX"
-        echo "75" ; sleep 1
-        echo "XXX" ; echo "Daten werden ins Webverzeichnis hochgeladen";
-        echo "XXX"
-        echo "100" ; sleep 3
-        ) |
-        $DIALOG --title "Fortschrittszustand" --gauge "Starte Backup-Script" 8 30
-        $DIALOG --clear
-        $DIALOG --msgbox "Arbeit erfolgreich beendet ..." 0 0
-        $DIALOG --clear
-        clear
+
+		dialogtext="Bitte warten!"
+
+        # dialog --gauge eine Fortschritsanzeige
+		for i in $(seq 0 10 100)
+		do
+			sleep 1
+			echo "$i" | dialog --gauge "$dialogtext" 10 70 0
+		done
+
 	else
 		# wenn dialog nicht installiert ist die Hilfe anzeigen.
 		hilfe
@@ -3782,6 +3858,7 @@ case  $KOMMANDO  in
 	loadinventar) loadinventar "$2" "$3" "$4" "$5" ;;
 	saveinventar) saveinventar "$2" "$3" "$4" "$5" ;;
 	infodialog) infodialog ;;
+	fortschritsanzeige) fortschritsanzeige ;;
 	*) hauptmenu ;;
 esac
 
