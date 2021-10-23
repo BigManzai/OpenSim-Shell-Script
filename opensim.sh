@@ -23,7 +23,7 @@ STARTVERZEICHNIS="opt" MONEYVERZEICHNIS="robust" ROBUSTVERZEICHNIS="robust" OPEN
 REGIONSDATEI="RegionList.ini" SIMDATEI="SimulatorList.ini" WARTEZEIT=30 STARTWARTEZEIT=10 STOPWARTEZEIT=30 MONEYWARTEZEIT=50 BACKUPWARTEZEIT=120 AUTOSTOPZEIT=60 SETMONOTHREADS=800 SETMONOTHREADSON="yes"
 OPENSIMDOWNLOAD="http://opensimulator.org/dist/" OPENSIMVERSION="opensim-0.9.1.1.zip" SEARCHADRES="icanhazip.com" AUTOCONFIG="no" SETMONOGCPARAMSON="yes"
 }
-VERSION="V0.52.201" # opensimMULTITOOL Versionsausgabe
+VERSION="V0.53.204" # opensimMULTITOOL Versionsausgabe
 clear # Bildschirm loeschen
 
 # LOGO
@@ -360,43 +360,52 @@ function menulogdel()
 
 ### Funktion ossettings, stellt den Linux Server fuer OpenSim ein.
 function ossettings()
-{
+{	
 	# Hier kommen alle gewünschten Einstellungen rein.
 	echo " "
 	echo "$(tput setab $Green)Setze die Einstellungen neu! $(tput sgr 0)"
 
 	# ulimit
+	VERGLEICHUL=$(ulimit -s)
 	if [[ $SETULIMITON = "yes" ]]
 	then
-	echo "$DATUM $(date +%H:%M:%S) OSSETTINGS: Setze die Einstellung: ulimit -s 1048576" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-	echo "Setze ulimit auf 1048576"
-	ulimit -s 1048576
+		if [[ $VERGLEICHUL == 1048576 ]]
+		then
+		echo "ulimit ist bereits auf 1048576 eingestellt"
+		else
+		echo "$DATUM $(date +%H:%M:%S) OSSETTINGS: Setze die Einstellung: ulimit -s 1048576" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+		echo "Setze ulimit auf 1048576"
+		ulimit -s 1048576
+		fi
 	fi
 
 	# MONO_THREADS_PER_CPU
+	VERGLEICHMT=${MONO_THREADS_PER_CPU}
 	if [[ $SETMONOTHREADSON = "yes" ]]
 	then
-	echo "$DATUM $(date +%H:%M:%S) OSSETTINGS: Setze die Mono Threads auf $SETMONOTHREADS" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-	echo "Setze Mono Threads auf $SETMONOTHREADS"
-	MONO_THREADS_PER_CPU=$SETMONOTHREADS
+		if [[ $VERGLEICHMT == "$SETMONOTHREADS" ]]
+		then
+		echo "Mono Threads sind bereits auf $SETMONOTHREADS eingestellt"
+		else
+		echo "$DATUM $(date +%H:%M:%S) OSSETTINGS: Setze die Mono Threads auf $SETMONOTHREADS" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+		echo "Setze Mono Threads auf $SETMONOTHREADS"
+		MONO_THREADS_PER_CPU=$SETMONOTHREADS
+		fi
 	fi
 
 	# MONO_GC_PARAMS
+	VERGLEICHMP=${MONO_GC_PARAMS}
 	if [[ $SETMONOGCPARAMSON = "yes" ]]
 	then
-	echo "$DATUM $(date +%H:%M:%S) OSSETTINGS: Setze die Einstellung: minor=split,promotion-age=14,nursery-size=64m" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-	echo "Setze Mono GC Parameter auf minor=split,promotion-age=14,nursery-size=64m"
-	export MONO_GC_PARAMS="minor=split,promotion-age=14,nursery-size=64m"
+		if [[ $VERGLEICHMP == "minor=split,promotion-age=14,nursery-size=64m" ]]
+		then
+		echo "Mono Parameter sind bereits auf minor=split,promotion-age=14,nursery-size=64m eingestellt"
+		else
+		echo "$DATUM $(date +%H:%M:%S) OSSETTINGS: Setze die Einstellung: minor=split,promotion-age=14,nursery-size=64m" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+		echo "Setze Mono GC Parameter auf minor=split,promotion-age=14,nursery-size=64m"
+		export MONO_GC_PARAMS="minor=split,promotion-age=14,nursery-size=64m"
+		fi
 	fi
-
-	# Manual page auf Deutsch
-	if [[ $SETMANUALPAGES = "yes" ]]
-	then
-	echo "$DATUM $(date +%H:%M:%S) OSSETTINGS: Setze manual pages auf Deutsch" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-	echo "Setze manual pages auf Deutsch"
-	alias man="man -L de_DE.utf8"
-	fi
-
 	# Zum schluss eine Leerzeile.
 	echo " "
 }
@@ -3676,7 +3685,7 @@ function expertenmenu()
 		antwort=$?
 		dialog --clear
 		clear
-		if [[ $feauswahl = "Voreinstellungen setzen" ]]; then settings; fi
+		if [[ $feauswahl = "Voreinstellungen setzen" ]]; then ossettings; fi
 		if [[ $feauswahl = "Opensimulator upgraden" ]]; then osupgrade; fi
 		if [[ $feauswahl = "Opensimulator bauen und upgraden" ]]; then osbuilding; fi
 		if [[ $feauswahl = "Automatischer Regionsbackup" ]]; then autoregionbackup; fi
