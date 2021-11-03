@@ -186,6 +186,9 @@ conf_read	- SUCHWORT PFAD DATEINAME - Konfigurationszeile lesen.
 
 ## TODO
 
+Version 0.54.213 - MoneyServer vom git kopieren - OSSL Skripte vom git kopieren, 
+    sind die ZIP Dateien vorhanen werden sie automatisch eingebaut und mit kompiliert.
+
 Neue Menü Funktionen, um diese nutzen zu können muss dialog nachinstalliert werden.
 
 Ich habe jetzt Restart nach oben gesetzt und Informationen hinzugefügt.
