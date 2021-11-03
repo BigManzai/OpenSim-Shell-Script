@@ -5,8 +5,10 @@
 	MONEYVERZEICHNIS="robust"
 	ROBUSTVERZEICHNIS="robust"
 	OPENSIMVERZEICHNIS="opensim"
-	SCRIPTSOURCE="ScriptNeu"
-	MONEYSOURCE="money48"
+	SCRIPTSOURCE="opensim-ossl-example-scripts-main"
+	SCRIPTZIP="opensim-ossl-example-scripts-main.zip"
+	MONEYSOURCE="OpenSimCurrencyServer-2021-master"
+	MONEYZIP="OpenSimCurrencyServer-2021-master.zip"
 	
 ## Dateien
 	REGIONSDATEI="RegionList.ini"

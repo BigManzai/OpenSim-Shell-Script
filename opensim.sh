@@ -19,12 +19,14 @@
 ### myshellschreck, ShellCheck ueberlisten, hat sonst keinerlei Funktion und wird auch nicht aufgerufen.
 function myshellschreck()
 {
-STARTVERZEICHNIS="opt" MONEYVERZEICHNIS="robust" ROBUSTVERZEICHNIS="robust" OPENSIMVERZEICHNIS="opensim" SCRIPTSOURCE="ScriptNeu" MONEYSOURCE="money48" OSVERSION="opensim-0.9.2.0Dev"
+STARTVERZEICHNIS="opt" MONEYVERZEICHNIS="robust" ROBUSTVERZEICHNIS="robust" OPENSIMVERZEICHNIS="opensim" SCRIPTSOURCE="ScriptNeu" SCRIPTZIP="opensim-ossl-example-scripts-main.zip" MONEYSOURCE="money48" MONEYZIP="OpenSimCurrencyServer-2021-master.zip" OSVERSION="opensim-0.9.2.0Dev"
 REGIONSDATEI="RegionList.ini" SIMDATEI="SimulatorList.ini" WARTEZEIT=30 STARTWARTEZEIT=10 STOPWARTEZEIT=30 MONEYWARTEZEIT=50 BACKUPWARTEZEIT=120 AUTOSTOPZEIT=60 SETMONOTHREADS=800 SETMONOTHREADSON="yes"
 OPENSIMDOWNLOAD="http://opensimulator.org/dist/" OPENSIMVERSION="opensim-0.9.1.1.zip" SEARCHADRES="icanhazip.com" AUTOCONFIG="no" SETMONOGCPARAMSON="yes"
 }
-VERSION="V0.53.204" # opensimMULTITOOL Versionsausgabe
+VERSION="V0.54.213" # opensimMULTITOOL Versionsausgabe
 clear # Bildschirm loeschen
+
+DATUM=$(date +%d.%m.%Y); DATEIDATUM=$(date +%d_%m_%Y); UHRZEIT=$(date +%H:%M:%S)
 
 # LOGO
 function logo()
@@ -36,7 +38,7 @@ function logo()
 		# Datum und Uhrzeit
 		DATUM=$(date +%d.%m.%Y)
 		DATEIDATUM=$(date +%d_%m_%Y)
-		echo "Datum: $DATUM Uhrzeit: $(date +%H:%M:%S)"
+		echo "Datum: $DATUM Uhrzeit: $UHRZEIT"
 		echo "Abbruch mit STRG und C"
 		echo " "
 
@@ -60,7 +62,9 @@ unset MONEYVERZEICHNIS
 unset ROBUSTVERZEICHNIS
 unset OPENSIMVERZEICHNIS
 unset SCRIPTSOURCE
+unset SCRIPTZIP
 unset MONEYSOURCE
+unset MONEYZIP
 unset REGIONSNAME
 unset REGIONSNAMEb
 unset REGIONSNAMEc
@@ -117,7 +121,7 @@ function vardel()
 	unset WARTEZEIT; unset STARTWARTEZEIT; unset STOPWARTEZEIT
 	unset MONEYWARTEZEIT; unset Red; unset Green; unset White
 	unset NAME; unset VERZEICHNIS; unset PASSWORD; unset DATEI
-	unset OPENSIMVERZEICHNIS; unset SCRIPTSOURCE; unset MONEYSOURCE
+	unset OPENSIMVERZEICHNIS; unset SCRIPTSOURCE; unset SCRIPTZIP; unset MONEYSOURCE; unset MONEYZIP
 	unset REGIONSNAME; unset REGIONSNAMEb; unset REGIONSNAMEc; unset REGIONSNAMEd
 }
 
@@ -138,8 +142,7 @@ function makeregionsliste()
 	while IFS= read -r line; do
 	REGIONSLISTE+=("$line")
 	done < /$STARTVERZEICHNIS/$REGIONSDATEI
-	# Anzahl der Eintraege.    
-	ANZAHLREGIONSLISTE=${#REGIONSLISTE[*]}
+	ANZAHLREGIONSLISTE=${#REGIONSLISTE[*]} # Anzahl der Eintraege.
 }
 
 ### Funktion assetdel, Asset von der Region loeschen.
@@ -161,8 +164,7 @@ function assetdel()
 	fi
 }
 
-### Funktion landclear, Land clear - Löscht alle Parzellen auf dem Land. 
-# Aufruf: landclear screen_name Regionsname Objektname
+### Funktion landclear, Land clear - Löscht alle Parzellen auf dem Land. # Aufruf: landclear screen_name Regionsname Objektname
 function landclear()
 {
 	VERZEICHNISSCREEN=$1; REGION=$2
@@ -180,8 +182,7 @@ function landclear()
 	fi
 }
 
-### Funktion loadinventar, saveinventar
-# Aufruf: load oder saveinventar "NAME" "VERZEICHNIS" "PASSWORD" "DATEImitPFAD"
+### Funktion loadinventar, saveinventar # Aufruf: load oder saveinventar "NAME" "VERZEICHNIS" "PASSWORD" "DATEImitPFAD"
 function loadinventar()
 {	
 	VERZEICHNISSCREEN="sim1"; NAME=$1; VERZEICHNIS=$2; PASSWORD=$3; DATEI=$4
@@ -206,8 +207,7 @@ function saveinventar()
 		echo "$DATUM $(date +%H:%M:%S) OSCOMMAND: Der Screen $VERZEICHNISSCREEN existiert nicht" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 	fi
 }
-### Funktion oscommand, OpenSim Command direkt in den screen senden.
-# Aufruf: oscommand Screen Region Befehl Parameter
+### Funktion oscommand, OpenSim Command direkt in den screen senden. # Aufruf: oscommand Screen Region Befehl Parameter
 # Beispiel: /opt/opensim.sh oscommand sim1 Welcome "alert Hallo liebe Leute dies ist eine Nachricht"
 # Beispiel: /opt/opensim.sh oscommand sim1 Welcome "alert-user John Doe Hallo John Doe"
 function oscommand()
@@ -224,8 +224,7 @@ function oscommand()
 	fi
 }
 
-### Funktion works, screen pruefen ob er laeuft.
-# Aufruf: works screen_name
+### Funktion works, screen pruefen ob er laeuft. # Aufruf: works screen_name
 function works()
 {
 	### dialog Aktionen
@@ -266,8 +265,7 @@ function works()
 
 	fi
 }
-### Funktion checkfile, pruefen ob Datei vorhanden ist.
-# Aufruf: checkfile "pfad/name"
+### Funktion checkfile, pruefen ob Datei vorhanden ist. # Aufruf: checkfile "pfad/name"
 # Verwendung als Einzeiler: checkfile /pfad/zur/datei && echo "File exists" || echo "File not found!"
 function checkfile 
 {
@@ -276,8 +274,7 @@ function checkfile
 	return $?
 }
 
-### Funktion mapdel, loescht die Map-Karten.
-# Aufruf: mapdel Verzeichnis
+### Funktion mapdel, loescht die Map-Karten. # Aufruf: mapdel Verzeichnis
 function mapdel()
 {
 	VERZEICHNIS=$1
@@ -292,8 +289,7 @@ function mapdel()
 	fi
 }
 
-### Funktion logdel, loescht die Log Dateien.
-# Aufruf: logdel Verzeichnis
+### Funktion logdel, loescht die Log Dateien. # Aufruf: logdel Verzeichnis
 function logdel()
 {
 	VERZEICHNIS=$1
@@ -319,8 +315,7 @@ function menumapdel()
 	else
 		# Alle Aktionen ohne dialog
 		VERZEICHNIS=$1
-	fi
-	# dialog Aktionen Ende
+	fi	# dialog Aktionen Ende
 	
 	if [ -d "$VERZEICHNIS" ]; then
 		echo "$(tput setaf $Red) $(tput setab $White)OpenSimulator maptile $VERZEICHNIS geloescht$(tput sgr 0)"
@@ -405,9 +400,8 @@ function ossettings()
 		echo "Setze Mono GC Parameter auf minor=split,promotion-age=14,nursery-size=64m"
 		export MONO_GC_PARAMS="minor=split,promotion-age=14,nursery-size=64m"
 		fi
-	fi
-	# Zum schluss eine Leerzeile.
-	echo " "
+	fi	
+	echo " " # Zum schluss eine Leerzeile.
 }
 
 ### Funktion screenlist, Laufende Screens auflisten und auch in die Log Datei schreiben.
@@ -419,9 +413,7 @@ function screenlist()
 	screen -ls >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 }
 
-### Funktion osstart, startet Region Server.
-# osstart screen_name
-# Beispiel-Example: /opt/opensim.sh osstart sim1
+### Funktion osstart, startet Region Server. # Beispiel-Example: /opt/opensim.sh osstart sim1
 function osstart()
 {
 	VERZEICHNISSCREEN=$1 # OpenSimulator, Verzeichnis und Screen Name
@@ -448,8 +440,7 @@ function osstart()
 	return
 }
 
-### Funktion osstop, stoppt Region Server.
-# Beispiel-Example: /opt/opensim.sh osstop sim1
+### Funktion osstop, stoppt Region Server. # Beispiel-Example: /opt/opensim.sh osstop sim1
 function osstop()
 {
 	VERZEICHNISSCREEN=$1 # OpenSimulator, Verzeichnis und Screen Name
@@ -608,8 +599,7 @@ function mostop()
 	fi	
 }
 
-### Funktion osscreenstop, beendet ein Screeen.
-# Beispiel-Example: osscreenstop sim1
+### Funktion osscreenstop, beendet ein Screeen. # Beispiel-Example: osscreenstop sim1
 function osscreenstop()
 {
 	VERZEICHNISSCREEN=$1
@@ -642,8 +632,7 @@ function gridstart()
 	fi
 }
 
-### Funktion simstats, zeigt Simstatistik an.
-# simstats screen_name
+### Funktion simstats, zeigt Simstatistik an. # simstats screen_name
 # Beispiel-Example: simstats sim1
 # erzeugt im Hauptverzeichnis eine Datei namens sim1.log in dieser Datei ist die Statistik zu finden.
 function simstats()
@@ -726,6 +715,37 @@ function oscompi()
 	echo "$DATUM $(date +%H:%M:%S) OSCOMPI: Kompilierung wurde durchgeführt" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 }
 
+### Funktion gitcopy, Dateien vom Github kopieren.
+function moneygitcopy()
+{
+#Money und Scripte vom Git holen
+
+	if [[ $MONEYCOPY = "yes" ]]
+	then
+		echo "$(tput setab $Green)MoneyServer wird vom GIT geholt! $(tput sgr 0)"
+		echo "$DATUM $(date +%H:%M:%S) MONEYSERVER: MoneyServer wird vom GIT geholt" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+		git clone https://github.com/BigManzai/OpenSimCurrencyServer-2021 /$STARTVERZEICHNIS/OpenSimCurrencyServer-2021-master
+	else
+		echo "$(tput setab $Green)MoneyServer nicht vorhanden! $(tput sgr 0)"
+		echo "$DATUM $(date +%H:%M:%S) MONEYSERVER: MoneyServer nicht vorhanden" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+	fi
+}
+
+### Funktion gitcopy, Dateien vom Github kopieren.
+function scriptgitcopy()
+{
+#Money und Scripte vom Git holen
+	if [[ $SCRIPTCOPY = "yes" ]]
+	then
+		echo "$(tput setab $Green)Script Assets werden vom GIT geholt! $(tput sgr 0)"
+		echo "$DATUM $(date +%H:%M:%S) SCRIPTCOPY: Script Assets werden vom GIT geholt" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+		git clone https://github.com/BigManzai/opensim-ossl-example-scripts /$STARTVERZEICHNIS/opensim-ossl-example-scripts-main
+	else
+		echo "$(tput setab $Green)Script Assets sind nicht vorhanden! $(tput sgr 0)"
+		echo "$DATUM $(date +%H:%M:%S) SCRIPTCOPY: Script Assets sind nicht vorhanden" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+	fi
+}
+
 ### Funktion scriptcopy, lsl ossl scripte kopieren.
 function scriptcopy()
 {
@@ -736,10 +756,20 @@ function scriptcopy()
 			echo "$DATUM $(date +%H:%M:%S) SCRIPTCOPY: Script Assets werden kopiert" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 			cp -r /$STARTVERZEICHNIS/$SCRIPTSOURCE/assets /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin
 			cp -r /$STARTVERZEICHNIS/$SCRIPTSOURCE/inventory /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin
-		echo " "
+			echo " "
 		else
-			echo "$(tput setab $Green)Script Assets sind nicht vorhanden! $(tput sgr 0)"
-			echo "$DATUM $(date +%H:%M:%S) SCRIPTCOPY: Script Assets sind nicht vorhanden" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+			# entpacken und kopieren
+			echo "$(tput setab $Green)Script Assets werden entpackt! $(tput sgr 0)"
+			echo "$DATUM $(date +%H:%M:%S) SCRIPTCOPY: Script Assets werden entpackt" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+			unzip "$SCRIPTZIP"
+			echo "$(tput setab $Green)Script Assets werden kopiert! $(tput sgr 0)"
+			echo "$DATUM $(date +%H:%M:%S) SCRIPTCOPY: Script Assets werden kopiert" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+			cp -r /$STARTVERZEICHNIS/$SCRIPTSOURCE/assets /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin
+			cp -r /$STARTVERZEICHNIS/$SCRIPTSOURCE/inventory /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin
+			echo " "
+
+			#echo "$(tput setab $Green)Script Assets sind nicht vorhanden! $(tput sgr 0)"
+			#echo "$DATUM $(date +%H:%M:%S) SCRIPTCOPY: Script Assets sind nicht vorhanden" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 		fi
 	else
     	echo "Skripte werden nicht kopiert."
@@ -752,15 +782,24 @@ function moneycopy()
 {
 	if [[ $MONEYCOPY = "yes" ]]
 	then
-		if [ -d /$STARTVERZEICHNIS/$MONEYSOURCE/ ]; then
+			if [ -d /$STARTVERZEICHNIS/$MONEYSOURCE/ ]; then
 			echo "$(tput setab $Green)Money Kopiervorgang startet! $(tput sgr 0)"
 			echo "$DATUM $(date +%H:%M:%S) MONEYCOPY: Money Kopiervorgang gestartet" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 			cp -r /$STARTVERZEICHNIS/$MONEYSOURCE/bin /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS
 			cp -r /$STARTVERZEICHNIS/$MONEYSOURCE/addon-modules /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS
 			echo " "
 		else
-			echo "$(tput setab $Green)Script Assets sind nicht vorhanden! $(tput sgr 0)"
-			echo "$DATUM $(date +%H:%M:%S) SCRIPTCOPY: Script Assets sind nicht vorhanden" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+			# Entpacken und kopieren
+			echo "$(tput setab $Green)Money entpacken! $(tput sgr 0)"
+			echo "$DATUM $(date +%H:%M:%S) MONEYCOPY: Money entpacken" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+			unzip "$MONEYZIP"
+			echo "$(tput setab $Green)Money Kopiervorgang startet! $(tput sgr 0)"
+			echo "$DATUM $(date +%H:%M:%S) MONEYCOPY: Money Kopiervorgang gestartet" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+			cp -r /$STARTVERZEICHNIS/$MONEYSOURCE/bin /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS
+			cp -r /$STARTVERZEICHNIS/$MONEYSOURCE/addon-modules /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS
+			echo " "
+			#echo "$(tput setab $Green)Moneyserver ist nicht vorhanden! $(tput sgr 0)"
+			#echo "$DATUM $(date +%H:%M:%S) SCRIPTCOPY: Moneyserver ist nicht vorhanden" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 		fi
 	else
     	echo "Money wird nicht kopiert."
@@ -965,8 +1004,8 @@ function cleanaot()
 	fi
 }
 
-### Funktion osprebuild, Prebuild einstellen - Aufruf Beispiel: opensim.sh prebuild 1175.
-# Ergebnis ist eine Einstellung für Release mit dem Namn OpenSim 0.9.2.1175
+### Funktion osprebuild, Prebuild einstellen # Aufruf Beispiel: opensim.sh prebuild 1330.
+# Ergebnis ist eine Einstellung für Release mit dem Namn OpenSim 0.9.2.1330
 # sed -i schreibt sofort - s/Suchwort/Ersatzwort/g - /Verzeichnis/Dateiname.Endung
 function osprebuild()
 {
@@ -984,8 +1023,7 @@ function osprebuild()
 	sed -i s/' + flavour'//g /$STARTVERZEICHNIS/opensim/OpenSim/Framework/VersionInfo.cs
 }
 
-# Funktion osstruktur, legt die Verzeichnisstruktur fuer OpenSim an.
-# Aufruf: opensim.sh osstruktur ersteSIM letzteSIM
+# Funktion osstruktur, legt die Verzeichnisstruktur fuer OpenSim an. # Aufruf: opensim.sh osstruktur ersteSIM letzteSIM
 # Beispiel: ./opensim.sh osstruktur 1 10 - erstellt ein Grid Verzeichnis fuer 10 Simulatoren inklusive der SimulatorList.ini.
 function osstruktur()
 {
@@ -1060,8 +1098,7 @@ function oscopysim()
 	echo "$DATUM $(date +%H:%M:%S) OSCOPY: OpenSim kopieren" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 }
 
-# Funktion configlesen, Regionskonfigurationen lesen.
-## Beispiel: configlesen sim1
+# Funktion configlesen, Regionskonfigurationen lesen. # Beispiel: configlesen sim1
 function configlesen()
 {
 	VERZEICHNISSCREEN=$1
@@ -1126,12 +1163,12 @@ function regionsinisuchen()
 }
 
 # Funktion get_regionsarray, gibt ein Array aller Regionsabschnitte zurueck.
-# $1 - Datei
 function get_regionsarray() 
 {
 	# Es fehlt eine pruefung ob Datei vorhanden ist.
+	DATEI=$1
 	# shellcheck disable=SC2207
-	ARRAY=($(grep '\[.*\]' "$1"))
+	ARRAY=($(grep '\[.*\]' "$DATEI"))
 	FIXED_ARRAY=""
 	for i in "${ARRAY[@]}"; do
 		FIX=$i
@@ -1147,10 +1184,11 @@ function get_regionsarray()
 # $1 - Datei - $2 - Schluessel - $3 - Sektion
 function get_value_from_Region_key() 
 {
+	# RKDATEI=$1; RKSCHLUESSEL=$2; RKSEKTION=$3;
 	# Es fehlt eine pruefung ob Datei vorhanden ist.
 	# shellcheck disable=SC2005
 	#echo "$(sed -nr "/^\[$2\]/ { :l /^$3[ ]*=/ { s/.*=[ ]*//; p; q;}; n; b l;}" "$1")" # Nur Parameter
-	echo "$(sed -nr "/^\[$2\]/ { :l /$3[ ]*=/ { p; q;}; n; b l;}" "$1")" # Komplette eintraege
+	echo "$(sed -nr "/^\[$2\]/ { :l /$3[ ]}*=/ { p; q;}; n; b l;}" "$1")" # Komplette eintraege
 }
 
 ### Regions.ini zerlegen
@@ -1375,18 +1413,6 @@ function osupgrade()
 	echo "$DATUM $(date +%H:%M:%S) OSUPGRADE: Das Grid wird jetzt gestartet" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 	autostart
 }
-
-# function restore()
-# {	
-# 	echo "ACHTUNG Test gefährlich!!!"
-# 	RESCREENNAME=$1 
-# 	REREGIONSNAME=$2
-# 	PFADDATEINAME=$3
-# 	screen -S "$RESCREENNAME" -p 0 -X eval "stuff 'change region ${REREGIONSNAME//\"/}'^M"
-# 	# es muss hier geschaut werden, das es nicht root ist, sondern wirklich die Region, sonst werden alle Regionen ueberschrieben!!!
-# 	screen -S "$RESCREENNAME" -p 0 -X eval "stuff 'load oar $PFADDATEINAME'^M"
-# 	echo "$DATUM $(date +%H:%M:%S) DEBUG: Start von MULTITOOL" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-# }
 
 ### Funktion regionbackup, backup einer Region.
 # regionbackup Screenname "Der Regionsname"
@@ -1650,9 +1676,12 @@ function autoscreenstop()
 	fi
 
 	if ! screen -list | grep -q "RO"; then
+	echo " "
+	echo "$(tput setaf $White)$(tput setab $Red) Nachsehen ob ROBUST heruntergefahren wurde $(tput sgr 0)"
 	echo "$(tput setaf $White)$(tput setab $Red) ROBUST OFFLINE! $(tput sgr 0)"
 	echo "$DATUM $(date +%H:%M:%S) WORKS: ROBUST OFFLINE!" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 	else
+	echo "$(tput setaf $White)$(tput setab $Red) ROBUST Killen! $(tput sgr 0)"
 	screen -S RO -X quit
 	fi
 }
@@ -1698,10 +1727,8 @@ function autostop()
 	else
 		sleep $AUTOSTOPZEIT
 	fi
-	echo " "
 	echo "$(tput setab 1)Beende alle noch offenen Screens! $(tput sgr 0)"
 	autoscreenstop
-	echo " "
 }
 
 ### Funktion autorestart, startet das gesamte Grid neu und loescht die log Dateien.
@@ -2032,12 +2059,6 @@ function osbuilding()
     compilieren
     
     echo " " 
-	
-	# Hier darf erst weitergemacht werden wenn geprüft wurde ob das kompilieren ohne Fehler geschehen ist.
-	#  msbuild /p:Configuration=Release || return 1 sollte bei Fehler mit return 1 beenden.
-
-	echo "$(tput setaf $Magenta)Neuen OpenSimulator upgraden$(tput sgr0)"
-	echo "$DATUM $(date +%H:%M:%S) OSBUILDING: Neuen OpenSimulator upgraden" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
     osupgrade
 }
 
@@ -3669,6 +3690,8 @@ function expertenmenu()
 		# dialog --menu
 		feauswahl=$(dialog --backtitle "opensimMULTITOOL $VERSION" --help-button --defaultno --menu "OPENSIM MULTITOOL $VERSION" 0 45 0 \
 		"Voreinstellungen setzen" ""\
+		"MoneyServer vom git kopieren" ""\
+		"OSSL Skripte vom git kopieren" ""\
 		"Opensimulator upgraden" ""\
 		"Opensimulator bauen und upgraden" ""\
 		"Automatischer Regionsbackup" ""\
@@ -3686,6 +3709,8 @@ function expertenmenu()
 		dialog --clear
 		clear
 		if [[ $feauswahl = "Voreinstellungen setzen" ]]; then ossettings; fi
+		if [[ $feauswahl = "MoneyServer vom git kopieren" ]]; then moneygitcopy; fi
+		if [[ $feauswahl = "OSSL Skripte vom git kopieren" ]]; then scriptgitcopy; fi
 		if [[ $feauswahl = "Opensimulator upgraden" ]]; then osupgrade; fi
 		if [[ $feauswahl = "Opensimulator bauen und upgraden" ]]; then osbuilding; fi
 		if [[ $feauswahl = "Automatischer Regionsbackup" ]]; then autoregionbackup; fi
@@ -3868,6 +3893,8 @@ case  $KOMMANDO  in
 	saveinventar) saveinventar "$2" "$3" "$4" "$5" ;;
 	infodialog) infodialog ;;
 	fortschritsanzeige) fortschritsanzeige ;;
+	moneygitcopy) moneygitcopy ;;
+	scriptgitcopy) scriptgitcopy ;;
 	*) hauptmenu ;;
 esac
 
