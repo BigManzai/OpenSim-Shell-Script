@@ -17,7 +17,7 @@ Eine Funktionsliste gibt es hier in der Wiki.
 
 ### Download OpenSimulator Testversion:
 
-https://www.mediafire.com/file/adg8paby5dhezj6/opensim-0.9.2.1301.zip/file
+https://www.mediafire.com/file/09iq8ggv1ho34qc/opensim-0.9.2.1330.zip/file
 
 ## Hilfe
 
