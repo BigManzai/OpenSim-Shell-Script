@@ -23,7 +23,7 @@ STARTVERZEICHNIS="opt" MONEYVERZEICHNIS="robust" ROBUSTVERZEICHNIS="robust" OPEN
 REGIONSDATEI="RegionList.ini" SIMDATEI="SimulatorList.ini" WARTEZEIT=30 STARTWARTEZEIT=10 STOPWARTEZEIT=30 MONEYWARTEZEIT=50 BACKUPWARTEZEIT=120 AUTOSTOPZEIT=60 SETMONOTHREADS=800 SETMONOTHREADSON="yes"
 OPENSIMDOWNLOAD="http://opensimulator.org/dist/" OPENSIMVERSION="opensim-0.9.1.1.zip" SEARCHADRES="icanhazip.com" AUTOCONFIG="no" SETMONOGCPARAMSON="yes"
 }
-VERSION="V0.54.213" # opensimMULTITOOL Versionsausgabe
+VERSION="V0.55.216" # opensimMULTITOOL Versionsausgabe
 clear # Bildschirm loeschen
 
 DATUM=$(date +%d.%m.%Y); DATEIDATUM=$(date +%d_%m_%Y); UHRZEIT=$(date +%H:%M:%S)
@@ -3274,6 +3274,42 @@ function osslenableini()
 		echo 'Allow_osSetContentType =${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER'
 	} > "/$STARTVERZEICHNIS/$DATEIDATUM-osslEnable.ini"
 }
+# Umbenennen der example Dateien in Konfigurationsdateien vor dem kopieren.
+function unlockexample()
+{
+	echo "$(tput setab $Green)Alle example Dateien umbenennen. $(tput sgr 0)"
+	echo "$DATUM $(date +%H:%M:%S) RENAME: Alle example Dateien umbenennen" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+	UEVERZEICHNIS1="/$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin"
+	UEVERZEICHNIS2="/$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin/config-include"
+
+	for file1 in /"$STARTVERZEICHNIS"/"$OPENSIMVERZEICHNIS"/bin/*.example
+	do
+	if [ -e "$file1" ]
+	then
+		cd $UEVERZEICHNIS1 || exit
+		for file in *.ini.example; do mv -i "${file}" "${file%%.ini.example}.ini"; done
+		for file in *.html.example; do mv -i "${file}" "${file%%.html.example}.html"; done
+		for file in *.txt.example; do mv -i "${file}" "${file%%.txt.example}.txt"; done
+		break
+	else
+		echo "$(tput setab $Red)keine example Datei im Verzeichnis $UEVERZEICHNIS1 vorhanden. $(tput sgr 0)"
+		echo "$DATUM $(date +%H:%M:%S) RENAME: keine example Datei im Verzeichnis $UEVERZEICHNIS1 vorhanden" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+	fi
+	done
+
+	for file2 in /"$STARTVERZEICHNIS"/"$OPENSIMVERZEICHNIS"/bin/config-include/*.example
+	do
+	if [ -e "$file2" ]
+	then
+		cd $UEVERZEICHNIS2 || exit
+		for file in *.ini.example; do mv -i "${file}" "${file%%.ini.example}.ini"; done
+		break
+	else
+		echo "$(tput setab $Red)keine example Datei im Verzeichnis $UEVERZEICHNIS2 vorhanden. $(tput sgr 0)"
+		echo "$DATUM $(date +%H:%M:%S) RENAME: keine example Datei im Verzeichnis $UEVERZEICHNIS2 vorhanden" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+	fi
+	done
+}
 # Hier entsteht die Automatische Konfiguration. UNGETESTET
 function autoconfig()
 {
@@ -3374,6 +3410,8 @@ echo " "
 	echo " "
 	echo "loadinventar - $(tput setab $Magenta)NAME VERZEICHNIS PASSWORD DATEINAMEmitPFAD $(tput sgr 0) - lädt Inventar aus einer iar"
 	echo "saveinventar - $(tput setab $Magenta)NAME VERZEICHNIS PASSWORD DATEINAMEmitPFAD $(tput sgr 0) - speichert Inventar in einer iar"
+
+	echo "unlockexample	- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Benennt alle wichtigen example Dateien um."
 
 	echo " "
 	echo "$(tput setaf $Yello)  Der Verzeichnisname ist gleichzeitig auch der Screen Name!$(tput sgr 0)"
@@ -3689,6 +3727,7 @@ function expertenmenu()
 	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
 		# dialog --menu
 		feauswahl=$(dialog --backtitle "opensimMULTITOOL $VERSION" --help-button --defaultno --menu "OPENSIM MULTITOOL $VERSION" 0 45 0 \
+		"Example Dateien umbenennen" ""\
 		"Voreinstellungen setzen" ""\
 		"MoneyServer vom git kopieren" ""\
 		"OSSL Skripte vom git kopieren" ""\
@@ -3707,7 +3746,8 @@ function expertenmenu()
 		"Server Installation" "" 3>&1 1>&2 2>&3)
 		antwort=$?
 		dialog --clear
-		clear
+		clear		
+		if [[ $feauswahl = "Example Dateien umbenennen" ]]; then unlockexample; fi
 		if [[ $feauswahl = "Voreinstellungen setzen" ]]; then ossettings; fi
 		if [[ $feauswahl = "MoneyServer vom git kopieren" ]]; then moneygitcopy; fi
 		if [[ $feauswahl = "OSSL Skripte vom git kopieren" ]]; then scriptgitcopy; fi
@@ -3895,6 +3935,7 @@ case  $KOMMANDO  in
 	fortschritsanzeige) fortschritsanzeige ;;
 	moneygitcopy) moneygitcopy ;;
 	scriptgitcopy) scriptgitcopy ;;
+	unlockexample) unlockexample ;;
 	*) hauptmenu ;;
 esac
 
