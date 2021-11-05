@@ -178,6 +178,8 @@ mysqleinstellen	- hat keine Parameter - mySQL Konfiguration auf Server Einstelle
 conf_write	- SUCHWORT ERSATZWORT PFAD DATEINAME - Konfigurationszeile schreiben.
 conf_delete	- SUCHWORT PFAD DATEINAME - Konfigurationszeile löschen.
 conf_read	- SUCHWORT PFAD DATEINAME - Konfigurationszeile lesen.
+
+unlockexample - hat keine Parameter - Benennt alle example Dateien um.
 ```
 
 ```
