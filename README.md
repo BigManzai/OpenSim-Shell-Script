@@ -103,6 +103,20 @@ Weis nicht ich hab das mal getestet aber bemerke da keine Geschwindigkeitszuwäc
 
 Aber wahrscheinlich ist da mein Grid zu klein für.
 
+## Menü mit dialog
+Ich habe eine Menüfunktion integriert diese schaut zuerst ob dialog installiert ist oder nicht.
+
+Wenn ihr dialog installiert habt dann öffnet sich nach der Eingabe von ./opensim.sh ein Menü.
+
+In diesem Menü kann man einige Funktionen bequem aufrufen.
+
+Bisher sind nur Funktionen im Menü die maximal 1 Übergabewert voraussetzen.
+
+     Nachinstallieren von dialog mit:
+     apt install dialog
+     oder
+     sudo apt-get install dialog
+
 ## Funktion:  -   Parameter:  -   Informationen:
 ```
 hilfe                   - hat keine Parameter   - Diese Hilfe.
