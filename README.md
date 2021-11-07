@@ -180,6 +180,7 @@ conf_delete	- SUCHWORT PFAD DATEINAME - Konfigurationszeile löschen.
 conf_read	- SUCHWORT PFAD DATEINAME - Konfigurationszeile lesen.
 
 unlockexample - hat keine Parameter - Benennt alle example Dateien um.
+passwdgenerator - Passwortstärke - Generiert ein Passwort zur weiteren verwendung.
 ```
 
 ```
