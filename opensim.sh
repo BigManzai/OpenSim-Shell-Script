@@ -23,7 +23,7 @@ STARTVERZEICHNIS="opt" MONEYVERZEICHNIS="robust" ROBUSTVERZEICHNIS="robust" OPEN
 REGIONSDATEI="RegionList.ini" SIMDATEI="SimulatorList.ini" WARTEZEIT=30 STARTWARTEZEIT=10 STOPWARTEZEIT=30 MONEYWARTEZEIT=50 BACKUPWARTEZEIT=120 AUTOSTOPZEIT=60 SETMONOTHREADS=800 SETMONOTHREADSON="yes"
 OPENSIMDOWNLOAD="http://opensimulator.org/dist/" OPENSIMVERSION="opensim-0.9.1.1.zip" SEARCHADRES="icanhazip.com" AUTOCONFIG="no" SETMONOGCPARAMSON="yes"
 }
-VERSION="V0.55.216" # opensimMULTITOOL Versionsausgabe
+VERSION="V0.56.219" # opensimMULTITOOL Versionsausgabe
 clear # Bildschirm loeschen
 
 DATUM=$(date +%d.%m.%Y); DATEIDATUM=$(date +%d_%m_%Y); UHRZEIT=$(date +%H:%M:%S)
@@ -144,7 +144,29 @@ function makeregionsliste()
 	done < /$STARTVERZEICHNIS/$REGIONSDATEI
 	ANZAHLREGIONSLISTE=${#REGIONSLISTE[*]} # Anzahl der Eintraege.
 }
-
+### Funktion passwdgenerator, Passwortgenerator
+function passwdgenerator()
+{
+	### dialog Aktionen
+	# zuerst schauen ob dialog installiert ist
+	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+		# Alle Aktionen mit dialog
+		boxtitel="opensimMULTITOOL Eingabe"; boxtext="Passwortstärke:"; 
+		STARK=$( dialog --backtitle "opensimMULTITOOL $VERSION" --title "$boxtitel" --inputbox "$boxtext" 8 40 3>&1 1>&2 2>&3 3>&- )
+		dialog --clear
+		clear
+        PASSWD=$(tr -dc 'A-Za-z0-9!"#$%&'\''()*+,-./:;<=>?@[\]^_`{|}~' </dev/urandom | head -c "$STARK")
+        echo "$PASSWD"
+        unset PASSWD
+	else
+		# Alle Aktionen ohne dialog
+		STARK=$1
+        PASSWD=$(tr -dc 'A-Za-z0-9!"#$%&'\''()*+,-./:;<=>?@[\]^_`{|}~' </dev/urandom | head -c "$STARK")
+        echo "$PASSWD"
+        unset PASSWD
+	fi	# dialog Aktionen Ende
+	
+}
 ### Funktion assetdel, Asset von der Region loeschen.
 # Aufruf: assetdel screen_name Regionsname Objektname
 function assetdel()
@@ -3411,7 +3433,7 @@ echo " "
 	echo "loadinventar - $(tput setab $Magenta)NAME VERZEICHNIS PASSWORD DATEINAMEmitPFAD $(tput sgr 0) - lädt Inventar aus einer iar"
 	echo "saveinventar - $(tput setab $Magenta)NAME VERZEICHNIS PASSWORD DATEINAMEmitPFAD $(tput sgr 0) - speichert Inventar in einer iar"
 
-	echo "unlockexample	- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Benennt alle wichtigen example Dateien um."
+	echo "unlockexample	- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Benennt alle example Dateien um."
 
 	echo " "
 	echo "$(tput setaf $Yello)  Der Verzeichnisname ist gleichzeitig auch der Screen Name!$(tput sgr 0)"
@@ -3631,6 +3653,7 @@ function hauptmenu()
 		"Einzelner Simulator Status" ""\
 		"--------------------------" ""\
 		"Server Informationen" ""\
+		"Passwortgenerator" ""\
 		Kalender ""\
 		"--------------------------" ""\
 		"Weitere Funktionen" "" 3>&1 1>&2 2>&3)
@@ -3642,6 +3665,7 @@ function hauptmenu()
 		if [[ $mauswahl = "Einzelner Simulator Status" ]]; then works; fi
 
 		if [[ $mauswahl = "Server Informationen" ]]; then infodialog; fi
+		if [[ $mauswahl = "Passwortgenerator" ]]; then passwdgenerator; fi
 		if [[ $mauswahl = "Kalender" ]]; then kalender; fi
 		if [[ $mauswahl = "Start" ]]; then autostart; fi
 		if [[ $mauswahl = "Stop" ]]; then autostop; fi
@@ -3936,6 +3960,7 @@ case  $KOMMANDO  in
 	moneygitcopy) moneygitcopy ;;
 	scriptgitcopy) scriptgitcopy ;;
 	unlockexample) unlockexample ;;
+	passwdgenerator) passwdgenerator "$2" ;;
 	*) hauptmenu ;;
 esac
 
