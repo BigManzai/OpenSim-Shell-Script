@@ -3434,6 +3434,8 @@ echo " "
 	echo "saveinventar - $(tput setab $Magenta)NAME VERZEICHNIS PASSWORD DATEINAMEmitPFAD $(tput sgr 0) - speichert Inventar in einer iar"
 
 	echo "unlockexample	- $(tput setaf $Yello)hat keine Parameter$(tput sgr 0) - Benennt alle example Dateien um."
+	
+	echo "passwdgenerator - $(tput setab $Magenta)Passwortstärke$(tput sgr 0) - Generiert ein Passwort zur weiteren verwendung."
 
 	echo " "
 	echo "$(tput setaf $Yello)  Der Verzeichnisname ist gleichzeitig auch der Screen Name!$(tput sgr 0)"
