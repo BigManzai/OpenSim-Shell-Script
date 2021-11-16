@@ -23,7 +23,7 @@ STARTVERZEICHNIS="opt" MONEYVERZEICHNIS="robust" ROBUSTVERZEICHNIS="robust" OPEN
 REGIONSDATEI="RegionList.ini" SIMDATEI="SimulatorList.ini" WARTEZEIT=30 STARTWARTEZEIT=10 STOPWARTEZEIT=30 MONEYWARTEZEIT=50 BACKUPWARTEZEIT=120 AUTOSTOPZEIT=60 SETMONOTHREADS=800 SETMONOTHREADSON="yes"
 OPENSIMDOWNLOAD="http://opensimulator.org/dist/" OPENSIMVERSION="opensim-0.9.1.1.zip" SEARCHADRES="icanhazip.com" AUTOCONFIG="no" SETMONOGCPARAMSON="yes"
 }
-VERSION="V0.61.225" # opensimMULTITOOL Versionsausgabe
+VERSION="V0.62.229" # opensimMULTITOOL Versionsausgabe
 clear # Bildschirm loeschen
 
 DATUM=$(date +%d.%m.%Y); DATEIDATUM=$(date +%d_%m_%Y); UHRZEIT=$(date +%H:%M:%S)
@@ -301,6 +301,59 @@ function loadinventar()
 		echo "$DATUM $(date +%H:%M:%S) OSCOMMAND: Der Screen $VERZEICHNISSCREEN existiert nicht" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 	fi
 }
+function menuloadinventar()
+{
+    # zuerst schauen ob dialog installiert ist
+    if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+
+    # Einstellungen
+    boxbacktitel="opensimMULTITOOL"
+    boxtitel="opensimMULTITOOL Eingabe"
+    formtitle="Inventarverzeichnis laden"
+    lable1="NAME:"; lablename1="John Doe"
+    lable2="VERZEICHNIS:"; lablename2="/texture"
+    lable3="PASSWORD:"; lablename3="PASSWORD"
+    lable4="DATEI:"; lablename4="/opt/texture.iar"
+
+    # Abfrage
+    BOXERGEBNIS=$( dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 "$lable4" 4 1 "$lablename4" 4 25 25 30 3>&1 1>&2 2>&3 3>&- )
+
+    # Zeilen in Variablen schreiben.
+    NAME=$(echo "$BOXERGEBNIS" | sed -n '1p')
+    VERZEICHNIS=$(echo "$BOXERGEBNIS" | sed -n '2p')
+    PASSWORD=$(echo "$BOXERGEBNIS" | sed -n '3p')
+    DATEI=$(echo "$BOXERGEBNIS" | sed -n '4p')
+
+    # Testausgabe.
+    echo "1. Eingabe: $NAME"
+    echo "2. Eingabe: $VERZEICHNIS"
+    echo "3. Eingabe: $PASSWORD"
+    echo "4. Eingabe: $DATEI"
+
+    # Alles löschen.
+    dialog --clear
+    #clear
+	else
+		# Alle Aktionen ohne dialog
+        echo "Keine Menülose Funktion"|exit
+	fi	# dialog Aktionen Ende
+
+    # Hier kommen die normalen Aktionen hin.
+	VERZEICHNISSCREEN="sim1"
+	if screen -list | grep -q "$VERZEICHNISSCREEN"; then
+	echo "$(tput setab $Green)load iar $NAME $VERZEICHNIS ***** $DATEI $(tput sgr 0)"
+	echo "$DATUM $(date +%H:%M:%S) OSCOMMAND: load iar $NAME $VERZEICHNIS ***** $DATEI " >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+	screen -S "$VERZEICHNISSCREEN" -p 0 -X eval "stuff 'load iar $NAME $VERZEICHNIS $PASSWORD $DATEI'^M"
+	else
+		echo "Der Screen $VERZEICHNISSCREEN existiert nicht."
+		echo "$DATUM $(date +%H:%M:%S) OSCOMMAND: Der Screen $VERZEICHNISSCREEN existiert nicht" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+	fi
+
+    
+
+    # Zum schluss alle Variablen löschen.
+    unset VERZEICHNISSCREEN NAME VERZEICHNIS PASSWORD DATEI
+}
 function saveinventar()
 {	
 	VERZEICHNISSCREEN="sim1"; NAME=$1; VERZEICHNIS=$2; PASSWORD=$3; DATEI=$4
@@ -312,6 +365,57 @@ function saveinventar()
 		echo "Der Screen $VERZEICHNISSCREEN existiert nicht."
 		echo "$DATUM $(date +%H:%M:%S) OSCOMMAND: Der Screen $VERZEICHNISSCREEN existiert nicht" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 	fi
+}
+function menusaveinventar()
+{
+    # zuerst schauen ob dialog installiert ist
+    if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+
+    # Einstellungen
+    boxbacktitel="opensimMULTITOOL"
+    boxtitel="opensimMULTITOOL Eingabe"
+    formtitle="Inventarverzeichnis speichern"
+    lable1="NAME:"; lablename1="John Doe"
+    lable2="VERZEICHNIS:"; lablename2="/texture"
+    lable3="PASSWORD:"; lablename3="PASSWORD"
+    lable4="DATEI:"; lablename4="/opt/texture.iar"
+
+    # Abfrage
+    BOXERGEBNIS=$( dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 "$lable4" 4 1 "$lablename4" 4 25 25 30 3>&1 1>&2 2>&3 3>&- )
+
+    # Zeilen in Variablen schreiben.
+    NAME=$(echo "$BOXERGEBNIS" | sed -n '1p')
+    VERZEICHNIS=$(echo "$BOXERGEBNIS" | sed -n '2p')
+    PASSWORD=$(echo "$BOXERGEBNIS" | sed -n '3p')
+    DATEI=$(echo "$BOXERGEBNIS" | sed -n '4p')
+
+    # Testausgabe.
+    echo "1. Eingabe: $NAME"
+    echo "2. Eingabe: $VERZEICHNIS"
+    echo "3. Eingabe: $PASSWORD"
+    echo "4. Eingabe: $DATEI"
+
+    # Alles löschen.
+    dialog --clear
+    #clear
+	else
+		# Alle Aktionen ohne dialog
+        echo "Keine Menülose Funktion"|exit
+	fi	# dialog Aktionen Ende
+
+    # Hier kommen die normalen Aktionen hin.
+	VERZEICHNISSCREEN="sim1"
+	if screen -list | grep -q "$VERZEICHNISSCREEN"; then
+	echo "$(tput setab $Green)save iar $NAME $VERZEICHNIS ***** $DATEI $(tput sgr 0)"
+	echo "$DATUM $(date +%H:%M:%S) OSCOMMAND: save iar $NAME $VERZEICHNIS ***** $DATEI " >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+	screen -S "$VERZEICHNISSCREEN" -p 0 -X eval "stuff 'save iar $NAME $VERZEICHNIS $PASSWORD $DATEI'^M"
+	else
+		echo "Der Screen $VERZEICHNISSCREEN existiert nicht."
+		echo "$DATUM $(date +%H:%M:%S) OSCOMMAND: Der Screen $VERZEICHNISSCREEN existiert nicht" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+	fi    
+
+    # Zum schluss alle Variablen löschen.
+    unset VERZEICHNISSCREEN NAME VERZEICHNIS PASSWORD DATEI
 }
 ### Funktion oscommand, OpenSim Command direkt in den screen senden. # Aufruf: oscommand Screen Region Befehl Parameter
 # Beispiel: /opt/opensim.sh oscommand sim1 Welcome "alert Hallo liebe Leute dies ist eine Nachricht"
@@ -329,6 +433,50 @@ function oscommand()
 		echo "$DATUM $(date +%H:%M:%S) OSCOMMAND: Der Screen $VERZEICHNISSCREEN existiert nicht" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 	fi
 }
+function menuoscommand()
+{
+    # zuerst schauen ob dialog installiert ist
+    if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+
+    # Einstellungen
+    boxbacktitel="opensimMULTITOOL"
+    boxtitel="opensimMULTITOOL Eingabe"
+    formtitle="Kommando an den Simulator"
+    lable1="Simulator:"; lablename1=""
+    lable2="Region:"; lablename2=""
+    lable3="Befehlskette:"; lablename3=""
+
+    # Abfrage
+    BOXERGEBNIS=$( dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30  3>&1 1>&2 2>&3 3>&- )
+
+    # Zeilen in Variablen schreiben.
+    VERZEICHNISSCREEN=$(echo "$BOXERGEBNIS" | sed -n '1p')
+    REGION=$(echo "$BOXERGEBNIS" | sed -n '2p')
+    COMMAND=$(echo "$BOXERGEBNIS" | sed -n '3p')
+
+    # Alles löschen.
+    dialog --clear
+    clear
+	else
+		# Alle Aktionen ohne dialog
+        echo "Keine Menülose Funktion"|exit
+	fi	# dialog Aktionen Ende
+
+    # Hier kommen die normalen Aktionen hin.
+	if screen -list | grep -q "$VERZEICHNISSCREEN"; then
+	echo "$(tput setab $Green)Sende $COMMAND an $VERZEICHNISSCREEN $(tput sgr 0)"
+	screen -S "$VERZEICHNISSCREEN" -p 0 -X eval "stuff 'change region ""$REGION""'^M" # Region wechseln
+	echo "$DATUM $(date +%H:%M:%S) OSCOMMAND: $COMMAND an $VERZEICHNISSCREEN senden" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+	screen -S "$VERZEICHNISSCREEN" -p 0 -X eval "stuff '$COMMAND'^M"
+	else
+		echo "Der Screen $VERZEICHNISSCREEN existiert nicht."
+		echo "$DATUM $(date +%H:%M:%S) OSCOMMAND: Der Screen $VERZEICHNISSCREEN existiert nicht" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+	fi
+
+    # Zum schluss alle Variablen löschen.
+    unset VERZEICHNISSCREEN REGION COMMAND
+}
+
 
 ### Funktion works, screen pruefen ob er laeuft. # Aufruf: works screen_name
 function works()
@@ -3900,7 +4048,7 @@ function hauptmenu()
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
 		# dialog --menu
-		mauswahl=$(dialog --backtitle "opensimMULTITOOL $VERSION" --help-button --menu "OPENSIM MULTITOOL $VERSION" 0 35 0 \
+		mauswahl=$(dialog --backtitle "opensimMULTITOOL $VERSION" --help-button --menu "OPENSIM MULTITOOL $VERSION" 0 45 0 \
 		Restart ""\
 		Stop ""\
 		Start ""\
@@ -3909,10 +4057,13 @@ function hauptmenu()
 		"Einzelner Simulator Start" ""\
 		"Einzelner Simulator Status" ""\
 		"--------------------------" ""\
-		"Einzelne Region OAR sichern" ""\
+		"Region OAR sichern" ""\
 		"Parzellen entfernen" ""\
 		"Objekt entfernen" ""\
+		"--------------------------" ""\
 		"Benutzer Account anlegen" ""\
+		"Inventar speichern" ""\
+		"Inventar laden" ""\
 		"--------------------------" ""\
 		"Server Informationen" ""\
 		"Passwortgenerator" ""\
@@ -3925,10 +4076,14 @@ function hauptmenu()
 		if [[ $mauswahl = "Einzelner Simulator Stop" ]]; then inputosstop; fi
 		if [[ $mauswahl = "Einzelner Simulator Start" ]]; then inputosstart; fi
 		if [[ $mauswahl = "Einzelner Simulator Status" ]]; then works; fi
-		if [[ $mauswahl = "Einzelne Region OAR sichern" ]]; then menuregionbackup; fi
+		if [[ $mauswahl = "Region OAR sichern" ]]; then menuregionbackup; fi
 		if [[ $mauswahl = "Parzellen entfernen" ]]; then menulandclear; fi
 		if [[ $mauswahl = "Objekt entfernen" ]]; then menuassetdel; fi
 		if [[ $mauswahl = "Benutzer Account anlegen" ]]; then menucreateuser; fi
+
+		if [[ $mauswahl = "Inventar speichern" ]]; then menusaveinventar; fi
+		if [[ $mauswahl = "Inventar laden" ]]; then menuloadinventar; fi
+
 		if [[ $mauswahl = "Server Informationen" ]]; then infodialog; fi
 		if [[ $mauswahl = "Passwortgenerator" ]]; then passwdgenerator; fi
 		if [[ $mauswahl = "Kalender" ]]; then kalender; fi
@@ -3974,16 +4129,20 @@ function funktionenmenu()
 		fauswahl=$(dialog --backtitle "opensimMULTITOOL $VERSION" --help-button --defaultno --menu "OPENSIM MULTITOOL $VERSION" 0 45 0 \
 		"Grid starten" ""\
 		"Grid stoppen" ""\
+		"--------------------------" ""\
 		"Robust starten" ""\
 		"Robust stoppen" ""\
 		"Money starten" ""\
 		"Money stoppen" ""\
+		"--------------------------" ""\
 		"Automatischer Sim start" ""\
 		"Automatischer Sim stop" ""\
+		"--------------------------" ""\
 		"Automatischer Screen stop" ""\
 		"Regionen anzeigen" ""\
 		"Log Dateien löschen" ""\
 		"Map Karten löschen" ""\
+		"--------------------------" ""\
 		"Experten Funktionen" "" 3>&1 1>&2 2>&3)
 		antwort=$?
 		dialog --clear
@@ -4019,20 +4178,26 @@ function expertenmenu()
 		"Voreinstellungen setzen" ""\
 		"MoneyServer vom git kopieren" ""\
 		"OSSL Skripte vom git kopieren" ""\
+		"--------------------------" ""\
+		"Kommando senden" ""\
+		"--------------------------" ""\
 		"Opensimulator upgraden" ""\
 		"Opensimulator bauen und upgraden" ""\
-		"Automatischer Regionsbackup" ""\
 		"Kompilieren" ""\
 		"oscompi" ""\
+		"--------------------------" ""\
+		"Automatischer Regionsbackup" ""\
+		"--------------------------" ""\
 		"autoregionsiniteilen" ""\
 		"RegionListe" ""\
+		"--------------------------" ""\
+		"Server Installation" ""\
 		"Opensim aus dem git holen" ""\
+		"Verzeichnisstrukturen anlegen" ""\
 		"terminator" ""\
 		"makeaot" ""\
 		"cleanaot" ""\
-		"Installationen anzeigen" ""\
-		"Verzeichnisstrukturen anlegen" ""\
-		"Server Installation" "" 3>&1 1>&2 2>&3)
+		"Installationen anzeigen" "" 3>&1 1>&2 2>&3)
 		antwort=$?
 		dialog --clear
 		clear		
@@ -4040,6 +4205,7 @@ function expertenmenu()
 		if [[ $feauswahl = "Voreinstellungen setzen" ]]; then ossettings; fi
 		if [[ $feauswahl = "MoneyServer vom git kopieren" ]]; then moneygitcopy; fi
 		if [[ $feauswahl = "OSSL Skripte vom git kopieren" ]]; then scriptgitcopy; fi
+		if [[ $feauswahl = "Kommando senden" ]]; then menuoscommand; fi
 		if [[ $feauswahl = "Opensimulator upgraden" ]]; then osupgrade; fi
 		if [[ $feauswahl = "Opensimulator bauen und upgraden" ]]; then osbuilding; fi
 		if [[ $feauswahl = "Automatischer Regionsbackup" ]]; then autoregionbackup; fi
