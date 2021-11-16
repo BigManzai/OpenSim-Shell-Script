@@ -201,7 +201,9 @@ passwdgenerator - Passwortstärke - Generiert ein Passwort zur weiteren verwendu
   Der Verzeichnisname ist gleichzeitig auch der Screen Name!
 ```
 
-## TODO
+## TODO und Informationen
+
+Version 0.61.225 - siehe multitool.png
 
 Version 0.56.219 - Neu Passwortgenerator
 
