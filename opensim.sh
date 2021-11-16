@@ -23,7 +23,7 @@ STARTVERZEICHNIS="opt" MONEYVERZEICHNIS="robust" ROBUSTVERZEICHNIS="robust" OPEN
 REGIONSDATEI="RegionList.ini" SIMDATEI="SimulatorList.ini" WARTEZEIT=30 STARTWARTEZEIT=10 STOPWARTEZEIT=30 MONEYWARTEZEIT=50 BACKUPWARTEZEIT=120 AUTOSTOPZEIT=60 SETMONOTHREADS=800 SETMONOTHREADSON="yes"
 OPENSIMDOWNLOAD="http://opensimulator.org/dist/" OPENSIMVERSION="opensim-0.9.1.1.zip" SEARCHADRES="icanhazip.com" AUTOCONFIG="no" SETMONOGCPARAMSON="yes"
 }
-VERSION="V0.56.219" # opensimMULTITOOL Versionsausgabe
+VERSION="V0.61.225" # opensimMULTITOOL Versionsausgabe
 clear # Bildschirm loeschen
 
 DATUM=$(date +%d.%m.%Y); DATEIDATUM=$(date +%d_%m_%Y); UHRZEIT=$(date +%H:%M:%S)
@@ -185,11 +185,95 @@ function assetdel()
 		echo "$DATUM $(date +%H:%M:%S) ASSETDEL: $OBJEKT Asset von der Region $REGION löschen fehlgeschlagen" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 	fi
 }
+function menuassetdel()
+{
+    # zuerst schauen ob dialog installiert ist
+    if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+
+    # Einstellungen
+    boxbacktitel="opensimMULTITOOL"
+    boxtitel="opensimMULTITOOL Eingabe"
+    formtitle="Objekt von der Region entfernen"
+    lable1="Simulator:"; lablename1=""
+    lable2="Region:"; lablename2=""
+    lable3="Objekt:"; lablename3=""
+
+    # Abfrage
+    BOXERGEBNIS=$( dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30  3>&1 1>&2 2>&3 3>&- )
+
+    # Zeilen in Variablen schreiben.
+    VERZEICHNISSCREEN=$(echo "$BOXERGEBNIS" | sed -n '1p')
+    REGION=$(echo "$BOXERGEBNIS" | sed -n '2p')
+    OBJEKT=$(echo "$BOXERGEBNIS" | sed -n '3p')
+
+    # Alles löschen.
+    dialog --clear
+    clear
+	else
+		# Alle Aktionen ohne dialog
+        echo "Keine Menülose Funktion"|exit
+	fi	# dialog Aktionen Ende
+
+	# Nachschauen ob der Screen und die Region existiert.
+	if screen -list | grep -q "$VERZEICHNISSCREEN"; then
+		echo "$(tput setaf $Red) $(tput setab $White)$OBJEKT Asset von der Region $REGION löschen$(tput sgr 0)"
+		screen -S "$VERZEICHNISSCREEN" -p 0 -X eval "stuff 'change region ""$REGION""'^M" # Region wechseln
+		screen -S "$VERZEICHNISSCREEN" -p 0 -X eval "stuff 'alert "Loesche: "$OBJEKT" von der Region!"'^M" # Mit einer loesch Meldung
+		screen -S "$VERZEICHNISSCREEN" -p 0 -X eval "stuff 'delete object name ""$OBJEKT""'^M" # Objekt loeschen
+		screen -S "$VERZEICHNISSCREEN" -p 0 -X eval "stuff 'y'^M" # Mit y also yes bestaetigen
+		echo "$DATUM $(date +%H:%M:%S) ASSETDEL: $OBJEKT Asset von der Region $REGION löschen" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+	else
+		echo "$(tput setaf $Red) $(tput setab $White)$OBJEKT Asset von der Region $REGION löschen fehlgeschlagen$(tput sgr 0)"
+		echo "$DATUM $(date +%H:%M:%S) ASSETDEL: $OBJEKT Asset von der Region $REGION löschen fehlgeschlagen" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+	fi
+}
 
 ### Funktion landclear, Land clear - Löscht alle Parzellen auf dem Land. # Aufruf: landclear screen_name Regionsname Objektname
 function landclear()
 {
 	VERZEICHNISSCREEN=$1; REGION=$2
+	# Nachschauen ob der Screen und die Region existiert.
+	if screen -list | grep -q "$VERZEICHNISSCREEN"; then
+		echo "$(tput setaf $Red) $(tput setab $White)$OBJEKT Parzellen von der Region $REGION löschen$(tput sgr 0)"
+		screen -S "$VERZEICHNISSCREEN" -p 0 -X eval "stuff 'change region ""$REGION""'^M" # Region wechseln
+		screen -S "$VERZEICHNISSCREEN" -p 0 -X eval "stuff 'alert "Loesche Parzellen von der Region!"'^M" # Mit einer loesch Meldung
+		screen -S "$VERZEICHNISSCREEN" -p 0 -X eval "stuff 'land clear'^M" # Objekt loeschen
+		screen -S "$VERZEICHNISSCREEN" -p 0 -X eval "stuff 'y'^M" # Mit y also yes bestaetigen
+		echo "$DATUM $(date +%H:%M:%S) LANDCLEAR: $OBJEKT Parzellen von der Region $REGION löschen" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+	else
+		echo "$(tput setaf $Red) $(tput setab $White)$OBJEKT Parzellen von der Region $REGION löschen fehlgeschlagen$(tput sgr 0)"
+		echo "$DATUM $(date +%H:%M:%S) LANDCLEAR: $OBJEKT Parzellen von der Region $REGION löschen fehlgeschlagen" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+	fi
+}
+function menulandclear()
+{
+    # zuerst schauen ob dialog installiert ist
+    if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+
+    # Einstellungen
+    boxbacktitel="opensimMULTITOOL"
+    boxtitel="opensimMULTITOOL Eingabe"
+    formtitle="Parzellen einer Region entfernen"
+    lable1="Simulator:"; lablename1="sim2"
+    lable2="Regionsname:"; lablename2="Sandbox"
+
+    # Abfrage
+    BOXERGEBNIS=$( dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 3>&1 1>&2 2>&3 3>&- )
+
+    # Zeilen in Variablen schreiben.
+    VERZEICHNISSCREEN=$(echo "$BOXERGEBNIS" | sed -n '1p')
+    REGION=$(echo "$BOXERGEBNIS" | sed -n '2p')
+
+    # Alles löschen.
+    dialog --clear
+    clear
+	else
+		# Alle Aktionen ohne dialog
+        echo "Keine Menülose Funktion"|exit
+	fi	# dialog Aktionen Ende
+
+    # Hier kommen die normalen Aktionen hin.
+
 	# Nachschauen ob der Screen und die Region existiert.
 	if screen -list | grep -q "$VERZEICHNISSCREEN"; then
 		echo "$(tput setaf $Red) $(tput setab $White)$OBJEKT Parzellen von der Region $REGION löschen$(tput sgr 0)"
@@ -1066,6 +1150,52 @@ function osstruktur()
 	done
 	echo "$DATUM $(date +%H:%M:%S) OSSTRUKTUR: Lege robust an ,Schreibe sim$i in $SIMDATEI" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 }
+function menuosstruktur()
+{
+    # zuerst schauen ob dialog installiert ist
+    if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+
+    # Einstellungen
+    boxbacktitel="opensimMULTITOOL"
+    boxtitel="opensimMULTITOOL Eingabe"
+    formtitle="Verzeichnisstrukturen anlegen"
+    lable1="Von:"; lablename1="1"
+    lable2="Bis:"; lablename2="10"
+
+    # Abfrage
+    BOXERGEBNIS=$( dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 3>&1 1>&2 2>&3 3>&- )
+
+    # Zeilen in Variablen schreiben.
+    EINGABE=$(echo "$BOXERGEBNIS" | sed -n '1p')
+    EINGABE2=$(echo "$BOXERGEBNIS" | sed -n '2p')
+
+    # Alles löschen.
+    dialog --clear
+    clear
+	else
+		# Alle Aktionen ohne dialog
+        echo "Keine Menülose Funktion"|exit
+	fi	# dialog Aktionen Ende
+
+    # Hier kommen die normalen Aktionen hin.
+	if [ ! -f "/$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/" ]; then
+		echo "Lege robust an im Verzeichnis $ROBUSTVERZEICHNIS"
+		echo "$DATUM $(date +%H:%M:%S) OSSTRUKTUR: Lege robust an im Verzeichnis $ROBUSTVERZEICHNIS" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+		mkdir -p /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin
+	else
+		echo "opensim Verzeichnis existiert bereits."
+		echo "$DATUM $(date +%H:%M:%S) OSSTRUKTUR: Verzeichnis $ROBUSTVERZEICHNIS existiert bereits" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+	fi
+	# shellcheck disable=SC2004
+	for ((i=$EINGABE;i<=$EINGABE2;i++))
+	do
+	echo "Lege sim$i an"
+	mkdir -p /$STARTVERZEICHNIS/sim"$i"/bin
+	echo "Schreibe sim$i in $SIMDATEI"
+	printf 'sim'"$i"'\t%s\n' >> /$STARTVERZEICHNIS/$SIMDATEI
+	done
+	echo "$DATUM $(date +%H:%M:%S) OSSTRUKTUR: Lege robust an ,Schreibe sim$i in $SIMDATEI" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+}
 
 ### Funktion osdelete, altes opensim loeschen und letztes opensim als Backup umbenennen.
 function osdelete()
@@ -1474,6 +1604,66 @@ function regionbackup()
 		cp -r /$STARTVERZEICHNIS/"$VERZEICHNISSCREENNAME"/bin/Regions/"$NSDATEINAME".ini /$STARTVERZEICHNIS/backup/"$DATUM"-"$NSDATEINAME".ini
 		echo "$DATUM $(date +%H:%M:%S) OSBACKUP: Region $NSDATEINAME.ini gespeichert" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 	fi
+}
+function menuregionbackup()
+{
+    # zuerst schauen ob dialog installiert ist
+    if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+
+    # Einstellungen
+    boxbacktitel="opensimMULTITOOL"
+    boxtitel="opensimMULTITOOL Eingabe"
+    formtitle="Backup einer Region"
+    lable1="Screenname:"; lablename1=""
+    lable2="Regionsname:"; lablename2=""
+
+    # Abfrage
+    BOXERGEBNIS=$( dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 3>&1 1>&2 2>&3 3>&- )
+
+    # Zeilen in Variablen schreiben.
+    VERZEICHNISSCREENNAME=$(echo "$BOXERGEBNIS" | sed -n '1p')
+    REGIONSNAME=$(echo "$BOXERGEBNIS" | sed -n '2p')
+
+    # Alles löschen.
+    dialog --clear
+    clear
+	else
+		# Alle Aktionen ohne dialog
+		echo "Keine Menülose Funktion"|exit
+	fi	# dialog Aktionen Ende
+
+		# Backup Verzeichnis anlegen.
+		mkdir -p /$STARTVERZEICHNIS/backup/
+		sleep 2
+		DATEINAME=${REGIONSNAME//\"/}
+		NSDATEINAME=${DATEINAME// /}
+
+		echo "$(tput setaf 4) $(tput setab 7)Region $NSDATEINAME speichern$(tput sgr 0)"
+		echo "$DATUM $(date +%H:%M:%S) OSBACKUP: Region $NSDATEINAME speichern" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+		cd /$STARTVERZEICHNIS/"$VERZEICHNISSCREENNAME"/bin || return 1
+		# Ich kann nicht pruefen ob die Region im OpenSimulator vorhanden ist.
+		# Sollte sie nicht vorhanden sein wird root also alle Regionen gespeichert.
+		screen -S "$VERZEICHNISSCREENNAME" -p 0 -X eval "stuff 'change region ${REGIONSNAME//\"/}'^M"
+		screen -S "$VERZEICHNISSCREENNAME" -p 0 -X eval "stuff 'save oar /$STARTVERZEICHNIS/backup/'$DATUM'-$NSDATEINAME.oar'^M"
+		screen -S "$VERZEICHNISSCREENNAME" -p 0 -X eval "stuff 'terrain save /$STARTVERZEICHNIS/backup/'$DATUM'-$NSDATEINAME.png'^M"
+		screen -S "$VERZEICHNISSCREENNAME" -p 0 -X eval "stuff 'terrain save /$STARTVERZEICHNIS/backup/'$DATUM'-$NSDATEINAME.raw'^M"
+		echo "$DATUM $(date +%H:%M:%S) OSBACKUP: Region $DATUM-$NSDATEINAME RAW und PNG Terrain gespeichert" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+		echo " "
+		sleep 10
+		if [ ! -f /$STARTVERZEICHNIS/"$VERZEICHNISSCREENNAME"/bin/Regions/"$NSDATEINAME".ini ]; then
+			cp -r /$STARTVERZEICHNIS/"$VERZEICHNISSCREENNAME"/bin/Regions/Regions.ini /$STARTVERZEICHNIS/backup/"$DATUM"-"$NSDATEINAME".ini
+			echo "$(tput setaf 2)Regions.ini wurde als $DATUM-$NSDATEINAME.ini gespeichert."
+			echo "$DATUM $(date +%H:%M:%S) OSBACKUP: Region $DATUM-$NSDATEINAME.ini gespeichert" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+		fi
+		if [ ! -f /$STARTVERZEICHNIS/"$VERZEICHNISSCREENNAME"/bin/Regions/"${REGIONSNAME//\"/}".ini ]; then
+			cp -r /$STARTVERZEICHNIS/"$VERZEICHNISSCREENNAME"/bin/Regions/Regions.ini /$STARTVERZEICHNIS/backup/"$DATUM"-"$NSDATEINAME".ini
+			echo "$(tput setaf 2)Regions.ini wurde als $DATUM-$NSDATEINAME.ini gespeichert."
+			echo "$DATUM $(date +%H:%M:%S) OSBACKUP: Region $DATUM-$NSDATEINAME.ini gespeichert" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+		fi
+		if [ ! -f /$STARTVERZEICHNIS/"$VERZEICHNISSCREENNAME"/bin/Regions/Regions.ini ]; then
+			cp -r /$STARTVERZEICHNIS/"$VERZEICHNISSCREENNAME"/bin/Regions/"$NSDATEINAME".ini /$STARTVERZEICHNIS/backup/"$DATUM"-"$NSDATEINAME".ini
+			echo "$DATUM $(date +%H:%M:%S) OSBACKUP: Region $NSDATEINAME.ini gespeichert" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+		fi
 }
 
 ### Funktion autosimstart, automatischer sim start ohne Robust und Money.
@@ -2103,7 +2293,7 @@ function createuser()
 		# User ID (enter for random) []: bestaetigen
 		# Model name []: bestaetigen
 
-		echo "Kontrollausgabe: $VORNAME $NACHNAME $PASSWORT $EMAIL"
+		#echo "Kontrollausgabe: $VORNAME $NACHNAME $PASSWORT $EMAIL"
 
 		# Befehl starten
 		screen -S RO -p 0 -X eval "stuff 'create user'^M"
@@ -2119,6 +2309,71 @@ function createuser()
 		echo "CREATEUSER: Robust existiert nicht."
 		echo "$DATUM $(date +%H:%M:%S) CREATEUSER: Robust existiert nicht" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 	fi
+}
+function menucreateuser()
+{
+    # zuerst schauen ob dialog installiert ist
+    if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+
+    # Einstellungen
+    boxbacktitel="opensimMULTITOOL"
+    boxtitel="opensimMULTITOOL Eingabe"
+    formtitle="Benutzer Account anlegen"
+    lable1="Vorname:"; lablename1="John"
+    lable2="Nachname:"; lablename2="Doe"
+    lable3="PASSWORT:"; lablename3="PASSWORT"
+    lable4="EMAIL:"; lablename4="EMAIL"
+
+    # Abfrage
+    BOXERGEBNIS=$( dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 "$lable4" 4 1 "$lablename4" 4 25 25 30 3>&1 1>&2 2>&3 3>&- )
+
+    # Zeilen in Variablen schreiben.
+    VORNAME=$(echo "$BOXERGEBNIS" | sed -n '1p')
+    NACHNAME=$(echo "$BOXERGEBNIS" | sed -n '2p')
+    PASSWORT=$(echo "$BOXERGEBNIS" | sed -n '3p')
+    EMAIL=$(echo "$BOXERGEBNIS" | sed -n '4p')
+
+    # Alles löschen.
+    dialog --clear
+    clear
+	else
+		# Alle Aktionen ohne dialog
+        echo "Keine Menülose Funktion"|exit
+	fi	# dialog Aktionen Ende
+
+	if [ -z "$VORNAME" ]; then echo "Der VORNAME fehlt!"; fi
+	if [ -z "$NACHNAME" ]; then echo "Der NACHNAME fehlt!"; fi
+	if [ -z "$PASSWORT" ]; then echo "Das PASSWORT fehlt!"; fi
+	if [ -z "$EMAIL" ]; then echo "Die EMAIL Adresse fehlt!"; fi
+	
+	if screen -list | grep -q "RO"; then
+		# Befehlskette
+		# First name [Default]: OK
+		# Last name [User]: OK
+		# Passwort: OK
+		# Email []: OK
+		# User ID (enter for random) []: bestaetigen
+		# Model name []: bestaetigen
+
+		#echo "Kontrollausgabe: $VORNAME $NACHNAME $PASSWORT $EMAIL"
+
+		# Befehl starten
+		screen -S RO -p 0 -X eval "stuff 'create user'^M"
+		# Abfragen beantworten
+		screen -S RO -p 0 -X eval "stuff '$VORNAME'^M"
+		screen -S RO -p 0 -X eval "stuff '$NACHNAME'^M"
+		screen -S RO -p 0 -X eval "stuff '$PASSWORT'^M"
+		screen -S RO -p 0 -X eval "stuff '$EMAIL'^M"
+		screen -S RO -p 0 -X eval "stuff ^M" # bestaetigen
+		screen -S RO -p 0 -X eval "stuff ^M" # bestaetigen
+
+	else
+		echo "CREATEUSER: Robust existiert nicht."
+		echo "$DATUM $(date +%H:%M:%S) CREATEUSER: Robust existiert nicht" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+	fi
+
+    # Zum schluss alle Variablen löschen.
+    unset VORNAME NACHNAME PASSWORT EMAIL
 }
 
 # Datenbank Befehle Achtung alles noch nicht ausgereift!!!
@@ -3654,6 +3909,11 @@ function hauptmenu()
 		"Einzelner Simulator Start" ""\
 		"Einzelner Simulator Status" ""\
 		"--------------------------" ""\
+		"Einzelne Region OAR sichern" ""\
+		"Parzellen entfernen" ""\
+		"Objekt entfernen" ""\
+		"Benutzer Account anlegen" ""\
+		"--------------------------" ""\
 		"Server Informationen" ""\
 		"Passwortgenerator" ""\
 		Kalender ""\
@@ -3665,15 +3925,17 @@ function hauptmenu()
 		if [[ $mauswahl = "Einzelner Simulator Stop" ]]; then inputosstop; fi
 		if [[ $mauswahl = "Einzelner Simulator Start" ]]; then inputosstart; fi
 		if [[ $mauswahl = "Einzelner Simulator Status" ]]; then works; fi
-
+		if [[ $mauswahl = "Einzelne Region OAR sichern" ]]; then menuregionbackup; fi
+		if [[ $mauswahl = "Parzellen entfernen" ]]; then menulandclear; fi
+		if [[ $mauswahl = "Objekt entfernen" ]]; then menuassetdel; fi
+		if [[ $mauswahl = "Benutzer Account anlegen" ]]; then menucreateuser; fi
 		if [[ $mauswahl = "Server Informationen" ]]; then infodialog; fi
 		if [[ $mauswahl = "Passwortgenerator" ]]; then passwdgenerator; fi
 		if [[ $mauswahl = "Kalender" ]]; then kalender; fi
 		if [[ $mauswahl = "Start" ]]; then autostart; fi
 		if [[ $mauswahl = "Stop" ]]; then autostop; fi
 		if [[ $mauswahl = "Restart" ]]; then autorestart; fi
-		if [[ $mauswahl = "Weitere Funktionen" ]]; then funktionenmenu; fi
-		#if [[ $mauswahl = "Hilfe" ]]; then hilfemenu; fi
+		if [[ $mauswahl = "Weitere Funktionen" ]]; then funktionenmenu; fi		
 		if [[ $antwort = 2 ]]; then hilfemenu ; fi
 		if [[ $antwort = 1 ]]; then exit ; fi
 	else
@@ -3769,6 +4031,7 @@ function expertenmenu()
 		"makeaot" ""\
 		"cleanaot" ""\
 		"Installationen anzeigen" ""\
+		"Verzeichnisstrukturen anlegen" ""\
 		"Server Installation" "" 3>&1 1>&2 2>&3)
 		antwort=$?
 		dialog --clear
@@ -3789,6 +4052,7 @@ function expertenmenu()
 		if [[ $feauswahl = "makeaot" ]]; then makeaot; fi
 		if [[ $feauswahl = "cleanaot" ]]; then cleanaot; fi
 		if [[ $feauswahl = "Installationen anzeigen" ]]; then installationen; fi
+		if [[ $feauswahl = "Verzeichnisstrukturen anlegen" ]]; then menuosstruktur; fi		
 		if [[ $feauswahl = "Server Installation" ]]; then serverinstall; fi
 		if [[ $feauswahl = "Hilfe" ]]; then hilfemenu; fi
 		if [[ $antwort = 2 ]]; then hilfemenu ; fi
