@@ -23,7 +23,7 @@ STARTVERZEICHNIS="opt" MONEYVERZEICHNIS="robust" ROBUSTVERZEICHNIS="robust" OPEN
 REGIONSDATEI="RegionList.ini" SIMDATEI="SimulatorList.ini" WARTEZEIT=30 STARTWARTEZEIT=10 STOPWARTEZEIT=30 MONEYWARTEZEIT=50 BACKUPWARTEZEIT=120 AUTOSTOPZEIT=60 SETMONOTHREADS=800 SETMONOTHREADSON="yes"
 OPENSIMDOWNLOAD="http://opensimulator.org/dist/" OPENSIMVERSION="opensim-0.9.1.1.zip" SEARCHADRES="icanhazip.com" AUTOCONFIG="no" SETMONOGCPARAMSON="yes" CONFIGURESOURCE="opensim-configuration-addon-modul-main"	CONFIGUREZIP="opensim-configuration-addon-modul-main.zip"
 }
-VERSION="V0.63.238" # opensimMULTITOOL Versionsausgabe
+VERSION="V0.63.239" # opensimMULTITOOL Versionsausgabe
 clear # Bildschirm loeschen
 
 DATUM=$(date +%d.%m.%Y); DATEIDATUM=$(date +%d_%m_%Y); UHRZEIT=$(date +%H:%M:%S)
@@ -69,6 +69,7 @@ unset REGIONSNAME
 unset REGIONSNAMEb
 unset REGIONSNAMEc
 unset REGIONSNAMEd
+unset VERZEICHNISSCREEN
 
 ### Einstellungen aus opensim.cnf laden ###
 # Warum? ganz einfach bei einem Script upgrade gehen so die einstellungen nicht mehr verloren.
@@ -76,8 +77,7 @@ unset REGIONSNAMEd
 # Pfad des opensim.sh Skriptes herausfinden
 SCRIPTPATH=$(cd "$(dirname "$0")" && pwd)
 # Variablen aus config Datei laden opensim.cnf muss sich im gleichen Verzeichnis wie opensim.sh befinden.
-# shellcheck disable=SC1091
-# shellcheck source=opensim.cnf
+
 . "$SCRIPTPATH"/opensim.cnf
 
 # Aktuelle IP über Suchadresse ermitteln und Ausführungszeichen anhängen.
@@ -130,7 +130,7 @@ function vardel()
 	unset MONEYWARTEZEIT; unset Red; unset Green; unset White
 	unset NAME; unset VERZEICHNIS; unset PASSWORD; unset DATEI
 	unset OPENSIMVERZEICHNIS; unset SCRIPTSOURCE; unset SCRIPTZIP; unset MONEYSOURCE; unset MONEYZIP
-	unset REGIONSNAME; unset REGIONSNAMEb; unset REGIONSNAMEc; unset REGIONSNAMEd
+	unset REGIONSNAME; unset REGIONSNAMEb; unset REGIONSNAMEc; unset REGIONSNAMEd; unset VERZEICHNISSCREEN
 }
 
 ### Erstellen eines Arrays aus einer Textdatei - Verzeichnisse und Regionen ###
@@ -469,6 +469,8 @@ function menuoscommand()
 ### Funktion works, screen pruefen ob er laeuft. # Aufruf: works screen_name
 function works()
 {
+	VERZEICHNISSCREEN=$1  # OpenSimulator, Verzeichnis und Screen Name
+
 	### dialog Aktionen
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
@@ -490,9 +492,7 @@ function works()
 		fi
 		hauptmenu
 	else
-		# Alle Aktionen ohne dialog
-		VERZEICHNISSCREEN=$1  # OpenSimulator, Verzeichnis und Screen Name
-		
+		# Alle Aktionen ohne dialog		
 		if ! screen -list | grep -q "$VERZEICHNISSCREEN"; then
 			# es laeuft nicht - not work
 				echo "$(tput setaf $White)$(tput setab $Red) $VERZEICHNISSCREEN OFFLINE! $(tput sgr 0)"
@@ -1958,8 +1958,8 @@ function menuregionrestore()
 ### Funktion autosimstart, automatischer sim start ohne Robust und Money.
 function autosimstart()
 {
-	# shellcheck disable=SC2022
-	if ! screen -list | grep -q 'sim*'; then
+	if ! screen -list | grep -q '^sim'; 
+	then
 	# es laeuft nicht - not work
 		makeverzeichnisliste
 		sleep 2
