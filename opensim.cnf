@@ -7,8 +7,10 @@
 	OPENSIMVERZEICHNIS="opensim"
 	SCRIPTSOURCE="opensim-ossl-example-scripts-main"
 	SCRIPTZIP="opensim-ossl-example-scripts-main.zip"
-	MONEYSOURCE="OpenSimCurrencyServer-2021-master"
+	MONEYSOURCE="OpenSimCurrencyServer-2021-master"	
 	MONEYZIP="OpenSimCurrencyServer-2021-master.zip"
+	CONFIGURESOURCE="opensim-configuration-addon-modul-main"
+	CONFIGUREZIP="opensim-configuration-addon-modul-main.zip"
 	
 ## Dateien
 	REGIONSDATEI="RegionList.ini"
@@ -20,6 +22,7 @@
 ## Inklusive
 	SCRIPTCOPY="yes"
 	MONEYCOPY="yes"
+	CONFIGURECOPY="yes"
 	PYTHONCOPY="no"
 	MUTELISTCOPY="no"
 	SEARCHCOPY="no"

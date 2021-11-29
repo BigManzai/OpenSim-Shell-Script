@@ -21,9 +21,9 @@ function myshellschreck()
 {
 STARTVERZEICHNIS="opt" MONEYVERZEICHNIS="robust" ROBUSTVERZEICHNIS="robust" OPENSIMVERZEICHNIS="opensim" SCRIPTSOURCE="ScriptNeu" SCRIPTZIP="opensim-ossl-example-scripts-main.zip" MONEYSOURCE="money48" MONEYZIP="OpenSimCurrencyServer-2021-master.zip" OSVERSION="opensim-0.9.2.0Dev"
 REGIONSDATEI="RegionList.ini" SIMDATEI="SimulatorList.ini" WARTEZEIT=30 STARTWARTEZEIT=10 STOPWARTEZEIT=30 MONEYWARTEZEIT=50 BACKUPWARTEZEIT=120 AUTOSTOPZEIT=60 SETMONOTHREADS=800 SETMONOTHREADSON="yes"
-OPENSIMDOWNLOAD="http://opensimulator.org/dist/" OPENSIMVERSION="opensim-0.9.1.1.zip" SEARCHADRES="icanhazip.com" AUTOCONFIG="no" SETMONOGCPARAMSON="yes"
+OPENSIMDOWNLOAD="http://opensimulator.org/dist/" OPENSIMVERSION="opensim-0.9.1.1.zip" SEARCHADRES="icanhazip.com" AUTOCONFIG="no" SETMONOGCPARAMSON="yes" CONFIGURESOURCE="opensim-configuration-addon-modul-main"	CONFIGUREZIP="opensim-configuration-addon-modul-main.zip"
 }
-VERSION="V0.62.229" # opensimMULTITOOL Versionsausgabe
+VERSION="V0.63.238" # opensimMULTITOOL Versionsausgabe
 clear # Bildschirm loeschen
 
 DATUM=$(date +%d.%m.%Y); DATEIDATUM=$(date +%d_%m_%Y); UHRZEIT=$(date +%H:%M:%S)
@@ -89,6 +89,14 @@ Red=1; Green=2; Yello=3; Blue=4; Magenta=5; White=7
 cd /"$STARTVERZEICHNIS" || return 1 # gibt es das Startverzeichnis wenn nicht abbruch.
 sleep 1
 KOMMANDO=$1 # Eingabeauswertung
+
+# Saubermann.
+function clean()
+{
+    # Alles löschen.
+    dialog --clear
+    clear
+}
 
 # Kopfzeile der log Datei.
 function schreibeinfo() 
@@ -164,8 +172,7 @@ function passwdgenerator()
         PASSWD=$(tr -dc 'A-Za-z0-9!"#$%&'\''()*+,-./:;<=>?@[\]^_`{|}~' </dev/urandom | head -c "$STARK")
         echo "$PASSWD"
         unset PASSWD
-	fi	# dialog Aktionen Ende
-	
+	fi	# dialog Aktionen Ende	
 }
 ### Funktion assetdel, Asset von der Region loeschen.
 # Aufruf: assetdel screen_name Regionsname Objektname
@@ -201,7 +208,7 @@ function menuassetdel()
     # Abfrage
     BOXERGEBNIS=$( dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30  3>&1 1>&2 2>&3 3>&- )
 
-    # Zeilen in Variablen schreiben.
+    # Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
     VERZEICHNISSCREEN=$(echo "$BOXERGEBNIS" | sed -n '1p')
     REGION=$(echo "$BOXERGEBNIS" | sed -n '2p')
     OBJEKT=$(echo "$BOXERGEBNIS" | sed -n '3p')
@@ -260,7 +267,7 @@ function menulandclear()
     # Abfrage
     BOXERGEBNIS=$( dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 3>&1 1>&2 2>&3 3>&- )
 
-    # Zeilen in Variablen schreiben.
+    # Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
     VERZEICHNISSCREEN=$(echo "$BOXERGEBNIS" | sed -n '1p')
     REGION=$(echo "$BOXERGEBNIS" | sed -n '2p')
 
@@ -271,8 +278,6 @@ function menulandclear()
 		# Alle Aktionen ohne dialog
         echo "Keine Menülose Funktion"|exit
 	fi	# dialog Aktionen Ende
-
-    # Hier kommen die normalen Aktionen hin.
 
 	# Nachschauen ob der Screen und die Region existiert.
 	if screen -list | grep -q "$VERZEICHNISSCREEN"; then
@@ -318,27 +323,20 @@ function menuloadinventar()
     # Abfrage
     BOXERGEBNIS=$( dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 "$lable4" 4 1 "$lablename4" 4 25 25 30 3>&1 1>&2 2>&3 3>&- )
 
-    # Zeilen in Variablen schreiben.
+    # Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
     NAME=$(echo "$BOXERGEBNIS" | sed -n '1p')
     VERZEICHNIS=$(echo "$BOXERGEBNIS" | sed -n '2p')
     PASSWORD=$(echo "$BOXERGEBNIS" | sed -n '3p')
     DATEI=$(echo "$BOXERGEBNIS" | sed -n '4p')
 
-    # Testausgabe.
-    echo "1. Eingabe: $NAME"
-    echo "2. Eingabe: $VERZEICHNIS"
-    echo "3. Eingabe: $PASSWORD"
-    echo "4. Eingabe: $DATEI"
-
     # Alles löschen.
     dialog --clear
-    #clear
+    clear
 	else
 		# Alle Aktionen ohne dialog
         echo "Keine Menülose Funktion"|exit
 	fi	# dialog Aktionen Ende
 
-    # Hier kommen die normalen Aktionen hin.
 	VERZEICHNISSCREEN="sim1"
 	if screen -list | grep -q "$VERZEICHNISSCREEN"; then
 	echo "$(tput setab $Green)load iar $NAME $VERZEICHNIS ***** $DATEI $(tput sgr 0)"
@@ -347,9 +345,7 @@ function menuloadinventar()
 	else
 		echo "Der Screen $VERZEICHNISSCREEN existiert nicht."
 		echo "$DATUM $(date +%H:%M:%S) OSCOMMAND: Der Screen $VERZEICHNISSCREEN existiert nicht" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-	fi
-
-    
+	fi    
 
     # Zum schluss alle Variablen löschen.
     unset VERZEICHNISSCREEN NAME VERZEICHNIS PASSWORD DATEI
@@ -383,27 +379,20 @@ function menusaveinventar()
     # Abfrage
     BOXERGEBNIS=$( dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 "$lable4" 4 1 "$lablename4" 4 25 25 30 3>&1 1>&2 2>&3 3>&- )
 
-    # Zeilen in Variablen schreiben.
+    # Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
     NAME=$(echo "$BOXERGEBNIS" | sed -n '1p')
     VERZEICHNIS=$(echo "$BOXERGEBNIS" | sed -n '2p')
     PASSWORD=$(echo "$BOXERGEBNIS" | sed -n '3p')
     DATEI=$(echo "$BOXERGEBNIS" | sed -n '4p')
 
-    # Testausgabe.
-    echo "1. Eingabe: $NAME"
-    echo "2. Eingabe: $VERZEICHNIS"
-    echo "3. Eingabe: $PASSWORD"
-    echo "4. Eingabe: $DATEI"
-
     # Alles löschen.
     dialog --clear
-    #clear
+    clear
 	else
 		# Alle Aktionen ohne dialog
         echo "Keine Menülose Funktion"|exit
 	fi	# dialog Aktionen Ende
 
-    # Hier kommen die normalen Aktionen hin.
 	VERZEICHNISSCREEN="sim1"
 	if screen -list | grep -q "$VERZEICHNISSCREEN"; then
 	echo "$(tput setab $Green)save iar $NAME $VERZEICHNIS ***** $DATEI $(tput sgr 0)"
@@ -449,7 +438,7 @@ function menuoscommand()
     # Abfrage
     BOXERGEBNIS=$( dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30  3>&1 1>&2 2>&3 3>&- )
 
-    # Zeilen in Variablen schreiben.
+    # Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
     VERZEICHNISSCREEN=$(echo "$BOXERGEBNIS" | sed -n '1p')
     REGION=$(echo "$BOXERGEBNIS" | sed -n '2p')
     COMMAND=$(echo "$BOXERGEBNIS" | sed -n '3p')
@@ -462,7 +451,6 @@ function menuoscommand()
         echo "Keine Menülose Funktion"|exit
 	fi	# dialog Aktionen Ende
 
-    # Hier kommen die normalen Aktionen hin.
 	if screen -list | grep -q "$VERZEICHNISSCREEN"; then
 	echo "$(tput setab $Green)Sende $COMMAND an $VERZEICHNISSCREEN $(tput sgr 0)"
 	screen -S "$VERZEICHNISSCREEN" -p 0 -X eval "stuff 'change region ""$REGION""'^M" # Region wechseln
@@ -516,7 +504,6 @@ function works()
 				echo "$DATUM $(date +%H:%M:%S) WORKS: $VERZEICHNISSCREEN ONLINE!" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 				return 0
 		fi
-
 	fi
 }
 ### Funktion checkfile, pruefen ob Datei vorhanden ist. # Aufruf: checkfile "pfad/name"
@@ -1000,6 +987,21 @@ function scriptgitcopy()
 	fi
 }
 
+### Funktion gitcopy, Dateien vom Github kopieren.
+function configuregitcopy()
+{
+#Money und Scripte vom Git holen
+	if [[ $CONFIGURECOPY = "yes" ]]
+	then
+		echo "$(tput setab $Green)Configure wird vom GIT geholt! $(tput sgr 0)"
+		echo "$DATUM $(date +%H:%M:%S) CONFIGURECOPY: Configure wird vom GIT geholt" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+		git clone https://github.com/BigManzai/opensim-configuration-addon-modul /$STARTVERZEICHNIS/opensim-configuration-addon-modul
+	else
+		echo "$(tput setab $Green)Configure ist nicht vorhanden! $(tput sgr 0)"
+		echo "$DATUM $(date +%H:%M:%S) CONFIGURECOPY: Configure ist nicht vorhanden" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+	fi
+}
+
 ### Funktion scriptcopy, lsl ossl scripte kopieren.
 function scriptcopy()
 {
@@ -1058,6 +1060,34 @@ function moneycopy()
 	else
     	echo "Money wird nicht kopiert."
 		echo "$DATUM $(date +%H:%M:%S) SCRIPTCOPY: Money wird nicht kopiert." >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+	fi
+}
+
+### configurecopy
+### Funktion moneycopy, Money Dateien kopieren.
+function configurecopy()
+{
+	if [[ $CONFIGURECOPY = "yes" ]]
+	then
+	##/opt/opensim-configuration-addon-modul/Configuration
+			if [ -d /$STARTVERZEICHNIS/opensim-configuration-addon-modul/ ]; then
+			echo "$(tput setab $Green)Configure Kopiervorgang startet! $(tput sgr 0)"
+			echo "$DATUM $(date +%H:%M:%S) CONFIGURECOPY: Configure Kopiervorgang gestartet" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"			
+			cp -r /$STARTVERZEICHNIS/opensim-configuration-addon-modul/Configuration /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/addon-modules
+			echo " "
+		else
+			# Entpacken und kopieren
+			echo "$(tput setab $Green)Configure entpacken! $(tput sgr 0)"
+			echo "$DATUM $(date +%H:%M:%S) CONFIGURECOPY: Configure entpacken" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+			unzip "$CONFIGUREZIP"
+			echo "$(tput setab $Green)Configure Kopiervorgang startet! $(tput sgr 0)"
+			echo "$DATUM $(date +%H:%M:%S) CONFIGURECOPY: Configure Kopiervorgang gestartet" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"			
+			cp -r /$STARTVERZEICHNIS/opensim-configuration-addon-modul/Configuration /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/addon-modules
+			echo " "
+		fi
+	else
+    	echo "Configure wird nicht kopiert."
+		echo "$DATUM $(date +%H:%M:%S) SCRIPTCOPY: Configure wird nicht kopiert." >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 	fi
 }
 
@@ -1162,6 +1192,13 @@ function compilieren()
 		echo "$DATUM $(date +%H:%M:%S) COMPILIEREN: MoneyServer Verzeichnis existiert nicht" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 	fi
 
+	if [ ! -f "/$STARTVERZEICHNIS/$CONFIGURESOURCE/" ]; then
+		configurecopy
+	else
+		echo "Configure Verzeichnis existiert nicht."
+		echo "$DATUM $(date +%H:%M:%S) COMPILIEREN: Configure Verzeichnis existiert nicht" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+	fi
+
 	if [ ! -f "/$STARTVERZEICHNIS/OpensimPython/" ]; then
 		pythoncopy
 	else
@@ -1176,14 +1213,14 @@ function compilieren()
 		echo "$DATUM $(date +%H:%M:%S) COMPILIEREN: OpenSimSearch Verzeichnis existiert nicht" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 	fi
 
-		if [ ! -f "/$STARTVERZEICHNIS/OpenSimMutelist/" ]; then
+	if [ ! -f "/$STARTVERZEICHNIS/OpenSimMutelist/" ]; then
 		mutelistcopy
 	else
 		echo "OpenSimMutelist Verzeichnis existiert nicht."
 		echo "$DATUM $(date +%H:%M:%S) COMPILIEREN: OpenSimMutelist Verzeichnis existiert nicht" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 	fi
 
-		if [ ! -f "/$STARTVERZEICHNIS/Chris.OS.Additions/" ]; then
+	if [ ! -f "/$STARTVERZEICHNIS/Chris.OS.Additions/" ]; then
 		chrisoscopy
 	else
 		echo "Chris.OS.Additions Verzeichnis existiert nicht."
@@ -1313,7 +1350,7 @@ function menuosstruktur()
     # Abfrage
     BOXERGEBNIS=$( dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 3>&1 1>&2 2>&3 3>&- )
 
-    # Zeilen in Variablen schreiben.
+    # Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
     EINGABE=$(echo "$BOXERGEBNIS" | sed -n '1p')
     EINGABE2=$(echo "$BOXERGEBNIS" | sed -n '2p')
 
@@ -1325,7 +1362,6 @@ function menuosstruktur()
         echo "Keine Menülose Funktion"|exit
 	fi	# dialog Aktionen Ende
 
-    # Hier kommen die normalen Aktionen hin.
 	if [ ! -f "/$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/" ]; then
 		echo "Lege robust an im Verzeichnis $ROBUSTVERZEICHNIS"
 		echo "$DATUM $(date +%H:%M:%S) OSSTRUKTUR: Lege robust an im Verzeichnis $ROBUSTVERZEICHNIS" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
@@ -1713,6 +1749,47 @@ function osupgrade()
 	echo "$DATUM $(date +%H:%M:%S) OSUPGRADE: Das Grid wird jetzt gestartet" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 	autostart
 }
+### Funktion osupgrade, automatisches upgrade des opensimulator aus dem verzeichnis opensim.
+function oszipupgrade()
+{
+	### dialog Aktionen
+	# zuerst schauen ob dialog installiert ist
+	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+		# Alle Aktionen mit dialog
+		VERSIONSNUMMER=$( dialog --backtitle "opensimMULTITOOL $VERSION" --title "opensimMULTITOOL Eingabe" --inputbox "Versionsnummer:" 8 40 3>&1 1>&2 2>&3 3>&- )
+		dialog --clear
+		clear
+	else
+		# Alle Aktionen ohne dialog
+		echo "Keine Menülose Funktion vorhanden!"|exit
+		#VERSIONSNUMMER=$1
+	fi
+	# dialog Aktionen Ende
+	
+    cd /$STARTVERZEICHNIS || exit
+
+	# Konfigurationsabfrage Neues Grid oder Upgrade.
+
+	echo "$(tput setaf $Magenta)Alten OpenSimulator sichern$(tput sgr0)"
+	echo "$DATUM $(date +%H:%M:%S) OSBUILDING: Alten OpenSimulator sichern" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+    osdelete
+
+	echo " "
+
+	echo "$(tput setaf $Magenta)Neuen OpenSimulator entpacken$(tput sgr0)"
+	echo "$DATUM $(date +%H:%M:%S) OSBUILDING: Neuen OpenSimulator aus der ZIP entpacken" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+    unzip opensim-0.9.2."$VERSIONSNUMMER".zip
+
+	echo " "
+
+	echo "$(tput setaf $Magenta)Neuen OpenSimulator umbenennen$(tput sgr0)"
+	echo "$DATUM $(date +%H:%M:%S) OSBUILDING: Neuen OpenSimulator umbenennen" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+    mv /$STARTVERZEICHNIS/opensim-0.9.2."$VERSIONSNUMMER"/ /$STARTVERZEICHNIS/opensim/
+
+	echo " "
+
+	osupgrade
+}
 
 ### Funktion regionbackup, backup einer Region.
 # regionbackup Screenname "Der Regionsname"
@@ -1768,7 +1845,7 @@ function menuregionbackup()
     # Abfrage
     BOXERGEBNIS=$( dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 3>&1 1>&2 2>&3 3>&- )
 
-    # Zeilen in Variablen schreiben.
+    # Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
     VERZEICHNISSCREENNAME=$(echo "$BOXERGEBNIS" | sed -n '1p')
     REGIONSNAME=$(echo "$BOXERGEBNIS" | sed -n '2p')
 
@@ -1812,6 +1889,70 @@ function menuregionbackup()
 			cp -r /$STARTVERZEICHNIS/"$VERZEICHNISSCREENNAME"/bin/Regions/"$NSDATEINAME".ini /$STARTVERZEICHNIS/backup/"$DATUM"-"$NSDATEINAME".ini
 			echo "$DATUM $(date +%H:%M:%S) OSBACKUP: Region $NSDATEINAME.ini gespeichert" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 		fi
+}
+
+### Funktion regionrestore, hochladen einer Region.
+# regionrestore Screenname "Der Regionsname"
+# Ich kann nicht pruefen ob die Region im OpenSimulator vorhanden ist.
+# Sollte sie nicht vorhanden sein wird root (Alle) oder die letzte ausgewählte Region wiederhergestellt. Dies zerstört eventuell vorhandene Regionen.
+function regionrestore()
+{
+	VERZEICHNISSCREENNAME=$1
+	REGIONSNAME=$2	
+	DATEINAME=${REGIONSNAME//\"/}
+	NSDATEINAME=${DATEINAME// /}
+
+	echo "$(tput setaf 4) $(tput setab 7)Region $NSDATEINAME wiederherstellen$(tput sgr 0)"
+	echo "$DATUM $(date +%H:%M:%S) OSRESTORE: Region $NSDATEINAME wiederherstellen" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+	cd /$STARTVERZEICHNIS/"$VERZEICHNISSCREENNAME"/bin || return 1
+	# Ich kann nicht pruefen ob die Region im OpenSimulator vorhanden ist.
+	# Sollte sie nicht vorhanden sein wird root also alle Regionen wiederhergestellt.
+	screen -S "$VERZEICHNISSCREENNAME" -p 0 -X eval "stuff 'change region ${REGIONSNAME//\"/}'^M"
+	screen -S "$VERZEICHNISSCREENNAME" -p 0 -X eval "stuff 'load oar /$STARTVERZEICHNIS/backup/'$DATUM'-$NSDATEINAME.oar'^M"
+
+	echo "$DATUM $(date +%H:%M:%S) OSRESTORE: Region $DATUM-$NSDATEINAME wiederhergestellt" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+	echo " "
+}
+function menuregionrestore()
+{
+    # zuerst schauen ob dialog installiert ist
+    if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+
+    # Einstellungen
+    boxbacktitel="opensimMULTITOOL"
+    boxtitel="opensimMULTITOOL Eingabe"
+    formtitle="Backup einer Region"
+    lable1="Screenname:"; lablename1=""
+    lable2="Regionsname:"; lablename2=""
+
+    # Abfrage
+    BOXERGEBNIS=$( dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 3>&1 1>&2 2>&3 3>&- )
+
+    # Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
+    VERZEICHNISSCREENNAME=$(echo "$BOXERGEBNIS" | sed -n '1p')
+    REGIONSNAME=$(echo "$BOXERGEBNIS" | sed -n '2p')
+
+    # Alles löschen.
+    dialog --clear
+    clear
+	else
+		# Alle Aktionen ohne dialog
+		echo "Keine Menülose Funktion"|exit
+	fi	# dialog Aktionen Ende
+
+	DATEINAME=${REGIONSNAME//\"/}
+	NSDATEINAME=${DATEINAME// /}
+
+	echo "$(tput setaf 4) $(tput setab 7)Region $NSDATEINAME wiederherstellen$(tput sgr 0)"
+	echo "$DATUM $(date +%H:%M:%S) OSRESTORE: Region $NSDATEINAME wiederherstellen" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+	cd /$STARTVERZEICHNIS/"$VERZEICHNISSCREENNAME"/bin || return 1
+	# Ich kann nicht pruefen ob die Region im OpenSimulator vorhanden ist.
+	# Sollte sie nicht vorhanden sein wird root also alle Regionen wiederhergestellt.
+	screen -S "$VERZEICHNISSCREENNAME" -p 0 -X eval "stuff 'change region ${REGIONSNAME//\"/}'^M"
+	screen -S "$VERZEICHNISSCREENNAME" -p 0 -X eval "stuff 'load oar /$STARTVERZEICHNIS/backup/'$DATUM'-$NSDATEINAME.oar'^M"
+
+	echo "$DATUM $(date +%H:%M:%S) OSRESTORE: Region $DATUM-$NSDATEINAME wiederhergestellt" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+	echo " "
 }
 
 ### Funktion autosimstart, automatischer sim start ohne Robust und Money.
@@ -2475,7 +2616,7 @@ function menucreateuser()
     # Abfrage
     BOXERGEBNIS=$( dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 "$lable4" 4 1 "$lablename4" 4 25 25 30 3>&1 1>&2 2>&3 3>&- )
 
-    # Zeilen in Variablen schreiben.
+    # Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
     VORNAME=$(echo "$BOXERGEBNIS" | sed -n '1p')
     NACHNAME=$(echo "$BOXERGEBNIS" | sed -n '2p')
     PASSWORT=$(echo "$BOXERGEBNIS" | sed -n '3p')
@@ -2817,6 +2958,7 @@ function mysqleinstellen()
 	MEGABYTE="M"
 
     echo "mySQL Konfiguration auf $mysqlspeicher$MEGABYTE Einstellen und neu starten"
+	echo "*** Bitte den Inhalt der Datei /tmp/mysqld.txt in die Datei /etc/mysql/mysql.conf.d/mysqld.cnf einfügen. ***"
 	echo "$DATUM $(date +%H:%M:%S) MYSQLEINSTELLEN: mySQL Konfiguration auf $mysqlspeicher$MEGABYTE Einstellen und neu starten" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 
 	# Hier wird die config geschrieben es wird angehängt
@@ -2834,12 +2976,13 @@ function mysqleinstellen()
 		echo "innodb_io_capacity = $mysqlspeicher$MEGABYTE # (50% des Maximums festlegen)"
 		echo "# Meine Einstellungen $mysqlspeicher Ende"
 		echo "#"
-	} >> "/etc/mysql/mysql.conf.d/mysqld.cnf"
+	} >> "/tmp/mysqld.txt"
+	echo "*** Bitte den Inhalt der Datei /tmp/mysqld.txt in die Datei /etc/mysql/mysql.conf.d/mysqld.cnf einfügen. ***"
 	# /etc/mysql/mysql.conf.d/mysqld.cnf
 	# /etc/mysql/my.cnf
 
 	# MySQL neu starten
-	mysql_neustart
+	#mysql_neustart
 }
 
 # In Arbeit
@@ -4178,10 +4321,12 @@ function expertenmenu()
 		"Voreinstellungen setzen" ""\
 		"MoneyServer vom git kopieren" ""\
 		"OSSL Skripte vom git kopieren" ""\
+		"Configure vom git kopieren" ""\
 		"--------------------------" ""\
 		"Kommando senden" ""\
 		"--------------------------" ""\
 		"Opensimulator upgraden" ""\
+		"Opensimulator aus zip upgraden" ""\
 		"Opensimulator bauen und upgraden" ""\
 		"Kompilieren" ""\
 		"oscompi" ""\
@@ -4205,8 +4350,10 @@ function expertenmenu()
 		if [[ $feauswahl = "Voreinstellungen setzen" ]]; then ossettings; fi
 		if [[ $feauswahl = "MoneyServer vom git kopieren" ]]; then moneygitcopy; fi
 		if [[ $feauswahl = "OSSL Skripte vom git kopieren" ]]; then scriptgitcopy; fi
+		if [[ $feauswahl = "Configure vom git kopieren" ]]; then configuregitcopy; fi
 		if [[ $feauswahl = "Kommando senden" ]]; then menuoscommand; fi
 		if [[ $feauswahl = "Opensimulator upgraden" ]]; then osupgrade; fi
+		if [[ $feauswahl = "Opensimulator aus zip upgraden" ]]; then oszipupgrade; fi		
 		if [[ $feauswahl = "Opensimulator bauen und upgraden" ]]; then osbuilding; fi
 		if [[ $feauswahl = "Automatischer Regionsbackup" ]]; then autoregionbackup; fi
 		if [[ $feauswahl = "Kompilieren" ]]; then compilieren; fi
@@ -4393,6 +4540,7 @@ case  $KOMMANDO  in
 	scriptgitcopy) scriptgitcopy ;;
 	unlockexample) unlockexample ;;
 	passwdgenerator) passwdgenerator "$2" ;;
+	configurecopy) configurecopy ;;
 	*) hauptmenu ;;
 esac
 
