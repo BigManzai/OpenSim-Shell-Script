@@ -23,12 +23,13 @@ STARTVERZEICHNIS="opt" MONEYVERZEICHNIS="robust" ROBUSTVERZEICHNIS="robust" OPEN
 REGIONSDATEI="RegionList.ini" SIMDATEI="SimulatorList.ini" WARTEZEIT=30 STARTWARTEZEIT=10 STOPWARTEZEIT=30 MONEYWARTEZEIT=50 BACKUPWARTEZEIT=120 AUTOSTOPZEIT=60 SETMONOTHREADS=800 SETMONOTHREADSON="yes"
 OPENSIMDOWNLOAD="http://opensimulator.org/dist/" OPENSIMVERSION="opensim-0.9.1.1.zip" SEARCHADRES="icanhazip.com" AUTOCONFIG="no" SETMONOGCPARAMSON="yes" CONFIGURESOURCE="opensim-configuration-addon-modul-main"	CONFIGUREZIP="opensim-configuration-addon-modul-main.zip"
 }
-VERSION="V0.63.239" # opensimMULTITOOL Versionsausgabe
+VERSION="V0.64.244" # opensimMULTITOOL Versionsausgabe
 clear # Bildschirm loeschen
 
+### Datumsvariablen Datum, Dateidatum und Uhrzeit
 DATUM=$(date +%d.%m.%Y); DATEIDATUM=$(date +%d_%m_%Y); UHRZEIT=$(date +%H:%M:%S)
 
-# LOGO
+### LOGO zeigt ein Logo im nicht dialog Modus an.
 function logo()
 {
 	# zuerst schauen ob dialog installiert ist
@@ -56,7 +57,7 @@ function logo()
 }
 logo
 
-### Alte Variablen loeschen aus eventuellen voherigen sessions ###
+# Alte Variablen loeschen aus eventuellen voherigen sessions
 unset STARTVERZEICHNIS
 unset MONEYVERZEICHNIS
 unset ROBUSTVERZEICHNIS
@@ -71,26 +72,27 @@ unset REGIONSNAMEc
 unset REGIONSNAMEd
 unset VERZEICHNISSCREEN
 
-### Einstellungen aus opensim.cnf laden ###
-# Warum? ganz einfach bei einem Script upgrade gehen so die einstellungen nicht mehr verloren.
-
+### Einstellungen aus opensim.cnf laden, bei einem Script upgrade gehen so die einstellungen nicht mehr verloren.
 # Pfad des opensim.sh Skriptes herausfinden
 SCRIPTPATH=$(cd "$(dirname "$0")" && pwd)
 # Variablen aus config Datei laden opensim.cnf muss sich im gleichen Verzeichnis wie opensim.sh befinden.
-
+# shellcheck disable=SC1091
 . "$SCRIPTPATH"/opensim.cnf
 
-# Aktuelle IP über Suchadresse ermitteln und Ausführungszeichen anhängen.
+### Aktuelle IP über Suchadresse ermitteln und Ausführungszeichen anhängen.
 AKTUELLEIP='"'$(wget -O - -q $SEARCHADRES)'"'
 
-## Farben Color
+### Farben Color
 Red=1; Green=2; Yello=3; Blue=4; Magenta=5; White=7
 
-cd /"$STARTVERZEICHNIS" || return 1 # gibt es das Startverzeichnis wenn nicht abbruch.
+### gibt es das Startverzeichnis wenn nicht abbruch.
+cd /"$STARTVERZEICHNIS" || return 1
 sleep 1
-KOMMANDO=$1 # Eingabeauswertung
 
-# Saubermann.
+### Eingabeauswertung für Funktionen ohne dialog.
+KOMMANDO=$1
+
+### Saubermann.
 function clean()
 {
     # Alles löschen.
@@ -98,7 +100,7 @@ function clean()
     clear
 }
 
-# Kopfzeile der log Datei.
+### Kopfzeile der log Datei.
 function schreibeinfo() 
 {
 	FILENAME="/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log" # Name der Datei
@@ -133,7 +135,7 @@ function vardel()
 	unset REGIONSNAME; unset REGIONSNAMEb; unset REGIONSNAMEc; unset REGIONSNAMEd; unset VERZEICHNISSCREEN
 }
 
-### Erstellen eines Arrays aus einer Textdatei - Verzeichnisse und Regionen ###
+### Erstellen eines Arrays aus einer Textdatei - Verzeichnisse
 function makeverzeichnisliste() 
 {
 	VERZEICHNISSLISTE=()
@@ -144,6 +146,7 @@ function makeverzeichnisliste()
 	ANZAHLVERZEICHNISSLISTE=${#VERZEICHNISSLISTE[*]}
 }
 
+### Erstellen eines Arrays aus einer Textdatei - Regionen
 function makeregionsliste() 
 {
 	REGIONSLISTE=()
@@ -174,24 +177,24 @@ function passwdgenerator()
         unset PASSWD
 	fi	# dialog Aktionen Ende	
 }
-### Funktion assetdel, Asset von der Region loeschen.
-# Aufruf: assetdel screen_name Regionsname Objektname
+### Funktion assetdel, Asset von der Region loeschen. Aufruf: assetdel screen_name Regionsname Objektname
 function assetdel()
 {
-	VERZEICHNISSCREEN=$1; REGION=$2; OBJEKT=$3
+	ASSDELSCREEN=$1; REGION=$2; OBJEKT=$3
 	# Nachschauen ob der Screen und die Region existiert.
-	if screen -list | grep -q "$VERZEICHNISSCREEN"; then
+	if screen -list | grep -q "$ASSDELSCREEN"; then
 		echo "$(tput setaf $Red) $(tput setab $White)$OBJEKT Asset von der Region $REGION löschen$(tput sgr 0)"
-		screen -S "$VERZEICHNISSCREEN" -p 0 -X eval "stuff 'change region ""$REGION""'^M" # Region wechseln
-		screen -S "$VERZEICHNISSCREEN" -p 0 -X eval "stuff 'alert "Loesche: "$OBJEKT" von der Region!"'^M" # Mit einer loesch Meldung
-		screen -S "$VERZEICHNISSCREEN" -p 0 -X eval "stuff 'delete object name ""$OBJEKT""'^M" # Objekt loeschen
-		screen -S "$VERZEICHNISSCREEN" -p 0 -X eval "stuff 'y'^M" # Mit y also yes bestaetigen
+		screen -S "$ASSDELSCREEN" -p 0 -X eval "stuff 'change region ""$REGION""'^M" # Region wechseln
+		screen -S "$ASSDELSCREEN" -p 0 -X eval "stuff 'alert "Loesche: "$OBJEKT" von der Region!"'^M" # Mit einer loesch Meldung
+		screen -S "$ASSDELSCREEN" -p 0 -X eval "stuff 'delete object name ""$OBJEKT""'^M" # Objekt loeschen
+		screen -S "$ASSDELSCREEN" -p 0 -X eval "stuff 'y'^M" # Mit y also yes bestaetigen
 		echo "$DATUM $(date +%H:%M:%S) ASSETDEL: $OBJEKT Asset von der Region $REGION löschen" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 	else
 		echo "$(tput setaf $Red) $(tput setab $White)$OBJEKT Asset von der Region $REGION löschen fehlgeschlagen$(tput sgr 0)"
 		echo "$DATUM $(date +%H:%M:%S) ASSETDEL: $OBJEKT Asset von der Region $REGION löschen fehlgeschlagen" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 	fi
 }
+### menuassetdel() Assets loeschen.
 function menuassetdel()
 {
     # zuerst schauen ob dialog installiert ist
@@ -206,12 +209,12 @@ function menuassetdel()
     lable3="Objekt:"; lablename3=""
 
     # Abfrage
-    BOXERGEBNIS=$( dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30  3>&1 1>&2 2>&3 3>&- )
+    ASSETDELBOXERGEBNIS=$( dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30  3>&1 1>&2 2>&3 3>&- )
 
     # Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
-    VERZEICHNISSCREEN=$(echo "$BOXERGEBNIS" | sed -n '1p')
-    REGION=$(echo "$BOXERGEBNIS" | sed -n '2p')
-    OBJEKT=$(echo "$BOXERGEBNIS" | sed -n '3p')
+    VERZEICHNISSCREEN=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '1p')
+    REGION=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '2p')
+    OBJEKT=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '3p')
 
     # Alles löschen.
     dialog --clear
@@ -238,20 +241,21 @@ function menuassetdel()
 ### Funktion landclear, Land clear - Löscht alle Parzellen auf dem Land. # Aufruf: landclear screen_name Regionsname Objektname
 function landclear()
 {
-	VERZEICHNISSCREEN=$1; REGION=$2
+	LANDCLEARSCREEN=$1; REGION=$2
 	# Nachschauen ob der Screen und die Region existiert.
-	if screen -list | grep -q "$VERZEICHNISSCREEN"; then
+	if screen -list | grep -q "$LANDCLEARSCREEN"; then
 		echo "$(tput setaf $Red) $(tput setab $White)$OBJEKT Parzellen von der Region $REGION löschen$(tput sgr 0)"
-		screen -S "$VERZEICHNISSCREEN" -p 0 -X eval "stuff 'change region ""$REGION""'^M" # Region wechseln
-		screen -S "$VERZEICHNISSCREEN" -p 0 -X eval "stuff 'alert "Loesche Parzellen von der Region!"'^M" # Mit einer loesch Meldung
-		screen -S "$VERZEICHNISSCREEN" -p 0 -X eval "stuff 'land clear'^M" # Objekt loeschen
-		screen -S "$VERZEICHNISSCREEN" -p 0 -X eval "stuff 'y'^M" # Mit y also yes bestaetigen
+		screen -S "$LANDCLEARSCREEN" -p 0 -X eval "stuff 'change region ""$REGION""'^M" # Region wechseln
+		screen -S "$LANDCLEARSCREEN" -p 0 -X eval "stuff 'alert "Loesche Parzellen von der Region!"'^M" # Mit einer loesch Meldung
+		screen -S "$LANDCLEARSCREEN" -p 0 -X eval "stuff 'land clear'^M" # Objekt loeschen
+		screen -S "$LANDCLEARSCREEN" -p 0 -X eval "stuff 'y'^M" # Mit y also yes bestaetigen
 		echo "$DATUM $(date +%H:%M:%S) LANDCLEAR: $OBJEKT Parzellen von der Region $REGION löschen" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 	else
 		echo "$(tput setaf $Red) $(tput setab $White)$OBJEKT Parzellen von der Region $REGION löschen fehlgeschlagen$(tput sgr 0)"
 		echo "$DATUM $(date +%H:%M:%S) LANDCLEAR: $OBJEKT Parzellen von der Region $REGION löschen fehlgeschlagen" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 	fi
 }
+### Funktion landclear, Land clear - Löscht alle Parzellen auf dem Land. # Aufruf: landclear screen_name Regionsname Objektname
 function menulandclear()
 {
     # zuerst schauen ob dialog installiert ist
@@ -265,11 +269,11 @@ function menulandclear()
     lable2="Regionsname:"; lablename2="Sandbox"
 
     # Abfrage
-    BOXERGEBNIS=$( dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 3>&1 1>&2 2>&3 3>&- )
+    landclearBOXERGEBNIS=$( dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 3>&1 1>&2 2>&3 3>&- )
 
     # Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
-    VERZEICHNISSCREEN=$(echo "$BOXERGEBNIS" | sed -n '1p')
-    REGION=$(echo "$BOXERGEBNIS" | sed -n '2p')
+    VERZEICHNISSCREEN=$(echo "$landclearBOXERGEBNIS" | sed -n '1p')
+    REGION=$(echo "$landclearBOXERGEBNIS" | sed -n '2p')
 
     # Alles löschen.
     dialog --clear
@@ -296,16 +300,17 @@ function menulandclear()
 ### Funktion loadinventar, saveinventar # Aufruf: load oder saveinventar "NAME" "VERZEICHNIS" "PASSWORD" "DATEImitPFAD"
 function loadinventar()
 {	
-	VERZEICHNISSCREEN="sim1"; NAME=$1; VERZEICHNIS=$2; PASSWORD=$3; DATEI=$4
-	if screen -list | grep -q "$VERZEICHNISSCREEN"; then
+	LOADINVSCREEN="sim1"; NAME=$1; VERZEICHNIS=$2; PASSWORD=$3; DATEI=$4
+	if screen -list | grep -q "$LOADINVSCREEN"; then
 	echo "$(tput setab $Green)load iar $NAME $VERZEICHNIS ***** $DATEI $(tput sgr 0)"
 	echo "$DATUM $(date +%H:%M:%S) OSCOMMAND: load iar $NAME $VERZEICHNIS ***** $DATEI " >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-	screen -S "$VERZEICHNISSCREEN" -p 0 -X eval "stuff 'load iar $NAME $VERZEICHNIS $PASSWORD $DATEI'^M"
+	screen -S "$LOADINVSCREEN" -p 0 -X eval "stuff 'load iar $NAME $VERZEICHNIS $PASSWORD $DATEI'^M"
 	else
-		echo "Der Screen $VERZEICHNISSCREEN existiert nicht."
-		echo "$DATUM $(date +%H:%M:%S) OSCOMMAND: Der Screen $VERZEICHNISSCREEN existiert nicht" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+		echo "Der Screen $LOADINVSCREEN existiert nicht."
+		echo "$DATUM $(date +%H:%M:%S) OSCOMMAND: Der Screen $LOADINVSCREEN existiert nicht" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 	fi
 }
+### Funktion loadinventar, saveinventar # Aufruf: load oder saveinventar "NAME" "VERZEICHNIS" "PASSWORD" "DATEImitPFAD"
 function menuloadinventar()
 {
     # zuerst schauen ob dialog installiert ist
@@ -321,13 +326,13 @@ function menuloadinventar()
     lable4="DATEI:"; lablename4="/opt/texture.iar"
 
     # Abfrage
-    BOXERGEBNIS=$( dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 "$lable4" 4 1 "$lablename4" 4 25 25 30 3>&1 1>&2 2>&3 3>&- )
+    loadinventarBOXERGEBNIS=$( dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 "$lable4" 4 1 "$lablename4" 4 25 25 30 3>&1 1>&2 2>&3 3>&- )
 
     # Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
-    NAME=$(echo "$BOXERGEBNIS" | sed -n '1p')
-    VERZEICHNIS=$(echo "$BOXERGEBNIS" | sed -n '2p')
-    PASSWORD=$(echo "$BOXERGEBNIS" | sed -n '3p')
-    DATEI=$(echo "$BOXERGEBNIS" | sed -n '4p')
+    NAME=$(echo "$loadinventarBOXERGEBNIS" | sed -n '1p')
+    VERZEICHNIS=$(echo "$loadinventarBOXERGEBNIS" | sed -n '2p')
+    PASSWORD=$(echo "$loadinventarBOXERGEBNIS" | sed -n '3p')
+    DATEI=$(echo "$loadinventarBOXERGEBNIS" | sed -n '4p')
 
     # Alles löschen.
     dialog --clear
@@ -337,31 +342,33 @@ function menuloadinventar()
         echo "Keine Menülose Funktion"|exit
 	fi	# dialog Aktionen Ende
 
-	VERZEICHNISSCREEN="sim1"
-	if screen -list | grep -q "$VERZEICHNISSCREEN"; then
+	LOADINVSCREEN="sim1"
+	if screen -list | grep -q "$LOADINVSCREEN"; then
 	echo "$(tput setab $Green)load iar $NAME $VERZEICHNIS ***** $DATEI $(tput sgr 0)"
 	echo "$DATUM $(date +%H:%M:%S) OSCOMMAND: load iar $NAME $VERZEICHNIS ***** $DATEI " >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-	screen -S "$VERZEICHNISSCREEN" -p 0 -X eval "stuff 'load iar $NAME $VERZEICHNIS $PASSWORD $DATEI'^M"
+	screen -S "$LOADINVSCREEN" -p 0 -X eval "stuff 'load iar $NAME $VERZEICHNIS $PASSWORD $DATEI'^M"
 	else
-		echo "Der Screen $VERZEICHNISSCREEN existiert nicht."
-		echo "$DATUM $(date +%H:%M:%S) OSCOMMAND: Der Screen $VERZEICHNISSCREEN existiert nicht" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+		echo "Der Screen $LOADINVSCREEN existiert nicht."
+		echo "$DATUM $(date +%H:%M:%S) OSCOMMAND: Der Screen $LOADINVSCREEN existiert nicht" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 	fi    
 
     # Zum schluss alle Variablen löschen.
-    unset VERZEICHNISSCREEN NAME VERZEICHNIS PASSWORD DATEI
+    unset LOADINVSCREEN NAME VERZEICHNIS PASSWORD DATEI
 }
+### Funktion saveinventar, saveinventar # Aufruf: load oder saveinventar "NAME" "VERZEICHNIS" "PASSWORD" "DATEImitPFAD"
 function saveinventar()
 {	
-	VERZEICHNISSCREEN="sim1"; NAME=$1; VERZEICHNIS=$2; PASSWORD=$3; DATEI=$4
-	if screen -list | grep -q "$VERZEICHNISSCREEN"; then
+	SAVEINVSCREEN="sim1"; NAME=$1; VERZEICHNIS=$2; PASSWORD=$3; DATEI=$4
+	if screen -list | grep -q "$SAVEINVSCREEN"; then
 	echo "$(tput setab $Green)save iar $NAME $VERZEICHNIS ***** $DATEI $(tput sgr 0)"
 	echo "$DATUM $(date +%H:%M:%S) OSCOMMAND: save iar $NAME $VERZEICHNIS ***** $DATEI " >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-	screen -S "$VERZEICHNISSCREEN" -p 0 -X eval "stuff 'save iar $NAME $VERZEICHNIS $PASSWORD $DATEI'^M"
+	screen -S "$SAVEINVSCREEN" -p 0 -X eval "stuff 'save iar $NAME $VERZEICHNIS $PASSWORD $DATEI'^M"
 	else
-		echo "Der Screen $VERZEICHNISSCREEN existiert nicht."
-		echo "$DATUM $(date +%H:%M:%S) OSCOMMAND: Der Screen $VERZEICHNISSCREEN existiert nicht" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+		echo "Der Screen $SAVEINVSCREEN existiert nicht."
+		echo "$DATUM $(date +%H:%M:%S) OSCOMMAND: Der Screen $SAVEINVSCREEN existiert nicht" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 	fi
 }
+### Funktion saveinventar, saveinventar # Aufruf: load oder saveinventar "NAME" "VERZEICHNIS" "PASSWORD" "DATEImitPFAD"
 function menusaveinventar()
 {
     # zuerst schauen ob dialog installiert ist
@@ -377,13 +384,13 @@ function menusaveinventar()
     lable4="DATEI:"; lablename4="/opt/texture.iar"
 
     # Abfrage
-    BOXERGEBNIS=$( dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 "$lable4" 4 1 "$lablename4" 4 25 25 30 3>&1 1>&2 2>&3 3>&- )
+    saveinventarBOXERGEBNIS=$( dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 "$lable4" 4 1 "$lablename4" 4 25 25 30 3>&1 1>&2 2>&3 3>&- )
 
     # Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
-    NAME=$(echo "$BOXERGEBNIS" | sed -n '1p')
-    VERZEICHNIS=$(echo "$BOXERGEBNIS" | sed -n '2p')
-    PASSWORD=$(echo "$BOXERGEBNIS" | sed -n '3p')
-    DATEI=$(echo "$BOXERGEBNIS" | sed -n '4p')
+    NAME=$(echo "$saveinventarBOXERGEBNIS" | sed -n '1p')
+    VERZEICHNIS=$(echo "$saveinventarBOXERGEBNIS" | sed -n '2p')
+    PASSWORD=$(echo "$saveinventarBOXERGEBNIS" | sed -n '3p')
+    DATEI=$(echo "$saveinventarBOXERGEBNIS" | sed -n '4p')
 
     # Alles löschen.
     dialog --clear
@@ -393,35 +400,36 @@ function menusaveinventar()
         echo "Keine Menülose Funktion"|exit
 	fi	# dialog Aktionen Ende
 
-	VERZEICHNISSCREEN="sim1"
-	if screen -list | grep -q "$VERZEICHNISSCREEN"; then
+	SAVEINVSCREEN="sim1"
+	if screen -list | grep -q "$SAVEINVSCREEN"; then
 	echo "$(tput setab $Green)save iar $NAME $VERZEICHNIS ***** $DATEI $(tput sgr 0)"
 	echo "$DATUM $(date +%H:%M:%S) OSCOMMAND: save iar $NAME $VERZEICHNIS ***** $DATEI " >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-	screen -S "$VERZEICHNISSCREEN" -p 0 -X eval "stuff 'save iar $NAME $VERZEICHNIS $PASSWORD $DATEI'^M"
+	screen -S "$SAVEINVSCREEN" -p 0 -X eval "stuff 'save iar $NAME $VERZEICHNIS $PASSWORD $DATEI'^M"
 	else
-		echo "Der Screen $VERZEICHNISSCREEN existiert nicht."
-		echo "$DATUM $(date +%H:%M:%S) OSCOMMAND: Der Screen $VERZEICHNISSCREEN existiert nicht" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+		echo "Der Screen $SAVEINVSCREEN existiert nicht."
+		echo "$DATUM $(date +%H:%M:%S) OSCOMMAND: Der Screen $SAVEINVSCREEN existiert nicht" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 	fi    
 
     # Zum schluss alle Variablen löschen.
-    unset VERZEICHNISSCREEN NAME VERZEICHNIS PASSWORD DATEI
+    unset SAVEINVSCREEN NAME VERZEICHNIS PASSWORD DATEI
 }
 ### Funktion oscommand, OpenSim Command direkt in den screen senden. # Aufruf: oscommand Screen Region Befehl Parameter
 # Beispiel: /opt/opensim.sh oscommand sim1 Welcome "alert Hallo liebe Leute dies ist eine Nachricht"
 # Beispiel: /opt/opensim.sh oscommand sim1 Welcome "alert-user John Doe Hallo John Doe"
 function oscommand()
 {	
-	VERZEICHNISSCREEN=$1; REGION=$2; COMMAND=$3
-	if screen -list | grep -q "$VERZEICHNISSCREEN"; then
-	echo "$(tput setab $Green)Sende $COMMAND an $VERZEICHNISSCREEN $(tput sgr 0)"
-	screen -S "$VERZEICHNISSCREEN" -p 0 -X eval "stuff 'change region ""$REGION""'^M" # Region wechseln
-	echo "$DATUM $(date +%H:%M:%S) OSCOMMAND: $COMMAND an $VERZEICHNISSCREEN senden" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-	screen -S "$VERZEICHNISSCREEN" -p 0 -X eval "stuff '$COMMAND'^M"
+	OSCOMMANDSCREEN=$1; REGION=$2; COMMAND=$3
+	if screen -list | grep -q "$OSCOMMANDSCREEN"; then
+	echo "$(tput setab $Green)Sende $COMMAND an $OSCOMMANDSCREEN $(tput sgr 0)"
+	screen -S "$OSCOMMANDSCREEN" -p 0 -X eval "stuff 'change region ""$REGION""'^M" # Region wechseln
+	echo "$DATUM $(date +%H:%M:%S) OSCOMMAND: $COMMAND an $OSCOMMANDSCREEN senden" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+	screen -S "$OSCOMMANDSCREEN" -p 0 -X eval "stuff '$COMMAND'^M"
 	else
-		echo "Der Screen $VERZEICHNISSCREEN existiert nicht."
-		echo "$DATUM $(date +%H:%M:%S) OSCOMMAND: Der Screen $VERZEICHNISSCREEN existiert nicht" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+		echo "Der Screen $OSCOMMANDSCREEN existiert nicht."
+		echo "$DATUM $(date +%H:%M:%S) OSCOMMAND: Der Screen $OSCOMMANDSCREEN existiert nicht" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 	fi
 }
+### Funktion oscommand, OpenSim Command direkt in den screen senden. # Aufruf: oscommand Screen Region Befehl Parameter
 function menuoscommand()
 {
     # zuerst schauen ob dialog installiert ist
@@ -436,12 +444,12 @@ function menuoscommand()
     lable3="Befehlskette:"; lablename3=""
 
     # Abfrage
-    BOXERGEBNIS=$( dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30  3>&1 1>&2 2>&3 3>&- )
+    oscommandBOXERGEBNIS=$( dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30  3>&1 1>&2 2>&3 3>&- )
 
     # Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
-    VERZEICHNISSCREEN=$(echo "$BOXERGEBNIS" | sed -n '1p')
-    REGION=$(echo "$BOXERGEBNIS" | sed -n '2p')
-    COMMAND=$(echo "$BOXERGEBNIS" | sed -n '3p')
+    OSCOMMANDSCREEN=$(echo "$oscommandBOXERGEBNIS" | sed -n '1p')
+    REGION=$(echo "$oscommandBOXERGEBNIS" | sed -n '2p')
+    COMMAND=$(echo "$oscommandBOXERGEBNIS" | sed -n '3p')
 
     # Alles löschen.
     dialog --clear
@@ -451,60 +459,81 @@ function menuoscommand()
         echo "Keine Menülose Funktion"|exit
 	fi	# dialog Aktionen Ende
 
-	if screen -list | grep -q "$VERZEICHNISSCREEN"; then
-	echo "$(tput setab $Green)Sende $COMMAND an $VERZEICHNISSCREEN $(tput sgr 0)"
-	screen -S "$VERZEICHNISSCREEN" -p 0 -X eval "stuff 'change region ""$REGION""'^M" # Region wechseln
-	echo "$DATUM $(date +%H:%M:%S) OSCOMMAND: $COMMAND an $VERZEICHNISSCREEN senden" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-	screen -S "$VERZEICHNISSCREEN" -p 0 -X eval "stuff '$COMMAND'^M"
+	if screen -list | grep -q "$OSCOMMANDSCREEN"; then
+	echo "$(tput setab $Green)Sende $COMMAND an $OSCOMMANDSCREEN $(tput sgr 0)"
+	screen -S "$OSCOMMANDSCREEN" -p 0 -X eval "stuff 'change region ""$REGION""'^M" # Region wechseln
+	echo "$DATUM $(date +%H:%M:%S) OSCOMMAND: $COMMAND an $OSCOMMANDSCREEN senden" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+	screen -S "$OSCOMMANDSCREEN" -p 0 -X eval "stuff '$COMMAND'^M"
 	else
-		echo "Der Screen $VERZEICHNISSCREEN existiert nicht."
-		echo "$DATUM $(date +%H:%M:%S) OSCOMMAND: Der Screen $VERZEICHNISSCREEN existiert nicht" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+		echo "Der Screen $OSCOMMANDSCREEN existiert nicht."
+		echo "$DATUM $(date +%H:%M:%S) OSCOMMAND: Der Screen $OSCOMMANDSCREEN existiert nicht" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 	fi
 
     # Zum schluss alle Variablen löschen.
-    unset VERZEICHNISSCREEN REGION COMMAND
+    unset OSCOMMANDSCREEN REGION COMMAND
 }
 
 
-### Funktion works, screen pruefen ob er laeuft. # Aufruf: works screen_name
-function works()
+### Funktion works, screen pruefen ob er laeuft. dialog auswahl
+function menuworks()
 {
-	VERZEICHNISSCREEN=$1  # OpenSimulator, Verzeichnis und Screen Name
+	WORKSSCREEN=$1  # OpenSimulator, Verzeichnis und Screen Name
 
 	### dialog Aktionen
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
 		# Alle Aktionen mit dialog
 		boxtitel="opensimMULTITOOL Eingabe"; boxtext="Screen Name:"; 
-		VERSIONSNUMMER=$( dialog --backtitle "opensimMULTITOOL $VERSION" --title "$boxtitel" --inputbox "$boxtext" 8 40 3>&1 1>&2 2>&3 3>&- )
+		WORKSSCREEN=$( dialog --backtitle "opensimMULTITOOL $VERSION" --title "$boxtitel" --inputbox "$boxtext" 8 40 3>&1 1>&2 2>&3 3>&- )
 		dialog --clear
 		clear
-		if ! screen -list | grep -q "$VERZEICHNISSCREEN"; then
+
+		if ! screen -list | grep -q "$WORKSSCREEN"; then
 		# es laeuft nicht - not work
-			dialog --backtitle "opensimMULTITOOL $VERSION" --msgbox "OpenSimulator $VERZEICHNISSCREEN OFFLINE!" 5 40
+			dialog --backtitle "opensimMULTITOOL $VERSION" --msgbox "OpenSimulator $WORKSSCREEN OFFLINE!" 5 40
             dialog --clear
             clear
 		else
 		# es laeuft - work
-			dialog --backtitle "opensimMULTITOOL $VERSION" --msgbox "OpenSimulator $VERZEICHNISSCREEN ONLINE!" 5 40
+			dialog --backtitle "opensimMULTITOOL $VERSION" --msgbox "OpenSimulator $WORKSSCREEN ONLINE!" 5 40
             dialog --clear
             clear
 		fi
+
 		hauptmenu
 	else
 		# Alle Aktionen ohne dialog		
-		if ! screen -list | grep -q "$VERZEICHNISSCREEN"; then
+		if ! screen -list | grep -q "$WORKSSCREEN"; then
 			# es laeuft nicht - not work
-				echo "$(tput setaf $White)$(tput setab $Red) $VERZEICHNISSCREEN OFFLINE! $(tput sgr 0)"
-				echo "$DATUM $(date +%H:%M:%S) WORKS: $VERZEICHNISSCREEN OFFLINE!" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+				echo "$(tput setaf $White)$(tput setab $Red) $WORKSSCREEN OFFLINE! $(tput sgr 0)"
+				echo "$DATUM $(date +%H:%M:%S) WORKS: $WORKSSCREEN OFFLINE!" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 				return 1
 			else
 			# es laeuft - work
-				echo "$(tput setaf $White)$(tput setab $Green) $VERZEICHNISSCREEN ONLINE! $(tput sgr 0)"
-				echo "$DATUM $(date +%H:%M:%S) WORKS: $VERZEICHNISSCREEN ONLINE!" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+				echo "$(tput setaf $White)$(tput setab $Green) $WORKSSCREEN ONLINE! $(tput sgr 0)"
+				echo "$DATUM $(date +%H:%M:%S) WORKS: $WORKSSCREEN ONLINE!" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 				return 0
 		fi
 	fi
+}
+### Funktion works, screen pruefen ob er laeuft. # Aufruf: works screen_name
+function works()
+{
+	WORKSSCREEN=$1  # OpenSimulator, Verzeichnis und Screen Name
+
+	# Alle Aktionen ohne dialog		
+	if ! screen -list | grep -q "$WORKSSCREEN"; then
+		# es laeuft nicht - not work
+			echo "$(tput setaf $White)$(tput setab $Red) $WORKSSCREEN OFFLINE! $(tput sgr 0)"
+			echo "$DATUM $(date +%H:%M:%S) WORKS: $WORKSSCREEN OFFLINE!" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+			return 1
+		else
+		# es laeuft - work
+			echo "$(tput setaf $White)$(tput setab $Green) $WORKSSCREEN ONLINE! $(tput sgr 0)"
+			echo "$DATUM $(date +%H:%M:%S) WORKS: $WORKSSCREEN ONLINE!" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+			return 0
+	fi
+
 }
 ### Funktion checkfile, pruefen ob Datei vorhanden ist. # Aufruf: checkfile "pfad/name"
 # Verwendung als Einzeiler: checkfile /pfad/zur/datei && echo "File exists" || echo "File not found!"
@@ -543,6 +572,7 @@ function logdel()
 		echo "$DATUM $(date +%H:%M:%S) LOGDEL: logs nicht gefunden" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 	fi
 }
+### Funktion logdel, loescht die Log Dateien. # Aufruf: logdel Verzeichnis
 function menumapdel()
 {
 	### dialog Aktionen
@@ -568,6 +598,7 @@ function menumapdel()
 		echo "$DATUM $(date +%H:%M:%S) MAPDEL: maptile $VERZEICHNIS nicht gefunden" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 	fi
 }
+### Funktion logdel, loescht die Log Dateien. # Aufruf: logdel Verzeichnis
 function menulogdel()
 {
 	### dialog Aktionen
@@ -657,26 +688,36 @@ function screenlist()
 ### Funktion osstart, startet Region Server. # Beispiel-Example: /opt/opensim.sh osstart sim1
 function osstart()
 {
-	VERZEICHNISSCREEN=$1 # OpenSimulator, Verzeichnis und Screen Name
-	if [ -d "$VERZEICHNISSCREEN" ]; then
-		
-		cd /$STARTVERZEICHNIS/"$VERZEICHNISSCREEN"/bin || return 1
+	OSSTARTSCREEN=$1 # OpenSimulator, Verzeichnis und Screen Name
 
-		# AOT Aktiveren oder Deaktivieren.
-		if [[ $SETAOTON = "yes" ]]
-		then
-			echo "$(tput setaf 2) $(tput setab $White)OpenSimulator $VERZEICHNISSCREEN Starten aot $(tput sgr 0)"
-			echo "$DATUM $(date +%H:%M:%S) OSSTART: OpenSimulator $VERZEICHNISSCREEN Starten aot" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-			screen -fa -S "$VERZEICHNISSCREEN" -d -U -m mono --desktop -O=all OpenSim.exe
+	if ! screen -list | grep -q "$OSSTARTSCREEN"; then
+		# es laeuft nicht - not work
+		echo "es läuft nicht test"
+		if [ -d "$OSSTARTSCREEN" ]; then
+			
+			cd /$STARTVERZEICHNIS/"$OSSTARTSCREEN"/bin || return 1
+
+			# AOT Aktiveren oder Deaktivieren.
+			if [[ $SETAOTON = "yes" ]]
+			then
+				echo "$(tput setaf 2) $(tput setab $White)OpenSimulator $OSSTARTSCREEN Starten aot $(tput sgr 0)"
+				echo "$DATUM $(date +%H:%M:%S) OSSTART: OpenSimulator $OSSTARTSCREEN Starten aot" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+				screen -fa -S "$OSSTARTSCREEN" -d -U -m mono --desktop -O=all OpenSim.exe
+			else
+				echo "$(tput setaf 2) $(tput setab $White)OpenSimulator $OSSTARTSCREEN Starten$(tput sgr 0)"
+				echo "$DATUM $(date +%H:%M:%S) OSSTART: OpenSimulator $OSSTARTSCREEN Starten" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+				screen -fa -S "$OSSTARTSCREEN" -d -U -m mono OpenSim.exe
+			fi		
+			sleep 10
 		else
-			echo "$(tput setaf 2) $(tput setab $White)OpenSimulator $VERZEICHNISSCREEN Starten$(tput sgr 0)"
-			echo "$DATUM $(date +%H:%M:%S) OSSTART: OpenSimulator $VERZEICHNISSCREEN Starten" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-			screen -fa -S "$VERZEICHNISSCREEN" -d -U -m mono OpenSim.exe
-		fi		
-		sleep 10
+			echo "$(tput setaf $Red) $(tput setab $White)OpenSimulator $OSSTARTSCREEN nicht vorhanden$(tput sgr 0)"
+			echo "$DATUM $(date +%H:%M:%S) OSSTART: OpenSimulator $OSSTARTSCREEN nicht vorhanden" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+		fi
+
 	else
-		echo "$(tput setaf $Red) $(tput setab $White)OpenSimulator $VERZEICHNISSCREEN nicht vorhanden$(tput sgr 0)"
-		echo "$DATUM $(date +%H:%M:%S) OSSTART: OpenSimulator $VERZEICHNISSCREEN nicht vorhanden" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+		# es laeuft - work
+		echo "$(tput setaf $Red) $(tput setab $White)OpenSimulator $OSSTARTSCREEN läuft bereits$(tput sgr 0)"
+		echo "$DATUM $(date +%H:%M:%S) OSSTART: OpenSimulator $OSSTARTSCREEN läuft bereits" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 	fi
 	return
 }
@@ -684,22 +725,22 @@ function osstart()
 ### Funktion osstop, stoppt Region Server. # Beispiel-Example: /opt/opensim.sh osstop sim1
 function osstop()
 {
-	VERZEICHNISSCREEN=$1 # OpenSimulator, Verzeichnis und Screen Name
-	if screen -list | grep -q "$VERZEICHNISSCREEN"; then
-		echo "$(tput setaf $Red) $(tput setab $White)OpenSimulator $VERZEICHNISSCREEN Beenden$(tput sgr 0)"
-		echo "$DATUM $(date +%H:%M:%S) OSSTOP: OpenSimulator $VERZEICHNISSCREEN Beenden" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-		screen -S "$VERZEICHNISSCREEN" -p 0 -X eval "stuff 'shutdown'^M"
+	OSSTOPSCREEN=$1 # OpenSimulator, Verzeichnis und Screen Name
+	if screen -list | grep -q "$OSSTOPSCREEN"; then
+		echo "$(tput setaf $Red) $(tput setab $White)OpenSimulator $OSSTOPSCREEN Beenden$(tput sgr 0)"
+		echo "$DATUM $(date +%H:%M:%S) OSSTOP: OpenSimulator $OSSTOPSCREEN Beenden" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+		screen -S "$OSSTOPSCREEN" -p 0 -X eval "stuff 'shutdown'^M"
 		sleep 10
 	else
-		echo "$(tput setaf $Red) $(tput setab $White)OpenSimulator $VERZEICHNISSCREEN nicht vorhanden$(tput sgr 0)"
-		echo "$DATUM $(date +%H:%M:%S) OSSTOP: OpenSimulator $VERZEICHNISSCREEN nicht vorhanden" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+		echo "$(tput setaf $Red) $(tput setab $White)OpenSimulator $OSSTOPSCREEN nicht vorhanden$(tput sgr 0)"
+		echo "$DATUM $(date +%H:%M:%S) OSSTOP: OpenSimulator $OSSTOPSCREEN nicht vorhanden" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 	fi
 	return
 }
 
 function inputosstart()
 {
-    VERZEICHNISSCREEN=$(\
+    IOSSTARTSCREEN=$(\
     dialog --backtitle "opensimMULTITOOL $VERSION" --title "opensimMULTITOOL Eingabe" \
             --inputbox "Simulator:" 8 40 \
     3>&1 1>&2 2>&3 3>&- \
@@ -707,41 +748,49 @@ function inputosstart()
     dialog --clear
     clear
 
-	if [ -d "$VERZEICHNISSCREEN" ]; then
-		
-		cd /$STARTVERZEICHNIS/"$VERZEICHNISSCREEN"/bin || return 1
+	if ! screen -list | grep -q "$IOSSTARTSCREEN"; then
+		# es laeuft nicht - not work
 
-		# AOT Aktiveren oder Deaktivieren.
-		if [[ $SETAOTON = "yes" ]]
-		then
-		DIALOG=dialog
-		(echo "10" ; screen -fa -S "$VERZEICHNISSCREEN" -d -U -m mono --desktop -O=all OpenSim.exe ; sleep 3
-		echo "100" ; sleep 2) |
-		$DIALOG --title "$VERZEICHNISSCREEN" --gauge "Start" 8 30
-		$DIALOG --clear
-		$DIALOG --msgbox "$VERZEICHNISSCREEN gestartet!" 5 20
-		$DIALOG --clear
-		clear
+		if [ -d "$IOSSTARTSCREEN" ]; then
+			
+			cd /$STARTVERZEICHNIS/"$IOSSTARTSCREEN"/bin || return 1
+
+			# AOT Aktiveren oder Deaktivieren.
+			if [[ $SETAOTON = "yes" ]]
+			then
+			DIALOG=dialog
+			(echo "10" ; screen -fa -S "$IOSSTARTSCREEN" -d -U -m mono --desktop -O=all OpenSim.exe ; sleep 3
+			echo "100" ; sleep 2) |
+			$DIALOG --title "$IOSSTARTSCREEN" --gauge "Start" 8 30
+			$DIALOG --clear
+			$DIALOG --msgbox "$IOSSTARTSCREEN gestartet!" 5 20
+			$DIALOG --clear
+			clear
+			else
+			DIALOG=dialog
+			(echo "10" ; screen -fa -S "$IOSSTARTSCREEN" -d -U -m mono OpenSim.exe ; sleep 3
+			echo "100" ; sleep 2) |
+			$DIALOG --title "$IOSSTARTSCREEN" --gauge "Start" 8 30
+			$DIALOG --clear
+			$DIALOG --msgbox "$IOSSTARTSCREEN gestartet!" 5 20
+			$DIALOG --clear
+			clear
+			fi		
+			#sleep 10
 		else
-		DIALOG=dialog
-		(echo "10" ; screen -fa -S "$VERZEICHNISSCREEN" -d -U -m mono OpenSim.exe ; sleep 3
-		echo "100" ; sleep 2) |
-		$DIALOG --title "$VERZEICHNISSCREEN" --gauge "Start" 8 30
-		$DIALOG --clear
-		$DIALOG --msgbox "$VERZEICHNISSCREEN gestartet!" 5 20
-		$DIALOG --clear
-		clear
-		fi		
-		#sleep 10
+			echo "OpenSimulator $IOSSTARTSCREEN nicht vorhanden"
+		fi
 	else
-		echo "OpenSimulator $VERZEICHNISSCREEN nicht vorhanden"
+		# es laeuft - work
+		echo "$(tput setaf $Red) $(tput setab $White)OpenSimulator $IOSSTARTSCREEN läuft bereits$(tput sgr 0)"
+		echo "$DATUM $(date +%H:%M:%S) OSSTART: OpenSimulator $IOSSTARTSCREEN läuft bereits" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 	fi
 	hauptmenu
 }
 
 function inputosstop()
 {
-    VERZEICHNISSCREEN=$(\
+    IOSSTOPSCREEN=$(\
     dialog --backtitle "opensimMULTITOOL $VERSION" --title "opensimMULTITOOL Eingabe" \
             --inputbox "Simulator:" 8 40 \
     3>&1 1>&2 2>&3 3>&- \
@@ -749,17 +798,17 @@ function inputosstop()
     dialog --clear
     clear
 
-	if screen -list | grep -q "$VERZEICHNISSCREEN"; then
+	if screen -list | grep -q "$IOSSTOPSCREEN"; then
 		DIALOG=dialog
-		(echo "10" ; screen -S "$VERZEICHNISSCREEN" -p 0 -X eval "stuff 'shutdown'^M" ; sleep 3
+		(echo "10" ; screen -S "$IOSSTOPSCREEN" -p 0 -X eval "stuff 'shutdown'^M" ; sleep 3
 		echo "100" ; sleep 2) |
-		$DIALOG --title "$VERZEICHNISSCREEN" --gauge "Stop" 8 30
+		$DIALOG --title "$IOSSTOPSCREEN" --gauge "Stop" 8 30
 		$DIALOG --clear
-		$DIALOG --msgbox "$VERZEICHNISSCREEN beendet!" 5 20
+		$DIALOG --msgbox "$IOSSTOPSCREEN beendet!" 5 20
 		$DIALOG --clear
 		clear
 	else
-		echo "OpenSimulator $VERZEICHNISSCREEN nicht vorhanden"
+		echo "OpenSimulator $IOSSTOPSCREEN nicht vorhanden"
 	fi
 	hauptmenu
 }
@@ -843,14 +892,14 @@ function mostop()
 ### Funktion osscreenstop, beendet ein Screeen. # Beispiel-Example: osscreenstop sim1
 function osscreenstop()
 {
-	VERZEICHNISSCREEN=$1
-	if screen -list | grep -q "$VERZEICHNISSCREEN"; then
-		echo "$(tput setaf $Red) $(tput setab $White)Screeen $VERZEICHNISSCREEN Beenden$(tput sgr 0)"
-		echo "$DATUM $(date +%H:%M:%S) OSSCREENSTOP: Screeen $VERZEICHNISSCREEN Beenden" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-		screen -S "$VERZEICHNISSCREEN" -X quit	  
+	SCREENSTOPSCREEN=$1
+	if screen -list | grep -q "$SCREENSTOPSCREEN"; then
+		echo "$(tput setaf $Red) $(tput setab $White)Screeen $SCREENSTOPSCREEN Beenden$(tput sgr 0)"
+		echo "$DATUM $(date +%H:%M:%S) OSSCREENSTOP: Screeen $SCREENSTOPSCREEN Beenden" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+		screen -S "$SCREENSTOPSCREEN" -X quit	  
 	else
-		echo "$(tput setaf $Red) $(tput setab $White)Screeen $VERZEICHNISSCREEN nicht vorhanden$(tput sgr 0)"
-		echo "$DATUM $(date +%H:%M:%S) OSSCREENSTOP: Screeen $VERZEICHNISSCREEN nicht vorhanden" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+		echo "$(tput setaf $Red) $(tput setab $White)Screeen $SCREENSTOPSCREEN nicht vorhanden$(tput sgr 0)"
+		echo "$DATUM $(date +%H:%M:%S) OSSCREENSTOP: Screeen $SCREENSTOPSCREEN nicht vorhanden" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 	fi
 	echo "No screen session found. Ist hier kein Fehler, sondern ein Beweis, das alles zuvor sauber heruntergefahren wurde."
 }
@@ -878,21 +927,21 @@ function gridstart()
 # erzeugt im Hauptverzeichnis eine Datei namens sim1.log in dieser Datei ist die Statistik zu finden.
 function simstats()
 {
-	VERZEICHNISSCREEN=$1 # OpenSimulator, Verzeichnis und Screen Name
-	if screen -list | grep -q "$VERZEICHNISSCREEN"; then
-		if checkfile /$STARTVERZEICHNIS/"$VERZEICHNISSCREEN".log; then
-			rm /$STARTVERZEICHNIS/"$VERZEICHNISSCREEN".log
+	STATSSCREEN=$1 # OpenSimulator, Verzeichnis und Screen Name
+	if screen -list | grep -q "$STATSSCREEN"; then
+		if checkfile /$STARTVERZEICHNIS/"$STATSSCREEN".log; then
+			rm /$STARTVERZEICHNIS/"$STATSSCREEN".log
 		fi
-		echo "$(tput setaf 2) $(tput setab $White)OpenSimulator $VERZEICHNISSCREEN Simstatistik anzeigen$(tput sgr 0)"
-		echo "$DATUM $(date +%H:%M:%S) simstat: Region $VERZEICHNISSCREEN Simstatistik anzeigen" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-		screen -S "$VERZEICHNISSCREEN" -p 0 -X eval "stuff 'stats save /$STARTVERZEICHNIS/$VERZEICHNISSCREEN.log'^M"
+		echo "$(tput setaf 2) $(tput setab $White)OpenSimulator $STATSSCREEN Simstatistik anzeigen$(tput sgr 0)"
+		echo "$DATUM $(date +%H:%M:%S) simstat: Region $STATSSCREEN Simstatistik anzeigen" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+		screen -S "$STATSSCREEN" -p 0 -X eval "stuff 'stats save /$STARTVERZEICHNIS/$STATSSCREEN.log'^M"
 		sleep 2
 		echo "$(tput setaf 2) "
-		cat /$STARTVERZEICHNIS/"$VERZEICHNISSCREEN".log
+		cat /$STARTVERZEICHNIS/"$STATSSCREEN".log
 		echo "$(tput sgr 0) "
 	else
-		echo "$(tput setaf $Red) $(tput setab $White)Simulator $VERZEICHNISSCREEN nicht vorhanden$(tput sgr 0)"
-		echo "$DATUM $(date +%H:%M:%S) simstat: Simulator $VERZEICHNISSCREEN nicht vorhanden" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+		echo "$(tput setaf $Red) $(tput setab $White)Simulator $STATSSCREEN nicht vorhanden$(tput sgr 0)"
+		echo "$DATUM $(date +%H:%M:%S) simstat: Simulator $STATSSCREEN nicht vorhanden" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 	fi
 	return
 }
@@ -1348,11 +1397,11 @@ function menuosstruktur()
     lable2="Bis:"; lablename2="10"
 
     # Abfrage
-    BOXERGEBNIS=$( dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 3>&1 1>&2 2>&3 3>&- )
+    osstrukturBOXERGEBNIS=$( dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 3>&1 1>&2 2>&3 3>&- )
 
     # Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
-    EINGABE=$(echo "$BOXERGEBNIS" | sed -n '1p')
-    EINGABE2=$(echo "$BOXERGEBNIS" | sed -n '2p')
+    EINGABE=$(echo "$osstrukturBOXERGEBNIS" | sed -n '1p')
+    EINGABE2=$(echo "$osstrukturBOXERGEBNIS" | sed -n '2p')
 
     # Alles löschen.
     dialog --clear
@@ -1437,11 +1486,11 @@ function oscopysim()
 # Funktion configlesen, Regionskonfigurationen lesen. # Beispiel: configlesen sim1
 function configlesen()
 {
-	VERZEICHNISSCREEN=$1
-	echo "$(tput setab $Green)Regionskonfigurationen von $VERZEICHNISSCREEN $(tput sgr 0)"
-	KONFIGLESEN=$(awk -F":" '// {print $0 }' /$STARTVERZEICHNIS/"$VERZEICHNISSCREEN"/bin/Regions/*.ini)	# Regionskonfigurationen aus einem Verzeichnis lesen.
+	CONFIGLESENSCREEN=$1
+	echo "$(tput setab $Green)Regionskonfigurationen von $CONFIGLESENSCREEN $(tput sgr 0)"
+	KONFIGLESEN=$(awk -F":" '// {print $0 }' /$STARTVERZEICHNIS/"$CONFIGLESENSCREEN"/bin/Regions/*.ini)	# Regionskonfigurationen aus einem Verzeichnis lesen.
 	echo "$KONFIGLESEN"
-	echo "$DATUM $(date +%H:%M:%S) CONFIGLESEN: Regionskonfigurationen von $VERZEICHNISSCREEN" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+	echo "$DATUM $(date +%H:%M:%S) CONFIGLESEN: Regionskonfigurationen von $CONFIGLESENSCREEN" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 	echo "$KONFIGLESEN" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 }
 
@@ -1843,11 +1892,11 @@ function menuregionbackup()
     lable2="Regionsname:"; lablename2=""
 
     # Abfrage
-    BOXERGEBNIS=$( dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 3>&1 1>&2 2>&3 3>&- )
+    regionbackupBOXERGEBNIS=$( dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 3>&1 1>&2 2>&3 3>&- )
 
     # Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
-    VERZEICHNISSCREENNAME=$(echo "$BOXERGEBNIS" | sed -n '1p')
-    REGIONSNAME=$(echo "$BOXERGEBNIS" | sed -n '2p')
+    VERZEICHNISSCREENNAME=$(echo "$regionbackupBOXERGEBNIS" | sed -n '1p')
+    REGIONSNAME=$(echo "$regionbackupBOXERGEBNIS" | sed -n '2p')
 
     # Alles löschen.
     dialog --clear
@@ -1926,11 +1975,11 @@ function menuregionrestore()
     lable2="Regionsname:"; lablename2=""
 
     # Abfrage
-    BOXERGEBNIS=$( dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 3>&1 1>&2 2>&3 3>&- )
+    regionrestoreBOXERGEBNIS=$( dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 3>&1 1>&2 2>&3 3>&- )
 
     # Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
-    VERZEICHNISSCREENNAME=$(echo "$BOXERGEBNIS" | sed -n '1p')
-    REGIONSNAME=$(echo "$BOXERGEBNIS" | sed -n '2p')
+    VERZEICHNISSCREENNAME=$(echo "$regionrestoreBOXERGEBNIS" | sed -n '1p')
+    REGIONSNAME=$(echo "$regionrestoreBOXERGEBNIS" | sed -n '2p')
 
     # Alles löschen.
     dialog --clear
@@ -1958,9 +2007,9 @@ function menuregionrestore()
 ### Funktion autosimstart, automatischer sim start ohne Robust und Money.
 function autosimstart()
 {
-	if ! screen -list | grep -q '^sim'; 
+	if ! screen -list | grep -q 'sim'; 
 	then
-	# es laeuft nicht - not work
+	# es laeuft kein Simulator - not work
 		makeverzeichnisliste
 		sleep 2
 		for (( i = 0 ; i < "$ANZAHLVERZEICHNISSLISTE" ; i++)) do
@@ -1979,6 +2028,7 @@ function autosimstart()
 			sleep $STARTWARTEZEIT
 		done
 	else
+	# es laeuft mindestens ein Simulator - work
 		echo "$(tput setaf $White)$(tput setab $Green) Regionen laufen bereits! $(tput sgr 0)"
 		echo "$DATUM $(date +%H:%M:%S) WORKS:  Regionen laufen bereits!" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 	fi
@@ -2203,7 +2253,7 @@ function autostart()
 ### Funktion autostop, stoppt das komplette Grid mit allen sims.
 function autostop()
 {
-	echo "$(tput setab 1)Stoppe alles! $(tput sgr 0)"
+	echo "$(tput setab 1) ### Stoppe alles! ### $(tput sgr 0)"
 	# schauen ob screens laufen wenn ja beenden.
 	# shellcheck disable=SC2022
 	if ! screen -list | grep -q 'sim*'; then
@@ -2240,7 +2290,7 @@ function autorestart()
 	echo " "
 	autologdel
 	echo " "
-	echo "$(tput setab 2)Starte alles! $(tput sgr 0)"
+	echo "$(tput setab 2) ### Starte alles! ### $(tput sgr 0)"
 	gridstart
 	autosimstart
 	echo " "
@@ -2614,13 +2664,13 @@ function menucreateuser()
     lable4="EMAIL:"; lablename4="EMAIL"
 
     # Abfrage
-    BOXERGEBNIS=$( dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 "$lable4" 4 1 "$lablename4" 4 25 25 30 3>&1 1>&2 2>&3 3>&- )
+    createuserBOXERGEBNIS=$( dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 "$lable4" 4 1 "$lablename4" 4 25 25 30 3>&1 1>&2 2>&3 3>&- )
 
     # Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
-    VORNAME=$(echo "$BOXERGEBNIS" | sed -n '1p')
-    NACHNAME=$(echo "$BOXERGEBNIS" | sed -n '2p')
-    PASSWORT=$(echo "$BOXERGEBNIS" | sed -n '3p')
-    EMAIL=$(echo "$BOXERGEBNIS" | sed -n '4p')
+    VORNAME=$(echo "$createuserBOXERGEBNIS" | sed -n '1p')
+    NACHNAME=$(echo "$createuserBOXERGEBNIS" | sed -n '2p')
+    PASSWORT=$(echo "$createuserBOXERGEBNIS" | sed -n '3p')
+    EMAIL=$(echo "$createuserBOXERGEBNIS" | sed -n '4p')
 
     # Alles löschen.
     dialog --clear
@@ -4218,7 +4268,7 @@ function hauptmenu()
 		clear
 		if [[ $mauswahl = "Einzelner Simulator Stop" ]]; then inputosstop; fi
 		if [[ $mauswahl = "Einzelner Simulator Start" ]]; then inputosstart; fi
-		if [[ $mauswahl = "Einzelner Simulator Status" ]]; then works; fi
+		if [[ $mauswahl = "Einzelner Simulator Status" ]]; then menuworks; fi
 		if [[ $mauswahl = "Region OAR sichern" ]]; then menuregionbackup; fi
 		if [[ $mauswahl = "Parzellen entfernen" ]]; then menulandclear; fi
 		if [[ $mauswahl = "Objekt entfernen" ]]; then menuassetdel; fi
@@ -4541,6 +4591,7 @@ case  $KOMMANDO  in
 	unlockexample) unlockexample ;;
 	passwdgenerator) passwdgenerator "$2" ;;
 	configurecopy) configurecopy ;;
+	menuworks) menuworks "$2" ;;
 	*) hauptmenu ;;
 esac
 
