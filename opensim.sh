@@ -23,7 +23,7 @@ STARTVERZEICHNIS="opt" MONEYVERZEICHNIS="robust" ROBUSTVERZEICHNIS="robust" OPEN
 REGIONSDATEI="RegionList.ini" SIMDATEI="SimulatorList.ini" WARTEZEIT=30 STARTWARTEZEIT=10 STOPWARTEZEIT=30 MONEYWARTEZEIT=50 BACKUPWARTEZEIT=120 AUTOSTOPZEIT=60 SETMONOTHREADS=800 SETMONOTHREADSON="yes"
 OPENSIMDOWNLOAD="http://opensimulator.org/dist/" OPENSIMVERSION="opensim-0.9.1.1.zip" SEARCHADRES="icanhazip.com" AUTOCONFIG="no" SETMONOGCPARAMSON="yes" CONFIGURESOURCE="opensim-configuration-addon-modul-main"	CONFIGUREZIP="opensim-configuration-addon-modul-main.zip"
 }
-VERSION="V0.64.244" # opensimMULTITOOL Versionsausgabe
+VERSION="V0.64.246" # opensimMULTITOOL Versionsausgabe
 clear # Bildschirm loeschen
 
 ### Datumsvariablen Datum, Dateidatum und Uhrzeit
@@ -535,6 +535,39 @@ function works()
 	fi
 
 }
+### waslauft2() Zeigt alle Laufenden Screens an.
+function waslauft2()
+{
+  simliste1=$(screen -list | grep -c 'sim')
+  simliste2=$(screen -list | grep -c 'RO')
+  simliste3=$(screen -list | grep -c 'MO')
+  if [ "$simliste2" == 1 ]; then echo "Robust Server"; fi
+  if [ "$simliste3" == 1 ]; then echo "Money Server"; fi
+  i=1; until [ $i -gt "$simliste1" ]; do echo sim$i && i=$((i+1)); done
+}
+### waslauft() Zeigt alle Laufenden Screens an.
+function waslauft()
+{
+  # Die screen -ls ausgabe zu einer Liste ändern.
+  # sed '1d' = erste Zeile löschen - sed '$d' letzte Zeile löschen.
+  # awk -F. alles vor dem Punkt entfernen - -F\( alles hinter dem  ( löschen.
+  ergebnis=$(screen -ls | sed '1d' | sed '$d' | awk -F. '{print $2}' | awk -F\( '{print $1}')
+  echo "$ergebnis"
+}
+
+### menuwaslauft() Zeigt alle Laufenden Screens an im dialog.
+function menuwaslauft()
+{
+  # Die screen -ls ausgabe zu einer Liste ändern.
+  # sed '1d' = erste Zeile löschen - sed '$d' letzte Zeile löschen.
+  # awk -F. alles vor dem Punkt entfernen - -F\( alles hinter dem  ( löschen.
+  ergebnis=$(screen -ls | sed '1d' | sed '$d' | awk -F. '{print $2}' | awk -F\( '{print $1}')
+  echo "$ergebnis"  
+  # dialog --infobox      "Laufende Simulatoren: $ergebnis" $HEIGHT $WIDTH; dialog --clear
+  dialog --msgbox       "Laufende Simulatoren:\n $ergebnis" 20 60; dialog --clear
+  hauptmenu
+}
+
 ### Funktion checkfile, pruefen ob Datei vorhanden ist. # Aufruf: checkfile "pfad/name"
 # Verwendung als Einzeiler: checkfile /pfad/zur/datei && echo "File exists" || echo "File not found!"
 function checkfile 
@@ -4249,6 +4282,7 @@ function hauptmenu()
 		"Einzelner Simulator Stop" ""\
 		"Einzelner Simulator Start" ""\
 		"Einzelner Simulator Status" ""\
+		"Alle Simulatoren Status" ""\
 		"--------------------------" ""\
 		"Region OAR sichern" ""\
 		"Parzellen entfernen" ""\
@@ -4269,6 +4303,7 @@ function hauptmenu()
 		if [[ $mauswahl = "Einzelner Simulator Stop" ]]; then inputosstop; fi
 		if [[ $mauswahl = "Einzelner Simulator Start" ]]; then inputosstart; fi
 		if [[ $mauswahl = "Einzelner Simulator Status" ]]; then menuworks; fi
+		if [[ $mauswahl = "Alle Simulatoren Status" ]]; then menuwaslauft; fi
 		if [[ $mauswahl = "Region OAR sichern" ]]; then menuregionbackup; fi
 		if [[ $mauswahl = "Parzellen entfernen" ]]; then menulandclear; fi
 		if [[ $mauswahl = "Objekt entfernen" ]]; then menuassetdel; fi
@@ -4592,6 +4627,7 @@ case  $KOMMANDO  in
 	passwdgenerator) passwdgenerator "$2" ;;
 	configurecopy) configurecopy ;;
 	menuworks) menuworks "$2" ;;
+	waslauft) waslauft ;;
 	*) hauptmenu ;;
 esac
 
