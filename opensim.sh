@@ -23,7 +23,7 @@ STARTVERZEICHNIS="opt" MONEYVERZEICHNIS="robust" ROBUSTVERZEICHNIS="robust" OPEN
 REGIONSDATEI="RegionList.ini" SIMDATEI="SimulatorList.ini" WARTEZEIT=30 STARTWARTEZEIT=10 STOPWARTEZEIT=30 MONEYWARTEZEIT=50 BACKUPWARTEZEIT=120 AUTOSTOPZEIT=60 SETMONOTHREADS=800 SETMONOTHREADSON="yes"
 OPENSIMDOWNLOAD="http://opensimulator.org/dist/" OPENSIMVERSION="opensim-0.9.1.1.zip" SEARCHADRES="icanhazip.com" AUTOCONFIG="no" SETMONOGCPARAMSON="yes" CONFIGURESOURCE="opensim-configuration-addon-modul-main"	CONFIGUREZIP="opensim-configuration-addon-modul-main.zip"
 }
-VERSION="V0.64.246" # opensimMULTITOOL Versionsausgabe
+VERSION="V0.65.249" # opensimMULTITOOL Versionsausgabe
 clear # Bildschirm loeschen
 
 ### Datumsvariablen Datum, Dateidatum und Uhrzeit
@@ -82,6 +82,47 @@ SCRIPTPATH=$(cd "$(dirname "$0")" && pwd)
 ### Aktuelle IP über Suchadresse ermitteln und Ausführungszeichen anhängen.
 AKTUELLEIP='"'$(wget -O - -q $SEARCHADRES)'"'
 
+### rebootdatum() letzter reboot des Servers.
+function rebootdatum()
+{
+	HEUTEDATUM=$(date +%Y-%m-%d) # Heute
+
+	# Parsen: system boot  2021-11-30 14:26
+	# Trim = | xargs
+	LETZTERREBOOT=$(who -b | awk -F' ' '{print $3}' | xargs) # Letzter Reboot
+
+	# Tolles Datum Script 
+	first_date=$(date -d "$HEUTEDATUM" "+%s")
+	second_date=$(date -d "$LETZTERREBOOT" "+%s")
+	EINST="-d" # Manuelle auswahl umgehen.
+	case "$EINST" in
+	"--seconds" | "-s") period=1;;
+	"--minutes" | "-m") period=60;;
+	"--hours" | "-h") period=$((60*60));;
+	"--days" | "-d" | "") period=$((60*60*24));;
+	esac
+	datediff=$(( ("$first_date" - "$second_date")/("$period") ))
+
+	dialog --yesno "Sie haben vor $datediff Tag(en)\nihren Server neu gestartet\n\nMöchten sie jetzt neu starten?" 10 45
+
+	antwort=$?
+
+    # Alles löschen.
+    dialog --clear
+    clear
+
+	# Ausgabe auf die Konsole
+	if [ $antwort = 0 ]
+	then
+		# Ja
+		autostop
+		shutdown -r now
+	else
+		# Nein
+		hauptmenu
+	fi
+}
+
 ### Farben Color
 Red=1; Green=2; Yello=3; Blue=4; Magenta=5; White=7
 
@@ -101,7 +142,7 @@ function clean()
 }
 
 ### Kopfzeile der log Datei.
-function schreibeinfo() 
+function schreibeinfo()
 {
 	FILENAME="/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log" # Name der Datei
 	FILESIZE=$(stat -c%s "$FILENAME") # Wie Gross ist die Datei.
@@ -117,6 +158,7 @@ function schreibeinfo()
 		echo "$DATUM $(date +%H:%M:%S) INFO: MONO THREAD Einstellung: ${MONO_THREADS_PER_CPU}"
 		echo "$DATUM $(date +%H:%M:%S) INFO: Spracheinstellung: ${LANG}"
 		echo "$DATUM $(date +%H:%M:%S) INFO: Screen Version: $(screen --version)"
+		echo "$DATUM $(date +%H:%M:%S) INFO: $(who -b)"
 		echo " "
 	} >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 	fi
@@ -1484,6 +1526,7 @@ function osdelete()
 ### Funktion oscopyrobust, Robust Daten kopieren.
 function oscopyrobust()
 {
+	cd /$STARTVERZEICHNIS || return 1
 	if [ -d /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/ ]; then
 		makeverzeichnisliste
 		echo "$(tput setab $Green)Kopiere Robust, Money! $(tput sgr 0)"
@@ -1502,6 +1545,7 @@ function oscopyrobust()
 ### Funktion oscopysim, Simulatoren kopieren aus dem Verzeichnis opensim.
 function oscopysim()
 {
+	cd /$STARTVERZEICHNIS || return 1
 	makeverzeichnisliste
 	echo "$(tput setab $Green)Kopiere Simulatoren! $(tput sgr 0)"
 	echo " "
@@ -4284,6 +4328,7 @@ function hauptmenu()
 		"Einzelner Simulator Status" ""\
 		"Alle Simulatoren Status" ""\
 		"--------------------------" ""\
+		"Server laufzeit und Neustart" ""\
 		"Region OAR sichern" ""\
 		"Parzellen entfernen" ""\
 		"Objekt entfernen" ""\
@@ -4302,23 +4347,26 @@ function hauptmenu()
 		clear
 		if [[ $mauswahl = "Einzelner Simulator Stop" ]]; then inputosstop; fi
 		if [[ $mauswahl = "Einzelner Simulator Start" ]]; then inputosstart; fi
-		if [[ $mauswahl = "Einzelner Simulator Status" ]]; then menuworks; fi
+		if [[ $mauswahl = "Einzelner Simulator Status" ]]; then menuworks; fi		
 		if [[ $mauswahl = "Alle Simulatoren Status" ]]; then menuwaslauft; fi
 		if [[ $mauswahl = "Region OAR sichern" ]]; then menuregionbackup; fi
+
 		if [[ $mauswahl = "Parzellen entfernen" ]]; then menulandclear; fi
 		if [[ $mauswahl = "Objekt entfernen" ]]; then menuassetdel; fi
 		if [[ $mauswahl = "Benutzer Account anlegen" ]]; then menucreateuser; fi
+		if [[ $mauswahl = "Server laufzeit und Neustart" ]]; then rebootdatum; fi
 
 		if [[ $mauswahl = "Inventar speichern" ]]; then menusaveinventar; fi
 		if [[ $mauswahl = "Inventar laden" ]]; then menuloadinventar; fi
-
 		if [[ $mauswahl = "Server Informationen" ]]; then infodialog; fi
 		if [[ $mauswahl = "Passwortgenerator" ]]; then passwdgenerator; fi
+
 		if [[ $mauswahl = "Kalender" ]]; then kalender; fi
 		if [[ $mauswahl = "Start" ]]; then autostart; fi
 		if [[ $mauswahl = "Stop" ]]; then autostop; fi
 		if [[ $mauswahl = "Restart" ]]; then autorestart; fi
-		if [[ $mauswahl = "Weitere Funktionen" ]]; then funktionenmenu; fi		
+		if [[ $mauswahl = "Weitere Funktionen" ]]; then funktionenmenu; fi
+
 		if [[ $antwort = 2 ]]; then hilfemenu ; fi
 		if [[ $antwort = 1 ]]; then exit ; fi
 	else
@@ -4628,6 +4676,7 @@ case  $KOMMANDO  in
 	configurecopy) configurecopy ;;
 	menuworks) menuworks "$2" ;;
 	waslauft) waslauft ;;
+	rebootdatum) rebootdatum ;;
 	*) hauptmenu ;;
 esac
 
