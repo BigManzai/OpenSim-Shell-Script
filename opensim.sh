@@ -17,7 +17,7 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #### Einstellungen ####
-VERSION="V0.67.293" # opensimMULTITOOL Versionsausgabe
+VERSION="V0.67.300" # opensimMULTITOOL Versionsausgabe
 clear # Bildschirm loeschen
 
 # Alte Variablen loeschen aus eventuellen voherigen sessions
@@ -381,6 +381,17 @@ function screenlist()
 		screen -ls >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 		return 0
 	fi
+}
+
+function screenlistrestart()
+{
+	echo "$(tput setaf $COLOR7)$(tput setab $BCOLOR2) Alle laufende Screens anzeigen! $(tput sgr $OMCOFF)"
+	screen -ls
+	# shellcheck disable=SC2129
+	echo "$DATUM $(date +%H:%M:%S) SCREENLIST: Alle laufende Screens anzeigen" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+	screen -ls >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+	echo "$DATUM $(date +%H:%M:%S) AUTORESTART: Auto Restart abgeschlossen" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+	exit
 }
 
 ### Erstellen eines Arrays aus einer Textdatei - Verzeichnisse
@@ -1052,8 +1063,6 @@ function osstart()
 	OSSTARTSCREEN=$1 # OpenSimulator, Verzeichnis und Screen Name
 
 	if ! screen -list | grep -q "$OSSTARTSCREEN"; then
-		# es laeuft nicht - not work
-		echo "es läuft nicht test"
 		if [ -d "$OSSTARTSCREEN" ]; then
 			
 			cd /$STARTVERZEICHNIS/"$OSSTARTSCREEN"/bin || return 1
@@ -2338,7 +2347,7 @@ function autosimstop()
 			echo "$DATUM $(date +%H:%M:%S) AUTOSIMSTOP: Regionen OpenSimulator ${VERZEICHNISSLISTE[$i]} Beenden" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 			sleep $STOPWARTEZEIT
 		else
-			echo "$(tput setaf $COLOR1)${VERZEICHNISSLISTE[$i]} läuft nicht $(tput sgr $OMCOFF)"
+			echo "$(tput setaf $COLOR1)$(tput setab $BCOLOR7)${VERZEICHNISSLISTE[$i]} läuft nicht $(tput sgr $OMCOFF)"
 		fi
 	done
 	return 0
@@ -2405,7 +2414,7 @@ function menuautosimstop()
 			echo "$DATUM $(date +%H:%M:%S) AUTOSIMSTOP: Regionen OpenSimulator ${VERZEICHNISSLISTE[$i]} Beenden" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 			sleep $STOPWARTEZEIT
 		else
-			echo "$(tput setaf $COLOR1)${VERZEICHNISSLISTE[$i]} läuft nicht $(tput sgr $OMCOFF)"
+			echo "$(tput setaf $COLOR1)$(tput setab $BCOLOR7)${VERZEICHNISSLISTE[$i]} läuft nicht $(tput sgr $OMCOFF)"
 		fi
 	done
 	return 0
@@ -2415,7 +2424,7 @@ function menuautosimstop()
 # Die Dateien samt neuer Daten werden beim naechsten start des opensimulator neu geschrieben.
 function autologdel()
 {
-	echo "$(tput setaf $BCOLOR1)Log Dateien löschen! $(tput sgr $OMCOFF)"
+	echo "$(tput setaf $BCOLOR1) $(tput setab $BCOLOR7)Log Dateien löschen! $(tput sgr $OMCOFF)"
 	makeverzeichnisliste
 	sleep 2
 	for (( i = 0 ; i < "$ANZAHLVERZEICHNISSLISTE" ; i++)) do
@@ -2643,13 +2652,14 @@ function autostop()
 	else
 		autosimstop
 	fi
-	if ! screen -list | grep -q "MO"; then
-		echo "$(tput setaf $COLOR7)$(tput setab $BCOLOR1) MONEY OFFLINE! $(tput sgr $OMCOFF)"
-	else
-		gridstop
-	fi
+	# if ! screen -list | grep -q "MO"; then
+	# 	echo "$(tput setaf $COLOR7)$(tput setab $BCOLOR1) MONEY OFFLINE! $(tput sgr $OMCOFF)"
+	# else
+	# 	gridstop
+	# fi
 	if ! screen -list | grep -q "RO"; then
-		echo "$(tput setaf $COLOR7)$(tput setab $BCOLOR1) ROBUST OFFLINE! $(tput sgr $OMCOFF)"
+		#echo "$(tput setaf $COLOR7)$(tput setab $BCOLOR1) ROBUST OFFLINE! $(tput sgr $OMCOFF)"
+		echo " "
 	else
 		gridstop
 	fi
@@ -2660,7 +2670,7 @@ function autostop()
 	else
 		sleep $AUTOSTOPZEIT
 	fi
-	echo "$(tput setaf $BCOLOR1)Beende alle noch offenen Screens! $(tput sgr $OMCOFF)"
+	echo "$(tput setaf $BCOLOR1)$(tput setab $BCOLOR7)Beende alle noch offenen Screens! $(tput sgr $OMCOFF)"
 	autoscreenstop
 	return 0
 }
@@ -2693,13 +2703,14 @@ function menuautostop()
 	else
 		menuautosimstop
 	fi
-	if ! screen -list | grep -q "MO"; then
-		echo "$(tput setaf $COLOR7)$(tput setab $BCOLOR1) MONEY OFFLINE! $(tput sgr $OMCOFF)"
-	else
-		gridstop
-	fi
+	# if ! screen -list | grep -q "MO"; then
+	# 	echo "$(tput setaf $COLOR7)$(tput setab $BCOLOR1) MONEY OFFLINE! $(tput sgr $OMCOFF)"
+	# else
+	# 	gridstop
+	# fi
 	if ! screen -list | grep -q "RO"; then
-		echo "$(tput setaf $COLOR7)$(tput setab $BCOLOR1) ROBUST OFFLINE! $(tput sgr $OMCOFF)"
+		#echo "$(tput setaf $COLOR7)$(tput setab $BCOLOR1) ROBUST OFFLINE! $(tput sgr $OMCOFF)"
+		echo " "
 	else
 		gridstop
 	fi
@@ -2710,7 +2721,7 @@ function menuautostop()
 	else
 		sleep $AUTOSTOPZEIT
 	fi
-	echo "$(tput setaf $BCOLOR1)Beende alle noch offenen Screens! $(tput sgr $OMCOFF)"
+	echo "$(tput setaf $BCOLOR1)$(tput setab $BCOLOR7)Beende alle noch offenen Screens! $(tput sgr $OMCOFF)"
 	autoscreenstop
 	return 0
 }
@@ -2733,11 +2744,11 @@ function autorestart()
 	#if [[ $? == 1 ]] ; then echo "ERROR: autosimstart"; exit 1; fi
 	echo " "
 
-	screenlist
+	screenlistrestart
 	#if [[ $? == 1 ]] ; then echo "ERROR: screenlist"; exit 1; fi
 	echo " "
 	echo "$DATUM $(date +%H:%M:%S) AUTORESTART: Auto Restart abgeschlossen" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-
+	
 	return 0
 }
 
@@ -4945,11 +4956,11 @@ function hauptmenu()
 		"Einzelner Simulator Start" ""
 		"Einzelner Simulator Status" ""
 		"Alle Simulatoren Status" ""
-		"--------------------------" ""		
+		"--------------------------" ""
 		"Benutzer Account anlegen" ""
 		"Parzellen entfernen" ""
 		"Objekt entfernen" ""
-		"--------------------------" ""		
+		"--------------------------" ""
 		"Server Informationen" ""
 		"Screen Liste" ""
 		"Server laufzeit und Neustart" ""
@@ -5025,7 +5036,6 @@ function hilfemenu()
 		antwort=$?
 		dialog --clear
 		clear
-		echo "hilfemenu ist hier"
 
 		if [[ $hauswahl = "Hilfe" ]]; then hilfe; fi
 		if [[ $hauswahl = "Konsolenhilfe" ]]; then menukonsolenhilfe; fi # Test menukonsolenhilfe
@@ -5081,7 +5091,6 @@ function funktionenmenu()
 		antwort=$?
 		dialog --clear
 		clear
-		echo "funktionenmenu ist hier"
 
 		if [[ $fauswahl = "Grid starten" ]]; then gridstart; fi
 		if [[ $fauswahl = "Grid stoppen" ]]; then gridstop; fi
@@ -5120,7 +5129,7 @@ function dateimenu()
 		OPTIONS=("Inventar speichern" ""
 		"Inventar laden" ""
 		"Region OAR sichern" ""
-		"--------------------------" ""		
+		"--------------------------" ""
 		"Log Dateien löschen" ""
 		"Map Karten löschen" ""
 		"--------------------------" ""
@@ -5148,7 +5157,6 @@ function dateimenu()
 		antwort=$?
 		dialog --clear
 		clear
-		echo "dateimenu ist hier"
 
 		if [[ $dauswahl = "Inventar speichern" ]]; then menusaveinventar; fi
 		if [[ $dauswahl = "Inventar laden" ]]; then menuloadinventar; fi
@@ -5198,7 +5206,10 @@ function expertenmenu()
 		"autoregionsiniteilen" ""
 		"RegionListe" ""
 		"--------------------------" ""
-		"Server Installation" ""		
+		"Server Installation" ""
+		"Server Installation für WordPress" ""
+		"Server Installation ohne mono" ""
+		"--------------------------" ""
 		"terminator" ""
 		"makeaot" ""
 		"cleanaot" ""
@@ -5222,7 +5233,6 @@ function expertenmenu()
 		antwort=$?
 		dialog --clear
 		clear
-		echo "expertenmenu ist hier"
 
 		if [[ $feauswahl = "Example Dateien umbenennen" ]]; then unlockexample; fi
 		if [[ $feauswahl = "Voreinstellungen setzen" ]]; then ossettings; fi
@@ -5246,6 +5256,9 @@ function expertenmenu()
 		if [[ $feauswahl = "Installationen anzeigen" ]]; then installationen; fi
 			
 		if [[ $feauswahl = "Server Installation" ]]; then serverinstall; fi
+		if [[ $feauswahl = "Server Installation für WordPress" ]]; then installwordpress; fi
+		if [[ $feauswahl = "Server Installation ohne mono" ]]; then installobensimulator; fi
+
 		if [[ $feauswahl = "Hilfe" ]]; then hilfemenu; fi
 		
 		if [[ $fauswahl = "Dateimennu" ]]; then dateimenu; fi
