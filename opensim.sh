@@ -17,7 +17,7 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #### Einstellungen ####
-VERSION="V0.67.281" # opensimMULTITOOL Versionsausgabe
+VERSION="V0.67.293" # opensimMULTITOOL Versionsausgabe
 clear # Bildschirm loeschen
 
 # Alte Variablen loeschen aus eventuellen voherigen sessions
@@ -161,6 +161,92 @@ function vardel()
 	return 0
 }
 
+### Sprachen
+function german() 
+{
+    bereitsinstalliert="ist bereits installiert."
+    installierejetzt="Ich installiere jetzt"
+}
+function frensh() 
+{
+    bereitsinstalliert="est déjà installé."
+    installierejetzt="J'installe maintenant"
+}
+function spain() 
+{
+    bereitsinstalliert="ya está instalado."
+    installierejetzt="Estoy instalando ahora"
+}
+function english() 
+{
+    bereitsinstalliert="is already installed."
+    installierejetzt="I'm installing now"
+}
+
+### Spprache Einstellungen
+german # Sprache
+
+## Neue installationsroutine
+function iinstall()
+{
+    installation=$1
+    if dpkg-query -s "$installation" 2>/dev/null|grep -q installed; then
+        echo "$installation $bereitsinstalliert"
+    else
+        echo "$installierejetzt $installation"
+        sudo apt-get -y install "$installation"
+    fi
+}
+## Neue installationsroutine aus Datei
+function finstall()
+{
+	TXTLISTE=$1
+
+	while read -r txtline 
+	do
+		if dpkg-query -s "$txtline" 2>/dev/null|grep -q installed; then
+			echo "$txtline ist bereits installiert!"
+		else
+			echo "Ich installiere jetzt: $txtline"
+			sudo apt-get -y install "$txtline"
+		fi
+	done < "$TXTLISTE"
+}
+## Neue installationsroutine aus Datei
+function menufinstall()
+{
+	TXTLISTE=$1
+	# zuerst schauen ob dialog installiert ist
+	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+		# Alle Aktionen mit dialog
+		boxtitel="opensimMULTITOOL Eingabe"; boxtext="Screen Name:"; 
+		TXTLISTE=$( dialog --backtitle "opensimMULTITOOL $VERSION" --title "$boxtitel" --inputbox "$boxtext" 8 40 3>&1 1>&2 2>&3 3>&- )
+		dialog --clear
+		clear
+
+		while read -r line 
+		do
+			if dpkg-query -s "$line" 2>/dev/null|grep -q installed; then
+				echo "$line ist bereits installiert!"
+			else
+				echo "Ich installiere jetzt: $line"
+				sudo apt-get -y install "$line"
+			fi
+		done < "$TXTLISTE"
+	else
+		# Alle Aktionen ohne dialog		
+		while read -r line 
+		do
+			if dpkg-query -s "$line" 2>/dev/null|grep -q installed; then
+				echo "$line ist bereits installiert!"
+			else
+				echo "Ich installiere jetzt: $line"
+				sudo apt-get -y install "$line"
+			fi
+		done < "$TXTLISTE"
+	fi
+}
+
 ### downloados() Opensim download
 function downloados()
 {
@@ -248,7 +334,7 @@ function rebootdatum()
 	esac
 	datediff=$(( ("$first_date" - "$second_date")/("$period") ))
 
-	dialog --yesno "Sie haben vor $datediff Tag(en)\nihren Server neu gestartet\n\nMöchten sie jetzt neu starten?" 10 45
+	dialog --args --yesno "Sie haben vor $datediff Tag(en)\nihren Server neu gestartet\n\nMöchten sie jetzt neu starten?" 10 45
 
 	antwort=$?
 
@@ -267,6 +353,34 @@ function rebootdatum()
 		hauptmenu
 	fi
 	return 0
+}
+
+### warnbox() Medung anzeigen.
+function warnbox()
+{
+    dialog --msgbox "$1" 0 0
+    dialog --clear
+	clear
+	menu1
+}
+
+### Funktion screenlist, Laufende Screens auflisten.
+function screenlist()
+{
+	# zuerst schauen ob dialog installiert ist
+	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+		# Alle Aktionen mit dialog
+		txtscreenlist=$(screen -ls)
+    	warnbox "$txtscreenlist"
+		hauptmenu
+	else
+		# Alle Aktionen ohne dialog
+		echo "$(tput setaf $COLOR7)$(tput setab $BCOLOR2) Alle laufende Screens anzeigen! $(tput sgr $OMCOFF)"
+		screen -ls
+		echo "$DATUM $(date +%H:%M:%S) SCREENLIST: Alle laufende Screens anzeigen" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+		screen -ls >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+		return 0
+	fi
 }
 
 ### Erstellen eines Arrays aus einer Textdatei - Verzeichnisse
@@ -640,6 +754,64 @@ function menuoscommand()
     unset OSCOMMANDSCREEN REGION COMMAND
 }
 
+function oswriteconfig()
+{	
+	SETSIMULATOR=$1
+	CONFIGWRITE="config save /opt/$SETSIMULATOR.ini"
+	screen -S "$SETSIMULATOR" -p 0 -X eval "stuff '$CONFIGWRITE'^M"
+}
+
+function menuoswriteconfig()
+{
+	SETSIMULATOR=$1  # OpenSimulator, Verzeichnis und Screen Name
+
+	### dialog Aktionen
+	# zuerst schauen ob dialog installiert ist
+	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+		# Alle Aktionen mit dialog
+		boxtitel="opensimMULTITOOL Eingabe"; boxtext="Screen Name:"; 
+		SETSIMULATOR=$( dialog --backtitle "opensimMULTITOOL $VERSION" --title "$boxtitel" --inputbox "$boxtext" 8 40 3>&1 1>&2 2>&3 3>&- )
+		dialog --clear
+		clear
+
+		if ! screen -list | grep -q "$SETSIMULATOR"; then
+		# es laeuft nicht - not work
+			dialog --backtitle "opensimMULTITOOL $VERSION" --msgbox "OpenSimulator $SETSIMULATOR OFFLINE!" 5 40
+            dialog --clear
+            clear
+		else
+		# es laeuft - work
+			# Konfig schreiben
+			CONFIGWRITE="config save /opt/$SETSIMULATOR.ini"
+			CONFIGREAD=$(sed '' "$SETSIMULATOR.ini")
+			screen -S "$SETSIMULATOR" -p 0 -X eval "stuff '$CONFIGWRITE'^M"
+			# # Konfig lesen
+			dialog --backtitle "opensimMULTITOOL $VERSION" --msgbox "$CONFIGREAD" 0 0
+			#dialog --editbox "$CONFIGREAD" 0 0
+			#dialog --textbox "$CONFIGREAD" 0 0
+            dialog --clear
+            #clear
+		fi
+	else
+		# Alle Aktionen ohne dialog		
+		if ! screen -list | grep -q "$SETSIMULATOR"; then
+			# es laeuft nicht - not work
+				echo "$(tput setaf $COLOR7)$(tput setab $BCOLOR1) $SETSIMULATOR OFFLINE! $(tput sgr $OMCOFF)"
+				echo "$DATUM $(date +%H:%M:%S) WORKS: $SETSIMULATOR OFFLINE!" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+				return 1
+			else
+			# es laeuft - work
+				#echo "$(tput setaf $COLOR7)$(tput setab $BCOLOR2) $SETSIMULATOR ONLINE! $(tput sgr $OMCOFF)"
+				#echo "$DATUM $(date +%H:%M:%S) WORKS: $SETSIMULATOR ONLINE!" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+				# Konfig schreiben
+				CONFIGWRITE="config save /opt/$SETSIMULATOR.ini"
+				screen -S "$SETSIMULATOR" -p 0 -X eval "stuff '$CONFIGWRITE'^M"
+				return 0
+		fi
+	fi
+	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then	hauptmenu; fi
+}
+
 ### Funktion works, screen pruefen ob er laeuft. dialog auswahl
 function menuworks()
 {
@@ -770,7 +942,7 @@ function logdel()
 	VERZEICHNIS=$1
 	if [ -d "$VERZEICHNIS" ]; then
 		echo "$(tput setaf $COLOR1) $(tput setab $BCOLOR7)OpenSimulator log $VERZEICHNIS geloescht$(tput sgr $OMCOFF)"
-		rm /$STARTVERZEICHNIS/"$VERZEICHNIS"/bin/*.log
+		rm /$STARTVERZEICHNIS/"$VERZEICHNIS"/bin/*.log || echo " "
 		echo "$DATUM $(date +%H:%M:%S) LOGDEL: OpenSimulator log $VERZEICHNIS geloescht" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 		return 0
 	else
@@ -799,7 +971,7 @@ function menumapdel()
 	if [ -d "$VERZEICHNIS" ]; then
 		echo "$(tput setaf $COLOR1) $(tput setab $BCOLOR7)OpenSimulator maptile $VERZEICHNIS geloescht$(tput sgr $OMCOFF)"
 		cd /$STARTVERZEICHNIS/"$VERZEICHNIS"/bin || return 1
-		rm -r maptiles/*
+		rm -r maptiles/* || echo " "
 		echo "$DATUM $(date +%H:%M:%S) MAPDEL: OpenSimulator maptile $VERZEICHNIS geloescht" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 		return 0
 	else
@@ -829,7 +1001,7 @@ function menulogdel()
 	
 	if [ -d "$VERZEICHNIS" ]; then
 		echo "$(tput setaf $COLOR1) $(tput setab $BCOLOR7)OpenSimulator log $VERZEICHNIS geloescht$(tput sgr $OMCOFF)"
-		rm /$STARTVERZEICHNIS/"$VERZEICHNIS"/bin/*.log
+		rm /$STARTVERZEICHNIS/"$VERZEICHNIS"/bin/*.log || echo " "
 		echo "$DATUM $(date +%H:%M:%S) LOGDEL: OpenSimulator log $VERZEICHNIS geloescht" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 		return 0
 	else
@@ -871,16 +1043,6 @@ function ossettings()
 		export MONO_GC_PARAMS="minor=split,promotion-age=14,nursery-size=64m"
 	fi	
 	# echo " " # Zum schluss eine Leerzeile.
-	return 0
-}
-
-### Funktion screenlist, Laufende Screens auflisten und auch in die Log Datei schreiben.
-function screenlist()
-{
-	echo "$(tput setaf $COLOR7)$(tput setab $BCOLOR2) Alle laufende Screens anzeigen! $(tput sgr $OMCOFF)"
-	screen -ls
-	echo "$DATUM $(date +%H:%M:%S) SCREENLIST: Alle laufende Screens anzeigen" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-	screen -ls >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 	return 0
 }
 
@@ -945,8 +1107,8 @@ function osstop()
 	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then hauptmenu; fi
 }
 
-### Funktion inputosstart() ist die dialog Version von osstart()
-function inputosstart()
+### Funktion menuosstart() ist die dialog Version von osstart()
+function menuosstart()
 {
     IOSSTARTSCREEN=$(\
     dialog --backtitle "opensimMULTITOOL $VERSION" --title "opensimMULTITOOL Eingabe" \
@@ -999,8 +1161,8 @@ function inputosstart()
 	hauptmenu
 }
 
-### Funktion inputosstop() ist die dialog Version von osstop()
-function inputosstop()
+### Funktion menuosstop() ist die dialog Version von osstop()
+function menuosstop()
 {
     IOSSTOPSCREEN=$(\
     dialog --backtitle "opensimMULTITOOL $VERSION" --title "opensimMULTITOOL Eingabe" \
@@ -2149,6 +2311,7 @@ function autosimstart()
 			then		
 				screen -fa -S "${VERZEICHNISSLISTE[$i]}" -d -U -m mono --desktop -O=all OpenSim.exe
 			else
+				
 				screen -fa -S "${VERZEICHNISSLISTE[$i]}" -d -U -m mono OpenSim.exe
 			fi
 
@@ -2180,6 +2343,73 @@ function autosimstop()
 	done
 	return 0
 }
+### Funktion autosimstart, automatischer sim start ohne Robust und Money.
+function menuautosimstart()
+{
+	if ! screen -list | grep -q 'sim'; 
+	then
+	# es laeuft kein Simulator - not work
+		makeverzeichnisliste
+		sleep 2
+		for (( i = 0 ; i < "$ANZAHLVERZEICHNISSLISTE" ; i++)) do
+			echo "$(tput setaf $COLOR2) $(tput setab $BCOLOR7)Regionen OpenSimulator ${VERZEICHNISSLISTE[$i]} Starten$(tput sgr $OMCOFF)"
+			cd /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin || return 1
+			
+			# AOT Aktiveren oder Deaktivieren.
+			if [[ $SETAOTON = "yes" ]]
+			then		
+				screen -fa -S "${VERZEICHNISSLISTE[$i]}" -d -U -m mono --desktop -O=all OpenSim.exe
+			else
+				#BALKEN1=$(("$i"*5))
+
+				#TMP1=$(("$ANZAHLVERZEICHNISSLISTE"*"$i"))
+				#BALKEN1=$(("$TMP1/100"))
+
+				#BALKEN1=$((("ANZAHLVERZEICHNISSLISTE"/100)*"$i"))
+				#BALKEN1=$(( (100/"$ANZAHLVERZEICHNISSLISTE") * "${VERZEICHNISSLISTE[$i]}"))
+				BERECHNUNG1=$((100/"$ANZAHLVERZEICHNISSLISTE"))
+				BALKEN1=$(("$i"*"$BERECHNUNG1"))
+				screen -fa -S "${VERZEICHNISSLISTE[$i]}" -d -U -m mono OpenSim.exe | dialog --gauge "Auto Sim start..." 6 64 $BALKEN1; dialog --clear
+
+			fi
+
+			echo "$DATUM $(date +%H:%M:%S) AUTOSIMSTART: Regionen OpenSimulator ${VERZEICHNISSLISTE[$i]} Starten" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+			sleep $STARTWARTEZEIT
+		done
+	else
+	# es laeuft mindestens ein Simulator - work
+		echo "$(tput setaf $COLOR7)$(tput setab $BCOLOR2) Regionen laufen bereits! $(tput sgr $OMCOFF)"
+		echo "$DATUM $(date +%H:%M:%S) WORKS:  Regionen laufen bereits!" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+	fi
+	return 0
+}
+
+### Funktion autosimstop, stoppen aller laufenden Simulatoren.
+function menuautosimstop()
+{
+	makeverzeichnisliste
+	sleep 2
+	for (( i = 0 ; i < "$ANZAHLVERZEICHNISSLISTE" ; i++)) do
+		if screen -list | grep -q "${VERZEICHNISSLISTE[$i]}"; then
+			echo "$(tput setaf $COLOR1) $(tput setab $BCOLOR7)Regionen OpenSimulator ${VERZEICHNISSLISTE[$i]} Beenden$(tput sgr $OMCOFF)"
+
+			#BALKEN2=$(("$i"*5))
+			#TMP2=$(("$ANZAHLVERZEICHNISSLISTE"*"$i"))
+			#BALKEN2=$(("$TMP2/100"))
+			BERECHNUNG2=$((100/"$ANZAHLVERZEICHNISSLISTE"))
+			BALKEN2=$(("$i"*"$BERECHNUNG2"))
+			#BALKEN2=$(( (100/"$ANZAHLVERZEICHNISSLISTE") * "${VERZEICHNISSLISTE[$i]}"))
+
+			screen -S "${VERZEICHNISSLISTE[$i]}" -p 0 -X eval "stuff 'shutdown'^M" | dialog --gauge "Auto Sim stop..." 6 64 $BALKEN2; dialog --clear
+
+			echo "$DATUM $(date +%H:%M:%S) AUTOSIMSTOP: Regionen OpenSimulator ${VERZEICHNISSLISTE[$i]} Beenden" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+			sleep $STOPWARTEZEIT
+		else
+			echo "$(tput setaf $COLOR1)${VERZEICHNISSLISTE[$i]} läuft nicht $(tput sgr $OMCOFF)"
+		fi
+	done
+	return 0
+}
 
 ### Funktion autologdel, automatisches loeschen aller log Dateien.
 # Die Dateien samt neuer Daten werden beim naechsten start des opensimulator neu geschrieben.
@@ -2190,7 +2420,7 @@ function autologdel()
 	sleep 2
 	for (( i = 0 ; i < "$ANZAHLVERZEICHNISSLISTE" ; i++)) do
 		echo "$(tput setaf $COLOR1) $(tput setab $BCOLOR7)OpenSimulator log ${VERZEICHNISSLISTE[$i]} geloescht$(tput sgr $OMCOFF)"
-		rm /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/*.log
+		rm /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/*.log || echo " "
 		echo "$DATUM $(date +%H:%M:%S) AUTOLOGDEL: OpenSimulator log ${VERZEICHNISSLISTE[$i]} geloescht" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 		sleep 2
 	done
@@ -2198,11 +2428,11 @@ function autologdel()
 	# schauen ist Robust und Money da dann diese Logs auch löschen!
 	if [[ ! $ROBUSTVERZEICHNIS == "robust" ]]
 	then 
-		rm /$STARTVERZEICHNIS/robust/bin/*.log
+		rm /$STARTVERZEICHNIS/robust/bin/*.log || echo " "
 	fi
 	# if [[ ! $MONEYVERZEICHNIS == "money" ]]
 	# then 
-	# 	rm /$STARTVERZEICHNIS/money/bin/*.log
+	# 	rm /$STARTVERZEICHNIS/money/bin/*.log || echo " "
 	# fi
 
 	return 0
@@ -2217,7 +2447,7 @@ function automapdel()
 	for (( i = 0 ; i < "$ANZAHLVERZEICHNISSLISTE" ; i++)) do
 		echo "$(tput setaf $COLOR1) $(tput setab $BCOLOR7)OpenSimulator maptile ${VERZEICHNISSLISTE[$i]} geloescht$(tput sgr $OMCOFF)"
 		cd /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin || return 1
-		rm -r maptiles/*
+		rm -r maptiles/* || echo " "
 		echo "$DATUM $(date +%H:%M:%S) AUTOMAPDEL: OpenSimulator maptile ${VERZEICHNISSLISTE[$i]} geloescht" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 		sleep 2
 	done
@@ -2231,7 +2461,7 @@ function autorobustmapdel()
 {
 	echo "$(tput setaf $COLOR1) $(tput setab $BCOLOR7)OpenSimulator maptile aus $ROBUSTVERZEICHNIS geloescht$(tput sgr $OMCOFF)"
 	cd /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin || return 1
-	rm -r maptiles/*
+	rm -r maptiles/* || echo " "
 	echo "$DATUM $(date +%H:%M:%S) AUTOMAPDEL: OpenSimulator maptile aus $ROBUSTVERZEICHNIS geloescht" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 	return 0
 }
@@ -2435,6 +2665,56 @@ function autostop()
 	return 0
 }
 
+### Funktion autostart, startet das komplette Grid mit allen sims.
+function menuautostart()
+{
+	echo "$(tput setab $BCOLOR2)Starte das Grid! $(tput sgr $OMCOFF)"
+	echo " "
+	if [[ $ROBUSTVERZEICHNIS == "robust" ]]
+	then 
+		gridstart
+	fi
+	menuautosimstart
+	echo " "
+	screenlist
+	echo " "
+	echo "$DATUM $(date +%H:%M:%S) AUTOSTART: Auto Start abgeschlossen" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+	return 0
+}
+
+### Funktion autostop, stoppt das komplette Grid mit allen sims.
+function menuautostop()
+{
+	echo "$(tput setaf $BCOLOR1) $(tput setab $BCOLOR7) ### Stoppe alles! ### $(tput sgr $OMCOFF)"
+	# schauen ob screens laufen wenn ja beenden.
+	# shellcheck disable=SC2022
+	if ! screen -list | grep -q 'sim'; then
+		echo "$(tput setaf $COLOR7)$(tput setab $BCOLOR1) SIMs OFFLINE! $(tput sgr $OMCOFF)"
+	else
+		menuautosimstop
+	fi
+	if ! screen -list | grep -q "MO"; then
+		echo "$(tput setaf $COLOR7)$(tput setab $BCOLOR1) MONEY OFFLINE! $(tput sgr $OMCOFF)"
+	else
+		gridstop
+	fi
+	if ! screen -list | grep -q "RO"; then
+		echo "$(tput setaf $COLOR7)$(tput setab $BCOLOR1) ROBUST OFFLINE! $(tput sgr $OMCOFF)"
+	else
+		gridstop
+	fi
+	# schauen ob screens laufen wenn ja warten.
+	# shellcheck disable=SC2022
+	if ! screen -list | grep -q 'sim'; then
+		echo " "
+	else
+		sleep $AUTOSTOPZEIT
+	fi
+	echo "$(tput setaf $BCOLOR1)Beende alle noch offenen Screens! $(tput sgr $OMCOFF)"
+	autoscreenstop
+	return 0
+}
+
 ### Funktion autorestart, startet das gesamte Grid neu und loescht die log Dateien.
 function autorestart()
 {
@@ -2484,236 +2764,143 @@ function monoinstall()
 }
 
 ### Funktion serverinstall, Ubuntu 18 Server zum Betrieb von OpenSim vorbereiten.
-function serverinstall() 
+function serverupgrade()
+{    
+    sudo apt-get update
+    sudo apt-get upgrade
+}
+
+function monoinstall18()
 {
-##Updaten um Gewissheit zu haben das, das Ubuntu 18.04 aktuell ist.
-sudo apt-get update
-sudo apt-get upgrade
+	if dpkg-query -s mono-complete 2>/dev/null|grep -q installed; then
+		echo "mono-complete $bereitsinstalliert"
+	else
+		echo "$installierejetzt mono-complete"
+		sleep 2
 
-##Apache2 und Erweiterung installieren.
-	if dpkg-query -s apache2 2>/dev/null|grep -q installed; then
-			echo "$(tput setaf $COLOR2)apache2 ist installiert.$(tput sgr0)"
-			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: apache2 ist installiert" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-		else
-			echo "$(tput setaf $COLOR1)Ich installiere jetzt apache2.$(tput sgr0)"
-			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: Ich installiere jetzt apache2" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-			sudo apt-get -y install apache2
-	fi
-	if dpkg-query -s libapache2-mod-php 2>/dev/null|grep -q installed; then
-			echo "$(tput setaf $COLOR2)libapache2-mod-php ist installiert.$(tput sgr0)"
-			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: libapache2-mod-php ist installiert" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-		else
-			echo "$(tput setaf $COLOR1)Ich installiere jetzt libapache2-mod-php.$(tput sgr0)"
-			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: Ich installiere jetzt libapache2-mod-php" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-			sudo apt-get -y install libapache2-mod-php
-	fi
+		sudo apt install gnupg ca-certificates
+		sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
+		echo "deb https://download.mono-project.com/repo/ubuntu stable-bionic main" | sudo tee /etc/apt/sources.list.d/mono-official-stable.list
 
-##PHP, mysql und Erweiterungen installieren.
-	if dpkg-query -s php 2>/dev/null|grep -q installed; then
-			echo "$(tput setaf $COLOR2)php ist installiert.$(tput sgr0)"
-			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: php ist installiert" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-		else
-			echo "$(tput setaf $COLOR1)Ich installiere jetzt php.$(tput sgr0)"
-			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: Ich installiere jetzt php" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-			sudo apt-get -y install php
+		sudo apt update
+        sudo apt-get -y install mono-complete
+		sudo apt-get upgrade
 	fi
-	if dpkg-query -s mysql-server 2>/dev/null|grep -q installed; then
-			echo "$(tput setaf $COLOR2)mysql-server ist installiert.$(tput sgr0)"
-			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: mysql-server ist installiert" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-		else
-			echo "$(tput setaf $COLOR1)Ich installiere jetzt mysql-server.$(tput sgr0)"
-			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: Ich installiere jetzt mysql-server" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-			sudo apt-get -y install mysql-server
-	fi
-	if dpkg-query -s php-mysql 2>/dev/null|grep -q installed; then
-			echo "$(tput setaf $COLOR2)php-mysql ist installiert.$(tput sgr0)"
-			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: php-mysql ist installiert" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-		else
-			echo "$(tput setaf $COLOR1)Ich installiere jetzt php-mysql.$(tput sgr0)"
-			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: Ich installiere jetzt php-mysql" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-			sudo apt-get -y install php-mysql
-	fi
-	if dpkg-query -s php-common 2>/dev/null|grep -q installed; then
-			echo "$(tput setaf $COLOR2)php-common ist installiert.$(tput sgr0)"
-			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: php-common ist installiert" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-		else
-			echo "$(tput setaf $COLOR1)Ich installiere jetzt php-common.$(tput sgr0)"
-			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: Ich installiere jetzt php-common" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-			sudo apt-get -y install php-common
-	fi
-	if dpkg-query -s php-gd 2>/dev/null|grep -q installed; then
-			echo "$(tput setaf $COLOR2)php-gd ist installiert.$(tput sgr0)"
-			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: php-gd ist installiert" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-		else
-			echo "$(tput setaf $COLOR1)Ich installiere jetzt php-gd.$(tput sgr0)"
-			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: Ich installiere jetzt php-gd" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-			sudo apt-get -y install php-gd
-	fi
-	if dpkg-query -s php-pear 2>/dev/null|grep -q installed; then
-			echo "$(tput setaf $COLOR2)php-pear ist installiert.$(tput sgr0)"
-			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: php-pear ist installiert" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-		else
-			echo "$(tput setaf $COLOR1)Ich installiere jetzt php-pear.$(tput sgr0)"
-			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: Ich installiere jetzt php-pear" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-			sudo apt-get -y install php-pear
-	fi
-	if dpkg-query -s php-xmlrpc 2>/dev/null|grep -q installed; then
-			echo "$(tput setaf $COLOR2)php-xmlrpc ist installiert.$(tput sgr0)"
-			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: php-xmlrpc ist installiert" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-		else
-			echo "$(tput setaf $COLOR1)Ich installiere jetzt php-xmlrpc.$(tput sgr0)"
-			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: Ich installiere jetzt php-xmlrpc" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-			sudo apt-get -y install php-xmlrpc
-	fi
-	if dpkg-query -s php-curl 2>/dev/null|grep -q installed; then
-			echo "$(tput setaf $COLOR2)php-curl ist installiert.$(tput sgr0)"
-			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: php-curl ist installiert" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-		else
-			echo "$(tput setaf $COLOR1)Ich installiere jetzt php-curl.$(tput sgr0)"
-			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: Ich installiere jetzt php-curl" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-			sudo apt-get -y install php-curl
-	fi
-	if dpkg-query -s php-mbstring 2>/dev/null|grep -q installed; then
-			echo "$(tput setaf $COLOR2)php-mbstring ist installiert.$(tput sgr0)"
-			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: php-mbstring ist installiert" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-		else
-			echo "$(tput setaf $COLOR1)Ich installiere jetzt php-mbstring.$(tput sgr0)"
-			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: Ich installiere jetzt php-mbstring" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-			sudo apt-get -y install php-mbstring
-	fi
-	if dpkg-query -s php-gettext 2>/dev/null|grep -q installed; then
-			echo "$(tput setaf $COLOR2)php-gettext ist installiert.$(tput sgr0)"
-			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: php-gettext ist installiert" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-		else
-			echo "$(tput setaf $COLOR1)Ich installiere jetzt php-gettext.$(tput sgr0)"
-			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: Ich installiere jetzt php-gettext" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-			sudo apt-get -y install php-gettext
-	fi
+}
 
-##Mono Installieren um OpenSim ausführen zu können.
-	monoinstall
+function monoinstall20()
+{
+	if dpkg-query -s mono-complete 2>/dev/null|grep -q installed; then
+		echo "mono-complete $bereitsinstalliert"
+	else
+		echo "$installierejetzt mono-complete"
+		sleep 2
 
-##Hilfsprogramme zum entpacken, Hintergrunddienste, Git, NAnt und Grafiktools installieren.
-	if dpkg-query -s zip 2>/dev/null|grep -q installed; then
-			echo "$(tput setaf $COLOR2)zip ist installiert.$(tput sgr0)"
-			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: zip ist installiert" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-		else
-			echo "$(tput setaf $COLOR1)Ich installiere jetzt zip.$(tput sgr0)"
-			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: Ich installiere jetzt zip" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-			sudo apt-get -y install zip
-	fi
-	if dpkg-query -s screen 2>/dev/null|grep -q installed; then
-			echo "$(tput setaf $COLOR2)screen ist installiert.$(tput sgr0)"
-			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: screen ist installiert" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-		else
-			echo "$(tput setaf $COLOR1)Ich installiere jetzt screen.$(tput sgr0)"
-			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: Ich installiere jetzt screen" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-			sudo apt-get -y install screen
-	fi
-	if dpkg-query -s git 2>/dev/null|grep -q installed; then
-			echo "$(tput setaf $COLOR2)git ist installiert.$(tput sgr0)"
-			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: git ist installiert" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-		else
-			echo "$(tput setaf $COLOR1)Ich installiere jetzt git.$(tput sgr0)"
-			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: Ich installiere jetzt git" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-			sudo apt-get -y install git
-	fi
-	if dpkg-query -s nant 2>/dev/null|grep -q installed; then
-			echo "$(tput setaf $COLOR2)nant ist installiert.$(tput sgr0)"
-			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: nant ist installiert" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-		else
-			echo "$(tput setaf $COLOR1)Ich installiere jetzt nant.$(tput sgr0)"
-			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: Ich installiere jetzt nant" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-			sudo apt-get -y install nant
-	fi
-	if dpkg-query -s libopenjp2-tools 2>/dev/null|grep -q installed; then
-			echo "$(tput setaf $COLOR2)libopenjp2-tools ist installiert.$(tput sgr0)"
-			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: libopenjp2-tools ist installiert" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-		else
-			echo "$(tput setaf $COLOR1)Ich installiere jetzt libopenjp2-tools.$(tput sgr0)"
-			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: Ich installiere jetzt libopenjp2-tools" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-			sudo apt-get -y install libopenjp2-tools
-	fi
-	if dpkg-query -s graphicsmagick 2>/dev/null|grep -q installed; then
-			echo "$(tput setaf $COLOR2)graphicsmagick ist installiert.$(tput sgr0)"
-			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: graphicsmagick ist installiert" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-		else
-			echo "$(tput setaf $COLOR1)Ich installiere jetzt graphicsmagick.$(tput sgr0)"
-			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: Ich installiere jetzt graphicsmagick" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-			sudo apt-get -y install graphicsmagick
-	fi
-	if dpkg-query -s imagemagick 2>/dev/null|grep -q installed; then
-			echo "$(tput setaf $COLOR2)imagemagick ist installiert.$(tput sgr0)"
-			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: imagemagick ist installiert" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-		else
-			echo "$(tput setaf $COLOR1)Ich installiere jetzt imagemagick.$(tput sgr0)"
-			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: Ich installiere jetzt imagemagick" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-			sudo apt-get -y install imagemagick
-	fi
-	if dpkg-query -s curl 2>/dev/null|grep -q installed; then
-			echo "$(tput setaf $COLOR2)curl ist installiert.$(tput sgr0)"
-			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: curl ist installiert" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-		else
-			echo "$(tput setaf $COLOR1)Ich installiere jetzt curl.$(tput sgr0)"
-			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: Ich installiere jetzt curl" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-			sudo apt-get -y install curl
-	fi
-	if dpkg-query -s php-cli 2>/dev/null|grep -q installed; then
-			echo "$(tput setaf $COLOR2)php-cli ist installiert.$(tput sgr0)"
-			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: php-cli ist installiert" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-		else
-			echo "$(tput setaf $COLOR1)Ich installiere jetzt php-cli.$(tput sgr0)"
-			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: Ich installiere jetzt php-cli" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-			sudo apt-get -y install php-cli
-	fi
-	if dpkg-query -s php-bcmath 2>/dev/null|grep -q installed; then
-			echo "$(tput setaf $COLOR2)php-bcmath ist installiert.$(tput sgr0)"
-			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: php-bcmath ist installiert" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-		else
-			echo "$(tput setaf $COLOR1)Ich installiere jetzt php-bcmath.$(tput sgr0)"
-			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: Ich installiere jetzt php-bcmath" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-			sudo apt-get -y install php-bcmath
-	fi
-	# Neu , dialog ist für dialogboxen und ungetestet.
-	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
-			echo "$(tput setaf $COLOR2)dialog ist installiert.$(tput sgr0)"
-			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: dialog ist installiert" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-		else
-			echo "$(tput setaf $COLOR1)Ich installiere jetzt dialog.$(tput sgr0)"
-			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: Ich installiere jetzt dialog" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-			sudo apt-get -y install dialog
-	fi
+		sudo apt install gnupg ca-certificates
+        sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
+        echo "deb https://download.mono-project.com/repo/ubuntu stable-focal main" | sudo tee /etc/apt/sources.list.d/mono-official-stable.list
 
-##Zeitsteuerung
-	if dpkg-query -s at 2>/dev/null|grep -q installed; then
-			echo "$(tput setaf $COLOR2)at ist installiert.$(tput sgr0)"
-			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: at ist installiert" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-		else
-			echo "$(tput setaf $COLOR1)Ich installiere jetzt at.$(tput sgr0)"
-			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: Ich installiere jetzt at" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-			sudo apt-get -y install at
+        sudo apt update
+        sudo apt-get -y install mono-complete
+		sudo apt-get upgrade       
 	fi
+}
 
-##Linux Handbuch in Deutsch
-	if dpkg-query -s manpages-de 2>/dev/null|grep -q installed; then
-			echo "$(tput setaf $COLOR2)Manual page DE ist installiert.$(tput sgr0)"
-			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: Manual page DE ist installiert" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-		else
-			echo "$(tput setaf $COLOR1)Ich installiere jetzt manual page DE.$(tput sgr0)"
-			echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: Ich installiere jetzt manual page DE" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-			sudo apt-get -y install manpages-de
-			# Deutsch aktivieren
-			alias man="man -L de_DE.utf8"
-	fi
+function installwordpress()
+{
+	iinstall apache2    
+	iinstall ghostscript
+    iinstall libapache2-mod-php
+    iinstall mysql-server
+    iinstall php
+    iinstall php-bcmath
+    iinstall php-curl
+    iinstall php-imagick
+    iinstall php-intl
+	iinstall php-json
+	iinstall php-mbstring
+	iinstall php-mysql
+	iinstall php-xml
+	iinstall php-zip    
+}
 
-##Als letzte Maßnahmen noch Updaten und Upgraden und Server neu starten wegen Mono Threads.
+function installobensimulator() 
+{
+    #Alles für den OpenSimulator ausser mono
+	iinstall apache2
+	iinstall libapache2-mod-php
+	iinstall php
+	iinstall mysql-server
+	iinstall php-mysql
+	iinstall php-common
+	iinstall php-gd
+	iinstall php-pear
+	iinstall php-xmlrpc
+	iinstall php-curl
+	iinstall php-mbstring
+	iinstall php-gettext
+	iinstall zip
+	iinstall screen
+	iinstall git
+	iinstall nant
+	iinstall libopenjp2-tools
+	iinstall graphicsmagick
+	iinstall imagemagick
+	iinstall curl
+	iinstall php-cli
+	iinstall php-bcmath
+	iinstall dialog
+	iinstall at
+}
+
+function installfinish()
+{
 	apt update
 	apt upgrade
 	apt -f install
+	# zuerst schauen das nichts mehr läuft bevor man einfach rebootet
+    #reboot now
+}
 
-	echo "$(tput setaf $COLOR1)Zum Abschluss sollte der ganze Server neu gestartet werden mit dem Kommando: $(tput sgr0) reboot now"
-	echo "$DATUM $(date +%H:%M:%S) SERVERINSTALL: Zum Abschluss sollte der ganze Server neu gestartet werden" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-	return 0
+### Auswahl der zu installierenden Pakete (Dies ist meinem Geschmack angepasst)
+function serverinstall()
+{
+	# zuerst schauen ob dialog installiert ist
+	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+		dialog --yesno "Möchten Sie wirklich alle nötigen Ubuntu Pakete installieren?" 0 0
+		# 0=ja; 1=nein
+		siantwort=$?
+		# Dialog-Bildschirm löschen
+		dialog --clear
+		# Ausgabe auf die Konsole
+		if [ $siantwort = 0 ]
+		then
+			serverupgrade
+			installobensimulator
+			monoinstall18
+			installfinish
+		fi
+		if [ $siantwort = 1 ]
+		then
+			# Nein, dann zurück zum Hauptmenu.
+			hauptmenu
+		fi
+		# Bildschirm löschen
+		clear
+	else
+		# ohne dialog erstmal einfach installieren - Test
+		read -r -p "Ubuntu Pakete installieren [y]es: " yesno
+		if [ "$yesno" = "y" ]
+		then
+			serverupgrade
+			installobensimulator
+			monoinstall18
+			installfinish
+		else
+			echo "Abbruch"
+		fi
+	fi
+	# dialog Aktionen Ende
 }
 
 ### Funktion installationen, Ubuntu 18 Server, Was habe ich alles auf meinem Server Installiert? sortiert auflisten.
@@ -4320,6 +4507,7 @@ function autoconfig()
 ###########################################################################
 
 
+
 ### Funktion info, Informationen auf den Bildschirm ausgeben.
 function info()
 {
@@ -4355,13 +4543,28 @@ function infodialog()
 ### Funktion kalender(), einfach nur ein Kalender.
 function kalender()
 {
+	HEIGHT=0
+	WIDTH=0
+    TITLE="opensimMULTITOOL $VERSION"
+
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
-		CDATUM=$(date +%d %m %Y)
+
+		TDATUM=$(date +%d)
+		MDATUM=$(date +%m)
+		JDATUM=$(date +%Y)
 		# dialog --calendar
-		dialog --backtitle "opensimMULTITOOL $VERSION" --no-cancel --calendar Calendar 0 0 "$CDATUM"
+
+		DATUMERGEBNIS=$(dialog --calendar "calendar" $HEIGHT $WIDTH "$TDATUM" "$MDATUM" "$JDATUM" 3>&1 1>&2 2>&3) # Unbekannter Fehler
+
 		dialog --clear
-		#clear
+		clear
+
+		# Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
+		NEWDATUM=$(echo "$DATUMERGEBNIS" | sed -n '1p' | sed 's/\//./g') # erste zeile aus DATUMERGEBNIS nehmen und die Schrägstriche gegen ein leerzeichen austauschen.
+
+		warnbox "Ihr gewähltes Datum: $NEWDATUM" || hauptmenu
+
 		hauptmenu
 	else
 		# wenn dialog nicht installiert ist die Hilfe anzeigen.
@@ -4412,6 +4615,18 @@ function menuinfo()
 	dialog --clear
 	hauptmenu
 
+	return 0
+}
+### Funktion menukonsolenhilfe, menukonsolenhilfe auf dem Bildschirm anzeigen.
+function menukonsolenhilfe()
+{
+	#helpergebnis=$(help)
+	#dialog --msgbox "Konsolenhilfe:\n $helpergebnis" 50 75; dialog --clear
+
+	help > help.txt	
+	dialog --textbox "help.txt" 55 85; dialog --clear
+
+	hauptmenu
 	return 0
 }
 
@@ -4532,6 +4747,7 @@ function konsolenhilfe()
 
 	echo "$DATUM $(date +%H:%M:%S) HILFE: Konsolenhilfe wurde angefordert" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 }
+
 
 function commandhelp()
 {
@@ -4713,63 +4929,62 @@ echo "$DATUM $(date +%H:%M:%S) HILFE: Commands Hilfe wurde angefordert" >> "/$ST
 
 function hauptmenu()
 {
+	HEIGHT=0
+	WIDTH=0
+	CHOICE_HEIGHT=30
+    BACKTITLE="opensimMULTITOOL"
+    TITLE="Hauptmenu"
+    MENU="opensimMULTITOOL $VERSION"
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
-		# dialog --menu
-		mauswahl=$(dialog --backtitle "opensimMULTITOOL $VERSION" --help-button --menu "OPENSIM MULTITOOL $VERSION" 0 45 0 \
-		Restart ""\
-		Stop ""\
-		Start ""\
-		"--------------------------" ""\
-		"Einzelner Simulator Stop" ""\
-		"Einzelner Simulator Start" ""\
-		"Einzelner Simulator Status" ""\
-		"Alle Simulatoren Status" ""\
-		"--------------------------" ""\
-		"Server laufzeit und Neustart" ""\
-		"Region OAR sichern" ""\
-		"Parzellen entfernen" ""\
-		"Objekt entfernen" ""\
-		"--------------------------" ""\
-		"Benutzer Account anlegen" ""\
-		"Inventar speichern" ""\
-		"Inventar laden" ""\
-		"--------------------------" ""\
-		"Server Informationen" ""\
-		"Passwortgenerator" ""\
-		Kalender ""\
-		"--------------------------" ""\
-		"Weitere Funktionen" ""\
-		"Experten Funktionen" "" 3>&1 1>&2 2>&3)
-
+		OPTIONS=("OpenSim Restart" ""
+		"OpenSim Stop" ""
+		"OpenSim Start" ""
+		"--------------------------" ""
+		"Einzelner Simulator Stop" ""
+		"Einzelner Simulator Start" ""
+		"Einzelner Simulator Status" ""
+		"Alle Simulatoren Status" ""
+		"--------------------------" ""		
+		"Benutzer Account anlegen" ""
+		"Parzellen entfernen" ""
+		"Objekt entfernen" ""
+		"--------------------------" ""		
+		"Server Informationen" ""
+		"Screen Liste" ""
+		"Server laufzeit und Neustart" ""
+		"--------------------------" ""
+		"Passwortgenerator" ""
+		"Kalender" ""
+		"--------------------------" ""
+		"Weitere Funktionen" ""
+		"Dateimennu" ""
+		"Experten Funktionen" "")
+		
+		mauswahl=$(dialog --backtitle "$BACKTITLE" --title "$TITLE" --help-button --defaultno --menu "$MENU" $HEIGHT $WIDTH $CHOICE_HEIGHT "${OPTIONS[@]}" 2>&1 >/dev/tty)
 		antwort=$?
-
 		dialog --clear
 		clear
 
-		if [[ $mauswahl = "Einzelner Simulator Stop" ]]; then inputosstop; fi
-		if [[ $mauswahl = "Einzelner Simulator Start" ]]; then inputosstart; fi
+		if [[ $mauswahl = "Einzelner Simulator Stop" ]]; then menuosstop; fi
+		if [[ $mauswahl = "Einzelner Simulator Start" ]]; then menuosstart; fi
 		if [[ $mauswahl = "Einzelner Simulator Status" ]]; then menuworks; fi		
-		if [[ $mauswahl = "Alle Simulatoren Status" ]]; then menuwaslauft; fi
-		if [[ $mauswahl = "Region OAR sichern" ]]; then menuregionbackup; fi
-
+		if [[ $mauswahl = "Alle Simulatoren Status" ]]; then menuwaslauft; fi		
+		if [[ $mauswahl = "Screen Liste" ]]; then screenlist; fi
 		if [[ $mauswahl = "Parzellen entfernen" ]]; then menulandclear; fi
 		if [[ $mauswahl = "Objekt entfernen" ]]; then menuassetdel; fi
 		if [[ $mauswahl = "Benutzer Account anlegen" ]]; then menucreateuser; fi
-		if [[ $mauswahl = "Server laufzeit und Neustart" ]]; then rebootdatum; fi
+		if [[ $mauswahl = "Server laufzeit und Neustart" ]]; then rebootdatum; fi		
 
-		if [[ $mauswahl = "Inventar speichern" ]]; then menusaveinventar; fi
-		if [[ $mauswahl = "Inventar laden" ]]; then menuloadinventar; fi
-
-		# if [[ $mauswahl = "Server Informationen" ]]; then infodialog; fi
 		if [[ $mauswahl = "Server Informationen" ]]; then menuinfo; fi		
 		if [[ $mauswahl = "Passwortgenerator" ]]; then passwdgenerator; fi
 		if [[ $mauswahl = "Kalender" ]]; then kalender; fi
 
-		if [[ $mauswahl = "Start" ]]; then autostart; fi
-		if [[ $mauswahl = "Stop" ]]; then autostop; fi
-		if [[ $mauswahl = "Restart" ]]; then autorestart; fi
-
+		if [[ $mauswahl = "OpenSim Start" ]]; then menuautostart; fi
+		if [[ $mauswahl = "OpenSim Stop" ]]; then menuautostop; fi
+		if [[ $mauswahl = "OpenSim Restart" ]]; then autorestart; fi
+		
+		if [[ $mauswahl = "Dateimennu" ]]; then dateimenu; fi
 		if [[ $mauswahl = "Weitere Funktionen" ]]; then funktionenmenu; fi
 		if [[ $mauswahl = "Experten Funktionen" ]]; then expertenmenu; fi
 
@@ -4780,60 +4995,93 @@ function hauptmenu()
 		hilfe
 	fi
 }
+
 function hilfemenu()
 {
+	HEIGHT=0
+	WIDTH=45
+	CHOICE_HEIGHT=30
+    BACKTITLE="opensimMULTITOOL"
+    TITLE="Hilfemenu"
+    MENU="opensimMULTITOOL $VERSION"
+
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
-		# dialog --radiolist
-		# Name : menu1
-		hauswahl=$(dialog --backtitle "opensimMULTITOOL $VERSION" --menu "OPENSIM MULTITOOL $VERSION" 0 45 0 \
-		Hilfe ""\
-		Konsolenhilfe ""\
-		Kommandohilfe "" 3>&1 1>&2 2>&3)
+		OPTIONS=("Hilfe" ""
+		"Konsolenhilfe" ""
+		"Kommandohilfe" ""
+		"Konfiguration lesen" ""
+		"Hauptmenu" "")
+
+		hauswahl=$(dialog --clear \
+                    --backtitle "$BACKTITLE" \
+                    --title "$TITLE" \
+					--help-button --defaultno \
+                    --menu "$MENU" \
+                    $HEIGHT $WIDTH $CHOICE_HEIGHT \
+                    "${OPTIONS[@]}" \
+                    2>&1 >/dev/tty) # 3>&1 1>&2 2>&3
+
 		antwort=$?
 		dialog --clear
 		clear
+		echo "hilfemenu ist hier"
+
 		if [[ $hauswahl = "Hilfe" ]]; then hilfe; fi
-		if [[ $hauswahl = "Konsolenhilfe" ]]; then konsolenhilfe; fi
+		if [[ $hauswahl = "Konsolenhilfe" ]]; then menukonsolenhilfe; fi # Test menukonsolenhilfe
 		if [[ $hauswahl = "Kommandohilfe" ]]; then commandhelp; fi
-		#if [[ $antwort = 2 ]]; then hilfemenu ; fi
-		if [[ $antwort = 1 ]]; then exit ; fi
+		if [[ $hauswahl = "Konfiguration lesen" ]]; then menuoswriteconfig; fi
+		
+		if [[ $hauswahl = "Hauptmenu" ]]; then hauptmenu; fi
+		if [[ $antwort = 1 ]]; then hauptmenu ; fi
 	else
 		# wenn dialog nicht installiert ist die Hilfe anzeigen.
 		hilfe
 	fi
 }
+
 function funktionenmenu()
 {
+	HEIGHT=0
+	WIDTH=45
+	CHOICE_HEIGHT=30
+    BACKTITLE="opensimMULTITOOL"
+    TITLE="Funktionsmenu"
+    MENU="opensimMULTITOOL $VERSION"
+
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
-		# dialog --menu
-		fauswahl=$(dialog --backtitle "opensimMULTITOOL $VERSION" --help-button --defaultno --menu "OPENSIM MULTITOOL $VERSION" 0 45 0 \
-		"Grid starten" ""\
-		"Grid stoppen" ""\
-		"--------------------------" ""\
-		"Robust starten" ""\
-		"Robust stoppen" ""\
-		"Money starten" ""\
-		"Money stoppen" ""\
-		"--------------------------" ""\
-		"Automatischer Sim start" ""\
-		"Automatischer Sim stop" ""\
-		"--------------------------" ""\
-		"OpenSim herunterladen" ""\
-		"--------------------------" ""\
-		"Automatischer Screen stop" ""\
-		"Regionen anzeigen" ""\
-		"Log Dateien löschen" ""\
-		"Map Karten löschen" ""\
-		"--------------------------" ""\
-		"Hauptmennu" ""\
-		"Experten Funktionen" "" 3>&1 1>&2 2>&3)
+		OPTIONS=("Grid starten" ""
+		"Grid stoppen" ""
+		"--------------------------" ""
+		"Robust starten" ""
+		"Robust stoppen" ""
+		"Money starten" ""
+		"Money stoppen" ""
+		"--------------------------" ""
+		"Automatischer Sim start" ""
+		"Automatischer Sim stop" ""
+		"--------------------------" ""
+		"Automatischer Screen stop" ""
+		"Regionen anzeigen" ""		
+		"--------------------------" ""
+		"Hauptmennu" ""
+		"Dateimennu" ""
+		"Experten Funktionen" "")
+
+		fauswahl=$(dialog --clear \
+                    --backtitle "$BACKTITLE" \
+                    --title "$TITLE" \
+					--help-button --defaultno \
+                    --menu "$MENU" \
+                    $HEIGHT $WIDTH $CHOICE_HEIGHT \
+                    "${OPTIONS[@]}" \
+                    2>&1 >/dev/tty) # 3>&1 1>&2 2>&3
 
 		antwort=$?
-
 		dialog --clear
 		clear
+		echo "funktionenmenu ist hier"
 
 		if [[ $fauswahl = "Grid starten" ]]; then gridstart; fi
 		if [[ $fauswahl = "Grid stoppen" ]]; then gridstop; fi
@@ -4841,14 +5089,12 @@ function funktionenmenu()
 		if [[ $fauswahl = "Robust stoppen" ]]; then rostop; fi
 		if [[ $fauswahl = "Money starten" ]]; then mostart; fi
 		if [[ $fauswahl = "Money stoppen" ]]; then mostop; fi
-		if [[ $fauswahl = "Automatischer Sim start" ]]; then autosimstart; fi
-		if [[ $fauswahl = "Automatischer Sim stop" ]]; then autosimstop; fi
+		if [[ $fauswahl = "Automatischer Sim start" ]]; then menuautosimstart; fi
+		if [[ $fauswahl = "Automatischer Sim stop" ]]; then menuautosimstop; fi
 		if [[ $fauswahl = "Automatischer Screen stop" ]]; then autoscreenstop; fi
 		if [[ $fauswahl = "Regionen anzeigen" ]]; then meineregionen; fi
-		if [[ $fauswahl = "Log Dateien löschen" ]]; then autologdel; fi
-		if [[ $fauswahl = "Map Karten löschen" ]]; then automapdel; fi
-		if [[ $fauswahl = "OpenSim herunterladen" ]]; then downloados; fi
-
+		
+		if [[ $fauswahl = "Dateimennu" ]]; then dateimenu; fi
 		if [[ $fauswahl = "Hauptmennu" ]]; then hauptmenu; fi
 		if [[ $fauswahl = "Experten Funktionen" ]]; then expertenmenu; fi
 
@@ -4859,69 +5105,150 @@ function funktionenmenu()
 		hilfe
 	fi
 }
-function expertenmenu()
+
+function dateimenu()
 {
+	HEIGHT=0
+	WIDTH=45
+	CHOICE_HEIGHT=30
+    BACKTITLE="opensimMULTITOOL"
+    TITLE="Dateimenu"
+    MENU="opensimMULTITOOL $VERSION"
+
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
-		# dialog --menu
-		feauswahl=$(dialog --backtitle "opensimMULTITOOL $VERSION" --help-button --defaultno --menu "OPENSIM MULTITOOL $VERSION" 0 45 0 \
-		"Example Dateien umbenennen" ""\
-		"Voreinstellungen setzen" ""\
-		"MoneyServer vom git kopieren" ""\
-		"OSSL Skripte vom git kopieren" ""\
-		"Configure vom git kopieren" ""\
-		"--------------------------" ""\
-		"Kommando senden" ""\
-		"--------------------------" ""\
-		"Opensimulator upgraden" ""\
-		"Opensimulator aus zip upgraden" ""\
-		"Opensimulator bauen und upgraden" ""\
-		"Kompilieren" ""\
-		"oscompi" ""\
-		"--------------------------" ""\
-		"Automatischer Regionsbackup" ""\
-		"--------------------------" ""\
-		"autoregionsiniteilen" ""\
-		"RegionListe" ""\
-		"--------------------------" ""\
-		"Server Installation" ""\
-		"Opensim aus dem git holen" ""\
-		"Verzeichnisstrukturen anlegen" ""\
-		"terminator" ""\
-		"makeaot" ""\
-		"cleanaot" ""\
-		"Installationen anzeigen" ""\
-		"Hauptmennu" ""\
-		"Weitere Funktionen" "" 3>&1 1>&2 2>&3)
+		OPTIONS=("Inventar speichern" ""
+		"Inventar laden" ""
+		"Region OAR sichern" ""
+		"--------------------------" ""		
+		"Log Dateien löschen" ""
+		"Map Karten löschen" ""
+		"--------------------------" ""
+		"OpenSim herunterladen" ""
+		"MoneyServer vom git kopieren" ""
+		"OSSL Skripte vom git kopieren" ""
+		"Configure vom git kopieren" ""		
+		"Opensim vom Github holen" ""
+		"--------------------------" ""
+		"Verzeichnisstrukturen anlegen" ""		
+		"--------------------------" ""
+		"Hauptmenu" ""
+		"Weitere Funktionen" ""
+		"Experten Funktionen" "")
+
+		dauswahl=$(dialog --clear \
+                    --backtitle "$BACKTITLE" \
+                    --title "$TITLE" \
+					--help-button --defaultno \
+                    --menu "$MENU" \
+                    $HEIGHT $WIDTH $CHOICE_HEIGHT \
+                    "${OPTIONS[@]}" \
+                    2>&1 >/dev/tty) # 3>&1 1>&2 2>&3
 
 		antwort=$?
-
 		dialog --clear
 		clear
+		echo "dateimenu ist hier"
+
+		if [[ $dauswahl = "Inventar speichern" ]]; then menusaveinventar; fi
+		if [[ $dauswahl = "Inventar laden" ]]; then menuloadinventar; fi
+		if [[ $dauswahl = "Region OAR sichern" ]]; then menuregionbackup; fi
+		if [[ $dauswahl = "OpenSim herunterladen" ]]; then downloados; fi
+		if [[ $dauswahl = "Log Dateien löschen" ]]; then autologdel; fi
+		if [[ $dauswahl = "Map Karten löschen" ]]; then automapdel; fi
+		if [[ $dauswahl = "MoneyServer vom git kopieren" ]]; then moneygitcopy; fi
+		if [[ $dauswahl = "OSSL Skripte vom git kopieren" ]]; then scriptgitcopy; fi
+		if [[ $dauswahl = "Configure vom git kopieren" ]]; then configuregitcopy; fi
+		if [[ $dauswahl = "Opensim vom Github holen" ]]; then osgitholen; fi
+		if [[ $dauswahl = "Verzeichnisstrukturen anlegen" ]]; then menuosstruktur; fi		
+		
+		if [[ $dauswahl = "Hauptmenu" ]]; then hauptmenu; fi
+		if [[ $dauswahl = "Weitere Funktionen" ]]; then funktionenmenu; fi
+		if [[ $dauswahl = "Experten Funktionen" ]]; then expertenmenu; fi
+
+		if [[ $antwort = 2 ]]; then hilfemenu ; fi
+		if [[ $antwort = 1 ]]; then exit ; fi
+	else
+		# wenn dialog nicht installiert ist die Hilfe anzeigen.
+		hilfe
+	fi
+}
+
+function expertenmenu()
+{
+	HEIGHT=0
+	WIDTH=45
+	CHOICE_HEIGHT=30
+    BACKTITLE="opensimMULTITOOL"
+    TITLE="Expertenmenu"
+    MENU="opensimMULTITOOL $VERSION"
+
+	# zuerst schauen ob dialog installiert ist
+	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+		OPTIONS=("Example Dateien umbenennen" ""
+		"Voreinstellungen setzen" ""		
+		"Opensimulator upgraden" ""
+		"Opensimulator aus zip upgraden" ""
+		"Opensimulator bauen und upgraden" ""
+		"Kompilieren" ""
+		"oscompi" ""
+		"--------------------------" ""
+		"Automatischer Regionsbackup" ""
+		"--------------------------" ""
+		"autoregionsiniteilen" ""
+		"RegionListe" ""
+		"--------------------------" ""
+		"Server Installation" ""		
+		"terminator" ""
+		"makeaot" ""
+		"cleanaot" ""
+		"Installationen anzeigen" ""
+		"--------------------------" ""
+		"Kommando an OpenSim senden" ""
+		"--------------------------" ""
+		"Hauptmennu" ""
+		"Dateimennu" ""
+		"Weitere Funktionen" "")
+
+		feauswahl=$(dialog --clear \
+                    --backtitle "$BACKTITLE" \
+                    --title "$TITLE" \
+					--help-button --defaultno \
+                    --menu "$MENU" \
+                    $HEIGHT $WIDTH $CHOICE_HEIGHT \
+                    "${OPTIONS[@]}" \
+                    2>&1 >/dev/tty)
+
+		antwort=$?
+		dialog --clear
+		clear
+		echo "expertenmenu ist hier"
 
 		if [[ $feauswahl = "Example Dateien umbenennen" ]]; then unlockexample; fi
 		if [[ $feauswahl = "Voreinstellungen setzen" ]]; then ossettings; fi
-		if [[ $feauswahl = "MoneyServer vom git kopieren" ]]; then moneygitcopy; fi
-		if [[ $feauswahl = "OSSL Skripte vom git kopieren" ]]; then scriptgitcopy; fi
-		if [[ $feauswahl = "Configure vom git kopieren" ]]; then configuregitcopy; fi
+		
 		if [[ $feauswahl = "Kommando senden" ]]; then menuoscommand; fi
+		
 		if [[ $feauswahl = "Opensimulator upgraden" ]]; then osupgrade; fi
 		if [[ $feauswahl = "Opensimulator aus zip upgraden" ]]; then oszipupgrade; fi		
 		if [[ $feauswahl = "Opensimulator bauen und upgraden" ]]; then osbuilding; fi
+		
 		if [[ $feauswahl = "Automatischer Regionsbackup" ]]; then autoregionbackup; fi
 		if [[ $feauswahl = "Kompilieren" ]]; then compilieren; fi
 		if [[ $feauswahl = "oscompi" ]]; then oscompi; fi
+		
 		if [[ $feauswahl = "autoregionsiniteilen" ]]; then autoregionsiniteilen; fi
 		if [[ $feauswahl = "RegionListe" ]]; then RegionListe; fi
-		if [[ $feauswahl = "Opensim aus dem git holen" ]]; then osgitholen; fi
+		
 		if [[ $feauswahl = "terminator" ]]; then terminator; fi
 		if [[ $feauswahl = "makeaot" ]]; then makeaot; fi
 		if [[ $feauswahl = "cleanaot" ]]; then cleanaot; fi
 		if [[ $feauswahl = "Installationen anzeigen" ]]; then installationen; fi
-		if [[ $feauswahl = "Verzeichnisstrukturen anlegen" ]]; then menuosstruktur; fi		
+			
 		if [[ $feauswahl = "Server Installation" ]]; then serverinstall; fi
 		if [[ $feauswahl = "Hilfe" ]]; then hilfemenu; fi
-
+		
+		if [[ $fauswahl = "Dateimennu" ]]; then dateimenu; fi
 		if [[ $feauswahl = "Hauptmennu" ]]; then hauptmenu; fi
 		if [[ $feauswahl = "Weitere Funktionen" ]]; then funktionenmenu; fi
 
@@ -5056,6 +5383,9 @@ case  $KOMMANDO  in
 	funktionenmenu) funktionenmenu ;;
 	expertenmenu) expertenmenu ;;
 	downloados) downloados ;;
+	oswriteconfig) oswriteconfig "$2" ;;
+	menuoswriteconfig) menuoswriteconfig "$2" ;;
+	finstall) finstall "$2" ;;
 	*) hauptmenu ;;
 esac
 
