@@ -17,7 +17,7 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #### Einstellungen ####
-VERSION="V0.67.300" # opensimMULTITOOL Versionsausgabe
+VERSION="V0.67.301" # opensimMULTITOOL Versionsausgabe
 clear # Bildschirm loeschen
 
 # Alte Variablen loeschen aus eventuellen voherigen sessions
@@ -5237,7 +5237,7 @@ function expertenmenu()
 		if [[ $feauswahl = "Example Dateien umbenennen" ]]; then unlockexample; fi
 		if [[ $feauswahl = "Voreinstellungen setzen" ]]; then ossettings; fi
 		
-		if [[ $feauswahl = "Kommando senden" ]]; then menuoscommand; fi
+		if [[ $feauswahl = "Kommando an OpenSim senden" ]]; then menuoscommand; fi
 		
 		if [[ $feauswahl = "Opensimulator upgraden" ]]; then osupgrade; fi
 		if [[ $feauswahl = "Opensimulator aus zip upgraden" ]]; then oszipupgrade; fi		
