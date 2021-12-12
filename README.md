@@ -82,6 +82,14 @@ Nachfolgende 2 Zeilen unten im mit "crontab -e" geöffneten Crontab einfügen.
     # Restart um 6 Uhr
     0 6 * * * /opt/opensim.sh restart
     
+oder
+
+    # Stoppen um 22 Uhr
+    0 22 * * * /opt/opensim.sh autostop
+
+    # Starten um 9 Uhr
+    0 9 * * * /opt/opensim.sh autostart
+    
 (Format: Minute=0, Stunde=6)
 
 **Crontab speichern:**
