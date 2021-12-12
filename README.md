@@ -211,6 +211,19 @@ passwdgenerator - Passwortstärke - Generiert ein Passwort zur weiteren verwendu
 
 ## TODO und Informationen
 
+```
+Neue Menüstruktur es sind jetzt alle Menüs aus allen Menüs einfach mit der Maus erreichbar.
+Die Menüstruktur ist komplett ausgetauscht worden.
+Auch einige Strukturen wie das Installieren der Linux Pakete sind komplett ausgetauscht worden.
+Auch ohne dialog kann das Grid zeitgesteuert, herauf und herunter gefahren, 
+sowie neu gestartet werden. 
+Es kann nun die Laufzeit des Servers angezeigt werden, 
+sowie den Server mit einem klick Mausklick neu gestartet werden 
+(Das Grid fährt hierbei vorher automatisch herunter). 
+Das Dateimenü wurde eingefügt um die Menüs kleiner zu gestalten.
+Unter Server Informationen ist auf einem blick alle wichtigen Infos zu sehen wie welche screens gerade laufen und mehr.
+```
+
 Version 0.61.225 - siehe multitool.png
 
 Version 0.56.219 - Neu Passwortgenerator
