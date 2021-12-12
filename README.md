@@ -77,7 +77,7 @@ Crontab bearbeiten oder erstellen:
 
     crontab -e
 
-Nachfolgende 2 Zeilen unten im mit "crontab -e" geöffneten Crontab einfügen.
+Nachfolgende Zeilen unten im mit "crontab -e" geöffneten Crontab einfügen.
 
     # Restart um 6 Uhr
     0 6 * * * /opt/opensim.sh restart
