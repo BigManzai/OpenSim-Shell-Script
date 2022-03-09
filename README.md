@@ -15,9 +15,9 @@ Es wird automatisch eine DATUM-multitool.log angelegt um nachzuverfolgen ob alle
 
 Eine Funktionsliste gibt es hier in der Wiki.
 
-### Download OpenSimulator Testversion:
+### Download OpenSimulator Testversion (Bitte die beiliegende opensim.sh und opensim.cfg verwenden):
 
-https://www.mediafire.com/file/h2oyssqjcpucode/opensim-0.9.2.1.92.zip/file
+https://www.mediafire.com/file/wrjd2n9024icc49/opensim-0.9.2.2.4.zip/file
 
 ## Hilfe
 
