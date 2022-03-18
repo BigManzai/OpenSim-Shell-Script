@@ -1,22 +1,28 @@
-### Einstellungen VERSION V0.67.281 ###
+### Einstellungen VERSION V0.68.321
 
 ## Das Startverzeichnis home oder opt zum Beispiel.
 	STARTVERZEICHNIS="opt"
 	MONEYVERZEICHNIS="robust"
 	ROBUSTVERZEICHNIS="robust"
 	OPENSIMVERZEICHNIS="opensim"
+	
 	SCRIPTSOURCE="opensim-ossl-example-scripts-main"
 	SCRIPTZIP="opensim-ossl-example-scripts-main.zip"
+	
 	MONEYSOURCE="OpenSimCurrencyServer-2021-master"	
 	MONEYZIP="OpenSimCurrencyServer-2021-master.zip"
+	
 	CONFIGURESOURCE="opensim-configuration-addon-modul-main"
 	CONFIGUREZIP="opensim-configuration-addon-modul-main.zip"
+
+	OSSEARCHSOURCE="OpenSimSearch"
+	OSSEARCHSZIP="OpenSimSearch-master.zip"
 	
 ## Dateien
 	REGIONSDATEI="RegionList.ini"
 	SIMDATEI="SimulatorList.ini"
 	OPENSIMDOWNLOAD="http://opensimulator.org/dist/"
-	OPENSIMVERSION="opensim-0.9.2.1"
+	OPENSIMVERSION="opensim-0.9.2.2Dev"
 	SEARCHADRES="icanhazip.com" # Suchadresse
 
 ## Inklusive
@@ -28,6 +34,7 @@
 	SEARCHCOPY="no"
 	CHRISOSCOPY="no"
 	AUTOCONFIG="no"
+	OSSEARCHCOPY="no"
 
 ## Die unterschiedlichen wartezeiten bis die Aktion ausgefuehrt wurde.
 	WARTEZEIT=60 # Ist eine allgemeine Wartezeit.
@@ -40,15 +47,17 @@
 
 ## Linux Einstellungen
 	SETMONOTHREADSON="yes"
-	SETMONOTHREADS=800
+	SETMONOTHREADS=800	
 	SETULIMITON="yes"
-	SETMONOGCPARAMSON="yes"
+	SETMONOGCPARAMSON1="no"
+	SETMONOGCPARAMSON2="yes"
 	SETMANUALPAGES="yes"
 
 ## Divers
 	SETOSCOMPION="no" # Mit oder ohne log Datei kompilieren. yes oder no.
 	SETAOTON="no"
-	OSVERSION="opensim-0.9.2.1Dev"
+	# opensim-0.9.2.2Dev-4-g5e9b3b4.zip
+	OSVERSION="opensim-0.9.2.2Dev-"
 
 ## Farben Color
 	OMCOLORSET="f" # "sw" Schwarzweiss oder "f" Farbe
