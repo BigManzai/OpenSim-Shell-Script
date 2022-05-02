@@ -17,7 +17,7 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #### Einstellungen ####
-VERSION="V0.70.330" # opensimMULTITOOL Versionsausgabe
+VERSION="V0.70.336" # opensimMULTITOOL Versionsausgabe
 clear # Bildschirm loeschen
 
 # Alte Variablen loeschen aus eventuellen voherigen sessions
@@ -276,7 +276,8 @@ function downloados()
 	"Download22: " "$LINK22" \
 	"Download23: " "$LINK23" \
 	"Download24: " "$LINK24" \
-	"Download25: " "$LINK25"  3>&1 1>&2 2>&3 3>&- )
+	"Download25: " "$LINK25" \
+	"Download26: " "$LINK26"  3>&1 1>&2 2>&3 3>&- )
 
 	dialog --clear
 
@@ -955,15 +956,16 @@ function logdel()
 ### Funktion rologdel, loescht die Log Dateien. # Aufruf: rologdel Verzeichnis
 function rologdel()
 {
-	VERZEICHNIS="robust"
-	if [ -d "$VERZEICHNIS" ]; then
-		echo "$(tput setaf $COLOR1) $(tput setab $BCOLOR7)OpenSimulator log $VERZEICHNIS geloescht$(tput sgr $OMCOFF)"
-		rm /$STARTVERZEICHNIS/"$VERZEICHNIS"/bin/*.log || echo " "
-		echo "$DATUM $(date +%H:%M:%S) LOGDEL: OpenSimulator log $VERZEICHNIS geloescht" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+	# /opt/robust/bin
+	RVERZEICHNIS="robust"
+	if [ -d /$STARTVERZEICHNIS/$RVERZEICHNIS ]; then
+		echo "$(tput setaf $COLOR1) $(tput setab $BCOLOR7)Robust logs geloescht$(tput sgr $OMCOFF)"
+		rm /$STARTVERZEICHNIS/"$RVERZEICHNIS"/bin/*.log || echo "robust logs nicht gefunden."
+		echo "$DATUM $(date +%H:%M:%S) LOGDEL: Robust logs geloescht" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 		return 0
 	else
-		echo "$(tput setaf $COLOR1) $VERZEICHNIS logs nicht gefunden $(tput sgr $OMCOFF)"
-		echo "$DATUM $(date +%H:%M:%S) LOGDEL: $VERZEICHNIS logs nicht gefunden" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+		echo "$(tput setaf $COLOR1) Robust logs nicht gefunden $(tput sgr $OMCOFF)"
+		echo "$DATUM $(date +%H:%M:%S) LOGDEL: Robust logs nicht gefunden" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 		return 1
 	fi
 }
@@ -2577,8 +2579,8 @@ function autologdel()
 	# schauen ist Robust und Money da dann diese Logs auch löschen!
 	if [[ ! $ROBUSTVERZEICHNIS == "robust" ]]
 	then
-		echo "$(tput setaf $BCOLOR1) $(tput setab $BCOLOR7)Robust Log Dateien löschen! $(tput sgr $OMCOFF)"
-		rm /$STARTVERZEICHNIS/robust/bin/*.log || echo " Ich kann die Robust Log Dateien nicht löschen! "
+		echo "$(tput setaf $BCOLOR1) $(tput setab $BCOLOR7)autologdel: Robust Log Dateien löschen! $(tput sgr $OMCOFF)"
+		rm /$STARTVERZEICHNIS/robust/bin/*.log || echo " autologdel: Ich kann die Robust Log Dateien nicht löschen! "
 	fi
 	# if [[ ! $MONEYVERZEICHNIS == "money" ]]
 	# then 
@@ -2605,8 +2607,9 @@ function menuautologdel()
 
 	# schauen ist Robust und Money da dann diese Logs auch löschen!
 	if [[ ! $ROBUSTVERZEICHNIS == "robust" ]]
-	then 
-		rm /$STARTVERZEICHNIS/robust/bin/*.log || echo " "
+	then
+		echo "$(tput setaf $BCOLOR1) $(tput setab $BCOLOR7) menuautologdel: Robust Log Dateien löschen! $(tput sgr $OMCOFF)"
+		rm /$STARTVERZEICHNIS/robust/bin/*.log || echo " menuautologdel: Ich kann die Robust Log Dateien nicht löschen! "
 	fi
 	# if [[ ! $MONEYVERZEICHNIS == "money" ]]
 	# then 

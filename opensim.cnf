@@ -2,6 +2,7 @@
 
 ## Das Startverzeichnis home oder opt zum Beispiel.
 	STARTVERZEICHNIS="opt"
+	#STARTVERZEICHNIS="home"
 	MONEYVERZEICHNIS="robust"
 	ROBUSTVERZEICHNIS="robust"
 	OPENSIMVERZEICHNIS="opensim"
@@ -88,3 +89,4 @@
 	LINK23="http://opensimulator.org/dist/opensim-0.9.2.0-source.zip"
 	LINK24="http://opensimulator.org/dist/opensim-0.9.2.0.tar.gz"
 	LINK25="http://opensimulator.org/dist/opensim-0.9.2.0.zip"
+	LINK26="http://opensimulator.org/dist/opensim-0.9.2.1.zip"
