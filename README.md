@@ -22,16 +22,7 @@ https://eu2.contabostorage.com/52253033fae547669ac2197e11daac60:bigmanzai/opensi
 ## Hilfe
 
     /opt/opensim.sh hilfe
-    
-oder
-
-    /opt/opensim.sh konsolenhilfe
-    
-oder
-
-    /opt/opensim.sh commandhelp    
-    
-
+ 
 dazu gibt es noch die Konsolenhilfe für Putty oder Bitvise-Xterm
 
     /opt/opensim.sh konsolenhilfe
