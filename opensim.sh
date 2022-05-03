@@ -4988,6 +4988,7 @@ echo "$(tput setab $BCOLOR1)Experten Funktionen$(tput sgr $OMCOFF)"
 	echo "terminator 		- $(tput setaf $COLOR3)hat keine Parameter$(tput sgr $OMCOFF) - Killt alle laufenden Screens."
 
 echo "$(tput setab $BCOLOR1)Ungetestete oder zu testende Funktionen$(tput sgr $OMCOFF)"
+	echo "osgridcopy		- $(tput setaf $COLOR3)hat keine Parameter$(tput sgr $OMCOFF) - Automatisches kopieren aus dem opensim Verzeichniss."
 	echo "makeaot			- $(tput setaf $COLOR3)hat keine Parameter$(tput sgr $OMCOFF) - aot Dateien erstellen."
 	echo "cleanaot		- $(tput setaf $COLOR3)hat keine Parameter$(tput sgr $OMCOFF) - aot Dateien entfernen."
 	echo "monoinstall		- $(tput setaf $COLOR3)hat keine Parameter$(tput sgr $OMCOFF) - mono 6.x installation."
