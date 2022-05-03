@@ -17,7 +17,7 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #### Einstellungen ####
-VERSION="V0.70.336" # opensimMULTITOOL Versionsausgabe
+VERSION="V0.71.337" # opensimMULTITOOL Versionsausgabe
 clear # Bildschirm loeschen
 
 # Alte Variablen loeschen aus eventuellen voherigen sessions
@@ -4701,6 +4701,30 @@ function compilieren()
 	return 0
 }
 
+### Funktion OSGRIDCOPY, automatisches kopieren des opensimulator aus dem verzeichnis opensim.
+function osgridcopy()
+{
+	echo " #############################"
+	echo " !!!      BEI FEHLER      !!! "
+	echo " !!! ABBRUCH MIT STRG + C !!! "
+	echo " #############################"
+
+	echo "$(tput setab $BCOLOR2)Das Grid wird jetzt kopiert/aktualisiert! $(tput sgr $OMCOFF)"
+	echo "$DATUM $(date +%H:%M:%S) OSGRIDCOPY: Das Grid wird jetzt kopiert/aktualisiert" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+	echo " "
+	# Grid Stoppen.
+	echo "$DATUM $(date +%H:%M:%S) OSGRIDCOPY: Alles Beenden falls da etwas läuft" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+	autostop
+	# Kopieren.
+	echo "$DATUM $(date +%H:%M:%S) OSGRIDCOPY: Neue Version kopieren" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+	oscopyrobust
+	oscopysim
+	echo " "
+	# MoneyServer eventuell loeschen.	
+	if [ "$MONEYVERZEICHNIS" = "keins" ] || [ "$MONEYVERZEICHNIS" = "no" ] || [ "$MONEYVERZEICHNIS" = "nein" ]; then moneydelete; fi
+	return 0
+}
+
 ### Funktion osupgrade, automatisches upgrade des opensimulator aus dem verzeichnis opensim.
 function osupgrade()
 {
@@ -4717,7 +4741,7 @@ function osupgrade()
 	autostop
 	# Kopieren.
 	echo "$DATUM $(date +%H:%M:%S) OSUPGRADE: Neue Version Installieren" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-	oscopyrobust	
+	oscopyrobust
 	oscopysim
 	echo " "
 	echo "$DATUM $(date +%H:%M:%S) OSUPGRADE: Log Dateien loeschen!" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
@@ -5675,6 +5699,7 @@ case  $KOMMANDO  in
 	menuoswriteconfig) menuoswriteconfig "$2" ;;
 	finstall) finstall "$2" ;;
 	rologdel) rologdel ;;
+	osgridcopy) osgridcopy ;;
 	*) hauptmenu ;;
 esac
 
