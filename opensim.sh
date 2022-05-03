@@ -17,7 +17,7 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #### Einstellungen ####
-VERSION="V0.71.337" # opensimMULTITOOL Versionsausgabe
+VERSION="V0.71.338" # opensimMULTITOOL Versionsausgabe
 clear # Bildschirm loeschen
 
 # Alte Variablen loeschen aus eventuellen voherigen sessions
@@ -4940,7 +4940,8 @@ function hilfe()
 {
 echo "$(tput setab $BCOLOR5)Funktion:$(tput sgr $OMCOFF)		$(tput setab $BCOLOR2)Parameter:$(tput sgr $OMCOFF)		$(tput setab $BCOLOR4)Informationen:$(tput sgr $OMCOFF)"
 	echo "hilfe 			- $(tput setaf $COLOR3)hat keine Parameter$(tput sgr $OMCOFF)	- Diese Hilfe."
-	echo "konsolenhilfe 		- $(tput setaf $COLOR3)hat keine Parameter$(tput sgr $OMCOFF)	- konsolenhilfe ist eine Hilfe für Putty oder Xterm."
+	echo "konsolenhilfe 		- $(tput setaf $COLOR3)hat keine Parameter$(tput sgr $OMCOFF)	- konsolenhilfe ist eine Hilfe für Putty oder Xterm."	
+	echo "commandhelp 		- $(tput setaf $COLOR3)hat keine Parameter$(tput sgr $OMCOFF)	- Die OpenSim Commands."
 	echo "restart 		- $(tput setaf $COLOR3)hat keine Parameter$(tput sgr $OMCOFF)	- Startet das gesamte Grid neu."
 	echo "autostop 		- $(tput setaf $COLOR3)hat keine Parameter$(tput sgr $OMCOFF)	- Stoppt das gesamte Grid."
 	echo "autostart 		- $(tput setaf $COLOR3)hat keine Parameter$(tput sgr $OMCOFF)	- Startet das gesamte Grid."
