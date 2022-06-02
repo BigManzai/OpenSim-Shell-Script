@@ -17,7 +17,7 @@ Eine Funktionsliste gibt es hier in der Wiki.
 
 ### Download OpenSimulator Testversion (Bitte die beiliegende opensim.sh und opensim.cfg verwenden):
 
-https://eu2.contabostorage.com/52253033fae547669ac2197e11daac60:bigmanzai/opensim-0.9.2.2.173.zip
+https://eu2.contabostorage.com/52253033fae547669ac2197e11daac60:bigmanzai/opensim-0.9.2.2.197.zip
 
 ## Hilfe
 
