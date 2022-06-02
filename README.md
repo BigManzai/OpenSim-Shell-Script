@@ -13,13 +13,13 @@ Dieses Script läuft auf einem Grid mit 40 Simulatoren genauso, wie mit zum Beis
 
 Es wird automatisch eine DATUM-multitool.log angelegt um nachzuverfolgen ob alles ordnungsgemäß ausgeführt wurde.
 
-Eine Funktionsliste gibt es hier in der Wiki.
+Eine Funktionsliste gibt es hier in der Wiki. 
 
 ### Download OpenSimulator Testversion (Bitte die beiliegende opensim.sh und opensim.cfg verwenden):
 
 https://eu2.contabostorage.com/52253033fae547669ac2197e11daac60:bigmanzai/opensim-0.9.2.2.197.zip
 
-## Hilfe
+## Hilfe 
 
     /opt/opensim.sh hilfe
  
