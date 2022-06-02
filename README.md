@@ -220,6 +220,9 @@ Das Dateimenü wurde eingefügt um die Menüs kleiner zu gestalten.
 Unter Server Informationen ist auf einem blick alle wichtigen Infos zu sehen wie welche screens gerade laufen und mehr.
 ```
 
+Version 0.77.386 - Neues Log System, es kann nun in der opensim.cnf die Log Funktionen aktiviert und deaktiviert werden.
+Das Schreiben und löschen der Log´s kann nun ein- und ausgeschaltet werden. MySQL wird als nächstes eingefügt.
+
 Version 0.61.225 - siehe multitool.png
 
 Version 0.56.219 - Neu Passwortgenerator
