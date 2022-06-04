@@ -17,7 +17,7 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #### Einstellungen ####
-VERSION="V0.77.387" # opensimMULTITOOL Versionsausgabe
+VERSION="V0.77.388" # opensimMULTITOOL Versionsausgabe
 clear # Bildschirm loeschen
 
 # Alte Variablen loeschen aus eventuellen voherigen sessions
@@ -3361,9 +3361,9 @@ MEIN_ABFRAGE_ENDE
 	return 0
 }
 
-########### Neu ab 04.06.2022
+########### Neu am 04.06.2022
 
-# Test:
+# Test: getestet und korrigiert am 05.06.2022
 
 ### Daten von allen Benutzern anzeigen: db_all_user "username" "password" "databasename"
 function db_all_user()
@@ -3371,7 +3371,7 @@ function db_all_user()
 	username=$1; password=$2; databasename=$3;
 	echo "Daten von allen Benutzern anzeigen:"
 	echo " "
-	mysqlrest "SELECT * FROM UserAccounts" # Alles holen und in die Variable result_mysqlrest schreiben.
+	mysqlrest "$username" "$password" "$databasename" "SELECT * FROM UserAccounts" # Alles holen und in die Variable result_mysqlrest schreiben.
 	echo "$result_mysqlrest" # Alles einfach ohne auswertung anzeigen.
 }
 
@@ -3381,7 +3381,7 @@ function db_all_uuid()
 	username=$1; password=$2; databasename=$3;
 	echo "UUID von allen Benutzern anzeigen:"
 	echo " "
-	mysqlrest "SELECT PrincipalID FROM UserAccounts"
+	mysqlrest "$username" "$password" "$databasename"  "SELECT PrincipalID FROM UserAccounts"
 	echo "$result_mysqlrest"
 }
 
@@ -3391,7 +3391,7 @@ function db_all_name()
 	username=$1; password=$2; databasename=$3;
 	echo "Vor- und Zuname von allen Benutzern anzeigen:"
 	echo " "
-	mysqlrest "SELECT FirstName, LastName FROM UserAccounts"
+	mysqlrest "$username" "$password" "$databasename" "SELECT FirstName, LastName FROM UserAccounts"
 	echo "$result_mysqlrest"
 }
 
@@ -3401,7 +3401,7 @@ function db_user_data()
 	username=$1; password=$2; databasename=$3; firstname=$4; lastname=$5;
 	echo "Daten von einem Benutzer anzeigen:"
 	echo " "
-	mysqlrest "SELECT * FROM UserAccounts WHERE firstname='$firstname' AND lastname LIKE '$lastname'"
+	mysqlrest "$username" "$password" "$databasename" "SELECT * FROM UserAccounts WHERE firstname='$firstname' AND lastname LIKE '$lastname'"
 	echo "$result_mysqlrest"
 }
 
@@ -3411,8 +3411,7 @@ function db_user_infos()
 	username=$1; password=$2; databasename=$3; firstname=$4; lastname=$5;
 	echo "UUID Vor- und Nachname sowie E-Mail Adresse von einem Benutzer anzeigen:"
 	echo " "
-	firstname="Manfred"; lastname="Aabye"
-	mysqlrest "SELECT PrincipalID, FirstName, LastName, Email FROM UserAccounts WHERE firstname='$firstname' AND lastname LIKE '$lastname'"
+	mysqlrest "$username" "$password" "$databasename" "SELECT PrincipalID, FirstName, LastName, Email FROM UserAccounts WHERE firstname='$firstname' AND lastname LIKE '$lastname'"
 	echo "$result_mysqlrest"
 }
 
@@ -3422,7 +3421,7 @@ function db_user_uuid()
 	username=$1; password=$2; databasename=$3; firstname=$4; lastname=$5;
 	echo "UUID von einem Benutzer anzeigen:"
 	echo " "
-	mysqlrest "SELECT PrincipalID FROM UserAccounts WHERE FirstName='$firstname' AND LastName='$lastname'"
+	mysqlrest "$username" "$password" "$databasename" "SELECT PrincipalID FROM UserAccounts WHERE FirstName='$firstname' AND LastName='$lastname'"
 	echo "$result_mysqlrest"
 }
 
@@ -3432,10 +3431,10 @@ function db_foldertyp_user()
 	username=$1; password=$2; databasename=$3; firstname=$4; lastname=$5; foldertyp=$6
 	echo "Alles vom inventoryfolders type des User:"
 	echo " "
-	mysqlrest "SELECT PrincipalID FROM UserAccounts WHERE FirstName='$firstname' AND LastName='$lastname'"
+	mysqlrest "$username" "$password" "$databasename" "SELECT PrincipalID FROM UserAccounts WHERE FirstName='$firstname' AND LastName='$lastname'"
 	user_uuid="$result_mysqlrest"
 	#mysqlrest "SELECT * FROM inventoryfolders WHERE (type='8' OR type='9') AND agentID='$user_uuid'"
-	mysqlrest "SELECT * FROM inventoryfolders WHERE (type='$foldertyp') AND agentID='$user_uuid'"
+	mysqlrest "$username" "$password" "$databasename" "SELECT * FROM inventoryfolders WHERE (type='$foldertyp') AND agentID='$user_uuid'"
 	echo "$result_mysqlrest"
 }
 
@@ -3445,9 +3444,9 @@ function db_all_userfailed()
 	username=$1; password=$2; databasename=$3; firstname=$4; lastname=$5;
 	echo "Alles vom inventoryfolders was type != -1 des User:"
 	echo " "
-	mysqlrest "SELECT PrincipalID FROM UserAccounts WHERE FirstName='$firstname' AND LastName='$lastname'"
+	mysqlrest "$username" "$password" "$databasename" "SELECT PrincipalID FROM UserAccounts WHERE FirstName='$firstname' AND LastName='$lastname'"
 	uf_user_uuid="$result_mysqlrest"
-	mysqlrest "SELECT * FROM inventoryfolders WHERE type != '-1' AND agentID='$uf_user_uuid'"
+	mysqlrest "$username" "$password" "$databasename" "SELECT * FROM inventoryfolders WHERE type != '-1' AND agentID='$uf_user_uuid'"
 	echo "$result_mysqlrest"
 }
 
@@ -3457,7 +3456,7 @@ function db_userdate()
 	username=$1; password=$2; databasename=$3; firstname=$4; lastname=$5;
 	echo "Zeige Erstellungsdatum eines Users an:"
 	echo " "
-	mysqlrest "SELECT Created FROM UserAccounts WHERE firstname='$firstname' AND lastname LIKE '$lastname'"
+	mysqlrest "$username" "$password" "$databasename" "SELECT Created FROM UserAccounts WHERE firstname='$firstname' AND lastname LIKE '$lastname'"
 	#unix timestamp konvertieren in das Deutsche Datumsformat.
 	userdatum=$(date +%d.%m.%Y -d @"$result_mysqlrest")
 	echo "Der Benutzer $firstname $lastname wurde am $userdatum angelegt."
@@ -3469,29 +3468,39 @@ function db_false_email()
 	username=$1; password=$2; databasename=$3; ausnahmefirstname="GRID"; ausnahmelastname="SERVICES"
 	echo "Finde offensichtlich falsche E-Mail Adressen der User ausser von $ausnahmefirstname $ausnahmelastname."
 	echo " "
-	mysqlrest "SELECT PrincipalID, FirstName, LastName, Email FROM UserAccounts WHERE Email NOT LIKE '%_@__%.__%'AND NOT firstname='$ausnahmefirstname' AND NOT lastname='$ausnahmelastname'"
+	mysqlrest "$username" "$password" "$databasename" "SELECT PrincipalID, FirstName, LastName, Email FROM UserAccounts WHERE Email NOT LIKE '%_@__%.__%'AND NOT firstname='$ausnahmefirstname' AND NOT lastname='$ausnahmelastname'"
 	echo "$result_mysqlrest"
 }
 
 ### Einen User in der Datenbank erstellen und das ohne Inventar (Gut fuer Picker): set_empty_user "username" "password" "databasename" "firstname" "lastname" "email"
 function set_empty_user()
 {
-	username=$1; password=$2; databasename=$3; firstname=$4; lastname=$5; email=$5
-	newPrincipalID=uuidgen
+	regex="^(([-a-zA-Z0-9\!#\$%\&\'*+/=?^_\`{\|}~]+|(\"([][,:;<>\&@a-zA-Z0-9\!#\$%\&\'*+/=?^_\`{\|}~-]|(\\\\[\\ \"]))+\"))\.)*([-a-zA-Z0-9\!#\$%\&\'*+/=?^_\`{\|}~]+|(\"([][,:;<>\&@a-zA-Z0-9\!#\$%\&\'*+/=?^_\`{\|}~-]|(\\\\[\\ \"]))+\"))@\w((-|\w)*\w)*\.(\w((-|\w)*\w)*\.)*\w{2,4}$"
+	username=$1; password=$2; databasename=$3; firstname=$4; lastname=$5; email=$6
+	UUID=$(uuidgen)
+	newPrincipalID="$UUID"
 	newScopeID="00000000-0000-0000-0000-000000000000"
 	newFirstName="$firstname"
 	newLastName="$lastname"
-	newEmail="$email"
-	newServiceURLs="omeURI= InventoryServerURI= AssetServerURI="
+	# regex email check
+	if [[ $email =~ $regex ]] ; then
+    	echo "E-Mail $email OK"
+		newEmail="$email"
+	else
+		echo "E-Mail $email not OK"
+		exit 1
+	fi
+	
+	newServiceURLs="HomeURI= InventoryServerURI= AssetServerURI="
 	newCreated=$(date +%s)
 	newUserLevel="0"
 	newUserFlags="0"
 	newUserTitle=""
 	newactive="1"
-	mysqlrest "INSERT INTO UserAccounts (PrincipalID, ScopeID, FirstName, LastName, Email, ServiceURLs, Created, UserLevel, UserFlags, UserTitle, active) VALUES ('$newPrincipalID', '$newScopeID', '$newFirstName', '$newLastName', '$newEmail', '$newServiceURLs', '$newCreated', '$newUserLevel', '$newUserFlags', '$newUserTitle', '$newactive')"
+	mysqlrest "$username" "$password" "$databasename" "INSERT INTO UserAccounts (PrincipalID, ScopeID, FirstName, LastName, Email, ServiceURLs, Created, UserLevel, UserFlags, UserTitle, active) VALUES ('$newPrincipalID', '$newScopeID', '$newFirstName', '$newLastName', '$newEmail', '$newServiceURLs', '$newCreated', '$newUserLevel', '$newUserFlags', '$newUserTitle', '$newactive')"
 }
 
-########### Neu ab 04.06.2022 Ende
+########### Neu am 04.06.2022 Ende
 
 ### function conf_write, Konfiguration schreiben ersatz für alle UNGETESTETEN ini Funktionen.
 # ./opensim.sh conf_write Einstellung NeuerParameter Verzeichnis Dateiname
