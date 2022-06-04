@@ -17,7 +17,7 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #### Einstellungen ####
-VERSION="V0.77.386" # opensimMULTITOOL Versionsausgabe
+VERSION="V0.77.387" # opensimMULTITOOL Versionsausgabe
 clear # Bildschirm loeschen
 
 # Alte Variablen loeschen aus eventuellen voherigen sessions
@@ -49,7 +49,7 @@ function dummyvar()
 	textfontcolor=7;	textbaggroundcolor=0;	debugfontcolor=4;	debugbaggroundcolor=0;	infofontcolor=2;	infobaggroundcolor=0;	warnfontcolor=3;	warnbaggroundcolor=0;
 	errorfontcolor=1;	errorbaggroundcolor=0;	SETMONOGCPARAMSON1="no"; SETMONOGCPARAMSON2="yes";	LOGDELETE="no";	LOGWRITE="no";
 
-	echo "$result_mymysql";	echo "$result_mysqlrest"
+	echo "$result_mysqlrest"
 	#hostname="localhost"; 	
 	username="username"; 	password="userpasswd"; 	databasename="grid"; #swpfilename="/opt/opensim.swp"
 }
@@ -88,35 +88,33 @@ function vardel()
 }
 
 ### Log Dateien und Funktionen
-function log 
+function log()
 {
-    local text; local logtype; local datetime; #local logfile
-    #logfile=/opt/log.txt
-	#logfile="/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-    logtype=$1 
-    text=$2 
+    local text; local logtype; local datetime;
+    logtype="$1"
+    text="$2" 
     datetime=$(date +'%F %H:%M:%S')
 	DATEIDATUM=$(date +%d_%m_%Y)
-    ###  0 – Black    1 – Red    2 – Green    3 – Yellow    4 – Blue    5 – Magenta    6 – Cyan    7 – White
+
     if [ $LOGWRITE = "yes" ]; then
+        case $logtype in
+            logotext) 
+                echo "$text" >> /$STARTVERZEICHNIS/"$DATEIDATUM"-multitool.log ;;
+            text)
+                echo "$datetime TEXT: $text" >> /$STARTVERZEICHNIS/"$DATEIDATUM"-multitool.log ;;
+            debug)
+                echo "$datetime DEBUG: $text" >> /$STARTVERZEICHNIS/"$DATEIDATUM"-multitool.log ;;
+            info)
+                echo "$datetime INFO: $text" >> /$STARTVERZEICHNIS/"$DATEIDATUM"-multitool.log ;;
+            warn)
+                echo "$datetime WARNING: $text" >> /$STARTVERZEICHNIS/"$DATEIDATUM"-multitool.log ;;
+            error)
+                echo "$datetime ERROR: $text" >> /$STARTVERZEICHNIS/"$DATEIDATUM"-multitool.log ;;
+            *) 
+                return 0 ;;
+        esac
+    fi
     case $logtype in
-		logotext) echo "$2" >> /$STARTVERZEICHNIS/"$DATEIDATUM"-multitool.log ;;
-        text)
-            echo "$(tput setaf $textfontcolor) $(tput setab $textbaggroundcolor) $datetime TEXT: $text $(tput sgr 0)" & echo "$datetime TEXT: $2" >> /$STARTVERZEICHNIS/"$DATEIDATUM"-multitool.log ;;
-        debug)
-            echo "$(tput setaf $debugfontcolor) $(tput setab $debugbaggroundcolor) $datetime DEBUG: $text $(tput sgr 0)" & echo "$datetime DEBUG: $2" >> /$STARTVERZEICHNIS/"$DATEIDATUM"-multitool.log ;;
-        info)
-            echo "$(tput setaf $infofontcolor) $(tput setab $infobaggroundcolor) $datetime INFO: $text $(tput sgr 0)" & echo "$datetime INFO: $2" >> /$STARTVERZEICHNIS/"$DATEIDATUM"-multitool.log ;;
-        warn)
-            echo "$(tput setaf $warnfontcolor) $(tput setab $warnbaggroundcolor) $datetime WARNING: $text $(tput sgr 0)" & echo "$datetime WARNING: $2" >> /$STARTVERZEICHNIS/"$DATEIDATUM"-multitool.log ;;
-        error)
-            echo "$(tput setaf $errorfontcolor) $(tput setab $errorbaggroundcolor) $datetime ERROR: $text $(tput sgr 0)" & echo "$datetime ERROR: $2" >> /$STARTVERZEICHNIS/"$DATEIDATUM"-multitool.log ;;
-		*) 
-			return 0 ;; # echo "Fehlerhafte Auswahl" return 0 ;;
-    esac
-    else
-    case $logtype in
-		logotext) echo "$2" ;;
         text)
             echo "$(tput setaf $textfontcolor) $(tput setab $textbaggroundcolor) $datetime TEXT: $text $(tput sgr 0)" ;;
         debug)
@@ -128,10 +126,9 @@ function log
         error)
             echo "$(tput setaf $errorfontcolor) $(tput setab $errorbaggroundcolor) $datetime ERROR: $text $(tput sgr 0)" ;;
 		*) 
-			return 0 ;; # echo "Fehlerhafte Auswahl" return 0 ;;
+			return 0 ;;
     esac
-	return 0
-    fi
+
 	return 0
 }
 
@@ -432,12 +429,6 @@ function makeregionsliste()
 	return 0
 }
 
-### Funktion zum abfragen von mySQL Datensaetzen: mymysql "mysqlcommand"
-function mymysql()
-{
-    mysqlcommand=$1
-    result_mymysql=$(echo "$mysqlcommand;" | MYSQL_PWD=$password mysql -u$username $databasename -N) 2> /dev/null    
-}
 ### Funktion zum abfragen von mySQL Datensaetzen: mymysql "username" "password" "databasename" "mysqlcommand"
 function mysqlrest()
 {
@@ -3102,7 +3093,7 @@ function menucreateuser()
 
 # Datenbank Befehle Achtung alles noch nicht ausgereift!!!
 
-### function db_anzeigen, listt alle erstellten Datenbanken auf.
+### function db_anzeigen, listet alle erstellten Datenbanken auf.
 function db_anzeigen()
 {
 	DBBENUTZER=$1; DBPASSWORT=$2;
@@ -3116,6 +3107,17 @@ function db_anzeigen()
 	# Eingabe Variablen löschen
 	unset DBBENUTZER
 	unset DBPASSWORT
+
+	return 0
+}
+### function db_anzeigen2, listet alle erstellten Datenbanken auf.
+function db_anzeigen2()
+{
+	username=$1; password=$2; databasename=$3;
+
+	log text "PRINT DATABASE: Alle Datenbanken anzeigen."
+	mysqlrest "$username" "$password" "$databasename" "show databases"
+	log info "$result_mysqlrest"
 
 	return 0
 }
@@ -5440,9 +5442,10 @@ case  $KOMMANDO  in
 	rologdel) rologdel ;;
 	osgridcopy) osgridcopy ;;
 	screenlistrestart) screenlistrestart ;;
+	db_anzeigen2) db_anzeigen2 "$2" "$3" "$4" ;;
 	test) test ;;
 	*) hauptmenu ;;
 esac
-log info "###########ENDE################"
 vardel
-printf "\n\n"
+#log info "###########ENDE################"
+exit 0

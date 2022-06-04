@@ -1,4 +1,4 @@
-### Einstellungen VERSION V0.77.386
+### Einstellungen VERSION V0.77.387
 
 ## Das Startverzeichnis home oder opt zum Beispiel.
 	STARTVERZEICHNIS="opt"
@@ -42,7 +42,7 @@
 	warnbaggroundcolor=0
 
 	errorfontcolor=1
-	errorbaggroundcolor=7
+	errorbaggroundcolor=0
 	
 ## Dateien
 	REGIONSDATEI="RegionList.ini"
@@ -53,11 +53,11 @@
 
 	LOGDELETE="yes" # yes/no
 	LOGWRITE="yes" # yes/no
-	DEBUGLOG="no" # yes/no
+	#DEBUGLOG="no" # yes/no
 	#Set log level
-	loglevel=0 #text:0; debug:1; info:2; warn:3; error:4
+	#loglevel=0 #text:0; debug:1; info:2; warn:3; error:4
 	# Name und speicherort der Logdatei.
-	logfile="/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+	#logfile="/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 	
 
 ## Inklusive
@@ -86,16 +86,13 @@
 	SETULIMITON="yes"
 	SETMONOGCPARAMSON1="no"
 	SETMONOGCPARAMSON2="yes"
-	SETMANUALPAGES="yes"
+	#SETMANUALPAGES="yes"
 
 ## Divers
 	SETOSCOMPION="no" # Mit oder ohne log Datei kompilieren. yes oder no.
 	SETAOTON="no"
 	# opensim-0.9.2.2Dev-4-g5e9b3b4.zip
 	OSVERSION="opensim-0.9.2.2Dev-"
-
-## Farben Color
-	OMCOLORSET="f" # "sw" Schwarzweiss oder "f" Farbe
 
 ## OpenSim Downloads
 	LINK01="http://opensimulator.org/dist/OpenSim-LastAutoBuild.zip"
