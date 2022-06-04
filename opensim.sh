@@ -43,8 +43,6 @@ function dummyvar()
 	MONEYZIP="OpenSimCurrencyServer-2021-master.zip" OSVERSION="opensim-0.9.2.2Dev"	REGIONSDATEI="RegionList.ini" SIMDATEI="SimulatorList.ini" WARTEZEIT=30 STARTWARTEZEIT=10 STOPWARTEZEIT=30 MONEYWARTEZEIT=60 ROBUSTWARTEZEIT=60
 	BACKUPWARTEZEIT=120 AUTOSTOPZEIT=60 SETMONOTHREADS=800 SETMONOTHREADSON="yes" OPENSIMDOWNLOAD="http://opensimulator.org/dist/" OPENSIMVERSION="opensim-0.9.2.2.zip" SEARCHADRES="icanhazip.com" AUTOCONFIG="no" 
 	CONFIGURESOURCE="opensim-configuration-addon-modul-main" CONFIGUREZIP="opensim-configuration-addon-modul-main.zip" 
-	# Alte Farbe
-	COLOR1=1; COLOR2=2; COLOR3=3; COLOR5=5; BCOLOR1=1;	BCOLOR2=2;	BCOLOR3=3;	BCOLOR4=4;	BCOLOR5=5; BCOLOR7=7; OMCOFF=0; BCOLOR0;
 	# neue Farbe
 	textfontcolor=7;	textbaggroundcolor=0;	debugfontcolor=4;	debugbaggroundcolor=0;	infofontcolor=2;	infobaggroundcolor=0;	warnfontcolor=3;	warnbaggroundcolor=0;
 	errorfontcolor=1;	errorbaggroundcolor=0;	SETMONOGCPARAMSON1="no"; SETMONOGCPARAMSON2="yes";	LOGDELETE="no";	LOGWRITE="no";
@@ -2094,7 +2092,7 @@ function osgitholen()
 {
 	if [ -d /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/ ]
 	then
-		echo "$(tput setaf $COLOR1) $(tput setaf $BCOLOR7)Kopieren der Entwicklungsversion des OpenSimulator aus dem Git$(tput sgr $OMCOFF)"
+		echo "$(tput setaf 1) $(tput setaf 7)Kopieren der Entwicklungsversion des OpenSimulator aus dem Git$(tput sgr 0)"
 		log info "##############################"
 		cd /$STARTVERZEICHNIS  || return 1
 		rm -r /$STARTVERZEICHNIS/opensim1
@@ -2102,7 +2100,7 @@ function osgitholen()
         git clone git://opensimulator.org/git/opensim opensim
 		log info "OPENSIMHOLEN: Git klonen"
 	else
-		echo "$(tput setaf $COLOR1) $(tput setaf $BCOLOR7)Kopieren der Entwicklungsversion des OpenSimulator aus dem Git$(tput sgr $OMCOFF)"
+		echo "$(tput setaf 1) $(tput setaf 7)Kopieren der Entwicklungsversion des OpenSimulator aus dem Git$(tput sgr 0)"
 		log info "##############################"
 		log info "Kopieren der Entwicklungsversion des OpenSimulator aus dem Git"
 		git clone git://opensimulator.org/git/opensim opensim
@@ -3145,14 +3143,14 @@ function create_db()
 {
 	DBBENUTZER=$1; DBPASSWORT=$2; DATENBANKNAME=$3;
 
-	echo "$(tput setaf $COLOR5)CREATE DATABASE: Datenbanken anlegen. $(tput sgr0)"
+	echo "$(tput setaf 5)CREATE DATABASE: Datenbanken anlegen. $(tput sgr0)"
 	echo "$DATUM $(date +%H:%M:%S) CREATE DATABASE: Datenbanken anlegen" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 	echo "$DBBENUTZER, ********, $DATENBANKNAME" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 
 	# 2>/dev/null verhindert die Fehlerausgabe - mysql warning using a password on the command line interface can be insecure. disable.
 	mysql -u"$DBBENUTZER" -p"$DBPASSWORT" -e "CREATE DATABASE IF NOT EXISTS $DATENBANKNAME CHARACTER SET utf8 COLLATE utf8_general_ci" 2>/dev/null
 
-	echo "$(tput setaf $COLOR5)CREATE DATABASE: Datenbanken $DATENBANKNAME wurde angelegt. $(tput sgr0)"
+	echo "$(tput setaf 5)CREATE DATABASE: Datenbanken $DATENBANKNAME wurde angelegt. $(tput sgr0)"
 	echo "$DATUM $(date +%H:%M:%S) CREATE DATABASE: Datenbanken $DATENBANKNAME wurde angelegt" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 
 	# Eingabe Variablen löschen
@@ -3168,7 +3166,7 @@ function create_db_user()
 {
 	DBBENUTZER=$1; DBPASSWORT=$2; NEUERNAME=$3; NEUESPASSWORT=$4;
 
-	echo "$(tput setaf $COLOR5)CREATE DATABASE USER: Datenbankbenutzer anlegen. $(tput sgr0)"
+	echo "$(tput setaf 5)CREATE DATABASE USER: Datenbankbenutzer anlegen. $(tput sgr0)"
 	echo "$DATUM $(date +%H:%M:%S) CREATE DATABASE USER: Datenbankbenutzer anlegen" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 	echo "$DBBENUTZER, ********, $NEUERNAME, ********" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 
@@ -3190,7 +3188,7 @@ function delete_db()
 {
 	DBBENUTZER=$1; DBPASSWORT=$2; DATENBANKNAME=$3;
 
-	echo "$(tput setaf $COLOR5)DELETE DATABASE: Datenbank löschen. $(tput sgr0)"
+	echo "$(tput setaf 5)DELETE DATABASE: Datenbank löschen. $(tput sgr0)"
 	echo "$DATUM $(date +%H:%M:%S) DELETE DATABASE: Datenbank löschen" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 
 	echo "$DBBENUTZER, ********, $DATENBANKNAME" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
@@ -3210,7 +3208,7 @@ function leere_db()
 {
 	DBBENUTZER=$1; DBPASSWORT=$2; DATENBANKNAME=$3;
 
-	echo "$(tput setaf $COLOR5)EMPTY DATABASE: Datenbank leeren. $(tput sgr0)"
+	echo "$(tput setaf 5)EMPTY DATABASE: Datenbank leeren. $(tput sgr0)"
 	echo "$DATUM $(date +%H:%M:%S) EMPTY DATABASE: Datenbank leeren" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 
 	# 2>/dev/null verhindert die Fehlerausgabe - mysql warning using a password on the command line interface can be insecure. disable.
@@ -3257,15 +3255,15 @@ function allrepair_db()
 ### function mysql_neustart, startet mySQL neu.
 function mysql_neustart()
 {
-	echo "$(tput setaf $COLOR5)MYSQL RESTART: MySQL Neu starten. $(tput sgr0)"
+	echo "$(tput setaf 5)MYSQL RESTART: MySQL Neu starten. $(tput sgr0)"
 	echo "$DATUM $(date +%H:%M:%S) MYSQL RESTART: MySQL Neu starten" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 
-	echo "$(tput setaf $COLOR1)MYSQL RESTART: Stoppen. $(tput sgr0)"
+	echo "$(tput setaf 1)MYSQL RESTART: Stoppen. $(tput sgr0)"
 	service mysql stop
 	sleep 2
-	echo "$(tput setaf $COLOR2)MYSQL RESTART: Starten. $(tput sgr0)"
+	echo "$(tput setaf 2)MYSQL RESTART: Starten. $(tput sgr0)"
 	service mysql start
-	echo "$(tput setaf $COLOR5)MYSQL RESTART: Fertig. $(tput sgr0)"
+	echo "$(tput setaf 5)MYSQL RESTART: Fertig. $(tput sgr0)"
 
 	return 0
 }
@@ -3275,13 +3273,13 @@ function db_sichern()
 {
 	DBBENUTZER=$1; DBPASSWORT=$2; DATENBANKNAME=$3;
 
-	echo "$(tput setaf $COLOR5)SAVE DATABASE: Datenbank $DATENBANKNAME sichern. $(tput sgr0)"
+	echo "$(tput setaf 5)SAVE DATABASE: Datenbank $DATENBANKNAME sichern. $(tput sgr0)"
 	echo "$DATUM $(date +%H:%M:%S) SAVE DATABASE: Datenbank $DATENBANKNAME sichern" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 
 	# 2>/dev/null verhindert die Fehlerausgabe - mysql warning using a password on the command line interface can be insecure. disable.
 	mysqldump -u"$DBBENUTZER" -p"$DBPASSWORT" "$DATENBANKNAME" > /$STARTVERZEICHNIS/"$DATENBANKNAME".sql 2>/dev/null
 
-	echo "$(tput setaf $COLOR5)SAVE DATABASE: Im Hintergrund wird die Datenbank $DATENBANKNAME jetzt gesichert. $(tput sgr0)"
+	echo "$(tput setaf 5)SAVE DATABASE: Im Hintergrund wird die Datenbank $DATENBANKNAME jetzt gesichert. $(tput sgr0)"
 	echo "$DATUM $(date +%H:%M:%S) SAVE DATABASE: Im Hintergrund wird die Datenbank $DATENBANKNAME jetzt gesichert" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 
 	# Eingabe Variablen löschen
@@ -3358,10 +3356,142 @@ USE $DATENBANKNAME
 UPDATE userprofile SET profilePartner = '$NEUERPARTNER' WHERE userprofile.useruuid = '$AVATARUUID'
 MEIN_ABFRAGE_ENDE
 
-	echo "$(tput setaf $COLOR5)SETPARTNER: $NEUERPARTNER ist jetzt Partner von $AVATARUUID. $(tput sgr0)"
+	echo "$(tput setaf 5)SETPARTNER: $NEUERPARTNER ist jetzt Partner von $AVATARUUID. $(tput sgr0)"
 	echo "$DATUM $(date +%H:%M:%S) SETPARTNER: $NEUERPARTNER ist jetzt Partner von $AVATARUUID" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 	return 0
 }
+
+########### Neu ab 04.06.2022
+
+# Test:
+
+### Daten von allen Benutzern anzeigen: db_all_user "username" "password" "databasename"
+function db_all_user()
+{
+	username=$1; password=$2; databasename=$3;
+	echo "Daten von allen Benutzern anzeigen:"
+	echo " "
+	mysqlrest "SELECT * FROM UserAccounts" # Alles holen und in die Variable result_mysqlrest schreiben.
+	echo "$result_mysqlrest" # Alles einfach ohne auswertung anzeigen.
+}
+
+### UUID von allen Benutzern anzeigen: db_all_uuid "username" "password" "databasename"
+function db_all_uuid()
+{
+	username=$1; password=$2; databasename=$3;
+	echo "UUID von allen Benutzern anzeigen:"
+	echo " "
+	mysqlrest "SELECT PrincipalID FROM UserAccounts"
+	echo "$result_mysqlrest"
+}
+
+###  Alle Namen anzeigen: db_all_name "username" "password" "databasename"
+function db_all_name()
+{
+	username=$1; password=$2; databasename=$3;
+	echo "Vor- und Zuname von allen Benutzern anzeigen:"
+	echo " "
+	mysqlrest "SELECT FirstName, LastName FROM UserAccounts"
+	echo "$result_mysqlrest"
+}
+
+### Daten von einem Benutzer anzeigen: db_user_data "username" "password" "databasename" "firstname" "lastname"
+function db_user_data()
+{
+	username=$1; password=$2; databasename=$3; firstname=$4; lastname=$5;
+	echo "Daten von einem Benutzer anzeigen:"
+	echo " "
+	mysqlrest "SELECT * FROM UserAccounts WHERE firstname='$firstname' AND lastname LIKE '$lastname'"
+	echo "$result_mysqlrest"
+}
+
+### UUID Vor- und Nachname sowie E-Mail Adresse von einem Benutzer anzeigen: db_user_infos "username" "password" "databasename" "firstname" "lastname"
+function db_user_infos()
+{
+	username=$1; password=$2; databasename=$3; firstname=$4; lastname=$5;
+	echo "UUID Vor- und Nachname sowie E-Mail Adresse von einem Benutzer anzeigen:"
+	echo " "
+	firstname="Manfred"; lastname="Aabye"
+	mysqlrest "SELECT PrincipalID, FirstName, LastName, Email FROM UserAccounts WHERE firstname='$firstname' AND lastname LIKE '$lastname'"
+	echo "$result_mysqlrest"
+}
+
+### UUID von einem Benutzer anzeigen: db_user_uuid
+function db_user_uuid()
+{
+	username=$1; password=$2; databasename=$3; firstname=$4; lastname=$5;
+	echo "UUID von einem Benutzer anzeigen:"
+	echo " "
+	mysqlrest "SELECT PrincipalID FROM UserAccounts WHERE FirstName='$firstname' AND LastName='$lastname'"
+	echo "$result_mysqlrest"
+}
+
+### Alles vom inventoryfolders type des User: db_foldertyp_user "username" "password" "databasename" "firstname" "lastname" "foldertyp"
+function db_foldertyp_user()
+{
+	username=$1; password=$2; databasename=$3; firstname=$4; lastname=$5; foldertyp=$6
+	echo "Alles vom inventoryfolders type des User:"
+	echo " "
+	mysqlrest "SELECT PrincipalID FROM UserAccounts WHERE FirstName='$firstname' AND LastName='$lastname'"
+	user_uuid="$result_mysqlrest"
+	#mysqlrest "SELECT * FROM inventoryfolders WHERE (type='8' OR type='9') AND agentID='$user_uuid'"
+	mysqlrest "SELECT * FROM inventoryfolders WHERE (type='$foldertyp') AND agentID='$user_uuid'"
+	echo "$result_mysqlrest"
+}
+
+### Alles vom inventoryfolders was type -1 des User: db_all_userfailed "username" "password" "databasename" "firstname" "lastname"
+function db_all_userfailed()
+{
+	username=$1; password=$2; databasename=$3; firstname=$4; lastname=$5;
+	echo "Alles vom inventoryfolders was type != -1 des User:"
+	echo " "
+	mysqlrest "SELECT PrincipalID FROM UserAccounts WHERE FirstName='$firstname' AND LastName='$lastname'"
+	uf_user_uuid="$result_mysqlrest"
+	mysqlrest "SELECT * FROM inventoryfolders WHERE type != '-1' AND agentID='$uf_user_uuid'"
+	echo "$result_mysqlrest"
+}
+
+### Zeige Erstellungsdatum eines Users an: db_userdate "username" "password" "databasename" "firstname" "lastname"
+function db_userdate()
+{
+	username=$1; password=$2; databasename=$3; firstname=$4; lastname=$5;
+	echo "Zeige Erstellungsdatum eines Users an:"
+	echo " "
+	mysqlrest "SELECT Created FROM UserAccounts WHERE firstname='$firstname' AND lastname LIKE '$lastname'"
+	#unix timestamp konvertieren in das Deutsche Datumsformat.
+	userdatum=$(date +%d.%m.%Y -d @"$result_mysqlrest")
+	echo "Der Benutzer $firstname $lastname wurde am $userdatum angelegt."
+}
+
+### Finde offensichtlich falsche E-Mail Adressen der User: db_false_email "username" "password" "databasename"
+function db_false_email()
+{
+	username=$1; password=$2; databasename=$3; ausnahmefirstname="GRID"; ausnahmelastname="SERVICES"
+	echo "Finde offensichtlich falsche E-Mail Adressen der User ausser von $ausnahmefirstname $ausnahmelastname."
+	echo " "
+	mysqlrest "SELECT PrincipalID, FirstName, LastName, Email FROM UserAccounts WHERE Email NOT LIKE '%_@__%.__%'AND NOT firstname='$ausnahmefirstname' AND NOT lastname='$ausnahmelastname'"
+	echo "$result_mysqlrest"
+}
+
+### Einen User in der Datenbank erstellen und das ohne Inventar (Gut fuer Picker): set_empty_user "username" "password" "databasename" "firstname" "lastname" "email"
+function set_empty_user()
+{
+	username=$1; password=$2; databasename=$3; firstname=$4; lastname=$5; email=$5
+	newPrincipalID=uuidgen
+	newScopeID="00000000-0000-0000-0000-000000000000"
+	newFirstName="$firstname"
+	newLastName="$lastname"
+	newEmail="$email"
+	newServiceURLs="omeURI= InventoryServerURI= AssetServerURI="
+	newCreated=$(date +%s)
+	newUserLevel="0"
+	newUserFlags="0"
+	newUserTitle=""
+	newactive="1"
+	mysqlrest "INSERT INTO UserAccounts (PrincipalID, ScopeID, FirstName, LastName, Email, ServiceURLs, Created, UserLevel, UserFlags, UserTitle, active) VALUES ('$newPrincipalID', '$newScopeID', '$newFirstName', '$newLastName', '$newEmail', '$newServiceURLs', '$newCreated', '$newUserLevel', '$newUserFlags', '$newUserTitle', '$newactive')"
+}
+
+########### Neu ab 04.06.2022 Ende
 
 ### function conf_write, Konfiguration schreiben ersatz für alle UNGETESTETEN ini Funktionen.
 # ./opensim.sh conf_write Einstellung NeuerParameter Verzeichnis Dateiname
@@ -3453,7 +3583,7 @@ function mysqleinstellen()
 # In Arbeit
 function neuegridconfig()
 {
-	echo "$(tput setaf $COLOR2)NEUEGRIDCONFIG: Konfigurationsdateien holen und in das ExampleConfig Verzeichnis kopieren. $(tput sgr0)"
+	echo "$(tput setaf 2)NEUEGRIDCONFIG: Konfigurationsdateien holen und in das ExampleConfig Verzeichnis kopieren. $(tput sgr0)"
 	echo "$DATUM $(date +%H:%M:%S) NEUEGRIDCONFIG: Konfigurationsdateien holen und in das ExampleConfig Verzeichnis kopieren" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 
 	cd /$STARTVERZEICHNIS || exit
@@ -3475,7 +3605,7 @@ function ipsetzen()
 	cd /"$STARTVERZEICHNIS/ExampleConfig" || return 1 # gibt es das ExampleConfig Verzeichnis wenn nicht abbruch.
 
 	EINGABEIP=""
-	echo "$(tput setaf $COLOR2)IPSETZEN: Bitte geben Sie ihre externe IP ein oder drücken sie Enter für $(tput sgr0) $AKTUELLEIP"
+	echo "$(tput setaf 2)IPSETZEN: Bitte geben Sie ihre externe IP ein oder drücken sie Enter für $(tput sgr0) $AKTUELLEIP"
 	
 	# Eingabe einlesen in Variable EINGABEIP
 	read -r EINGABEIP 
@@ -4554,11 +4684,11 @@ function autoconfig()
 ### Funktion info, Informationen auf den Bildschirm ausgeben.
 function info()
 {
-	echo "$(tput setab $BCOLOR4) Server Name: ${HOSTNAME}"
+	echo "$(tput setab 4) Server Name: ${HOSTNAME}"
 	echo " Bash Version: ${BASH_VERSION}"
 	echo " Server IP: ${AKTUELLEIP}"
 	echo " MONO THREAD Einstellung: ${MONO_THREADS_PER_CPU}"
-	echo " Spracheinstellung: ${LANG} $(tput sgr $OMCOFF)"
+	echo " Spracheinstellung: ${LANG} $(tput sgr 0)"
 	echo " Screen Version: $(screen --version)"
 	who -b
 	return 0
@@ -4676,96 +4806,96 @@ function menukonsolenhilfe()
 ### Funktion hilfe, Hilfe auf dem Bildschirm anzeigen.
 function hilfe()
 {
-echo "$(tput setab $BCOLOR5)Funktion:$(tput sgr $OMCOFF)		$(tput setab $BCOLOR2)Parameter:$(tput sgr $OMCOFF)		$(tput setab $BCOLOR4)Informationen:$(tput sgr $OMCOFF)"
-	echo "hilfe 			- $(tput setaf $COLOR3)hat keine Parameter$(tput sgr $OMCOFF)	- Diese Hilfe."
-	echo "konsolenhilfe 		- $(tput setaf $COLOR3)hat keine Parameter$(tput sgr $OMCOFF)	- konsolenhilfe ist eine Hilfe für Putty oder Xterm."	
-	echo "commandhelp 		- $(tput setaf $COLOR3)hat keine Parameter$(tput sgr $OMCOFF)	- Die OpenSim Commands."
-	echo "restart 		- $(tput setaf $COLOR3)hat keine Parameter$(tput sgr $OMCOFF)	- Startet das gesamte Grid neu."
-	echo "autostop 		- $(tput setaf $COLOR3)hat keine Parameter$(tput sgr $OMCOFF)	- Stoppt das gesamte Grid."
-	echo "autostart 		- $(tput setaf $COLOR3)hat keine Parameter$(tput sgr $OMCOFF)	- Startet das gesamte Grid."
-	echo "works 			- $(tput setab $BCOLOR5)Verzeichnisname$(tput sgr $OMCOFF)	- Einzelne screens auf Existenz prüfen."
-	echo "osstart 		- $(tput setab $BCOLOR5)Verzeichnisname$(tput sgr $OMCOFF)	- Startet einen einzelnen Simulator."
-	echo "osstop 			- $(tput setab $BCOLOR5)Verzeichnisname$(tput sgr $OMCOFF)	- Stoppt einen einzelnen Simulator."
-	echo "meineregionen 		- $(tput setaf $COLOR3)hat keine Parameter$(tput sgr $OMCOFF)   - listet alle Regionen aus den Konfigurationen auf."
-	echo "autologdel		- $(tput setaf $COLOR3)hat keine Parameter$(tput sgr $OMCOFF)	- Löscht alle Log Dateien."
-	echo "automapdel		- $(tput setaf $COLOR3)hat keine Parameter$(tput sgr $OMCOFF)	- Löscht alle Map Karten."
+echo "$(tput setab 5)Funktion:$(tput sgr 0)		$(tput setab 2)Parameter:$(tput sgr 0)		$(tput setab 4)Informationen:$(tput sgr 0)"
+	echo "hilfe 			- $(tput setaf 3)hat keine Parameter$(tput sgr 0)	- Diese Hilfe."
+	echo "konsolenhilfe 		- $(tput setaf 3)hat keine Parameter$(tput sgr 0)	- konsolenhilfe ist eine Hilfe für Putty oder Xterm."	
+	echo "commandhelp 		- $(tput setaf 3)hat keine Parameter$(tput sgr 0)	- Die OpenSim Commands."
+	echo "restart 		- $(tput setaf 3)hat keine Parameter$(tput sgr 0)	- Startet das gesamte Grid neu."
+	echo "autostop 		- $(tput setaf 3)hat keine Parameter$(tput sgr 0)	- Stoppt das gesamte Grid."
+	echo "autostart 		- $(tput setaf 3)hat keine Parameter$(tput sgr 0)	- Startet das gesamte Grid."
+	echo "works 			- $(tput setab 5)Verzeichnisname$(tput sgr 0)	- Einzelne screens auf Existenz prüfen."
+	echo "osstart 		- $(tput setab 5)Verzeichnisname$(tput sgr 0)	- Startet einen einzelnen Simulator."
+	echo "osstop 			- $(tput setab 5)Verzeichnisname$(tput sgr 0)	- Stoppt einen einzelnen Simulator."
+	echo "meineregionen 		- $(tput setaf 3)hat keine Parameter$(tput sgr 0)   - listet alle Regionen aus den Konfigurationen auf."
+	echo "autologdel		- $(tput setaf 3)hat keine Parameter$(tput sgr 0)	- Löscht alle Log Dateien."
+	echo "automapdel		- $(tput setaf 3)hat keine Parameter$(tput sgr 0)	- Löscht alle Map Karten."
 
-echo "$(tput setab $BCOLOR3)Erweiterte Funktionen$(tput sgr $OMCOFF)"
-	echo "regionbackup 		- $(tput setab $BCOLOR5)Verzeichnisname$(tput sgr $OMCOFF) $(tput setab $BCOLOR4)Regionsname$(tput sgr $OMCOFF) - Backup einer ausgewählten Region."
-	echo "assetdel 		- $(tput setab $BCOLOR5)screen_name$(tput sgr $OMCOFF) $(tput setab $BCOLOR4)Regionsname$(tput sgr $OMCOFF) $(tput setab $BCOLOR2)Objektname$(tput sgr $OMCOFF) - Einzelnes Asset löschen."
-	echo "oscommand 		- $(tput setab $BCOLOR5)Verzeichnisname$(tput sgr $OMCOFF) $(tput setab $BCOLOR3)Region$(tput sgr $OMCOFF) $(tput setab $BCOLOR4)Konsolenbefehl Parameter$(tput sgr $OMCOFF) - Konsolenbefehl senden."
-	echo "gridstart 		- $(tput setaf $COLOR3)hat keine Parameter$(tput sgr $OMCOFF) - Startet Robust und Money. "
-	echo "gridstop 		- $(tput setaf $COLOR3)hat keine Parameter$(tput sgr $OMCOFF) - Beendet Robust und Money. "
-	echo "rostart 		- $(tput setaf $COLOR3)hat keine Parameter$(tput sgr $OMCOFF) - Startet Robust Server."
-	echo "rostop 			- $(tput setaf $COLOR3)hat keine Parameter$(tput sgr $OMCOFF) - Stoppt Robust Server."
-	echo "mostart 		- $(tput setaf $COLOR3)hat keine Parameter$(tput sgr $OMCOFF) - Startet Money Server."
-	echo "mostop 			- $(tput setaf $COLOR3)hat keine Parameter$(tput sgr $OMCOFF) - Stoppt Money Server."
-	echo "autosimstart 		- $(tput setaf $COLOR3)hat keine Parameter$(tput sgr $OMCOFF) - Startet alle Regionen."
-	echo "autosimstop 		- $(tput setaf $COLOR3)hat keine Parameter$(tput sgr $OMCOFF) - Beendet alle Regionen. "
-	echo "autoscreenstop		- $(tput setaf $COLOR3)hat keine Parameter$(tput sgr $OMCOFF) - Killt alle OpenSim Screens."
-	echo "logdel 			- $(tput setab $BCOLOR5)Verzeichnisname$(tput sgr $OMCOFF)     - Löscht alle Simulator Log Dateien im Verzeichnis."
-	echo "mapdel 			- $(tput setab $BCOLOR5)Verzeichnisname$(tput sgr $OMCOFF)     - Löscht alle Simulator Map-Karten im Verzeichnis."
-	echo "settings 		- $(tput setaf $COLOR3)hat keine Parameter$(tput sgr $OMCOFF) - setzt Linux Einstellungen."
-	echo "configlesen 		- $(tput setab $BCOLOR5)Verzeichnisname$(tput sgr $OMCOFF)     - Alle Regionskonfigurationen im Verzeichnis anzeigen."
+echo "$(tput setab 3)Erweiterte Funktionen$(tput sgr 0)"
+	echo "regionbackup 		- $(tput setab 5)Verzeichnisname$(tput sgr 0) $(tput setab 4)Regionsname$(tput sgr 0) - Backup einer ausgewählten Region."
+	echo "assetdel 		- $(tput setab 5)screen_name$(tput sgr 0) $(tput setab 4)Regionsname$(tput sgr 0) $(tput setab 2)Objektname$(tput sgr 0) - Einzelnes Asset löschen."
+	echo "oscommand 		- $(tput setab 5)Verzeichnisname$(tput sgr 0) $(tput setab 3)Region$(tput sgr 0) $(tput setab 4)Konsolenbefehl Parameter$(tput sgr 0) - Konsolenbefehl senden."
+	echo "gridstart 		- $(tput setaf 3)hat keine Parameter$(tput sgr 0) - Startet Robust und Money. "
+	echo "gridstop 		- $(tput setaf 3)hat keine Parameter$(tput sgr 0) - Beendet Robust und Money. "
+	echo "rostart 		- $(tput setaf 3)hat keine Parameter$(tput sgr 0) - Startet Robust Server."
+	echo "rostop 			- $(tput setaf 3)hat keine Parameter$(tput sgr 0) - Stoppt Robust Server."
+	echo "mostart 		- $(tput setaf 3)hat keine Parameter$(tput sgr 0) - Startet Money Server."
+	echo "mostop 			- $(tput setaf 3)hat keine Parameter$(tput sgr 0) - Stoppt Money Server."
+	echo "autosimstart 		- $(tput setaf 3)hat keine Parameter$(tput sgr 0) - Startet alle Regionen."
+	echo "autosimstop 		- $(tput setaf 3)hat keine Parameter$(tput sgr 0) - Beendet alle Regionen. "
+	echo "autoscreenstop		- $(tput setaf 3)hat keine Parameter$(tput sgr 0) - Killt alle OpenSim Screens."
+	echo "logdel 			- $(tput setab 5)Verzeichnisname$(tput sgr 0)     - Löscht alle Simulator Log Dateien im Verzeichnis."
+	echo "mapdel 			- $(tput setab 5)Verzeichnisname$(tput sgr 0)     - Löscht alle Simulator Map-Karten im Verzeichnis."
+	echo "settings 		- $(tput setaf 3)hat keine Parameter$(tput sgr 0) - setzt Linux Einstellungen."
+	echo "configlesen 		- $(tput setab 5)Verzeichnisname$(tput sgr 0)     - Alle Regionskonfigurationen im Verzeichnis anzeigen."
 
-echo "$(tput setab $BCOLOR1)Experten Funktionen$(tput sgr $OMCOFF)"
-	echo "osupgrade 		- $(tput setaf $COLOR3)hat keine Parameter$(tput sgr $OMCOFF) - Installiert eine neue OpenSim Version."
-	echo "autoregionbackup	- $(tput setaf $COLOR3)hat keine Parameter$(tput sgr $OMCOFF) - Backup aller Regionen."
-	echo "oscopy			- $(tput setab $BCOLOR5)Verzeichnisname$(tput sgr $OMCOFF)     - Kopiert den Simulator."
-	echo "osstruktur		- $(tput setab $BCOLOR5)ersteSIM$(tput sgr $OMCOFF) $(tput setab $BCOLOR4)letzteSIM$(tput sgr $OMCOFF)  - Legt eine Verzeichnisstruktur an."
-	echo "osprebuild		- $(tput setab $BCOLOR2)Versionsnummer$(tput sgr $OMCOFF)      - Aendert die Versionseinstellungen 0.9.2.XXXX"
-	echo "compilieren 		- $(tput setaf $COLOR3)hat keine Parameter$(tput sgr $OMCOFF) - Kopiert fehlende Dateien und Kompiliert."
-	echo "oscompi 		- $(tput setaf $COLOR3)hat keine Parameter$(tput sgr $OMCOFF) - Kompiliert einen neuen OpenSimulator ohne kopieren."
-	echo "scriptcopy 		- $(tput setaf $COLOR3)hat keine Parameter$(tput sgr $OMCOFF) - Kopiert die Scripte in den Source."
-	echo "moneycopy 		- $(tput setaf $COLOR3)hat keine Parameter$(tput sgr $OMCOFF) - Kopiert Money Source in den OpenSimulator Source."
-	echo "osdelete 		- $(tput setaf $COLOR3)hat keine Parameter$(tput sgr $OMCOFF) - Löscht alte OpenSim Version."
-	echo "regionsiniteilen 	- $(tput setab $BCOLOR5)Verzeichnisname$(tput sgr $OMCOFF) $(tput setab $BCOLOR3)Region$(tput sgr $OMCOFF) - kopiert aus der Regions.ini eine Region heraus."
-	echo "autoregionsiniteilen 	- $(tput setaf $COLOR3)hat keine Parameter$(tput sgr $OMCOFF) - aus allen Regions.ini alle Regionen vereinzeln."
-	echo "RegionListe 		- $(tput setaf $COLOR3)hat keine Parameter$(tput sgr $OMCOFF) - Die RegionList.ini erstellen."
-	echo "Regionsdateiliste 	- $(tput setab $BCOLOR4)-b Bildschirm oder -d Datei$(tput sgr $OMCOFF) $(tput setab $BCOLOR5)Verzeichnisname$(tput sgr $OMCOFF) - Regionsdateiliste erstellen."
-	echo "osgitholen 		- $(tput setaf $COLOR3)hat keine Parameter$(tput sgr $OMCOFF) - kopiert eine OpenSimulator Git Entwicklerversion."
-	echo "terminator 		- $(tput setaf $COLOR3)hat keine Parameter$(tput sgr $OMCOFF) - Killt alle laufenden Screens."
+echo "$(tput setab 1)Experten Funktionen$(tput sgr 0)"
+	echo "osupgrade 		- $(tput setaf 3)hat keine Parameter$(tput sgr 0) - Installiert eine neue OpenSim Version."
+	echo "autoregionbackup	- $(tput setaf 3)hat keine Parameter$(tput sgr 0) - Backup aller Regionen."
+	echo "oscopy			- $(tput setab 5)Verzeichnisname$(tput sgr 0)     - Kopiert den Simulator."
+	echo "osstruktur		- $(tput setab 5)ersteSIM$(tput sgr 0) $(tput setab 4)letzteSIM$(tput sgr 0)  - Legt eine Verzeichnisstruktur an."
+	echo "osprebuild		- $(tput setab 2)Versionsnummer$(tput sgr 0)      - Aendert die Versionseinstellungen 0.9.2.XXXX"
+	echo "compilieren 		- $(tput setaf 3)hat keine Parameter$(tput sgr 0) - Kopiert fehlende Dateien und Kompiliert."
+	echo "oscompi 		- $(tput setaf 3)hat keine Parameter$(tput sgr 0) - Kompiliert einen neuen OpenSimulator ohne kopieren."
+	echo "scriptcopy 		- $(tput setaf 3)hat keine Parameter$(tput sgr 0) - Kopiert die Scripte in den Source."
+	echo "moneycopy 		- $(tput setaf 3)hat keine Parameter$(tput sgr 0) - Kopiert Money Source in den OpenSimulator Source."
+	echo "osdelete 		- $(tput setaf 3)hat keine Parameter$(tput sgr 0) - Löscht alte OpenSim Version."
+	echo "regionsiniteilen 	- $(tput setab 5)Verzeichnisname$(tput sgr 0) $(tput setab 3)Region$(tput sgr 0) - kopiert aus der Regions.ini eine Region heraus."
+	echo "autoregionsiniteilen 	- $(tput setaf 3)hat keine Parameter$(tput sgr 0) - aus allen Regions.ini alle Regionen vereinzeln."
+	echo "RegionListe 		- $(tput setaf 3)hat keine Parameter$(tput sgr 0) - Die RegionList.ini erstellen."
+	echo "Regionsdateiliste 	- $(tput setab 4)-b Bildschirm oder -d Datei$(tput sgr 0) $(tput setab 5)Verzeichnisname$(tput sgr 0) - Regionsdateiliste erstellen."
+	echo "osgitholen 		- $(tput setaf 3)hat keine Parameter$(tput sgr 0) - kopiert eine OpenSimulator Git Entwicklerversion."
+	echo "terminator 		- $(tput setaf 3)hat keine Parameter$(tput sgr 0) - Killt alle laufenden Screens."
 
-echo "$(tput setab $BCOLOR1)Ungetestete oder zu testende Funktionen$(tput sgr $OMCOFF)"
-	echo "osgridcopy		- $(tput setaf $COLOR3)hat keine Parameter$(tput sgr $OMCOFF) - Automatisches kopieren aus dem opensim Verzeichniss."
-	echo "makeaot			- $(tput setaf $COLOR3)hat keine Parameter$(tput sgr $OMCOFF) - aot Dateien erstellen."
-	echo "cleanaot		- $(tput setaf $COLOR3)hat keine Parameter$(tput sgr $OMCOFF) - aot Dateien entfernen."
-	echo "monoinstall		- $(tput setaf $COLOR3)hat keine Parameter$(tput sgr $OMCOFF) - mono 6.x installation."
-	echo "installationen		- $(tput setaf $COLOR3)hat keine Parameter$(tput sgr $OMCOFF) - Linux Pakete - installationen aufisten."
-	echo "serverinstall		- $(tput setaf $COLOR3)hat keine Parameter$(tput sgr $OMCOFF) - alle benötigten Linux Pakete installieren."
-	echo "osbuilding		- $(tput setab $BCOLOR5)Versionsnummer$(tput sgr $OMCOFF) - Upgrade des OpenSimulator aus einer Source ZIP Datei."
-	echo "createuser 		- $(tput setab $BCOLOR5) Vorname $(tput sgr $OMCOFF) $(tput setab $BCOLOR4) Nachname $(tput sgr $OMCOFF) $(tput setab $BCOLOR2) Passwort $(tput sgr $OMCOFF) $(tput setab $BCOLOR3) E-Mail $(tput sgr $OMCOFF) - Grid Benutzer anlegen."
+echo "$(tput setab 1)Ungetestete oder zu testende Funktionen$(tput sgr 0)"
+	echo "osgridcopy		- $(tput setaf 3)hat keine Parameter$(tput sgr 0) - Automatisches kopieren aus dem opensim Verzeichniss."
+	echo "makeaot			- $(tput setaf 3)hat keine Parameter$(tput sgr 0) - aot Dateien erstellen."
+	echo "cleanaot		- $(tput setaf 3)hat keine Parameter$(tput sgr 0) - aot Dateien entfernen."
+	echo "monoinstall		- $(tput setaf 3)hat keine Parameter$(tput sgr 0) - mono 6.x installation."
+	echo "installationen		- $(tput setaf 3)hat keine Parameter$(tput sgr 0) - Linux Pakete - installationen aufisten."
+	echo "serverinstall		- $(tput setaf 3)hat keine Parameter$(tput sgr 0) - alle benötigten Linux Pakete installieren."
+	echo "osbuilding		- $(tput setab 5)Versionsnummer$(tput sgr 0) - Upgrade des OpenSimulator aus einer Source ZIP Datei."
+	echo "createuser 		- $(tput setab 5) Vorname $(tput sgr 0) $(tput setab 4) Nachname $(tput sgr 0) $(tput setab 2) Passwort $(tput sgr 0) $(tput setab 3) E-Mail $(tput sgr 0) - Grid Benutzer anlegen."
 log text "##############################"
-	echo "db_anzeigen	- $(tput setab $BCOLOR5) DBBENUTZER $(tput sgr $OMCOFF) $(tput setab $BCOLOR4) DBDATENBANKNAME $(tput sgr $OMCOFF) - Alle Datenbanken anzeigen."
-	echo "create_db	- $(tput setab $BCOLOR5) DBBENUTZER $(tput sgr $OMCOFF) $(tput setab $BCOLOR4) DBPASSWORT $(tput sgr $OMCOFF) $(tput setab $BCOLOR2) DATENBANKNAME $(tput sgr $OMCOFF) - Datenbank anlegen."
-	#echo "create_db_user	- $(tput setab $BCOLOR5) DBBENUTZER $(tput sgr $OMCOFF) $(tput setab $BCOLOR4) DBDATENBANKNAME $(tput sgr $OMCOFF) $(tput setab $BCOLOR2) NEUERNAME $(tput sgr $OMCOFF) $(tput setab $BCOLOR3) NEUESPASSWORT $(tput sgr $OMCOFF) - DB Benutzer anlegen."
-	echo "delete_db	- $(tput setab $BCOLOR5) DBBENUTZER $(tput sgr $OMCOFF) $(tput setab $BCOLOR4) DBPASSWORT $(tput sgr $OMCOFF) $(tput setab $BCOLOR2) DATENBANKNAME $(tput sgr $OMCOFF) - Datenbank löschen."
-	echo "leere_db	- $(tput setab $BCOLOR5) DBBENUTZER $(tput sgr $OMCOFF) $(tput setab $BCOLOR4) DBPASSWORT $(tput sgr $OMCOFF) $(tput setab $BCOLOR2) DATENBANKNAME $(tput sgr $OMCOFF) - Datenbank leeren."
-	echo "allrepair_db	- $(tput setab $BCOLOR5) DBBENUTZER $(tput sgr $OMCOFF) $(tput setab $BCOLOR4) DBPASSWORT $(tput sgr $OMCOFF) - Alle Datenbanken Reparieren und Optimieren."
-	echo "db_sichern	- $(tput setab $BCOLOR5) DBBENUTZER $(tput sgr $OMCOFF) $(tput setab $BCOLOR4) DBPASSWORT $(tput sgr $OMCOFF) $(tput setab $BCOLOR2) DATENBANKNAME $(tput sgr $OMCOFF) - Datenbank sichern."
-	echo "mysql_neustart	- $(tput setaf $COLOR3)hat keine Parameter$(tput sgr $OMCOFF) - MySQL neu starten."
+	echo "db_anzeigen	- $(tput setab 5) DBBENUTZER $(tput sgr 0) $(tput setab 4) DBDATENBANKNAME $(tput sgr 0) - Alle Datenbanken anzeigen."
+	echo "create_db	- $(tput setab 5) DBBENUTZER $(tput sgr 0) $(tput setab 4) DBPASSWORT $(tput sgr 0) $(tput setab 2) DATENBANKNAME $(tput sgr 0) - Datenbank anlegen."
+	#echo "create_db_user	- $(tput setab 5) DBBENUTZER $(tput sgr 0) $(tput setab 4) DBDATENBANKNAME $(tput sgr 0) $(tput setab 2) NEUERNAME $(tput sgr 0) $(tput setab 3) NEUESPASSWORT $(tput sgr 0) - DB Benutzer anlegen."
+	echo "delete_db	- $(tput setab 5) DBBENUTZER $(tput sgr 0) $(tput setab 4) DBPASSWORT $(tput sgr 0) $(tput setab 2) DATENBANKNAME $(tput sgr 0) - Datenbank löschen."
+	echo "leere_db	- $(tput setab 5) DBBENUTZER $(tput sgr 0) $(tput setab 4) DBPASSWORT $(tput sgr 0) $(tput setab 2) DATENBANKNAME $(tput sgr 0) - Datenbank leeren."
+	echo "allrepair_db	- $(tput setab 5) DBBENUTZER $(tput sgr 0) $(tput setab 4) DBPASSWORT $(tput sgr 0) - Alle Datenbanken Reparieren und Optimieren."
+	echo "db_sichern	- $(tput setab 5) DBBENUTZER $(tput sgr 0) $(tput setab 4) DBPASSWORT $(tput sgr 0) $(tput setab 2) DATENBANKNAME $(tput sgr 0) - Datenbank sichern."
+	echo "mysql_neustart	- $(tput setaf 3)hat keine Parameter$(tput sgr 0) - MySQL neu starten."
 
-	echo "regionsabfrage	- $(tput setab $BCOLOR5) DBBENUTZER $(tput sgr $OMCOFF) $(tput setab $BCOLOR4) DBPASSWORT $(tput sgr $OMCOFF) $(tput setab $BCOLOR2) DATENBANKNAME $(tput sgr $OMCOFF) - Regionsliste."
-	echo "regionsuri	- $(tput setab $BCOLOR5) DBBENUTZER $(tput sgr $OMCOFF) $(tput setab $BCOLOR4) DBPASSWORT $(tput sgr $OMCOFF) $(tput setab $BCOLOR2) DATENBANKNAME $(tput sgr $OMCOFF) - URI prüfen sortiert nach URI."
-	echo "regionsport	- $(tput setab $BCOLOR5) DBBENUTZER $(tput sgr $OMCOFF) $(tput setab $BCOLOR4) DBPASSWORT $(tput sgr $OMCOFF) $(tput setab $BCOLOR2) DATENBANKNAME $(tput sgr $OMCOFF) - Ports prüfen sortiert nach Ports."
+	echo "regionsabfrage	- $(tput setab 5) DBBENUTZER $(tput sgr 0) $(tput setab 4) DBPASSWORT $(tput sgr 0) $(tput setab 2) DATENBANKNAME $(tput sgr 0) - Regionsliste."
+	echo "regionsuri	- $(tput setab 5) DBBENUTZER $(tput sgr 0) $(tput setab 4) DBPASSWORT $(tput sgr 0) $(tput setab 2) DATENBANKNAME $(tput sgr 0) - URI prüfen sortiert nach URI."
+	echo "regionsport	- $(tput setab 5) DBBENUTZER $(tput sgr 0) $(tput setab 4) DBPASSWORT $(tput sgr 0) $(tput setab 2) DATENBANKNAME $(tput sgr 0) - Ports prüfen sortiert nach Ports."
 
-	echo "opensimholen	- $(tput setaf $COLOR3)hat keine Parameter$(tput sgr $OMCOFF) - Lädt eine Reguläre OpenSimulator Version herunter."
-	echo "mysqleinstellen	- $(tput setaf $COLOR3)hat keine Parameter$(tput sgr $OMCOFF) - mySQL Konfiguration auf Server Einstellen und neu starten."
-	echo "conf_write	- $(tput setab $BCOLOR5) SUCHWORT $(tput sgr $OMCOFF) $(tput setab $BCOLOR4) ERSATZWORT $(tput sgr $OMCOFF) $(tput setab $BCOLOR2) PFAD $(tput sgr $OMCOFF) $(tput setab $BCOLOR3) DATEINAME $(tput sgr $OMCOFF) - Konfigurationszeile schreiben."
-	echo "conf_delete	- $(tput setab $BCOLOR5) SUCHWORT $(tput sgr $OMCOFF) $(tput setab $BCOLOR4) PFAD $(tput sgr $OMCOFF) $(tput setab $BCOLOR2) DATEINAME $(tput sgr $OMCOFF) - Konfigurationszeile löschen."
-	echo "conf_read	- $(tput setab $BCOLOR5) SUCHWORT $(tput sgr $OMCOFF) $(tput setab $BCOLOR4) PFAD $(tput sgr $OMCOFF) $(tput setab $BCOLOR2) DATEINAME $(tput sgr $OMCOFF) - Konfigurationszeile lesen."
-	echo "landclear 	- $(tput setab $BCOLOR5)screen_name$(tput sgr $OMCOFF) $(tput setab $BCOLOR4)Regionsname$(tput sgr $OMCOFF) - Land clear - Löscht alle Parzellen auf dem Land."
+	echo "opensimholen	- $(tput setaf 3)hat keine Parameter$(tput sgr 0) - Lädt eine Reguläre OpenSimulator Version herunter."
+	echo "mysqleinstellen	- $(tput setaf 3)hat keine Parameter$(tput sgr 0) - mySQL Konfiguration auf Server Einstellen und neu starten."
+	echo "conf_write	- $(tput setab 5) SUCHWORT $(tput sgr 0) $(tput setab 4) ERSATZWORT $(tput sgr 0) $(tput setab 2) PFAD $(tput sgr 0) $(tput setab 3) DATEINAME $(tput sgr 0) - Konfigurationszeile schreiben."
+	echo "conf_delete	- $(tput setab 5) SUCHWORT $(tput sgr 0) $(tput setab 4) PFAD $(tput sgr 0) $(tput setab 2) DATEINAME $(tput sgr 0) - Konfigurationszeile löschen."
+	echo "conf_read	- $(tput setab 5) SUCHWORT $(tput sgr 0) $(tput setab 4) PFAD $(tput sgr 0) $(tput setab 2) DATEINAME $(tput sgr 0) - Konfigurationszeile lesen."
+	echo "landclear 	- $(tput setab 5)screen_name$(tput sgr 0) $(tput setab 4)Regionsname$(tput sgr 0) - Land clear - Löscht alle Parzellen auf dem Land."
 
 	log text "##############################"
-	echo "loadinventar - $(tput setab $BCOLOR5)NAME VERZEICHNIS PASSWORD DATEINAMEmitPFAD $(tput sgr $OMCOFF) - lädt Inventar aus einer iar"
-	echo "saveinventar - $(tput setab $BCOLOR5)NAME VERZEICHNIS PASSWORD DATEINAMEmitPFAD $(tput sgr $OMCOFF) - speichert Inventar in einer iar"
+	echo "loadinventar - $(tput setab 5)NAME VERZEICHNIS PASSWORD DATEINAMEmitPFAD $(tput sgr 0) - lädt Inventar aus einer iar"
+	echo "saveinventar - $(tput setab 5)NAME VERZEICHNIS PASSWORD DATEINAMEmitPFAD $(tput sgr 0) - speichert Inventar in einer iar"
 
-	echo "unlockexample	- $(tput setaf $COLOR3)hat keine Parameter$(tput sgr $OMCOFF) - Benennt alle example Dateien um."
+	echo "unlockexample	- $(tput setaf 3)hat keine Parameter$(tput sgr 0) - Benennt alle example Dateien um."
 	
-	echo "passwdgenerator - $(tput setab $BCOLOR5)Passwortstärke$(tput sgr $OMCOFF) - Generiert ein Passwort zur weiteren verwendung."
+	echo "passwdgenerator - $(tput setab 5)Passwortstärke$(tput sgr 0) - Generiert ein Passwort zur weiteren verwendung."
 
 	log text "##############################"
-	echo "$(tput setaf $COLOR3)  Der Verzeichnisname ist gleichzeitig auch der Screen Name!$(tput sgr $OMCOFF)"
+	echo "$(tput setaf 3)  Der Verzeichnisname ist gleichzeitig auch der Screen Name!$(tput sgr 0)"
 
 	log info "HILFE: Hilfe wurde angefordert."
 }
@@ -4773,7 +4903,7 @@ log text "##############################"
 ### Funktion konsolenhilfe, konsolenhilfe auf dem Bildschirm anzeigen.
 function konsolenhilfe()
 {
-	echo "$(tput setab $BCOLOR5)Funktion:$(tput sgr $OMCOFF) $(tput setab $BCOLOR4)Informationen:$(tput sgr $OMCOFF)"
+	echo "$(tput setab 5)Funktion:$(tput sgr 0) $(tput setab 4)Informationen:$(tput sgr 0)"
 	echo "Tab - Dateien und Ordnernamen automatisch vervollständigen."
 	echo "Strg + W - Löscht das word vor dem Cursor."
 	echo "Strg + K - Löscht die Zeile hinter dem Cursor."
@@ -4798,24 +4928,24 @@ function konsolenhilfe()
 function commandhelp()
 {
 cat << eof
-$(tput setab $BCOLOR1)
+$(tput setab 1)
 Help OpenSim Commands:
 Aufruf: oscommand Screen Region "Befehl mit Parameter in Hochstrichen"
 Beispiel: /opt/opensim.sh oscommand sim1 Welcome "alert Hallo liebe Leute dies ist eine Nachricht"
-$(tput sgr $OMCOFF)
+$(tput sgr 0)
 
-$(tput setab $BCOLOR1)A$(tput sgr $OMCOFF)
+$(tput setab 1)A$(tput sgr 0)
 alert <Nachricht> - sendet eine Nachricht an alle.
 alert-user <Vorname> <Nachname> <Nachricht> - sendet eine Nachricht an eine bestimmte Person. 
 appearance find <uuid-oder-start-der-uuid> - herausfinden welcher Avatar das angegebene Asset als gebackene Textur verwendet, falls vorhanden.
 appearance rebake <Vorname> <Nachname> - Sendet eine Anfrage an den Viewer des Benutzers, damit er seine Aussehenstexturen neu backen und hochladen kann.
 appearance send <Vorname> <Nachname> - Sendet Aussehensdaten für jeden Avatar im Simulator an andere Viewer. 
 
-$(tput setab $BCOLOR1)B$(tput sgr $OMCOFF)
+$(tput setab 1)B$(tput sgr 0)
 backup - Das momentan nicht gespeicherte Objekt wird sofort geändert, anstatt auf den normalen Speicheraufruf zu warten.
 bypass permissions <true / false> - Berechtigungsprüfungen umgehen.
 
-$(tput setab $BCOLOR1)C$(tput sgr $OMCOFF)
+$(tput setab 1)C$(tput sgr 0)
 change region <Regionsname> - Ändere die aktuelle Region in der Konsole.
 clear image queues <Vorname> <Nachname> - Löscht die Bildwarteschlangen (über UDP heruntergeladene Texturen) für einen bestimmten Client.
 command-script <Skript> - Ausführen eines Befehlsskripts aus einer Datei.
@@ -4823,7 +4953,7 @@ config save <Pfad> - Speichert die aktuelle Konfiguration in einer Datei unter d
 config set <Sektion> <key> <value> - Legt eine Konfigurationsoption fest. Dies ist in den meisten Fällen nicht sinnvoll, da geänderte Parameter nicht dynamisch nachgeladen werden. Geänderte Parameter bleiben auch nicht bestehen - Sie müssen eine Konfigurationsdatei manuell ändern und neu starten.
 create region ["Regionsname"] <Regionsdatei.ini> - Erstellt eine neue Region. 
 
-$(tput setab $BCOLOR1)D$(tput sgr $OMCOFF)
+$(tput setab 1)D$(tput sgr 0)
 debug attachments log [0|1] - Debug Protokollierung für Anhänge aktivieren.
 debug eq [0|1|2] - Aktiviert das Debuggen der Ereigniswarteschlange.
   <= 0 - deaktiviert die gesamte Protokollierung der Ereigniswarteschlange.
@@ -4848,7 +4978,7 @@ delete-region <name> - Löschen einer Region von der Festplatte.
 dump asset <id> - Ein Asset ausgeben.
 dump object id <UUID-oder-localID> - Dump der formatierten Serialisierung des angegebenen Objekts in die Datei <UUID>.xml 
  
-$(tput setab $BCOLOR1)E$(tput sgr $OMCOFF)
+$(tput setab 1)E$(tput sgr 0)
 edit scale <name> <x> <y> <z> - Ändert die Größe des benannten Prim.
 estate create <owner UUID> <estate name> - Erstellt ein neues Anwesen mit dem angegebenen Namen, das dem angegebenen Benutzer gehört. Der Name des Anwesens muss eindeutig sein.
 estate link region <estate ID> <region ID> - Hängt die angegebene Region an die angegebene Domain an.
@@ -4856,7 +4986,7 @@ estate set name <estate-id> <new name> - Setzt den Namen des angegebenen Anwesen
 estate set owner <estate-id>[ <UUID> | <Vorname> <Nachname> ] - Setzt den Besitzer des angegebenen Anwesens auf die angegebene UUID oder den angegebenen Benutzer.
 export-map [<Pfad>] - Speichert ein Bild der Karte.
 
-$(tput setab $BCOLOR1)F$(tput sgr $OMCOFF)
+$(tput setab 1)F$(tput sgr 0)
 fcache assets - Versucht alle Assets in allen Szenen gründlich zu scannen und zwischenzuspeichern.
 fcache cachedefaultassets - lädt lokale Standardassets in den Cache. Dies kann Rasterfelder überschreiben, mit Vorsicht verwenden.
 fcache clear [file] [memory] - Entfernt alle Assets im Cache. Wenn Datei oder Speicher angegeben ist, wird nur dieser Cache geleert.
@@ -4866,16 +4996,16 @@ force gc - Ruft die Garbage Collection zur Laufzeit manuell auf. Für Debugging-
 force permissions <true / false> - Berechtigungen ein- oder ausschalten.
 force update - Erzwinge die Aktualisierung aller Objekte auf Clients.
 
-$(tput setab $BCOLOR1)G$(tput sgr $OMCOFF)
+$(tput setab 1)G$(tput sgr 0)
 generate map - Erzeugt und speichert ein neues Kartenstück.
 
-$(tput setab $BCOLOR1)J$(tput sgr $OMCOFF)
+$(tput setab 1)J$(tput sgr 0)
 j2k decode <ID> - Führt die JPEG2000 Decodierung eines Assets durch.
 
-$(tput setab $BCOLOR1)K$(tput sgr $OMCOFF)
+$(tput setab 1)K$(tput sgr 0)
 kick user <first> <last> [--force] [message] - Einen Benutzer aus dem Simulator werfen.
 
-$(tput setab $BCOLOR1)L$(tput sgr $OMCOFF)
+$(tput setab 1)L$(tput sgr 0)
 land clear - Löscht alle Parzellen aus der Region.
 link-mapping [<x> <y>] - Stellt lokale Koordinaten ein, um HG Regionen abzubilden.
 link-region <Xloc> <Yloc> <ServerURI> [<RemoteRegionName>] - Verknüpft eine HyperGrid Region.
@@ -4886,13 +5016,13 @@ load xml2 [<file name>] - Laden Sie die Daten einer Region aus dem XML2-Format.
 login disable - Simulator Logins deaktivieren.
 login enable - Simulator Logins aktivieren.
 
-$(tput setab $BCOLOR1)P$(tput sgr $OMCOFF)
+$(tput setab 1)P$(tput sgr 0)
 physics set <param> [<value>|TRUE|FALSE] [localID|ALL] - Setzt Physikparameter aus der aktuell ausgewählten Region.
 
-$(tput setab $BCOLOR1)Q$(tput sgr $OMCOFF)
+$(tput setab 1)Q$(tput sgr 0)
 quit - Beenden Sie die Anwendung.
 
-$(tput setab $BCOLOR1)R$(tput sgr $OMCOFF)
+$(tput setab 1)R$(tput sgr 0)
 region restart abort [<message>] - Einen Neustart der Region abbrechen.
 region restart bluebox <message> <delta seconds>+ - Planen eines Regionsneustart.
 region restart notice <message> <delta seconds>+ - Planen eines Neustart der Region.
@@ -4902,7 +5032,7 @@ reset user cache - Benutzercache zurücksetzen, damit geänderte Einstellungen �
 restart - Startet die aktuell ausgewählte(n) Region(en) in dieser Instanz neu.
 rotate scene <degrees> [centerX, centerY] - Dreht alle Szenenobjekte um centerX, centerY (Standard 128, 128) (bitte sichern Sie Ihre Region vor der Verwendung).
 
-$(tput setab $BCOLOR1)S$(tput sgr $OMCOFF)
+$(tput setab 1)S$(tput sgr 0)
 save iar [-h|--home=<url>] [--noassets] <first> <last> <inventory path> <password> [<IAR path>] [-c|--creators] [-e|--exclude=<name/uuid>] [-f|--excludefolder=<foldername/uuid>] [-v|--verbose] - Benutzerinventararchiv (IAR) speichern.
 save oar [-h|--home=<url>] [--noassets] [--publish] [--perm=<permissions>] [--all] [<OAR path>] - Speichert die Daten einer Region in ein OAR-Archiv.
 save prims xml2 [<prim name> <file name>] - Speichern Sie das benannte Prim in XML2
@@ -4919,7 +5049,7 @@ stand user name [--regex] <first-name> <last-name> - Nutzer zum aufstehen zwinge
 stats record start|stop - Steuert ob Statistiken regelmäßig in einer separaten Datei aufgezeichnet werden.
 stats save <path> - Statistik Snapshot in einer Datei speichern. Wenn die Datei bereits existiert, wird der Bericht angehängt.
 
-$(tput setab $BCOLOR1)T$(tput sgr $OMCOFF)
+$(tput setab 1)T$(tput sgr 0)
 teleport user <first-name> <last-name> <destination> - Teleportiert einen Benutzer in diesem Simulator zum angegebenen Ziel.
 terrain load - Lädt ein Terrain aus einer angegebenen Datei.
 terrain load-tile - Lädt ein Terrain aus einem Abschnitt einer größeren Datei.
@@ -4949,13 +5079,13 @@ tree reload - Erneutes Laden von Copse-Definitionen aus den In-Scene-Bäumen.
 tree remove - Entfert eine Wald-Definition und alle ihrer bereits gepflanzten Bäume.
 tree statistics - Log-Statistik über die Bäume.
 
-$(tput setab $BCOLOR1)U$(tput sgr $OMCOFF)
+$(tput setab 1)U$(tput sgr 0)
 unlink-region <local name> - Verknüpfung einer Hypergrid-Region aufheben
 
-$(tput setab $BCOLOR1)V$(tput sgr $OMCOFF)
+$(tput setab 1)V$(tput sgr 0)
 vivox debug <on>|<off> - Einstellen des vivox-Debuggings
 
-$(tput setab $BCOLOR1)W$(tput sgr $OMCOFF)
+$(tput setab 1)W$(tput sgr 0)
 wind base wind_update_rate [<value>] - Abrufen oder Festlegen der Windaktualisierungsrate.
 wind ConfigurableWind avgDirection [<value>] - durchschnittliche Windrichtung in Grad.
 wind ConfigurableWind avgStrength [<value>] - durchschnittliche Windstärke.
@@ -5443,6 +5573,17 @@ case  $KOMMANDO  in
 	osgridcopy) osgridcopy ;;
 	screenlistrestart) screenlistrestart ;;
 	db_anzeigen2) db_anzeigen2 "$2" "$3" "$4" ;;
+	db_all_user) db_all_user  "$2" "$3" "$4" ;;
+	db_all_uuid) db_all_uuid  "$2" "$3" "$4" ;;
+	db_all_name) db_all_name "$2" "$3" "$4" ;;
+	db_user_data) db_user_data "$2" "$3" "$4" "$5" "$6" ;;
+	db_user_infos) db_user_infos "$2" "$3" "$4" "$5" "$6" ;;
+	db_user_uuid) db_user_uuid  "$2" "$3" "$4" "$5" "$6" ;;
+	db_foldertyp_user) db_foldertyp_user "$2" "$3" "$4" "$5" "$6" "$7" ;;
+	db_all_userfailed) db_all_userfailed "$2" "$3" "$4" "$5" "$6" ;;
+	db_userdate) db_userdate "$2" "$3" "$4" "$5" "$6" ;;
+	db_false_email) db_false_email "$2" "$3" "$4" ;;
+	set_empty_user) set_empty_user "$2" "$3" "$4" "$5" "$6" "$7" ;;
 	test) test ;;
 	*) hauptmenu ;;
 esac
