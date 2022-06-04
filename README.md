@@ -220,6 +220,21 @@ Das Dateimenü wurde eingefügt um die Menüs kleiner zu gestalten.
 Unter Server Informationen ist auf einem blick alle wichtigen Infos zu sehen wie welche screens gerade laufen und mehr.
 ```
 
+Version 0.77.387
+```
+db_all_user 
+db_all_uuid 
+db_all_name
+db_user_data
+db_user_infos
+db_user_uuid
+db_foldertyp_user
+db_all_userfailed
+db_userdate
+db_false_email
+set_empty_user
+```
+
 Version 0.77.386 - Neues Log System, es kann nun in der opensim.cnf die Log Funktionen aktiviert und deaktiviert werden.
 Das Schreiben und löschen der Log´s kann nun ein- und ausgeschaltet werden. MySQL wird als nächstes eingefügt.
 
