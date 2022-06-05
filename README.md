@@ -220,6 +220,22 @@ Das Dateimenü wurde eingefügt um die Menüs kleiner zu gestalten.
 Unter Server Informationen ist auf einem blick alle wichtigen Infos zu sehen wie welche screens gerade laufen und mehr.
 ```
 
+Version 0.77.392
+```
+db_create "$2" "$3" "$4"
+db_dbuserrechte "$2" "$3" "$4"
+db_deldbuser "$2" "$3" "$4"
+db_create_new_dbuser "$2" "$3" "$4" "$5"
+db_anzeigen "$2" "$3" "$4"
+db_dbuser "$2" "$3"
+db_delete "$2" "$3" "$4"
+db_empty "$2" "$3" "$4"
+db_tables "$2" "$3" "$4"
+db_regions "$2" "$3" "$4"
+db_regionsuri "$2" "$3" "$4"
+db_regionsport "$2" "$3" "$4"
+```
+
 Version 0.77.388
 ```
 opensim.sh db_anzeigen2 mysqlbenutzer mysqlpaswd griddatabase
