@@ -220,19 +220,20 @@ Das Dateimenü wurde eingefügt um die Menüs kleiner zu gestalten.
 Unter Server Informationen ist auf einem blick alle wichtigen Infos zu sehen wie welche screens gerade laufen und mehr.
 ```
 
-Version 0.77.387
+Version 0.77.388
 ```
-db_all_user 
-db_all_uuid 
-db_all_name
-db_user_data
-db_user_infos
-db_user_uuid
-db_foldertyp_user
-db_all_userfailed
-db_userdate
-db_false_email
-set_empty_user
+opensim.sh db_anzeigen2 mysqlbenutzer mysqlpaswd griddatabase
+opensim.sh db_all_user mysqlbenutzer mysqlpaswd griddatabase
+opensim.sh db_all_uuid mysqlbenutzer mysqlpaswd griddatabase
+opensim.sh db_all_name mysqlbenutzer mysqlpaswd griddatabase
+opensim.sh db_user_data mysqlbenutzer mysqlpaswd griddatabase John Doe
+opensim.sh db_user_infos mysqlbenutzer mysqlpaswd griddatabase John Doe
+opensim.sh db_user_uuid mysqlbenutzer mysqlpaswd griddatabase John Doe
+opensim.sh db_foldertyp_user mysqlbenutzer mysqlpaswd griddatabase John Doe 1
+opensim.sh db_all_userfailed mysqlbenutzer mysqlpaswd griddatabase John Doe
+opensim.sh db_userdate mysqlbenutzer mysqlpaswd griddatabase John Doe
+opensim.sh db_false_email mysqlbenutzer mysqlpaswd griddatabase
+opensim.sh set_empty_user mysqlbenutzer mysqlpaswd griddatabase Mustafas Schokolade "schokoladenprinz@prinz.de"
 ```
 
 Version 0.77.386 - Neues Log System, es kann nun in der opensim.cnf die Log Funktionen aktiviert und deaktiviert werden.
