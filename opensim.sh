@@ -17,7 +17,7 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #### Einstellungen ####
-VERSION="V0.77.388" # opensimMULTITOOL Versionsausgabe
+VERSION="V0.77.392" # opensimMULTITOOL Versionsausgabe
 clear # Bildschirm loeschen
 
 # Alte Variablen loeschen aus eventuellen voherigen sessions
@@ -3094,27 +3094,22 @@ function menucreateuser()
 ### function db_anzeigen, listet alle erstellten Datenbanken auf.
 function db_anzeigen()
 {
-	DBBENUTZER=$1; DBPASSWORT=$2;
-
-	log text "PRINT DATABASE: Alle Datenbanken anzeigen."
-
-	# 2>/dev/null verhindert die Fehlerausgabe - mysql warning using a password on the command line interface can be insecure. disable.
-	mysql -u"$DBBENUTZER" -p"$DBPASSWORT" -e "show databases" 2>/dev/null
-	mysql -u"$DBBENUTZER" -p"$DBPASSWORT" -e "show databases" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log" 2>/dev/null
-
-	# Eingabe Variablen löschen
-	unset DBBENUTZER
-	unset DBPASSWORT
-
-	return 0
-}
-### function db_anzeigen2, listet alle erstellten Datenbanken auf.
-function db_anzeigen2()
-{
 	username=$1; password=$2; databasename=$3;
 
 	log text "PRINT DATABASE: Alle Datenbanken anzeigen."
 	mysqlrest "$username" "$password" "$databasename" "show databases"
+	log info "$result_mysqlrest"
+
+	return 0
+}
+
+### db_tables tabellenabfrage, listet alle Tabellen in einer Datenbank auf.
+function db_tables()
+{
+	username=$1; password=$2; databasename=$3;
+
+	log text "PRINT DATABASE: tabellenabfrage, listet alle Tabellen in einer Datenbank auf."
+	mysqlrest "$username" "$password" "$databasename" "SHOW TABLES FROM $databasename"
 	log info "$result_mysqlrest"
 
 	return 0
@@ -3134,6 +3129,42 @@ function db_benutzer_anzeigen()
 	# Eingabe Variablen löschen
 	unset DBBENUTZER
 	unset DBPASSWORT
+
+	return 0
+}
+
+### regionsabfrage, Alle Regionen listen (Dies geht nur im Grid (Grid Datenbank) oder Standalone Modus).
+function db_regions()
+{
+	username=$1; password=$2; databasename=$3;
+
+	log text "PRINT DATABASE: Alle Regionen listen."
+	mysqlrest "$username" "$password" "$databasename" "SELECT regionName FROM regions"
+	log info "$result_mysqlrest"
+
+	return 0
+}
+
+### regionsuri, Region URI prüfen sortiert nach URI (Dies geht nur im Grid (Grid Datenbank) oder Standalone Modus).
+function db_regionsuri()
+{
+	username=$1; password=$2; databasename=$3;
+
+	log text "PRINT DATABASE: Region URI prüfen sortiert nach URI."
+	mysqlrest "$username" "$password" "$databasename" "SELECT regionName , serverURI FROM regions ORDER BY serverURI"
+	log info "$result_mysqlrest"
+
+	return 0
+}
+
+### regionsport, Ports prüfen sortiert nach Ports (Dies geht nur im Grid (Grid Datenbank) oder Standalone Modus).
+function db_regionsport()
+{
+	username=$1; password=$2; databasename=$3;
+
+	log text "PRINT DATABASE: Alle Datenbanken anzeigen."
+	mysqlrest "$username" "$password" "$databasename" "SELECT regionName , serverPort FROM regions ORDER BY serverPort"
+	log info "$result_mysqlrest"
 
 	return 0
 }
@@ -3255,20 +3286,17 @@ function allrepair_db()
 ### function mysql_neustart, startet mySQL neu.
 function mysql_neustart()
 {
-	echo "$(tput setaf 5)MYSQL RESTART: MySQL Neu starten. $(tput sgr0)"
-	echo "$DATUM $(date +%H:%M:%S) MYSQL RESTART: MySQL Neu starten" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+	log text "MYSQL RESTART: MySQL Neu starten."
 
-	echo "$(tput setaf 1)MYSQL RESTART: Stoppen. $(tput sgr0)"
 	service mysql stop
-	sleep 2
-	echo "$(tput setaf 2)MYSQL RESTART: Starten. $(tput sgr0)"
+	sleep 15
 	service mysql start
-	echo "$(tput setaf 5)MYSQL RESTART: Fertig. $(tput sgr0)"
+	log text "MYSQL RESTART: Fertig."
 
 	return 0
 }
 
-### function db_sichern, sichert eine einzelne Datenbank.
+### function db_sichern, sichert eine einzelne Datenbank. Alt
 function db_sichern()
 {
 	DBBENUTZER=$1; DBPASSWORT=$2; DATENBANKNAME=$3;
@@ -3286,6 +3314,108 @@ function db_sichern()
 	unset DBBENUTZER
 	unset DBPASSWORT
 	unset DATENBANKNAME
+
+	return 0
+}
+### db_backup, sichert eine einzelne Datenbank. Neu
+function db_backup()
+{
+	username=$1; password=$2; databasename=$3;
+
+	log text "SAVE DATABASE: Datenbank $databasename sichern."
+
+	mysqldump -u"$username" -p"$password" "$databasename" > /$STARTVERZEICHNIS/"$DATENBANKNAME".sql 2>/dev/null
+
+	log text "SAVE DATABASE: Im Hintergrund wird die Datenbank $databasename jetzt gesichert." # Screen fehlt!
+
+	return 0
+}
+
+# Test funktioniert
+### create_db, erstellt eine neue Datenbank. db_create "username" "password" "databasename"
+function db_create()
+{
+	username=$1; password=$2; databasename=$3;
+	# result_mysqlrest=$(echo "$mysqlcommand;" | MYSQL_PWD=$password mysql -u"$username" "$databasename" -N) 2> /dev/null
+
+	log text "CREATE DATABASE: Datenbank anlegen."
+
+	echo "CREATE DATABASE IF NOT EXISTS $databasename CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;" | MYSQL_PWD=$password mysql -u"$username" -N
+
+	log text "CREATE DATABASE: Datenbank $databasename wurde angelegt."
+
+	# Du solltest benutzen:
+	# CREATE DATABASE mydb CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+	# Beachten Sie, dass utf8_general_ci nicht mehr als bewährte Methode empfohlen wird.
+
+	return 0
+}
+
+# Test funktioniert
+### function db_dbuser, listet alle erstellten Datenbankbenutzer auf.
+function db_dbuser()
+{
+	username=$1; password=$2;
+
+	log text "PRINT DATABASE: Alle Datenbankbenutzer anzeigen."
+	result_mysqlrest=$(echo "select User from mysql.user;" | MYSQL_PWD=$password mysql -u"$username" -N) 2> /dev/null
+	log text "$result_mysqlrest"
+
+	return 0
+}
+
+# Test funktioniert
+### function db_benutzerrechte, listet alle erstellten Benutzerrechte auf. db_dbuserrechte root 123456 testuser
+function db_dbuserrechte()
+{
+	username=$1; password=$2; benutzer=$3
+
+	log text "PRINT DATABASE: Alle Datenbankbenutzer anzeigen."
+	result_mysqlrest=$(echo "SHOW GRANTS FOR '$benutzer'@'localhost';" | MYSQL_PWD=$password mysql -u"$username" -N) 2> /dev/null
+	log text "$result_mysqlrest"
+
+	return 0
+}
+
+# Test funktioniert
+### function db_deldbuser, löscht Datenbankbenutzer. db_deldbuser root 123456 testuser
+function db_deldbuser()
+{
+	username=$1; password=$2; benutzer=$3
+	log text "Benutzer löschen: Datenbankbenutzer löschen."
+	echo "DROP USER '$benutzer'@'localhost';" | MYSQL_PWD=$password mysql -u"$username" -N
+	log text "Benutzer löschen: Datenbankbenutzer $benutzer gelöscht."
+
+	return 0
+}
+
+# Test funktioniert
+### db_create_new_dbuser root password NEUERNAME NEUESPASSWORT
+function db_create_new_dbuser()
+{
+	username=$1; password=$2; NEUERNAME=$3; NEUESPASSWORT=$4;
+
+	log text "CREATE DATABASE USER: Datenbankbenutzer $NEUERNAME anlegen."
+
+	echo "CREATE USER $NEUERNAME@'localhost' IDENTIFIED BY '$NEUESPASSWORT';" | MYSQL_PWD=$password mysql -u"$username" -N
+	echo "GRANT ALL PRIVILEGES ON * . * TO '$NEUERNAME'@'localhost';" | MYSQL_PWD=$password mysql -u"$username" -N
+	echo "flush privileges;" | MYSQL_PWD=$password mysql -u"$username" -N
+
+	log text "CREATE DATABASE USER: Datenbankbenutzer $NEUERNAME wurde anlgelegt."
+
+	return 0
+}
+
+# Test funktioniert
+### db_delete, löscht eine Datenbank komplett.
+function db_delete()
+{
+	username=$1; password=$2; databasename=$3;
+
+	log text "DELETE DATABASE: Datenbank loeschen."
+	echo "DROP DATABASE $databasename;" | MYSQL_PWD=$password mysql -u"$username" -N
+
+	log text "DELETE DATABASE: Datenbank $databasename wurde geloescht."
 
 	return 0
 }
@@ -5527,7 +5657,6 @@ case  $KOMMANDO  in
 	simstats) simstats "$2" ;;
 	osbuilding) osbuilding "$2" ;;
 	createuser) createuser "$2" "$3" "$4" "$5" ;;
-	db_anzeigen) db_anzeigen "$2" "$3" ;;
 	db_benutzer_anzeigen) db_benutzer_anzeigen "$2" "$3" ;;
 	create_db) create_db "$2" "$3" "$4" ;;
 	create_db_user) create_db_user "$2" "$3" "$4" "$5" ;;
@@ -5581,7 +5710,6 @@ case  $KOMMANDO  in
 	rologdel) rologdel ;;
 	osgridcopy) osgridcopy ;;
 	screenlistrestart) screenlistrestart ;;
-	db_anzeigen2) db_anzeigen2 "$2" "$3" "$4" ;;
 	db_all_user) db_all_user  "$2" "$3" "$4" ;;
 	db_all_uuid) db_all_uuid  "$2" "$3" "$4" ;;
 	db_all_name) db_all_name "$2" "$3" "$4" ;;
@@ -5593,6 +5721,18 @@ case  $KOMMANDO  in
 	db_userdate) db_userdate "$2" "$3" "$4" "$5" "$6" ;;
 	db_false_email) db_false_email "$2" "$3" "$4" ;;
 	set_empty_user) set_empty_user "$2" "$3" "$4" "$5" "$6" "$7" ;;
+	db_create) db_create "$2" "$3" "$4" ;;
+	db_dbuserrechte) db_dbuserrechte "$2" "$3" "$4" ;;
+	db_deldbuser) db_deldbuser "$2" "$3" "$4" ;;
+	db_create_new_dbuser) db_create_new_dbuser "$2" "$3" "$4" "$5" ;;
+    db_anzeigen) db_anzeigen "$2" "$3" "$4" ;;
+	db_dbuser) db_dbuser "$2" "$3" ;;
+	db_delete) db_delete "$2" "$3" "$4" ;;
+	db_empty) db_empty "$2" "$3" "$4" ;;
+	db_tables) db_tables "$2" "$3" "$4" ;;
+	db_regions) db_regions "$2" "$3" "$4" ;;
+	db_regionsuri) db_regionsuri "$2" "$3" "$4" ;;
+	db_regionsport) db_regionsport "$2" "$3" "$4" ;;
 	test) test ;;
 	*) hauptmenu ;;
 esac
