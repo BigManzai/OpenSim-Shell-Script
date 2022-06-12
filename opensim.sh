@@ -3704,7 +3704,7 @@ function db_email_setincorrectuseroff()
 }
 
 ### Grid User dauerhaft abschalten: 
-### /opt/opensim.sh db_setuseroff "GRIDdatabaseusername" "GRIDdatabasepassword" "GRIDdatabasename"
+### /opt/opensim.sh db_setuseroff "GRIDdatabaseusername" "GRIDdatabasepassword" "GRIDdatabasename" "firstname" "lastname"
 function db_setuserofline()
 {
 	username=$1; password=$2; databasename=$3; firstname=$4; lastname=$5; 
@@ -3718,7 +3718,7 @@ function db_setuserofline()
 }
 
 ### Grid User dauerhaft aktivieren: 
-### /opt/opensim.sh db_setuseronline "GRIDdatabaseusername" "GRIDdatabasepassword" "GRIDdatabasename"
+### /opt/opensim.sh db_setuseronline "GRIDdatabaseusername" "GRIDdatabasepassword" "GRIDdatabasename" "firstname" "lastname"
 function db_setuseronline()
 {
 	username=$1; password=$2; databasename=$3; firstname=$4; lastname=$5; 
