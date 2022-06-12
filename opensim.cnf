@@ -42,7 +42,7 @@
 	warnbaggroundcolor=0
 
 	errorfontcolor=1
-	errorbaggroundcolor=0
+	errorbaggroundcolor=7
 	
 ## Dateien
 	REGIONSDATEI="RegionList.ini"
@@ -52,7 +52,7 @@
 	SEARCHADRES="icanhazip.com" # Suchadresse
 
 	LOGDELETE="yes" # yes/no
-	LOGWRITE="yes" # yes/no
+	LOGWRITE="no" # yes/no
 	#DEBUGLOG="no" # yes/no
 	#Set log level
 	#loglevel=0 #text:0; debug:1; info:2; warn:3; error:4

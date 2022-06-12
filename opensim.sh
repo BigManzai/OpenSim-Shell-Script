@@ -17,7 +17,7 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #### Einstellungen ####
-VERSION="V0.77.392" # opensimMULTITOOL Versionsausgabe
+VERSION="V0.77.404" # opensimMULTITOOL Versionsausgabe
 clear # Bildschirm loeschen
 
 # Alte Variablen loeschen aus eventuellen voherigen sessions
@@ -85,6 +85,12 @@ function vardel()
 	return 0
 }
 
+function errorlog()
+{
+    if [ $LOGWRITE = "no" ]; then echo 1>&2 "Log message: $1"; fi
+    if [ $LOGWRITE = "yes" ]; then echo 1>&2 "Log message: $1" >> /$STARTVERZEICHNIS/"$DATEIDATUM"-multitool.log; fi
+}
+
 ### Log Dateien und Funktionen
 function log()
 {
@@ -96,7 +102,7 @@ function log()
 
     if [ $LOGWRITE = "yes" ]; then
         case $logtype in
-            logotext) 
+			rohtext) 
                 echo "$text" >> /$STARTVERZEICHNIS/"$DATEIDATUM"-multitool.log ;;
             text)
                 echo "$datetime TEXT: $text" >> /$STARTVERZEICHNIS/"$DATEIDATUM"-multitool.log ;;
@@ -113,6 +119,8 @@ function log()
         esac
     fi
     case $logtype in
+		rohtext) 
+            echo "$text" ;;
         text)
             echo "$(tput setaf $textfontcolor) $(tput setab $textbaggroundcolor) $datetime TEXT: $text $(tput sgr 0)" ;;
         debug)
@@ -164,26 +172,26 @@ function schreibeinfo()
 	NULL=0
 	# Ist die Datei Groesser als null, dann Kopfzeile nicht erneut schreiben.
 	if [ "$FILESIZE" \< "$NULL" ]; then
-		log logotext "   ____                        _____  _                    _         _               "     
-		log logotext "  / __ \                      / ____|(_)                  | |       | |              "
-		log logotext " | |  | | _ __    ___  _ __  | (___   _  _ __ ___   _   _ | |  __ _ | |_  ___   _ __ "
-		log logotext " | |  | ||  _ \  / _ \|  _ \  \___ \ | ||  _   _ \ | | | || | / _  || __|/ _ \ |  __|"
-		log logotext " | |__| || |_) ||  __/| | | | ____) || || | | | | || |_| || || (_| || |_| (_) || |   "
-		log logotext "  \____/ |  __/  \___||_| |_||_____/ |_||_| |_| |_| \____||_| \____| \__|\___/ |_|   "
-		log logotext "         | |                                                                         "
-		log logotext "         |_|                                                                         "
-		log logotext " $VERSION"
-		log logotext " "
-		log logotext "#####################################################################################"
-		log logotext "$DATUM $(date +%H:%M:%S) MULTITOOL: wurde gestartet am $(date +%d.%m.%Y) um $(date +%H:%M:%S) Uhr"
-		log logotext "$DATUM $(date +%H:%M:%S) INFO: Server Name: ${HOSTNAME}"
-		log logotext "$DATUM $(date +%H:%M:%S) INFO: Server IP: ${AKTUELLEIP}"
-		log logotext "$DATUM $(date +%H:%M:%S) INFO: Bash Version: ${BASH_VERSION}"
-		log logotext "$DATUM $(date +%H:%M:%S) INFO: MONO THREAD Einstellung: ${MONO_THREADS_PER_CPU}"
-		log logotext "$DATUM $(date +%H:%M:%S) INFO: Spracheinstellung: ${LANG}"
-		log logotext "$DATUM $(date +%H:%M:%S) INFO: Screen Version: $(screen --version)"
-		log logotext "$DATUM $(date +%H:%M:%S) INFO: $(who -b)"
-		log logotext " "			 
+		log rohtext "   ____                        _____  _                    _         _               "     
+		log rohtext "  / __ \                      / ____|(_)                  | |       | |              "
+		log rohtext " | |  | | _ __    ___  _ __  | (___   _  _ __ ___   _   _ | |  __ _ | |_  ___   _ __ "
+		log rohtext " | |  | ||  _ \  / _ \|  _ \  \___ \ | ||  _   _ \ | | | || | / _  || __|/ _ \ |  __|"
+		log rohtext " | |__| || |_) ||  __/| | | | ____) || || | | | | || |_| || || (_| || |_| (_) || |   "
+		log rohtext "  \____/ |  __/  \___||_| |_||_____/ |_||_| |_| |_| \____||_| \____| \__|\___/ |_|   "
+		log rohtext "         | |                                                                         "
+		log rohtext "         |_|                                                                         "
+		log rohtext " $VERSION"
+		log rohtext " "
+		log rohtext "#####################################################################################"
+		log rohtext "$DATUM $(date +%H:%M:%S) MULTITOOL: wurde gestartet am $(date +%d.%m.%Y) um $(date +%H:%M:%S) Uhr"
+		log rohtext "$DATUM $(date +%H:%M:%S) INFO: Server Name: ${HOSTNAME}"
+		log rohtext "$DATUM $(date +%H:%M:%S) INFO: Server IP: ${AKTUELLEIP}"
+		log rohtext "$DATUM $(date +%H:%M:%S) INFO: Bash Version: ${BASH_VERSION}"
+		log rohtext "$DATUM $(date +%H:%M:%S) INFO: MONO THREAD Einstellung: ${MONO_THREADS_PER_CPU}"
+		log rohtext "$DATUM $(date +%H:%M:%S) INFO: Spracheinstellung: ${LANG}"
+		log rohtext "$DATUM $(date +%H:%M:%S) INFO: Screen Version: $(screen --version)"
+		log rohtext "$DATUM $(date +%H:%M:%S) INFO: $(who -b)"
+		log rohtext " "			 
 	fi
 	return 0
 }
@@ -381,6 +389,7 @@ function warnbox()
 ### Funktion screenlist, Laufende Screens auflisten.
 function screenlist()
 {
+	log text "##############################"
 	log info "Alle laufende Screens anzeigen!"
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
@@ -398,6 +407,7 @@ function screenlist()
 
 function screenlistrestart()
 {
+	log text "##############################"
 	log info "Alle laufende Screens anzeigen!"
 	mynewlist=$(screen -ls)
 	log text "$mynewlist"
@@ -943,11 +953,11 @@ function rologdel()
 	# /opt/robust/bin
 	RVERZEICHNIS="robust"
 	if [ -d /$STARTVERZEICHNIS/$RVERZEICHNIS ]; then
-		rm /$STARTVERZEICHNIS/"$RVERZEICHNIS"/bin/*.log 2>/dev/null|| echo "robust logs nicht gefunden."
-		log warn "LOGDEL: Robust logs geloescht"
+		rm /$STARTVERZEICHNIS/"$RVERZEICHNIS"/bin/*.log 2>/dev/null|| echo "Robust und Money logs nicht gefunden."
+		log warn "Robust und Money logs geloescht"
 		return 0
 	else
-		log error "LOGDEL: Robust logs nicht gefunden"
+		log error "Robust logs nicht gefunden"
 		return 1
 	fi
 }
@@ -1185,12 +1195,12 @@ function rostart()
 		# Start mit oder ohne AOT.
 		if [[ $SETAOTON = "yes" ]]
 		then
-			log info "RobustServer Start aot"
+			log info "RobustServer  wird gestartet mit aot"
 			screen -fa -S RO -d -U -m mono --desktop -O=all Robust.exe
 			sleep $ROBUSTWARTEZEIT
 			return 0
 		else
-			log info "RobustServer Start"
+			log info "RobustServer  wird gestartet"
 			screen -fa -S RO -d -U -m mono Robust.exe
 			sleep $ROBUSTWARTEZEIT
 			return 0
@@ -2312,7 +2322,7 @@ function autosimstart()
 		makeverzeichnisliste
 		sleep 2
 		for (( i = 0 ; i < "$ANZAHLVERZEICHNISSLISTE" ; i++)) do
-			log info "Regionen ${VERZEICHNISSLISTE[$i]} Starten"
+			log info "Regionen ${VERZEICHNISSLISTE[$i]} werden gestartet"
 			cd /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin || return 1
 			
 			# AOT Aktiveren oder Deaktivieren.
@@ -2357,7 +2367,7 @@ function menuautosimstart()
 		makeverzeichnisliste
 		sleep 2
 		for (( i = 0 ; i < "$ANZAHLVERZEICHNISSLISTE" ; i++)) do
-			log info "Regionen ${VERZEICHNISSLISTE[$i]} Starten"
+			log info "Regionen ${VERZEICHNISSLISTE[$i]} werden gestartet"
 			cd /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin || return 1
 			
 			# AOT Aktiveren oder Deaktivieren.
@@ -2411,7 +2421,6 @@ function menuautosimstop()
 function autologdel()
 {
 	log text "##############################"
-	log warn "Log Dateien löschen!"
 	makeverzeichnisliste
 	sleep 2
 	for (( i = 0 ; i < "$ANZAHLVERZEICHNISSLISTE" ; i++)) do
@@ -2425,7 +2434,7 @@ function autologdel()
 	then
 		log warn "Robust Log Dateien löschen!"
 		log warn "Money Log Dateien löschen!"
-		rm /$STARTVERZEICHNIS/robust/bin/*.log 2>/dev/null || log warn "autologdel: Ich kann die Robust und Money Log Dateien nicht löschen! "
+		rm /$STARTVERZEICHNIS/robust/bin/*.log 2>/dev/null || return 0
 	fi
 	# if [[ ! $MONEYVERZEICHNIS == "money" ]]
 	# then 
@@ -2437,13 +2446,12 @@ function autologdel()
 function menuautologdel()
 {
 	log text "##############################"
-	log warn "Log Dateien löschen!"
 	makeverzeichnisliste
 	sleep 2
 	for (( i = 0 ; i < "$ANZAHLVERZEICHNISSLISTE" ; i++)) do
 		BERECHNUNG3=$((100/"$ANZAHLVERZEICHNISSLISTE"))
 		BALKEN3=$(("$i"*"$BERECHNUNG3"))
-		rm /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/*.log | dialog --gauge "Auto Sim stop..." 6 64 $BALKEN3; dialog --clear  || log text "##############################"
+		rm /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/*.log | dialog --gauge "Auto Sim stop..." 6 64 $BALKEN3; dialog --clear  || return 0
 		log warn "OpenSimulator log ${VERZEICHNISSLISTE[$i]} geloescht"
 		sleep 2
 	done
@@ -2599,7 +2607,7 @@ function autoscreenstop()
 
 	# shellcheck disable=SC2022
 	if ! screen -list | grep -q 'sim'; then
-	log error "SIMs OFFLINE!"
+	log info "SIMs sind bereits OFFLINE!"
 	else
 		for (( i = 0 ; i < "$ANZAHLVERZEICHNISSLISTE" ; i++)) do
 			screen -S "${VERZEICHNISSLISTE[$i]}" -X quit
@@ -2607,15 +2615,14 @@ function autoscreenstop()
 	fi
 
 	if ! screen -list | grep -q "MO"; then
-		log error "MONEY OFFLINE!"
+		log info "MONEY Server ist bereits OFFLINE!"
 	else	
 		screen -S MO -X quit
 	fi
 
 	if ! screen -list | grep -q "RO"; then
-		log error "ROBUST OFFLINE!"
+		log info "ROBUST Server ist bereits OFFLINE!"
 	else
-		log error "ROBUST Killen!"
 		screen -S RO -X quit
 	fi
 	return 0
@@ -2627,7 +2634,7 @@ function menuautoscreenstop()
 
 	# shellcheck disable=SC2022
 	if ! screen -list | grep -q 'sim'; then
-	log error "SIMs OFFLINE!"
+	log info "SIMs sind bereits OFFLINE!"
 	else
 		for (( i = 0 ; i < "$ANZAHLVERZEICHNISSLISTE" ; i++)) do
 			screen -S "${VERZEICHNISSLISTE[$i]}" -X quit
@@ -2635,13 +2642,13 @@ function menuautoscreenstop()
 	fi
 
 	if ! screen -list | grep -q "MO"; then
-	log error "MONEY OFFLINE!"
+	log info "MONEY Server ist bereits OFFLINE!"
 	else	
 	screen -S MO -X quit
 	fi
 
 	if ! screen -list | grep -q "RO"; then
-	log error "ROBUST OFFLINE!"
+	log info "ROBUST Server ist bereits OFFLINE!"
 	else
 	screen -S RO -X quit
 	fi
@@ -2690,7 +2697,7 @@ function autostop()
 	else
 		sleep $AUTOSTOPZEIT
 	fi
-	log info "Beende alle noch offenen Screens!"
+	log info "Alle noch offenen OpenSimulator bestandteile, die nicht innerhalb von $AUTOSTOPZEIT Sekunden heruntergefahren werden konnten, werden jetzt zwangsbeendet!"
 	autoscreenstop
 	return 0
 }
@@ -3098,7 +3105,7 @@ function db_anzeigen()
 
 	log text "PRINT DATABASE: Alle Datenbanken anzeigen."
 	mysqlrest "$username" "$password" "$databasename" "show databases"
-	log info "$result_mysqlrest"
+	log rohtext "$result_mysqlrest"
 
 	return 0
 }
@@ -3110,7 +3117,7 @@ function db_tables()
 
 	log text "PRINT DATABASE: tabellenabfrage, listet alle Tabellen in einer Datenbank auf."
 	mysqlrest "$username" "$password" "$databasename" "SHOW TABLES FROM $databasename"
-	log info "$result_mysqlrest"
+	log rohtext "$result_mysqlrest"
 
 	return 0
 }
@@ -3140,7 +3147,7 @@ function db_regions()
 
 	log text "PRINT DATABASE: Alle Regionen listen."
 	mysqlrest "$username" "$password" "$databasename" "SELECT regionName FROM regions"
-	log info "$result_mysqlrest"
+	log rohtext "$result_mysqlrest"
 
 	return 0
 }
@@ -3152,7 +3159,7 @@ function db_regionsuri()
 
 	log text "PRINT DATABASE: Region URI prüfen sortiert nach URI."
 	mysqlrest "$username" "$password" "$databasename" "SELECT regionName , serverURI FROM regions ORDER BY serverURI"
-	log info "$result_mysqlrest"
+	log rohtext "$result_mysqlrest"
 
 	return 0
 }
@@ -3164,7 +3171,7 @@ function db_regionsport()
 
 	log text "PRINT DATABASE: Alle Datenbanken anzeigen."
 	mysqlrest "$username" "$password" "$databasename" "SELECT regionName , serverPort FROM regions ORDER BY serverPort"
-	log info "$result_mysqlrest"
+	log rohtext "$result_mysqlrest"
 
 	return 0
 }
@@ -3266,8 +3273,8 @@ function allrepair_db()
 
 	log text "ALL REPAIR DATABASE: Alle Datenbanken Checken, Reparieren und Optimieren"
 
-	mysqlcheck -u"$DBBENUTZER" -p"$DBPASSWORT" --auto-repair --all-databases
 	mysqlcheck -u"$DBBENUTZER" -p"$DBPASSWORT" --check --all-databases
+	mysqlcheck -u"$DBBENUTZER" -p"$DBPASSWORT" --auto-repair --all-databases	
 	mysqlcheck -u"$DBBENUTZER" -p"$DBPASSWORT" --optimize --all-databases
 	# Danach werden automatisiert folgende SQL Statements ausgeführt:
 	# – CHECK TABLE
@@ -3359,7 +3366,7 @@ function db_dbuser()
 
 	log text "PRINT DATABASE: Alle Datenbankbenutzer anzeigen."
 	result_mysqlrest=$(echo "select User from mysql.user;" | MYSQL_PWD=$password mysql -u"$username" -N) 2> /dev/null
-	log text "$result_mysqlrest"
+	log rohtext "$result_mysqlrest"
 
 	return 0
 }
@@ -3372,7 +3379,7 @@ function db_dbuserrechte()
 
 	log text "PRINT DATABASE: Alle Datenbankbenutzer anzeigen."
 	result_mysqlrest=$(echo "SHOW GRANTS FOR '$benutzer'@'localhost';" | MYSQL_PWD=$password mysql -u"$username" -N) 2> /dev/null
-	log text "$result_mysqlrest"
+	log rohtext "$result_mysqlrest"
 
 	return 0
 }
@@ -3413,7 +3420,11 @@ function db_delete()
 	username=$1; password=$2; databasename=$3;
 
 	log text "DELETE DATABASE: Datenbank loeschen."
-	echo "DROP DATABASE $databasename;" | MYSQL_PWD=$password mysql -u"$username" -N
+	
+	#echo "DROP DATABASE $databasename;" | MYSQL_PWD=$password mysql -u"$username" -N
+
+	# Vor dem Loeschen sicherzustellen dass die Datenbank existiert.
+	echo "DROP DATABASE IF EXISTS $databasename;" | MYSQL_PWD=$password mysql -u"$username" -N
 
 	log text "DELETE DATABASE: Datenbank $databasename wurde geloescht."
 
@@ -3502,7 +3513,9 @@ function db_all_user()
 	echo "Daten von allen Benutzern anzeigen:"
 	echo " "
 	mysqlrest "$username" "$password" "$databasename" "SELECT * FROM UserAccounts" # Alles holen und in die Variable result_mysqlrest schreiben.
-	echo "$result_mysqlrest" # Alles einfach ohne auswertung anzeigen.
+	log rohtext "$result_mysqlrest"
+
+	return 0
 }
 
 ### UUID von allen Benutzern anzeigen: db_all_uuid "username" "password" "databasename"
@@ -3512,7 +3525,9 @@ function db_all_uuid()
 	echo "UUID von allen Benutzern anzeigen:"
 	echo " "
 	mysqlrest "$username" "$password" "$databasename"  "SELECT PrincipalID FROM UserAccounts"
-	echo "$result_mysqlrest"
+	log rohtext "$result_mysqlrest"
+
+	return 0
 }
 
 ###  Alle Namen anzeigen: db_all_name "username" "password" "databasename"
@@ -3522,7 +3537,9 @@ function db_all_name()
 	echo "Vor- und Zuname von allen Benutzern anzeigen:"
 	echo " "
 	mysqlrest "$username" "$password" "$databasename" "SELECT FirstName, LastName FROM UserAccounts"
-	echo "$result_mysqlrest"
+	log rohtext "$result_mysqlrest"
+
+	return 0
 }
 
 ### Daten von einem Benutzer anzeigen: db_user_data "username" "password" "databasename" "firstname" "lastname"
@@ -3532,7 +3549,9 @@ function db_user_data()
 	echo "Daten von einem Benutzer anzeigen:"
 	echo " "
 	mysqlrest "$username" "$password" "$databasename" "SELECT * FROM UserAccounts WHERE firstname='$firstname' AND lastname LIKE '$lastname'"
-	echo "$result_mysqlrest"
+	log rohtext "$result_mysqlrest"
+
+	return 0
 }
 
 ### UUID Vor- und Nachname sowie E-Mail Adresse von einem Benutzer anzeigen: db_user_infos "username" "password" "databasename" "firstname" "lastname"
@@ -3542,7 +3561,9 @@ function db_user_infos()
 	echo "UUID Vor- und Nachname sowie E-Mail Adresse von einem Benutzer anzeigen:"
 	echo " "
 	mysqlrest "$username" "$password" "$databasename" "SELECT PrincipalID, FirstName, LastName, Email FROM UserAccounts WHERE firstname='$firstname' AND lastname LIKE '$lastname'"
-	echo "$result_mysqlrest"
+	log rohtext "$result_mysqlrest"
+
+	return 0
 }
 
 ### UUID von einem Benutzer anzeigen: db_user_uuid
@@ -3552,20 +3573,49 @@ function db_user_uuid()
 	echo "UUID von einem Benutzer anzeigen:"
 	echo " "
 	mysqlrest "$username" "$password" "$databasename" "SELECT PrincipalID FROM UserAccounts WHERE FirstName='$firstname' AND LastName='$lastname'"
-	echo "$result_mysqlrest"
+	log rohtext "$result_mysqlrest"
+
+	return 0
 }
 
 ### Alles vom inventoryfolders type des User: db_foldertyp_user "username" "password" "databasename" "firstname" "lastname" "foldertyp"
 function db_foldertyp_user()
 {
 	username=$1; password=$2; databasename=$3; firstname=$4; lastname=$5; foldertyp=$6
-	echo "Alles vom inventoryfolders type des User:"
+
+	case $foldertyp in
+	Textures | textures) foldertyp="0" ;;
+	Sounds | sounds)	foldertyp="1" ;;
+	CallingCards | callingcards) foldertyp="2" ;;
+	Landmarks | landmarks) foldertyp="3" ;;
+	Clothing | clothing) foldertyp="5" ;;
+	Objects | objects) foldertyp="6" ;;		
+	Notecards | notecards) foldertyp="7" ;;
+	MyInventory | myinventory) foldertyp="8" ;;
+	Scripts | scripts) foldertyp="10" ;;
+	BodyParts | bodyparts) foldertyp="13" ;;
+	Trash | trash) foldertyp="14" ;;
+	PhotoAlbum | photoalbum) foldertyp="15" ;;		
+	LostandFound | lostandfound) foldertyp="16" ;;
+	Animations | animations) foldertyp="20" ;;
+	Gestures | gestures) foldertyp="21" ;;
+	Favorites | favorites) foldertyp="23" ;;
+	CurrentOutfit | currentoutfit) foldertyp="46" ;;
+	Outfits | outfits) foldertyp="47" ;;		
+	Meshes | meshes) foldertyp="49" ;;
+	Settings | settings) foldertyp="56" ;;
+	userDefined | userdefined) foldertyp="-1" ;;		
+	*) $foldertyp ;;
+	esac
+
+	echo "Alles vom Inventar des User, nach Verzeichnissnamen oder ID:"
 	echo " "
 	mysqlrest "$username" "$password" "$databasename" "SELECT PrincipalID FROM UserAccounts WHERE FirstName='$firstname' AND LastName='$lastname'"
 	user_uuid="$result_mysqlrest"
-	#mysqlrest "SELECT * FROM inventoryfolders WHERE (type='8' OR type='9') AND agentID='$user_uuid'"
 	mysqlrest "$username" "$password" "$databasename" "SELECT * FROM inventoryfolders WHERE (type='$foldertyp') AND agentID='$user_uuid'"
-	echo "$result_mysqlrest"
+	log rohtext "$result_mysqlrest"
+
+	return 0
 }
 
 ### Alles vom inventoryfolders was type -1 des User: db_all_userfailed "username" "password" "databasename" "firstname" "lastname"
@@ -3577,7 +3627,9 @@ function db_all_userfailed()
 	mysqlrest "$username" "$password" "$databasename" "SELECT PrincipalID FROM UserAccounts WHERE FirstName='$firstname' AND LastName='$lastname'"
 	uf_user_uuid="$result_mysqlrest"
 	mysqlrest "$username" "$password" "$databasename" "SELECT * FROM inventoryfolders WHERE type != '-1' AND agentID='$uf_user_uuid'"
-	echo "$result_mysqlrest"
+	log rohtext "$result_mysqlrest"
+
+	return 0
 }
 
 ### Zeige Erstellungsdatum eines Users an: db_userdate "username" "password" "databasename" "firstname" "lastname"
@@ -3599,7 +3651,9 @@ function db_false_email()
 	echo "Finde offensichtlich falsche E-Mail Adressen der User ausser von $ausnahmefirstname $ausnahmelastname."
 	echo " "
 	mysqlrest "$username" "$password" "$databasename" "SELECT PrincipalID, FirstName, LastName, Email FROM UserAccounts WHERE Email NOT LIKE '%_@__%.__%'AND NOT firstname='$ausnahmefirstname' AND NOT lastname='$ausnahmelastname'"
-	echo "$result_mysqlrest"
+	log rohtext "$result_mysqlrest"
+
+	return 0
 }
 
 ### Einen User in der Datenbank erstellen und das ohne Inventar (Gut fuer Picker): set_empty_user "username" "password" "databasename" "firstname" "lastname" "email"
@@ -3631,6 +3685,53 @@ function set_empty_user()
 }
 
 ########### Neu am 04.06.2022 Ende
+
+########### Neu am 08.06.2022
+
+### Finde alle offensichtlich falschen E-Mail Adressen der Grid User und 
+### deaktiviere dauerhaft dessen Account:
+### /opt/opensim.sh db_email_setincorrectuseroff "GRIDdatabaseusername" "GRIDdatabasepassword" "GRIDdatabasename"
+function db_email_setincorrectuseroff()
+{
+	username=$1; password=$2; databasename=$3; 
+	ausnahmefirstname="GRID"; ausnahmelastname="SERVICES"
+
+	log warn "Finde offensichtlich falsche E-Mail Adressen der User ausser von $ausnahmefirstname $ausnahmelastname und schalte diese User ab."
+	
+	mysqlrest "$username" "$password" "$databasename" "UPDATE UserAccounts SET active = -1 WHERE Email NOT LIKE '%_@__%.__%'AND NOT firstname='$ausnahmefirstname' AND NOT lastname='$ausnahmelastname';"
+
+	return 0
+}
+
+### Grid User dauerhaft abschalten: 
+### /opt/opensim.sh db_setuseroff "GRIDdatabaseusername" "GRIDdatabasepassword" "GRIDdatabasename"
+function db_setuserofline()
+{
+	username=$1; password=$2; databasename=$3; firstname=$4; lastname=$5; 
+
+	echo "Setze User $firstname $lastname offline."
+	echo " "
+	mysqlrest "$username" "$password" "$databasename" "UPDATE UserAccounts SET active='-1' WHERE FirstName='$firstname' AND LastName='$lastname'"
+	echo "$result_mysqlrest"
+
+	return 0
+}
+
+### Grid User dauerhaft aktivieren: 
+### /opt/opensim.sh db_setuseronline "GRIDdatabaseusername" "GRIDdatabasepassword" "GRIDdatabasename"
+function db_setuseronline()
+{
+	username=$1; password=$2; databasename=$3; firstname=$4; lastname=$5; 
+	
+	echo "Setze User $firstname $lastname online."
+	echo " "
+	mysqlrest "$username" "$password" "$databasename" "UPDATE UserAccounts SET active='1' WHERE FirstName='$firstname' AND LastName='$lastname'"
+	echo "$result_mysqlrest"
+
+	return 0
+}
+
+########### Neu am 08.06.2022 Ende
 
 ### function conf_write, Konfiguration schreiben ersatz für alle UNGETESTETEN ini Funktionen.
 # ./opensim.sh conf_write Einstellung NeuerParameter Verzeichnis Dateiname
@@ -5239,7 +5340,7 @@ log info "HILFE: Commands Hilfe wurde angefordert"
 }
 
 ###########################################################################
-# Menu
+# Menu Menue
 ###########################################################################
 
 function hauptmenu()
@@ -5272,6 +5373,7 @@ function hauptmenu()
 		"--------------------------" ""
 		"Weitere Funktionen" ""
 		"Dateimennu" ""
+		"mySQLmenu" ""
 		"Experten Funktionen" "")
 		
 		mauswahl=$(dialog --backtitle "$BACKTITLE" --title "$TITLE" --help-button --defaultno --menu "$MENU" $HEIGHT $WIDTH $CHOICE_HEIGHT "${OPTIONS[@]}" 2>&1 >/dev/tty)
@@ -5299,6 +5401,7 @@ function hauptmenu()
 		if [[ $mauswahl = "Kalender" ]]; then kalender; fi
 		
 		if [[ $mauswahl = "Dateimennu" ]]; then dateimenu; fi
+		if [[ $mauswahl = "mySQLmenu" ]]; then mySQLmenu; fi
 		if [[ $mauswahl = "Weitere Funktionen" ]]; then funktionenmenu; fi
 		if [[ $mauswahl = "Experten Funktionen" ]]; then expertenmenu; fi
 
@@ -5380,6 +5483,7 @@ function funktionenmenu()
 		"--------------------------" ""
 		"Hauptmennu" ""
 		"Dateimennu" ""
+		"mySQLmenu" ""
 		"Experten Funktionen" "")
 
 		fauswahl=$(dialog --clear \
@@ -5407,6 +5511,7 @@ function funktionenmenu()
 		if [[ $fauswahl = "Regionen anzeigen" ]]; then meineregionen; fi
 		
 		if [[ $fauswahl = "Dateimennu" ]]; then dateimenu; fi
+		if [[ $fauswahl = "mySQLmenu" ]]; then mySQLmenu; fi
 		if [[ $fauswahl = "Hauptmennu" ]]; then hauptmenu; fi
 		if [[ $fauswahl = "Experten Funktionen" ]]; then expertenmenu; fi
 
@@ -5447,6 +5552,7 @@ function dateimenu()
 		"--------------------------" ""
 		"Hauptmenu" ""
 		"Weitere Funktionen" ""
+		"mySQLmenu" ""
 		"Experten Funktionen" "")
 
 		dauswahl=$(dialog --clear \
@@ -5477,8 +5583,45 @@ function dateimenu()
 		if [[ $dauswahl = "Asset loeschen" ]]; then menuassetdel; fi
 		
 		if [[ $dauswahl = "Hauptmenu" ]]; then hauptmenu; fi
+		if [[ $dauswahl = "mySQLmenu" ]]; then mySQLmenu; fi
 		if [[ $dauswahl = "Weitere Funktionen" ]]; then funktionenmenu; fi
 		if [[ $dauswahl = "Experten Funktionen" ]]; then expertenmenu; fi
+
+		if [[ $antwort = 2 ]]; then hilfemenu ; fi
+		if [[ $antwort = 1 ]]; then exit ; fi
+	else
+		# wenn dialog nicht installiert ist die Hilfe anzeigen.
+		hilfe
+	fi
+}
+
+function mySQLmenu()
+{
+	HEIGHT=0
+	WIDTH=0
+	CHOICE_HEIGHT=30
+    BACKTITLE="opensimMULTITOOL"
+    TITLE="mySQLmenu"
+    MENU="opensimMULTITOOL $VERSION"
+	# zuerst schauen ob dialog installiert ist
+	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+		OPTIONS=("noch leer" ""
+		"--------------------------" ""
+		"Hauptmenu" ""
+		"Weitere Funktionen" ""
+		"Dateimennu" ""
+		"Experten Funktionen" "")
+		
+		mysqlauswahl=$(dialog --backtitle "$BACKTITLE" --title "$TITLE" --help-button --defaultno --menu "$MENU" $HEIGHT $WIDTH $CHOICE_HEIGHT "${OPTIONS[@]}" 2>&1 >/dev/tty)
+		antwort=$?
+		dialog --clear
+		clear
+
+		if [[ $mysqlauswahl = "noch leer" ]]; then hauptmenu; fi
+		if [[ $mysqlauswahl = "Hauptmenu" ]]; then hauptmenu; fi
+		if [[ $mysqlauswahl = "Dateimennu" ]]; then dateimenu; fi
+		if [[ $mysqlauswahl = "Weitere Funktionen" ]]; then funktionenmenu; fi
+		if [[ $mysqlauswahl = "Experten Funktionen" ]]; then expertenmenu; fi
 
 		if [[ $antwort = 2 ]]; then hilfemenu ; fi
 		if [[ $antwort = 1 ]]; then exit ; fi
@@ -5526,6 +5669,7 @@ function expertenmenu()
 		"--------------------------" ""
 		"Hauptmennu" ""
 		"Dateimennu" ""
+		"mySQLmenu" ""
 		"Weitere Funktionen" "")
 
 		feauswahl=$(dialog --clear \
@@ -5569,7 +5713,8 @@ function expertenmenu()
 
 		if [[ $feauswahl = "Hilfe" ]]; then hilfemenu; fi
 		
-		if [[ $fauswahl = "Dateimennu" ]]; then dateimenu; fi
+		if [[ $feauswahl = "Dateimennu" ]]; then dateimenu; fi
+		if [[ $feauswahl = "mySQLmenu" ]]; then mySQLmenu; fi
 		if [[ $feauswahl = "Hauptmennu" ]]; then hauptmenu; fi
 		if [[ $feauswahl = "Weitere Funktionen" ]]; then funktionenmenu; fi
 
@@ -5582,7 +5727,7 @@ function expertenmenu()
 }
 
 ###########################################################################
-# Eingabeauswertung
+# Eingabeauswertung Konsolenmenue
 ###########################################################################
 case  $KOMMANDO  in
 	schreibeinfo) schreibeinfo ;;
@@ -5733,6 +5878,9 @@ case  $KOMMANDO  in
 	db_regions) db_regions "$2" "$3" "$4" ;;
 	db_regionsuri) db_regionsuri "$2" "$3" "$4" ;;
 	db_regionsport) db_regionsport "$2" "$3" "$4" ;;
+	db_email_setincorrectuseroff) db_email_setincorrectuseroff "$2" "$3" "$4" ;;
+	db_setuserofline) db_setuserofline "$2" "$3" "$4" "$5" "$6" ;;
+	db_setuseronline) db_setuseronline "$2" "$3" "$4" "$5" "$6" ;;
 	test) test ;;
 	*) hauptmenu ;;
 esac
