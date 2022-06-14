@@ -219,6 +219,9 @@ sowie den Server mit einem klick Mausklick neu gestartet werden
 Das Dateimenü wurde eingefügt um die Menüs kleiner zu gestalten.
 Unter Server Informationen ist auf einem blick alle wichtigen Infos zu sehen wie welche screens gerade laufen und mehr.
 ```
+Version 0.78.421
+
+Menü mySQL hat jetzt 11 neue Funktionen.
 
 Version 0.77.392
 ```
