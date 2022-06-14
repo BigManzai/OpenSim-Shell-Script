@@ -17,7 +17,7 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #### Einstellungen ####
-VERSION="V0.77.404" # opensimMULTITOOL Versionsausgabe
+VERSION="V0.78.421" # opensimMULTITOOL Versionsausgabe
 clear # Bildschirm loeschen
 
 # Alte Variablen loeschen aus eventuellen voherigen sessions
@@ -2279,7 +2279,7 @@ function menuregionrestore()
     # Einstellungen
     boxbacktitel="opensimMULTITOOL"
     boxtitel="opensimMULTITOOL Eingabe"
-    formtitle="Backup einer Region"
+    formtitle="Restore einer Region"
     lable1="Screenname:"; lablename1=""
     lable2="Regionsname:"; lablename2=""
 
@@ -3039,7 +3039,7 @@ function menucreateuser()
     # Einstellungen
     boxbacktitel="opensimMULTITOOL"
     boxtitel="opensimMULTITOOL Eingabe"
-    formtitle="Benutzer Account anlegen"
+    formtitle="Grid Benutzer Account anlegen"
     lable1="Vorname:"; lablename1="John"
     lable2="Nachname:"; lablename2="Doe"
     lable3="PASSWORT:"; lablename3="PASSWORT"
@@ -3109,6 +3109,41 @@ function db_anzeigen()
 
 	return 0
 }
+### function db_anzeigen_dialog, listet alle erstellten Datenbanken auf.
+function db_anzeigen_dialog()
+{
+    # zuerst schauen ob dialog installiert ist
+    if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+
+    # Einstellungen
+    boxbacktitel="opensimMULTITOOL"
+    boxtitel="opensimMULTITOOL Eingabe"
+    formtitle="Alle erstellten Datenbanken auflisten"
+    lable1="Benutzername:"; lablename1=""
+    lable2="Passwort:"; lablename2=""
+
+    # Abfrage
+    db_menu=$( dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 3>&1 1>&2 2>&3 3>&- )
+
+    # Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
+    username=$(echo "$db_menu" | sed -n '1p')
+    password=$(echo "$db_menu" | sed -n '2p')
+
+    # Alles loeschen.
+    dialog --clear
+    clear
+	else
+		# Alle Aktionen ohne dialog
+        echo "Keine Menuelose Funktion"|exit
+	fi	# dialog Aktionen Ende
+
+	# Abfrage
+	mysqlergebniss=$(echo "show databases;" | MYSQL_PWD=$password mysql -u"$username" -N) 2> /dev/null
+	# Ausgabe in Box
+	warnbox "$mysqlergebniss"
+
+	return 0
+}
 
 ### db_tables tabellenabfrage, listet alle Tabellen in einer Datenbank auf.
 function db_tables()
@@ -3118,6 +3153,42 @@ function db_tables()
 	log text "PRINT DATABASE: tabellenabfrage, listet alle Tabellen in einer Datenbank auf."
 	mysqlrest "$username" "$password" "$databasename" "SHOW TABLES FROM $databasename"
 	log rohtext "$result_mysqlrest"
+
+	return 0
+}
+### db_tables_dialog tabellenabfrage, listet alle Tabellen in einer Datenbank auf.
+function db_tables_dialog()
+{
+    # zuerst schauen ob dialog installiert ist
+    if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+
+    # Einstellungen
+    boxbacktitel="opensimMULTITOOL"
+    boxtitel="opensimMULTITOOL Eingabe"
+    formtitle="Alle Tabellen in einer Datenbank auflisten"
+    lable1="Benutzername:"; lablename1=""
+    lable2="Passwort:"; lablename2=""
+    lable3="Datenbankname:"; lablename3=""
+
+    # Abfrage
+    ASSETDELBOXERGEBNIS=$( dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30  3>&1 1>&2 2>&3 3>&- )
+
+    # Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
+    username=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '1p')
+    password=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '2p')
+    databasename=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '3p')
+
+    # Alles loeschen.
+    dialog --clear
+    clear
+	else
+		# Alle Aktionen ohne dialog
+        echo "Keine Menuelose Funktion"|exit
+	fi	# dialog Aktionen Ende
+
+	mysqlrest "$username" "$password" "$databasename" "SHOW TABLES FROM $databasename"
+
+	warnbox "$result_mysqlrest"
 
 	return 0
 }
@@ -3262,6 +3333,26 @@ function leere_db()
 	unset DBBENUTZER
 	unset DBPASSWORT
 	unset DATENBANKNAME
+
+	return 0
+}
+### db_empty, löscht eine Datenbank und erstellt diese anschließend neu. Das ist Datenbank leeren auf die schnelle Art.
+function db_empty()
+{
+	username=$1; password=$2; databasename=$3;
+
+	log text "EMPTY DATABASE: Datenbank $databasename leeren."
+
+	echo "DROP DATABASE $databasename;" | MYSQL_PWD=$password mysql -u"$username" -N
+	sleep 15
+	echo "CREATE DATABASE IF NOT EXISTS $databasename CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;" | MYSQL_PWD=$password mysql -u"$username" -N
+
+	log text "EMPTY DATABASE: Datenbank $databasename wurde geleert."
+
+
+	# Du solltest benutzen:
+	# CREATE DATABASE mydb CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+	# Beachten Sie, dass utf8_general_ci nicht mehr als bewährte Methode empfohlen wird.
 
 	return 0
 }
@@ -3414,7 +3505,7 @@ function db_create_new_dbuser()
 }
 
 # Test funktioniert
-### db_delete, löscht eine Datenbank komplett.
+### db_delete, loescht eine Datenbank komplett.
 function db_delete()
 {
 	username=$1; password=$2; databasename=$3;
@@ -3501,6 +3592,35 @@ MEIN_ABFRAGE_ENDE
 	echo "$DATUM $(date +%H:%M:%S) SETPARTNER: $NEUERPARTNER ist jetzt Partner von $AVATARUUID" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 	return 0
 }
+### setpartner, Partner setzen bei einer Person. Also bei beiden Partnern muss dies gemacht werden.
+# opensim.sh setpartner Datenbankbenutzer Datenbankpasswort Robustdatenbank "AvatarUUID" "PartnerUUID"
+function db_setpartner()
+{
+	username=$1; password=$2; databasename=$3; AVATARUUID=$4; NEUERPARTNER=$5;
+	
+	LEEREMPTY="00000000-0000-0000-0000-000000000000";
+	log text "Leere UUID um den Partner zu löschen: $LEEREMPTY"
+
+	log text "SETPARTNER: $NEUERPARTNER ist jetzt Partner von $AVATARUUID."
+	mysqlrest "$username" "$password" "$databasename" "UPDATE userprofile SET profilePartner = '$NEUERPARTNER' WHERE userprofile.useruuid = '$AVATARUUID'"
+	log info "$result_mysqlrest"
+
+	return 0
+}
+### db_deletepartner, Partner loeschen bei einer Person. Also bei beiden Partnern muss dies gemacht werden.
+# opensim.sh setpartner Datenbankbenutzer Datenbankpasswort Robustdatenbank "AvatarUUID" "PartnerUUID"
+function db_deletepartner()
+{
+	username=$1; password=$2; databasename=$3; AVATARUUID=$4;
+	
+	LEEREMPTY="00000000-0000-0000-0000-000000000000";
+
+	log text "SETPARTNER: Leere UUID um den Partner zu löschen von $AVATARUUID."
+	mysqlrest "$username" "$password" "$databasename" "UPDATE userprofile SET profilePartner = '$LEEREMPTY' WHERE userprofile.useruuid = '$AVATARUUID'"
+	log info "$result_mysqlrest"
+
+	return 0
+}
 
 ########### Neu am 04.06.2022
 
@@ -3517,6 +3637,42 @@ function db_all_user()
 
 	return 0
 }
+### db_all_user_dialog tabellenabfrage, Daten von allen Benutzern anzeigen.
+function db_all_user_dialog()
+{
+    # zuerst schauen ob dialog installiert ist
+    if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+
+    # Einstellungen
+    boxbacktitel="opensimMULTITOOL"
+    boxtitel="opensimMULTITOOL Eingabe"
+    formtitle="Daten von allen Benutzern anzeigen"
+    lable1="Benutzername:"; lablename1=""
+    lable2="Passwort:"; lablename2=""
+    lable3="Datenbankname:"; lablename3=""
+
+    # Abfrage
+    ASSETDELBOXERGEBNIS=$( dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30  3>&1 1>&2 2>&3 3>&- )
+
+    # Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
+    username=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '1p')
+    password=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '2p')
+    databasename=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '3p')
+
+    # Alles loeschen.
+    dialog --clear
+    clear
+	else
+		# Alle Aktionen ohne dialog
+        echo "Keine Menuelose Funktion"|exit
+	fi	# dialog Aktionen Ende
+
+	mysqlrest "$username" "$password" "$databasename" "SELECT * FROM UserAccounts" # Alles holen und in die Variable result_mysqlrest schreiben.
+
+	warnbox "$result_mysqlrest"
+
+	return 0
+}
 
 ### UUID von allen Benutzern anzeigen: db_all_uuid "username" "password" "databasename"
 function db_all_uuid()
@@ -3526,6 +3682,42 @@ function db_all_uuid()
 	echo " "
 	mysqlrest "$username" "$password" "$databasename"  "SELECT PrincipalID FROM UserAccounts"
 	log rohtext "$result_mysqlrest"
+
+	return 0
+}
+### UUID von allen Benutzern anzeigen.
+function db_all_uuid_dialog()
+{
+    # zuerst schauen ob dialog installiert ist
+    if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+
+    # Einstellungen
+    boxbacktitel="opensimMULTITOOL"
+    boxtitel="opensimMULTITOOL Eingabe"
+    formtitle="UUID von allen Benutzern anzeigen"
+    lable1="Benutzername:"; lablename1=""
+    lable2="Passwort:"; lablename2=""
+    lable3="Datenbankname:"; lablename3=""
+
+    # Abfrage
+    ASSETDELBOXERGEBNIS=$( dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30  3>&1 1>&2 2>&3 3>&- )
+
+    # Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
+    username=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '1p')
+    password=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '2p')
+    databasename=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '3p')
+
+    # Alles loeschen.
+    dialog --clear
+    clear
+	else
+		# Alle Aktionen ohne dialog
+        echo "Keine Menuelose Funktion"|exit
+	fi	# dialog Aktionen Ende
+
+	mysqlrest "$username" "$password" "$databasename"  "SELECT PrincipalID FROM UserAccounts"
+
+	warnbox "$result_mysqlrest"
 
 	return 0
 }
@@ -3541,6 +3733,42 @@ function db_all_name()
 
 	return 0
 }
+###  Alle Namen anzeigen: db_all_name_dialog "username" "password" "databasename"
+function db_all_name_dialog()
+{
+    # zuerst schauen ob dialog installiert ist
+    if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+
+    # Einstellungen
+    boxbacktitel="opensimMULTITOOL"
+    boxtitel="opensimMULTITOOL Eingabe"
+    formtitle="Alle Tabellen in einer Datenbank auflisten"
+    lable1="Benutzername:"; lablename1=""
+    lable2="Passwort:"; lablename2=""
+    lable3="Datenbankname:"; lablename3=""
+
+    # Abfrage
+    db_all_name=$( dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30  3>&1 1>&2 2>&3 3>&- )
+
+    # Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
+    username=$(echo "$db_all_name" | sed -n '1p')
+    password=$(echo "$db_all_name" | sed -n '2p')
+    databasename=$(echo "$db_all_name" | sed -n '3p')
+
+    # Alles loeschen.
+    dialog --clear
+    clear
+	else
+		# Alle Aktionen ohne dialog
+        echo "Keine Menuelose Funktion"|exit
+	fi	# dialog Aktionen Ende
+
+	mysqlrest "$username" "$password" "$databasename" "SELECT FirstName, LastName FROM UserAccounts"
+
+	warnbox "$result_mysqlrest"
+
+	return 0
+}
 
 ### Daten von einem Benutzer anzeigen: db_user_data "username" "password" "databasename" "firstname" "lastname"
 function db_user_data()
@@ -3550,6 +3778,46 @@ function db_user_data()
 	echo " "
 	mysqlrest "$username" "$password" "$databasename" "SELECT * FROM UserAccounts WHERE firstname='$firstname' AND lastname LIKE '$lastname'"
 	log rohtext "$result_mysqlrest"
+
+	return 0
+}
+### Daten von einem Benutzer anzeigen: db_user_data_dialog "username" "password" "databasename" "firstname" "lastname"
+function db_user_data_dialog()
+{
+    # zuerst schauen ob dialog installiert ist
+    if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+
+    # Einstellungen
+    boxbacktitel="opensimMULTITOOL"
+    boxtitel="opensimMULTITOOL Eingabe"
+    formtitle="Finde alle offensichtlich falschen E-Mail Adressen der Grid User und deaktiviere dauerhaft dessen Account"
+    lable1="Benutzername:"; lablename1=""
+    lable2="Passwort:"; lablename2=""
+    lable3="Datenbankname:"; lablename3=""
+	lable4="Vorname:"; lablename4=""
+	lable5="Nachname:"; lablename5=""
+
+    # Abfrage
+    db_user_data=$( dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 "$lable4" 4 1 "$lablename4" 4 25 25 30 "$lable5" 5 1 "$lablename5" 5 25 25 30  3>&1 1>&2 2>&3 3>&- )
+
+    # Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
+    username=$(echo "$db_user_data" | sed -n '1p')
+    password=$(echo "$db_user_data" | sed -n '2p')
+    databasename=$(echo "$db_user_data" | sed -n '3p')
+	firstname=$(echo "$db_user_data" | sed -n '4p')
+	lastname=$(echo "$db_user_data" | sed -n '5p')
+
+    # Alles loeschen.
+    dialog --clear
+    clear
+	else
+		# Alle Aktionen ohne dialog
+        echo "Keine Menuelose Funktion"|exit
+	fi	# dialog Aktionen Ende
+
+	mysqlrest "$username" "$password" "$databasename" "SELECT * FROM UserAccounts WHERE firstname='$firstname' AND lastname LIKE '$lastname'"
+
+	warnbox "$result_mysqlrest"
 
 	return 0
 }
@@ -3565,6 +3833,46 @@ function db_user_infos()
 
 	return 0
 }
+### UUID Vor- und Nachname sowie E-Mail Adresse von einem Benutzer anzeigen: db_user_infos "username" "password" "databasename" "firstname" "lastname"
+function db_user_infos_dialog()
+{
+    # zuerst schauen ob dialog installiert ist
+    if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+
+    # Einstellungen
+    boxbacktitel="opensimMULTITOOL"
+    boxtitel="opensimMULTITOOL Eingabe"
+    formtitle="Finde alle offensichtlich falschen E-Mail Adressen der Grid User und deaktiviere dauerhaft dessen Account"
+    lable1="Benutzername:"; lablename1=""
+    lable2="Passwort:"; lablename2=""
+    lable3="Datenbankname:"; lablename3=""
+	lable4="Vorname:"; lablename4=""
+	lable5="Nachname:"; lablename5=""
+
+    # Abfrage
+    db_user_infos=$( dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 "$lable4" 4 1 "$lablename4" 4 25 25 30 "$lable5" 5 1 "$lablename5" 5 25 25 30  3>&1 1>&2 2>&3 3>&- )
+
+    # Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
+    username=$(echo "$db_user_infos" | sed -n '1p')
+    password=$(echo "$db_user_infos" | sed -n '2p')
+    databasename=$(echo "$db_user_infos" | sed -n '3p')
+	firstname=$(echo "$db_user_infos" | sed -n '4p')
+	lastname=$(echo "$db_user_infos" | sed -n '5p')
+
+    # Alles loeschen.
+    dialog --clear
+    clear
+	else
+		# Alle Aktionen ohne dialog
+        echo "Keine Menuelose Funktion"|exit
+	fi	# dialog Aktionen Ende
+
+	mysqlrest "$username" "$password" "$databasename" "SELECT PrincipalID, FirstName, LastName, Email FROM UserAccounts WHERE firstname='$firstname' AND lastname LIKE '$lastname'"
+
+	warnbox "$result_mysqlrest"
+
+	return 0
+}
 
 ### UUID von einem Benutzer anzeigen: db_user_uuid
 function db_user_uuid()
@@ -3574,6 +3882,46 @@ function db_user_uuid()
 	echo " "
 	mysqlrest "$username" "$password" "$databasename" "SELECT PrincipalID FROM UserAccounts WHERE FirstName='$firstname' AND LastName='$lastname'"
 	log rohtext "$result_mysqlrest"
+
+	return 0
+}
+### UUID von einem Benutzer anzeigen: db_user_uuid_dialog
+function db_user_uuid_dialog()
+{
+    # zuerst schauen ob dialog installiert ist
+    if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+
+    # Einstellungen
+    boxbacktitel="opensimMULTITOOL"
+    boxtitel="opensimMULTITOOL Eingabe"
+    formtitle="Finde alle offensichtlich falschen E-Mail Adressen der Grid User und deaktiviere dauerhaft dessen Account"
+    lable1="Benutzername:"; lablename1=""
+    lable2="Passwort:"; lablename2=""
+    lable3="Datenbankname:"; lablename3=""
+	lable4="Vorname:"; lablename4=""
+	lable5="Nachname:"; lablename5=""
+
+    # Abfrage
+    db_user_uuid=$( dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 "$lable4" 4 1 "$lablename4" 4 25 25 30 "$lable5" 5 1 "$lablename5" 5 25 25 30  3>&1 1>&2 2>&3 3>&- )
+
+    # Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
+    username=$(echo "$db_user_uuid" | sed -n '1p')
+    password=$(echo "$db_user_uuid" | sed -n '2p')
+    databasename=$(echo "$db_user_uuid" | sed -n '3p')
+	firstname=$(echo "$db_user_uuid" | sed -n '4p')
+	lastname=$(echo "$db_user_uuid" | sed -n '5p')
+
+    # Alles loeschen.
+    dialog --clear
+    clear
+	else
+		# Alle Aktionen ohne dialog
+        echo "Keine Menuelose Funktion"|exit
+	fi	# dialog Aktionen Ende
+
+	mysqlrest "$username" "$password" "$databasename" "SELECT PrincipalID FROM UserAccounts WHERE FirstName='$firstname' AND LastName='$lastname'"
+
+	warnbox "$result_mysqlrest"
 
 	return 0
 }
@@ -3702,9 +4050,49 @@ function db_email_setincorrectuseroff()
 
 	return 0
 }
+### Finde alle offensichtlich falschen E-Mail Adressen der Grid User und 
+### deaktiviere dauerhaft dessen Account:
+### /opt/opensim.sh db_email_setincorrectuseroff "GRIDdatabaseusername" "GRIDdatabasepassword" "GRIDdatabasename"
+function db_email_setincorrectuseroff_dialog()
+{
+    # zuerst schauen ob dialog installiert ist
+    if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+
+    # Einstellungen
+    boxbacktitel="opensimMULTITOOL"
+    boxtitel="opensimMULTITOOL Eingabe"
+    formtitle="Finde alle offensichtlich falschen E-Mail Adressen der Grid User und deaktiviere dauerhaft dessen Account"
+    lable1="Benutzername:"; lablename1=""
+    lable2="Passwort:"; lablename2=""
+    lable3="Datenbankname:"; lablename3=""
+
+    # Abfrage
+    ASSETDELBOXERGEBNIS=$( dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30  3>&1 1>&2 2>&3 3>&- )
+
+    # Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
+    username=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '1p')
+    password=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '2p')
+    databasename=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '3p')
+
+    # Alles loeschen.
+    dialog --clear
+    clear
+	else
+		# Alle Aktionen ohne dialog
+        echo "Keine Menuelose Funktion"|exit
+	fi	# dialog Aktionen Ende
+
+	ausnahmefirstname="GRID"; ausnahmelastname="SERVICES"
+
+	mysqlrest "$username" "$password" "$databasename" "UPDATE UserAccounts SET active = -1 WHERE Email NOT LIKE '%_@__%.__%'AND NOT firstname='$ausnahmefirstname' AND NOT lastname='$ausnahmelastname';"
+
+	warnbox "Alle offensichtlich falschen E-Mail Adressen der Grid User wurden gesucht und dessen Accounts deaktiviert."
+
+	return 0
+}
 
 ### Grid User dauerhaft abschalten: 
-### /opt/opensim.sh db_setuseroff "GRIDdatabaseusername" "GRIDdatabasepassword" "GRIDdatabasename" "firstname" "lastname"
+### /opt/opensim.sh db_setuserofline "GRIDdatabaseusername" "GRIDdatabasepassword" "GRIDdatabasename" "firstname" "lastname"
 function db_setuserofline()
 {
 	username=$1; password=$2; databasename=$3; firstname=$4; lastname=$5; 
@@ -3713,6 +4101,47 @@ function db_setuserofline()
 	echo " "
 	mysqlrest "$username" "$password" "$databasename" "UPDATE UserAccounts SET active='-1' WHERE FirstName='$firstname' AND LastName='$lastname'"
 	echo "$result_mysqlrest"
+
+	return 0
+}
+### Grid User dauerhaft abschalten: 
+### /opt/opensim.sh db_setuserofline_dialog "GRIDdatabaseusername" "GRIDdatabasepassword" "GRIDdatabasename" "firstname" "lastname"
+function db_setuserofline_dialog()
+{
+    # zuerst schauen ob dialog installiert ist
+    if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+
+    # Einstellungen
+    boxbacktitel="opensimMULTITOOL"
+    boxtitel="opensimMULTITOOL Eingabe"
+    formtitle="Finde alle offensichtlich falschen E-Mail Adressen der Grid User und deaktiviere dauerhaft dessen Account"
+    lable1="Benutzername:"; lablename1=""
+    lable2="Passwort:"; lablename2=""
+    lable3="Datenbankname:"; lablename3=""
+	lable4="Vorname:"; lablename4=""
+	lable5="Nachname:"; lablename5=""
+
+    # Abfrage
+    setuserofline=$( dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 "$lable4" 4 1 "$lablename4" 4 25 25 30 "$lable5" 5 1 "$lablename5" 5 25 25 30  3>&1 1>&2 2>&3 3>&- )
+
+    # Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
+    username=$(echo "$setuserofline" | sed -n '1p')
+    password=$(echo "$setuserofline" | sed -n '2p')
+    databasename=$(echo "$setuserofline" | sed -n '3p')	
+	firstname=$(echo "$setuserofline" | sed -n '4p')
+	lastname=$(echo "$setuserofline" | sed -n '5p')
+
+    # Alles loeschen.
+    dialog --clear
+    clear
+	else
+		# Alle Aktionen ohne dialog
+        echo "Keine Menuelose Funktion"|exit
+	fi	# dialog Aktionen Ende
+
+	mysqlrest "$username" "$password" "$databasename" "UPDATE UserAccounts SET active='-1' WHERE FirstName='$firstname' AND LastName='$lastname'"
+
+	warnbox "Benutzer $firstname $lastname wurde abgeschaltet."
 
 	return 0
 }
@@ -3727,6 +4156,47 @@ function db_setuseronline()
 	echo " "
 	mysqlrest "$username" "$password" "$databasename" "UPDATE UserAccounts SET active='1' WHERE FirstName='$firstname' AND LastName='$lastname'"
 	echo "$result_mysqlrest"
+
+	return 0
+}
+### Grid User dauerhaft aktivieren: 
+### /opt/opensim.sh db_setuseronline "GRIDdatabaseusername" "GRIDdatabasepassword" "GRIDdatabasename" "firstname" "lastname"
+function db_setuseronline_dialog()
+{
+    # zuerst schauen ob dialog installiert ist
+    if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+
+    # Einstellungen
+    boxbacktitel="opensimMULTITOOL"
+    boxtitel="opensimMULTITOOL Eingabe"
+    formtitle="Finde alle offensichtlich falschen E-Mail Adressen der Grid User und deaktiviere dauerhaft dessen Account"
+    lable1="Benutzername:"; lablename1=""
+    lable2="Passwort:"; lablename2=""
+    lable3="Datenbankname:"; lablename3=""
+	lable4="Vorname:"; lablename4=""
+	lable5="Nachname:"; lablename5=""
+
+    # Abfrage
+    setuseronline=$( dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 "$lable4" 4 1 "$lablename4" 4 25 25 30 "$lable5" 5 1 "$lablename5" 5 25 25 30  3>&1 1>&2 2>&3 3>&- )
+
+    # Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
+    username=$(echo "$setuseronline" | sed -n '1p')
+    password=$(echo "$setuseronline" | sed -n '2p')
+    databasename=$(echo "$setuseronline" | sed -n '3p')
+	firstname=$(echo "$setuseronline" | sed -n '4p')
+	lastname=$(echo "$setuseronline" | sed -n '5p')
+
+    # Alles loeschen.
+    dialog --clear
+    clear
+	else
+		# Alle Aktionen ohne dialog
+        echo "Keine Menuelose Funktion"|exit
+	fi	# dialog Aktionen Ende
+
+	mysqlrest "$username" "$password" "$databasename" "UPDATE UserAccounts SET active='1' WHERE FirstName='$firstname' AND LastName='$lastname'"
+
+	warnbox "Benutzer $firstname $lastname wurde reaktiviert."
 
 	return 0
 }
@@ -5370,7 +5840,7 @@ function hauptmenu()
 		"--------------------------" ""
 		"Passwortgenerator" ""
 		"Kalender" ""
-		"--------------------------" ""
+		"----------Menu------------" ""
 		"Weitere Funktionen" ""
 		"Dateimennu" ""
 		"mySQLmenu" ""
@@ -5480,7 +5950,7 @@ function funktionenmenu()
 		"--------------------------" ""
 		"Automatischer Screen stop" ""
 		"Regionen anzeigen" ""		
-		"--------------------------" ""
+		"----------Menu------------" ""
 		"Hauptmennu" ""
 		"Dateimennu" ""
 		"mySQLmenu" ""
@@ -5549,7 +6019,7 @@ function dateimenu()
 		"Opensim vom Github holen" ""
 		"--------------------------" ""
 		"Verzeichnisstrukturen anlegen" ""		
-		"--------------------------" ""
+		"----------Menu------------" ""
 		"Hauptmenu" ""
 		"Weitere Funktionen" ""
 		"mySQLmenu" ""
@@ -5605,8 +6075,19 @@ function mySQLmenu()
     MENU="opensimMULTITOOL $VERSION"
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
-		OPTIONS=("noch leer" ""
+		OPTIONS=("Alle Datenbanken anzeigen" ""
+		"Tabellen einer Datenbank" ""
+		"Alle Benutzerdaten der ROBUST Datenbank" ""
+		"UUID von allen Benutzern anzeigen" ""
+		"Alle Benutzernamen anzeigen" ""
+		"Daten von einem Benutzer anzeigen" ""
+		"UUID, Vor, Nachname, E-Mail vom Benutzer anzeigen" ""
+		"UUID von einem Benutzer anzeigen" ""
 		"--------------------------" ""
+		"Alle Benutzer mit inkorrekter EMail abschalten" ""
+		"Benutzeracount abschalten" ""
+		"Benutzeracount einschalten" ""
+		"----------Menu------------" ""
 		"Hauptmenu" ""
 		"Weitere Funktionen" ""
 		"Dateimennu" ""
@@ -5617,7 +6098,23 @@ function mySQLmenu()
 		dialog --clear
 		clear
 
-		if [[ $mysqlauswahl = "noch leer" ]]; then hauptmenu; fi
+		# db_anzeigen_dialog, db_tables_dialog, db_all_user_dialog, db_all_uuid_dialog, db_email_setincorrectuseroff_dialog, db_setuseronline_dialog, db_setuserofline_dialog
+		# db_all_name_dialog, db_user_data_dialog, db_user_infos_dialog, db_user_uuid_dialog
+
+		if [[ $mysqlauswahl = "Alle Datenbanken anzeigen" ]]; then db_anzeigen_dialog; fi
+		if [[ $mysqlauswahl = "Tabellen einer Datenbank" ]]; then db_tables_dialog; fi
+		if [[ $mysqlauswahl = "Alle Benutzerdaten der ROBUST Datenbank" ]]; then db_all_user_dialog; fi
+		if [[ $mysqlauswahl = "UUID von allen Benutzern anzeigen" ]]; then db_all_uuid_dialog; fi
+
+		if [[ $mysqlauswahl = "Alle Benutzernamen anzeigen" ]]; then db_all_name_dialog; fi
+		if [[ $mysqlauswahl = "Daten von einem Benutzer anzeigen" ]]; then db_user_data_dialog; fi
+		if [[ $mysqlauswahl = "UUID, Vor, Nachname, E-Mail vom Benutzer anzeigen" ]]; then db_user_infos_dialog; fi
+		if [[ $mysqlauswahl = "UUID von einem Benutzer anzeigen" ]]; then db_user_uuid_dialog; fi
+
+		if [[ $mysqlauswahl = "Alle Benutzer mit inkorrekter EMail abschalten" ]]; then db_email_setincorrectuseroff_dialog; fi
+		if [[ $mysqlauswahl = "Benutzeracount abschalten" ]]; then db_setuserofline_dialog; fi
+		if [[ $mysqlauswahl = "Benutzeracount einschalten" ]]; then db_setuseronline_dialog; fi
+
 		if [[ $mysqlauswahl = "Hauptmenu" ]]; then hauptmenu; fi
 		if [[ $mysqlauswahl = "Dateimennu" ]]; then dateimenu; fi
 		if [[ $mysqlauswahl = "Weitere Funktionen" ]]; then funktionenmenu; fi
@@ -5666,7 +6163,7 @@ function expertenmenu()
 		"Installationen anzeigen" ""
 		"--------------------------" ""
 		"Kommando an OpenSim senden" ""
-		"--------------------------" ""
+		"----------Menu------------" ""
 		"Hauptmennu" ""
 		"Dateimennu" ""
 		"mySQLmenu" ""
@@ -5875,12 +6372,17 @@ case  $KOMMANDO  in
 	db_delete) db_delete "$2" "$3" "$4" ;;
 	db_empty) db_empty "$2" "$3" "$4" ;;
 	db_tables) db_tables "$2" "$3" "$4" ;;
+	db_tables_dialog) db_tables_dialog "$2" "$3" "$4" ;;
 	db_regions) db_regions "$2" "$3" "$4" ;;
 	db_regionsuri) db_regionsuri "$2" "$3" "$4" ;;
 	db_regionsport) db_regionsport "$2" "$3" "$4" ;;
 	db_email_setincorrectuseroff) db_email_setincorrectuseroff "$2" "$3" "$4" ;;
 	db_setuserofline) db_setuserofline "$2" "$3" "$4" "$5" "$6" ;;
 	db_setuseronline) db_setuseronline "$2" "$3" "$4" "$5" "$6" ;;
+	warnbox) warnbox  "$2" ;;
+	db_anzeigen_dialog) db_anzeigen_dialog "$2" "$3" ;;
+	db_all_user_dialog) db_all_user_dialog "$2" "$3" "$4" ;;
+	db_all_uuid_dialog) db_all_uuid_dialog "$2" "$3" "$4" ;;
 	test) test ;;
 	*) hauptmenu ;;
 esac
