@@ -16,8 +16,10 @@
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+# Status 26.06.2022 232 Funktionen.
+
 #### Einstellungen ####
-VERSION="V0.79.477" # opensimMULTITOOL Versionsausgabe
+VERSION="V0.79.480" # opensimMULTITOOL Versionsausgabe
 clear # Bildschirm loeschen
 
 # Alte Variablen loeschen aus eventuellen voherigen sessions
@@ -35,7 +37,7 @@ unset REGIONSNAMEc
 unset REGIONSNAMEd
 unset VERZEICHNISSCREEN
 
-### dummyvar, Shell-Check ueberlisten wegen der Konfigurationsdatei, hat sonst keinerlei Funktion und wird auch nicht aufgerufen.
+### ! dummyvar, Shell-Check ueberlisten wegen der Konfigurationsdatei, hat sonst keinerlei Funktion und wird auch nicht aufgerufen.
 function dummyvar()
 {
 # shellcheck disable=SC2034
@@ -43,17 +45,22 @@ function dummyvar()
 	MONEYZIP="OpenSimCurrencyServer-2021-master.zip" OSVERSION="opensim-0.9.2.2Dev"	REGIONSDATEI="RegionList.ini" SIMDATEI="SimulatorList.ini" WARTEZEIT=30 STARTWARTEZEIT=10 STOPWARTEZEIT=30 MONEYWARTEZEIT=60 ROBUSTWARTEZEIT=60
 	BACKUPWARTEZEIT=120 AUTOSTOPZEIT=60 SETMONOTHREADS=800 SETMONOTHREADSON="yes" OPENSIMDOWNLOAD="http://opensimulator.org/dist/" OPENSIMVERSION="opensim-0.9.2.2.zip" SEARCHADRES="icanhazip.com" AUTOCONFIG="no" 
 	CONFIGURESOURCE="opensim-configuration-addon-modul-main" CONFIGUREZIP="opensim-configuration-addon-modul-main.zip" 
-	# neue Farbe
 	textfontcolor=7;	textbaggroundcolor=0;	debugfontcolor=4;	debugbaggroundcolor=0;	infofontcolor=2;	infobaggroundcolor=0;	warnfontcolor=3;	warnbaggroundcolor=0;
 	errorfontcolor=1;	errorbaggroundcolor=0;	SETMONOGCPARAMSON1="no"; SETMONOGCPARAMSON2="yes";	LOGDELETE="no";	LOGWRITE="no";
-
-	echo "$result_mysqlrest"
-	#hostname="localhost"; 	
-	username="username"; 	password="userpasswd"; 	databasename="grid"; #swpfilename="/opt/opensim.swp"
+	username="username"; 	password="userpasswd"; 	databasename="grid";
 }
 
 ### Datumsvariablen Datum, Dateidatum und Uhrzeit
 DATUM=$(date +%d.%m.%Y); DATEIDATUM=$(date +%d_%m_%Y) # UHRZEIT=$(date +%H:%M:%S)
+
+# Linux Version
+myDescription=$(lsb_release -d) # Description: Ubuntu 22.04 LTS
+myRelease=$(lsb_release -r) # Release: 22.04
+myCodename=$(lsb_release -sc) # jammy
+
+ubuntuDescription=$(cut -f2 <<< "$myDescription") # Ubuntu 22.04 LTS
+ubuntuRelease=$(cut -f2 <<< "$myRelease") # 22.04
+ubuntuCodename=$(cut -f2 <<< "$myCodename") # jammy
 
 ### Einstellungen aus opensim.cnf laden, bei einem Script upgrade gehen so die einstellungen nicht mehr verloren.
 # Pfad des opensim.sh Skriptes herausfinden
@@ -69,13 +76,16 @@ AKTUELLEIP='"'$(wget -O - -q $SEARCHADRES)'"'
 cd /"$STARTVERZEICHNIS" || return 1
 sleep 1
 
-### Eingabeauswertung fuer Funktionen ohne dialog.
+### Standart Mono Threads
+export MONO_THREADS_PER_CPU=800
+
+### * Eingabeauswertung fuer Funktionen ohne dialog.
 KOMMANDO=$1
 
 ### Wenn es noch keine log Datei gibt dann anlegen, wegen Fehlermeldung Datei nicht vorhanden.
 # if [ ! -f /$STARTVERZEICHNIS/"$DATEIDATUM"-multitool.log ]; then echo "" > /$STARTVERZEICHNIS/"$DATEIDATUM"-multitool.log ; fi
 
-### Funktion vardel, Variablen loeschen.
+### ! vardel, Variablen loeschen.
 function vardel()
 {	unset STARTVERZEICHNIS; unset MONEYVERZEICHNIS; unset ROBUSTVERZEICHNIS
 	unset WARTEZEIT; unset STARTWARTEZEIT; unset STOPWARTEZEIT
@@ -85,13 +95,14 @@ function vardel()
 	return 0
 }
 
+### !  errorlog
 function errorlog()
 {
     if [ $LOGWRITE = "no" ]; then echo 1>&2 "Log message: $1"; fi
     if [ $LOGWRITE = "yes" ]; then echo 1>&2 "Log message: $1" >> /$STARTVERZEICHNIS/"$DATEIDATUM"-multitool.log; fi
 }
 
-### Log Dateien und Funktionen
+### ! Log Dateien und Funktionen
 function log()
 {
     local text; local logtype; local datetime;
@@ -138,7 +149,7 @@ function log()
 	return 0
 }
 
-### Sprachen
+### ! Sprachen Test
 function german() 
 {
     bereitsinstalliert="ist bereits installiert."
@@ -163,8 +174,14 @@ function english()
 ### Spprache Einstellungen
 german # Sprache
 
+### ! .Funktionen eines Bash Skript auslesen und in eine Text Datei schreiben.
+function functionsliste() 
+{
+    file="/opt/opensim.sh"
+    grep -i -r "function " $file >> /opt/functionsliste.txt
+}
 
-### Kopfzeile
+### ! Kopfzeile
 function schreibeinfo()
 {
 	FILENAME="/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log" # Name der Datei
@@ -186,6 +203,9 @@ function schreibeinfo()
 		log rohtext "$DATUM $(date +%H:%M:%S) MULTITOOL: wurde gestartet am $(date +%d.%m.%Y) um $(date +%H:%M:%S) Uhr"
 		log rohtext "$DATUM $(date +%H:%M:%S) INFO: Server Name: ${HOSTNAME}"
 		log rohtext "$DATUM $(date +%H:%M:%S) INFO: Server IP: ${AKTUELLEIP}"
+		log rohtext "$DATUM $(date +%H:%M:%S) INFO: Linux Version: $ubuntuDescription"
+		log rohtext "$DATUM $(date +%H:%M:%S) INFO: Release: $ubuntuRelease"
+		log rohtext "$DATUM $(date +%H:%M:%S) INFO: Linux Name: $ubuntuCodename"
 		log rohtext "$DATUM $(date +%H:%M:%S) INFO: Bash Version: ${BASH_VERSION}"
 		log rohtext "$DATUM $(date +%H:%M:%S) INFO: MONO THREAD Einstellung: ${MONO_THREADS_PER_CPU}"
 		log rohtext "$DATUM $(date +%H:%M:%S) INFO: Spracheinstellung: ${LANG}"
@@ -196,10 +216,17 @@ function schreibeinfo()
 	return 0
 }
 
-# Kopfzeile in die Log Datei schreiben.
+# Better Comments Plugin (defaults: ! * ? //) 
+# Text
+# !Text
+# *Text
+# ?Text
+# //Text
+
+# *Kopfzeile in die Log Datei schreiben.
 schreibeinfo
 
-## Installationsroutine
+### ! Installationsroutine
 function iinstall()
 {
     installation=$1
@@ -210,7 +237,8 @@ function iinstall()
         sudo apt-get -y install "$installation"
     fi
 }
-## Neue Installationsroutine
+
+### ! Neue Installationsroutine
 function iinstall2()
 {
     installation=$1
@@ -218,10 +246,11 @@ function iinstall2()
         echo "$installation $bereitsinstalliert"
     else
         echo "$installierejetzt $installation"
-        sudo apt install "$installation -y"
+        sudo apt install "$installation" -y
     fi
 }
-## Neue installationsroutine aus Datei
+
+### ! Neue installationsroutine aus Datei
 function finstall()
 {
 	TXTLISTE=$1
@@ -236,7 +265,8 @@ function finstall()
 		fi
 	done < "$TXTLISTE"
 }
-## Neue installationsroutine aus Datei
+
+### ! Neue installationsroutine aus Datei
 function menufinstall()
 {
 	TXTLISTE=$1
@@ -271,7 +301,7 @@ function menufinstall()
 	fi
 }
 
-### downloados() Opensim download
+### ! downloados Opensim download
 function downloados()
 {
 	ASSETDELBOXERGEBNIS=$( dialog --menu "Downloads" 30 80 25 \
@@ -338,7 +368,7 @@ function downloados()
 	hauptmenu
 }
 
-### rebootdatum() letzter reboot des Servers.
+### ! rebootdatum letzter reboot des Servers.
 function rebootdatum()
 {
 	HEUTEDATUM=$(date +%Y-%m-%d) # Heute
@@ -380,7 +410,7 @@ function rebootdatum()
 	return 0
 }
 
-### warnbox() Medung anzeigen.
+### ! warnbox Medung anzeigen.
 function warnbox()
 {
     dialog --msgbox "$1" 0 0
@@ -389,7 +419,7 @@ function warnbox()
 	hauptmenu
 }
 
-### Funktion screenlist, Laufende Screens auflisten.
+### !  screenlist, Laufende Screens auflisten.
 function screenlist()
 {
 	log text "##############################"
@@ -407,7 +437,7 @@ function screenlist()
 		return 0
 	fi
 }
-
+### ! screenlistrestart Alle laufende Screens anzeigen
 function screenlistrestart()
 {
 	log text "##############################"
@@ -417,7 +447,7 @@ function screenlistrestart()
 	return 0
 }
 
-### Erstellen eines Arrays aus einer Textdatei - Verzeichnisse
+### ! makeverzeichnisliste Erstellen eines Arrays aus einer Textdatei - Verzeichnisse
 function makeverzeichnisliste() 
 {
 	VERZEICHNISSLISTE=()
@@ -429,7 +459,7 @@ function makeverzeichnisliste()
 	return 0
 }
 
-### Erstellen eines Arrays aus einer Textdatei - Regionen
+### ! makeregionsliste Erstellen eines Arrays aus einer Textdatei - Regionen
 function makeregionsliste() 
 {
 	REGIONSLISTE=()
@@ -440,14 +470,14 @@ function makeregionsliste()
 	return 0
 }
 
-### Funktion zum abfragen von mySQL Datensaetzen: mymysql "username" "password" "databasename" "mysqlcommand"
+### ! mysqlrest Funktion zum abfragen von mySQL Datensaetzen: mymysql "username" "password" "databasename" "mysqlcommand"
 function mysqlrest()
 {
 	username=$1; password=$2; databasename=$3; mysqlcommand=$4;
 	result_mysqlrest=$(echo "$mysqlcommand;" | MYSQL_PWD=$password mysql -u"$username" "$databasename" -N) 2> /dev/null    
 }
 
-### Funktion passwdgenerator, Passwortgenerator
+### !  passwdgenerator, Passwortgenerator
 function passwdgenerator()
 {
 	### dialog Aktionen
@@ -473,7 +503,7 @@ function passwdgenerator()
 	return 0
 }
 
-### Funktion assetdel, Asset von der Region loeschen. Aufruf: assetdel screen_name Regionsname Objektname
+### !  assetdel, Asset von der Region loeschen. Aufruf: assetdel screen_name Regionsname Objektname
 function assetdel()
 {
 	ASSDELSCREEN=$1; REGION=$2; OBJEKT=$3
@@ -491,7 +521,7 @@ function assetdel()
 	fi
 }
 
-### menuassetdel() Assets loeschen.
+### ! menuassetdel Assets loeschen.
 function menuassetdel()
 {
     # zuerst schauen ob dialog installiert ist
@@ -535,7 +565,7 @@ function menuassetdel()
 	fi
 }
 
-### Funktion landclear, Land clear - Loescht alle Parzellen auf dem Land. # Aufruf: landclear screen_name Regionsname Objektname
+### !  landclear, Land clear - Loescht alle Parzellen auf dem Land. # Aufruf: landclear screen_name Regionsname Objektname
 function landclear()
 {
 	LANDCLEARSCREEN=$1; REGION=$2
@@ -553,7 +583,7 @@ function landclear()
 	fi
 }
 
-### Funktion landclear, Land clear - Loescht alle Parzellen auf dem Land. # Aufruf: landclear screen_name Regionsname Objektname
+### !  menulandclear, Land clear - Loescht alle Parzellen auf dem Land. # Aufruf: landclear screen_name Regionsname Objektname
 function menulandclear()
 {
     # zuerst schauen ob dialog installiert ist
@@ -595,7 +625,7 @@ function menulandclear()
 	fi
 }
 
-### Funktion loadinventar, saveinventar # Aufruf: load oder saveinventar "NAME" "VERZEICHNIS" "PASSWORD" "DATEImitPFAD"
+### !  loadinventar, saveinventar # Aufruf: load oder saveinventar "NAME" "VERZEICHNIS" "PASSWORD" "DATEImitPFAD"
 function loadinventar()
 {	
 	LOADINVSCREEN="sim1"; NAME=$1; VERZEICHNIS=$2; PASSWORD=$3; DATEI=$4
@@ -609,7 +639,7 @@ function loadinventar()
 	fi
 }
 
-### Funktion loadinventar, saveinventar # Aufruf: load oder saveinventar "NAME" "VERZEICHNIS" "PASSWORD" "DATEImitPFAD"
+### !  loadinventar, saveinventar # Aufruf: load oder saveinventar "NAME" "VERZEICHNIS" "PASSWORD" "DATEImitPFAD"
 function menuloadinventar()
 {
     # zuerst schauen ob dialog installiert ist
@@ -655,7 +685,7 @@ function menuloadinventar()
     unset LOADINVSCREEN NAME VERZEICHNIS PASSWORD DATEI
 }
 
-### Funktion saveinventar, saveinventar # Aufruf: load oder saveinventar "NAME" "VERZEICHNIS" "PASSWORD" "DATEImitPFAD"
+### !  saveinventar, saveinventar # Aufruf: load oder saveinventar "NAME" "VERZEICHNIS" "PASSWORD" "DATEImitPFAD"
 function saveinventar()
 {	
 	SAVEINVSCREEN="sim1"; NAME=$1; VERZEICHNIS=$2; PASSWORD=$3; DATEI=$4
@@ -669,7 +699,7 @@ function saveinventar()
 	fi
 }
 
-### Funktion saveinventar, saveinventar # Aufruf: load oder saveinventar "NAME" "VERZEICHNIS" "PASSWORD" "DATEImitPFAD"
+### !  saveinventar, saveinventar # Aufruf: load oder saveinventar "NAME" "VERZEICHNIS" "PASSWORD" "DATEImitPFAD"
 function menusaveinventar()
 {
     # zuerst schauen ob dialog installiert ist
@@ -715,7 +745,7 @@ function menusaveinventar()
     unset SAVEINVSCREEN NAME VERZEICHNIS PASSWORD DATEI	
 }
 
-### Funktion oscommand, OpenSim Command direkt in den screen senden. # Aufruf: oscommand Screen Region Befehl Parameter
+### !  oscommand, OpenSim Command direkt in den screen senden. # Aufruf: oscommand Screen Region Befehl Parameter
 # Beispiel: /opt/opensim.sh oscommand sim1 Welcome "alert Hallo liebe Leute dies ist eine Nachricht"
 # Beispiel: /opt/opensim.sh oscommand sim1 Welcome "alert-user John Doe Hallo John Doe"
 function oscommand()
@@ -731,7 +761,7 @@ function oscommand()
 	return 0
 }
 
-### Funktion oscommand, OpenSim Command direkt in den screen senden. # Aufruf: oscommand Screen Region Befehl Parameter
+### !  oscommand, OpenSim Command direkt in den screen senden. # Aufruf: oscommand Screen Region Befehl Parameter
 function menuoscommand()
 {
     # zuerst schauen ob dialog installiert ist
@@ -774,14 +804,14 @@ function menuoscommand()
     # Zum schluss alle Variablen loeschen.
     unset OSCOMMANDSCREEN REGION COMMAND
 }
-
+### ! oswriteconfig
 function oswriteconfig()
 {	
 	SETSIMULATOR=$1
 	CONFIGWRITE="config save /opt/$SETSIMULATOR.ini"
 	screen -S "$SETSIMULATOR" -p 0 -X eval "stuff '$CONFIGWRITE'^M"
 }
-
+### ! menuoswriteconfig
 function menuoswriteconfig()
 {
 	SETSIMULATOR=$1  # OpenSimulator, Verzeichnis und Screen Name
@@ -830,7 +860,7 @@ function menuoswriteconfig()
 	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then	hauptmenu; fi
 }
 
-### Funktion works, screen pruefen ob er laeuft. dialog auswahl
+### !  menuworks, screen pruefen ob er laeuft. dialog auswahl
 function menuworks()
 {
 	WORKSSCREEN=$1  # OpenSimulator, Verzeichnis und Screen Name
@@ -870,7 +900,7 @@ function menuworks()
 	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then	hauptmenu; fi
 }
 
-### Funktion works, screen pruefen ob er laeuft. # Aufruf: works screen_name
+### !  works, screen pruefen ob er laeuft. # Aufruf: works screen_name
 function works()
 {
 	WORKSSCREEN=$1  # OpenSimulator, Verzeichnis und Screen Name
@@ -887,7 +917,7 @@ function works()
 	fi
 }
 
-### waslauft() Zeigt alle Laufenden Screens an.
+### ! waslauft - Zeigt alle Laufenden Screens an.
 function waslauft()
 {
   # Die screen -ls ausgabe zu einer Liste aendern.
@@ -898,7 +928,7 @@ function waslauft()
   return 0
 }
 
-### menuwaslauft() Zeigt alle Laufenden Screens an im dialog.
+### ! menuwaslauft - Zeigt alle Laufenden Screens an im dialog.
 function menuwaslauft()
 {
   # Die screen -ls ausgabe zu einer Liste aendern.
@@ -912,7 +942,7 @@ function menuwaslauft()
   return 0
 }
 
-### Funktion checkfile, pruefen ob Datei vorhanden ist. # Aufruf: checkfile "pfad/name"
+### !  checkfile, pruefen ob Datei vorhanden ist. # Aufruf: checkfile "pfad/name"
 # Verwendung als Einzeiler: checkfile /pfad/zur/datei && echo "File exists" || echo "File not found!"
 function checkfile()
 {
@@ -921,7 +951,7 @@ function checkfile()
 	return $?
 }
 
-### Funktion mapdel, loescht die Map-Karten. # Aufruf: mapdel Verzeichnis
+### !  mapdel, loescht die Map-Karten. # Aufruf: mapdel Verzeichnis
 function mapdel()
 {
 	VERZEICHNIS=$1
@@ -936,7 +966,7 @@ function mapdel()
 	fi
 }
 
-### Funktion logdel, loescht die Log Dateien. # Aufruf: logdel Verzeichnis
+### !  logdel, loescht die Log Dateien. # Aufruf: logdel Verzeichnis
 function logdel()
 {
 	VERZEICHNIS=$1
@@ -950,7 +980,7 @@ function logdel()
 	fi
 }
 
-### Funktion rologdel, loescht die Log Dateien. # Aufruf: rologdel Verzeichnis
+### !  rologdel, loescht die Log Dateien. # Aufruf: rologdel Verzeichnis
 function rologdel()
 {
 	# /opt/robust/bin
@@ -965,7 +995,7 @@ function rologdel()
 	fi
 }
 
-### Funktion menumapdel(), loescht die Log Dateien. # Aufruf: mapdel Verzeichnis
+### !  menumapdel, loescht die Log Dateien. # Aufruf: mapdel Verzeichnis
 function menumapdel()
 {
 	### dialog Aktionen
@@ -993,7 +1023,7 @@ function menumapdel()
 	hauptmenu
 }
 
-### Funktion logdel, loescht die Log Dateien. # Aufruf: logdel Verzeichnis
+### !  logdel, loescht die Log Dateien. # Aufruf: logdel Verzeichnis
 function menulogdel()
 {
 	### dialog Aktionen
@@ -1021,7 +1051,7 @@ function menulogdel()
 	hauptmenu
 }
 
-### Funktion ossettings, stellt den Linux Server fuer OpenSim ein.
+### !  ossettings, stellt den Linux Server fuer OpenSim ein.
 function ossettings()
 {	
 	log text "##############################"
@@ -1058,7 +1088,7 @@ function ossettings()
 	return 0
 }
 
-### Funktion osstart, startet Region Server. # Beispiel-Example: /opt/opensim.sh osstart sim1
+### !  osstart, startet Region Server. # Beispiel-Example: /opt/opensim.sh osstart sim1
 function osstart()
 {
 	OSSTARTSCREEN=$1 # OpenSimulator, Verzeichnis und Screen Name
@@ -1093,7 +1123,7 @@ function osstart()
 	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then hauptmenu; fi
 }
 
-### Funktion osstop, stoppt Region Server. # Beispiel-Example: /opt/opensim.sh osstop sim1
+### !  osstop, stoppt Region Server. # Beispiel-Example: /opt/opensim.sh osstop sim1
 function osstop()
 {
 	OSSTOPSCREEN=$1 # OpenSimulator, Verzeichnis und Screen Name
@@ -1110,7 +1140,7 @@ function osstop()
 	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then hauptmenu; fi
 }
 
-### Funktion menuosstart() ist die dialog Version von osstart()
+### !  menuosstart() ist die dialog Version von osstart()
 function menuosstart()
 {
     IOSSTARTSCREEN=$(\
@@ -1164,7 +1194,7 @@ function menuosstart()
 	# hauptmenu
 }
 
-### Funktion menuosstop() ist die dialog Version von osstop()
+### !  menuosstop() ist die dialog Version von osstop()
 function menuosstop()
 {
     IOSSTOPSCREEN=$(\
@@ -1190,7 +1220,7 @@ function menuosstop()
 	fi
 }
 
-### Funktion rostart, Robust Server starten.
+### !  rostart, Robust Server starten.
 function rostart()
 {
 	log text "##############################"
@@ -1214,6 +1244,7 @@ function rostart()
 		return 1
 	fi
 }
+### ! menurostart
 function menurostart()
 {
 	log text "##############################"
@@ -1236,7 +1267,7 @@ function menurostart()
 	fi
 }
 
-### Funktion rostop, Robust Server herunterfahren.
+### !  rostop, Robust Server herunterfahren.
 function rostop()
 {
 	if screen -list | grep -q "RO"; then
@@ -1249,6 +1280,7 @@ function rostop()
 		return 1
 	fi
 }
+### !  menurostop, Robust Server herunterfahren.
 function menurostop()
 {
 	if screen -list | grep -q "RO"; then
@@ -1260,7 +1292,7 @@ function menurostop()
 	fi
 }
 
-### Funktion mostart, Money Server starten.
+### !  mostart, Money Server starten.
 function mostart()
 {
 	if checkfile /$STARTVERZEICHNIS/$MONEYVERZEICHNIS/bin/MoneyServer.exe; then
@@ -1284,6 +1316,8 @@ function mostart()
 		return 1
 	fi
 }
+
+### !  menumostart, Money Server starten.
 function menumostart()
 {
 	if checkfile /$STARTVERZEICHNIS/$MONEYVERZEICHNIS/bin/MoneyServer.exe; then
@@ -1308,7 +1342,7 @@ function menumostart()
 	fi
 }
 
-### Funktion mostop, Money Server herunterfahren.
+### !  mostop, Money Server herunterfahren.
 function mostop()
 {
 	if screen -list | grep -q "MO"; then
@@ -1321,6 +1355,7 @@ function mostop()
 		return 1
 	fi
 }
+### !  menumostop, Money Server herunterfahren.
 function menumostop()
 {
 	if screen -list | grep -q "MO"; then
@@ -1334,7 +1369,7 @@ function menumostop()
 	fi
 }
 
-### Funktion osscreenstop, beendet ein Screeen. # Beispiel-Example: osscreenstop sim1
+### !  osscreenstop, beendet ein Screeen. # Beispiel-Example: osscreenstop sim1
 function osscreenstop()
 {
 	SCREENSTOPSCREEN=$1
@@ -1349,7 +1384,7 @@ function osscreenstop()
 	log text "No screen session found. Ist hier kein Fehler, sondern ein Beweis, das alles zuvor sauber heruntergefahren wurde."
 }
 
-### Funktion gridstart, startet erst Robust und dann Money.
+### !  gridstart, startet erst Robust und dann Money.
 function gridstart()
 {
 	ossettings
@@ -1365,7 +1400,7 @@ function gridstart()
 	fi
 	return 0
 }
-#menugridstart
+### ! menugridstart
 function menugridstart()
 {
 	ossettings
@@ -1382,7 +1417,7 @@ function menugridstart()
 	fi
 }
 
-### Funktion simstats, zeigt Simstatistik an. # simstats screen_name
+### !  simstats, zeigt Simstatistik an. # simstats screen_name
 # Beispiel-Example: simstats sim1
 # erzeugt im Hauptverzeichnis eine Datei namens sim1.log in dieser Datei ist die Statistik zu finden.
 function simstats()
@@ -1402,7 +1437,7 @@ function simstats()
 	return 0
 }
 
-### Funktion terminator, killt alle noch offene Screens.
+### !  terminator, killt alle noch offene Screens.
 function terminator()
 {
 	log info "hasta la vista baby"
@@ -1412,7 +1447,7 @@ function terminator()
 	return 0
 }
 
-### Funktion oscompi, kompilieren des OpenSimulator.
+### !  oscompi, kompilieren des OpenSimulator.
 function oscompi()
 {
 	log info "OSCOMPI: Kompilierungsvorgang startet"
@@ -1443,10 +1478,10 @@ function oscompi()
 	return 0
 }
 
-### Funktion gitcopy, Dateien vom Github kopieren.
+### !  gitcopy, Dateien vom Github kopieren.
 function moneygitcopy()
 {
-#Money und Scripte vom Git holen
+	#Money und Scripte vom Git holen
 
 	if [[ $MONEYCOPY = "yes" ]]
 	then
@@ -1458,7 +1493,7 @@ function moneygitcopy()
 	return 0
 }
 
-### Funktion gitcopy, Dateien vom Github kopieren.
+### !  gitcopy, Dateien vom Github kopieren.
 function scriptgitcopy()
 {
 #Money und Scripte vom Git holen
@@ -1472,10 +1507,10 @@ function scriptgitcopy()
 	return 0
 }
 
-### Funktion gitcopy, Dateien vom Github kopieren.
+### !  gitcopy, Dateien vom Github kopieren.
 function configuregitcopy()
 {
-#Money und Scripte vom Git holen
+	#Money und Scripte vom Git holen
 	if [[ $CONFIGURECOPY = "yes" ]]
 	then
 		log info "CONFIGURECOPY: Configure wird vom GIT geholt"
@@ -1486,8 +1521,8 @@ function configuregitcopy()
 	return 0
 }
 
-### Funktion gitcopy, Dateien vom Github kopieren.
-function OpenSimSearchgitcopy()
+### !  gitcopy, Dateien vom Github kopieren.
+function searchgitcopy()
 {
 #OpenSimSearch vom Git holen
 	if [[ $OSSEARCHCOPY = "yes" ]]
@@ -1500,7 +1535,7 @@ function OpenSimSearchgitcopy()
 	return 0
 }
 
-### Funktion scriptcopy, lsl ossl scripte kopieren.
+### !  scriptcopy, lsl ossl scripte kopieren.
 function scriptcopy()
 {
 	if [[ $SCRIPTCOPY = "yes" ]]
@@ -1525,7 +1560,7 @@ function scriptcopy()
 	return 0
 }
 
-### Funktion moneycopy, Money Dateien kopieren.
+### !  moneycopy, Money Dateien kopieren.
 function moneycopy()
 {
 	if [[ $MONEYCOPY = "yes" ]]
@@ -1549,8 +1584,7 @@ function moneycopy()
 	return 0
 }
 
-### configurecopy
-### Funktion moneycopy, Money Dateien kopieren.
+### ! configurecopy
 function configurecopy()
 {
 	if [[ $CONFIGURECOPY = "yes" ]]
@@ -1577,7 +1611,7 @@ function configurecopy()
 	return 0
 }
 
-### Funktion pythoncopy, Plugin Daten kopieren.
+### !  pythoncopy, Plugin Daten kopieren.
 function pythoncopy()
 {
 	if [[ $PYTHONCOPY = "yes" ]]
@@ -1594,7 +1628,7 @@ function pythoncopy()
 	return 0
 }
 
-### Funktion searchcopy, Plugin Daten kopieren.
+### !  searchcopy, Plugin Daten kopieren.
 function searchcopy()
 {
 	if [[ $SEARCHCOPY = "yes" ]]
@@ -1612,7 +1646,7 @@ function searchcopy()
 	return 0
 }
 
-### Funktion mutelistcopy, Plugin Daten kopieren.
+### !  mutelistcopy, Plugin Daten kopieren.
 function mutelistcopy()
 {
 	if [[ $MUTELISTCOPY = "yes" ]]
@@ -1630,7 +1664,7 @@ function mutelistcopy()
 	return 0
 }
 
-### Funktion chrisoscopy, Plugin Dateien kopieren.
+### !  chrisoscopy, Plugin Dateien kopieren.
 function chrisoscopy()
 {
 	if [[ $CHRISOSCOPY = "yes" ]]
@@ -1649,7 +1683,7 @@ function chrisoscopy()
 	return 0
 }
 
-### Funktion makeaot, aot generieren.
+### !  makeaot, aot generieren.
 function makeaot()
 {
 	if [ ! -f "/$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/" ]; then
@@ -1674,7 +1708,7 @@ function makeaot()
 	return 0
 }
 
-### Funktion cleanaot, aot entfernen. Test
+### !  cleanaot, aot entfernen. Test
 function cleanaot()
 {
 	if [ ! -f "/$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/" ]; then
@@ -1701,7 +1735,7 @@ function cleanaot()
 	return 0
 }
 
-### Funktion osprebuild, Prebuild einstellen # Aufruf Beispiel: opensim.sh prebuild 1330.
+### !  osprebuild, Prebuild einstellen # Aufruf Beispiel: opensim.sh prebuild 1330.
 # Ergebnis ist eine Einstellung fuer Release mit dem Namn OpenSim 0.9.2.1330
 # sed -i schreibt sofort - s/Suchwort/Ersatzwort/g - /Verzeichnis/Dateiname.Endung
 function osprebuild()
@@ -1722,7 +1756,7 @@ function osprebuild()
 	return 0
 }
 
-# Funktion osstruktur, legt die Verzeichnisstruktur fuer OpenSim an. # Aufruf: opensim.sh osstruktur ersteSIM letzteSIM
+### !  osstruktur, legt die Verzeichnisstruktur fuer OpenSim an. # Aufruf: opensim.sh osstruktur ersteSIM letzteSIM
 # Beispiel: ./opensim.sh osstruktur 1 10 - erstellt ein Grid Verzeichnis fuer 10 Simulatoren inklusive der SimulatorList.ini.
 function osstruktur()
 {
@@ -1744,7 +1778,7 @@ function osstruktur()
 	return 0
 }
 
-### Funktion menuosstruktur() ist die dialog Version von osstruktur()
+### !  menuosstruktur() ist die dialog Version von osstruktur()
 function menuosstruktur()
 {
     # zuerst schauen ob dialog installiert ist
@@ -1790,7 +1824,7 @@ function menuosstruktur()
 	return 0
 }
 
-### Funktion osdelete, altes opensim loeschen und letztes opensim als Backup umbenennen.
+### !  osdelete, altes opensim loeschen und letztes opensim als Backup umbenennen.
 function osdelete()
 {	
 	if [ -d /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/ ]; then
@@ -1807,7 +1841,7 @@ function osdelete()
 	return 0
 }
 
-### Funktion oscopyrobust, Robust Daten kopieren.
+### !  oscopyrobust, Robust Daten kopieren.
 function oscopyrobust()
 {
 	cd /$STARTVERZEICHNIS || return 1
@@ -1825,7 +1859,7 @@ function oscopyrobust()
 	return 0
 }
 
-### Funktion oscopysim, Simulatoren kopieren aus dem Verzeichnis opensim.
+### !  oscopysim, Simulatoren kopieren aus dem Verzeichnis opensim.
 function oscopysim()
 {
 	cd /$STARTVERZEICHNIS || return 1
@@ -1844,7 +1878,7 @@ function oscopysim()
 	return 0
 }
 
-### Funktion oscopysim, Simulatoren kopieren aus dem Verzeichnis opensim.
+### !  oscopysim, Simulatoren kopieren aus dem Verzeichnis opensim.
 function oscopy()
 {
 	cd /$STARTVERZEICHNIS || return 1
@@ -1856,7 +1890,7 @@ function oscopy()
 }
 
 
-# Funktion configlesen, Regionskonfigurationen lesen. # Beispiel: configlesen sim1
+### !  configlesen, Regionskonfigurationen lesen. # Beispiel: configlesen sim1
 function configlesen()
 {
 	log info "CONFIGLESEN: Regionskonfigurationen von $CONFIGLESENSCREEN"
@@ -1866,7 +1900,7 @@ function configlesen()
 	return 0
 }
 
-### Funktion regionsconfigdateiliste, schreibt Dateinamen mit Pfad in eine Datei.
+### !  regionsconfigdateiliste, schreibt Dateinamen mit Pfad in eine Datei.
 # regionsconfigdateiliste -b(Bildschirm) -d(Datei)  Vereichnis
 function regionsconfigdateiliste() 
 {
@@ -1881,7 +1915,7 @@ function regionsconfigdateiliste()
 	return 0
 }
 
-### Funktion meineregionen, listet alle Regionen aus den Konfigurationen auf.
+### !  meineregionen, listet alle Regionen aus den Konfigurationen auf.
 function meineregionen() 
 {	
 	makeverzeichnisliste
@@ -1898,7 +1932,7 @@ function meineregionen()
 	return 0
 }
 
-### Funktion regionsinisuchen, sucht alle Regionen.
+### !  regionsinisuchen, sucht alle Regionen.
 function regionsinisuchen() 
 {	
 	makeverzeichnisliste
@@ -1919,7 +1953,7 @@ function regionsinisuchen()
 	return 0
 }
 
-# Funktion get_regionsarray, gibt ein Array aller Regionsabschnitte zurueck.
+### !  get_regionsarray, gibt ein Array aller Regionsabschnitte zurueck.
 function get_regionsarray() 
 {
 	# Es fehlt eine pruefung ob Datei vorhanden ist.
@@ -1938,7 +1972,7 @@ function get_regionsarray()
 	return 0
 }
 
-# Funktion get_value_from_Region_key, gibt den Wert eines bestimmten Schluessels im angegebenen Abschnitt zurueck.
+### !  get_value_from_Region_key, gibt den Wert eines bestimmten Schluessels im angegebenen Abschnitt zurueck.
 # $1 - Datei - $2 - Schluessel - $3 - Sektion
 function get_value_from_Region_key() 
 {
@@ -1950,8 +1984,8 @@ function get_value_from_Region_key()
 	return 0
 }
 
-### Regions.ini zerlegen
-### Funktion regionsiniteilen, holt aus der Regions.ini eine Region heraus und speichert sie mit ihrem Regionsnamen.
+### ! Regions.ini zerlegen
+## Funktion regionsiniteilen, holt aus der Regions.ini eine Region heraus und speichert sie mit ihrem Regionsnamen.
 # Aufruf: regionsiniteilen Verzeichnis Regionsname
 function regionsiniteilen()
 {
@@ -1995,7 +2029,7 @@ function regionsiniteilen()
 	return 0
 }
 
-### Funktion autoregionsiniteilen, Die gemeinschaftsdatei Regions.ini in einzelne Regionen teilen.
+### !  autoregionsiniteilen, Die gemeinschaftsdatei Regions.ini in einzelne Regionen teilen.
 # diese dann unter dem Regionsnamen speichern, danach die Alte Regions.ini umbenennen in Regions.ini.old.
 function autoregionsiniteilen()
 {
@@ -2026,7 +2060,7 @@ function autoregionsiniteilen()
 	return 0
 }
 
-### Funktion regionliste, Die RegionListe ermitteln und mit dem Verzeichnisnamen in die RegionList.ini schreiben.
+### !  regionliste, Die RegionListe ermitteln und mit dem Verzeichnisnamen in die RegionList.ini schreiben.
 function regionliste()
 {
 	# Alte RegionList.ini sichern und in RegionList.ini.old umbenennen.
@@ -2063,6 +2097,7 @@ function regionliste()
 	return 0
 }
 
+### !  makewebmaps
 function makewebmaps()
 {
 	MAPTILEVERZEICHNIS="maptiles"
@@ -2074,7 +2109,7 @@ function makewebmaps()
 	return 0
 }
 
-### Funktion moneydelete, loescht den MoneyServer ohne die OpenSim Config zu veraendern.
+### !  moneydelete, loescht den MoneyServer ohne die OpenSim Config zu veraendern.
 function moneydelete()
 {
 	makeverzeichnisliste
@@ -2102,7 +2137,7 @@ function moneydelete()
 	return 0
 }
 
-### Funktion osgitholen, kopiert eine Entwicklerversion in das opensim Verzeichnis.
+### !  osgitholen, kopiert eine Entwicklerversion in das opensim Verzeichnis.
 function osgitholen()
 {
 	if [ -d /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/ ]
@@ -2123,7 +2158,7 @@ function osgitholen()
 	return 0
 }
 
-### Funktion opensimholen, holt den OpenSimulator in das Arbeitsverzeichnis.
+### !  opensimholen, holt den OpenSimulator in das Arbeitsverzeichnis.
 function opensimholen()
 {
 	if [ -d /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/ ]
@@ -2154,7 +2189,7 @@ function opensimholen()
 	return 0
 }
 
-### Installation von mysqltuner
+### !Installation von mysqltuner
 function install_mysqltuner()
 {
 	cd /$STARTVERZEICHNIS || return 1
@@ -2166,7 +2201,7 @@ function install_mysqltuner()
 	return 0
 }
 
-### Funktion regionbackup, backup einer Region.
+### !  regionbackup, backup einer Region.
 # regionbackup Screenname "Der Regionsname"
 function regionbackup()
 {
@@ -2204,7 +2239,7 @@ function regionbackup()
 	return 0
 }
 
-### Funktion menuregionbackup() ist die dialog Version von regionbackup()
+### !  menuregionbackup() ist die dialog Version von regionbackup()
 function menuregionbackup()
 {
     # zuerst schauen ob dialog installiert ist
@@ -2264,7 +2299,7 @@ function menuregionbackup()
 	return 0
 }
 
-### Funktion regionrestore, hochladen einer Region.
+### !  regionrestore, hochladen einer Region.
 # regionrestore Screenname "Der Regionsname"
 # Ich kann nicht pruefen ob die Region im OpenSimulator vorhanden ist.
 # Sollte sie nicht vorhanden sein wird root (Alle) oder die letzte ausgewaehlte Region wiederhergestellt. Dies zerstoert eventuell vorhandene Regionen.
@@ -2287,7 +2322,7 @@ function regionrestore()
 	return 0
 }
 
-### Funktion menuregionrestore() ist die dialog Version von regionrestore()
+### !  menuregionrestore() ist die dialog Version von regionrestore()
 function menuregionrestore()
 {
     # zuerst schauen ob dialog installiert ist
@@ -2330,7 +2365,7 @@ function menuregionrestore()
 	return 0
 }
 
-### Funktion autosimstart, automatischer sim start ohne Robust und Money.
+### !  autosimstart, automatischer sim start ohne Robust und Money.
 function autosimstart()
 {
 	if ! screen -list | grep -q 'sim'; 
@@ -2359,7 +2394,7 @@ function autosimstart()
 	return 0
 }
 
-### Funktion autosimstop, stoppen aller laufenden Simulatoren.
+### !  autosimstop, stoppen aller laufenden Simulatoren.
 function autosimstop()
 {
 	makeverzeichnisliste
@@ -2375,7 +2410,7 @@ function autosimstop()
 	done
 	return 0
 }
-### Funktion autosimstart, automatischer sim start ohne Robust und Money.
+### !  autosimstart, automatischer sim start ohne Robust und Money.
 function menuautosimstart()
 {
 	if ! screen -list | grep -q 'sim'; 
@@ -2408,7 +2443,7 @@ function menuautosimstart()
 	return 0
 }
 
-### Funktion autosimstop, stoppen aller laufenden Simulatoren.
+### !  autosimstop, stoppen aller laufenden Simulatoren.
 function menuautosimstop()
 {
 	makeverzeichnisliste
@@ -2433,7 +2468,7 @@ function menuautosimstop()
 	return 0
 }
 
-### Funktion autologdel, automatisches loeschen aller log Dateien.
+### !  autologdel, automatisches loeschen aller log Dateien.
 # Die Dateien samt neuer Daten werden beim naechsten start des opensimulator neu geschrieben.
 function autologdel()
 {
@@ -2460,6 +2495,8 @@ function autologdel()
 
 	return 0
 }
+
+### !  menuautologdel
 function menuautologdel()
 {
 	log text "##############################"
@@ -2482,7 +2519,7 @@ function menuautologdel()
 	fi
 }
 
-### Funktion automapdel, automatisches loeschen aller Map/Karten Dateien.
+### !  automapdel, automatisches loeschen aller Map/Karten Dateien.
 # Die Dateien samt neuer Daten werden beim naechsten start des opensimulator neu geschrieben.
 function automapdel()
 {
@@ -2498,7 +2535,7 @@ function automapdel()
 	return 0
 }
 
-### Funktion autorobustmapdel, automatisches loeschen aller Map/Karten Dateien in Robust.
+### !  autorobustmapdel, automatisches loeschen aller Map/Karten Dateien in Robust.
 # Die Dateien samt neuer Daten werden beim naechsten start des opensimulator neu geschrieben.
 function autorobustmapdel()
 {
@@ -2508,7 +2545,7 @@ function autorobustmapdel()
 	return 0
 }
 
-### Funktion cleaninstall, loeschen aller externen addon Module.
+### !  cleaninstall, loeschen aller externen addon Module.
 function cleaninstall()
 {
 
@@ -2520,7 +2557,7 @@ function cleaninstall()
 	return 0
 }
 
-### Funktion allclean, loescht Log, dll, so, exe, aot Dateien fuer einen saubere neue installation, ohne Robust.
+### !  allclean, loescht Log, dll, so, exe, aot Dateien fuer einen saubere neue installation, ohne Robust.
 # Hierbei werden keine Datenbanken oder Konfigurationen geloescht aber opensim ist anschliessend nicht mehr startbereit.
 # Um opensim wieder Funktionsbereit zu machen muss ein Upgrade oder ein oscopy vorgang ausgefuehrt werden.
 # allclean Verzeichnis
@@ -2546,7 +2583,7 @@ function allclean()
 	return 0
 }
 
-### Funktion autoallclean, loescht Log, dll, so, exe, aot Dateien fuer einen saubere neue installation, mit Robust.
+### !  autoallclean, loescht Log, dll, so, exe, aot Dateien fuer einen saubere neue installation, mit Robust.
 # Hierbei werden keine Datenbanken oder Konfigurationen geloescht.
 # Hierbei werden keine Datenbanken oder Konfigurationen geloescht aber opensim ist anschliessend nicht mehr startbereit.
 # Um opensim wieder Funktionsbereit zu machen muss ein Upgrade oder ein oscopy vorgang ausgefuehrt werden.
@@ -2601,7 +2638,7 @@ function autoallclean()
 	return 0
 }
 
-### Funktion autoregionbackup, automatischer Backup aller Regionen die in der Regionsliste eingetragen sind.
+### !  autoregionbackup, automatischer Backup aller Regionen die in der Regionsliste eingetragen sind.
 function autoregionbackup()
 {
 	log info "Automatisches Backup wird gestartet."
@@ -2616,7 +2653,7 @@ function autoregionbackup()
 	return 0
 }
 
-### Funktion autoscreenstop, beendet alle laufenden simX screens.
+### !  autoscreenstop, beendet alle laufenden simX screens.
 function autoscreenstop()
 {
 	makeverzeichnisliste
@@ -2644,6 +2681,7 @@ function autoscreenstop()
 	fi
 	return 0
 }
+### !  menuautoscreenstop
 function menuautoscreenstop()
 {
 	makeverzeichnisliste
@@ -2672,7 +2710,7 @@ function menuautoscreenstop()
 	return 0
 }
 
-### Funktion autostart, startet das komplette Grid mit allen sims.
+### !  autostart, startet das komplette Grid mit allen sims.
 function autostart()
 {
 	log text "##############################"
@@ -2689,11 +2727,11 @@ function autostart()
 	return 0
 }
 
-### Funktion autostop, stoppt das komplette Grid mit allen sims.
+### !  autostop, stoppt das komplette Grid mit allen sims.
 function autostop()
 {
 	log text "##############################"
-	log info "### Stoppe das Grid! ###"
+	log info "Stoppe das Grid! ###"
 	# schauen ob screens laufen wenn ja beenden.
 	# shellcheck disable=SC2022
 	if ! screen -list | grep -q 'sim'; then
@@ -2719,7 +2757,7 @@ function autostop()
 	return 0
 }
 
-### Funktion autostart, startet das komplette Grid mit allen sims.
+### !  autostart, startet das komplette Grid mit allen sims.
 function menuautostart()
 {
 	echo ""
@@ -2733,7 +2771,7 @@ function menuautostart()
 	return 0
 }
 
-### Funktion autostop, stoppt das komplette Grid mit allen sims.
+### !  autostop, stoppt das komplette Grid mit allen sims.
 function menuautostop()
 {
 	# schauen ob screens laufen wenn ja beenden.
@@ -2760,7 +2798,7 @@ function menuautostop()
 	menuautoscreenstop
 }
 
-### Funktion autorestart, startet das gesamte Grid neu und loescht die log Dateien.
+### !  autorestart, startet das gesamte Grid neu und loescht die log Dateien.
 function autorestart()
 {
 	autostop
@@ -2775,6 +2813,7 @@ function autorestart()
 	screenlistrestart
 	return 0
 }
+### !  menuautorestart
 function menuautorestart()
 {
 	menuautostop
@@ -2789,7 +2828,7 @@ function menuautorestart()
 	log info "Auto Restart abgeschlossen."
 }
 
-### Dieses Installationsbeispiel installiert alles fuer OpenSim inkusive Web, sowie alles um einen OpenSimulator zu Kompilieren.
+### !Dieses Installationsbeispiel installiert alles fuer OpenSim inkusive Web, sowie alles um einen OpenSimulator zu Kompilieren.
 ### Funktion monoinstall, mono 6.x installieren.
 function monoinstall() 
 {
@@ -2811,13 +2850,13 @@ function monoinstall()
 	return 0
 }
 
-### Funktion serverinstall, Ubuntu 18 Server zum Betrieb von OpenSim vorbereiten.
+### !  serverinstall, Ubuntu 18 Server zum Betrieb von OpenSim vorbereiten.
 function serverupgrade()
 {    
     sudo apt-get update
     sudo apt-get upgrade
 }
-### Installation oder Migration von MariaDB 10.8.3 oder hoeher fuer Ubuntu 18
+### !Installation oder Migration von MariaDB 10.8.3 oder hoeher fuer Ubuntu 18
 function installmariadb18()
 {
 	
@@ -2836,7 +2875,8 @@ function installmariadb18()
 
 	mariadb --version
 }
-### Installation oder Migration von MariaDB fuer Ubuntu 22
+
+### !Installation oder Migration von MariaDB fuer Ubuntu 22
 function installmariadb22()
 {
 	# MySQL stoppen:
@@ -2849,6 +2889,7 @@ function installmariadb22()
 	mariadb --version
 }
 
+### !  monoinstall18
 function monoinstall18()
 {
 	if dpkg-query -s mono-complete 2>/dev/null|grep -q installed; then
@@ -2867,6 +2908,7 @@ function monoinstall18()
 	fi
 }
 
+### !  monoinstall20
 function monoinstall20()
 {
 	if dpkg-query -s mono-complete 2>/dev/null|grep -q installed; then
@@ -2885,6 +2927,7 @@ function monoinstall20()
 	fi
 }
 
+### !  sourcelist18
 function sourcelist18()
 {
 	echo "deb http://de.archive.ubuntu.com/ubuntu bionic main restricted universe multiverse"
@@ -2903,6 +2946,7 @@ function sourcelist18()
 	echo "# deb-src http://archive.canonical.com/ubuntu bionic partner"
 }
 
+### !  sourcelist22
 function sourcelist22()
 {
 	echo "deb http://de.archive.ubuntu.com/ubuntu jammy main restricted universe multiverse"
@@ -2918,6 +2962,7 @@ function sourcelist22()
 	echo "#deb-src http://de.archive.ubuntu.com/ubuntu jammy-backports main restricted universe multiverse"
 }
 
+### !  installwordpress
 function installwordpress()
 {
 	#Installationen die fuer Wordpress benoetigt werden
@@ -2937,6 +2982,7 @@ function installwordpress()
 	iinstall php-zip    
 }
 
+### !  installobensimulator
 function installobensimulator() 
 {
     #Alles fuer den OpenSimulator ausser mono
@@ -2967,17 +3013,20 @@ function installobensimulator()
 	iinstall mysqltuner
 }
 
+### !  installbegin
 function installbegin()
 {
 	apt update
 	apt upgrade
 }
 
+### !  installmono22
 function installmono22()
 {
 	sudo apt install mono-roslyn mono-complete mono-dbg mono-xbuild -y
 }
 
+### !  installubuntu22
 function installubuntu22()
 {
     #Alles fuer den OpenSimulator ausser mono
@@ -3021,6 +3070,7 @@ function installubuntu22()
 	iinstall2 libopenjp3d7
 }
 
+### !  ufwset
 function ufwset()
 {
 	### Uncomplicated Firewall
@@ -3056,13 +3106,14 @@ function ufwset()
 	#sudo ufw allow 20800:20900/udp
 }
 
-### Installieren von PhpMyAdmin
+### !Installieren von PhpMyAdmin
 function installphpmyadmin()
 {
 	### Installieren von PhpMyAdmin
 	sudo apt install phpmyadmin
 }
 
+### !  installfinis
 function installfinish()
 {
 	apt update
@@ -3072,7 +3123,7 @@ function installfinish()
     #reboot now
 }
 
-### HTTPS installieren: installationhttps22 "myemail@server.com" "myworld.com"
+### !HTTPS installieren: installationhttps22 "myemail@server.com" "myworld.com"
 function installationhttps22()
 {
 	httpsemail=$1
@@ -3085,6 +3136,7 @@ function installationhttps22()
 	sudo certbot --apache --agree-tos --redirect -m "$httpsemail" -d "$httpsdomain" -d www."$httpsdomain"
 }
 
+### !  serverinstall22
 function serverinstall22()
 {
 	installbegin
@@ -3096,7 +3148,7 @@ function serverinstall22()
 	installfinish
 }
 
-### Auswahl der zu installierenden Pakete (Dies ist meinem Geschmack angepasst)
+### !Auswahl der zu installierenden Pakete (Dies ist meinem Geschmack angepasst)
 function serverinstall()
 {
 	# zuerst schauen ob dialog installiert ist
@@ -3137,7 +3189,7 @@ function serverinstall()
 	# dialog Aktionen Ende
 }
 
-### Funktion installationen, Ubuntu 18 Server, Was habe ich alles auf meinem Server Installiert? sortiert auflisten.
+### !  installationen, Ubuntu 18 Server, Was habe ich alles auf meinem Server Installiert? sortiert auflisten.
 function installationen() 
 {
 	log info "Liste aller Installierten Pakete unter Linux:"
@@ -3146,12 +3198,12 @@ function installationen()
 	return 0
 }
 
-### Funktion osbuilding, test automation.
+### !  osbuilding, test automation.
 # Beispiel: opensim-0.9.2.2Dev-1187-gcf0b1b1.zip
 # /opt/opensim.sh osbuilding 1187
 function osbuilding() 
 {
-	### dialog Aktionen
+	## dialog Aktionen
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
 		# Alle Aktionen mit dialog
@@ -3196,7 +3248,7 @@ function osbuilding()
 	return 0
 }
 
-# create user [first] [last] [passw] [RegionX] [RegionY] [Email] - creates a new user and password 
+### !  create user [first] [last] [passw] [RegionX] [RegionY] [Email] - creates a new user and password 
 function createuser()
 {	
 	VORNAME=$1; NACHNAME=$2; PASSWORT=$3; EMAIL=$4;
@@ -3231,7 +3283,7 @@ function createuser()
 	return 0
 }
 
-### Funktion menucreateuser() ist die dialog Version von createuser()
+### !  menucreateuser() ist die dialog Version von createuser()
 function menucreateuser()
 {
     # zuerst schauen ob dialog installiert ist
@@ -3299,7 +3351,7 @@ function menucreateuser()
 
 # Datenbank Befehle Achtung alles noch nicht ausgereift!!!
 
-### function db_anzeigen, listet alle erstellten Datenbanken auf.
+### !  db_anzeigen, listet alle erstellten Datenbanken auf.
 function db_anzeigen()
 {
 	username=$1; password=$2; databasename=$3;
@@ -3310,7 +3362,7 @@ function db_anzeigen()
 
 	return 0
 }
-### function db_anzeigen_dialog, listet alle erstellten Datenbanken auf.
+### !  db_anzeigen_dialog, listet alle erstellten Datenbanken auf.
 function db_anzeigen_dialog()
 {
     # zuerst schauen ob dialog installiert ist
@@ -3346,7 +3398,7 @@ function db_anzeigen_dialog()
 	return 0
 }
 
-### db_tables tabellenabfrage, listet alle Tabellen in einer Datenbank auf.
+### !db_tables tabellenabfrage, listet alle Tabellen in einer Datenbank auf.
 function db_tables()
 {
 	username=$1; password=$2; databasename=$3;
@@ -3357,7 +3409,7 @@ function db_tables()
 
 	return 0
 }
-### db_tables_dialog tabellenabfrage, listet alle Tabellen in einer Datenbank auf.
+### !db_tables_dialog tabellenabfrage, listet alle Tabellen in einer Datenbank auf.
 function db_tables_dialog()
 {
     # zuerst schauen ob dialog installiert ist
@@ -3394,25 +3446,7 @@ function db_tables_dialog()
 	return 0
 }
 
-### function db_benutzer_anzeigen, alle angelegten Benutzer von mySQL anzeigen.
-function db_benutzer_anzeigen_offline()
-{
-	DBBENUTZER=$1; DBPASSWORT=$2;
-
-	log text "PRINT DATABASE USER: Alle Datenbankbenutzer anzeigen."
-
-	# 2>/dev/null verhindert die Fehlerausgabe - mysql warning using a password on the command line interface can be insecure. disable.
-	mysql -u"$DBBENUTZER" -p"$DBPASSWORT" -e "SELECT User FROM mysql.user" 2>/dev/null
-	mysql -u"$DBBENUTZER" -p"$DBPASSWORT" -e "SELECT User FROM mysql.user" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log" 2>/dev/null
-
-	# Eingabe Variablen loeschen
-	unset DBBENUTZER
-	unset DBPASSWORT
-
-	return 0
-}
-#test
-### function db_benutzer_anzeigen, alle angelegten Benutzer von mySQL anzeigen.
+### !  db_benutzer_anzeigen, alle angelegten Benutzer von mySQL anzeigen.
 function db_benutzer_anzeigen()
 {
     # zuerst schauen ob dialog installiert ist
@@ -3453,19 +3487,7 @@ function db_benutzer_anzeigen()
 	return 0
 }
 
-### regionsabfrage, Alle Regionen listen (Dies geht nur im Grid (Grid Datenbank) oder Standalone Modus).
-function db_regions_offline()
-{
-	username=$1; password=$2; databasename=$3;
-
-	log text "PRINT DATABASE: Alle Regionen listen."
-	mysqlrest "$username" "$password" "$databasename" "SELECT regionName FROM regions"
-	log rohtext "$result_mysqlrest"
-
-	return 0
-}
-#test
-### regionsabfrage, Alle Regionen listen (Dies geht nur im Grid (Grid Datenbank) oder Standalone Modus).
+### ! Regionsabfrage, Alle Regionen listen (Dies geht nur im Grid (Grid Datenbank) oder Standalone Modus).
 function db_regions()
 {
     # zuerst schauen ob dialog installiert ist
@@ -3508,19 +3530,7 @@ function db_regions()
 	return 0
 }
 
-### regionsuri, Region URI pruefen sortiert nach URI (Dies geht nur im Grid (Grid Datenbank) oder Standalone Modus).
-function db_regionsuri_offline()
-{
-	username=$1; password=$2; databasename=$3;
-
-	log text "PRINT DATABASE: Region URI pruefen sortiert nach URI."
-	mysqlrest "$username" "$password" "$databasename" "SELECT regionName , serverURI FROM regions ORDER BY serverURI"
-	log rohtext "$result_mysqlrest"
-
-	return 0
-}
-#3
-### regionsuri, Region URI pruefen sortiert nach URI (Dies geht nur im Grid (Grid Datenbank) oder Standalone Modus).
+### ! Regionsuri, Region URI pruefen sortiert nach URI (Dies geht nur im Grid (Grid Datenbank) oder Standalone Modus).
 function db_regionsuri()
 {
     # zuerst schauen ob dialog installiert ist
@@ -3563,19 +3573,7 @@ function db_regionsuri()
 	return 0
 }
 
-### regionsport, Ports pruefen sortiert nach Ports (Dies geht nur im Grid (Grid Datenbank) oder Standalone Modus).
-function db_regionsport_offline()
-{
-	username=$1; password=$2; databasename=$3;
-
-	log text "PRINT DATABASE: Alle Datenbanken anzeigen."
-	mysqlrest "$username" "$password" "$databasename" "SELECT regionName , serverPort FROM regions ORDER BY serverPort"
-	log rohtext "$result_mysqlrest"
-
-	return 0
-}
-#test
-### regionsport, Ports pruefen sortiert nach Ports (Dies geht nur im Grid (Grid Datenbank) oder Standalone Modus).
+### ! Regionsport, Ports pruefen sortiert nach Ports (Dies geht nur im Grid (Grid Datenbank) oder Standalone Modus).
 function db_regionsport()
 {
     # zuerst schauen ob dialog installiert ist
@@ -3618,7 +3616,7 @@ function db_regionsport()
 	return 0
 }
 
-### function create_db, erstellt eine neue Datenbank.
+### !  create_db, erstellt eine neue Datenbank.
 function create_db()
 {
 	DBBENUTZER=$1; DBPASSWORT=$2; DATENBANKNAME=$3;
@@ -3642,7 +3640,7 @@ function create_db()
 	return 0
 }
 
-### function create_db_user - Operation CREATE USER failed - Fehler.
+### !  create_db_user - Operation CREATE USER failed - Fehler.
 function create_db_user()
 {
 	DBBENUTZER=$1; DBPASSWORT=$2; NEUERNAME=$3; NEUESPASSWORT=$4;
@@ -3664,7 +3662,7 @@ function create_db_user()
 	return 0
 }
 
-### function delete_db, loescht eine Datenbank.
+### !  delete_db, loescht eine Datenbank.
 function delete_db()
 {
 	DBBENUTZER=$1; DBPASSWORT=$2; DATENBANKNAME=$3;
@@ -3684,28 +3682,7 @@ function delete_db()
 	return 0
 }
 
-### db_empty, loescht eine Datenbank und erstellt diese anschliessend neu. Das ist Datenbank leeren auf die schnelle Art.
-function db_empty_offline()
-{
-	username=$1; password=$2; databasename=$3;
-
-	log text "EMPTY DATABASE: Datenbank $databasename leeren."
-
-	echo "DROP DATABASE $databasename;" | MYSQL_PWD=$password mysql -u"$username" -N
-	sleep 15
-	echo "CREATE DATABASE IF NOT EXISTS $databasename CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;" | MYSQL_PWD=$password mysql -u"$username" -N
-
-	log text "EMPTY DATABASE: Datenbank $databasename wurde geleert."
-
-
-	# Du solltest benutzen:
-	# CREATE DATABASE mydb CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-	# Beachten Sie, dass utf8_general_ci nicht mehr als bewaehrte Methode empfohlen wird.
-
-	return 0
-}
-#test
-### db_empty, loescht eine Datenbank und erstellt diese anschliessend neu. Das ist Datenbank leeren auf die schnelle Art.
+### !db_empty, loescht eine Datenbank und erstellt diese anschliessend neu. Das ist Datenbank leeren auf die schnelle Art.
 function db_empty()
 {
     # zuerst schauen ob dialog installiert ist
@@ -3757,31 +3734,7 @@ function db_empty()
 	return 0
 }
 
-### function allrepair_db, CHECK – REPAIR – ANALYZE – OPTIMIZE, alle Datenbanken.
-function allrepair_db_offline()
-{
-	DBBENUTZER=$1; DBPASSWORT=$2;
-
-	log text "ALL REPAIR DATABASE: Alle Datenbanken Checken, Reparieren und Optimieren"
-
-	mysqlcheck -u"$DBBENUTZER" -p"$DBPASSWORT" --check --all-databases
-	mysqlcheck -u"$DBBENUTZER" -p"$DBPASSWORT" --auto-repair --all-databases	
-	mysqlcheck -u"$DBBENUTZER" -p"$DBPASSWORT" --optimize --all-databases
-	# Danach werden automatisiert folgende SQL Statements ausgefuehrt:
-	# – CHECK TABLE
-	# – REPAIR TABLE
-	# – ANALYZE TABLE
-	# – OPTIMIZE TABLE
-	log text "ALL REPAIR DATABASE: Fertig"
-
-	# Eingabe Variablen loeschen
-	unset DBBENUTZER
-	unset DBPASSWORT
-
-	return 0
-}
-#test
-### function allrepair_db, CHECK – REPAIR – ANALYZE – OPTIMIZE, alle Datenbanken.
+### !  allrepair_db, CHECK – REPAIR – ANALYZE – OPTIMIZE, alle Datenbanken.
 function allrepair_db()
 {
     # zuerst schauen ob dialog installiert ist
@@ -3829,7 +3782,7 @@ function allrepair_db()
 	return 0
 }
 
-### function mysql_neustart, startet mySQL neu.
+### !  mysql_neustart, startet mySQL neu.
 function mysql_neustart()
 {
 	log text "MYSQL RESTART: MySQL Neu starten."
@@ -3842,7 +3795,7 @@ function mysql_neustart()
 	return 0
 }
 
-### db_backup, sichert eine einzelne Datenbank. Neu
+### !db_backup, sichert eine einzelne Datenbank. Neu
 function db_backup()
 {
 	username=$1; password=$2; databasename=$3;
@@ -3856,27 +3809,7 @@ function db_backup()
 	return 0
 }
 
-# Test funktioniert
-### create_db, erstellt eine neue Datenbank. db_create "username" "password" "databasename"
-function db_create_offline()
-{
-	username=$1; password=$2; databasename=$3;
-	# result_mysqlrest=$(echo "$mysqlcommand;" | MYSQL_PWD=$password mysql -u"$username" "$databasename" -N) 2> /dev/null
-
-	log text "CREATE DATABASE: Datenbank anlegen."
-
-	echo "CREATE DATABASE IF NOT EXISTS $databasename CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;" | MYSQL_PWD=$password mysql -u"$username" -N
-
-	log text "CREATE DATABASE: Datenbank $databasename wurde angelegt."
-
-	# Du solltest benutzen:
-	# CREATE DATABASE mydb CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-	# Beachten Sie, dass utf8_general_ci nicht mehr als bewaehrte Methode empfohlen wird.
-
-	return 0
-}
-#test
-### create_db, erstellt eine neue Datenbank. db_create "username" "password" "databasename"
+### !create_db, erstellt eine neue Datenbank. db_create "username" "password" "databasename"
 function db_create()
 {
     # zuerst schauen ob dialog installiert ist
@@ -3927,7 +3860,7 @@ function db_create()
 }
 
 # Test funktioniert
-### function db_dbuser, listet alle erstellten Datenbankbenutzer auf.
+### !  db_dbuser, listet alle erstellten Datenbankbenutzer auf.
 function db_dbuser()
 {
 	username=$1; password=$2;
@@ -3939,20 +3872,7 @@ function db_dbuser()
 	return 0
 }
 
-# Test funktioniert
-### function db_benutzerrechte, listet alle erstellten Benutzerrechte auf. db_dbuserrechte root 123456 testuser
-function db_dbuserrechte_offline()
-{
-	username=$1; password=$2; benutzer=$3
-
-	log text "PRINT DATABASE: Alle Datenbankbenutzer anzeigen."
-	result_mysqlrest=$(echo "SHOW GRANTS FOR '$benutzer'@'localhost';" | MYSQL_PWD=$password mysql -u"$username" -N) 2> /dev/null
-	log rohtext "$result_mysqlrest"
-
-	return 0
-}
-#test
-### function db_benutzerrechte, listet alle erstellten Benutzerrechte auf. db_dbuserrechte root 123456 testuser
+### ! db_benutzerrechte, listet alle erstellten Benutzerrechte auf. db_dbuserrechte root 123456 testuser
 function db_dbuserrechte()
 {
     # zuerst schauen ob dialog installiert ist
@@ -3994,19 +3914,7 @@ function db_dbuserrechte()
 	return 0
 }
 
-# Test funktioniert
-### function db_deldbuser, loescht Datenbankbenutzer. db_deldbuser root 123456 testuser
-function db_deldbuser_offline()
-{
-	username=$1; password=$2; benutzer=$3
-	log text "Benutzer loeschen: Datenbankbenutzer loeschen."
-	echo "DROP USER '$benutzer'@'localhost';" | MYSQL_PWD=$password mysql -u"$username" -N
-	log text "Benutzer loeschen: Datenbankbenutzer $benutzer geloescht."
-
-	return 0
-}
-#test
-### function db_deldbuser, loescht einen Datenbankbenutzer. db_deldbuser root 123456 testuser
+### !  db_deldbuser, loescht einen Datenbankbenutzer. db_deldbuser root 123456 testuser
 function db_deldbuser()
 {
     # zuerst schauen ob dialog installiert ist
@@ -4058,24 +3966,7 @@ function db_deldbuser()
 	return 0
 }
 
-# Test funktioniert
-### db_create_new_dbuser root password NEUERNAME NEUESPASSWORT
-function db_create_new_dbuser_offline()
-{
-	username=$1; password=$2; NEUERNAME=$3; NEUESPASSWORT=$4;
-
-	log text "CREATE DATABASE USER: Datenbankbenutzer $NEUERNAME anlegen."
-
-	echo "CREATE USER $NEUERNAME@'localhost' IDENTIFIED BY '$NEUESPASSWORT';" | MYSQL_PWD=$password mysql -u"$username" -N
-	echo "GRANT ALL PRIVILEGES ON * . * TO '$NEUERNAME'@'localhost';" | MYSQL_PWD=$password mysql -u"$username" -N
-	echo "flush privileges;" | MYSQL_PWD=$password mysql -u"$username" -N
-
-	log text "CREATE DATABASE USER: Datenbankbenutzer $NEUERNAME wurde anlgelegt."
-
-	return 0
-}
-#test
-### db_create_new_dbuser root password NEUERNAME NEUESPASSWORT
+### !db_create_new_dbuser root password NEUERNAME NEUESPASSWORT
 function db_create_new_dbuser()
 {
     # zuerst schauen ob dialog installiert ist
@@ -4121,25 +4012,7 @@ function db_create_new_dbuser()
 	return 0
 }
 
-# Test funktioniert
-### db_delete, loescht eine Datenbank komplett.
-function db_delete_offline()
-{
-	username=$1; password=$2; databasename=$3;
-
-	log text "DELETE DATABASE: Datenbank loeschen."
-	
-	#echo "DROP DATABASE $databasename;" | MYSQL_PWD=$password mysql -u"$username" -N
-
-	# Vor dem Loeschen sicherzustellen dass die Datenbank existiert.
-	echo "DROP DATABASE IF EXISTS $databasename;" | MYSQL_PWD=$password mysql -u"$username" -N
-
-	log text "DELETE DATABASE: Datenbank $databasename wurde geloescht."
-
-	return 0
-}
-# Test
-### db_delete, loescht eine Datenbank komplett.
+### ! db_delete, loescht eine Datenbank komplett.
 function db_delete()
 {
     # zuerst schauen ob dialog installiert ist
@@ -4182,7 +4055,7 @@ function db_delete()
 	return 0
 }
 
-### function tabellenabfrage, listet alle Tabellen in einer Datenbank auf.
+### ! tabellenabfrage, listet alle Tabellen in einer Datenbank auf.
 # Es geht hier um die machbarkeit und nicht den Sinn.
 function tabellenabfrage()
 {
@@ -4196,7 +4069,7 @@ MEINE_ABFRAGE_ENDE
 return 0
 }
 
-### function regionsabfrage, Alle Regionen listen (Dies geht nur im Grid (Grid Datenbank) oder Standalone Modus).
+### !  regionsabfrage, Alle Regionen listen (Dies geht nur im Grid (Grid Datenbank) oder Standalone Modus).
 function regionsabfrage()
 {
 	DBBENUTZER=$1; DBPASSWORT=$2; DATENBANKNAME=$3;	
@@ -4208,7 +4081,7 @@ MEIN_ABFRAGE_ENDE
 return 0
 }
 
-### function regionsuri, Region URI pruefen sortiert nach URI (Dies geht nur im Grid (Grid Datenbank) oder Standalone Modus).
+### !  regionsuri, Region URI pruefen sortiert nach URI (Dies geht nur im Grid (Grid Datenbank) oder Standalone Modus).
 function regionsuri()
 {
 	DBBENUTZER=$1; DBPASSWORT=$2; DATENBANKNAME=$3;	
@@ -4220,7 +4093,7 @@ MEIN_ABFRAGE_ENDE
 return 0
 }
 
-### function regionsport, Ports pruefen sortiert nach Ports (Dies geht nur im Grid (Grid Datenbank) oder Standalone Modus).
+### !  regionsport, Ports pruefen sortiert nach Ports (Dies geht nur im Grid (Grid Datenbank) oder Standalone Modus).
 function regionsport()
 {
 	DBBENUTZER=$1; DBPASSWORT=$2; DATENBANKNAME=$3;	
@@ -4232,7 +4105,7 @@ MEIN_ABFRAGE_ENDE
 return 0
 }
 
-### function setpartner, Partner setzen bei einer Person. Also bei beiden Partnern muss dies gemacht werden.
+### !  setpartner, Partner setzen bei einer Person. Also bei beiden Partnern muss dies gemacht werden.
 # opensim.sh setpartner Datenbankbenutzer Datenbankpasswort Robustdatenbank "AvatarUUID" "PartnerUUID"
 function setpartner()
 {
@@ -4252,7 +4125,7 @@ MEIN_ABFRAGE_ENDE
 	echo "$DATUM $(date +%H:%M:%S) SETPARTNER: $NEUERPARTNER ist jetzt Partner von $AVATARUUID" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 	return 0
 }
-### setpartner, Partner setzen bei einer Person. Also bei beiden Partnern muss dies gemacht werden.
+### !setpartner, Partner setzen bei einer Person. Also bei beiden Partnern muss dies gemacht werden.
 # opensim.sh setpartner Datenbankbenutzer Datenbankpasswort Robustdatenbank "AvatarUUID" "PartnerUUID"
 function db_setpartner()
 {
@@ -4267,7 +4140,7 @@ function db_setpartner()
 
 	return 0
 }
-### db_deletepartner, Partner loeschen bei einer Person. Also bei beiden Partnern muss dies gemacht werden.
+### !db_deletepartner, Partner loeschen bei einer Person. Also bei beiden Partnern muss dies gemacht werden.
 # opensim.sh setpartner Datenbankbenutzer Datenbankpasswort Robustdatenbank "AvatarUUID" "PartnerUUID"
 function db_deletepartner()
 {
@@ -4286,7 +4159,7 @@ function db_deletepartner()
 
 # Test: getestet und korrigiert am 05.06.2022
 
-### Daten von allen Benutzern anzeigen: db_all_user "username" "password" "databasename"
+### !Daten von allen Benutzern anzeigen: db_all_user "username" "password" "databasename"
 function db_all_user()
 {
 	username=$1; password=$2; databasename=$3;
@@ -4297,7 +4170,7 @@ function db_all_user()
 
 	return 0
 }
-### db_all_user_dialog tabellenabfrage, Daten von allen Benutzern anzeigen.
+### !db_all_user_dialog tabellenabfrage, Daten von allen Benutzern anzeigen.
 function db_all_user_dialog()
 {
     # zuerst schauen ob dialog installiert ist
@@ -4334,7 +4207,7 @@ function db_all_user_dialog()
 	return 0
 }
 
-### UUID von allen Benutzern anzeigen: db_all_uuid "username" "password" "databasename"
+### !UUID von allen Benutzern anzeigen: db_all_uuid "username" "password" "databasename"
 function db_all_uuid()
 {
 	username=$1; password=$2; databasename=$3;
@@ -4345,7 +4218,7 @@ function db_all_uuid()
 
 	return 0
 }
-### UUID von allen Benutzern anzeigen.
+### !UUID von allen Benutzern anzeigen.
 function db_all_uuid_dialog()
 {
     # zuerst schauen ob dialog installiert ist
@@ -4382,7 +4255,7 @@ function db_all_uuid_dialog()
 	return 0
 }
 
-###  Alle Namen anzeigen: db_all_name "username" "password" "databasename"
+### ! Alle Namen anzeigen: db_all_name "username" "password" "databasename"
 function db_all_name()
 {
 	username=$1; password=$2; databasename=$3;
@@ -4393,7 +4266,7 @@ function db_all_name()
 
 	return 0
 }
-###  Alle Namen anzeigen: db_all_name_dialog "username" "password" "databasename"
+### ! Alle Namen anzeigen: db_all_name_dialog "username" "password" "databasename"
 function db_all_name_dialog()
 {
     # zuerst schauen ob dialog installiert ist
@@ -4430,7 +4303,7 @@ function db_all_name_dialog()
 	return 0
 }
 
-### Daten von einem Benutzer anzeigen: db_user_data "username" "password" "databasename" "firstname" "lastname"
+### !Daten von einem Benutzer anzeigen: db_user_data "username" "password" "databasename" "firstname" "lastname"
 function db_user_data()
 {
 	username=$1; password=$2; databasename=$3; firstname=$4; lastname=$5;
@@ -4441,7 +4314,7 @@ function db_user_data()
 
 	return 0
 }
-### Daten von einem Benutzer anzeigen: db_user_data_dialog "username" "password" "databasename" "firstname" "lastname"
+### !Daten von einem Benutzer anzeigen: db_user_data_dialog "username" "password" "databasename" "firstname" "lastname"
 function db_user_data_dialog()
 {
     # zuerst schauen ob dialog installiert ist
@@ -4482,7 +4355,7 @@ function db_user_data_dialog()
 	return 0
 }
 
-### UUID Vor- und Nachname sowie E-Mail Adresse von einem Benutzer anzeigen: db_user_infos "username" "password" "databasename" "firstname" "lastname"
+### !UUID Vor- und Nachname sowie E-Mail Adresse von einem Benutzer anzeigen: db_user_infos "username" "password" "databasename" "firstname" "lastname"
 function db_user_infos()
 {
 	username=$1; password=$2; databasename=$3; firstname=$4; lastname=$5;
@@ -4493,7 +4366,7 @@ function db_user_infos()
 
 	return 0
 }
-### UUID Vor- und Nachname sowie E-Mail Adresse von einem Benutzer anzeigen: db_user_infos "username" "password" "databasename" "firstname" "lastname"
+### !UUID Vor- und Nachname sowie E-Mail Adresse von einem Benutzer anzeigen: db_user_infos "username" "password" "databasename" "firstname" "lastname"
 function db_user_infos_dialog()
 {
     # zuerst schauen ob dialog installiert ist
@@ -4534,7 +4407,7 @@ function db_user_infos_dialog()
 	return 0
 }
 
-### UUID von einem Benutzer anzeigen: db_user_uuid
+### !UUID von einem Benutzer anzeigen: db_user_uuid
 function db_user_uuid()
 {
 	username=$1; password=$2; databasename=$3; firstname=$4; lastname=$5;
@@ -4545,7 +4418,7 @@ function db_user_uuid()
 
 	return 0
 }
-### UUID von einem Benutzer anzeigen: db_user_uuid_dialog
+### !UUID von einem Benutzer anzeigen: db_user_uuid_dialog
 function db_user_uuid_dialog()
 {
     # zuerst schauen ob dialog installiert ist
@@ -4586,7 +4459,7 @@ function db_user_uuid_dialog()
 	return 0
 }
 
-### Alles vom inventoryfolders type des User: db_foldertyp_user "username" "password" "databasename" "firstname" "lastname" "foldertyp"
+### !Alles vom inventoryfolders type des User: db_foldertyp_user "username" "password" "databasename" "firstname" "lastname" "foldertyp"
 function db_foldertyp_user()
 {
 	username=$1; password=$2; databasename=$3; firstname=$4; lastname=$5; foldertyp=$6
@@ -4626,21 +4499,7 @@ function db_foldertyp_user()
 	return 0
 }
 
-### Alles vom inventoryfolders was type -1 des User: db_all_userfailed "username" "password" "databasename" "firstname" "lastname"
-function db_all_userfailed_offline()
-{
-	username=$1; password=$2; databasename=$3; firstname=$4; lastname=$5;
-	echo "Alles vom inventoryfolders was type != -1 des User:"
-	echo " "
-	mysqlrest "$username" "$password" "$databasename" "SELECT PrincipalID FROM UserAccounts WHERE FirstName='$firstname' AND LastName='$lastname'"
-	uf_user_uuid="$result_mysqlrest"
-	mysqlrest "$username" "$password" "$databasename" "SELECT * FROM inventoryfolders WHERE type != '-1' AND agentID='$uf_user_uuid'"
-	log rohtext "$result_mysqlrest"
-
-	return 0
-}
-#test
-### Alles vom inventoryfolders was type -1 des User: db_all_userfailed "username" "password" "databasename" "firstname" "lastname"
+### ! Alles vom inventoryfolders was type -1 des User: db_all_userfailed "username" "password" "databasename" "firstname" "lastname"
 function db_all_userfailed()
 {
     # zuerst schauen ob dialog installiert ist
@@ -4689,19 +4548,7 @@ function db_all_userfailed()
 	return 0
 }
 
-### Zeige Erstellungsdatum eines Users an: db_userdate "username" "password" "databasename" "firstname" "lastname"
-function db_userdate_offline()
-{
-	username=$1; password=$2; databasename=$3; firstname=$4; lastname=$5;
-	echo "Zeige Erstellungsdatum eines Users an:"
-	echo " "
-	mysqlrest "$username" "$password" "$databasename" "SELECT Created FROM UserAccounts WHERE firstname='$firstname' AND lastname LIKE '$lastname'"
-	#unix timestamp konvertieren in das Deutsche Datumsformat.
-	userdatum=$(date +%d.%m.%Y -d @"$result_mysqlrest")
-	echo "Der Benutzer $firstname $lastname wurde am $userdatum angelegt."
-}
-#test
-### Zeige Erstellungsdatum eines Users an: db_userdate "username" "password" "databasename" "firstname" "lastname"
+### !Zeige Erstellungsdatum eines Users an: db_userdate "username" "password" "databasename" "firstname" "lastname"
 function db_userdate()
 {
     # zuerst schauen ob dialog installiert ist
@@ -4750,19 +4597,7 @@ function db_userdate()
 	return 0
 }
 
-### Finde offensichtlich falsche E-Mail Adressen der User: db_false_email "username" "password" "databasename"
-function db_false_email_offline()
-{
-	username=$1; password=$2; databasename=$3; ausnahmefirstname="GRID"; ausnahmelastname="SERVICES"
-	echo "Finde offensichtlich falsche E-Mail Adressen der User ausser von $ausnahmefirstname $ausnahmelastname."
-	echo " "
-	mysqlrest "$username" "$password" "$databasename" "SELECT PrincipalID, FirstName, LastName, Email FROM UserAccounts WHERE Email NOT LIKE '%_@__%.__%'AND NOT firstname='$ausnahmefirstname' AND NOT lastname='$ausnahmelastname'"
-	log rohtext "$result_mysqlrest"
-
-	return 0
-}
-#test
-### Finde offensichtlich falsche E-Mail Adressen der User: db_false_email "username" "password" "databasename"
+### ! Finde offensichtlich falsche E-Mail Adressen der User: db_false_email "username" "password" "databasename"
 function db_false_email()
 {
     # zuerst schauen ob dialog installiert ist
@@ -4808,7 +4643,7 @@ function db_false_email()
 	return 0
 }
 
-### Einen User in der Datenbank erstellen und das ohne Inventar (Gut fuer Picker): set_empty_user "username" "password" "databasename" "firstname" "lastname" "email"
+### !Einen User in der Datenbank erstellen und das ohne Inventar (Gut fuer Picker): set_empty_user "username" "password" "databasename" "firstname" "lastname" "email"
 function set_empty_user()
 {
 	regex="^(([-a-zA-Z0-9\!#\$%\&\'*+/=?^_\`{\|}~]+|(\"([][,:;<>\&@a-zA-Z0-9\!#\$%\&\'*+/=?^_\`{\|}~-]|(\\\\[\\ \"]))+\"))\.)*([-a-zA-Z0-9\!#\$%\&\'*+/=?^_\`{\|}~]+|(\"([][,:;<>\&@a-zA-Z0-9\!#\$%\&\'*+/=?^_\`{\|}~-]|(\\\\[\\ \"]))+\"))@\w((-|\w)*\w)*\.(\w((-|\w)*\w)*\.)*\w{2,4}$"
@@ -4840,9 +4675,9 @@ function set_empty_user()
 
 ########### Neu am 08.06.2022
 
-### Finde alle offensichtlich falschen E-Mail Adressen der Grid User und 
-### deaktiviere dauerhaft dessen Account:
-### /opt/opensim.sh db_email_setincorrectuseroff "GRIDdatabaseusername" "GRIDdatabasepassword" "GRIDdatabasename"
+### ! Finde alle offensichtlich falschen E-Mail Adressen der Grid User und 
+## deaktiviere dauerhaft dessen Account:
+## /opt/opensim.sh db_email_setincorrectuseroff "GRIDdatabaseusername" "GRIDdatabasepassword" "GRIDdatabasename"
 function db_email_setincorrectuseroff()
 {
 	username=$1; password=$2; databasename=$3; 
@@ -4854,9 +4689,9 @@ function db_email_setincorrectuseroff()
 
 	return 0
 }
-### Finde alle offensichtlich falschen E-Mail Adressen der Grid User und 
-### deaktiviere dauerhaft dessen Account:
-### /opt/opensim.sh db_email_setincorrectuseroff "GRIDdatabaseusername" "GRIDdatabasepassword" "GRIDdatabasename"
+### ! Finde alle offensichtlich falschen E-Mail Adressen der Grid User und 
+## deaktiviere dauerhaft dessen Account:
+## /opt/opensim.sh db_email_setincorrectuseroff "GRIDdatabaseusername" "GRIDdatabasepassword" "GRIDdatabasename"
 function db_email_setincorrectuseroff_dialog()
 {
     # zuerst schauen ob dialog installiert ist
@@ -4895,8 +4730,8 @@ function db_email_setincorrectuseroff_dialog()
 	return 0
 }
 
-### Grid User dauerhaft abschalten: 
-### /opt/opensim.sh db_setuserofline "GRIDdatabaseusername" "GRIDdatabasepassword" "GRIDdatabasename" "firstname" "lastname"
+### ! Grid User dauerhaft abschalten: 
+## /opt/opensim.sh db_setuserofline "GRIDdatabaseusername" "GRIDdatabasepassword" "GRIDdatabasename" "firstname" "lastname"
 function db_setuserofline()
 {
 	username=$1; password=$2; databasename=$3; firstname=$4; lastname=$5; 
@@ -4908,8 +4743,8 @@ function db_setuserofline()
 
 	return 0
 }
-### Grid User dauerhaft abschalten: 
-### /opt/opensim.sh db_setuserofline_dialog "GRIDdatabaseusername" "GRIDdatabasepassword" "GRIDdatabasename" "firstname" "lastname"
+### ! Grid User dauerhaft abschalten: 
+## /opt/opensim.sh db_setuserofline_dialog "GRIDdatabaseusername" "GRIDdatabasepassword" "GRIDdatabasename" "firstname" "lastname"
 function db_setuserofline_dialog()
 {
     # zuerst schauen ob dialog installiert ist
@@ -4950,8 +4785,8 @@ function db_setuserofline_dialog()
 	return 0
 }
 
-### Grid User dauerhaft aktivieren: 
-### /opt/opensim.sh db_setuseronline "GRIDdatabaseusername" "GRIDdatabasepassword" "GRIDdatabasename" "firstname" "lastname"
+### ! Grid User dauerhaft aktivieren: 
+## /opt/opensim.sh db_setuseronline "GRIDdatabaseusername" "GRIDdatabasepassword" "GRIDdatabasename" "firstname" "lastname"
 function db_setuseronline()
 {
 	username=$1; password=$2; databasename=$3; firstname=$4; lastname=$5; 
@@ -4963,8 +4798,8 @@ function db_setuseronline()
 
 	return 0
 }
-### Grid User dauerhaft aktivieren: 
-### /opt/opensim.sh db_setuseronline "GRIDdatabaseusername" "GRIDdatabasepassword" "GRIDdatabasename" "firstname" "lastname"
+### ! Grid User dauerhaft aktivieren: 
+## /opt/opensim.sh db_setuseronline "GRIDdatabaseusername" "GRIDdatabasepassword" "GRIDdatabasename" "firstname" "lastname"
 function db_setuseronline_dialog()
 {
     # zuerst schauen ob dialog installiert ist
@@ -5007,7 +4842,7 @@ function db_setuseronline_dialog()
 
 ########### Neu am 08.06.2022 Ende
 
-### function conf_write, Konfiguration schreiben ersatz fuer alle UNGETESTETEN ini Funktionen.
+### !  conf_write, Konfiguration schreiben ersatz fuer alle UNGETESTETEN ini Funktionen.
 # ./opensim.sh conf_write Einstellung NeuerParameter Verzeichnis Dateiname
 function conf_write()
 {
@@ -5017,7 +4852,8 @@ function conf_write()
 	echo "$DATUM $(date +%H:%M:%S) CONF_WRITE: Einstellung $CONF_SEARCH auf Parameter $CONF_ERSATZ geaendert in Datei /$CONF_PFAD/$CONF_DATEINAME" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 	return 0
 }
-### function conf_read, ganze Zeile aus der Konfigurationsdatei anzeigen.
+
+### !  conf_read, ganze Zeile aus der Konfigurationsdatei anzeigen.
 # ./opensim.sh conf_read Einstellungsbereich Verzeichnis Dateiname
 function conf_read()
 {
@@ -5027,7 +4863,8 @@ function conf_read()
 	echo "$DATUM $(date +%H:%M:%S) CONF_WRITE: Einstellung $CONF_SEARCH suchen in Datei /$CONF_PFAD/$CONF_DATEINAME" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 	return 0
 }
-### function conf_delete, ganze Zeile aus der Konfigurationsdatei loeschen.
+
+### !  conf_delete, ganze Zeile aus der Konfigurationsdatei loeschen.
 # ./opensim.sh conf_delete Einstellungsbereich Verzeichnis Dateiname
 function conf_delete()
 {
@@ -5038,7 +4875,7 @@ function conf_delete()
 	return 0
 }
 
-### function ramspeicher, den echten RAM Speicher auslesen.
+### !  ramspeicher, den echten RAM Speicher auslesen.
 function ramspeicher()
 {
 	# RAM groesse auslesen
@@ -5051,7 +4888,7 @@ function ramspeicher()
 	return 0
 }
 
-### function mysqleinstellen, ermitteln wieviel RAM Speicher vorhanden ist und anschliessend mySQL Einstellen.
+### !  mysqleinstellen, ermitteln wieviel RAM Speicher vorhanden ist und anschliessend mySQL Einstellen.
 # Einstellungen sind in der my.cnf nicht moeglich es muss in die /etc/mysql/mysql.conf.d/mysqld.cnf
 # Hier wird nicht geprueft ob die Einstellungen schon vorhanden sind sondern nur angehaengt.
 function mysqleinstellen()
@@ -5116,7 +4953,7 @@ function mysqleinstellen()
 	return 0
 }
 
-# In Arbeit
+### !  In Arbeit
 function neuegridconfig()
 {
 	echo "$(tput setaf 2)NEUEGRIDCONFIG: Konfigurationsdateien holen und in das ExampleConfig Verzeichnis kopieren. $(tput sgr0)"
@@ -5135,7 +4972,7 @@ function neuegridconfig()
 	return 0
 }
 
-### function ipsetzen, setzt nach Abfrage die IP in die Konfigurationen. OK
+### !  ipsetzen, setzt nach Abfrage die IP in die Konfigurationen. OK
 function ipsetzen()
 {
 	cd /"$STARTVERZEICHNIS/ExampleConfig" || return 1 # gibt es das ExampleConfig Verzeichnis wenn nicht abbruch.
@@ -5176,7 +5013,7 @@ function ipsetzen()
 	return 0
 }
 
-### Aktuelle IP in die Robust.ini schreiben. UNGETESTET
+### !Aktuelle IP in die Robust.ini schreiben. UNGETESTET
 function robustini()
 {
 	# Aktuelle IP ueber Suchadresse ermitteln und Ausfuehrungszeichen anhaengen.
@@ -5425,7 +5262,7 @@ function robustini()
 	return 0
 }
 
-### Aktuelle IP in die MoneyServer.ini schreiben. UNGETESTET
+### !Aktuelle IP in die MoneyServer.ini schreiben. UNGETESTET
 function moneyserverini()
 {	
 	# Aktuelle IP ueber Suchadresse ermitteln und Ausfuehrungszeichen anhaengen.
@@ -5479,7 +5316,7 @@ function moneyserverini()
 	return 0
 }
 
-### Aktuelle IP in die OpenSim.ini schreiben.
+### !Aktuelle IP in die OpenSim.ini schreiben.
 function opensimini()
 {
 	# Aktuelle IP ueber Suchadresse ermitteln und Ausfuehrungszeichen anhaengen.
@@ -5707,7 +5544,7 @@ function opensimini()
 	return 0
 }
 
-### Aktuelle IP in die GridCommon.ini schreiben. UNGETESTET
+### !Aktuelle IP in die GridCommon.ini schreiben. UNGETESTET
 function gridcommonini()
 {
 	# Aktuelle IP ueber Suchadresse ermitteln und Ausfuehrungszeichen anhaengen.
@@ -5788,7 +5625,7 @@ function gridcommonini()
 	return 0
 }
 
-### regionini Simulator Dateiname
+### ! Regionini Simulator Dateiname
 ### Aktuelle IP in die Regions.ini schreiben. UNGETESTET
 function regionini()
 {	
@@ -5824,7 +5661,7 @@ function regionini()
 	return 0
 }
 
-### function osslenableini() erstellt eine osslenable.ini Datei und Konfiguriert diese.
+### !  osslenableini() erstellt eine osslenable.ini Datei und Konfiguriert diese.
 function osslenableini()
 {	
 	#osslEnable.ini
@@ -5973,7 +5810,7 @@ function osslenableini()
 	return 0
 }
 
-### Umbenennen der example Dateien in Konfigurationsdateien vor dem kopieren.
+### ! Umbenennen der example Dateien in Konfigurationsdateien vor dem kopieren.
 function unlockexample()
 {
 	log info "RENAME: Alle example Dateien umbenennen"
@@ -6012,7 +5849,7 @@ function unlockexample()
 # Samples
 ###########################################################################
 
-### Funktion gridstop, stoppt erst Money dann Robust.
+### !  gridstop, stoppt erst Money dann Robust.
 function gridstop()
 {
 	if screen -list | grep -q MO; then
@@ -6028,7 +5865,7 @@ function gridstop()
 	fi
 	return 0
 }
-### Funktion gridstop, stoppt erst Money dann Robust.
+### !  gridstop, stoppt erst Money dann Robust.
 function menugridstop()
 {
 	if screen -list | grep -q MO; then
@@ -6045,7 +5882,7 @@ function menugridstop()
 	return 0
 }
 
-### Funktion compilieren, kompilieren des OpenSimulator.
+### !  compilieren, kompilieren des OpenSimulator.
 function compilieren()
 {
 	log info "COMPILIEREN: Bauen eines neuen OpenSimulators wird gestartet"
@@ -6069,7 +5906,7 @@ function compilieren()
 	fi
 
 	if [ ! -f "/$STARTVERZEICHNIS/$OSSEARCHCOPY/" ]; then
-		OpenSimSearchgitcopy
+		searchgitcopy
 	else
 		log error "COMPILIEREN: OpenSimSearch Verzeichnis existiert nicht"
 	fi
@@ -6114,7 +5951,7 @@ function compilieren()
 	return 0
 }
 
-### Funktion OSGRIDCOPY, automatisches kopieren des opensimulator aus dem verzeichnis opensim.
+### !  OSGRIDCOPY, automatisches kopieren des opensimulator aus dem verzeichnis opensim.
 function osgridcopy()
 {
 	log text " #############################"
@@ -6145,7 +5982,7 @@ function osgridcopy()
 	return 0
 }
 
-### Funktion osupgrade, automatisches upgrade des opensimulator aus dem verzeichnis opensim.
+### !  osupgrade, automatisches upgrade des opensimulator aus dem verzeichnis opensim.
 function osupgrade()
 {
 	log text " #############################"
@@ -6172,7 +6009,7 @@ function osupgrade()
 	return 0
 }
 
-### Funktion osupgrade, automatisches upgrade des opensimulator aus dem verzeichnis opensim.
+### !  osupgrade, automatisches upgrade des opensimulator aus dem verzeichnis opensim.
 function oszipupgrade()
 {
 	### dialog Aktionen
@@ -6211,7 +6048,7 @@ function oszipupgrade()
 	return 0
 }
 
-# Hier entsteht die Automatische Konfiguration. UNGETESTET
+### !  Hier entsteht die Automatische Konfiguration. UNGETESTET
 function autoconfig()
 {
 	$AUTOCONFIG # yes oder no
@@ -6225,7 +6062,7 @@ function autoconfig()
 
 
 
-### Funktion info, Informationen auf den Bildschirm ausgeben.
+### !  info, Informationen auf den Bildschirm ausgeben.
 function info()
 {
 	echo "$(tput setab 4) Server Name: ${HOSTNAME}"
@@ -6238,7 +6075,7 @@ function info()
 	return 0
 }
 
-### Funktion infodialog, Informationen auf den Bildschirm ausgeben.
+### !  infodialog, Informationen auf den Bildschirm ausgeben.
 function infodialog()
 {
 	TEXT1=(" Server Name: ${HOSTNAME}")
@@ -6257,7 +6094,7 @@ function infodialog()
 	hauptmenu
 }
 
-### Funktion kalender(), einfach nur ein Kalender.
+### !  kalender(), einfach nur ein Kalender.
 function kalender()
 {
 	HEIGHT=0
@@ -6289,7 +6126,7 @@ function kalender()
 	fi
 }
 
-### Funktion fortschritsanzeige(), test fuer eine Fortschrittsanzeige.
+### !  fortschritsanzeige(), test fuer eine Fortschrittsanzeige.
 function fortschritsanzeige()
 {
 	# zuerst schauen ob dialog installiert ist
@@ -6310,7 +6147,7 @@ function fortschritsanzeige()
 	fi
 }
 
-### Funktion menuinfo, Informationen im dialog ausgeben.
+### !  menuinfo, Informationen im dialog ausgeben.
 function menuinfo()
 {
 	menuinfoergebnis=$(screen -ls | sed '1d' | sed '$d' | awk -F. '{print $2}' | awk -F\( '{print $1}')
@@ -6334,7 +6171,7 @@ function menuinfo()
 
 	return 0
 }
-### Funktion menukonsolenhilfe, menukonsolenhilfe auf dem Bildschirm anzeigen.
+### !  menukonsolenhilfe, menukonsolenhilfe auf dem Bildschirm anzeigen.
 function menukonsolenhilfe()
 {
 	#helpergebnis=$(help)
@@ -6347,7 +6184,7 @@ function menukonsolenhilfe()
 	return 0
 }
 
-### Funktion hilfe, Hilfe auf dem Bildschirm anzeigen.
+### !  hilfe, Hilfe auf dem Bildschirm anzeigen.
 function hilfe()
 {
 echo "$(tput setab 5)Funktion:$(tput sgr 0)		$(tput setab 2)Parameter:$(tput sgr 0)		$(tput setab 4)Informationen:$(tput sgr 0)"
@@ -6444,7 +6281,7 @@ log text "##############################"
 	log info "HILFE: Hilfe wurde angefordert."
 }
 
-### Funktion konsolenhilfe, konsolenhilfe auf dem Bildschirm anzeigen.
+### !  konsolenhilfe, konsolenhilfe auf dem Bildschirm anzeigen.
 function konsolenhilfe()
 {
 	echo "$(tput setab 5)Funktion:$(tput sgr 0) $(tput setab 4)Informationen:$(tput sgr 0)"
@@ -6468,7 +6305,7 @@ function konsolenhilfe()
 	log info "HILFE: Konsolenhilfe wurde angefordert"
 }
 
-
+### !  commandhelp
 function commandhelp()
 {
 cat << eof
@@ -6647,6 +6484,7 @@ log info "HILFE: Commands Hilfe wurde angefordert"
 # Menu Menue
 ###########################################################################
 
+### !  hauptmenu
 function hauptmenu()
 {
 	HEIGHT=0
@@ -6717,6 +6555,7 @@ function hauptmenu()
 	fi
 }
 
+### !  hilfemenu
 function hilfemenu()
 {
 	HEIGHT=0
@@ -6760,6 +6599,7 @@ function hilfemenu()
 	fi
 }
 
+### !  funktionenmenu
 function funktionenmenu()
 {
 	HEIGHT=0
@@ -6827,6 +6667,7 @@ function funktionenmenu()
 	fi
 }
 
+### !  dateimenu
 function dateimenu()
 {
 	HEIGHT=0
@@ -6899,6 +6740,7 @@ function dateimenu()
 	fi
 }
 
+### !  mySQLmenu
 function mySQLmenu()
 {
 	HEIGHT=0
@@ -6997,6 +6839,7 @@ function mySQLmenu()
 	fi
 }
 
+### !  expertenmenu
 function expertenmenu()
 {
 	HEIGHT=0
