@@ -222,7 +222,7 @@ Auch einige Strukturen wie das Installieren der Linux Pakete sind komplett ausge
 Auch ohne dialog kann das Grid zeitgesteuert, herauf und herunter gefahren, 
 sowie neu gestartet werden. 
 Es kann nun die Laufzeit des Servers angezeigt werden, 
-sowie den Server mit einem klick Mausklick neu gestartet werden 
+sowie den Server mit einem Mausklick neu gestartet werden 
 (Das Grid fährt hierbei vorher automatisch herunter). 
 Das Dateimenü wurde eingefügt um die Menüs kleiner zu gestalten.
 Unter Server Informationen ist auf einem blick alle wichtigen Infos zu sehen wie welche screens gerade laufen und mehr.
