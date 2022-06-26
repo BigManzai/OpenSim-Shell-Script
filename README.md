@@ -207,6 +207,14 @@ passwdgenerator - Passwortstärke - Generiert ein Passwort zur weiteren verwendu
 
 ## TODO und Informationen
 
+V0.79.477
+
+Leerzeichen Fehler in der SimulatorList.ini erstellung behoben.
+
+MONO_THREADS_PER_CPU Fehler behoben.
+
+Ubuntu 22 Installationen werden hinzugefügt.
+
 ```
 Neue Menüstruktur es sind jetzt alle Menüs aus allen Menüs einfach mit der Maus erreichbar.
 Die Menüstruktur ist komplett ausgetauscht worden.
