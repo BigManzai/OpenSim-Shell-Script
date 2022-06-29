@@ -3831,6 +3831,8 @@ function db_backup()
 }
 
 ### ! Backup, eine Datenbanken Tabellenweise speichern. Test OK
+## function db_backuptabellen DB_Benutzername DB_Passwort Datenbankname
+## Datenbank Tabellenweise sichern im Verzeichnis Datenbankname
 function db_backuptabellen()
 {    
 	# Hier fehlt noch das die Asset Datenbank gesplittet wird.
@@ -3855,6 +3857,8 @@ function db_backuptabellen()
 }
 
 ### ! Backup Test, eine Datenbanken Tabellenweise wiederherstellen.
+## function db_restorebackuptabellen DB_Benutzername DB_Passwort AlterDatenbankname NeuerDatenbankname
+## Die Tabellenweise gesicherte Datenbank in einer neuen Datenbank zusammensetzen.
 function db_restorebackuptabellen()
 {  
 	username=$1; password=$2; databasename=$3; newdatabasename=$4;
