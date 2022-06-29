@@ -207,6 +207,24 @@ passwdgenerator - Passwortstärke - Generiert ein Passwort zur weiteren verwendu
 
 ## TODO und Informationen
 
+Neue Funktionen 29.06.2022
+
+```
+function db_backuptabellen DB_Benutzername DB_Passwort Datenbankname
+Datenbank Tabellenweise sichern im Verzeichnis Datenbankname
+```
+
+```
+function db_restorebackuptabellen DB_Benutzername DB_Passwort AlterDatenbankname NeuerDatenbankname
+Die Tabellenweise gesicherte Datenbank in einer neuen Datenbank zusammensetzen.
+```
+
+```
+Wozu?
+Hierdurch sind bei einem defekt nicht alle Datenbank Bereiche zerstört 
+und es können auch Teile einer Datenbank, einfacher repariert werden.
+```
+
 V0.79.477
 
 Leerzeichen Fehler in der SimulatorList.ini erstellung behoben.
