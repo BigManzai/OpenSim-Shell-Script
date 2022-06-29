@@ -7,7 +7,7 @@ Da Server unterschiedlich sind, kann eine einwandfreie Funktion nicht gewährlei
 
 Die Benutzung dieses Scripts, oder deren Bestandteile, erfolgt auf eigene Gefahr!!!
 
-Erstellt und getestet ist opensim.sh, auf verschiedenen Ubuntu 18.04 Servern, unter verschiedenen Server Anbietern (Contabo, Hetzner etc.).
+Erstellt und getestet ist opensim.sh, auf verschiedenen Ubuntu 18.04 (jetzt auch 22.04) Servern, unter verschiedenen Server Anbietern (Contabo, Hetzner etc.).
 
 Dieses Script läuft auf einem Grid mit 40 Simulatoren genauso, wie mit zum Beispiel OsGrid angebundenen Simulatoren.
 
@@ -208,6 +208,8 @@ passwdgenerator - Passwortstärke - Generiert ein Passwort zur weiteren verwendu
 ## TODO und Informationen
 
 Neue Funktionen 29.06.2022
+
+Ubuntu 22.04 Installer eingefügt so wie mariaDB 10.
 
 ```
 function db_backuptabellen DB_Benutzername DB_Passwort Datenbankname
