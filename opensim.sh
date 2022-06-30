@@ -28,7 +28,7 @@
 # // Text
 
 #### ? Einstellungen ####
-VERSION="V0.79.423" # opensimMULTITOOL Versionsausgabe
+VERSION="V0.79.523" # opensimMULTITOOL Versionsausgabe
 clear # Bildschirm loeschen
 
 # ? Alte Variablen loeschen aus eventuellen voherigen sessions
