@@ -123,9 +123,7 @@ Bisher sind nur Funktionen im Menü die maximal 1 Übergabewert voraussetzen.
 
 ## Status 30.06.2022 265 Funktionen.
 
-```
-  Der Verzeichnisname ist gleichzeitig auch der Screen Name!
-```
+.
 
 ## TODO und Informationen
 
