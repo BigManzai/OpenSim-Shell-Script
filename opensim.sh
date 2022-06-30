@@ -28,7 +28,7 @@
 # // Text
 
 #### ? Einstellungen ####
-VERSION="V0.79.491" # opensimMULTITOOL Versionsausgabe
+VERSION="V0.79.423" # opensimMULTITOOL Versionsausgabe
 clear # Bildschirm loeschen
 
 # ? Alte Variablen loeschen aus eventuellen voherigen sessions
@@ -485,6 +485,12 @@ function mysqlrest()
 {
 	username=$1; password=$2; databasename=$3; mysqlcommand=$4;
 	result_mysqlrest=$(echo "$mysqlcommand;" | MYSQL_PWD=$password mysql -u"$username" "$databasename" -N) 2> /dev/null    
+}
+### ! mysqlrestnodb Funktion mySQL Datensaetzen: mymysql "username" "password" "mysqlcommand"
+function mysqlrestnodb()
+{
+	username=$1; password=$2; mysqlcommand=$3;
+	result_mysqlrestnodb=$(echo "$mysqlcommand" | MYSQL_PWD=$password mysql -u"$username")    
 }
 
 ### ! mysqlbackup Funktion zum sichern von mySQL Datensaetzen: mysqlbackup "username" "password" "databasename"
@@ -4908,6 +4914,569 @@ function db_setuseronline_dialog()
 
 ########### Neu am 08.06.2022 Ende
 
+
+### NEU mariaDB 30.06.2022 Anfang ########################################################################
+### ! default_master_connection "$2" "$3"
+function default_master_connection()
+{
+    username=$1; password=$2;
+    if [ -z "$username" ]; then username="root"; fi
+    if [ -z "$password" ]; then password=""; fi
+
+    mysqlrestnodb "$username" "$password" "SET default_master_connection = '$username';"
+    mysqlrestnodb "$username" "$password" "STOP SLAVE;"
+    mysqlrestnodb "$username" "$password" "CHANGE MASTER TO MASTER_PASSWORD='$password';"
+    mysqlrestnodb "$username" "$password" "START SLAVE;"
+	#shellcheck disable=SC2128
+	log text " $FUNCNAME: $result_mysqlrestnodb"
+    return 0
+}
+
+### ! connection_name "$2" "$3"
+function connection_name()
+{
+    username=$1; password=$2;
+    if [ -z "$username" ]; then username="root"; fi
+    if [ -z "$password" ]; then password=""; fi
+
+    mysqlrestnodb "$username" "$password" "STOP SLAVE '$username';"
+    mysqlrestnodb "$username" "$password" "CHANGE MASTER '$username' TO MASTER_PASSWORD='$password';"
+    mysqlrestnodb "$username" "$password" "START SLAVE '$username';"
+	#shellcheck disable=SC2128
+	log text " $FUNCNAME: $result_mysqlrestnodb"
+    return 0
+}
+
+### ! MASTER_USER "$2" "$3"
+function MASTER_USER()
+{
+    username=$1; password=$2;
+    if [ -z "$username" ]; then username="root"; fi
+    if [ -z "$password" ]; then password=""; fi
+
+    mysqlrestnodb "$username" "$password" "STOP SLAVE;"
+    mysqlrestnodb "$username" "$password" "CHANGE MASTER TO MASTER_USER='$username', MASTER_PASSWORD='$password';"
+    mysqlrestnodb "$username" "$password" "START SLAVE;"
+	#shellcheck disable=SC2128
+	log text " $FUNCNAME: $result_mysqlrestnodb"
+    return 0
+}
+
+### ! MASTER_PASSWORD "$2" "$3"
+function MASTER_PASSWORD()
+{
+    username=$1; password=$2;
+    if [ -z "$username" ]; then username="root"; fi
+    if [ -z "$password" ]; then password=""; fi
+
+    mysqlrestnodb "$username" "$password" "STOP SLAVE;"
+    mysqlrestnodb "$username" "$password" "CHANGE MASTER TO MASTER_PASSWORD=$password;"
+    mysqlrestnodb "$username" "$password" "START SLAVE;"
+	#shellcheck disable=SC2128
+	log text " $FUNCNAME: $result_mysqlrestnodb"
+    return 0
+}
+
+### ! MASTER_HOST "$2" "$3" "$4"
+function MASTER_HOST()
+{
+    username=$1; password=$2; MASTERHOST=$3;
+    if [ -z "$username" ]; then username="root"; fi
+    if [ -z "$password" ]; then password=""; fi
+    if [ -z "$MASTERHOST" ]; then MASTERHOST='127.0.0.1'; fi
+
+    mysqlrestnodb "$username" "$password" "STOP SLAVE;"
+    mysqlrestnodb "$username" "$password" "CHANGE MASTER TO MASTER_HOST='$MASTERHOST', MASTER_USER='$username', MASTER_PASSWORD='$password', MASTER_USE_GTID=slave_pos;"
+    mysqlrestnodb "$username" "$password" "START SLAVE;"
+	#shellcheck disable=SC2128
+	log text " $FUNCNAME: $result_mysqlrestnodb"
+    return 0
+}
+
+### ! MASTER_PORT "$2" "$3" "$4" "$5"
+function MASTER_PORT()
+{
+    username=$1; password=$2; MASTERHOST=$3; MASTERPORT=$4;
+    if [ -z "$username" ]; then username="root"; fi
+    if [ -z "$password" ]; then password=""; fi
+    if [ -z "$MASTERHOST" ]; then MASTERHOST='127.0.0.1'; fi
+    if [ -z "$MASTERPORT" ]; then MASTERPORT='3306'; fi
+
+    mysqlrestnodb "$username" "$password" "STOP SLAVE;"
+    mysqlrestnodb "$username" "$password" "CHANGE MASTER TO MASTER_HOST='$MASTERHOST', MASTER_PORT='$MASTERPORT', MASTER_USER='$username', MASTER_PASSWORD='$password', MASTER_USE_GTID=slave_pos;"
+    mysqlrestnodb "$username" "$password" "START SLAVE;"
+	#shellcheck disable=SC2128
+	log text " $FUNCNAME: $result_mysqlrestnodb"
+    return 0
+}
+
+### ! MASTER_CONNECT_RETRY "$2" "$3" "$4"
+function MASTER_CONNECT_RETRY()
+{
+    username=$1; password=$2; MASTERCONNECTRETRY=$3;
+    if [ -z "$username" ]; then username="root"; fi
+    if [ -z "$password" ]; then password=""; fi
+    if [ -z "$MASTERCONNECTRETRY" ]; then MASTERCONNECTRETRY='20'; fi
+
+    mysqlrestnodb "$username" "$password" "STOP SLAVE;"
+    mysqlrestnodb "$username" "$password" "CHANGE MASTER TO MASTER_CONNECT_RETRY=$MASTERCONNECTRETRY;"
+    mysqlrestnodb "$username" "$password" "START SLAVE;"
+	#shellcheck disable=SC2128
+	log text " $FUNCNAME: $result_mysqlrestnodb"
+    return 0
+}
+
+### ! MASTER_SSL "$2" "$3"
+function MASTER_SSL()
+{
+    username=$1; password=$2; MASTERSSL=$3;
+    if [ -z "$username" ]; then username="root"; fi
+    if [ -z "$password" ]; then password=""; fi
+    if [ -z "$MASTERSSL" ]; then MASTERSSL=1; fi
+
+    mysqlrestnodb "$username" "$password" "STOP SLAVE;"
+    mysqlrestnodb "$username" "$password" "CHANGE MASTER TO MASTER_SSL=$MASTERSSL;"
+    mysqlrestnodb "$username" "$password" "START SLAVE;"
+	#shellcheck disable=SC2128
+	log text " $FUNCNAME: $result_mysqlrestnodb"
+    return 0
+}
+
+### ! MASTER_SSL_CA "$2" "$3"
+function MASTER_SSL_CA()
+{
+    username=$1; password=$2;
+    if [ -z "$username" ]; then username="root"; fi
+    if [ -z "$password" ]; then password=""; fi
+
+    MASTERSSLCERT='/etc/my.cnf.d/certificates/server-cert.pem'
+    MASTERSSLKEY='/etc/my.cnf.d/certificates/server-key.pem'
+    MASTERSSLCA='/etc/my.cnf.d/certificates/ca.pem'
+    MASTERSSLVERIFYSERVERCERT=1
+
+    mysqlrestnodb "$username" "$password" "STOP SLAVE;"
+    mysqlrestnodb "$username" "$password" "CHANGE MASTER TO MASTER_SSL_CERT='$MASTERSSLCERT', MASTER_SSL_KEY='$MASTERSSLKEY', MASTER_SSL_CA='$MASTERSSLCA', MASTER_SSL_VERIFY_SERVER_CERT=$MASTERSSLVERIFYSERVERCERT;"
+    mysqlrestnodb "$username" "$password" "START SLAVE;"
+	#shellcheck disable=SC2128
+	log text " $FUNCNAME: $result_mysqlrestnodb"
+    return 0
+}
+
+### ! MASTER_SSL_CAPATH "$2" "$3"
+function MASTER_SSL_CAPATH()
+{
+    username=$1; password=$2;
+    if [ -z "$username" ]; then username="root"; fi
+    if [ -z "$password" ]; then password=""; fi
+
+    MASTERSSLCERT='/etc/my.cnf.d/certificates/server-cert.pem'
+    MASTERSSLKEY='/etc/my.cnf.d/certificates/server-key.pem'
+    MASTERSSLCAPATH='/etc/my.cnf.d/certificates/ca/'
+    MASTERSSLVERIFYSERVERCERT=1
+
+    mysqlrestnodb "$username" "$password" "STOP SLAVE;"
+    mysqlrestnodb "$username" "$password" "CHANGE MASTER TO MASTER_SSL_CERT='$MASTERSSLCERT', MASTER_SSL_KEY='$MASTERSSLKEY', MASTER_SSL_CAPATH='$MASTERSSLCAPATH', MASTER_SSL_VERIFY_SERVER_CERT=$MASTERSSLVERIFYSERVERCERT;"
+    mysqlrestnodb "$username" "$password" "START SLAVE;"
+	#shellcheck disable=SC2128
+	log text " $FUNCNAME: $result_mysqlrestnodb"
+    return 0
+}
+
+### ! MASTER_SSL_CERT "$2" "$3"
+function MASTER_SSL_CERT()
+{
+    username=$1; password=$2;
+    if [ -z "$username" ]; then username="root"; fi
+    if [ -z "$password" ]; then password=""; fi
+
+    MASTERSSLCERT='/etc/my.cnf.d/certificates/server-cert.pem'
+    MASTERSSLKEY='/etc/my.cnf.d/certificates/server-key.pem'
+    MASTERSSLCA='/etc/my.cnf.d/certificates/ca.pem'
+    MASTERSSLVERIFYSERVERCERT=1
+
+    mysqlrestnodb "$username" "$password" "STOP SLAVE;"
+    mysqlrestnodb "$username" "$password" "CHANGE MASTER TO MASTER_SSL_CERT='$MASTERSSLCERT', MASTER_SSL_KEY='$MASTERSSLKEY', MASTER_SSL_CA='$MASTERSSLCA', MASTER_SSL_VERIFY_SERVER_CERT=$MASTERSSLVERIFYSERVERCERT;"
+    mysqlrestnodb "$username" "$password" "START SLAVE;"
+	#shellcheck disable=SC2128
+	log text " $FUNCNAME: $result_mysqlrestnodb"
+
+    return 0
+}
+
+### ! MASTER_SSL_CRL "$2" "$3"
+function MASTER_SSL_CRL()
+{
+    username=$1; password=$2;
+    if [ -z "$username" ]; then username="root"; fi
+    if [ -z "$password" ]; then password=""; fi
+
+    MASTERSSLCERT='/etc/my.cnf.d/certificates/server-cert.pem'
+    MASTERSSLKEY='/etc/my.cnf.d/certificates/server-key.pem'
+    MASTERSSLCA='/etc/my.cnf.d/certificates/ca.pem'
+    MASTERSSLVERIFYSERVERCERT=1
+
+    mysqlrestnodb "$username" "$password" "STOP SLAVE;"
+    mysqlrestnodb "$username" "$password" "CHANGE MASTER TO MASTER_SSL_CERT='$MASTERSSLCERT', MASTER_SSL_KEY='$MASTERSSLKEY', MASTER_SSL_CA='$MASTERSSLCA', MASTER_SSL_VERIFY_SERVER_CERT=$MASTERSSLVERIFYSERVERCERT, MASTER_SSL_CRL='/etc/my.cnf.d/certificates/crl.pem';"
+    mysqlrestnodb "$username" "$password" "START SLAVE;"
+	#shellcheck disable=SC2128
+	log text " $FUNCNAME: $result_mysqlrestnodb"
+
+    return 0
+}
+
+### ! MASTER_SSL_CRLPATH "$2" "$3"
+function MASTER_SSL_CRLPATH()
+{
+    username=$1; password=$2;
+    if [ -z "$username" ]; then username="root"; fi
+    if [ -z "$password" ]; then password=""; fi
+
+    MASTERSSLCERT='/etc/my.cnf.d/certificates/server-cert.pem'
+    MASTERSSLKEY='/etc/my.cnf.d/certificates/server-key.pem'
+    MASTERSSLCA='/etc/my.cnf.d/certificates/ca.pem'
+    MASTERSSLVERIFYSERVERCERT=1
+
+    mysqlrestnodb "$username" "$password" "STOP SLAVE;"
+    mysqlrestnodb "$username" "$password" "CHANGE MASTER TO MASTER_SSL_CERT='$MASTERSSLCERT', MASTER_SSL_KEY='$MASTERSSLKEY', MASTER_SSL_CA='$MASTERSSLCA', MASTER_SSL_VERIFY_SERVER_CERT=$MASTERSSLVERIFYSERVERCERT, MASTER_SSL_CRLPATH='/etc/my.cnf.d/certificates/crl/';"
+    mysqlrestnodb "$username" "$password" "START SLAVE;"
+	#shellcheck disable=SC2128
+	log text " $FUNCNAME: $result_mysqlrestnodb"
+
+    return 0
+}
+
+### ! MASTER_SSL_KEY "$2" "$3"
+function MASTER_SSL_KEY()
+{
+    username=$1; password=$2;
+    if [ -z "$username" ]; then username="root"; fi
+    if [ -z "$password" ]; then password=""; fi
+
+    MASTERSSLCERT='/etc/my.cnf.d/certificates/server-cert.pem'
+    MASTERSSLKEY='/etc/my.cnf.d/certificates/server-key.pem'
+    MASTERSSLCA='/etc/my.cnf.d/certificates/ca.pem'
+    MASTERSSLVERIFYSERVERCERT=1
+
+    mysqlrestnodb "$username" "$password" "STOP SLAVE;"
+    mysqlrestnodb "$username" "$password" "CHANGE MASTER TO MASTER_SSL_CERT='$MASTERSSLCERT', MASTER_SSL_KEY='$MASTERSSLKEY', MASTER_SSL_CA='$MASTERSSLCA', MASTER_SSL_VERIFY_SERVER_CERT=$MASTERSSLVERIFYSERVERCERT;"
+    mysqlrestnodb "$username" "$password" "START SLAVE;"
+	#shellcheck disable=SC2128
+	log text " $FUNCNAME: $result_mysqlrestnodb"
+
+    return 0
+}
+
+### ! MASTER_SSL_CIPHER "$2" "$3"
+function MASTER_SSL_CIPHER()
+{
+    username=$1; password=$2;
+    if [ -z "$username" ]; then username="root"; fi
+    if [ -z "$password" ]; then password=""; fi
+
+    MASTERSSLCERT='/etc/my.cnf.d/certificates/server-cert.pem'
+    MASTERSSLKEY='/etc/my.cnf.d/certificates/server-key.pem'
+    MASTERSSLCA='/etc/my.cnf.d/certificates/ca.pem'
+    MASTERSSLVERIFYSERVERCERT=1
+
+    mysqlrestnodb "$username" "$password" "STOP SLAVE;"
+    mysqlrestnodb "$username" "$password" "CHANGE MASTER TO MASTER_SSL_CERT='$MASTERSSLCERT', MASTER_SSL_KEY='$MASTERSSLKEY', MASTER_SSL_CA='$MASTERSSLCA', MASTER_SSL_VERIFY_SERVER_CERT=$MASTERSSLVERIFYSERVERCERT, MASTER_SSL_CIPHER='TLSv1.2';"
+    mysqlrestnodb "$username" "$password" "START SLAVE;"
+	#shellcheck disable=SC2128
+	log text " $FUNCNAME: $result_mysqlrestnodb"
+
+    return 0
+}
+
+### ! MASTER_SSL_VERIFY_SERVER_CERT "$2" "$3"
+function MASTER_SSL_VERIFY_SERVER_CERT()
+{
+    username=$1; password=$2;
+    if [ -z "$username" ]; then username="root"; fi
+    if [ -z "$password" ]; then password=""; fi
+
+    MASTERSSLCERT='/etc/my.cnf.d/certificates/server-cert.pem'
+    MASTERSSLKEY='/etc/my.cnf.d/certificates/server-key.pem'
+    MASTERSSLCA='/etc/my.cnf.d/certificates/ca.pem'
+    MASTERSSLVERIFYSERVERCERT=1
+
+    mysqlrestnodb "$username" "$password" "STOP SLAVE;"
+    mysqlrestnodb "$username" "$password" "CHANGE MASTER TO MASTER_SSL_CERT='$MASTERSSLCERT', MASTER_SSL_KEY='$MASTERSSLKEY', MASTER_SSL_CA='$MASTERSSLCA', MASTER_SSL_VERIFY_SERVER_CERT=$MASTERSSLVERIFYSERVERCERT;"
+    mysqlrestnodb "$username" "$password" "START SLAVE;"
+	#shellcheck disable=SC2128
+	log text " $FUNCNAME: $result_mysqlrestnodb"
+
+    return 0
+}
+
+### ! MASTER_LOG_FILE "$2" "$3" "$4" "$5"
+function MASTER_LOG_FILE()
+{
+username=$1; password=$2; MASTERLOGFILE=$3; MASTERLOGPOS=$4;
+    if [ -z "$username" ]; then username="root"; fi
+    if [ -z "$password" ]; then password=""; fi
+    if [ -z "$MASTERLOGPOS" ]; then MASTERLOGPOS=4; fi
+    if [ -z "$MASTERLOGFILE" ]; then MASTERLOGFILE="master2-bin.001"; fi
+
+    mysqlrestnodb "$username" "$password" "STOP SLAVE;"
+    mysqlrestnodb "$username" "CHANGE MASTER TO MASTER_LOG_FILE=$MASTERLOGFILE, MASTER_LOG_POS=$MASTERLOGPOS;"
+    mysqlrestnodb "$username" "START SLAVE;"
+	#shellcheck disable=SC2128
+	log text " $FUNCNAME: $result_mysqlrestnodb"
+
+return 0
+}
+
+### ! MASTER_LOG_POS "$2" "$3" "$4" "$5"
+function MASTER_LOG_POS()
+{
+    username=$1; password=$2; MASTERLOGFILE=$2; MASTERLOGPOS=$2;
+    if [ -z "$username" ]; then username="root"; fi
+    if [ -z "$password" ]; then password=""; fi
+    if [ -z "$MASTERLOGPOS" ]; then MASTERLOGPOS=4; fi
+    if [ -z "$MASTERLOGFILE" ]; then MASTERLOGFILE="master2-bin.001"; fi
+
+    mysqlrestnodb "$username" "$password" "STOP SLAVE;"
+    mysqlrestnodb "$username" "$password" "CHANGE MASTER TO MASTER_LOG_FILE=$MASTERLOGFILE, MASTER_LOG_POS=$MASTERLOGPOS;"
+    mysqlrestnodb "$username" "$password" "START SLAVE;"
+	#shellcheck disable=SC2128
+	log text " $FUNCNAME: $result_mysqlrestnodb"
+
+    return 0
+}
+
+### ! RELAY_LOG_FILE "$2" "$3" "$4" "$5"
+function RELAY_LOG_FILE()
+{
+    username=$1; password=$2; RELAYLOGFILE=$3; RELAYLOGPOS=$4;
+    if [ -z "$username" ]; then username="root"; fi
+    if [ -z "$password" ]; then password=""; fi
+    if [ -z "$RELAYLOGPOS" ]; then RELAYLOGPOS=4025; fi
+    if [ -z "$RELAYLOGFILE" ]; then RELAYLOGFILE="slave-relay-bin.006"; fi
+
+    mysqlrestnodb "$username" "$password" "STOP SLAVE SQL_THREAD;"
+    mysqlrestnodb "$username" "$password" "CHANGE MASTER TO RELAY_LOG_FILE=$RELAYLOGFILE, RELAY_LOG_POS=$RELAYLOGPOS;"
+    mysqlrestnodb "$username" "$password" "START SLAVE SQL_THREAD;"
+	#shellcheck disable=SC2128
+	log text " $FUNCNAME: $result_mysqlrestnodb"
+
+    return 0
+}
+
+### ! RELAY_LOG_POS "$2" "$3" "$4" "$5"
+function RELAY_LOG_POS()
+{
+    username=$1; password=$2; RELAYLOGFILE=$3; RELAYLOGPOS=$4;
+    if [ -z "$username" ]; then username="root"; fi
+    if [ -z "$password" ]; then password=""; fi
+    if [ -z "$RELAYLOGPOS" ]; then RELAYLOGPOS=4025; fi
+    if [ -z "$RELAYLOGFILE" ]; then RELAYLOGFILE="slave-relay-bin.006"; fi
+
+    mysqlrestnodb "$username" "$password" "STOP SLAVE SQL_THREAD;"
+    mysqlrestnodb "$username" "$password" "CHANGE MASTER TO RELAY_LOG_FILE=$RELAYLOGFILE, RELAY_LOG_POS=$RELAYLOGPOS;"
+    mysqlrestnodb "$username" "$password" "START SLAVE SQL_THREAD;"
+	#shellcheck disable=SC2128
+	log text " $FUNCNAME: $result_mysqlrestnodb"
+
+    return 0
+}
+
+### ! MASTER_USE_GTID "$2" "$3"
+function MASTER_USE_GTID()
+{
+    username=$1; password=$2;
+    if [ -z "$username" ]; then username="root"; fi
+    if [ -z "$password" ]; then password=""; fi
+
+    mysqlrestnodb "$username" "$password" "STOP SLAVE;"
+    mysqlrestnodb "$username" "$password" "CHANGE MASTER TO MASTER_USE_GTID = current_pos;"
+    mysqlrestnodb "$username" "$password" "START SLAVE;"
+	#shellcheck disable=SC2128
+	log text " $FUNCNAME: $result_mysqlrestnodb"
+
+    return 0
+}
+### ! MASTER_USE_GTID2 "$2" "$3" "$4"
+function MASTER_USE_GTID2()
+{
+    username=$1; password=$2; gtidslavepos=$3;
+    if [ -z "$username" ]; then username="root"; fi
+    if [ -z "$password" ]; then password=""; fi
+    if [ -z "$gtidslavepos" ]; then gtidslavepos='0-1-153'; fi
+
+    mysqlrestnodb "$username" "$password" "STOP SLAVE;"
+    mysqlrestnodb "$username" "$password" "SET GLOBAL gtid_slave_pos='$gtidslavepos';"
+    mysqlrestnodb "$username" "$password" "CHANGE MASTER TO MASTER_USE_GTID = slave_pos;"
+    mysqlrestnodb "$username" "$password" "START SLAVE;"
+	#shellcheck disable=SC2128
+	log text " $FUNCNAME: $result_mysqlrestnodb"
+
+    return 0
+}
+
+### ! IGNORE_SERVER_IDS "$2" "$3" "$4"
+function IGNORE_SERVER_IDS()
+{
+    username=$1; password=$2; ids=$3;
+    if [ -z "$username" ]; then username="root"; fi
+    if [ -z "$password" ]; then password=""; fi
+
+    mysqlrestnodb "$username" "$password" "STOP SLAVE;"
+    mysqlrestnodb "$username" "$password" "CHANGE MASTER TO IGNORE_SERVER_IDS = ($ids);"
+    mysqlrestnodb "$username" "$password" "START SLAVE;"
+	#shellcheck disable=SC2128
+	log text " $FUNCNAME: $result_mysqlrestnodb"
+
+    return 0
+}
+
+### ! DO_DOMAIN_IDS "$2" "$3" "$4"
+function DO_DOMAIN_IDS()
+{
+    username=$1; password=$2; ids=$3;
+    if [ -z "$username" ]; then username="root"; fi
+    if [ -z "$password" ]; then password=""; fi
+
+    mysqlrestnodb "$username" "$password" "STOP SLAVE;"
+    mysqlrestnodb "$username" "$password" "CHANGE MASTER TO DO_DOMAIN_IDS = ($ids);"
+    mysqlrestnodb "$username" "$password" "START SLAVE;"
+	#shellcheck disable=SC2128
+	log text " $FUNCNAME: $result_mysqlrestnodb"
+
+    return 0
+}
+### ! DO_DOMAIN_IDS2 "$2" "$3"
+function DO_DOMAIN_IDS2()
+{
+    username=$1; password=$2;
+    if [ -z "$username" ]; then username="root"; fi
+    if [ -z "$password" ]; then password=""; fi
+
+    mysqlrestnodb "$username" "$password" "STOP SLAVE;"
+    mysqlrestnodb "$username" "$password" "CHANGE MASTER TO DO_DOMAIN_IDS = ();"
+    mysqlrestnodb "$username" "$password" "START SLAVE;"
+	#shellcheck disable=SC2128
+	log text " $FUNCNAME: $result_mysqlrestnodb"
+
+    return 0
+}
+
+### ! IGNORE_DOMAIN_IDS "$2" "$3" "$4"
+function IGNORE_DOMAIN_IDS()
+{
+    username=$1; password=$2; ids=$3;
+    if [ -z "$username" ]; then username="root"; fi
+    if [ -z "$password" ]; then password=""; fi
+
+    mysqlrestnodb "$username" "$password" "STOP SLAVE;"
+    mysqlrestnodb "$username" "$password" "CHANGE MASTER TO IGNORE_DOMAIN_IDS = ($ids);"
+    mysqlrestnodb "$username" "$password" "START SLAVE;"
+	#shellcheck disable=SC2128
+	log text " $FUNCNAME: $result_mysqlrestnodb"
+
+    return 0
+}
+### ! IGNORE_DOMAIN_IDS2 "$2" "$3"
+function IGNORE_DOMAIN_IDS2()
+{
+    username=$1; password=$2;
+    if [ -z "$username" ]; then username="root"; fi
+    if [ -z "$password" ]; then password=""; fi
+
+    mysqlrestnodb "$username" "$password" "STOP SLAVE;"
+    mysqlrestnodb "$username" "$password" "CHANGE MASTER TO IGNORE_DOMAIN_IDS = ();"
+    mysqlrestnodb "$username" "$password" "START SLAVE;"
+	#shellcheck disable=SC2128
+	log text " $FUNCNAME: $result_mysqlrestnodb"
+
+    return 0
+}
+
+### ! MASTER_DELAY "$2" "$3" "$4"
+function MASTER_DELAY()
+{
+    username=$1; password=$2; MASTERDELAY=$3;
+    if [ -z "$username" ]; then username="root"; fi
+    if [ -z "$password" ]; then password=""; fi
+    if [ -z "$MASTERDELAY" ]; then MASTERDELAY=3600; fi
+
+    mysqlrestnodb "$username" "$password" "STOP SLAVE;"
+    mysqlrestnodb "$username" "$password" "CHANGE MASTER TO MASTER_DELAY=$MASTERDELAY;"
+    mysqlrestnodb "$username" "$password" "START SLAVE;"
+	#shellcheck disable=SC2128
+	log text " $FUNCNAME: $result_mysqlrestnodb"
+
+    return 0
+}
+
+### ! MASTER_PASSWORD "$2" "$3"
+function MASTER_PASSWORD()
+{
+    username=$1; password=$2;
+    if [ -z "$username" ]; then username="root"; fi
+    if [ -z "$password" ]; then password=""; fi
+
+
+    mysqlrestnodb "$username" "$password" "STOP SLAVE;"
+    mysqlrestnodb "$username" "$password" "CHANGE MASTER TO MASTER_PASSWORD=$password;"
+    mysqlrestnodb "$username" "$password" "START SLAVE;"
+	#shellcheck disable=SC2128
+	log text " $FUNCNAME: $result_mysqlrestnodb"
+
+    return 0
+}
+
+### ! Creating a Replica from a Backup "$2" "$3" "$4" "$5"
+function Replica_Backup()
+{
+    username=$1; password=$2; MASTERLOGFILE=$3; MASTERLOGPOS=$4;
+    if [ -z "$username" ]; then username="root"; fi
+    if [ -z "$password" ]; then password=""; fi
+    if [ -z "$MASTERLOGFILE" ]; then MASTERLOGFILE="master2-bin.001"; fi
+    if [ -z "$MASTERLOGPOS" ]; then MASTERLOGPOS=4; fi
+
+    mysqlrestnodb "$username" "$password" "CHANGE MASTER TO MASTER_LOG_FILE=$MASTERLOGFILE, MASTER_LOG_POS=$MASTERLOGPOS;"
+    mysqlrestnodb "$username" "$password" "START SLAVE;"
+	#shellcheck disable=SC2128
+	log text " $FUNCNAME: $result_mysqlrestnodb"
+
+    return 0
+}
+### ! Creating a Replica from a Backup2 "$2" "$3" "$4"
+function Replica_Backup2()
+{
+    username=$1; password=$2; gtidslavepos=$3;
+    if [ -z "$username" ]; then username="root"; fi
+    if [ -z "$password" ]; then password=""; fi
+    if [ -z "$gtidslavepos" ]; then gtidslavepos='0-1-153'; fi
+
+    mysqlrestnodb "$username" "$password" "SET GLOBAL gtid_slave_pos='$gtidslavepos';"
+    mysqlrestnodb "$username" "$password" "CHANGE MASTER TO MASTER_USE_GTID=slave_pos;"
+    mysqlrestnodb "$username" "$password" "START SLAVE;"
+	#shellcheck disable=SC2128
+	log text " $FUNCNAME: $result_mysqlrestnodb"
+
+    return 0
+}
+### ! ReplikatKoordinaten - Dies aendert die Koordinaten des primaeren und des primaeren Binaerlogs "$2" "$3" "$4" "$5" "$6" "$7" "$8"
+function ReplikatKoordinaten()
+{    
+    username=$1; password=$2; MASTERHOST=$3; MASTERPORT=$4; MASTERLOGFILE=$5; MASTERLOGPOS=$6; MASTERCONNECTRETRY=$7;
+    if [ -z "$username" ]; then username="root"; fi
+    if [ -z "$password" ]; then password=""; fi
+
+    # Dies aendert die Koordinaten des primaeren und des primaeren Binaerlogs. 
+    # Dies wird verwendet, wenn Sie das Replikat so einrichten moechten, dass es das primaere repliziert:
+  
+    mysqlrestnodb "$username" "$password" "CHANGE MASTER TO  MASTER_HOST=$MASTERHOST, MASTER_USER=$username, MASTER_PASSWORD=$password, MASTER_PORT=$MASTERPORT, MASTER_LOG_FILE=$MASTERLOGFILE, MASTER_LOG_POS=$MASTERLOGPOS, MASTER_CONNECT_RETRY=$MASTERCONNECTRETRY;"
+    mysqlrestnodb "$username" "$password" "START SLAVE;"
+	#shellcheck disable=SC2128
+	log text " $FUNCNAME: $result_mysqlrestnodb"
+
+    return 0
+}
+
+### NEU mariaDB 30.06.2022 ENDE ########################################################################
+
 ### !  conf_write, Konfiguration schreiben ersatz fuer alle UNGETESTETEN ini Funktionen.
 # ./opensim.sh conf_write Einstellung NeuerParameter Verzeichnis Dateiname
 function conf_write()
@@ -7239,6 +7808,36 @@ case  $KOMMANDO  in
 	backupdatum) backupdatum ;;
 	db_backuptabellen) db_backuptabellen "$2" "$3" "$4" ;;
 	db_restorebackuptabellen) db_restorebackuptabellen "$2" "$3" "$4" "$5" ;;
+	default_master_connection) default_master_connection  "$2" "$3" ;;
+	connection_name) connection_name  "$2" "$3" ;;
+	MASTER_USER) MASTER_USER  "$2" "$3" ;;
+	MASTER_PASSWORD) MASTER_PASSWORD  "$2" "$3" ;;
+	MASTER_HOST) MASTER_HOST  "$2" "$3" "$4" ;;
+	MASTER_PORT) MASTER_PORT  "$2" "$3" "$4" "$5" ;;
+	MASTER_CONNECT_RETRY) MASTER_CONNECT_RETRY  "$2" "$3" "$4" ;;
+	MASTER_SSL) MASTER_SSL  "$2" "$3" ;;
+	MASTER_SSL_CA) MASTER_SSL_CA  "$2" "$3" ;;
+	MASTER_SSL_CAPATH) MASTER_SSL_CAPATH  "$2" "$3" ;;
+	MASTER_SSL_CERT) MASTER_SSL_CERT  "$2" "$3" ;;
+	MASTER_SSL_CRL) MASTER_SSL_CRL  "$2" "$3" ;;
+	MASTER_SSL_CRLPATH) MASTER_SSL_CRLPATH  "$2" "$3" ;;
+	MASTER_SSL_KEY) MASTER_SSL_KEY  "$2" "$3";;
+	MASTER_SSL_CIPHER) MASTER_SSL_CIPHER  "$2" "$3" ;;
+	MASTER_SSL_VERIFY_SERVER_CERT) MASTER_SSL_VERIFY_SERVER_CERT  "$2" "$3" ;;
+	MASTER_LOG_FILE) MASTER_LOG_FILE  "$2" "$3" "$4" "$5" ;;
+	MASTER_LOG_POS) MASTER_LOG_POS  "$2" "$3" "$4" "$5" ;;
+	RELAY_LOG_FILE) RELAY_LOG_FILE  "$2" "$3" "$4" "$5" ;;
+	RELAY_LOG_POS) RELAY_LOG_POS  "$2" "$3" "$4" "$5" ;;
+	MASTER_USE_GTID) MASTER_USE_GTID  "$2" "$3" ;;
+	MASTER_USE_GTID2) MASTER_USE_GTID2 "$2" "$3" "$4" ;;
+	IGNORE_SERVER_IDS) IGNORE_SERVER_IDS "$2" "$3" "$4" ;;
+	DO_DOMAIN_IDS) DO_DOMAIN_IDS "$2" "$3" "$4" ;;
+	DO_DOMAIN_IDS2) DO_DOMAIN_IDS2  "$2" "$3" ;;
+	IGNORE_DOMAIN_IDS) IGNORE_DOMAIN_IDS "$2" "$3" "$4" ;;
+	MASTER_DELAY) MASTER_DELAY "$2" "$3" "$4" ;;
+	Replica_Backup) Replica_Backup "$2" "$3" "$4" "$5" ;;
+	Replica_Backup2) Replica_Backup2 "$2" "$3" "$4" ;;
+	ReplikatKoordinaten) ReplikatKoordinaten "$2" "$3" "$4" "$5" "$6" "$7" "$8" ;;
 	*) hauptmenu ;;
 esac
 vardel
