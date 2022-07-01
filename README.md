@@ -184,8 +184,6 @@ V0.79.477
 
 Leerzeichen Fehler in der SimulatorList.ini erstellung behoben.
 
-MONO_THREADS_PER_CPU Fehler behoben.
-
 Ubuntu 22 Installationen werden hinzugefügt.
 
 ```
