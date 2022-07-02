@@ -1,4 +1,20 @@
-### Einstellungen VERSION V0.77.387
+### Einstellungen VERSION V0.79.537
+
+: "${DIALOG=dialog}"
+
+: "${DIALOG_OK=0}"
+: "${DIALOG_CANCEL=1}"
+: "${DIALOG_HELP=2}"
+: "${DIALOG_EXTRA=3}"
+: "${DIALOG_ITEM_HELP=4}"
+: "${DIALOG_ESC=255}"
+
+: "${SIG_NONE=0}"
+: "${SIG_HUP=1}"
+: "${SIG_INT=2}"
+: "${SIG_QUIT=3}"
+: "${SIG_KILL=9}"
+: "${SIG_TERM=15}"
 
 ## Das Startverzeichnis home oder opt zum Beispiel.
 	STARTVERZEICHNIS="opt"
@@ -43,6 +59,9 @@
 
 	errorfontcolor=1
 	errorbaggroundcolor=7
+
+	linefontcolor=7
+	linebaggroundcolor=0
 	
 ## Dateien
 	REGIONSDATEI="RegionList.ini"
@@ -82,7 +101,7 @@
 
 ## Linux Einstellungen
 	SETMONOTHREADSON="yes"
-	SETMONOTHREADS=800	
+	SETMONOTHREADS=1024	
 	SETULIMITON="yes"
 	SETMONOGCPARAMSON1="no"
 	SETMONOGCPARAMSON2="yes"
@@ -121,3 +140,11 @@
 	LINK24="http://opensimulator.org/dist/opensim-0.9.2.0.tar.gz"
 	LINK25="http://opensimulator.org/dist/opensim-0.9.2.0.zip"
 	LINK26="http://opensimulator.org/dist/opensim-0.9.2.1.zip"
+
+### Log Dateien
+	apache2errorlog="/var/log/apache2/error.log"
+	apache2accesslog="/var/log/apache2/access.log"
+	authlog="/var/log/auth.log"
+	ufwlog="/var/log/ufw.log"
+	mysqlmariadberor="/var/log/mysql/mariadb.err"
+	mysqlerrorlog="/var/log/mysql/error.log"

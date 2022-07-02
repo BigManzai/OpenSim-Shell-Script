@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# * opensimMULTITOOL Copyright (c) 2021 2022 BigManzai Manfred Aabye
+# ? opensimMULTITOOL Copyright (c) 2021 2022 BigManzai Manfred Aabye
 # opensim.sh Basiert auf meinen Einzelscripten, an denen ich bereits 7 Jahre Arbeite und verbessere.
 # Da Server unterschiedlich sind, kann eine einwandfreie fuunktion nicht gewaehrleistet werden, also bitte mit bedacht verwenden.
 # Die Benutzung dieses Scriptes, oder deren Bestandteile, erfolgt auf eigene Gefahr!!!
@@ -16,7 +16,7 @@
 # ! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 # ! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-# * Status 29.06.2022 236 Funktionen.
+# * Status 30.06.2022 270 Funktionen.
 
 # # Visual Studio Code # ShellCheck # shellman # Better Comments #
 
@@ -28,7 +28,7 @@
 # // Text
 
 #### ? Einstellungen ####
-VERSION="V0.79.523" # opensimMULTITOOL Versionsausgabe
+VERSION="V0.79.537" # opensimMULTITOOL Versionsausgabe
 clear # Bildschirm loeschen
 
 # ? Alte Variablen loeschen aus eventuellen voherigen sessions
@@ -56,7 +56,9 @@ function dummyvar()
 	CONFIGURESOURCE="opensim-configuration-addon-modul-main" CONFIGUREZIP="opensim-configuration-addon-modul-main.zip" 
 	textfontcolor=7;	textbaggroundcolor=0;	debugfontcolor=4;	debugbaggroundcolor=0;	infofontcolor=2;	infobaggroundcolor=0;	warnfontcolor=3;	warnbaggroundcolor=0;
 	errorfontcolor=1;	errorbaggroundcolor=0;	SETMONOGCPARAMSON1="no"; SETMONOGCPARAMSON2="yes";	LOGDELETE="no";	LOGWRITE="no";
-	username="username"; 	password="userpasswd"; 	databasename="grid";
+	username="username"; 	password="userpasswd"; 	databasename="grid"; linefontcolor=7; linebaggroundcolor=0; apache2errorlog="/var/log/apache2/error.log"
+	apache2accesslog="/var/log/apache2/access.log"; authlog="/var/log/auth.log"; ufwlog="/var/log/ufw.log"; mysqlmariadberor="/var/log/mysql/mariadb.err"; mysqlerrorlog="/var/log/mysql/error.log"
+	# DIALOG_OK=0; DIALOG_HELP=2 DIALOG_CANCEL=1; DIALOG_EXTRA=3; DIALOG_ITEM_HELP=4; DIALOG_ESC=255; DIALOG=dialog; SIG_NONE=0; SIG_HUP=1; SIG_INT=2; SIG_QUIT=3; SIG_KILL=9; SIG_TERM=15
 }
 
 ### Datumsvariablen Datum, Dateidatum und Uhrzeit
@@ -84,12 +86,6 @@ AKTUELLEIP='"'$(wget -O - -q $SEARCHADRES)'"'
 ### gibt es das Startverzeichnis wenn nicht abbruch.
 cd /"$STARTVERZEICHNIS" || return 1
 sleep 1
-
-### Standart Mono Threads
-#MONO_THREADS_PER_CPU=800
-#export MONO_THREADS_PER_CPU=800
-# Funktion Exportieren;
-# export -f FUNKTIONSNAME
 
 ### * Eingabeauswertung fuer Funktionen ohne dialog.
 KOMMANDO=$1
@@ -125,6 +121,8 @@ function log()
 
     if [ $LOGWRITE = "yes" ]; then
         case $logtype in
+			line)
+				echo "#####################################################################################" >> /$STARTVERZEICHNIS/"$DATEIDATUM"-multitool.log ;;
 			rohtext) 
                 echo "$text" >> /$STARTVERZEICHNIS/"$DATEIDATUM"-multitool.log ;;
             text)
@@ -142,6 +140,8 @@ function log()
         esac
     fi
     case $logtype in
+		line)
+			echo "$(tput setaf $linefontcolor) $(tput setab $linebaggroundcolor)#####################################################################################$(tput sgr 0)" ;;
 		rohtext) 
             echo "$text" ;;
         text)
@@ -183,7 +183,7 @@ function english()
     installierejetzt="I'm installing now"
 }
 
-### Spprache Einstellungen
+### Sprachen Einstellung
 german # Sprache
 
 ### ! .Funktionen eines Bash Skript auslesen und in eine Text Datei schreiben.
@@ -215,7 +215,7 @@ function schreibeinfo()
 		log rohtext "         |_|                                                                         "
 		log rohtext " $VERSION"
 		log rohtext " "
-		log rohtext "#####################################################################################"
+		log line
 		log rohtext "$DATUM $(date +%H:%M:%S) MULTITOOL: wurde gestartet am $(date +%d.%m.%Y) um $(date +%H:%M:%S) Uhr"
 		log rohtext "$DATUM $(date +%H:%M:%S) INFO: Server Name: ${HOSTNAME}"
 		log rohtext "$DATUM $(date +%H:%M:%S) INFO: Server IP: ${AKTUELLEIP}"
@@ -227,7 +227,7 @@ function schreibeinfo()
 		log rohtext "$DATUM $(date +%H:%M:%S) INFO: Spracheinstellung: ${LANG}"
 		log rohtext "$DATUM $(date +%H:%M:%S) INFO: Screen Version: $(screen --version)"
 		log rohtext "$DATUM $(date +%H:%M:%S) INFO: $(who -b)"
-		log rohtext "#####################################################################################"
+		log line
 		log rohtext " "			 
 	fi
 	return 0
@@ -236,7 +236,7 @@ function schreibeinfo()
 # *Kopfzeile in die Log Datei schreiben.
 schreibeinfo
 
-### ! Installationsroutine
+### ! Linux apt-get Installationsroutine
 function iinstall()
 {
     installation=$1
@@ -248,7 +248,7 @@ function iinstall()
     fi
 }
 
-### ! Neue Installationsroutine
+### ! Linux apt Installationsroutine
 function iinstall2()
 {
     installation=$1
@@ -260,7 +260,7 @@ function iinstall2()
     fi
 }
 
-### ! Neue installationsroutine aus Datei
+### ! Neue apt-get installationsroutine aus Datei
 function finstall()
 {
 	TXTLISTE=$1
@@ -429,10 +429,112 @@ function warnbox()
 	hauptmenu
 }
 
+### ! Text editieren.
+function edittextbox()
+{
+	#--editbox 	DATEI HOEHE BREITE
+	dialog --editbox "$1" 0 0
+    #NEWTEXT=$(dialog --editbox "$1" 0 0)
+    dialog --clear
+	clear
+	#echo "$NEWTEXT"
+	hauptmenu
+}
+
+### ! Text Meldung anzeigen.
+function textbox()
+{
+	#--editbox 	DATEI HOEHE BREITE
+    dialog --textbox "$1" 0 0
+    dialog --clear
+	clear
+	hauptmenu
+}
+
+### ! Nachrichtbox Meldung anzeigen.
+function nachrichtbox() 
+{
+	dialog --title "$1" --no-collapse --msgbox "$result" 0 0
+	hauptmenu
+}
+
+### ! php log anzeigen.
+function apacheerror()
+{	
+	###php log Datei:
+	if [ -f "$apache2errorlog" ]; then
+		textbox "$apache2errorlog"
+	else
+		warnbox "$apache2errorlog File not found!"
+	fi
+}
+
+### ! mysql log anzeigen.
+function mysqldberror()
+{	
+	###mysql log Datei:
+	if [ -f "$mysqlerrorlog" ]; then
+		textbox "$mysqlerrorlog"
+	else
+		warnbox "$mysqlerrorlog File not found!"
+	fi
+}
+
+### ! mariadb error anzeigen.
+function mariadberror()
+{	
+	###mariaDB log Datei:
+	if [ -f "$mysqlmariadberor" ]; then
+		textbox "$mysqlmariadberor"
+	else
+		warnbox "$mysqlmariadberor File not found!"
+	fi
+}
+
+### ! ufw log anzeigen.
+function ufwlog()
+{	
+	###mariaDB log Datei:
+	if [ -f "$ufwlog" ]; then
+		textbox "$ufwlog"
+	else
+		warnbox "$ufwlog File not found!"
+	fi
+}
+
+### ! auth log anzeigen.
+function authlog()
+{	
+	###auth.log Datei:
+	if [ -f "$authlog" ]; then
+		textbox "$authlog"
+	else
+		warnbox "$authlog File not found!"
+	fi
+}
+
+### ! access log anzeigen.
+function accesslog()
+{	
+	###access.log Datei:
+	if [ -f "$apache2accesslog" ]; then
+		textbox "$apache2accesslog"
+	else
+		warnbox "$apache2accesslog File not found!"
+	fi
+}
+
+### ! Festplattenspeicher anzeigen.
+function fpspeicher()
+{
+	result=$(df -h)
+	nachrichtbox "Freier Spericher"
+}
+
 ### !  screenlist, Laufende Screens auflisten.
 function screenlist()
 {
-	log rohtext "#####################################################################################"
+	log line
 	log info "Alle laufende Screens anzeigen!"
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
@@ -450,7 +552,7 @@ function screenlist()
 ### ! screenlistrestart Alle laufende Screens anzeigen
 function screenlistrestart()
 {
-	log rohtext "#####################################################################################"
+	log line
 	log info "Alle laufende Screens anzeigen!"
 	mynewlist=$(screen -ls)
 	log text "$mynewlist"
@@ -1040,7 +1142,7 @@ function menumapdel()
 	
 	if [ -d "$VERZEICHNIS" ]; then
 		cd /$STARTVERZEICHNIS/"$VERZEICHNIS"/bin || return 1
-		rm -r maptiles/* || log rohtext "#####################################################################################"
+		rm -r maptiles/* || log line
 		log info " MAPDEL: OpenSimulator maptile $VERZEICHNIS geloescht"
 		return 0
 	else
@@ -1068,7 +1170,7 @@ function menulogdel()
 	# dialog Aktionen Ende
 	
 	if [ -d "$VERZEICHNIS" ]; then
-		rm /$STARTVERZEICHNIS/"$VERZEICHNIS"/bin/*.log 2>/dev/null|| log rohtext "#####################################################################################"
+		rm /$STARTVERZEICHNIS/"$VERZEICHNIS"/bin/*.log 2>/dev/null|| log line
 		log info "LOGDEL: OpenSimulator log $VERZEICHNIS geloescht"
 		return 0
 	else
@@ -1081,7 +1183,7 @@ function menulogdel()
 ### !  ossettings, stellt den Linux Server fuer OpenSim ein.
 function ossettings()
 {	
-	log rohtext "#####################################################################################"
+	log line
 	# Hier kommen alle gewuenschten Einstellungen rein.
 	# ulimit
 	if [[ $SETULIMITON = "yes" ]]
@@ -1094,7 +1196,9 @@ function ossettings()
 	then
 		log info "Setze die Mono Threads auf $SETMONOTHREADS"
 		MONO_THREADS_PER_CPU=$SETMONOTHREADS
+		# Test 30.06.2022
 		export MONO_THREADS_PER_CPU=$SETMONOTHREADS
+		# MonoSetEnv MONO_THREADS_PER_CPU=$SETMONOTHREADS
 	fi
 
 	# MONO_GC_PARAMS
@@ -1105,7 +1209,9 @@ function ossettings()
 	fi
 	if [[ $SETMONOGCPARAMSON2 = "yes" ]]
 	then
-		log info "Setze die Einstellung: nursery-size=32m,promotion-age=14,minor=split,major=marksweep,no-lazy-sweep,alloc-ratio=50,nursery-size=64m"
+		log info "Setze die Einstellung: nursery-size=32m,promotion-age=14,"
+		log info "minor=split,major=marksweep,no-lazy-sweep,alloc-ratio=50,"
+		log info "nursery-size=64m"
 
 		# Test 26.02.2022
 		export MONO_GC_PARAMS="nursery-size=32m,promotion-age=14,minor=split,major=marksweep,no-lazy-sweep,alloc-ratio=50,nursery-size=64m"
@@ -1250,7 +1356,7 @@ function menuosstop()
 ### !  rostart, Robust Server starten.
 function rostart()
 {
-	log rohtext "#####################################################################################"
+	log line
 	if checkfile /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/Robust.exe; then		
 		cd /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin || return 1
 		# Start mit oder ohne AOT.
@@ -1274,7 +1380,7 @@ function rostart()
 ### ! menurostart
 function menurostart()
 {
-	log rohtext "#####################################################################################"
+	log line
 	if checkfile /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/Robust.exe; then		
 		cd /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin || return 1
 
@@ -1431,7 +1537,7 @@ function gridstart()
 function menugridstart()
 {
 	ossettings
-	log rohtext "#####################################################################################"
+	log line
 	if screen -list | grep -q RO; then
 		log error "RobustServer laeuft bereits"
 	else
@@ -1571,7 +1677,7 @@ function scriptcopy()
 			log info "SCRIPTCOPY: Script Assets werden kopiert"
 			cp -r /$STARTVERZEICHNIS/$SCRIPTSOURCE/assets /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin
 			cp -r /$STARTVERZEICHNIS/$SCRIPTSOURCE/inventory /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin
-			log rohtext "#####################################################################################"
+			log line
 		else
 			# entpacken und kopieren
 			log info "SCRIPTCOPY: Script Assets werden entpackt"
@@ -1579,7 +1685,7 @@ function scriptcopy()
 			log info "SCRIPTCOPY: Script Assets werden kopiert"
 			cp -r /$STARTVERZEICHNIS/$SCRIPTSOURCE/assets /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin
 			cp -r /$STARTVERZEICHNIS/$SCRIPTSOURCE/inventory /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin
-			log rohtext "#####################################################################################"
+			log line
 		fi
 	else
 		log warn "SCRIPTCOPY: Skripte werden nicht kopiert."
@@ -1596,7 +1702,7 @@ function moneycopy()
 			log info "MONEYCOPY: Money Kopiervorgang gestartet"
 			cp -r /$STARTVERZEICHNIS/$MONEYSOURCE/bin /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS
 			cp -r /$STARTVERZEICHNIS/$MONEYSOURCE/addon-modules /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS
-			log rohtext "#####################################################################################"
+			log line
 		else
 			# Entpacken und kopieren
 			log info "MONEYCOPY: Money entpacken"
@@ -1622,7 +1728,7 @@ function configurecopy()
 			cp -r /opt/opensim-configuration-addon-modul/Configuration /opt/opensim/addon-modules
 			//mv /opt/opensim/addon-modules/opensim-configuration-addon-modul /opt/opensim/addon-modules/Configuration
 
-			log rohtext "#####################################################################################"
+			log line
 		else
 			# Entpacken und kopieren
 			log info "CONFIGURECOPY: Configure entpacken"
@@ -1630,7 +1736,7 @@ function configurecopy()
 			log info "CONFIGURECOPY: Configure Kopiervorgang gestartet"		
 			cp -r /opt/opensim-configuration-addon-modul/Configuration /$STARTVERZEICHNIS/opensim/addon-modules
 			//mv /opt/opensim/addon-modules/opensim-configuration-addon-modul /opt/opensim/addon-modules/Configuration
-			log rohtext "#####################################################################################"
+			log line
 		fi
 	else
 		log warn "CONFIGURE: Configure wird nicht kopiert."
@@ -1663,7 +1769,7 @@ function searchcopy()
 		if [ -d /$STARTVERZEICHNIS/OpenSimSearch/ ]; then
 			log info "OpenSimSearch: python wird kopiert"
 			cp -r /$STARTVERZEICHNIS/OpenSimSearch /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/addon-modules
-		log rohtext "#####################################################################################"
+		log line
 		else
 			log info "OpenSimSearch: python ist nicht vorhanden"
 		fi
@@ -1681,7 +1787,7 @@ function mutelistcopy()
 		if [ -d /$STARTVERZEICHNIS/OpenSimMutelist/ ]; then
 			log info "OpenSimMutelist: python wird kopiert"
 			cp -r /$STARTVERZEICHNIS/OpenSimMutelist /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/addon-modules
-		log rohtext "#####################################################################################"
+		log line
 		else
 			log error "OpenSimMutelist: python ist nicht vorhanden"
 		fi
@@ -1700,7 +1806,7 @@ function chrisoscopy()
 		if [ -d /$STARTVERZEICHNIS/Chris.OS.Additions/ ]; then
 			log info "CHRISOSCOPY: Chris.OS.Additions Kopiervorgang gestartet"
 			cp -r /$STARTVERZEICHNIS/Chris.OS.Additions /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/addon-modules
-			log rohtext "#####################################################################################"
+			log line
 		else
 			log error "CHRISOSCOPY: Chris.OS.Additions ist nicht vorhanden"
 		fi	
@@ -1860,7 +1966,7 @@ function osdelete()
 		rm -r /$STARTVERZEICHNIS/opensim1
 		log info "OSDELETE: Umbenennen von $OPENSIMVERZEICHNIS nach opensim1 zur sicherung"
 		mv /$STARTVERZEICHNIS/opensim /$STARTVERZEICHNIS/opensim1
-		log rohtext "#####################################################################################"
+		log line
 		
 	else
 		log error "$STARTVERZEICHNIS Verzeichnis existiert nicht"
@@ -1874,14 +1980,14 @@ function oscopyrobust()
 	cd /$STARTVERZEICHNIS || return 1
 	if [ -d /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/ ]; then
 		log info "Kopiere Robust, Money!"
-		log rohtext "#####################################################################################"
+		log line
 		sleep 2
 		log info "Robust und Money kopiert"
 		cd /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin || return 1
 		cp -r /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS
-		log rohtext "#####################################################################################"
+		log line
 	else
-		log rohtext "#####################################################################################"
+		log line
 	fi
 	return 0
 }
@@ -1892,7 +1998,7 @@ function oscopysim()
 	cd /$STARTVERZEICHNIS || return 1
 	makeverzeichnisliste
 	log info "Kopiere Simulatoren!"
-	log rohtext "#####################################################################################"
+	log line
 	sleep 2
 	for (( i = 0 ; i < "$ANZAHLVERZEICHNISSLISTE" ; i++)) do
 		log info "OpenSimulator ${VERZEICHNISSLISTE[$i]} kopiert"
@@ -1900,7 +2006,7 @@ function oscopysim()
 		cp -r /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"
 		sleep 2
 	done
-	log rohtext "#####################################################################################"
+	log line
 	log info "OSCOPY: OpenSim kopieren"
 	return 0
 }
@@ -2065,7 +2171,7 @@ function autoregionsiniteilen()
 	for (( i = 0 ; i < "$ANZAHLVERZEICHNISSLISTE" ; i++))
 	do
 		log info "Region.ini ${VERZEICHNISSLISTE[$i]} zerlegen"
-		log rohtext "#####################################################################################"
+		log line
 		VERZEICHNIS="${VERZEICHNISSLISTE[$i]}"
 		# Regions.ini teilen:
 		echo "$VERZEICHNIS" # OK geht
@@ -2249,7 +2355,7 @@ function regionbackup()
 	screen -S "$VERZEICHNISSCREENNAME" -p 0 -X eval "stuff 'terrain save /$STARTVERZEICHNIS/backup/'$DATUM'-$NSDATEINAME.png'^M"
 	screen -S "$VERZEICHNISSCREENNAME" -p 0 -X eval "stuff 'terrain save /$STARTVERZEICHNIS/backup/'$DATUM'-$NSDATEINAME.raw'^M"
 	log info "Region $DATUM-$NSDATEINAME RAW und PNG Terrain gespeichert"
-	log rohtext "#####################################################################################"
+	log line
 	sleep 10
 	if [ ! -f /$STARTVERZEICHNIS/"$VERZEICHNISSCREENNAME"/bin/Regions/"$NSDATEINAME".ini ]; then
 		cp -r /$STARTVERZEICHNIS/"$VERZEICHNISSCREENNAME"/bin/Regions/Regions.ini /$STARTVERZEICHNIS/backup/"$DATUM"-"$NSDATEINAME".ini
@@ -2309,7 +2415,7 @@ function menuregionbackup()
 	screen -S "$VERZEICHNISSCREENNAME" -p 0 -X eval "stuff 'terrain save /$STARTVERZEICHNIS/backup/'$DATUM'-$NSDATEINAME.png'^M"
 	screen -S "$VERZEICHNISSCREENNAME" -p 0 -X eval "stuff 'terrain save /$STARTVERZEICHNIS/backup/'$DATUM'-$NSDATEINAME.raw'^M"
 	log info "Region $DATUM-$NSDATEINAME RAW und PNG Terrain gespeichert"
-	log rohtext "#####################################################################################"
+	log line
 	sleep 10
 	if [ ! -f /$STARTVERZEICHNIS/"$VERZEICHNISSCREENNAME"/bin/Regions/"$NSDATEINAME".ini ]; then
 		cp -r /$STARTVERZEICHNIS/"$VERZEICHNISSCREENNAME"/bin/Regions/Regions.ini /$STARTVERZEICHNIS/backup/"$DATUM"-"$NSDATEINAME".ini
@@ -2345,7 +2451,7 @@ function regionrestore()
 	screen -S "$VERZEICHNISSCREENNAME" -p 0 -X eval "stuff 'load oar /$STARTVERZEICHNIS/backup/'$DATUM'-$NSDATEINAME.oar'^M"
 
 	log info "OSRESTORE: Region $DATUM-$NSDATEINAME wiederhergestellt"
-	log rohtext "#####################################################################################"
+	log line
 	return 0
 }
 
@@ -2388,7 +2494,7 @@ function menuregionrestore()
 	screen -S "$VERZEICHNISSCREENNAME" -p 0 -X eval "stuff 'load oar /$STARTVERZEICHNIS/backup/'$DATUM'-$NSDATEINAME.oar'^M"
 
 	log info "OSRESTORE: Region $DATUM-$NSDATEINAME wiederhergestellt"
-	log rohtext "#####################################################################################"
+	log line
 	return 0
 }
 
@@ -2499,7 +2605,7 @@ function menuautosimstop()
 # Die Dateien samt neuer Daten werden beim naechsten start des opensimulator neu geschrieben.
 function autologdel()
 {
-	log rohtext "#####################################################################################"
+	log line
 	makeverzeichnisliste
 	sleep 2
 	for (( i = 0 ; i < "$ANZAHLVERZEICHNISSLISTE" ; i++)) do
@@ -2517,7 +2623,7 @@ function autologdel()
 	fi
 	# if [[ ! $MONEYVERZEICHNIS == "money" ]]
 	# then 
-	# 	rm /$STARTVERZEICHNIS/money/bin/*.log || log rohtext "#####################################################################################"
+	# 	rm /$STARTVERZEICHNIS/money/bin/*.log || log line
 	# fi
 
 	return 0
@@ -2526,7 +2632,7 @@ function autologdel()
 ### !  menuautologdel
 function menuautologdel()
 {
-	log rohtext "#####################################################################################"
+	log line
 	makeverzeichnisliste
 	sleep 2
 	for (( i = 0 ; i < "$ANZAHLVERZEICHNISSLISTE" ; i++)) do
@@ -2567,7 +2673,7 @@ function automapdel()
 function autorobustmapdel()
 {
 	cd /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin || return 1
-	rm -r maptiles/* || log rohtext "#####################################################################################"
+	rm -r maptiles/* || log line
 	log warn "OpenSimulator maptile aus $ROBUSTVERZEICHNIS geloescht"
 	return 0
 }
@@ -2740,16 +2846,16 @@ function menuautoscreenstop()
 ### !  autostart, startet das komplette Grid mit allen sims.
 function autostart()
 {
-	log rohtext "#####################################################################################"
+	log line
 	log info "Starte das Grid!"
 	if [[ $ROBUSTVERZEICHNIS == "robust" ]]
 	then
 		gridstart
 	fi
 	autosimstart
-	log rohtext "#####################################################################################"
+	log line
 	screenlist
-	log rohtext "#####################################################################################"
+	log line
 	log info "Auto Start abgeschlossen"
 	return 0
 }
@@ -2757,7 +2863,7 @@ function autostart()
 ### !  autostop, stoppt das komplette Grid mit allen sims.
 function autostop()
 {
-	log rohtext "#####################################################################################"
+	log line
 	log info "Stoppe das Grid! ###"
 	# schauen ob screens laufen wenn ja beenden.
 	# shellcheck disable=SC2022
@@ -2775,11 +2881,13 @@ function autostop()
 	# schauen ob screens laufen wenn ja warten.
 	# shellcheck disable=SC2022
 	if ! screen -list | grep -q 'sim'; then
-		log rohtext "#####################################################################################"
+		log line
 	else
 		sleep $AUTOSTOPZEIT
 	fi
-	log info "Alle noch offenen OpenSimulator bestandteile, die nicht innerhalb von $AUTOSTOPZEIT Sekunden heruntergefahren werden konnten, werden jetzt zwangsbeendet!"
+	log info "Alle noch offenen OpenSimulator bestandteile,"
+	log info "die nicht innerhalb von $AUTOSTOPZEIT Sekunden heruntergefahren werden konnten,"
+	log info "werden jetzt zwangsbeendet!"
 	autoscreenstop
 	return 0
 }
@@ -2825,7 +2933,7 @@ function menuautostop()
 	menuautoscreenstop
 }
 
-### !  autorestart, startet das gesamte Grid neu und loescht die log Dateien.
+### ! autorestart, startet das gesamte Grid neu und loescht die log Dateien.
 function autorestart()
 {
 	autostop
@@ -2840,7 +2948,7 @@ function autorestart()
 	screenlistrestart
 	return 0
 }
-### !  menuautorestart
+### ! menuautorestart
 function menuautorestart()
 {
 	menuautostop
@@ -2855,7 +2963,46 @@ function menuautorestart()
 	log info "Auto Restart abgeschlossen."
 }
 
-### !Dieses Installationsbeispiel installiert alles fuer OpenSim inkusive Web, sowie alles um einen OpenSimulator zu Kompilieren.
+### ! serverinstall, Ubuntu 18 Server zum Betrieb von OpenSim vorbereiten.
+function serverupgrade()
+{    
+    sudo apt-get update
+    sudo apt-get upgrade
+}
+### ! Installation oder Migration von MariaDB 10.8.3 oder hoeher fuer Ubuntu 18
+function installmariadb18()
+{
+	
+	log info "Installation oder Migration von MariaDB 10.8.3 oder hoeher fuer Ubuntu 18"
+	log info "Nach der Installation werden Fehler in den OpenSim log Dateien angezeigt bitte dann alles neustarten!"
+	# MySQL stoppen:
+	sudo service mysql stop
+
+	sudo apt-get install apt-transport-https curl
+	sudo curl -o /etc/apt/trusted.gpg.d/mariadb_release_signing_key.asc 'https://mariadb.org/mariadb_release_signing_key.asc'
+	sudo sh -c "echo 'deb https://mirror.kumi.systems/mariadb/repo/10.8/ubuntu bionic main' >>/etc/apt/sources.list"
+	
+	# MariaDB installieren:
+	sudo apt-get update
+	sudo apt-get -y install mariadb-server
+
+	mariadb --version
+}
+
+### ! Installation oder Migration von MariaDB fuer Ubuntu 22
+function installmariadb22()
+{
+	# MySQL stoppen wenn es laeuft:
+	sudo service mysql stop
+
+	# MariaDB installieren:
+	sudo apt-get update
+	sudo apt-get -y install mariadb-server
+
+	mariadb --version
+}
+
+### ! monoinstall18 alt
 ### Funktion monoinstall, mono 6.x installieren.
 function monoinstall() 
 {
@@ -2877,46 +3024,7 @@ function monoinstall()
 	return 0
 }
 
-### !  serverinstall, Ubuntu 18 Server zum Betrieb von OpenSim vorbereiten.
-function serverupgrade()
-{    
-    sudo apt-get update
-    sudo apt-get upgrade
-}
-### !Installation oder Migration von MariaDB 10.8.3 oder hoeher fuer Ubuntu 18
-function installmariadb18()
-{
-	
-	log info "Installation oder Migration von MariaDB 10.8.3 oder hoeher fuer Ubuntu 18"
-	log info "Nach der Installation werden Fehler in den OpenSim log Dateien angezeigt bitte dann alles neustarten!"
-	# MySQL stoppen:
-	sudo service mysql stop
-
-	sudo apt-get install apt-transport-https curl
-	sudo curl -o /etc/apt/trusted.gpg.d/mariadb_release_signing_key.asc 'https://mariadb.org/mariadb_release_signing_key.asc'
-	sudo sh -c "echo 'deb https://mirror.kumi.systems/mariadb/repo/10.8/ubuntu bionic main' >>/etc/apt/sources.list"
-	
-	# MariaDB installieren:
-	sudo apt-get update
-	sudo apt-get -y install mariadb-server
-
-	mariadb --version
-}
-
-### !Installation oder Migration von MariaDB fuer Ubuntu 22
-function installmariadb22()
-{
-	# MySQL stoppen:
-	sudo service mysql stop
-
-	# MariaDB installieren:
-	sudo apt-get update
-	sudo apt-get -y install mariadb-server
-
-	mariadb --version
-}
-
-### !  monoinstall18
+### ! monoinstall18
 function monoinstall18()
 {
 	if dpkg-query -s mono-complete 2>/dev/null|grep -q installed; then
@@ -2935,7 +3043,7 @@ function monoinstall18()
 	fi
 }
 
-### !  monoinstall20
+### ! monoinstall20
 function monoinstall20()
 {
 	if dpkg-query -s mono-complete 2>/dev/null|grep -q installed; then
@@ -2954,7 +3062,13 @@ function monoinstall20()
 	fi
 }
 
-### !  sourcelist18
+### ! monoinstall22
+function monoinstall22()
+{
+	sudo apt install mono-roslyn mono-complete mono-dbg mono-xbuild -y
+}
+
+### ! sourcelist18
 function sourcelist18()
 {
 	echo "deb http://de.archive.ubuntu.com/ubuntu bionic main restricted universe multiverse"
@@ -3047,12 +3161,6 @@ function installbegin()
 	apt upgrade
 }
 
-### !  installmono22
-function installmono22()
-{
-	sudo apt install mono-roslyn mono-complete mono-dbg mono-xbuild -y
-}
-
 ### !  installubuntu22
 function installubuntu22()
 {
@@ -3127,10 +3235,10 @@ function ufwset()
 
 	# Port oeffnen OpenSim
 	sudo ufw allow 9000/tcp
-	# von 9000 bis 9900 oeffnen
+	# von 9000 bis 9100 oeffnen
 	sudo ufw allow 9000:9100/udp
 	# XmlRpcPort = 20800 ?
-	#sudo ufw allow 20800:20900/udp
+	sudo ufw allow 20800:20900/udp
 }
 
 ### !Installieren von PhpMyAdmin
@@ -3247,29 +3355,29 @@ function osbuilding()
 	log info "OSBUILDING: Alten OpenSimulator sichern"
     osdelete
 
-	log rohtext "#####################################################################################"
+	log line
 
 	# Neue Versionsnummer: opensim-0.9.2.2Dev-4-g5e9b3b4.zip
 	log info "OSBUILDING: Neuen OpenSimulator entpacken"
     unzip $OSVERSION"$VERSIONSNUMMER"-*.zip
 
-	log rohtext "#####################################################################################"
+	log line
 
 	log info "OSBUILDING: Neuen OpenSimulator umbenennen"
 	mv /$STARTVERZEICHNIS/$OSVERSION"$VERSIONSNUMMER"-*/ /$STARTVERZEICHNIS/opensim/
 
-	log rohtext "#####################################################################################"
+	log line
 	sleep 3
 
 	log info "OSBUILDING: Prebuild des neuen OpenSimulator starten"
     osprebuild "$VERSIONSNUMMER"
 
-	log rohtext "#####################################################################################"
+	log line
 
 	log info "OSBUILDING: Compilieren des neuen OpenSimulator"
     compilieren
     
-    log rohtext "#####################################################################################" 
+    log line 
     osupgrade
 
 	return 0
@@ -3829,7 +3937,7 @@ function db_backup()
 
 	log text "SAVE DATABASE: Datenbank $databasename sichern."
 
-	mysqldump -u"$username" -p"$password" "$databasename" > /$STARTVERZEICHNIS/"$DATENBANKNAME".sql 2>/dev/null
+	mysqldump -u"$username" -p"$password" "$databasename" > /$STARTVERZEICHNIS/"$databasename".sql 2>/dev/null
 
 	log text "SAVE DATABASE: Im Hintergrund wird die Datenbank $databasename jetzt gesichert." # Screen fehlt!
 
@@ -6603,7 +6711,7 @@ function osgridcopy()
 	log text " #############################"
 
 	log info "OSGRIDCOPY: Das Grid wird jetzt kopiert/aktualisiert"
-	log rohtext "#####################################################################################"
+	log line
 	# Grid Stoppen.
 	log info "OSGRIDCOPY: Alles Beenden falls da etwas laeuft"
 	autostop
@@ -6611,7 +6719,7 @@ function osgridcopy()
 	log info "OSGRIDCOPY: Neue Version kopieren"
 	oscopyrobust
 	oscopysim
-	log rohtext "#####################################################################################"
+	log line
 	# MoneyServer eventuell loeschen.	
 	if [ "$MONEYVERZEICHNIS" = "keins" ] || [ "$MONEYVERZEICHNIS" = "no" ] || [ "$MONEYVERZEICHNIS" = "nein" ]; then moneydelete; fi
 	return 0
@@ -6667,17 +6775,17 @@ function oszipupgrade()
 	log info "OSBUILDING: Alten OpenSimulator sichern"
     osdelete
 
-	log rohtext "#####################################################################################"
+	log line
 
 	log info "OSBUILDING: Neuen OpenSimulator aus der ZIP entpacken"
     unzip opensim-0.9.2.2."$VERSIONSNUMMER".zip
 
-	log rohtext "#####################################################################################"
+	log line
 
 	log info "OSBUILDING: Neuen OpenSimulator umbenennen"
     mv /$STARTVERZEICHNIS/opensim-0.9.2.2."$VERSIONSNUMMER"/ /$STARTVERZEICHNIS/opensim/
 
-	log rohtext "#####################################################################################"
+	log line
 
 	osupgrade
 	return 0
@@ -6944,7 +7052,7 @@ echo "$(tput setab 1)Ungetestete oder zu testende Funktionen$(tput sgr 0)"
 	echo "serverinstall		- $(tput setaf 3)hat keine Parameter$(tput sgr 0) - alle benoetigten Linux Pakete installieren."
 	echo "osbuilding		- $(tput setab 5)Versionsnummer$(tput sgr 0) - Upgrade des OpenSimulator aus einer Source ZIP Datei."
 	echo "createuser 		- $(tput setab 5) Vorname $(tput sgr 0) $(tput setab 4) Nachname $(tput sgr 0) $(tput setab 2) Passwort $(tput sgr 0) $(tput setab 3) E-Mail $(tput sgr 0) - Grid Benutzer anlegen."
-log rohtext "#####################################################################################"
+log line
 	echo "db_anzeigen	- $(tput setab 5) DBBENUTZER $(tput sgr 0) $(tput setab 4) DBDATENBANKNAME $(tput sgr 0) - Alle Datenbanken anzeigen."
 	echo "create_db	- $(tput setab 5) DBBENUTZER $(tput sgr 0) $(tput setab 4) DBPASSWORT $(tput sgr 0) $(tput setab 2) DATENBANKNAME $(tput sgr 0) - Datenbank anlegen."
 	#echo "create_db_user	- $(tput setab 5) DBBENUTZER $(tput sgr 0) $(tput setab 4) DBDATENBANKNAME $(tput sgr 0) $(tput setab 2) NEUERNAME $(tput sgr 0) $(tput setab 3) NEUESPASSWORT $(tput sgr 0) - DB Benutzer anlegen."
@@ -6965,7 +7073,7 @@ log rohtext "###################################################################
 	echo "conf_read	- $(tput setab 5) SUCHWORT $(tput sgr 0) $(tput setab 4) PFAD $(tput sgr 0) $(tput setab 2) DATEINAME $(tput sgr 0) - Konfigurationszeile lesen."
 	echo "landclear 	- $(tput setab 5)screen_name$(tput sgr 0) $(tput setab 4)Regionsname$(tput sgr 0) - Land clear - Loescht alle Parzellen auf dem Land."
 
-	log rohtext "#####################################################################################"
+	log line
 	echo "loadinventar - $(tput setab 5)NAME VERZEICHNIS PASSWORD DATEINAMEmitPFAD $(tput sgr 0) - laedt Inventar aus einer iar"
 	echo "saveinventar - $(tput setab 5)NAME VERZEICHNIS PASSWORD DATEINAMEmitPFAD $(tput sgr 0) - speichert Inventar in einer iar"
 
@@ -6973,7 +7081,7 @@ log rohtext "###################################################################
 	
 	echo "passwdgenerator - $(tput setab 5)Passwortstaerke$(tput sgr 0) - Generiert ein Passwort zur weiteren verwendung."
 
-	log rohtext "#####################################################################################"
+	log line
 	echo "$(tput setaf 3)  Der Verzeichnisname ist gleichzeitig auch der Screen Name!$(tput sgr 0)"
 
 	log info "HILFE: Hilfe wurde angefordert."
@@ -7838,6 +7946,14 @@ case  $KOMMANDO  in
 	Replica_Backup) Replica_Backup "$2" "$3" "$4" "$5" ;;
 	Replica_Backup2) Replica_Backup2 "$2" "$3" "$4" ;;
 	ReplikatKoordinaten) ReplikatKoordinaten "$2" "$3" "$4" "$5" "$6" "$7" "$8" ;;
+	textbox) textbox  "$8" ;;
+	apacheerror) apacheerror ;;
+	mysqldberror) mysqldberror ;;
+	mariadberror) mariadberror ;;
+	ufwlog) ufwlog ;;
+	authlog) authlog ;;
+	accesslog) accesslog ;;
+	fpspeicher) fpspeicher ;;
 	*) hauptmenu ;;
 esac
 vardel
