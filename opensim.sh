@@ -16,7 +16,7 @@
 # ! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 # ! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-# * Status 30.06.2022 270 Funktionen.
+# * Status 30.06.2022 273 Funktionen.
 
 # # Visual Studio Code # ShellCheck # shellman # Better Comments #
 
@@ -28,7 +28,7 @@
 # // Text
 
 #### ? Einstellungen ####
-VERSION="V0.79.537" # opensimMULTITOOL Versionsausgabe
+VERSION="V0.79.544" # opensimMULTITOOL Versionsausgabe
 clear # Bildschirm loeschen
 
 # ? Alte Variablen loeschen aus eventuellen voherigen sessions
@@ -419,6 +419,9 @@ function rebootdatum()
 	fi
 	return 0
 }
+
+## * --no-collapse   verhindert dialog die Neuformatierung des Nachrichtentextes. 
+## * Verwenden Sie dies, wenn die exakte Darstellung des Textes erforderlich ist.
 
 ### ! warnbox Medung anzeigen.
 function warnbox()
@@ -5585,6 +5588,76 @@ function ReplikatKoordinaten()
 
 ### NEU mariaDB 30.06.2022 ENDE ########################################################################
 
+###* NEU Datenbank splitten 03.07.2022 ENDE #############################################################
+
+### ! Alle Tabellen aus einer SQL Datensicherung in ein gleichnahmigen Verzeichniss extrahieren.
+# db_tablesplitt /Pfad/SQL_Datei.sql
+function db_tablesplitt() 
+{
+	VERZEICHNISNAME=$(basename "$1" .sql)
+	STARTVERZEICHNIS=$(pwd)
+	TABELLEN_ZAEHLER=0
+	mkdir -p "$STARTVERZEICHNIS"/"$VERZEICHNISNAME"
+	log info "Zerlege $VERZEICHNISNAME und kopiere alle Tabellen nach $STARTVERZEICHNIS/$VERZEICHNISNAME"
+
+    #Schleife für jeden Tabellennamen, der in der bereitgestellten Dumpdatei gefunden wird
+
+	# shellcheck disable=SC2013
+	for TABELLENNAME in $(grep "Table structure for table " "$1" | awk -F"\`" \{'print $2'\})        
+	do
+		log info "Entpacke $TABELLENNAME..."
+		#Extrahiert den tabellenspezifischen Dump in TABELLENNAME.sql
+		sed -n "/^-- Table structure for table \`$TABELLENNAME\`/,/^-- Table structure for table/p" "$1" > "$STARTVERZEICHNIS"/"$VERZEICHNISNAME"/"$TABELLENNAME".sql
+		TABELLEN_ZAEHLER=$((TABELLEN_ZAEHLER+1))
+		log info "Kopiere $TABELLENNAME nach $STARTVERZEICHNIS/$VERZEICHNISNAME/$TABELLENNAME.sql"
+	done;
+}
+
+### ! Eine einzelne Tabelle aus einem SQL Datenbank Backup extrahieren.
+# db_tablextract /Pfad/SQL_Datei.sql Tabellenname
+function db_tablextract() 
+{
+	VERZEICHNISNAME=$(basename "$1" .sql)
+	STARTVERZEICHNIS=$(pwd)
+	TABELLEN_ZAEHLER=0
+	mkdir -p "$STARTVERZEICHNIS"/"$VERZEICHNISNAME"
+	log info "Kopiere $TABELLENNAME nach $STARTVERZEICHNIS/$VERZEICHNISNAME/$TABELLENNAME.sql"
+
+	# shellcheck disable=SC2013
+	for TABELLENNAME in $(grep -E "Table structure for table \`$2\`" "$1"| awk -F"\`" \{'print $2'\})
+	do
+		log info "Entpacke $TABELLENNAME..."
+		#Extrahiert den tabellenspezifischen Dump in TABELLENNAME.sql
+		sed -n "/^-- Table structure for table \`$TABELLENNAME\`/,/^-- Table structure for table/p" "$1" > "$STARTVERZEICHNIS"/"$VERZEICHNISNAME"/"$TABELLENNAME".sql
+		TABELLEN_ZAEHLER=$((TABELLEN_ZAEHLER+1))
+		log info "Habe $TABELLENNAME nach $STARTVERZEICHNIS/$VERZEICHNISNAME/$TABELLENNAME.sql kopiert"
+	done;
+}
+
+### ! db_tablextract_regex, Extrahiere Tabelle aus SQL Datenbank Backup unter zuhilfenahme von regex.
+# db_tablextract_regex DUMP-FILE-NAME -S TABLE-NAME-REGEXP Extrahiert 
+# Tabellen aus der sql Datei mit dem angegebenen regulaeren Ausdruck.
+function db_tablextract_regex() 
+{
+	VERZEICHNISNAME=$(basename "$1" .sql)
+	STARTVERZEICHNIS=$(pwd)
+	TABELLEN_ZAEHLER=0
+	mkdir -p "$STARTVERZEICHNIS"/"$VERZEICHNISNAME"
+
+	# shellcheck disable=SC2013
+	for TABELLENNAME in $(grep -E "Table structure for table \`$3" "$1"| awk -F"\`" \{'print $2'\})
+	do
+		
+		log info "Entpacke $TABELLENNAME..."
+		
+		#Extrahiert den tabellenspezifischen Dump in TABELLENNAME.sql
+		sed -n "/^-- Table structure for table \`$TABELLENNAME\`/,/^-- Table structure for table/p" "$1" > "$STARTVERZEICHNIS"/"$VERZEICHNISNAME"/"$TABELLENNAME".sql
+		TABELLEN_ZAEHLER=$((TABELLEN_ZAEHLER+1))
+		log info "Kopiere $TABELLENNAME structur $1 nach $STARTVERZEICHNIS/$VERZEICHNISNAME/$TABELLENNAME.sql"
+	done;
+}
+###* NEU Datenbank splitten ENDE 03.07.2022 ENDE ########################################################################
+
 ### !  conf_write, Konfiguration schreiben ersatz fuer alle UNGETESTETEN ini Funktionen.
 # ./opensim.sh conf_write Einstellung NeuerParameter Verzeichnis Dateiname
 function conf_write()
@@ -7954,6 +8027,9 @@ case  $KOMMANDO  in
 	authlog) authlog ;;
 	accesslog) accesslog ;;
 	fpspeicher) fpspeicher ;;
+	db_tablesplitt ) db_tablesplitt "$2" ;;
+	db_tablextract ) db_tablextract "$2" "$3" ;;
+	db_tablextract_regex) db_tablextract_regex "$2" "$3" "$4" ;;
 	*) hauptmenu ;;
 esac
 vardel
