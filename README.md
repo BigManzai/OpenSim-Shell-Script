@@ -129,9 +129,9 @@ Bisher sind nur Funktionen im Menü die maximal 1 Übergabewert voraussetzen.
 
 V0.79.544
 
-sql Backup Date in Tabellen splitten.
+ mySQL Dump Backup Datei in Tabellen splitten.
 
-sql Backup einzelne Tabelle aus mySQL Dump extahieren.
+sql Backup in einzelne Tabelle aus mySQL Dump extahieren.
 
 sql Datenbank Tabellenweise sichern.
 
