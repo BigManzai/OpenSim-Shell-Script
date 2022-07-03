@@ -128,16 +128,22 @@ Bisher sind nur Funktionen im Menü die maximal 1 Übergabewert voraussetzen.
 ## TODO und Informationen
 
 V0.79.544
+
 sql Backup Date in Tabellen splitten.
+
 sql Backup einzelne Tabelle aus mySQL Dump extahieren.
+
 sql Datenbank Tabellenweise sichern.
+
 Einzelne Tabellen zu einer neuen OpenSim Datenbank zusammensetzen.
+
 ```
 db_tablesplitt - Alle Tabellen aus einer SQL Datensicherung in ein gleichnahmigen Verzeichniss extrahieren.
 db_tablextract - Eine einzelne Tabelle aus einem SQL Datenbank Backup extrahieren.
 db_backuptabellen - Backup, eine Datenbanken Tabellenweise speichern.
 db_restorebackuptabellen - Backup Test, eine Datenbanken Tabellenweise wiederherstellen.
 ```
+
 etc...
 
 
