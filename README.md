@@ -15,7 +15,7 @@ Es wird automatisch eine DATUM-multitool.log angelegt um nachzuverfolgen ob alle
 
 Eine Funktionsliste gibt es hier in der Wiki. 
 
-### Download OpenSimulator Testversion 
+### Download OpenSimulator Testversion für Ubuntu 18.04
 
 (Bitte die beiliegende opensim.sh und opensim.cfg verwenden):
 
