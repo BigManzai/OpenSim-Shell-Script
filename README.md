@@ -138,7 +138,7 @@ sql Datenbank Tabellenweise sichern.
 Einzelne Tabellen zu einer neuen OpenSim Datenbank zusammensetzen.
 
 ```
-db_tablesplitt - Alle Tabellen aus einer SQL Datensicherung in ein gleichnahmigen Verzeichniss extrahieren.
+db_tablesplitt - Alle Tabellen aus einer SQL Datensicherung in ein gleichnamigen Verzeichnis extrahieren.
 db_tablextract - Eine einzelne Tabelle aus einem SQL Datenbank Backup extrahieren.
 db_backuptabellen - Backup, eine Datenbanken Tabellenweise speichern.
 db_restorebackuptabellen - Backup Test, eine Datenbanken Tabellenweise wiederherstellen.
