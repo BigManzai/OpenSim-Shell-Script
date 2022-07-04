@@ -16,7 +16,7 @@
 # ! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 # ! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-# * Status 30.06.2022 273 Funktionen.
+# * Status 03.07.2022 275 Funktionen.
 
 # # Visual Studio Code # ShellCheck # shellman # Better Comments #
 
@@ -28,7 +28,7 @@
 # // Text
 
 #### ? Einstellungen ####
-VERSION="V0.79.544" # opensimMULTITOOL Versionsausgabe
+VERSION="V0.79.547" # opensimMULTITOOL Versionsausgabe
 clear # Bildschirm loeschen
 
 # ? Alte Variablen loeschen aus eventuellen voherigen sessions
@@ -5600,7 +5600,7 @@ function db_tablesplitt()
 	mkdir -p "$STARTVERZEICHNIS"/"$VERZEICHNISNAME"
 	log info "Zerlege $VERZEICHNISNAME und kopiere alle Tabellen nach $STARTVERZEICHNIS/$VERZEICHNISNAME"
 
-    #Schleife für jeden Tabellennamen, der in der bereitgestellten Dumpdatei gefunden wird
+	#Schleife für jeden Tabellennamen, der in der bereitgestellten Dumpdatei gefunden wird
 
 	# shellcheck disable=SC2013
 	for TABELLENNAME in $(grep "Table structure for table " "$1" | awk -F"\`" \{'print $2'\})        
@@ -5775,16 +5775,16 @@ function neuegridconfig()
 	echo "$(tput setaf 2)NEUEGRIDCONFIG: Konfigurationsdateien holen und in das ExampleConfig Verzeichnis kopieren. $(tput sgr0)"
 	echo "$DATUM $(date +%H:%M:%S) NEUEGRIDCONFIG: Konfigurationsdateien holen und in das ExampleConfig Verzeichnis kopieren" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
 
-	cd /$STARTVERZEICHNIS || exit
+	cd /"$STARTVERZEICHNIS" || exit
 	git clone https://github.com/BigManzai/OpenSim-Shell-Script
-	mv /$STARTVERZEICHNIS/OpenSim-Shell-Script/ExampleConfig /$STARTVERZEICHNIS/ExampleConfig
-	rm -r /$STARTVERZEICHNIS/OpenSim-Shell-Script
+	mv /"$STARTVERZEICHNIS"/OpenSim-Shell-Script/ExampleConfig /"$STARTVERZEICHNIS"/ExampleConfig
+	rm -r /"$STARTVERZEICHNIS"/OpenSim-Shell-Script
 
 	echo "IP eintragen"
 	ipsetzen
 
-	cp /$STARTVERZEICHNIS/ExampleConfig/robust/ /$STARTVERZEICHNIS/opensim/bin
-	cp /$STARTVERZEICHNIS/ExampleConfig/sim/ /$STARTVERZEICHNIS/opensim/bin
+	cp /"$STARTVERZEICHNIS"/ExampleConfig/robust/ /"$STARTVERZEICHNIS"/opensim/bin
+	cp /"$STARTVERZEICHNIS"/ExampleConfig/sim/ /"$STARTVERZEICHNIS"/opensim/bin
 	return 0
 }
 
@@ -5804,25 +5804,25 @@ function ipsetzen()
 	then
 	# ENTER wurde gewaehlt
 	# Robust aendern
-	sed -i 's/BaseURL =.*$/BaseURL = '"$AKTUELLEIP"'/' /$STARTVERZEICHNIS/ExampleConfig/robust/Robust.ini
+	sed -i 's/BaseURL =.*$/BaseURL = '"$AKTUELLEIP"'/' /"$STARTVERZEICHNIS"/ExampleConfig/robust/Robust.ini
 	# OpenSim aendern
-	sed -i 's/BaseHostname =.*$/BaseHostname = '"$AKTUELLEIP"'/' /$STARTVERZEICHNIS/ExampleConfig/sim/OpenSim.ini
+	sed -i 's/BaseHostname =.*$/BaseHostname = '"$AKTUELLEIP"'/' /"$STARTVERZEICHNIS"/ExampleConfig/sim/OpenSim.ini
 	# MoneyServer aendern
-	sed -i 's/MoneyScriptIPaddress  =.*$/MoneyScriptIPaddress  = '"$AKTUELLEIP"'/' /$STARTVERZEICHNIS/ExampleConfig/robust/MoneyServer.ini
+	sed -i 's/MoneyScriptIPaddress  =.*$/MoneyScriptIPaddress  = '"$AKTUELLEIP"'/' /"$STARTVERZEICHNIS"/ExampleConfig/robust/MoneyServer.ini
 	# GridCommon aendern
-	sed -i 's/BaseHostname =.*$/BaseHostname = '"$AKTUELLEIP"'/' /$STARTVERZEICHNIS/ExampleConfig/sim/config-include/GridCommon.ini
+	sed -i 's/BaseHostname =.*$/BaseHostname = '"$AKTUELLEIP"'/' /"$STARTVERZEICHNIS"/ExampleConfig/sim/config-include/GridCommon.ini
 	else
 	# IP wurde gewaehlt
 	# Ausfuehrungszeichen anhaengen
 	EINGABEIP='"'$EINGABEIP'"'
 	# Robust aendern
-	sed -i 's/BaseURL =.*$/BaseURL = '"$EINGABEIP"'/' /$STARTVERZEICHNIS/ExampleConfig/robust/Robust.ini
+	sed -i 's/BaseURL =.*$/BaseURL = '"$EINGABEIP"'/' /"$STARTVERZEICHNIS"/ExampleConfig/robust/Robust.ini
 	# OpenSim aendern
-	sed -i 's/BaseHostname =.*$/BaseHostname = '"$EINGABEIP"'/' /$STARTVERZEICHNIS/ExampleConfig/sim/OpenSim.ini
+	sed -i 's/BaseHostname =.*$/BaseHostname = '"$EINGABEIP"'/' /"$STARTVERZEICHNIS"/ExampleConfig/sim/OpenSim.ini
 	# MoneyServer aendern
-	sed -i 's/MoneyScriptIPaddress  =.*$/MoneyScriptIPaddress  = '"$EINGABEIP"'/' /$STARTVERZEICHNIS/ExampleConfig/robust/MoneyServer.ini
+	sed -i 's/MoneyScriptIPaddress  =.*$/MoneyScriptIPaddress  = '"$EINGABEIP"'/' /"$STARTVERZEICHNIS"/ExampleConfig/robust/MoneyServer.ini
 	# GridCommon aendern
-	sed -i 's/BaseHostname =.*$/BaseHostname = '"$EINGABEIP"'/' /$STARTVERZEICHNIS/ExampleConfig/sim/config-include/GridCommon.ini
+	sed -i 's/BaseHostname =.*$/BaseHostname = '"$EINGABEIP"'/' /"$STARTVERZEICHNIS"/ExampleConfig/sim/config-include/GridCommon.ini
 	fi
 
 	log info "IPSETZEN: IP oder DNS Einstellungen geaendert"
@@ -6637,7 +6637,7 @@ function unlockexample()
 	do
 	if [ -e "$file1" ]
 	then
-		cd $UEVERZEICHNIS1 || exit
+		cd "$UEVERZEICHNIS1" || exit
 		for file in *.ini.example; do mv -i "${file}" "${file%%.ini.example}.ini"; done
 		for file in *.html.example; do mv -i "${file}" "${file%%.html.example}.html"; done
 		for file in *.txt.example; do mv -i "${file}" "${file%%.txt.example}.txt"; done
@@ -6651,7 +6651,7 @@ function unlockexample()
 	do
 	if [ -e "$file2" ]
 	then
-		cd $UEVERZEICHNIS2 || exit
+		cd "$UEVERZEICHNIS2" || exit
 		for file in *.ini.example; do mv -i "${file}" "${file%%.ini.example}.ini"; done
 		break
 	else
@@ -6842,7 +6842,7 @@ function oszipupgrade()
 	fi
 	# dialog Aktionen Ende
 	
-    cd /$STARTVERZEICHNIS || exit
+    cd /"$STARTVERZEICHNIS" || exit
 
 	# Konfigurationsabfrage Neues Grid oder Upgrade.
 	log info "OSBUILDING: Alten OpenSimulator sichern"
@@ -6856,7 +6856,7 @@ function oszipupgrade()
 	log line
 
 	log info "OSBUILDING: Neuen OpenSimulator umbenennen"
-    mv /$STARTVERZEICHNIS/opensim-0.9.2.2."$VERSIONSNUMMER"/ /$STARTVERZEICHNIS/opensim/
+    mv /"$STARTVERZEICHNIS"/opensim-0.9.2.2."$VERSIONSNUMMER"/ /"$STARTVERZEICHNIS"/opensim/
 
 	log line
 
@@ -6876,7 +6876,86 @@ function autoconfig()
 # Hilfen und Info
 ###########################################################################
 
+### ! Funktion zum Anzeigen von Informationen der Auswahl.
+function show_info()  
+{
+  dialog --title "$1" \
+    --no-collapse \
+    --msgbox "$info" 0 0
+}
 
+### ! Systeminformationen anzeigen.
+function systeminformation()
+{
+	# Definiert die Ausgangsstatuscodes der Dialogfelder
+	DIALOG_CANCEL=1
+	DIALOG_ESC=255
+	HEIGHT=0
+	WIDTH=0
+
+	# Zeigt den Menuepunkt mit einer While-Schleife an
+	while true; do
+	exec 3>&1
+	selection=$(dialog \
+		--backtitle "opensimMULTITOOL $VERSION Systeminformationen" \
+		--title "[Main Menu]" \
+		--clear \
+		--cancel-label "Exit" \
+		--menu "\nPlease select:" $HEIGHT $WIDTH 4 \
+		"1" "Display OS Type" \
+		"2" "Display CPU Info" \
+		"3" "Display Memory Info" \
+		"4" "Display HardDisk Info" \
+		"5" "Display File System" \
+		2>&1 1>&3)
+	exit_status=$?
+	exec 3>&-
+	
+	# Fall, der angezeigt werden soll, wenn das Programm erfolgreich beendet oder das Programm abgebrochen wurde
+	case $exit_status in
+		"$DIALOG_CANCEL")
+		clear
+		#echo "Program exit successfully."
+		hauptmenu
+		exit
+		;;
+		"$DIALOG_ESC")
+		clear
+		#echo "Program aborted." >&2
+		hauptmenu >&2
+		exit 1
+		;;
+	esac
+	
+	# Fallauswahl, um Informationen der Benutzer Auswahl anzuzeigen
+	case $selection in
+		0 )
+		clear
+		echo "Program exit successfully."
+		;;
+		1 )
+		info=$(uname -o)
+		show_info "Operating System Type"
+		;;
+		2 )
+		info=$(lscpu)
+		show_info "CPU Information"
+		;;
+		3 )
+		info=$(less /proc/meminfo)
+		show_info "Memory Information"
+		;;
+		4 )
+		info=$(lsblk)
+		show_info "Hard disk Information"
+		;;
+		5 )
+		info=$(df)
+		show_info "File System (Mounted)"
+		;;
+	esac
+	done
+}
 
 ### !  info, Informationen auf den Bildschirm ausgeben.
 function info()
@@ -7385,6 +7464,7 @@ function hauptmenu()
 		"Parzellen entfernen" ""
 		"Objekt entfernen" ""
 		"--------------------------" ""
+		"Systeminformationen" ""	
 		"Informationen" ""	
 		"Screen Liste" ""
 		"Server laufzeit und Neustart" ""
@@ -7411,6 +7491,7 @@ function hauptmenu()
 		#if [[ $mauswahl = "Einzelner Simulator Status" ]]; then menuworks; fi		
 		#if [[ $mauswahl = "Alle Simulatoren Status" ]]; then menuwaslauft; fi
 		if [[ $mauswahl = "Informationen" ]]; then menuinfo; fi
+		if [[ $mauswahl = "Systeminformationen" ]]; then systeminformation; fi
 
 		if [[ $mauswahl = "Screen Liste" ]]; then screenlist; fi
 		if [[ $mauswahl = "Parzellen entfernen" ]]; then menulandclear; fi
@@ -8030,6 +8111,7 @@ case  $KOMMANDO  in
 	db_tablesplitt ) db_tablesplitt "$2" ;;
 	db_tablextract ) db_tablextract "$2" "$3" ;;
 	db_tablextract_regex) db_tablextract_regex "$2" "$3" "$4" ;;
+	systeminformation) systeminformation ;;
 	*) hauptmenu ;;
 esac
 vardel
