@@ -129,7 +129,7 @@ Bisher sind nur Funktionen im Menü die maximal 1 Übergabewert voraussetzen.
      oder
      sudo apt-get install dialog
 
-## Status 03.07.2022 273 Funktionen.
+## Status 15.07.2022 280 Funktionen.
 
 .
 
@@ -137,7 +137,9 @@ Bisher sind nur Funktionen im Menü die maximal 1 Übergabewert voraussetzen.
 
 V0.79.559
 
-Radio Listen Tagesaktuell für Radio & DJ Board by Rebekka Revnik. ./opensim.sh radiolist
+Radio Listen Tagesaktuell für Radio & DJ Board by Rebekka Revnik. 
+
+./opensim.sh radiolist
 
 Setup in opensim.cnf
 
