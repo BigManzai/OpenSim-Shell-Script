@@ -135,6 +135,12 @@ Bisher sind nur Funktionen im Menü die maximal 1 Übergabewert voraussetzen.
 
 ## TODO und Informationen
 
+V0.79.559
+
+Radio Listen Tagesaktuell für Radio & DJ Board by Rebekka Revnik. ./opensim.sh radiolist
+
+Setup in opensim.cnf
+
 V0.79.544
 
  mySQL Dump Backup Datei in Tabellen splitten.
