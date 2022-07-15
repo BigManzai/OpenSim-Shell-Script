@@ -16,11 +16,11 @@
 # ! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 # ! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-# * Status 03.07.2022 275 Funktionen.
+# * Status 03.07.2022 280 Funktionen.
 
 # # Visual Studio Code # ShellCheck # shellman # Better Comments #
 
-# ? Better Comments Plugin (defaults: ! * ? //) 
+# ? Better Comments Plugin (defaults: ! * ? //)
 #    Text
 # !  Text
 # *  Text
@@ -28,8 +28,8 @@
 # // Text
 
 #### ? Einstellungen ####
-VERSION="V0.79.547" # opensimMULTITOOL Versionsausgabe
-clear # Bildschirm loeschen
+VERSION="V0.79.559" # opensimMULTITOOL Versionsausgabe
+clear               # Bildschirm loeschen
 
 # ? Alte Variablen loeschen aus eventuellen voherigen sessions
 unset STARTVERZEICHNIS
@@ -46,32 +46,116 @@ unset REGIONSNAMEc
 unset REGIONSNAMEd
 unset VERZEICHNISSCREEN
 
+# Language spielereien:
+
+function _configure_locale() { 
+	# [profile]
+	local profile=${1:-EN}
+	case ${profile} in
+		DE|DE_DE|de_DE)
+			LC_ALL="de_DE.UTF-8"
+			LANG="de_DE.UTF-8"
+			LANGUAGE="de_DE:de:en_US:en"
+			;;
+		EN|EN_US|en|en_US)
+			LC_ALL="en_US.UTF-8"
+			LANG="en_US.UTF-8"
+			LANGUAGE="en_US:en"
+			;;
+		*) # shellcheck disable=SC2128
+			echo "ALERT" "${FUNCNAME}: unknown profile '${profile}'"
+			;;
+		esac
+		LC_PAPER="de_DE.UTF-8"; # independent from locale
+		LESSCHARSET="utf-8";    # independent from locale
+		MM_CHARSET="utf-8"      # independent from locale
+		echo "locale settings" "${LANG}";
+		export LC_ALL LANG LANGUAGE LC_PAPER LESSCHARSET MM_CHARSET
+}
+
+# wrap fuer gettext {{ _('') }}
+
+
+#######################
+
+# Sie muessen die folgenden Schritte ausfuehren:
+# Ermitteln Sie den Namen Ihres Projekts, gettext nennt es textdomain, 
+# Sie benoetigen es, um die uebersetzungen fuer Ihr Projekt abzurufen. Nennen wir es "opensim".
+# Markieren Sie die zu uebersetzenden Zeichenketten. Das folgende Snippet gibt ein Beispiel:
+# Nennen wir es opensim.sh:
+
+#alias GETTEXT='gettext "opensim"'
+
+## Verwenden Sie GETTEXT, um die Zeichenfolge zu markieren, die Sie uebersetzen moechten
+#HELLO_WORLD=$(GETTEXT "Hello world") 
+
+#echo "$HELLO_WORLD"
+
+# Produzieren Sie eine .pot-Datei, damit uebersetzer daran arbeiten koennen.
+# Fuehren Sie den folgenden Befehl aus, er sucht nur nach GETTEXT, die Sie tatsaechlich uebersetzen moechten.
+#? xgettext -o PRJ.pot  -L Shell --keyword --keyword=GETTEXT  opensim.sh
+# Optional : Generieren Sie .po-Dateien.
+# Fuer jedes Gebietsschema, das Sie abdecken moechten.
+#? msginit -i PRJ.pot -l fr.UTF-8
+# Beachten Sie, dass "UTF-8" vorgeschlagen wird, 
+# da Sie sonst msginitmoeglicherweise faelschlicherweise eine veraltete Codierung fuer Sie auswaehlen.
+# Fertige .po-Dateien abrufen und in eine .mo-Datei konvertieren (die Datei, die der Computer lesen kann)
+#? msgfmt -v  fr.po -o fr.mo
+# Installieren Sie .mo-Dateien. Laufen:
+#? sudo install fr.mo /usr/share/locale/fr/LC_MESSAGES/PRJ.mo 
+# Jetzt koennen Sie das Ergebnis ausprobieren:
+#? LANGUAGE=fr  ./opensim.sh
+# und Sie sollten die franzoesische uebersetzung fuer Hallo Welt sehen.
+
+#######################
+
+### Sprachen Einstellung
+#german # Sprache
+#_configure_locale DE
+
+#LANG=foo_BAR.utf8
+#TEXTDOMAIN="test" 
+#TEXTDOMAINDIR="/usr/share/locale"
+#echo $"fooMsgid"
+# bash --dump-po-strings <scriptfile>
+
+#export LC_ALL=de_DE.UTF-8   # if LC_ALL not work, you could try also "LANG" and "LANGUAGE"
+#export TEXTDOMAINDIR=/usr/share/locale
+# export TEXTDOMAIN="<textdomain>"   # <- optional, set this to save the "<textdomain>" argument for `gettext` below
+#LANG_HELLO_WORLD="$( gettext "<textdomain>" "Your message to translate" )"
+
+#echo "$TEXTDOMAIN"
+#echo "$TEXTDOMAINDIR"
+#echo "$LANG_HELLO_WORLD"
+
+# Language spielereien ende:
+
 ### ! dummyvar, Shell-Check ueberlisten wegen der Konfigurationsdatei, hat sonst keinerlei Funktion und wird auch nicht aufgerufen.
-function dummyvar()
-{
-# shellcheck disable=SC2034
-	STARTVERZEICHNIS="opt" MONEYVERZEICHNIS="robust" ROBUSTVERZEICHNIS="robust" OPENSIMVERZEICHNIS="opensim" SCRIPTSOURCE="ScriptNeu" SCRIPTZIP="opensim-ossl-example-scripts-main.zip" MONEYSOURCE="money48" 
-	MONEYZIP="OpenSimCurrencyServer-2021-master.zip" OSVERSION="opensim-0.9.2.2Dev"	REGIONSDATEI="RegionList.ini" SIMDATEI="SimulatorList.ini" WARTEZEIT=30 STARTWARTEZEIT=10 STOPWARTEZEIT=30 MONEYWARTEZEIT=60 ROBUSTWARTEZEIT=60
-	BACKUPWARTEZEIT=120 AUTOSTOPZEIT=60 SETMONOTHREADS=800 SETMONOTHREADSON="yes" OPENSIMDOWNLOAD="http://opensimulator.org/dist/" OPENSIMVERSION="opensim-0.9.2.2.zip" SEARCHADRES="icanhazip.com" AUTOCONFIG="no" 
-	CONFIGURESOURCE="opensim-configuration-addon-modul-main" CONFIGUREZIP="opensim-configuration-addon-modul-main.zip" 
-	textfontcolor=7;	textbaggroundcolor=0;	debugfontcolor=4;	debugbaggroundcolor=0;	infofontcolor=2;	infobaggroundcolor=0;	warnfontcolor=3;	warnbaggroundcolor=0;
-	errorfontcolor=1;	errorbaggroundcolor=0;	SETMONOGCPARAMSON1="no"; SETMONOGCPARAMSON2="yes";	LOGDELETE="no";	LOGWRITE="no";
-	username="username"; 	password="userpasswd"; 	databasename="grid"; linefontcolor=7; linebaggroundcolor=0; apache2errorlog="/var/log/apache2/error.log"
-	apache2accesslog="/var/log/apache2/access.log"; authlog="/var/log/auth.log"; ufwlog="/var/log/ufw.log"; mysqlmariadberor="/var/log/mysql/mariadb.err"; mysqlerrorlog="/var/log/mysql/error.log"
+function dummyvar() {
+	# shellcheck disable=SC2034
+	STARTVERZEICHNIS="opt"; MONEYVERZEICHNIS="robust"; ROBUSTVERZEICHNIS="robust"; OPENSIMVERZEICHNIS="opensim"; SCRIPTSOURCE="ScriptNeu"; SCRIPTZIP="opensim-ossl-example-scripts-main.zip"; MONEYSOURCE="money48"
+	MONEYZIP="OpenSimCurrencyServer-2021-master.zip"; OSVERSION="opensim-0.9.2.2Dev"; REGIONSDATEI="RegionList.ini"; SIMDATEI="SimulatorList.ini"; WARTEZEIT=30; STARTWARTEZEIT=10; STOPWARTEZEIT=30; MONEYWARTEZEIT=60; ROBUSTWARTEZEIT=60
+	BACKUPWARTEZEIT=120; AUTOSTOPZEIT=60; SETMONOTHREADS=800; SETMONOTHREADSON="yes"; OPENSIMDOWNLOAD="http://opensimulator.org/dist/"; OPENSIMVERSION="opensim-0.9.2.2.zip"; SEARCHADRES="icanhazip.com"; AUTOCONFIG="no"
+	CONFIGURESOURCE="opensim-configuration-addon-modul-main"; CONFIGUREZIP="opensim-configuration-addon-modul-main.zip"
+	textfontcolor=7; textbaggroundcolor=0; debugfontcolor=4; debugbaggroundcolor=0	infofontcolor=2	infobaggroundcolor=0; warnfontcolor=3; warnbaggroundcolor=0
+	errorfontcolor=1; errorbaggroundcolor=0; SETMONOGCPARAMSON1="no"; SETMONOGCPARAMSON2="yes"	LOGDELETE="no"; LOGWRITE="no"; "$trimmvar"; logfilename="multitool"
+	username="username"	password="userpasswd"	databasename="grid"	linefontcolor=7	linebaggroundcolor=0; apache2errorlog="/var/log/apache2/error.log"; apache2accesslog="/var/log/apache2/access.log"
+	authlog="/var/log/auth.log"	ufwlog="/var/log/ufw.log"	mysqlmariadberor="/var/log/mysql/mariadb.err"; mysqlerrorlog="/var/log/mysql/error.log"; listVar=""
 	# DIALOG_OK=0; DIALOG_HELP=2 DIALOG_CANCEL=1; DIALOG_EXTRA=3; DIALOG_ITEM_HELP=4; DIALOG_ESC=255; DIALOG=dialog; SIG_NONE=0; SIG_HUP=1; SIG_INT=2; SIG_QUIT=3; SIG_KILL=9; SIG_TERM=15
 }
 
 ### Datumsvariablen Datum, Dateidatum und Uhrzeit
-DATUM=$(date +%d.%m.%Y); DATEIDATUM=$(date +%d_%m_%Y) # UHRZEIT=$(date +%H:%M:%S)
+DATUM=$(date +%d.%m.%Y)
+DATEIDATUM=$(date +%d_%m_%Y) # UHRZEIT=$(date +%H:%M:%S)
 
 # Linux Version
 myDescription=$(lsb_release -d) # Description: Ubuntu 22.04 LTS
-myRelease=$(lsb_release -r) # Release: 22.04
-myCodename=$(lsb_release -sc) # jammy
+myRelease=$(lsb_release -r)     # Release: 22.04
+myCodename=$(lsb_release -sc)   # jammy
 
-ubuntuDescription=$(cut -f2 <<< "$myDescription") # Ubuntu 22.04 LTS
-ubuntuRelease=$(cut -f2 <<< "$myRelease") # 22.04
-ubuntuCodename=$(cut -f2 <<< "$myCodename") # jammy
+ubuntuDescription=$(cut -f2 <<<"$myDescription") # Ubuntu 22.04 LTS
+ubuntuRelease=$(cut -f2 <<<"$myRelease")         # 22.04
+ubuntuCodename=$(cut -f2 <<<"$myCodename")       # jammy
 
 ### Einstellungen aus opensim.cnf laden, bei einem Script upgrade gehen so die einstellungen nicht mehr verloren.
 # Pfad des opensim.sh Skriptes herausfinden
@@ -90,122 +174,86 @@ sleep 1
 ### * Eingabeauswertung fuer Funktionen ohne dialog.
 KOMMANDO=$1
 
-### Wenn es noch keine log Datei gibt dann anlegen, wegen Fehlermeldung Datei nicht vorhanden.
-# if [ ! -f /$STARTVERZEICHNIS/"$DATEIDATUM"-multitool.log ]; then echo "" > /$STARTVERZEICHNIS/"$DATEIDATUM"-multitool.log ; fi
-
 ### ! vardel, Variablen loeschen.
-function vardel()
-{	unset STARTVERZEICHNIS; unset MONEYVERZEICHNIS; unset ROBUSTVERZEICHNIS
-	unset WARTEZEIT; unset STARTWARTEZEIT; unset STOPWARTEZEIT
-	unset MONEYWARTEZEIT; unset NAME; unset VERZEICHNIS; unset PASSWORD; unset DATEI
-	unset OPENSIMVERZEICHNIS; unset SCRIPTSOURCE; unset SCRIPTZIP; unset MONEYSOURCE; unset MONEYZIP
-	unset REGIONSNAME; unset REGIONSNAMEb; unset REGIONSNAMEc; unset REGIONSNAMEd; unset VERZEICHNISSCREEN
+function vardel() {
+	unset STARTVERZEICHNIS
+	unset MONEYVERZEICHNIS
+	unset ROBUSTVERZEICHNIS
+	unset WARTEZEIT
+	unset STARTWARTEZEIT
+	unset STOPWARTEZEIT
+	unset MONEYWARTEZEIT
+	unset NAME
+	unset VERZEICHNIS
+	unset PASSWORD
+	unset DATEI
+	unset OPENSIMVERZEICHNIS
+	unset SCRIPTSOURCE
+	unset SCRIPTZIP
+	unset MONEYSOURCE
+	unset MONEYZIP
+	unset REGIONSNAME
+	unset REGIONSNAMEb
+	unset REGIONSNAMEc
+	unset REGIONSNAMEd
+	unset VERZEICHNISSCREEN
 	return 0
 }
-
-### !  errorlog
-function errorlog()
-{
-    if [ $LOGWRITE = "no" ]; then echo 1>&2 "Log message: $1"; fi
-    if [ $LOGWRITE = "yes" ]; then echo 1>&2 "Log message: $1" >> /$STARTVERZEICHNIS/"$DATEIDATUM"-multitool.log; fi
-}
-
+logfilename=""
 ### ! Log Dateien und Funktionen
-function log()
-{
-    local text; local logtype; local datetime;
-    logtype="$1"
-    text="$2" 
-    datetime=$(date +'%F %H:%M:%S')
+function log() {
+	local text
+	local logtype
+	local datetime
+	logtype="$1"
+	text="$2"
+	datetime=$(date +'%F %H:%M:%S')
 	DATEIDATUM=$(date +%d_%m_%Y)
+	lline="#####################################################################################"
 
-    if [ $LOGWRITE = "yes" ]; then
-        case $logtype in
-			line)
-				echo "#####################################################################################" >> /$STARTVERZEICHNIS/"$DATEIDATUM"-multitool.log ;;
-			rohtext) 
-                echo "$text" >> /$STARTVERZEICHNIS/"$DATEIDATUM"-multitool.log ;;
-            text)
-                echo "$datetime TEXT: $text" >> /$STARTVERZEICHNIS/"$DATEIDATUM"-multitool.log ;;
-            debug)
-                echo "$datetime DEBUG: $text" >> /$STARTVERZEICHNIS/"$DATEIDATUM"-multitool.log ;;
-            info)
-                echo "$datetime INFO: $text" >> /$STARTVERZEICHNIS/"$DATEIDATUM"-multitool.log ;;
-            warn)
-                echo "$datetime WARNING: $text" >> /$STARTVERZEICHNIS/"$DATEIDATUM"-multitool.log ;;
-            error)
-                echo "$datetime ERROR: $text" >> /$STARTVERZEICHNIS/"$DATEIDATUM"-multitool.log ;;
-            *) 
-                return 0 ;;
-        esac
-    fi
-    case $logtype in
-		line)
-			echo "$(tput setaf $linefontcolor) $(tput setab $linebaggroundcolor)#####################################################################################$(tput sgr 0)" ;;
-		rohtext) 
-            echo "$text" ;;
-        text)
-            echo "$(tput setaf $textfontcolor) $(tput setab $textbaggroundcolor) $datetime TEXT: $text $(tput sgr 0)" ;;
-        debug)
-            echo "$(tput setaf $debugfontcolor) $(tput setab $debugbaggroundcolor) $datetime DEBUG: $text $(tput sgr 0)" ;;
-        info)
-            echo "$(tput setaf $infofontcolor) $(tput setab $infobaggroundcolor) $datetime INFO: $text $(tput sgr 0)" ;;
-        warn)
-            echo "$(tput setaf $warnfontcolor) $(tput setab $warnbaggroundcolor) $datetime WARNING: $text $(tput sgr 0)" ;;
-        error)
-            echo "$(tput setaf $errorfontcolor) $(tput setab $errorbaggroundcolor) $datetime ERROR: $text $(tput sgr 0)" ;;
-		*) 
-			return 0 ;;
-    esac
-
+	if [ "$LOGWRITE" = "yes" ]; then
+		case $logtype in
+		line) echo $lline >>/$STARTVERZEICHNIS/"$DATEIDATUM""$logfilename".log ;;
+		rohtext) echo "$text" >>/$STARTVERZEICHNIS/"$DATEIDATUM""$logfilename".log ;;
+		text) echo "$datetime TEXT: $text" >>/$STARTVERZEICHNIS/"$DATEIDATUM""$logfilename".log ;;
+		debug) echo "$datetime DEBUG: $text" >>/$STARTVERZEICHNIS/"$DATEIDATUM""$logfilename".log ;;
+		info) echo "$datetime INFO: $text" >>/$STARTVERZEICHNIS/"$DATEIDATUM""$logfilename".log ;;
+		warn) echo "$datetime WARNING: $text" >>/$STARTVERZEICHNIS/"$DATEIDATUM""$logfilename".log ;;
+		error) echo "$datetime ERROR: $text" >>/$STARTVERZEICHNIS/"$DATEIDATUM""$logfilename".log ;;
+		*) return 0 ;;
+		esac
+	fi
+	case $logtype in
+	line) echo "$(tput setaf $linefontcolor) $(tput setab $linebaggroundcolor)$lline $(tput sgr 0)" ;;
+	rohtext) echo "$text" ;;
+	text) echo "$(tput setaf $textfontcolor) $(tput setab $textbaggroundcolor) $datetime TEXT: $text $(tput sgr 0)" ;;
+	debug) echo "$(tput setaf $debugfontcolor) $(tput setab $debugbaggroundcolor) $datetime DEBUG: $text $(tput sgr 0)" ;;
+	info) echo "$(tput setaf $infofontcolor) $(tput setab $infobaggroundcolor) $datetime INFO: $text $(tput sgr 0)" ;;
+	warn) echo "$(tput setaf $warnfontcolor) $(tput setab $warnbaggroundcolor) $datetime WARNING: $text $(tput sgr 0)" ;;
+	error) echo "$(tput setaf $errorfontcolor) $(tput setab $errorbaggroundcolor) $datetime ERROR: $text $(tput sgr 0)" ;;
+	*) return 0 ;;
+	esac
 	return 0
 }
-
-### ! Sprachen Test
-function german() 
-{
-    bereitsinstalliert="ist bereits installiert."
-    installierejetzt="Ich installiere jetzt"
-}
-function frensh() 
-{
-    bereitsinstalliert="est déjà installé."
-    installierejetzt="J'installe maintenant"
-}
-function spain() 
-{
-    bereitsinstalliert="ya está instalado."
-    installierejetzt="Estoy instalando ahora"
-}
-function english() 
-{
-    bereitsinstalliert="is already installed."
-    installierejetzt="I'm installing now"
-}
-
-### Sprachen Einstellung
-german # Sprache
 
 ### ! .Funktionen eines Bash Skript auslesen und in eine Text Datei schreiben.
-function functionslist()
-{
-    file="/opt/opensim.sh"
+function functionslist() {
+	file="/opt/opensim.sh"
 	ergebnisfunktionslist=$(grep -i -r "function " $file | grep -v ^# | grep -v ^$)
-	echo "$ergebnisfunktionslist" > /opt/funktionsliste.txt
+	echo "$ergebnisfunktionslist" >/opt/funktionsliste.txt
 }
 
 ### ! Kopfzeile
-function schreibeinfo()
-{
+function schreibeinfo() {
 	# Wenn das schreiben abgeschaltet ist dann braucht man nicht zu schauen ob was in der Datei steht.
-	if [ $LOGWRITE = "yes" ]; then
-		FILENAME="/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log" # Name der Datei
-		FILESIZE=$(stat -c%s "$FILENAME") # Wie Gross ist die Datei.
+	if [ "$LOGWRITE" = "yes" ]; then
+		FILENAME="/$STARTVERZEICHNIS/$DATEIDATUM$logfilename.log" # Name der Datei
+		FILESIZE=$(stat -c%s "$FILENAME")                         # Wie Gross ist die Datei.
 	fi
 	NULL=0
 	# Ist die Datei Groesser als null, dann Kopfzeile nicht erneut schreiben.
 	if [ "$FILESIZE" \< "$NULL" ]; then
-		log rohtext "   ____                        _____  _                    _         _               "     
+		log rohtext "   ____                        _____  _                    _         _               "
 		log rohtext "  / __ \                      / ____|(_)                  | |       | |              "
 		log rohtext " | |  | | _ __    ___  _ __  | (___   _  _ __ ___   _   _ | |  __ _ | |_  ___   _ __ "
 		log rohtext " | |  | ||  _ \  / _ \|  _ \  \___ \ | ||  _   _ \ | | | || | / _  || __|/ _ \ |  __|"
@@ -228,7 +276,7 @@ function schreibeinfo()
 		log rohtext "$DATUM $(date +%H:%M:%S) INFO: Screen Version: $(screen --version)"
 		log rohtext "$DATUM $(date +%H:%M:%S) INFO: $(who -b)"
 		log line
-		log rohtext " "			 
+		log rohtext " "
 	fi
 	return 0
 }
@@ -236,116 +284,166 @@ function schreibeinfo()
 # *Kopfzeile in die Log Datei schreiben.
 schreibeinfo
 
+### ! Leerzeichen korrigieren,
+# trimm "   Beispiel   Text    "
+# oder trimm $variable, rueckgabe in Variable: $trimmvar.
+function trimm() {
+	set -f
+	# shellcheck disable=SC2086,SC2048
+	set -- $*
+	trimmvar=$(printf '%s\n' "$*")
+	set +f
+}
+
+### ! Zeichen entfernen
+# letterdel $variable "[aAbBcCdD]" - letterdel $variable "[[:space:]]"
+letterdel() {
+	printf '%s\n' "${1//$2/}"
+}
+
+### ! Zeichen entfernen
+# Usage: trim_string "   example   string    "
+trim_string() {
+    : "${1#"${1%%[![:space:]]*}"}"
+    : "${_%"${_##*[![:space:]]}"}"
+    printf '%s\n' "$_"
+}
+
+### ! Alle Zeichen entfernen
+# Usage: trim_all "   example   string    "
+trim_all() {
+    set -f
+# shellcheck disable=SC2086,SC2048
+    set -- $*
+    printf '%s\n' "$*"
+    set +f
+}
+
 ### ! Linux apt-get Installationsroutine
-function iinstall()
-{
-    installation=$1
-    if dpkg-query -s "$installation" 2>/dev/null|grep -q installed; then
-        echo "$installation $bereitsinstalliert"
-    else
-        echo "$installierejetzt $installation"
-        sudo apt-get -y install "$installation"
-    fi
+function iinstall() {
+	installation=$1
+	if dpkg-query -s "$installation" 2>/dev/null | grep -q installed; then
+		echo "$installation ist bereits installiert."
+	else
+		echo "Ich installiere jetzt $installation"
+		sudo apt-get -y install "$installation"
+	fi
 }
 
 ### ! Linux apt Installationsroutine
-function iinstall2()
-{
-    installation=$1
-    if dpkg-query -s "$installation" 2>/dev/null|grep -q installed; then
-        echo "$installation $bereitsinstalliert"
-    else
-        echo "$installierejetzt $installation"
-        sudo apt install "$installation" -y
-    fi
+function iinstall2() {
+	installation=$1
+	if dpkg-query -s "$installation" 2>/dev/null | grep -q installed; then
+		echo "$installation ist bereits installiert.""
+	else
+		echo ""Ich installiere jetzt $installation"
+		sudo apt install "$installation" -y
+	fi
 }
 
 ### ! Neue apt-get installationsroutine aus Datei
-function finstall()
-{
+function finstall() {
 	TXTLISTE=$1
 
-	while read -r txtline 
-	do
-		if dpkg-query -s "$txtline" 2>/dev/null|grep -q installed; then
+	while read -r txtline; do
+		if dpkg-query -s "$txtline" 2>/dev/null | grep -q installed; then
 			echo "$txtline ist bereits installiert!"
 		else
 			echo "Ich installiere jetzt: $txtline"
 			sudo apt-get -y install "$txtline"
 		fi
-	done < "$TXTLISTE"
+	done <"$TXTLISTE"
 }
 
 ### ! Neue installationsroutine aus Datei
-function menufinstall()
-{
+function menufinstall() {
 	TXTLISTE=$1
 	# zuerst schauen ob dialog installiert ist
-	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
 		# Alle Aktionen mit dialog
-		boxtitel="opensimMULTITOOL Eingabe"; boxtext="Screen Name:"; 
-		TXTLISTE=$( dialog --backtitle "opensimMULTITOOL $VERSION" --title "$boxtitel" --inputbox "$boxtext" 8 40 3>&1 1>&2 2>&3 3>&- )
+		boxtitel="opensimMULTITOOL Eingabe"
+		boxtext="Screen Name:"
+		TXTLISTE=$(dialog --backtitle "opensimMULTITOOL $VERSION" --title "$boxtitel" --inputbox "$boxtext" 8 40 3>&1 1>&2 2>&3 3>&-)
 		dialog --clear
 		clear
 
-		while read -r line 
-		do
-			if dpkg-query -s "$line" 2>/dev/null|grep -q installed; then
+		while read -r line; do
+			if dpkg-query -s "$line" 2>/dev/null | grep -q installed; then
 				echo "$line ist bereits installiert!"
 			else
 				echo "Ich installiere jetzt: $line"
 				sudo apt-get -y install "$line"
 			fi
-		done < "$TXTLISTE"
+		done <"$TXTLISTE"
 	else
-		# Alle Aktionen ohne dialog		
-		while read -r line 
-		do
-			if dpkg-query -s "$line" 2>/dev/null|grep -q installed; then
+		# Alle Aktionen ohne dialog
+		while read -r line; do
+			if dpkg-query -s "$line" 2>/dev/null | grep -q installed; then
 				echo "$line ist bereits installiert!"
 			else
 				echo "Ich installiere jetzt: $line"
 				sudo apt-get -y install "$line"
 			fi
-		done < "$TXTLISTE"
+		done <"$TXTLISTE"
 	fi
 }
 
-### ! downloados Opensim download
-function downloados()
+### ! uncompress ermittelt welcher Kompressor eingesetzt wurde und gibt den entpack Befehl zurueck.
+function uncompress()
 {
-	ASSETDELBOXERGEBNIS=$( dialog --menu "Downloads" 30 80 25 \
-	"Download1: " "$LINK01" \
-	"Download2: " "$LINK02" \
-	"Download3: " "$LINK03" \
-	"Download4: " "$LINK04" \
-	"Download5: " "$LINK05" \
-	"Download6: " "$LINK06" \
-	"Download7: " "$LINK07" \
-	"Download8: " "$LINK08" \
-	"Download9: " "$LINK09" \
-	"Download10: " "$LINK10" \
-	"Download11: " "$LINK11" \
-	"Download12: " "$LINK12" \
-	"Download13: " "$LINK13" \
-	"Download14: " "$LINK14" \
-	"Download15: " "$LINK15" \
-	"Download16: " "$LINK16" \
-	"Download17: " "$LINK17" \
-	"Download18: " "$LINK18" \
-	"Download19: " "$LINK19" \
-	"Download20: " "$LINK20" \
-	"Download21: " "$LINK21" \
-	"Download22: " "$LINK22" \
-	"Download23: " "$LINK23" \
-	"Download24: " "$LINK24" \
-	"Download25: " "$LINK25" \
-	"Download26: " "$LINK26"  3>&1 1>&2 2>&3 3>&- )
+    datei=$1
+
+    for file in $datei; do
+        case $(file "$file") in
+            *ASCII*)    export uncompress=""            ;;
+            *gzip*)     export uncompress="gunzip"      ;;
+            *zip*)      export uncompress="unzip -p"    ;;
+            *7z*)       export uncompress="7z e"        ;;          
+            *rar*)      export uncompress="unrar e"     ;;
+            *tar.gz*)   export uncompress="tar -xf"     ;;
+            *tar.bz2*)  export uncompress="tar -xjf"    ;;
+            *tar.xz*)   export uncompress="tar -xJf"    ;;
+            *bz2*)      export uncompress="bunzip2"     ;;
+            *xz*)       export uncompress="unxz"        ;;
+        esac
+    done
+
+    return 0
+}
+
+### ! downloados Opensim download
+function downloados() {
+	ASSETDELBOXERGEBNIS=$(dialog --menu "Downloads" 30 80 25 \
+		"Download1: " "$LINK01" \
+		"Download2: " "$LINK02" \
+		"Download3: " "$LINK03" \
+		"Download4: " "$LINK04" \
+		"Download5: " "$LINK05" \
+		"Download6: " "$LINK06" \
+		"Download7: " "$LINK07" \
+		"Download8: " "$LINK08" \
+		"Download9: " "$LINK09" \
+		"Download10: " "$LINK10" \
+		"Download11: " "$LINK11" \
+		"Download12: " "$LINK12" \
+		"Download13: " "$LINK13" \
+		"Download14: " "$LINK14" \
+		"Download15: " "$LINK15" \
+		"Download16: " "$LINK16" \
+		"Download17: " "$LINK17" \
+		"Download18: " "$LINK18" \
+		"Download19: " "$LINK19" \
+		"Download20: " "$LINK20" \
+		"Download21: " "$LINK21" \
+		"Download22: " "$LINK22" \
+		"Download23: " "$LINK23" \
+		"Download24: " "$LINK24" \
+		"Download25: " "$LINK25" \
+		"Download26: " "$LINK26" 3>&1 1>&2 2>&3 3>&-)
 
 	dialog --clear
 
-		DownloadAntwort=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '1p')
-
+	DownloadAntwort=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '1p')
 
 	if [[ $DownloadAntwort = "Download1: " ]]; then wget "$LINK01"; fi
 	if [[ $DownloadAntwort = "Download2: " ]]; then wget "$LINK02"; fi
@@ -378,38 +476,86 @@ function downloados()
 	hauptmenu
 }
 
-### ! rebootdatum letzter reboot des Servers.
-function rebootdatum()
+### Radioliste erstellen aus Webseitenlinks.
+function radiolist()
 {
+    rm /tmp/radio.tmp
+    mkdir -p /"$STARTVERZEICHNIS"/radiolist
+    for genre in $listVar; do        
+        # Link Liste holen
+        lynx -listonly -nonumbers -dump https://dir.xiph.org/genres/"$genre" > /tmp/radio.tmp
+
+        # Alles unnoetige herausfiltern.
+        sed -i '/dir/d'     /tmp/radio.tmp
+    
+        # Ueberschrift
+    echo "# $genre" > /"$STARTVERZEICHNIS"/radiolist/"$genre".txt
+
+	log info "$genre Liste wird erstellt."
+
+    readarray lines < /tmp/radio.tmp
+
+    for line_no in "${!lines[@]}" 
+    do
+        IFS=';' read -ra values <<<"${lines[$line_no]}"
+        ((line_no ++))
+        for element_index in "${!values[@]}" 
+        do
+            url="${values[$element_index]}"
+
+            # das Protokoll extrahieren.
+            proto="$(echo "$url" | grep :// | sed -e's,^\(.*://\).*,\1,g')"
+
+            # das Protokoll entfernen.
+            # shellcheck disable=SC2001
+            url=$(echo "$url" | sed -e s,"$proto",,g)
+
+            # den Benutzer extrahieren (falls vorhanden).
+            #user="$(echo "$url" | grep @ | cut -d@ -f1)"
+
+            # Host extrahieren.
+            # shellcheck disable=SC2154
+            host=$(echo "$url" | sed -e s,"$user"@,,g | cut -d/ -f1 | sed -e 's,:.*,,g')
+
+            # extract the path (if any)
+            path="$(echo "$url" | grep / | cut -d/ -f2-)"
+
+            echo "$genre|$host|$path|${values[$element_index]}" >> /"$STARTVERZEICHNIS"/radiolist/"$genre".txt
+        done
+    done
+done
+}
+
+### ! rebootdatum letzter reboot des Servers.
+function rebootdatum() {
 	HEUTEDATUM=$(date +%Y-%m-%d) # Heute
 
 	# Parsen: system boot  2021-11-30 14:26
 	# Trim = | xargs
 	LETZTERREBOOT=$(who -b | awk -F' ' '{print $3}' | xargs) # Letzter Reboot
 
-	# Tolles Datum Script 
+	# Tolles Datum Script
 	first_date=$(date -d "$HEUTEDATUM" "+%s")
 	second_date=$(date -d "$LETZTERREBOOT" "+%s")
 	EINST="-d" # Manuelle auswahl umgehen.
 	case "$EINST" in
-	"--seconds" | "-s") period=1;;
-	"--minutes" | "-m") period=60;;
-	"--hours" | "-h") period=$((60*60));;
-	"--days" | "-d" | "") period=$((60*60*24));;
+	"--seconds" | "-s") period=1 ;;
+	"--minutes" | "-m") period=60 ;;
+	"--hours" | "-h") period=$((60 * 60)) ;;
+	"--days" | "-d" | "") period=$((60 * 60 * 24)) ;;
 	esac
-	datediff=$(( ("$first_date" - "$second_date")/("$period") ))
+	datediff=$((("$first_date" - "$second_date") / ("$period")))
 
 	dialog --args --yesno "Sie haben vor $datediff Tag(en)\nihren Server neu gestartet\n\nMoechten sie jetzt neu starten?" 10 45
 
 	antwort=$?
 
-    # Alles loeschen.
-    dialog --clear
-    clear
+	# Alles loeschen.
+	dialog --clear
+	clear
 
 	# Auswertung Ja / Nein
-	if [ $antwort = 0 ]
-	then
+	if [ $antwort = 0 ]; then
 		# Ja herunterfahren von Robust und OpenSim anschliessend ein Server Reboot ausfuehren.
 		autostop
 		shutdown -r now
@@ -420,50 +566,45 @@ function rebootdatum()
 	return 0
 }
 
-## * --no-collapse   verhindert dialog die Neuformatierung des Nachrichtentextes. 
+## * --no-collapse   verhindert dialog die Neuformatierung des Nachrichtentextes.
 ## * Verwenden Sie dies, wenn die exakte Darstellung des Textes erforderlich ist.
 
 ### ! warnbox Medung anzeigen.
-function warnbox()
-{
-    dialog --msgbox "$1" 0 0
-    dialog --clear
+function warnbox() {
+	dialog --msgbox "$1" 0 0
+	dialog --clear
 	clear
 	hauptmenu
 }
 
 ### ! Text editieren.
-function edittextbox()
-{
+function edittextbox() {
 	#--editbox 	DATEI HOEHE BREITE
 	dialog --editbox "$1" 0 0
-    #NEWTEXT=$(dialog --editbox "$1" 0 0)
-    dialog --clear
+	#NEWTEXT=$(dialog --editbox "$1" 0 0)
+	dialog --clear
 	clear
 	#echo "$NEWTEXT"
 	hauptmenu
 }
 
 ### ! Text Meldung anzeigen.
-function textbox()
-{
+function textbox() {
 	#--editbox 	DATEI HOEHE BREITE
-    dialog --textbox "$1" 0 0
-    dialog --clear
+	dialog --textbox "$1" 0 0
+	dialog --clear
 	clear
 	hauptmenu
 }
 
 ### ! Nachrichtbox Meldung anzeigen.
-function nachrichtbox() 
-{
+function nachrichtbox() {
 	dialog --title "$1" --no-collapse --msgbox "$result" 0 0
 	hauptmenu
 }
 
 ### ! php log anzeigen.
-function apacheerror()
-{	
+function apacheerror() {
 	###php log Datei:
 	if [ -f "$apache2errorlog" ]; then
 		textbox "$apache2errorlog"
@@ -473,8 +614,7 @@ function apacheerror()
 }
 
 ### ! mysql log anzeigen.
-function mysqldberror()
-{	
+function mysqldberror() {
 	###mysql log Datei:
 	if [ -f "$mysqlerrorlog" ]; then
 		textbox "$mysqlerrorlog"
@@ -484,8 +624,7 @@ function mysqldberror()
 }
 
 ### ! mariadb error anzeigen.
-function mariadberror()
-{	
+function mariadberror() {
 	###mariaDB log Datei:
 	if [ -f "$mysqlmariadberor" ]; then
 		textbox "$mysqlmariadberor"
@@ -495,8 +634,7 @@ function mariadberror()
 }
 
 ### ! ufw log anzeigen.
-function ufwlog()
-{	
+function ufwlog() {
 	###mariaDB log Datei:
 	if [ -f "$ufwlog" ]; then
 		textbox "$ufwlog"
@@ -506,8 +644,7 @@ function ufwlog()
 }
 
 ### ! auth log anzeigen.
-function authlog()
-{	
+function authlog() {
 	###auth.log Datei:
 	if [ -f "$authlog" ]; then
 		textbox "$authlog"
@@ -517,8 +654,7 @@ function authlog()
 }
 
 ### ! access log anzeigen.
-function accesslog()
-{	
+function accesslog() {
 	###access.log Datei:
 	if [ -f "$apache2accesslog" ]; then
 		textbox "$apache2accesslog"
@@ -528,33 +664,30 @@ function accesslog()
 }
 
 ### ! Festplattenspeicher anzeigen.
-function fpspeicher()
-{
+function fpspeicher() {
 	result=$(df -h)
 	nachrichtbox "Freier Spericher"
 }
 
 ### !  screenlist, Laufende Screens auflisten.
-function screenlist()
-{
+function screenlist() {
 	log line
 	log info "Alle laufende Screens anzeigen!"
 	# zuerst schauen ob dialog installiert ist
-	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
 		# Alle Aktionen mit dialog
 		txtscreenlist=$(screen -ls)
-    	warnbox "$txtscreenlist"
+		warnbox "$txtscreenlist"
 		hauptmenu
 	else
-		# Alle Aktionen ohne dialog		
+		# Alle Aktionen ohne dialog
 		mynewlist=$(screen -ls)
 		log text "$mynewlist"
 		return 0
 	fi
 }
 ### ! screenlistrestart Alle laufende Screens anzeigen
-function screenlistrestart()
-{
+function screenlistrestart() {
 	log line
 	log info "Alle laufende Screens anzeigen!"
 	mynewlist=$(screen -ls)
@@ -563,88 +696,89 @@ function screenlistrestart()
 }
 
 ### ! makeverzeichnisliste Erstellen eines Arrays aus einer Textdatei - Verzeichnisse
-function makeverzeichnisliste() 
-{
+function makeverzeichnisliste() {
 	VERZEICHNISSLISTE=()
 	while IFS= read -r line; do
-	VERZEICHNISSLISTE+=("$line")
-	done < /$STARTVERZEICHNIS/$SIMDATEI
+		VERZEICHNISSLISTE+=("$line")
+	done </$STARTVERZEICHNIS/$SIMDATEI
 	# Anzahl der Eintraege.
 	ANZAHLVERZEICHNISSLISTE=${#VERZEICHNISSLISTE[*]}
 	return 0
 }
 
 ### ! makeregionsliste Erstellen eines Arrays aus einer Textdatei - Regionen
-function makeregionsliste() 
-{
+function makeregionsliste() {
 	REGIONSLISTE=()
 	while IFS= read -r line; do
-	REGIONSLISTE+=("$line")
-	done < /$STARTVERZEICHNIS/$REGIONSDATEI
+		REGIONSLISTE+=("$line")
+	done </$STARTVERZEICHNIS/$REGIONSDATEI
 	ANZAHLREGIONSLISTE=${#REGIONSLISTE[*]} # Anzahl der Eintraege.
 	return 0
 }
 
 ### ! mysqlrest Funktion zum abfragen von mySQL Datensaetzen: mymysql "username" "password" "databasename" "mysqlcommand"
-function mysqlrest()
-{
-	username=$1; password=$2; databasename=$3; mysqlcommand=$4;
-	result_mysqlrest=$(echo "$mysqlcommand;" | MYSQL_PWD=$password mysql -u"$username" "$databasename" -N) 2> /dev/null    
+function mysqlrest() {
+	username=$1
+	password=$2
+	databasename=$3
+	mysqlcommand=$4
+	result_mysqlrest=$(echo "$mysqlcommand;" | MYSQL_PWD=$password mysql -u"$username" "$databasename" -N) 2>/dev/null
 }
 ### ! mysqlrestnodb Funktion mySQL Datensaetzen: mymysql "username" "password" "mysqlcommand"
-function mysqlrestnodb()
-{
-	username=$1; password=$2; mysqlcommand=$3;
-	result_mysqlrestnodb=$(echo "$mysqlcommand" | MYSQL_PWD=$password mysql -u"$username")    
+function mysqlrestnodb() {
+	username=$1
+	password=$2
+	mysqlcommand=$3
+	result_mysqlrestnodb=$(echo "$mysqlcommand" | MYSQL_PWD=$password mysql -u"$username")
 }
 
 ### ! mysqlbackup Funktion zum sichern von mySQL Datensaetzen: mysqlbackup "username" "password" "databasename"
-function mysqlbackup()
-{
+function mysqlbackup() {
 	# bearbeitung noetig!
-	username=$1; password=$2; databasename=$3;
+	username=$1
+	password=$2
+	databasename=$3
 	result_mysqlrest=$("MYSQL_PWD=$password" "mysqldump -u$username $databasename" -N)
-	# mysqldump -u root -p omlgrid assets > AssetService.sql   
+	# mysqldump -u root -p omlgrid assets > AssetService.sql
 }
 
-
-
 ### !  passwdgenerator, Passwortgenerator
-function passwdgenerator()
-{
+function passwdgenerator() {
 	### dialog Aktionen
 	# zuerst schauen ob dialog installiert ist
-	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
 		# Alle Aktionen mit dialog
-		boxtitel="opensimMULTITOOL Eingabe"; boxtext="Passwortstaerke:"; 
-		STARK=$( dialog --backtitle "opensimMULTITOOL $VERSION" --title "$boxtitel" --inputbox "$boxtext" 8 40 3>&1 1>&2 2>&3 3>&- )
+		boxtitel="opensimMULTITOOL Eingabe"
+		boxtext="Passwortstaerke:"
+		STARK=$(dialog --backtitle "opensimMULTITOOL $VERSION" --title "$boxtitel" --inputbox "$boxtext" 8 40 3>&1 1>&2 2>&3 3>&-)
 		dialog --clear
 		clear
-        PASSWD=$(tr -dc 'A-Za-z0-9!"#$%&'\''()*+,-./:;<=>?@[\]^_`{|}~' </dev/urandom | head -c "$STARK")
-        echo "$PASSWD"
-        unset PASSWD
+		PASSWD=$(tr -dc 'A-Za-z0-9!"#$%&'\''()*+,-./:;<=>?@[\]^_`{|}~' </dev/urandom | head -c "$STARK")
+		echo "$PASSWD"
+		unset PASSWD
 		return 0
 	else
 		# Alle Aktionen ohne dialog
 		STARK=$1
-        PASSWD=$(tr -dc 'A-Za-z0-9!"#$%&'\''()*+,-./:;<=>?@[\]^_`{|}~' </dev/urandom | head -c "$STARK")
-        echo "$PASSWD"
-        unset PASSWD
+		PASSWD=$(tr -dc 'A-Za-z0-9!"#$%&'\''()*+,-./:;<=>?@[\]^_`{|}~' </dev/urandom | head -c "$STARK")
+		echo "$PASSWD"
+		unset PASSWD
 		return 0
-	fi	# dialog Aktionen Ende
+	fi # dialog Aktionen Ende
 	return 0
 }
 
 ### !  assetdel, Asset von der Region loeschen. Aufruf: assetdel screen_name Regionsname Objektname
-function assetdel()
-{
-	ASSDELSCREEN=$1; REGION=$2; OBJEKT=$3
+function assetdel() {
+	ASSDELSCREEN=$1
+	REGION=$2
+	OBJEKT=$3
 	# Nachschauen ob der Screen und die Region existiert.
 	if screen -list | grep -q "$ASSDELSCREEN"; then
-		screen -S "$ASSDELSCREEN" -p 0 -X eval "stuff 'change region ""$REGION""'^M" # Region wechseln
+		screen -S "$ASSDELSCREEN" -p 0 -X eval "stuff 'change region ""$REGION""'^M"                  # Region wechseln
 		screen -S "$ASSDELSCREEN" -p 0 -X eval "stuff 'alert "Loesche: "$OBJEKT" von der Region!"'^M" # Mit einer loesch Meldung
-		screen -S "$ASSDELSCREEN" -p 0 -X eval "stuff 'delete object name ""$OBJEKT""'^M" # Objekt loeschen
-		screen -S "$ASSDELSCREEN" -p 0 -X eval "stuff 'y'^M" # Mit y also yes bestaetigen
+		screen -S "$ASSDELSCREEN" -p 0 -X eval "stuff 'delete object name ""$OBJEKT""'^M"             # Objekt loeschen
+		screen -S "$ASSDELSCREEN" -p 0 -X eval "stuff 'y'^M"                                          # Mit y also yes bestaetigen
 		log warn "ASSETDEL: $OBJEKT Asset von der Region $REGION loeschen"
 		return 0
 	else
@@ -654,42 +788,44 @@ function assetdel()
 }
 
 ### ! menuassetdel Assets loeschen.
-function menuassetdel()
-{
-    # zuerst schauen ob dialog installiert ist
-    if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+function menuassetdel() {
+	# zuerst schauen ob dialog installiert ist
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
 
-    # Einstellungen
-    boxbacktitel="opensimMULTITOOL"
-    boxtitel="opensimMULTITOOL Eingabe"
-    formtitle="Objekt von der Region entfernen"
-    lable1="Simulator:"; lablename1=""
-    lable2="Region:"; lablename2=""
-    lable3="Objekt:"; lablename3=""
+		# Einstellungen
+		boxbacktitel="opensimMULTITOOL"
+		boxtitel="opensimMULTITOOL Eingabe"
+		formtitle="Objekt von der Region entfernen"
+		lable1="Simulator:"
+		lablename1=""
+		lable2="Region:"
+		lablename2=""
+		lable3="Objekt:"
+		lablename3=""
 
-    # Abfrage
-    ASSETDELBOXERGEBNIS=$( dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30  3>&1 1>&2 2>&3 3>&- )
+		# Abfrage
+		ASSETDELBOXERGEBNIS=$(dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 3>&1 1>&2 2>&3 3>&-)
 
-    # Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
-    VERZEICHNISSCREEN=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '1p')
-    REGION=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '2p')
-    OBJEKT=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '3p')
+		# Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
+		VERZEICHNISSCREEN=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '1p')
+		REGION=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '2p')
+		OBJEKT=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '3p')
 
-    # Alles loeschen.
-    dialog --clear
-    clear
+		# Alles loeschen.
+		dialog --clear
+		clear
 	else
 		# Alle Aktionen ohne dialog
-        echo "Keine Menuelose Funktion"|exit
-	fi	# dialog Aktionen Ende
+		echo "Keine Menuelose Funktion" | exit
+	fi # dialog Aktionen Ende
 
 	# Nachschauen ob der Screen und die Region existiert.
 	if screen -list | grep -q "$VERZEICHNISSCREEN"; then
 		log warn "$OBJEKT Asset von der Region $REGION loeschen"
-		screen -S "$VERZEICHNISSCREEN" -p 0 -X eval "stuff 'change region ""$REGION""'^M" # Region wechseln
+		screen -S "$VERZEICHNISSCREEN" -p 0 -X eval "stuff 'change region ""$REGION""'^M"                  # Region wechseln
 		screen -S "$VERZEICHNISSCREEN" -p 0 -X eval "stuff 'alert "Loesche: "$OBJEKT" von der Region!"'^M" # Mit einer loesch Meldung
-		screen -S "$VERZEICHNISSCREEN" -p 0 -X eval "stuff 'delete object name ""$OBJEKT""'^M" # Objekt loeschen
-		screen -S "$VERZEICHNISSCREEN" -p 0 -X eval "stuff 'y'^M" # Mit y also yes bestaetigen
+		screen -S "$VERZEICHNISSCREEN" -p 0 -X eval "stuff 'delete object name ""$OBJEKT""'^M"             # Objekt loeschen
+		screen -S "$VERZEICHNISSCREEN" -p 0 -X eval "stuff 'y'^M"                                          # Mit y also yes bestaetigen
 		return 0
 	else
 		log error "ASSETDEL: $OBJEKT Asset von der Region $REGION loeschen fehlgeschlagen"
@@ -698,16 +834,16 @@ function menuassetdel()
 }
 
 ### !  landclear, Land clear - Loescht alle Parzellen auf dem Land. # Aufruf: landclear screen_name Regionsname Objektname
-function landclear()
-{
-	LANDCLEARSCREEN=$1; REGION=$2
+function landclear() {
+	LANDCLEARSCREEN=$1
+	REGION=$2
 	# Nachschauen ob der Screen und die Region existiert.
 	if screen -list | grep -q "$LANDCLEARSCREEN"; then
 		log warn "$OBJEKT Parzellen von der Region $REGION loeschen"
-		screen -S "$LANDCLEARSCREEN" -p 0 -X eval "stuff 'change region ""$REGION""'^M" # Region wechseln
+		screen -S "$LANDCLEARSCREEN" -p 0 -X eval "stuff 'change region ""$REGION""'^M"                 # Region wechseln
 		screen -S "$LANDCLEARSCREEN" -p 0 -X eval "stuff 'alert "Loesche Parzellen von der Region!"'^M" # Mit einer loesch Meldung
-		screen -S "$LANDCLEARSCREEN" -p 0 -X eval "stuff 'land clear'^M" # Objekt loeschen
-		screen -S "$LANDCLEARSCREEN" -p 0 -X eval "stuff 'y'^M" # Mit y also yes bestaetigen
+		screen -S "$LANDCLEARSCREEN" -p 0 -X eval "stuff 'land clear'^M"                                # Objekt loeschen
+		screen -S "$LANDCLEARSCREEN" -p 0 -X eval "stuff 'y'^M"                                         # Mit y also yes bestaetigen
 		return 0
 	else
 		log error "LANDCLEAR: $OBJEKT Parzellen von der Region $REGION loeschen fehlgeschlagen"
@@ -716,40 +852,41 @@ function landclear()
 }
 
 ### !  menulandclear, Land clear - Loescht alle Parzellen auf dem Land. # Aufruf: landclear screen_name Regionsname Objektname
-function menulandclear()
-{
-    # zuerst schauen ob dialog installiert ist
-    if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+function menulandclear() {
+	# zuerst schauen ob dialog installiert ist
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
 
-    # Einstellungen
-    boxbacktitel="opensimMULTITOOL"
-    boxtitel="opensimMULTITOOL Eingabe"
-    formtitle="Parzellen einer Region entfernen"
-    lable1="Simulator:"; lablename1="sim2"
-    lable2="Regionsname:"; lablename2="Sandbox"
+		# Einstellungen
+		boxbacktitel="opensimMULTITOOL"
+		boxtitel="opensimMULTITOOL Eingabe"
+		formtitle="Parzellen einer Region entfernen"
+		lable1="Simulator:"
+		lablename1="sim2"
+		lable2="Regionsname:"
+		lablename2="Sandbox"
 
-    # Abfrage
-    landclearBOXERGEBNIS=$( dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 3>&1 1>&2 2>&3 3>&- )
+		# Abfrage
+		landclearBOXERGEBNIS=$(dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 3>&1 1>&2 2>&3 3>&-)
 
-    # Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
-    VERZEICHNISSCREEN=$(echo "$landclearBOXERGEBNIS" | sed -n '1p')
-    REGION=$(echo "$landclearBOXERGEBNIS" | sed -n '2p')
+		# Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
+		VERZEICHNISSCREEN=$(echo "$landclearBOXERGEBNIS" | sed -n '1p')
+		REGION=$(echo "$landclearBOXERGEBNIS" | sed -n '2p')
 
-    # Alles loeschen.
-    dialog --clear
-    clear
+		# Alles loeschen.
+		dialog --clear
+		clear
 	else
 		# Alle Aktionen ohne dialog
-        echo "Keine Menuelose Funktion"|exit
-	fi	# dialog Aktionen Ende
+		echo "Keine Menuelose Funktion" | exit
+	fi # dialog Aktionen Ende
 
 	# Nachschauen ob der Screen und die Region existiert.
 	if screen -list | grep -q "$VERZEICHNISSCREEN"; then
 		log warn "$OBJEKT Parzellen von der Region $REGION loeschen"
-		screen -S "$VERZEICHNISSCREEN" -p 0 -X eval "stuff 'change region ""$REGION""'^M" # Region wechseln
+		screen -S "$VERZEICHNISSCREEN" -p 0 -X eval "stuff 'change region ""$REGION""'^M"                 # Region wechseln
 		screen -S "$VERZEICHNISSCREEN" -p 0 -X eval "stuff 'alert "Loesche Parzellen von der Region!"'^M" # Mit einer loesch Meldung
-		screen -S "$VERZEICHNISSCREEN" -p 0 -X eval "stuff 'land clear'^M" # Objekt loeschen
-		screen -S "$VERZEICHNISSCREEN" -p 0 -X eval "stuff 'y'^M" # Mit y also yes bestaetigen
+		screen -S "$VERZEICHNISSCREEN" -p 0 -X eval "stuff 'land clear'^M"                                # Objekt loeschen
+		screen -S "$VERZEICHNISSCREEN" -p 0 -X eval "stuff 'y'^M"                                         # Mit y also yes bestaetigen
 		return 0
 	else
 		log error "LANDCLEAR: $OBJEKT Parzellen von der Region $REGION loeschen fehlgeschlagen"
@@ -758,9 +895,12 @@ function menulandclear()
 }
 
 ### !  loadinventar, saveinventar # Aufruf: load oder saveinventar "NAME" "VERZEICHNIS" "PASSWORD" "DATEImitPFAD"
-function loadinventar()
-{	
-	LOADINVSCREEN="sim1"; NAME=$1; VERZEICHNIS=$2; PASSWORD=$3; DATEI=$4
+function loadinventar() {
+	LOADINVSCREEN="sim1"
+	NAME=$1
+	VERZEICHNIS=$2
+	PASSWORD=$3
+	DATEI=$4
 	if screen -list | grep -q "$LOADINVSCREEN"; then
 		log info "OSCOMMAND: load iar $NAME $VERZEICHNIS ***** $DATEI"
 		screen -S "$LOADINVSCREEN" -p 0 -X eval "stuff 'load iar $NAME $VERZEICHNIS $PASSWORD $DATEI'^M"
@@ -772,36 +912,39 @@ function loadinventar()
 }
 
 ### !  loadinventar, saveinventar # Aufruf: load oder saveinventar "NAME" "VERZEICHNIS" "PASSWORD" "DATEImitPFAD"
-function menuloadinventar()
-{
-    # zuerst schauen ob dialog installiert ist
-    if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+function menuloadinventar() {
+	# zuerst schauen ob dialog installiert ist
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
 
-    # Einstellungen
-    boxbacktitel="opensimMULTITOOL"
-    boxtitel="opensimMULTITOOL Eingabe"
-    formtitle="Inventarverzeichnis laden"
-    lable1="NAME:"; lablename1="John Doe"
-    lable2="VERZEICHNIS:"; lablename2="/texture"
-    lable3="PASSWORD:"; lablename3="PASSWORD"
-    lable4="DATEI:"; lablename4="/opt/texture.iar"
+		# Einstellungen
+		boxbacktitel="opensimMULTITOOL"
+		boxtitel="opensimMULTITOOL Eingabe"
+		formtitle="Inventarverzeichnis laden"
+		lable1="NAME:"
+		lablename1="John Doe"
+		lable2="VERZEICHNIS:"
+		lablename2="/texture"
+		lable3="PASSWORD:"
+		lablename3="PASSWORD"
+		lable4="DATEI:"
+		lablename4="/opt/texture.iar"
 
-    # Abfrage
-    loadinventarBOXERGEBNIS=$( dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 "$lable4" 4 1 "$lablename4" 4 25 25 30 3>&1 1>&2 2>&3 3>&- )
+		# Abfrage
+		loadinventarBOXERGEBNIS=$(dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 "$lable4" 4 1 "$lablename4" 4 25 25 30 3>&1 1>&2 2>&3 3>&-)
 
-    # Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
-    NAME=$(echo "$loadinventarBOXERGEBNIS" | sed -n '1p')
-    VERZEICHNIS=$(echo "$loadinventarBOXERGEBNIS" | sed -n '2p')
-    PASSWORD=$(echo "$loadinventarBOXERGEBNIS" | sed -n '3p')
-    DATEI=$(echo "$loadinventarBOXERGEBNIS" | sed -n '4p')
+		# Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
+		NAME=$(echo "$loadinventarBOXERGEBNIS" | sed -n '1p')
+		VERZEICHNIS=$(echo "$loadinventarBOXERGEBNIS" | sed -n '2p')
+		PASSWORD=$(echo "$loadinventarBOXERGEBNIS" | sed -n '3p')
+		DATEI=$(echo "$loadinventarBOXERGEBNIS" | sed -n '4p')
 
-    # Alles loeschen.
-    dialog --clear
-    clear
+		# Alles loeschen.
+		dialog --clear
+		clear
 	else
 		# Alle Aktionen ohne dialog
-        echo "Keine Menuelose Funktion"|exit
-	fi	# dialog Aktionen Ende
+		echo "Keine Menuelose Funktion" | exit
+	fi # dialog Aktionen Ende
 
 	LOADINVSCREEN="sim1"
 	if screen -list | grep -q "$LOADINVSCREEN"; then
@@ -811,16 +954,19 @@ function menuloadinventar()
 	else
 		log error "OSCOMMAND: Der Screen $LOADINVSCREEN existiert nicht"
 		return 1
-	fi    
+	fi
 
-    # Zum schluss alle Variablen loeschen.
-    unset LOADINVSCREEN NAME VERZEICHNIS PASSWORD DATEI
+	# Zum schluss alle Variablen loeschen.
+	unset LOADINVSCREEN NAME VERZEICHNIS PASSWORD DATEI
 }
 
 ### !  saveinventar, saveinventar # Aufruf: load oder saveinventar "NAME" "VERZEICHNIS" "PASSWORD" "DATEImitPFAD"
-function saveinventar()
-{	
-	SAVEINVSCREEN="sim1"; NAME=$1; VERZEICHNIS=$2; PASSWORD=$3; DATEI=$4
+function saveinventar() {
+	SAVEINVSCREEN="sim1"
+	NAME=$1
+	VERZEICHNIS=$2
+	PASSWORD=$3
+	DATEI=$4
 	if screen -list | grep -q "$SAVEINVSCREEN"; then
 		log info "OSCOMMAND: save iar $NAME $VERZEICHNIS ***** $DATEI "
 		screen -S "$SAVEINVSCREEN" -p 0 -X eval "stuff 'save iar $NAME $VERZEICHNIS $PASSWORD $DATEI'^M"
@@ -832,36 +978,39 @@ function saveinventar()
 }
 
 ### !  saveinventar, saveinventar # Aufruf: load oder saveinventar "NAME" "VERZEICHNIS" "PASSWORD" "DATEImitPFAD"
-function menusaveinventar()
-{
-    # zuerst schauen ob dialog installiert ist
-    if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+function menusaveinventar() {
+	# zuerst schauen ob dialog installiert ist
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
 
-    # Einstellungen
-    boxbacktitel="opensimMULTITOOL"
-    boxtitel="opensimMULTITOOL Eingabe"
-    formtitle="Inventarverzeichnis speichern"
-    lable1="NAME:"; lablename1="John Doe"
-    lable2="VERZEICHNIS:"; lablename2="/texture"
-    lable3="PASSWORD:"; lablename3="PASSWORD"
-    lable4="DATEI:"; lablename4="/opt/texture.iar"
+		# Einstellungen
+		boxbacktitel="opensimMULTITOOL"
+		boxtitel="opensimMULTITOOL Eingabe"
+		formtitle="Inventarverzeichnis speichern"
+		lable1="NAME:"
+		lablename1="John Doe"
+		lable2="VERZEICHNIS:"
+		lablename2="/texture"
+		lable3="PASSWORD:"
+		lablename3="PASSWORD"
+		lable4="DATEI:"
+		lablename4="/opt/texture.iar"
 
-    # Abfrage
-    saveinventarBOXERGEBNIS=$( dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 "$lable4" 4 1 "$lablename4" 4 25 25 30 3>&1 1>&2 2>&3 3>&- )
+		# Abfrage
+		saveinventarBOXERGEBNIS=$(dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 "$lable4" 4 1 "$lablename4" 4 25 25 30 3>&1 1>&2 2>&3 3>&-)
 
-    # Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
-    NAME=$(echo "$saveinventarBOXERGEBNIS" | sed -n '1p')
-    VERZEICHNIS=$(echo "$saveinventarBOXERGEBNIS" | sed -n '2p')
-    PASSWORD=$(echo "$saveinventarBOXERGEBNIS" | sed -n '3p')
-    DATEI=$(echo "$saveinventarBOXERGEBNIS" | sed -n '4p')
-	
-    # Alles loeschen.
-    dialog --clear
-    clear
+		# Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
+		NAME=$(echo "$saveinventarBOXERGEBNIS" | sed -n '1p')
+		VERZEICHNIS=$(echo "$saveinventarBOXERGEBNIS" | sed -n '2p')
+		PASSWORD=$(echo "$saveinventarBOXERGEBNIS" | sed -n '3p')
+		DATEI=$(echo "$saveinventarBOXERGEBNIS" | sed -n '4p')
+
+		# Alles loeschen.
+		dialog --clear
+		clear
 	else
 		# Alle Aktionen ohne dialog
-        echo "Keine Menuelose Funktion"|exit
-	fi	# dialog Aktionen Ende
+		echo "Keine Menuelose Funktion" | exit
+	fi # dialog Aktionen Ende
 
 	SAVEINVSCREEN="sim1"
 	if screen -list | grep -q "$SAVEINVSCREEN"; then
@@ -871,22 +1020,23 @@ function menusaveinventar()
 	else
 		log error "OSCOMMAND: Der Screen $SAVEINVSCREEN existiert nicht"
 		return 1
-	fi    
+	fi
 
-    # Zum schluss alle Variablen loeschen.
-    unset SAVEINVSCREEN NAME VERZEICHNIS PASSWORD DATEI	
+	# Zum schluss alle Variablen loeschen.
+	unset SAVEINVSCREEN NAME VERZEICHNIS PASSWORD DATEI
 }
 
 ### !  oscommand, OpenSim Command direkt in den screen senden. # Aufruf: oscommand Screen Region Befehl Parameter
 # Beispiel: /opt/opensim.sh oscommand sim1 Welcome "alert Hallo liebe Leute dies ist eine Nachricht"
 # Beispiel: /opt/opensim.sh oscommand sim1 Welcome "alert-user John Doe Hallo John Doe"
-function oscommand()
-{	
-	OSCOMMANDSCREEN=$1; REGION=$2; COMMAND=$3
+function oscommand() {
+	OSCOMMANDSCREEN=$1
+	REGION=$2
+	COMMAND=$3
 	if screen -list | grep -q "$OSCOMMANDSCREEN"; then
-	log info "OSCOMMAND: $COMMAND an $OSCOMMANDSCREEN senden"
-	screen -S "$OSCOMMANDSCREEN" -p 0 -X eval "stuff 'change region ""$REGION""'^M" # Region wechseln
-	screen -S "$OSCOMMANDSCREEN" -p 0 -X eval "stuff '$COMMAND'^M"
+		log info "OSCOMMAND: $COMMAND an $OSCOMMANDSCREEN senden"
+		screen -S "$OSCOMMANDSCREEN" -p 0 -X eval "stuff 'change region ""$REGION""'^M" # Region wechseln
+		screen -S "$OSCOMMANDSCREEN" -p 0 -X eval "stuff '$COMMAND'^M"
 	else
 		log error "OSCOMMAND: Der Screen $OSCOMMANDSCREEN existiert nicht"
 	fi
@@ -894,34 +1044,36 @@ function oscommand()
 }
 
 ### !  oscommand, OpenSim Command direkt in den screen senden. # Aufruf: oscommand Screen Region Befehl Parameter
-function menuoscommand()
-{
-    # zuerst schauen ob dialog installiert ist
-    if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+function menuoscommand() {
+	# zuerst schauen ob dialog installiert ist
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
 
-    # Einstellungen
-    boxbacktitel="opensimMULTITOOL"
-    boxtitel="opensimMULTITOOL Eingabe"
-    formtitle="Kommando an den Simulator"
-    lable1="Simulator:"; lablename1=""
-    lable2="Region:"; lablename2=""
-    lable3="Befehlskette:"; lablename3=""
+		# Einstellungen
+		boxbacktitel="opensimMULTITOOL"
+		boxtitel="opensimMULTITOOL Eingabe"
+		formtitle="Kommando an den Simulator"
+		lable1="Simulator:"
+		lablename1=""
+		lable2="Region:"
+		lablename2=""
+		lable3="Befehlskette:"
+		lablename3=""
 
-    # Abfrage
-    oscommandBOXERGEBNIS=$( dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30  3>&1 1>&2 2>&3 3>&- )
+		# Abfrage
+		oscommandBOXERGEBNIS=$(dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 3>&1 1>&2 2>&3 3>&-)
 
-    # Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
-    OSCOMMANDSCREEN=$(echo "$oscommandBOXERGEBNIS" | sed -n '1p')
-    REGION=$(echo "$oscommandBOXERGEBNIS" | sed -n '2p')
-    COMMAND=$(echo "$oscommandBOXERGEBNIS" | sed -n '3p')
+		# Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
+		OSCOMMANDSCREEN=$(echo "$oscommandBOXERGEBNIS" | sed -n '1p')
+		REGION=$(echo "$oscommandBOXERGEBNIS" | sed -n '2p')
+		COMMAND=$(echo "$oscommandBOXERGEBNIS" | sed -n '3p')
 
-    # Alles loeschen.
-    dialog --clear
-    clear
+		# Alles loeschen.
+		dialog --clear
+		clear
 	else
 		# Alle Aktionen ohne dialog
-        echo "Keine Menuelose Funktion"|exit
-	fi	# dialog Aktionen Ende
+		echo "Keine Menuelose Funktion" | exit
+	fi # dialog Aktionen Ende
 
 	if screen -list | grep -q "$OSCOMMANDSCREEN"; then
 		log info "OSCOMMAND: $COMMAND an $OSCOMMANDSCREEN senden"
@@ -933,37 +1085,36 @@ function menuoscommand()
 		return 1
 	fi
 
-    # Zum schluss alle Variablen loeschen.
-    unset OSCOMMANDSCREEN REGION COMMAND
+	# Zum schluss alle Variablen loeschen.
+	unset OSCOMMANDSCREEN REGION COMMAND
 }
 ### ! oswriteconfig
-function oswriteconfig()
-{	
+function oswriteconfig() {
 	SETSIMULATOR=$1
 	CONFIGWRITE="config save /opt/$SETSIMULATOR.ini"
 	screen -S "$SETSIMULATOR" -p 0 -X eval "stuff '$CONFIGWRITE'^M"
 }
 ### ! menuoswriteconfig
-function menuoswriteconfig()
-{
-	SETSIMULATOR=$1  # OpenSimulator, Verzeichnis und Screen Name
+function menuoswriteconfig() {
+	SETSIMULATOR=$1 # OpenSimulator, Verzeichnis und Screen Name
 
 	### dialog Aktionen
 	# zuerst schauen ob dialog installiert ist
-	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
 		# Alle Aktionen mit dialog
-		boxtitel="opensimMULTITOOL Eingabe"; boxtext="Screen Name:"; 
-		SETSIMULATOR=$( dialog --backtitle "opensimMULTITOOL $VERSION" --title "$boxtitel" --inputbox "$boxtext" 8 40 3>&1 1>&2 2>&3 3>&- )
+		boxtitel="opensimMULTITOOL Eingabe"
+		boxtext="Screen Name:"
+		SETSIMULATOR=$(dialog --backtitle "opensimMULTITOOL $VERSION" --title "$boxtitel" --inputbox "$boxtext" 8 40 3>&1 1>&2 2>&3 3>&-)
 		dialog --clear
 		clear
 
 		if ! screen -list | grep -q "$SETSIMULATOR"; then
-		# es laeuft nicht - not work
+			# es laeuft nicht - not work
 			dialog --backtitle "opensimMULTITOOL $VERSION" --msgbox "OpenSimulator $SETSIMULATOR OFFLINE!" 5 40
-            dialog --clear
-            clear
+			dialog --clear
+			clear
 		else
-		# es laeuft - work
+			# es laeuft - work
 			# Konfig schreiben
 			CONFIGWRITE="config save /opt/$SETSIMULATOR.ini"
 			CONFIGREAD=$(sed '' "$SETSIMULATOR.ini")
@@ -972,120 +1123,116 @@ function menuoswriteconfig()
 			dialog --backtitle "opensimMULTITOOL $VERSION" --msgbox "$CONFIGREAD" 0 0
 			#dialog --editbox "$CONFIGREAD" 0 0
 			#dialog --textbox "$CONFIGREAD" 0 0
-            dialog --clear
-            #clear
+			dialog --clear
+			#clear
 		fi
 	else
-		# Alle Aktionen ohne dialog		
+		# Alle Aktionen ohne dialog
 		if ! screen -list | grep -q "$SETSIMULATOR"; then
 			# es laeuft nicht - not work
-				log info "WORKS: $SETSIMULATOR OFFLINE!"
-				return 1
-			else
+			log info "WORKS: $SETSIMULATOR OFFLINE!"
+			return 1
+		else
 			# es laeuft - work
-				# Konfig schreiben
-				CONFIGWRITE="config save /opt/$SETSIMULATOR.ini"
-				screen -S "$SETSIMULATOR" -p 0 -X eval "stuff '$CONFIGWRITE'^M"
-				return 0
+			# Konfig schreiben
+			CONFIGWRITE="config save /opt/$SETSIMULATOR.ini"
+			screen -S "$SETSIMULATOR" -p 0 -X eval "stuff '$CONFIGWRITE'^M"
+			return 0
 		fi
 	fi
-	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then	hauptmenu; fi
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then hauptmenu; fi
 }
 
 ### !  menuworks, screen pruefen ob er laeuft. dialog auswahl
-function menuworks()
-{
-	WORKSSCREEN=$1  # OpenSimulator, Verzeichnis und Screen Name
+function menuworks() {
+	WORKSSCREEN=$1 # OpenSimulator, Verzeichnis und Screen Name
 
 	### dialog Aktionen
 	# zuerst schauen ob dialog installiert ist
-	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
 		# Alle Aktionen mit dialog
-		boxtitel="opensimMULTITOOL Eingabe"; boxtext="Screen Name:"; 
-		WORKSSCREEN=$( dialog --backtitle "opensimMULTITOOL $VERSION" --title "$boxtitel" --inputbox "$boxtext" 8 40 3>&1 1>&2 2>&3 3>&- )
+		boxtitel="opensimMULTITOOL Eingabe"
+		boxtext="Screen Name:"
+		WORKSSCREEN=$(dialog --backtitle "opensimMULTITOOL $VERSION" --title "$boxtitel" --inputbox "$boxtext" 8 40 3>&1 1>&2 2>&3 3>&-)
 		dialog --clear
 		clear
 
 		if ! screen -list | grep -q "$WORKSSCREEN"; then
-		# es laeuft nicht - not work
+			# es laeuft nicht - not work
 			dialog --backtitle "opensimMULTITOOL $VERSION" --msgbox "OpenSimulator $WORKSSCREEN OFFLINE!" 5 40
-            dialog --clear
-            clear
+			dialog --clear
+			clear
 		else
-		# es laeuft - work
+			# es laeuft - work
 			dialog --backtitle "opensimMULTITOOL $VERSION" --msgbox "OpenSimulator $WORKSSCREEN ONLINE!" 5 40
-            dialog --clear
-            clear
+			dialog --clear
+			clear
 		fi
 	else
-		# Alle Aktionen ohne dialog		
+		# Alle Aktionen ohne dialog
 		if ! screen -list | grep -q "$WORKSSCREEN"; then
 			# es laeuft nicht - not work
-				log info "WORKS: $WORKSSCREEN OFFLINE!"
-				return 1
-			else
-			# es laeuft - work
-				log info "WORKS: $WORKSSCREEN ONLINE!"
-				return 0
-		fi
-	fi
-	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then	hauptmenu; fi
-}
-
-### !  works, screen pruefen ob er laeuft. # Aufruf: works screen_name
-function works()
-{
-	WORKSSCREEN=$1  # OpenSimulator, Verzeichnis und Screen Name
-
-	# Alle Aktionen ohne dialog		
-	if ! screen -list | grep -q "$WORKSSCREEN"; then
-		# es laeuft nicht - not work
 			log info "WORKS: $WORKSSCREEN OFFLINE!"
 			return 1
 		else
-		# es laeuft - work
+			# es laeuft - work
 			log info "WORKS: $WORKSSCREEN ONLINE!"
 			return 0
+		fi
+	fi
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then hauptmenu; fi
+}
+
+### !  works, screen pruefen ob er laeuft. # Aufruf: works screen_name
+function works() {
+	WORKSSCREEN=$1 # OpenSimulator, Verzeichnis und Screen Name
+
+	# Alle Aktionen ohne dialog
+	if ! screen -list | grep -q "$WORKSSCREEN"; then
+		# es laeuft nicht - not work
+		log info "WORKS: $WORKSSCREEN OFFLINE!"
+		return 1
+	else
+		# es laeuft - work
+		log info "WORKS: $WORKSSCREEN ONLINE!"
+		return 0
 	fi
 }
 
 ### ! waslauft - Zeigt alle Laufenden Screens an.
-function waslauft()
-{
-  # Die screen -ls ausgabe zu einer Liste aendern.
-  # sed '1d' = erste Zeile loeschen - sed '$d' letzte Zeile loeschen.
-  # awk -F. alles vor dem Punkt entfernen - -F\( alles hinter dem  ( loeschen.
-  ergebnis=$(screen -ls | sed '1d' | sed '$d' | awk -F. '{print $2}' | awk -F\( '{print $1}')
-  echo "$ergebnis"
-  return 0
+function waslauft() {
+	# Die screen -ls ausgabe zu einer Liste aendern.
+	# sed '1d' = erste Zeile loeschen - sed '$d' letzte Zeile loeschen.
+	# awk -F. alles vor dem Punkt entfernen - -F\( alles hinter dem  ( loeschen.
+	ergebnis=$(screen -ls | sed '1d' | sed '$d' | awk -F. '{print $2}' | awk -F\( '{print $1}')
+	echo "$ergebnis"
+	return 0
 }
 
 ### ! menuwaslauft - Zeigt alle Laufenden Screens an im dialog.
-function menuwaslauft()
-{
-  # Die screen -ls ausgabe zu einer Liste aendern.
-  # sed '1d' = erste Zeile loeschen - sed '$d' letzte Zeile loeschen.
-  # awk -F. alles vor dem Punkt entfernen - -F\( alles hinter dem  ( loeschen.
-  ergebnis=$(screen -ls | sed '1d' | sed '$d' | awk -F. '{print $2}' | awk -F\( '{print $1}')
-  echo "$ergebnis"  
-  # dialog --infobox      "Laufende Simulatoren: $ergebnis" $HEIGHT $WIDTH; dialog --clear
-  dialog --msgbox       "Laufende Simulatoren:\n $ergebnis" 20 60; dialog --clear
-  hauptmenu
-  return 0
+function menuwaslauft() {
+	# Die screen -ls ausgabe zu einer Liste aendern.
+	# sed '1d' = erste Zeile loeschen - sed '$d' letzte Zeile loeschen.
+	# awk -F. alles vor dem Punkt entfernen - -F\( alles hinter dem  ( loeschen.
+	ergebnis=$(screen -ls | sed '1d' | sed '$d' | awk -F. '{print $2}' | awk -F\( '{print $1}')
+	echo "$ergebnis"
+	# dialog --infobox      "Laufende Simulatoren: $ergebnis" $HEIGHT $WIDTH; dialog --clear
+	dialog --msgbox "Laufende Simulatoren:\n $ergebnis" 20 60
+	dialog --clear
+	hauptmenu
+	return 0
 }
 
 ### !  checkfile, pruefen ob Datei vorhanden ist. # Aufruf: checkfile "pfad/name"
 # Verwendung als Einzeiler: checkfile /pfad/zur/datei && echo "File exists" || echo "File not found!"
-function checkfile()
-{
+function checkfile() {
 	DATEINAME=$1
-	[ -f "$DATEINAME" ]	
+	[ -f "$DATEINAME" ]
 	return $?
 }
 
 ### !  mapdel, loescht die Map-Karten. # Aufruf: mapdel Verzeichnis
-function mapdel()
-{
+function mapdel() {
 	VERZEICHNIS=$1
 	if [ -d "$VERZEICHNIS" ]; then
 		log info "MAPDEL: OpenSimulator maptile $VERZEICHNIS geloescht"
@@ -1099,11 +1246,10 @@ function mapdel()
 }
 
 ### !  logdel, loescht die Log Dateien. # Aufruf: logdel Verzeichnis
-function logdel()
-{
+function logdel() {
 	VERZEICHNIS=$1
 	if [ -d "$VERZEICHNIS" ]; then
-		rm /$STARTVERZEICHNIS/"$VERZEICHNIS"/bin/*.log 2>/dev/null|| echo "$VERZEICHNIS logs nicht gefunden."
+		rm /$STARTVERZEICHNIS/"$VERZEICHNIS"/bin/*.log 2>/dev/null || echo "$VERZEICHNIS logs nicht gefunden."
 		log info "LOGDEL: OpenSimulator log $VERZEICHNIS geloescht"
 		return 0
 	else
@@ -1113,12 +1259,11 @@ function logdel()
 }
 
 ### !  rologdel, loescht die Log Dateien. # Aufruf: rologdel Verzeichnis
-function rologdel()
-{
+function rologdel() {
 	# /opt/robust/bin
 	RVERZEICHNIS="robust"
 	if [ -d /$STARTVERZEICHNIS/$RVERZEICHNIS ]; then
-		rm /$STARTVERZEICHNIS/"$RVERZEICHNIS"/bin/*.log 2>/dev/null|| echo "Robust und Money logs nicht gefunden."
+		rm /$STARTVERZEICHNIS/"$RVERZEICHNIS"/bin/*.log 2>/dev/null || echo "Robust und Money logs nicht gefunden."
 		log warn "Robust und Money logs geloescht"
 		return 0
 	else
@@ -1128,21 +1273,21 @@ function rologdel()
 }
 
 ### !  menumapdel, loescht die Log Dateien. # Aufruf: mapdel Verzeichnis
-function menumapdel()
-{
+function menumapdel() {
 	### dialog Aktionen
 	# zuerst schauen ob dialog installiert ist
-	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
 		# Alle Aktionen mit dialog
-		boxtitel="opensimMULTITOOL Eingabe"; boxtext="Verzeichnis:"; 
-		VERZEICHNIS=$( dialog --backtitle "opensimMULTITOOL $VERSION" --title "$boxtitel" --inputbox "$boxtext" 8 40 3>&1 1>&2 2>&3 3>&- )
+		boxtitel="opensimMULTITOOL Eingabe"
+		boxtext="Verzeichnis:"
+		VERZEICHNIS=$(dialog --backtitle "opensimMULTITOOL $VERSION" --title "$boxtitel" --inputbox "$boxtext" 8 40 3>&1 1>&2 2>&3 3>&-)
 		dialog --clear
 		clear
 	else
 		# Alle Aktionen ohne dialog
 		VERZEICHNIS=$1
-	fi	# dialog Aktionen Ende
-	
+	fi # dialog Aktionen Ende
+
 	if [ -d "$VERZEICHNIS" ]; then
 		cd /$STARTVERZEICHNIS/"$VERZEICHNIS"/bin || return 1
 		rm -r maptiles/* || log line
@@ -1156,14 +1301,14 @@ function menumapdel()
 }
 
 ### !  logdel, loescht die Log Dateien. # Aufruf: logdel Verzeichnis
-function menulogdel()
-{
+function menulogdel() {
 	### dialog Aktionen
 	# zuerst schauen ob dialog installiert ist
-	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
 		# Alle Aktionen mit dialog
-		boxtitel="opensimMULTITOOL Eingabe"; boxtext="Verzeichnis:"; 
-		VERZEICHNIS=$( dialog --backtitle "opensimMULTITOOL $VERSION" --title "$boxtitel" --inputbox "$boxtext" 8 40 3>&1 1>&2 2>&3 3>&- )
+		boxtitel="opensimMULTITOOL Eingabe"
+		boxtext="Verzeichnis:"
+		VERZEICHNIS=$(dialog --backtitle "opensimMULTITOOL $VERSION" --title "$boxtitel" --inputbox "$boxtext" 8 40 3>&1 1>&2 2>&3 3>&-)
 		dialog --clear
 		clear
 	else
@@ -1171,9 +1316,9 @@ function menulogdel()
 		VERZEICHNIS=$1
 	fi
 	# dialog Aktionen Ende
-	
+
 	if [ -d "$VERZEICHNIS" ]; then
-		rm /$STARTVERZEICHNIS/"$VERZEICHNIS"/bin/*.log 2>/dev/null|| log line
+		rm /$STARTVERZEICHNIS/"$VERZEICHNIS"/bin/*.log 2>/dev/null || log line
 		log info "LOGDEL: OpenSimulator log $VERZEICHNIS geloescht"
 		return 0
 	else
@@ -1184,19 +1329,16 @@ function menulogdel()
 }
 
 ### !  ossettings, stellt den Linux Server fuer OpenSim ein.
-function ossettings()
-{	
+function ossettings() {
 	log line
 	# Hier kommen alle gewuenschten Einstellungen rein.
 	# ulimit
-	if [[ $SETULIMITON = "yes" ]]
-	then
+	if [[ $SETULIMITON = "yes" ]]; then
 		log info "Setze die Einstellung: ulimit -s 1048576"
 		ulimit -s 1048576
 	fi
 	# MONO_THREADS_PER_CPU
-	if [[ $SETMONOTHREADSON = "yes" ]]
-	then
+	if [[ $SETMONOTHREADSON = "yes" ]]; then
 		log info "Setze die Mono Threads auf $SETMONOTHREADS"
 		MONO_THREADS_PER_CPU=$SETMONOTHREADS
 		# Test 30.06.2022
@@ -1205,13 +1347,11 @@ function ossettings()
 	fi
 
 	# MONO_GC_PARAMS
-	if [[ $SETMONOGCPARAMSON1 = "yes" ]]
-	then
+	if [[ $SETMONOGCPARAMSON1 = "yes" ]]; then
 		log info "Setze die Einstellung: minor=split,promotion-age=14,nursery-size=64m"
 		export MONO_GC_PARAMS="minor=split,promotion-age=14,nursery-size=64m"
 	fi
-	if [[ $SETMONOGCPARAMSON2 = "yes" ]]
-	then
+	if [[ $SETMONOGCPARAMSON2 = "yes" ]]; then
 		log info "Setze die Einstellung: nursery-size=32m,promotion-age=14,"
 		log info "minor=split,major=marksweep,no-lazy-sweep,alloc-ratio=50,"
 		log info "nursery-size=64m"
@@ -1225,25 +1365,23 @@ function ossettings()
 }
 
 ### !  osstart, startet Region Server. # Beispiel-Example: /opt/opensim.sh osstart sim1
-function osstart()
-{
+function osstart() {
 	OSSTARTSCREEN=$1 # OpenSimulator, Verzeichnis und Screen Name
 
 	if ! screen -list | grep -q "$OSSTARTSCREEN"; then
 		if [ -d "$OSSTARTSCREEN" ]; then
-			
+
 			cd /$STARTVERZEICHNIS/"$OSSTARTSCREEN"/bin || return 1
 
 			# AOT Aktiveren oder Deaktivieren.
-			if [[ $SETAOTON = "yes" ]]
-			then
+			if [[ $SETAOTON = "yes" ]]; then
 				log info "OpenSimulator $OSSTARTSCREEN Starten mit aot"
 				screen -fa -S "$OSSTARTSCREEN" -d -U -m mono --desktop -O=all OpenSim.exe
 				return 0
-				log info "OpenSimulator $OSSTARTSCREEN Starten"				
+				log info "OpenSimulator $OSSTARTSCREEN Starten"
 				screen -fa -S "$OSSTARTSCREEN" -d -U -m mono OpenSim.exe
 				return 0
-			fi		
+			fi
 			sleep 10
 		else
 			log error "OpenSimulator $OSSTARTSCREEN nicht vorhanden"
@@ -1251,17 +1389,16 @@ function osstart()
 		fi
 
 	else
-		# es laeuft - work		
+		# es laeuft - work
 		log warn "OpenSimulator $OSSTARTSCREEN laeuft bereits"
 		return 1
 	fi
 
-	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then hauptmenu; fi
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then hauptmenu; fi
 }
 
 ### !  osstop, stoppt Region Server. # Beispiel-Example: /opt/opensim.sh osstop sim1
-function osstop()
-{
+function osstop() {
 	OSSTOPSCREEN=$1 # OpenSimulator, Verzeichnis und Screen Name
 	if screen -list | grep -q "$OSSTOPSCREEN"; then
 		log warn "OpenSimulator $OSSTOPSCREEN Beenden"
@@ -1273,51 +1410,59 @@ function osstop()
 		return 1
 	fi
 
-	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then hauptmenu; fi
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then hauptmenu; fi
 }
 
 ### !  menuosstart() ist die dialog Version von osstart()
-function menuosstart()
-{
-    IOSSTARTSCREEN=$(\
-    dialog --backtitle "opensimMULTITOOL $VERSION" --title "opensimMULTITOOL Eingabe" \
-            --inputbox "Simulator:" 8 40 \
-    3>&1 1>&2 2>&3 3>&- \
-    )
+function menuosstart() {
+	IOSSTARTSCREEN=$(
+		dialog --backtitle "opensimMULTITOOL $VERSION" --title "opensimMULTITOOL Eingabe" \
+			--inputbox "Simulator:" 8 40 \
+			3>&1 1>&2 2>&3 3>&-
+	)
 
-    dialog --clear
-    clear
+	dialog --clear
+	clear
 
 	if ! screen -list | grep -q "$IOSSTARTSCREEN"; then
 		# es laeuft nicht - not work
 
 		if [ -d "$IOSSTARTSCREEN" ]; then
-			
+
 			cd /$STARTVERZEICHNIS/"$IOSSTARTSCREEN"/bin || return 1
 
 			# AOT Aktiveren oder Deaktivieren.
-			if [[ $SETAOTON = "yes" ]]
-			then
-			DIALOG=dialog
-			(echo "10" ; screen -fa -S "$IOSSTARTSCREEN" -d -U -m mono --desktop -O=all OpenSim.exe ; sleep 3
-			echo "100" ; sleep 2) |
-			$DIALOG --title "$IOSSTARTSCREEN" --gauge "Start" 8 30
-			$DIALOG --clear
-			$DIALOG --msgbox "$IOSSTARTSCREEN gestartet!" 5 20
-			$DIALOG --clear
-			clear
-			return 0
+			if [[ $SETAOTON = "yes" ]]; then
+				DIALOG=dialog
+				(
+					echo "10"
+					screen -fa -S "$IOSSTARTSCREEN" -d -U -m mono --desktop -O=all OpenSim.exe
+					sleep 3
+					echo "100"
+					sleep 2
+				) |
+					$DIALOG --title "$IOSSTARTSCREEN" --gauge "Start" 8 30
+				$DIALOG --clear
+				$DIALOG --msgbox "$IOSSTARTSCREEN gestartet!" 5 20
+				$DIALOG --clear
+				clear
+				return 0
 			else
-			DIALOG=dialog
-			(echo "10" ; screen -fa -S "$IOSSTARTSCREEN" -d -U -m mono OpenSim.exe ; sleep 3
-			echo "100" ; sleep 2) |
-			$DIALOG --title "$IOSSTARTSCREEN" --gauge "Start" 8 30
-			$DIALOG --clear
-			$DIALOG --msgbox "$IOSSTARTSCREEN gestartet!" 5 20
-			$DIALOG --clear
-			clear
-			hauptmenu
-			fi		
+				DIALOG=dialog
+				(
+					echo "10"
+					screen -fa -S "$IOSSTARTSCREEN" -d -U -m mono OpenSim.exe
+					sleep 3
+					echo "100"
+					sleep 2
+				) |
+					$DIALOG --title "$IOSSTARTSCREEN" --gauge "Start" 8 30
+				$DIALOG --clear
+				$DIALOG --msgbox "$IOSSTARTSCREEN gestartet!" 5 20
+				$DIALOG --clear
+				clear
+				hauptmenu
+			fi
 		else
 			echo "OpenSimulator $IOSSTARTSCREEN nicht vorhanden"
 			hauptmenu
@@ -1331,21 +1476,25 @@ function menuosstart()
 }
 
 ### !  menuosstop() ist die dialog Version von osstop()
-function menuosstop()
-{
-    IOSSTOPSCREEN=$(\
-    dialog --backtitle "opensimMULTITOOL $VERSION" --title "opensimMULTITOOL Eingabe" \
-            --inputbox "Simulator:" 8 40 \
-    3>&1 1>&2 2>&3 3>&- \
-    )
-    dialog --clear
-    clear
+function menuosstop() {
+	IOSSTOPSCREEN=$(
+		dialog --backtitle "opensimMULTITOOL $VERSION" --title "opensimMULTITOOL Eingabe" \
+			--inputbox "Simulator:" 8 40 \
+			3>&1 1>&2 2>&3 3>&-
+	)
+	dialog --clear
+	clear
 
 	if screen -list | grep -q "$IOSSTOPSCREEN"; then
 		DIALOG=dialog
-		(echo "10" ; screen -S "$IOSSTOPSCREEN" -p 0 -X eval "stuff 'shutdown'^M" ; sleep 3
-		echo "100" ; sleep 2) |
-		$DIALOG --title "$IOSSTOPSCREEN" --gauge "Stop" 8 30
+		(
+			echo "10"
+			screen -S "$IOSSTOPSCREEN" -p 0 -X eval "stuff 'shutdown'^M"
+			sleep 3
+			echo "100"
+			sleep 2
+		) |
+			$DIALOG --title "$IOSSTOPSCREEN" --gauge "Stop" 8 30
 		$DIALOG --clear
 		$DIALOG --msgbox "$IOSSTOPSCREEN beendet!" 5 20
 		$DIALOG --clear
@@ -1357,14 +1506,12 @@ function menuosstop()
 }
 
 ### !  rostart, Robust Server starten.
-function rostart()
-{
+function rostart() {
 	log line
-	if checkfile /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/Robust.exe; then		
+	if checkfile /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/Robust.exe; then
 		cd /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin || return 1
 		# Start mit oder ohne AOT.
-		if [[ $SETAOTON = "yes" ]]
-		then
+		if [[ $SETAOTON = "yes" ]]; then
 			log info "RobustServer  wird gestartet mit aot"
 			screen -fa -S RO -d -U -m mono --desktop -O=all Robust.exe
 			sleep $ROBUSTWARTEZEIT
@@ -1374,22 +1521,20 @@ function rostart()
 			screen -fa -S RO -d -U -m mono Robust.exe
 			sleep $ROBUSTWARTEZEIT
 			return 0
-		fi		
+		fi
 	else
 		log error "RobustServer wurde nicht gefunden"
 		return 1
 	fi
 }
 ### ! menurostart
-function menurostart()
-{
+function menurostart() {
 	log line
-	if checkfile /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/Robust.exe; then		
+	if checkfile /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/Robust.exe; then
 		cd /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin || return 1
 
 		# Start mit oder ohne AOT.
-		if [[ $SETAOTON = "yes" ]]
-		then
+		if [[ $SETAOTON = "yes" ]]; then
 			log info "RobustServer wird mit aot gestartet"
 			screen -fa -S RO -d -U -m mono --desktop -O=all Robust.exe
 			sleep $ROBUSTWARTEZEIT
@@ -1397,15 +1542,14 @@ function menurostart()
 			log info "RobustServer wird gestartet"
 			screen -fa -S RO -d -U -m mono Robust.exe
 			sleep $ROBUSTWARTEZEIT
-		fi		
+		fi
 	else
 		log error "RobustServer wurde nicht gefunden"
 	fi
 }
 
 ### !  rostop, Robust Server herunterfahren.
-function rostop()
-{
+function rostop() {
 	if screen -list | grep -q "RO"; then
 		screen -S RO -p 0 -X eval "stuff 'shutdown'^M"
 		log warn "RobustServer Beenden"
@@ -1417,8 +1561,7 @@ function rostop()
 	fi
 }
 ### !  menurostop, Robust Server herunterfahren.
-function menurostop()
-{
+function menurostop() {
 	if screen -list | grep -q "RO"; then
 		screen -S RO -p 0 -X eval "stuff 'shutdown'^M"
 		log warn "RobustServer Beenden"
@@ -1429,14 +1572,12 @@ function menurostop()
 }
 
 ### !  mostart, Money Server starten.
-function mostart()
-{
+function mostart() {
 	if checkfile /$STARTVERZEICHNIS/$MONEYVERZEICHNIS/bin/MoneyServer.exe; then
 		cd /$STARTVERZEICHNIS/$MONEYVERZEICHNIS/bin || return 1
 
 		# AOT Aktiveren oder Deaktivieren.
-		if [[ $SETAOTON = "yes" ]]
-		then
+		if [[ $SETAOTON = "yes" ]]; then
 			log info "MoneyServer wird mit aot gestartet"
 			screen -fa -S MO -d -U -m mono --desktop -O=all MoneyServer.exe
 			sleep $MONEYWARTEZEIT
@@ -1454,14 +1595,12 @@ function mostart()
 }
 
 ### !  menumostart, Money Server starten.
-function menumostart()
-{
+function menumostart() {
 	if checkfile /$STARTVERZEICHNIS/$MONEYVERZEICHNIS/bin/MoneyServer.exe; then
 		cd /$STARTVERZEICHNIS/$MONEYVERZEICHNIS/bin || return 1
 
 		# AOT Aktiveren oder Deaktivieren.
-		if [[ $SETAOTON = "yes" ]]
-		then
+		if [[ $SETAOTON = "yes" ]]; then
 			log info "MOSTART: Money Server Start aot"
 			screen -fa -S MO -d -U -m mono --desktop -O=all MoneyServer.exe
 			sleep $MONEYWARTEZEIT
@@ -1479,8 +1618,7 @@ function menumostart()
 }
 
 ### !  mostop, Money Server herunterfahren.
-function mostop()
-{
+function mostop() {
 	if screen -list | grep -q "MO"; then
 		screen -S MO -p 0 -X eval "stuff 'shutdown'^M"
 		log warn "Money Server Beenden"
@@ -1492,8 +1630,7 @@ function mostop()
 	fi
 }
 ### !  menumostop, Money Server herunterfahren.
-function menumostop()
-{
+function menumostop() {
 	if screen -list | grep -q "MO"; then
 		screen -S MO -p 0 -X eval "stuff 'shutdown'^M"
 		log warn "Money Server Beenden"
@@ -1506,8 +1643,7 @@ function menumostop()
 }
 
 ### !  osscreenstop, beendet ein Screeen. # Beispiel-Example: osscreenstop sim1
-function osscreenstop()
-{
+function osscreenstop() {
 	SCREENSTOPSCREEN=$1
 	if screen -list | grep -q "$SCREENSTOPSCREEN"; then
 		log text "Screeen $SCREENSTOPSCREEN Beenden"
@@ -1521,8 +1657,7 @@ function osscreenstop()
 }
 
 ### !  gridstart, startet erst Robust und dann Money.
-function gridstart()
-{
+function gridstart() {
 	ossettings
 	if screen -list | grep -q RO; then
 		log error "RobustServer laeuft bereits"
@@ -1537,8 +1672,7 @@ function gridstart()
 	return 0
 }
 ### ! menugridstart
-function menugridstart()
-{
+function menugridstart() {
 	ossettings
 	log line
 	if screen -list | grep -q RO; then
@@ -1556,8 +1690,7 @@ function menugridstart()
 ### !  simstats, zeigt Simstatistik an. # simstats screen_name
 # Beispiel-Example: simstats sim1
 # erzeugt im Hauptverzeichnis eine Datei namens sim1.log in dieser Datei ist die Statistik zu finden.
-function simstats()
-{
+function simstats() {
 	STATSSCREEN=$1 # OpenSimulator, Verzeichnis und Screen Name
 	if screen -list | grep -q "$STATSSCREEN"; then
 		if checkfile /$STARTVERZEICHNIS/"$STATSSCREEN".log; then
@@ -1574,8 +1707,7 @@ function simstats()
 }
 
 ### !  terminator, killt alle noch offene Screens.
-function terminator()
-{
+function terminator() {
 	log info "hasta la vista baby"
 	log warn "TERMINATOR: Alle Screens wurden durch Benutzer beendet"
 	killall screen
@@ -1584,30 +1716,26 @@ function terminator()
 }
 
 ### !  oscompi, kompilieren des OpenSimulator.
-function oscompi()
-{
+function oscompi() {
 	log info "OSCOMPI: Kompilierungsvorgang startet"
 	# In das opensim Verzeichnis wechseln wenn es das gibt ansonsten beenden.
 	cd /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS || return 1
-	
+
 	log info "OSCOMPI: Prebuildvorgang startet"
 	# runprebuild19.sh startbar machen und starten.
 	chmod +x runprebuild19.sh || chmod +x runprebuild48.sh
 	./runprebuild19.sh || ./runprebuild48.sh
 
 	# ohne log Datei.
-	if [[ $SETOSCOMPION = "no" ]]
-	then
+	if [[ $SETOSCOMPION = "no" ]]; then
 		msbuild /p:Configuration=Release || return 1
 	fi
 	# mit log Datei.
-	if [[ $SETOSCOMPION = "yes" ]]
-	then
+	if [[ $SETOSCOMPION = "yes" ]]; then
 		msbuild /p:Configuration=Release /fileLogger /flp:logfile=opensimbuild.log /v:d || return 1
 	fi
 	# AOT Aktiveren oder Deaktivieren.
-	if [[ $SETAOTON = "yes" ]]
-	then		
+	if [[ $SETAOTON = "yes" ]]; then
 		makeaot
 	fi
 	log info "OSCOMPI: Kompilierung wurde durchgefuehrt"
@@ -1615,12 +1743,10 @@ function oscompi()
 }
 
 ### !  gitcopy, Dateien vom Github kopieren.
-function moneygitcopy()
-{
+function moneygitcopy() {
 	#Money und Scripte vom Git holen
 
-	if [[ $MONEYCOPY = "yes" ]]
-	then
+	if [[ $MONEYCOPY = "yes" ]]; then
 		log info "MONEYSERVER: MoneyServer wird vom GIT geholt"
 		git clone https://github.com/BigManzai/OpenSimCurrencyServer-2021 /$STARTVERZEICHNIS/OpenSimCurrencyServer-2021-master
 	else
@@ -1630,11 +1756,9 @@ function moneygitcopy()
 }
 
 ### !  gitcopy, Dateien vom Github kopieren.
-function scriptgitcopy()
-{
-#Money und Scripte vom Git holen
-	if [[ $SCRIPTCOPY = "yes" ]]
-	then
+function scriptgitcopy() {
+	#Money und Scripte vom Git holen
+	if [[ $SCRIPTCOPY = "yes" ]]; then
 		log info "SCRIPTCOPY: Script Assets werden vom GIT geholt"
 		git clone https://github.com/BigManzai/opensim-ossl-example-scripts /$STARTVERZEICHNIS/opensim-ossl-example-scripts-main
 	else
@@ -1644,11 +1768,9 @@ function scriptgitcopy()
 }
 
 ### !  gitcopy, Dateien vom Github kopieren.
-function configuregitcopy()
-{
+function configuregitcopy() {
 	#Money und Scripte vom Git holen
-	if [[ $CONFIGURECOPY = "yes" ]]
-	then
+	if [[ $CONFIGURECOPY = "yes" ]]; then
 		log info "CONFIGURECOPY: Configure wird vom GIT geholt"
 		git clone https://github.com/BigManzai/opensim-configuration-addon-modul
 	else
@@ -1658,11 +1780,9 @@ function configuregitcopy()
 }
 
 ### !  gitcopy, Dateien vom Github kopieren.
-function searchgitcopy()
-{
-#OpenSimSearch vom Git holen
-	if [[ $OSSEARCHCOPY = "yes" ]]
-	then
+function searchgitcopy() {
+	#OpenSimSearch vom Git holen
+	if [[ $OSSEARCHCOPY = "yes" ]]; then
 		log info "COPY: OpenSimSearch wird vom GIT geholt"
 		git clone https://github.com/BigManzai/OpenSimSearch
 	else
@@ -1672,10 +1792,8 @@ function searchgitcopy()
 }
 
 ### !  scriptcopy, lsl ossl scripte kopieren.
-function scriptcopy()
-{
-	if [[ $SCRIPTCOPY = "yes" ]]
-	then
+function scriptcopy() {
+	if [[ $SCRIPTCOPY = "yes" ]]; then
 		if [ -d /$STARTVERZEICHNIS/$SCRIPTSOURCE/ ]; then
 			log info "SCRIPTCOPY: Script Assets werden kopiert"
 			cp -r /$STARTVERZEICHNIS/$SCRIPTSOURCE/assets /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin
@@ -1697,11 +1815,9 @@ function scriptcopy()
 }
 
 ### !  moneycopy, Money Dateien kopieren.
-function moneycopy()
-{
-	if [[ $MONEYCOPY = "yes" ]]
-	then
-			if [ -d /$STARTVERZEICHNIS/$MONEYSOURCE/ ]; then
+function moneycopy() {
+	if [[ $MONEYCOPY = "yes" ]]; then
+		if [ -d /$STARTVERZEICHNIS/$MONEYSOURCE/ ]; then
 			log info "MONEYCOPY: Money Kopiervorgang gestartet"
 			cp -r /$STARTVERZEICHNIS/$MONEYSOURCE/bin /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS
 			cp -r /$STARTVERZEICHNIS/$MONEYSOURCE/addon-modules /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS
@@ -1721,13 +1837,11 @@ function moneycopy()
 }
 
 ### ! configurecopy
-function configurecopy()
-{
-	if [[ $CONFIGURECOPY = "yes" ]]
-	then
-	##/opt/opensim-configuration-addon-modul/Configuration
-			if [ -d /opt/opensim-configuration-addon-modul ]; then
-			log info "CONFIGURECOPY: Configure Kopiervorgang gestartet"			
+function configurecopy() {
+	if [[ $CONFIGURECOPY = "yes" ]]; then
+		##/opt/opensim-configuration-addon-modul/Configuration
+		if [ -d /opt/opensim-configuration-addon-modul ]; then
+			log info "CONFIGURECOPY: Configure Kopiervorgang gestartet"
 			cp -r /opt/opensim-configuration-addon-modul/Configuration /opt/opensim/addon-modules
 			//mv /opt/opensim/addon-modules/opensim-configuration-addon-modul /opt/opensim/addon-modules/Configuration
 
@@ -1736,7 +1850,7 @@ function configurecopy()
 			# Entpacken und kopieren
 			log info "CONFIGURECOPY: Configure entpacken"
 			unzip "$CONFIGUREZIP"
-			log info "CONFIGURECOPY: Configure Kopiervorgang gestartet"		
+			log info "CONFIGURECOPY: Configure Kopiervorgang gestartet"
 			cp -r /opt/opensim-configuration-addon-modul/Configuration /$STARTVERZEICHNIS/opensim/addon-modules
 			//mv /opt/opensim/addon-modules/opensim-configuration-addon-modul /opt/opensim/addon-modules/Configuration
 			log line
@@ -1748,10 +1862,8 @@ function configurecopy()
 }
 
 ### !  pythoncopy, Plugin Daten kopieren.
-function pythoncopy()
-{
-	if [[ $PYTHONCOPY = "yes" ]]
-	then
+function pythoncopy() {
+	if [[ $PYTHONCOPY = "yes" ]]; then
 		if [ -d /$STARTVERZEICHNIS/OpensimPython/ ]; then
 			log info "PYTHONCOPY: python wird kopiert"
 			cp -r /$STARTVERZEICHNIS/OpensimPython /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/addon-modules
@@ -1765,14 +1877,12 @@ function pythoncopy()
 }
 
 ### !  searchcopy, Plugin Daten kopieren.
-function searchcopy()
-{
-	if [[ $SEARCHCOPY = "yes" ]]
-	then
+function searchcopy() {
+	if [[ $SEARCHCOPY = "yes" ]]; then
 		if [ -d /$STARTVERZEICHNIS/OpenSimSearch/ ]; then
 			log info "OpenSimSearch: python wird kopiert"
 			cp -r /$STARTVERZEICHNIS/OpenSimSearch /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/addon-modules
-		log line
+			log line
 		else
 			log info "OpenSimSearch: python ist nicht vorhanden"
 		fi
@@ -1783,14 +1893,12 @@ function searchcopy()
 }
 
 ### !  mutelistcopy, Plugin Daten kopieren.
-function mutelistcopy()
-{
-	if [[ $MUTELISTCOPY = "yes" ]]
-	then
+function mutelistcopy() {
+	if [[ $MUTELISTCOPY = "yes" ]]; then
 		if [ -d /$STARTVERZEICHNIS/OpenSimMutelist/ ]; then
 			log info "OpenSimMutelist: python wird kopiert"
 			cp -r /$STARTVERZEICHNIS/OpenSimMutelist /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/addon-modules
-		log line
+			log line
 		else
 			log error "OpenSimMutelist: python ist nicht vorhanden"
 		fi
@@ -1801,10 +1909,8 @@ function mutelistcopy()
 }
 
 ### !  chrisoscopy, Plugin Dateien kopieren.
-function chrisoscopy()
-{
-	if [[ $CHRISOSCOPY = "yes" ]]
-	then
+function chrisoscopy() {
+	if [[ $CHRISOSCOPY = "yes" ]]; then
 		# /opt/Chris.OS.Additions
 		if [ -d /$STARTVERZEICHNIS/Chris.OS.Additions/ ]; then
 			log info "CHRISOSCOPY: Chris.OS.Additions Kopiervorgang gestartet"
@@ -1812,7 +1918,7 @@ function chrisoscopy()
 			log line
 		else
 			log error "CHRISOSCOPY: Chris.OS.Additions ist nicht vorhanden"
-		fi	
+		fi
 	else
 		log warn "CHRISOSCOPY: Chris.OS.Additions werden nicht kopiert."
 	fi
@@ -1820,24 +1926,23 @@ function chrisoscopy()
 }
 
 ### !  makeaot, aot generieren.
-function makeaot()
-{
+function makeaot() {
 	if [ ! -f "/$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/" ]; then
-	cd /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin || exit
-	mono --aot=mcpu=native,bind-to-runtime-version -O=all Nini.dll
-	mono --aot=mcpu=native,bind-to-runtime-version -O=all DotNetOpen*.dll
-	mono --aot=mcpu=native,bind-to-runtime-version -O=all Ionic.Zip.dll
-	mono --aot=mcpu=native,bind-to-runtime-version -O=all Newtonsoft.Json.dll
-	mono --aot=mcpu=native,bind-to-runtime-version -O=all C5.dll
-	mono --aot=mcpu=native,bind-to-runtime-version -O=all CSJ2K.dll
-	mono --aot=mcpu=native,bind-to-runtime-version -O=all Npgsql.dll
-	mono --aot=mcpu=native,bind-to-runtime-version -O=all RestSharp.dll
-	mono --aot=mcpu=native,bind-to-runtime-version -O=all Mono*.dll
-	mono --aot=mcpu=native,bind-to-runtime-version -O=all MySql*.dll
-	mono --aot=mcpu=native,bind-to-runtime-version -O=all OpenMetaverse*.dll
-	mono --aot=mcpu=native,bind-to-runtime-version -O=all OpenSim*.dll
-	mono --aot=mcpu=native,bind-to-runtime-version -O=all OpenSim*.exe
-	mono --aot=mcpu=native,bind-to-runtime-version -O=all Robust*.exe
+		cd /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin || exit
+		mono --aot=mcpu=native,bind-to-runtime-version -O=all Nini.dll
+		mono --aot=mcpu=native,bind-to-runtime-version -O=all DotNetOpen*.dll
+		mono --aot=mcpu=native,bind-to-runtime-version -O=all Ionic.Zip.dll
+		mono --aot=mcpu=native,bind-to-runtime-version -O=all Newtonsoft.Json.dll
+		mono --aot=mcpu=native,bind-to-runtime-version -O=all C5.dll
+		mono --aot=mcpu=native,bind-to-runtime-version -O=all CSJ2K.dll
+		mono --aot=mcpu=native,bind-to-runtime-version -O=all Npgsql.dll
+		mono --aot=mcpu=native,bind-to-runtime-version -O=all RestSharp.dll
+		mono --aot=mcpu=native,bind-to-runtime-version -O=all Mono*.dll
+		mono --aot=mcpu=native,bind-to-runtime-version -O=all MySql*.dll
+		mono --aot=mcpu=native,bind-to-runtime-version -O=all OpenMetaverse*.dll
+		mono --aot=mcpu=native,bind-to-runtime-version -O=all OpenSim*.dll
+		mono --aot=mcpu=native,bind-to-runtime-version -O=all OpenSim*.exe
+		mono --aot=mcpu=native,bind-to-runtime-version -O=all Robust*.exe
 	else
 		log error "MAKEAOT: opensim Verzeichnis existiert nicht"
 	fi
@@ -1845,25 +1950,24 @@ function makeaot()
 }
 
 ### !  cleanaot, aot entfernen. Test
-function cleanaot()
-{
+function cleanaot() {
 	if [ ! -f "/$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/" ]; then
-	cd /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin || exit
-	
-	rm Nini.dll.so
-	rm DotNetOpen*.dll.so
-	rm Ionic.Zip.dll.so
-	rm Newtonsoft.Json.dll.so
-	rm C5.dll.so
-	rm CSJ2K.dll.so
-	rm Npgsql.dll.so
-	rm RestSharp.dll.so
-	rm Mono*.dll.so
-	rm MySql*.dll.so
-	rm OpenMetaverse*.dll.so
-	rm OpenSim*.dll.so
-	rm OpenSim*.exe.so
-	rm Robust*.exe.so
+		cd /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin || exit
+
+		rm Nini.dll.so
+		rm DotNetOpen*.dll.so
+		rm Ionic.Zip.dll.so
+		rm Newtonsoft.Json.dll.so
+		rm C5.dll.so
+		rm CSJ2K.dll.so
+		rm Npgsql.dll.so
+		rm RestSharp.dll.so
+		rm Mono*.dll.so
+		rm MySql*.dll.so
+		rm OpenMetaverse*.dll.so
+		rm OpenSim*.dll.so
+		rm OpenSim*.exe.so
+		rm Robust*.exe.so
 
 	else
 		log error "MAKEAOT: opensim Verzeichnis existiert nicht"
@@ -1874,12 +1978,11 @@ function cleanaot()
 ### !  osprebuild, Prebuild einstellen # Aufruf Beispiel: opensim.sh prebuild 1330.
 # Ergebnis ist eine Einstellung fuer Release mit dem Namn OpenSim 0.9.2.1330
 # sed -i schreibt sofort - s/Suchwort/Ersatzwort/g - /Verzeichnis/Dateiname.Endung
-function osprebuild()
-{
+function osprebuild() {
 	NUMMER=$1
 	log info "PREBUILD: Version umbenennen und Release auf $NUMMER einstellen"
 
-	echo "V$NUMMER " > /$STARTVERZEICHNIS/opensim/bin/'.version'
+	echo "V$NUMMER " >/$STARTVERZEICHNIS/opensim/bin/'.version'
 
 	# Nummer einfuegen
 	#sed -i s/0.9.2.1/0.9.2.1."$NUMMER"/g /$STARTVERZEICHNIS/opensim/OpenSim/Framework/VersionInfo.cs
@@ -1894,53 +1997,52 @@ function osprebuild()
 
 ### !  osstruktur, legt die Verzeichnisstruktur fuer OpenSim an. # Aufruf: opensim.sh osstruktur ersteSIM letzteSIM
 # Beispiel: ./opensim.sh osstruktur 1 10 - erstellt ein Grid Verzeichnis fuer 10 Simulatoren inklusive der SimulatorList.ini.
-function osstruktur()
-{
+function osstruktur() {
 	if [ ! -f "/$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/" ]; then
 		log info "OSSTRUKTUR: Lege robust an im Verzeichnis $ROBUSTVERZEICHNIS"
 		mkdir -p /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin
 	else
 		log error "OSSTRUKTUR: Verzeichnis $ROBUSTVERZEICHNIS existiert bereits"
 	fi
-	for ((i=$1;i<=$2;i++))
-	do
-	echo "Lege sim$i an"
-	mkdir -p /$STARTVERZEICHNIS/sim"$i"/bin
-	echo "Schreibe sim$i in $SIMDATEI"
-	# xargs sollte leerzeichen entfernen.
-	printf 'sim'"$i"'\t%s\n' | xargs >> /$STARTVERZEICHNIS/$SIMDATEI
+	for ((i = $1; i <= $2; i++)); do
+		echo "Lege sim$i an"
+		mkdir -p /$STARTVERZEICHNIS/sim"$i"/bin
+		echo "Schreibe sim$i in $SIMDATEI"
+		# xargs sollte leerzeichen entfernen.
+		printf 'sim'"$i"'\t%s\n' | xargs >>/$STARTVERZEICHNIS/$SIMDATEI
 	done
 	log info "OSSTRUKTUR: Lege robust an ,Schreibe sim$i in $SIMDATEI"
 	return 0
 }
 
 ### !  menuosstruktur() ist die dialog Version von osstruktur()
-function menuosstruktur()
-{
-    # zuerst schauen ob dialog installiert ist
-    if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+function menuosstruktur() {
+	# zuerst schauen ob dialog installiert ist
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
 
-    # Einstellungen
-    boxbacktitel="opensimMULTITOOL"
-    boxtitel="opensimMULTITOOL Eingabe"
-    formtitle="Verzeichnisstrukturen anlegen"
-    lable1="Von:"; lablename1="1"
-    lable2="Bis:"; lablename2="10"
+		# Einstellungen
+		boxbacktitel="opensimMULTITOOL"
+		boxtitel="opensimMULTITOOL Eingabe"
+		formtitle="Verzeichnisstrukturen anlegen"
+		lable1="Von:"
+		lablename1="1"
+		lable2="Bis:"
+		lablename2="10"
 
-    # Abfrage
-    osstrukturBOXERGEBNIS=$( dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 3>&1 1>&2 2>&3 3>&- )
+		# Abfrage
+		osstrukturBOXERGEBNIS=$(dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 3>&1 1>&2 2>&3 3>&-)
 
-    # Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
-    EINGABE=$(echo "$osstrukturBOXERGEBNIS" | sed -n '1p')
-    EINGABE2=$(echo "$osstrukturBOXERGEBNIS" | sed -n '2p')
+		# Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
+		EINGABE=$(echo "$osstrukturBOXERGEBNIS" | sed -n '1p')
+		EINGABE2=$(echo "$osstrukturBOXERGEBNIS" | sed -n '2p')
 
-    # Alles loeschen.
-    dialog --clear
-    clear
+		# Alles loeschen.
+		dialog --clear
+		clear
 	else
 		# Alle Aktionen ohne dialog
-        echo "Keine Menuelose Funktion"|exit
-	fi	# dialog Aktionen Ende
+		echo "Keine Menuelose Funktion" | exit
+	fi # dialog Aktionen Ende
 
 	if [ ! -f "/$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/" ]; then
 		log info "OSSTRUKTUR: Lege robust an im Verzeichnis $ROBUSTVERZEICHNIS"
@@ -1949,28 +2051,26 @@ function menuosstruktur()
 		log error "OSSTRUKTUR: Verzeichnis $ROBUSTVERZEICHNIS existiert bereits"
 	fi
 	# shellcheck disable=SC2004
-	for ((i=$EINGABE;i<=$EINGABE2;i++))
-	do
-	echo "Lege sim$i an"
-	mkdir -p /$STARTVERZEICHNIS/sim"$i"/bin
-	echo "Schreibe sim$i in $SIMDATEI"
-	printf 'sim'"$i"'\t%s\n' >> /$STARTVERZEICHNIS/$SIMDATEI
+	for ((i = $EINGABE; i <= $EINGABE2; i++)); do
+		echo "Lege sim$i an"
+		mkdir -p /$STARTVERZEICHNIS/sim"$i"/bin
+		echo "Schreibe sim$i in $SIMDATEI"
+		printf 'sim'"$i"'\t%s\n' >>/$STARTVERZEICHNIS/$SIMDATEI
 	done
 	log info "OSSTRUKTUR: Lege robust an ,Schreibe sim$i in $SIMDATEI"
 	return 0
 }
 
 ### !  osdelete, altes opensim loeschen und letztes opensim als Backup umbenennen.
-function osdelete()
-{	
+function osdelete() {
 	if [ -d /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/ ]; then
 		log info "OSDELETE: Loesche altes opensim1 Verzeichnis"
-		cd /$STARTVERZEICHNIS  || return 1
+		cd /$STARTVERZEICHNIS || return 1
 		rm -r /$STARTVERZEICHNIS/opensim1
 		log info "OSDELETE: Umbenennen von $OPENSIMVERZEICHNIS nach opensim1 zur sicherung"
 		mv /$STARTVERZEICHNIS/opensim /$STARTVERZEICHNIS/opensim1
 		log line
-		
+
 	else
 		log error "$STARTVERZEICHNIS Verzeichnis existiert nicht"
 	fi
@@ -1978,8 +2078,7 @@ function osdelete()
 }
 
 ### !  oscopyrobust, Robust Daten kopieren.
-function oscopyrobust()
-{
+function oscopyrobust() {
 	cd /$STARTVERZEICHNIS || return 1
 	if [ -d /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/ ]; then
 		log info "Kopiere Robust, Money!"
@@ -1996,14 +2095,13 @@ function oscopyrobust()
 }
 
 ### !  oscopysim, Simulatoren kopieren aus dem Verzeichnis opensim.
-function oscopysim()
-{
+function oscopysim() {
 	cd /$STARTVERZEICHNIS || return 1
 	makeverzeichnisliste
 	log info "Kopiere Simulatoren!"
 	log line
 	sleep 2
-	for (( i = 0 ; i < "$ANZAHLVERZEICHNISSLISTE" ; i++)) do
+	for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
 		log info "OpenSimulator ${VERZEICHNISSLISTE[$i]} kopiert"
 		cd /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin || return 1
 		cp -r /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"
@@ -2015,8 +2113,7 @@ function oscopysim()
 }
 
 ### !  oscopysim, Simulatoren kopieren aus dem Verzeichnis opensim.
-function oscopy()
-{
+function oscopy() {
 	cd /$STARTVERZEICHNIS || return 1
 	VERZEICHNIS=$1
 	log info "Kopiere Simulator $VERZEICHNIS "
@@ -2025,42 +2122,37 @@ function oscopy()
 	return 0
 }
 
-
 ### !  configlesen, Regionskonfigurationen lesen. # Beispiel: configlesen sim1
-function configlesen()
-{
+function configlesen() {
 	log info "CONFIGLESEN: Regionskonfigurationen von $CONFIGLESENSCREEN"
 	CONFIGLESENSCREEN=$1
-	KONFIGLESEN=$(awk -F":" '// {print $0 }' /$STARTVERZEICHNIS/"$CONFIGLESENSCREEN"/bin/Regions/*.ini)	# Regionskonfigurationen aus einem Verzeichnis lesen.
+	KONFIGLESEN=$(awk -F":" '// {print $0 }' /$STARTVERZEICHNIS/"$CONFIGLESENSCREEN"/bin/Regions/*.ini) # Regionskonfigurationen aus einem Verzeichnis lesen.
 	log info "$KONFIGLESEN"
 	return 0
 }
 
 ### !  regionsconfigdateiliste, schreibt Dateinamen mit Pfad in eine Datei.
 # regionsconfigdateiliste -b(Bildschirm) -d(Datei)  Vereichnis
-function regionsconfigdateiliste() 
-{
+function regionsconfigdateiliste() {
 	VERZEICHNIS=$1
 	declare -A Dateien # Array erstellen
 	# shellcheck disable=SC2178
 	Dateien=$(find /$STARTVERZEICHNIS/"$VERZEICHNIS"/bin/Regions/ -name "*.ini") # Alle Regions.ini in das Assoziative Arrays mit der Option -A schreiben oder ein indiziertes mit -a.
-	for i in "${Dateien[@]}"; do # Array abarbeiten
-		if [ "$2" = "-d" ]; then echo "$i" >> RegionsDateiliste.txt; fi  # In die config Datei hinzufuegen.
-		if [ "$2" = "-b" ]; then echo "$i"; fi  # In die config Datei hinzufuegen.
+	for i in "${Dateien[@]}"; do                                                 # Array abarbeiten
+		if [ "$2" = "-d" ]; then echo "$i" >>RegionsDateiliste.txt; fi              # In die config Datei hinzufuegen.
+		if [ "$2" = "-b" ]; then echo "$i"; fi                                      # In die config Datei hinzufuegen.
 	done
 	return 0
 }
 
 ### !  meineregionen, listet alle Regionen aus den Konfigurationen auf.
-function meineregionen() 
-{	
+function meineregionen() {
 	makeverzeichnisliste
 	log info "MEINEREGIONEN: Regionsliste"
 	sleep 2
-	for (( i = 0 ; i < "$ANZAHLVERZEICHNISSLISTE" ; i++))
-	do
-	VERZEICHNIS="${VERZEICHNISSLISTE[$i]}"
-		REGIONSAUSGABE=$(awk -F "[" '/\[/ {print $1 $2 $3}' /$STARTVERZEICHNIS/"$VERZEICHNIS"/bin/Regions/*.ini |sed s/'\]'//g) # Zeigt nur die Regionsnamen aus einer Regions.ini an
+	for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
+		VERZEICHNIS="${VERZEICHNISSLISTE[$i]}"
+		REGIONSAUSGABE=$(awk -F "[" '/\[/ {print $1 $2 $3}' /$STARTVERZEICHNIS/"$VERZEICHNIS"/bin/Regions/*.ini | sed s/'\]'//g) # Zeigt nur die Regionsnamen aus einer Regions.ini an
 		log info "$VERZEICHNIS"
 		log info "$REGIONSAUSGABE"
 	done
@@ -2069,20 +2161,17 @@ function meineregionen()
 }
 
 ### !  regionsinisuchen, sucht alle Regionen.
-function regionsinisuchen() 
-{	
+function regionsinisuchen() {
 	makeverzeichnisliste
 	sleep 2
 
-	for (( i = 0 ; i < "$ANZAHLVERZEICHNISSLISTE" ; i++))
-	do
-	VERZEICHNIS="${VERZEICHNISSLISTE[$i]}"
+	for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
+		VERZEICHNIS="${VERZEICHNISSLISTE[$i]}"
 		REGIONSINIAUSGABE=$(find /$STARTVERZEICHNIS/"$VERZEICHNIS"/bin/Regions/ -name "Regions.ini")
 		#leerzeilen=$(echo "$REGIONSINIAUSGABE" | grep -v '^$')
-		while read -r
-		do
+		while read -r; do
 			[[ -z "$REPLY" ]] && continue
-			AUSGABE=$(awk -F "[" '/\[/ {print $1 $2 $3}' "$REPLY" |sed s/'\]'//g)
+			AUSGABE=$(awk -F "[" '/\[/ {print $1 $2 $3}' "$REPLY" | sed s/'\]'//g)
 			echo "$AUSGABE"
 		done <<<"$REGIONSINIAUSGABE"
 	done
@@ -2090,8 +2179,7 @@ function regionsinisuchen()
 }
 
 ### !  get_regionsarray, gibt ein Array aller Regionsabschnitte zurueck.
-function get_regionsarray() 
-{
+function get_regionsarray() {
 	# Es fehlt eine pruefung ob Datei vorhanden ist.
 	DATEI=$1
 	# shellcheck disable=SC2207
@@ -2110,8 +2198,7 @@ function get_regionsarray()
 
 ### !  get_value_from_Region_key, gibt den Wert eines bestimmten Schluessels im angegebenen Abschnitt zurueck.
 # $1 - Datei - $2 - Schluessel - $3 - Sektion
-function get_value_from_Region_key() 
-{
+function get_value_from_Region_key() {
 	# RKDATEI=$1; RKSCHLUESSEL=$2; RKSEKTION=$3;
 	# Es fehlt eine pruefung ob Datei vorhanden ist.
 	# shellcheck disable=SC2005
@@ -2123,42 +2210,42 @@ function get_value_from_Region_key()
 ### ! Regions.ini zerlegen
 ## Funktion regionsiniteilen, holt aus der Regions.ini eine Region heraus und speichert sie mit ihrem Regionsnamen.
 # Aufruf: regionsiniteilen Verzeichnis Regionsname
-function regionsiniteilen()
-{
-	INIVERZEICHNIS=$1 # Auszulesendes Verzeichnis
-	RTREGIONSNAME=$2 # Auszulesende Region
+function regionsiniteilen() {
+	INIVERZEICHNIS=$1                                                     # Auszulesendes Verzeichnis
+	RTREGIONSNAME=$2                                                      # Auszulesende Region
 	INI_FILE="/$STARTVERZEICHNIS/$INIVERZEICHNIS/bin/Regions/Regions.ini" # Auszulesende Datei
 
 	if [ ! -d "$INI_FILE" ]; then
-	log info "REGIONSINITEILEN: Schreiben der Werte fuer $RTREGIONSNAME"
-	# Schreiben der einzelnen Punkte nur wenn vorhanden ist.
-	# shellcheck disable=SC2005
-	{	echo "[$RTREGIONSNAME]"
-		echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "RegionUUID")"
-		echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "Location")"
-		echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "SizeX")"
-		echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "SizeY")"
-		echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "SizeZ")"
-		echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "InternalAddress")"
-		echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "InternalPort")"
-		echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "AllowAlternatePorts")"
-		echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "ResolveAddress")"
-		echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "ExternalHostName")"
-		echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "MaxPrims")"
-		echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "MaxAgents")"
-		echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "DefaultLanding")"
-		echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "NonPhysicalPrimMax")"
-		echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "PhysicalPrimMax")"
-		echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "ClampPrimSize")"
-		echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "MaxPrimsPerUser")"
-		echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "ScopeID")"
-		echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "RegionType")"
-		echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "MaptileStaticUUID")"
-		echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "MaptileStaticFile")"
-		echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "MasterAvatarFirstName")"
-		echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "MasterAvatarLastName")"
-		echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "MasterAvatarSandboxPassword")"
-	} >> "/$STARTVERZEICHNIS/$INIVERZEICHNIS/bin/Regions/$RTREGIONSNAME.ini"
+		log info "REGIONSINITEILEN: Schreiben der Werte fuer $RTREGIONSNAME"
+		# Schreiben der einzelnen Punkte nur wenn vorhanden ist.
+		# shellcheck disable=SC2005
+		{
+			echo "[$RTREGIONSNAME]"
+			echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "RegionUUID")"
+			echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "Location")"
+			echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "SizeX")"
+			echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "SizeY")"
+			echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "SizeZ")"
+			echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "InternalAddress")"
+			echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "InternalPort")"
+			echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "AllowAlternatePorts")"
+			echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "ResolveAddress")"
+			echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "ExternalHostName")"
+			echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "MaxPrims")"
+			echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "MaxAgents")"
+			echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "DefaultLanding")"
+			echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "NonPhysicalPrimMax")"
+			echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "PhysicalPrimMax")"
+			echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "ClampPrimSize")"
+			echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "MaxPrimsPerUser")"
+			echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "ScopeID")"
+			echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "RegionType")"
+			echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "MaptileStaticUUID")"
+			echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "MaptileStaticFile")"
+			echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "MasterAvatarFirstName")"
+			echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "MasterAvatarLastName")"
+			echo "$(get_value_from_Region_key "${INI_FILE}" "$RTREGIONSNAME" "MasterAvatarSandboxPassword")"
+		} >>"/$STARTVERZEICHNIS/$INIVERZEICHNIS/bin/Regions/$RTREGIONSNAME.ini"
 	else
 		log error "REGIONSINITEILEN: $INI_FILE wurde nicht gefunden"
 	fi
@@ -2167,75 +2254,70 @@ function regionsiniteilen()
 
 ### !  autoregionsiniteilen, Die gemeinschaftsdatei Regions.ini in einzelne Regionen teilen.
 # diese dann unter dem Regionsnamen speichern, danach die Alte Regions.ini umbenennen in Regions.ini.old.
-function autoregionsiniteilen()
-{
+function autoregionsiniteilen() {
 	makeverzeichnisliste
 	sleep 2
-	for (( i = 0 ; i < "$ANZAHLVERZEICHNISSLISTE" ; i++))
-	do
+	for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
 		log info "Region.ini ${VERZEICHNISSLISTE[$i]} zerlegen"
 		log line
 		VERZEICHNIS="${VERZEICHNISSLISTE[$i]}"
 		# Regions.ini teilen:
-		echo "$VERZEICHNIS" # OK geht
+		echo "$VERZEICHNIS"                                                # OK geht
 		INI_FILE="/$STARTVERZEICHNIS/$VERZEICHNIS/bin/Regions/Regions.ini" # Auszulesende Datei
 		# shellcheck disable=SC2155
 		declare -a TARGETS="$(get_regionsarray "${INI_FILE}")"
-			# shellcheck disable=SC2068
-			for MeineRegion in ${TARGETS[@]}; do
-				regionsiniteilen "$VERZEICHNIS" "$MeineRegion"
-				sleep 2
-				echo "regionsiniteilen $VERZEICHNIS $MeineRegion"
-			done
-	#  Dann umbenennen:
-	# Pruefung ob Datei vorhanden ist, wenn ja umbenennen.
-	if [ ! -d "$INI_FILE" ]; then
-		mv /$STARTVERZEICHNIS/"$INIVERZEICHNIS"/bin/Regions/Regions.ini /$STARTVERZEICHNIS/"$INIVERZEICHNIS"/bin/Regions/"$DATUM"-Regions.ini.old
-	fi
+		# shellcheck disable=SC2068
+		for MeineRegion in ${TARGETS[@]}; do
+			regionsiniteilen "$VERZEICHNIS" "$MeineRegion"
+			sleep 2
+			echo "regionsiniteilen $VERZEICHNIS $MeineRegion"
+		done
+		#  Dann umbenennen:
+		# Pruefung ob Datei vorhanden ist, wenn ja umbenennen.
+		if [ ! -d "$INI_FILE" ]; then
+			mv /$STARTVERZEICHNIS/"$INIVERZEICHNIS"/bin/Regions/Regions.ini /$STARTVERZEICHNIS/"$INIVERZEICHNIS"/bin/Regions/"$DATUM"-Regions.ini.old
+		fi
 	done
 	return 0
 }
 
 ### !  regionliste, Die RegionListe ermitteln und mit dem Verzeichnisnamen in die RegionList.ini schreiben.
-function regionliste()
-{
+function regionliste() {
 	# Alte RegionList.ini sichern und in RegionList.ini.old umbenennen.
 	if [ -f "/$STARTVERZEICHNIS/RegionList.ini" ]; then
 		if [ -f "/$STARTVERZEICHNIS/RegionList.ini.old" ]; then
 			rm -r /$STARTVERZEICHNIS/RegionList.ini.old
 		fi
-	mv /$STARTVERZEICHNIS/RegionList.ini /$STARTVERZEICHNIS/RegionList.ini.old
+		mv /$STARTVERZEICHNIS/RegionList.ini /$STARTVERZEICHNIS/RegionList.ini.old
 	fi
 	# Die mit regionsconfigdateiliste erstellte Datei RegionList.ini nach sim Verzeichnis und Regionsnamen in die RegionList.ini speichern.
 	declare -A Dateien # Array erstellen
 	makeverzeichnisliste
 	sleep 2
-	for (( i = 0 ; i < "$ANZAHLVERZEICHNISSLISTE" ; i++))
-	do
+	for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
 		log info "Regionnamen ${VERZEICHNISSLISTE[$i]} schreiben"
 		VERZEICHNIS="${VERZEICHNISSLISTE[$i]}"
 		# shellcheck disable=SC2178
 		Dateien=$(find /$STARTVERZEICHNIS/"$VERZEICHNIS"/bin/Regions/ -name "*.ini")
 		for i2 in "${Dateien[@]}"; do # Array abarbeiten
-		echo "$i2" >> RegionList.ini
+			echo "$i2" >>RegionList.ini
 		done
 	done
 	# Ueberfluessige Zeichen entfernen
-	LOESCHEN=$(sed s/'\/opt\/'//g /$STARTVERZEICHNIS/RegionList.ini) # /opt/ entfernen.
-	echo "$LOESCHEN" > /$STARTVERZEICHNIS/RegionList.ini # Aenderung /opt/ speichern.
+	LOESCHEN=$(sed s/'\/opt\/'//g /$STARTVERZEICHNIS/RegionList.ini)              # /opt/ entfernen.
+	echo "$LOESCHEN" >/$STARTVERZEICHNIS/RegionList.ini                           # Aenderung /opt/ speichern.
 	LOESCHEN=$(sed s/'\/bin\/Regions\/'/' "'/g /$STARTVERZEICHNIS/RegionList.ini) # /bin/Regions/ entfernen.
-	echo "$LOESCHEN" > /$STARTVERZEICHNIS/RegionList.ini # Aenderung /bin/Regions/ speichern.
-	LOESCHEN=$(sed s/'.ini'/'"'/g /$STARTVERZEICHNIS/RegionList.ini) # Endung .ini entfernen.
-	echo "$LOESCHEN" > /$STARTVERZEICHNIS/RegionList.ini # Aenderung .ini entfernen speichern.
+	echo "$LOESCHEN" >/$STARTVERZEICHNIS/RegionList.ini                           # Aenderung /bin/Regions/ speichern.
+	LOESCHEN=$(sed s/'.ini'/'"'/g /$STARTVERZEICHNIS/RegionList.ini)              # Endung .ini entfernen.
+	echo "$LOESCHEN" >/$STARTVERZEICHNIS/RegionList.ini                           # Aenderung .ini entfernen speichern.
 	# Schauen ob da noch Regions.ini bei sind also Regionen mit dem Namen Regions, diese Zeilen loeschen.
 	LOESCHEN=$(sed '/Regions/d' /$STARTVERZEICHNIS/RegionList.ini) # Alle Zeilen mit dem Eintrag Regions entfernen	.
-	echo "$LOESCHEN" > /$STARTVERZEICHNIS/RegionList.ini # Aenderung .ini entfernen speichern.
+	echo "$LOESCHEN" >/$STARTVERZEICHNIS/RegionList.ini            # Aenderung .ini entfernen speichern.
 	return 0
 }
 
 ### !  makewebmaps
-function makewebmaps()
-{
+function makewebmaps() {
 	MAPTILEVERZEICHNIS="maptiles"
 	log info "MAKEWEBMAPS: Kopiere Maptile"
 	# Verzeichnis erstellen wenn es noch nicht vorhanden ist.
@@ -2246,13 +2328,12 @@ function makewebmaps()
 }
 
 ### !  moneydelete, loescht den MoneyServer ohne die OpenSim Config zu veraendern.
-function moneydelete()
-{
+function moneydelete() {
 	makeverzeichnisliste
 	sleep 2
-	# MoneyServer aus den sims entfernen 
-	for (( i = 0 ; i < "$ANZAHLVERZEICHNISSLISTE" ; i++)) do
-		cd /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin || return 1 # Pruefen ob Verzeichnis vorhanden ist.
+	# MoneyServer aus den sims entfernen
+	for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
+		cd /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin || return 1               # Pruefen ob Verzeichnis vorhanden ist.
 		rm -r /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/MoneyServer.exe.config # Dateien loeschen.
 		rm -r /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/MoneyServer.ini.example
 		rm -r /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/OpenSim.Data.MySQL.MySQLMoneyDataWrapper.dll
@@ -2261,8 +2342,7 @@ function moneydelete()
 		sleep 2
 	done
 	# MoneyServer aus Robust entfernen
-	if [ -d /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/ ]
-	then
+	if [ -d /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/ ]; then
 		cd /$STARTVERZEICHNIS/robust/bin || return 1
 		rm -r /$STARTVERZEICHNIS/robust/bin/MoneyServer.exe.config
 		rm -r /$STARTVERZEICHNIS/robust/bin/MoneyServer.ini.example
@@ -2274,16 +2354,14 @@ function moneydelete()
 }
 
 ### !  osgitholen, kopiert eine Entwicklerversion in das opensim Verzeichnis.
-function osgitholen()
-{
-	if [ -d /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/ ]
-	then
+function osgitholen() {
+	if [ -d /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/ ]; then
 		echo "$(tput setaf 1) $(tput setaf 7)Kopieren der Entwicklungsversion des OpenSimulator aus dem Git$(tput sgr 0)"
 		log info "##############################"
-		cd /$STARTVERZEICHNIS  || return 1
+		cd /$STARTVERZEICHNIS || return 1
 		rm -r /$STARTVERZEICHNIS/opensim1
 		mv /$STARTVERZEICHNIS/opensim /$STARTVERZEICHNIS/opensim1
-        git clone git://opensimulator.org/git/opensim opensim
+		git clone git://opensimulator.org/git/opensim opensim
 		log info "OPENSIMHOLEN: Git klonen"
 	else
 		echo "$(tput setaf 1) $(tput setaf 7)Kopieren der Entwicklungsversion des OpenSimulator aus dem Git$(tput sgr 0)"
@@ -2295,17 +2373,15 @@ function osgitholen()
 }
 
 ### !  opensimholen, holt den OpenSimulator in das Arbeitsverzeichnis.
-function opensimholen()
-{
-	if [ -d /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/ ]
-	then
+function opensimholen() {
+	if [ -d /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/ ]; then
 		log info "Kopieren des OpenSimulator in das Arbeitsverzeichnis"
-		cd /$STARTVERZEICHNIS  || return 1
+		cd /$STARTVERZEICHNIS || return 1
 		rm -r /$STARTVERZEICHNIS/opensim1
 		mv /$STARTVERZEICHNIS/opensim /$STARTVERZEICHNIS/opensim1
 
 		echo "$OPENSIMDOWNLOAD$OPENSIMVERSION"
-        wget $OPENSIMDOWNLOAD$OPENSIMVERSION.zip
+		wget $OPENSIMDOWNLOAD$OPENSIMVERSION.zip
 		echo "$OPENSIMVERSION"
 		unzip $OPENSIMVERSION
 		mv /$STARTVERZEICHNIS/$OPENSIMVERSION /$STARTVERZEICHNIS/opensim
@@ -2315,7 +2391,7 @@ function opensimholen()
 		log info "Kopieren des OpenSimulator in das Arbeitsverzeichnis"
 
 		echo "$OPENSIMDOWNLOAD$OPENSIMVERSION"
-        wget $OPENSIMDOWNLOAD$OPENSIMVERSION.zip
+		wget $OPENSIMDOWNLOAD$OPENSIMVERSION.zip
 		echo "$OPENSIMVERSION"
 		unzip $OPENSIMVERSION
 		mv /$STARTVERZEICHNIS/$OPENSIMVERSION /$STARTVERZEICHNIS/opensim
@@ -2326,8 +2402,7 @@ function opensimholen()
 }
 
 ### !Installation von mysqltuner
-function install_mysqltuner()
-{
+function install_mysqltuner() {
 	cd /$STARTVERZEICHNIS || return 1
 	log info "mySQL Tuner Download"
 	wget http://mysqltuner.pl/ -O mysqltuner.pl 2>/dev/null
@@ -2339,13 +2414,12 @@ function install_mysqltuner()
 
 ### !  regionbackup, backup einer Region.
 # regionbackup Screenname "Der Regionsname"
-function regionbackup()
-{
+function regionbackup() {
 	# Backup Verzeichnis anlegen.
 	mkdir -p /$STARTVERZEICHNIS/backup/
 	sleep 2
 	VERZEICHNISSCREENNAME=$1
-	REGIONSNAME=$2	
+	REGIONSNAME=$2
 	DATEINAME=${REGIONSNAME//\"/}
 	NSDATEINAME=${DATEINAME// /}
 
@@ -2376,32 +2450,33 @@ function regionbackup()
 }
 
 ### !  menuregionbackup() ist die dialog Version von regionbackup()
-function menuregionbackup()
-{
-    # zuerst schauen ob dialog installiert ist
-    if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+function menuregionbackup() {
+	# zuerst schauen ob dialog installiert ist
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
 
-    # Einstellungen
-    boxbacktitel="opensimMULTITOOL"
-    boxtitel="opensimMULTITOOL Eingabe"
-    formtitle="Backup einer Region"
-    lable1="Screenname:"; lablename1=""
-    lable2="Regionsname:"; lablename2=""
+		# Einstellungen
+		boxbacktitel="opensimMULTITOOL"
+		boxtitel="opensimMULTITOOL Eingabe"
+		formtitle="Backup einer Region"
+		lable1="Screenname:"
+		lablename1=""
+		lable2="Regionsname:"
+		lablename2=""
 
-    # Abfrage
-    regionbackupBOXERGEBNIS=$( dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 3>&1 1>&2 2>&3 3>&- )
+		# Abfrage
+		regionbackupBOXERGEBNIS=$(dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 3>&1 1>&2 2>&3 3>&-)
 
-    # Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
-    VERZEICHNISSCREENNAME=$(echo "$regionbackupBOXERGEBNIS" | sed -n '1p')
-    REGIONSNAME=$(echo "$regionbackupBOXERGEBNIS" | sed -n '2p')
+		# Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
+		VERZEICHNISSCREENNAME=$(echo "$regionbackupBOXERGEBNIS" | sed -n '1p')
+		REGIONSNAME=$(echo "$regionbackupBOXERGEBNIS" | sed -n '2p')
 
-    # Alles loeschen.
-    dialog --clear
-    clear
+		# Alles loeschen.
+		dialog --clear
+		clear
 	else
 		# Alle Aktionen ohne dialog
-		echo "Keine Menuelose Funktion"|exit
-	fi	# dialog Aktionen Ende
+		echo "Keine Menuelose Funktion" | exit
+	fi # dialog Aktionen Ende
 
 	# Backup Verzeichnis anlegen.
 	mkdir -p /$STARTVERZEICHNIS/backup/
@@ -2439,10 +2514,9 @@ function menuregionbackup()
 # regionrestore Screenname "Der Regionsname"
 # Ich kann nicht pruefen ob die Region im OpenSimulator vorhanden ist.
 # Sollte sie nicht vorhanden sein wird root (Alle) oder die letzte ausgewaehlte Region wiederhergestellt. Dies zerstoert eventuell vorhandene Regionen.
-function regionrestore()
-{
+function regionrestore() {
 	VERZEICHNISSCREENNAME=$1
-	REGIONSNAME=$2	
+	REGIONSNAME=$2
 	DATEINAME=${REGIONSNAME//\"/}
 	NSDATEINAME=${DATEINAME// /}
 
@@ -2459,32 +2533,33 @@ function regionrestore()
 }
 
 ### !  menuregionrestore() ist die dialog Version von regionrestore()
-function menuregionrestore()
-{
-    # zuerst schauen ob dialog installiert ist
-    if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+function menuregionrestore() {
+	# zuerst schauen ob dialog installiert ist
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
 
-    # Einstellungen
-    boxbacktitel="opensimMULTITOOL"
-    boxtitel="opensimMULTITOOL Eingabe"
-    formtitle="Restore einer Region"
-    lable1="Screenname:"; lablename1=""
-    lable2="Regionsname:"; lablename2=""
+		# Einstellungen
+		boxbacktitel="opensimMULTITOOL"
+		boxtitel="opensimMULTITOOL Eingabe"
+		formtitle="Restore einer Region"
+		lable1="Screenname:"
+		lablename1=""
+		lable2="Regionsname:"
+		lablename2=""
 
-    # Abfrage
-    regionrestoreBOXERGEBNIS=$( dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 3>&1 1>&2 2>&3 3>&- )
+		# Abfrage
+		regionrestoreBOXERGEBNIS=$(dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 3>&1 1>&2 2>&3 3>&-)
 
-    # Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
-    VERZEICHNISSCREENNAME=$(echo "$regionrestoreBOXERGEBNIS" | sed -n '1p')
-    REGIONSNAME=$(echo "$regionrestoreBOXERGEBNIS" | sed -n '2p')
+		# Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
+		VERZEICHNISSCREENNAME=$(echo "$regionrestoreBOXERGEBNIS" | sed -n '1p')
+		REGIONSNAME=$(echo "$regionrestoreBOXERGEBNIS" | sed -n '2p')
 
-    # Alles loeschen.
-    dialog --clear
-    clear
+		# Alles loeschen.
+		dialog --clear
+		clear
 	else
 		# Alle Aktionen ohne dialog
-		echo "Keine Menuelose Funktion"|exit
-	fi	# dialog Aktionen Ende
+		echo "Keine Menuelose Funktion" | exit
+	fi # dialog Aktionen Ende
 
 	DATEINAME=${REGIONSNAME//\"/}
 	NSDATEINAME=${DATEINAME// /}
@@ -2502,40 +2577,36 @@ function menuregionrestore()
 }
 
 ### !  autosimstart, automatischer sim start ohne Robust und Money.
-function autosimstart()
-{
-	if ! screen -list | grep -q 'sim'; 
-	then
-	# es laeuft kein Simulator - not work
+function autosimstart() {
+	if ! screen -list | grep -q 'sim'; then
+		# es laeuft kein Simulator - not work
 		makeverzeichnisliste
 		sleep 2
-		for (( i = 0 ; i < "$ANZAHLVERZEICHNISSLISTE" ; i++)) do
+		for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
 			log info "Regionen ${VERZEICHNISSLISTE[$i]} werden gestartet"
 			cd /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin || return 1
-			
+
 			# AOT Aktiveren oder Deaktivieren.
-			if [[ $SETAOTON = "yes" ]]
-			then		
+			if [[ $SETAOTON = "yes" ]]; then
 				screen -fa -S "${VERZEICHNISSLISTE[$i]}" -d -U -m mono --desktop -O=all OpenSim.exe
 			else
-				
+
 				screen -fa -S "${VERZEICHNISSLISTE[$i]}" -d -U -m mono OpenSim.exe
 			fi
 			sleep $STARTWARTEZEIT
 		done
 	else
-	# es laeuft mindestens ein Simulator - work
+		# es laeuft mindestens ein Simulator - work
 		log text "WORKS:  Regionen laufen bereits!"
 	fi
 	return 0
 }
 
 ### !  autosimstop, stoppen aller laufenden Simulatoren.
-function autosimstop()
-{
+function autosimstop() {
 	makeverzeichnisliste
 	sleep 2
-	for (( i = 0 ; i < "$ANZAHLVERZEICHNISSLISTE" ; i++)) do
+	for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
 		if screen -list | grep -q "${VERZEICHNISSLISTE[$i]}"; then
 			log warn "Regionen ${VERZEICHNISSLISTE[$i]} Beenden"
 			screen -S "${VERZEICHNISSLISTE[$i]}" -p 0 -X eval "stuff 'shutdown'^M"
@@ -2547,55 +2618,54 @@ function autosimstop()
 	return 0
 }
 ### !  autosimstart, automatischer sim start ohne Robust und Money.
-function menuautosimstart()
-{
-	if ! screen -list | grep -q 'sim'; 
-	then
-	# es laeuft kein Simulator - not work
+function menuautosimstart() {
+	if ! screen -list | grep -q 'sim'; then
+		# es laeuft kein Simulator - not work
 		makeverzeichnisliste
 		sleep 2
-		for (( i = 0 ; i < "$ANZAHLVERZEICHNISSLISTE" ; i++)) do
+		for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
 			log info "Regionen ${VERZEICHNISSLISTE[$i]} werden gestartet"
 			cd /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin || return 1
-			
+
 			# AOT Aktiveren oder Deaktivieren.
-			if [[ $SETAOTON = "yes" ]]
-			then
-				BERECHNUNG1=$((100/"$ANZAHLVERZEICHNISSLISTE"))
-				BALKEN1=$(("$i"*"$BERECHNUNG1"))
-				screen -fa -S "${VERZEICHNISSLISTE[$i]}" -d -U -m mono --desktop -O=all OpenSim.exe | dialog --gauge "Auto Sim start..." 6 64 $BALKEN1; dialog --clear
+			if [[ $SETAOTON = "yes" ]]; then
+				BERECHNUNG1=$((100 / "$ANZAHLVERZEICHNISSLISTE"))
+				BALKEN1=$(("$i" * "$BERECHNUNG1"))
+				screen -fa -S "${VERZEICHNISSLISTE[$i]}" -d -U -m mono --desktop -O=all OpenSim.exe | dialog --gauge "Auto Sim start..." 6 64 $BALKEN1
+				dialog --clear
 			else
-				BERECHNUNG1=$((100/"$ANZAHLVERZEICHNISSLISTE"))
-				BALKEN1=$(("$i"*"$BERECHNUNG1"))
-				screen -fa -S "${VERZEICHNISSLISTE[$i]}" -d -U -m mono OpenSim.exe | dialog --gauge "Auto Sim start..." 6 64 $BALKEN1; dialog --clear
+				BERECHNUNG1=$((100 / "$ANZAHLVERZEICHNISSLISTE"))
+				BALKEN1=$(("$i" * "$BERECHNUNG1"))
+				screen -fa -S "${VERZEICHNISSLISTE[$i]}" -d -U -m mono OpenSim.exe | dialog --gauge "Auto Sim start..." 6 64 $BALKEN1
+				dialog --clear
 
 			fi
 			sleep $STARTWARTEZEIT
 		done
 	else
-	# es laeuft mindestens ein Simulator - work
+		# es laeuft mindestens ein Simulator - work
 		log error "Regionen laufen bereits!"
 	fi
 	return 0
 }
 
 ### !  autosimstop, stoppen aller laufenden Simulatoren.
-function menuautosimstop()
-{
+function menuautosimstop() {
 	makeverzeichnisliste
 	sleep 2
-	for (( i = 0 ; i < "$ANZAHLVERZEICHNISSLISTE" ; i++)) do
+	for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
 		if screen -list | grep -q "${VERZEICHNISSLISTE[$i]}"; then
 			log text "Regionen ${VERZEICHNISSLISTE[$i]} Beenden"
 
 			#BALKEN2=$(("$i"*5))
 			#TMP2=$(("$ANZAHLVERZEICHNISSLISTE"*"$i"))
 			#BALKEN2=$(("$TMP2/100"))
-			BERECHNUNG2=$((100/"$ANZAHLVERZEICHNISSLISTE"))
-			BALKEN2=$(("$i"*"$BERECHNUNG2"))
-			#BALKEN2=$(( (100/"$ANZAHLVERZEICHNISSLISTE") * "${VERZEICHNISSLISTE[$i]}"))			
+			BERECHNUNG2=$((100 / "$ANZAHLVERZEICHNISSLISTE"))
+			BALKEN2=$(("$i" * "$BERECHNUNG2"))
+			#BALKEN2=$(( (100/"$ANZAHLVERZEICHNISSLISTE") * "${VERZEICHNISSLISTE[$i]}"))
 
-			screen -S "${VERZEICHNISSLISTE[$i]}" -p 0 -X eval "stuff 'shutdown'^M" | dialog --gauge "Alle Simulatoren werden gestoppt!" 6 64 $BALKEN2; dialog --clear
+			screen -S "${VERZEICHNISSLISTE[$i]}" -p 0 -X eval "stuff 'shutdown'^M" | dialog --gauge "Alle Simulatoren werden gestoppt!" 6 64 $BALKEN2
+			dialog --clear
 			sleep $STOPWARTEZEIT
 		else
 			log error "Regionen ${VERZEICHNISSLISTE[$i]}  laeuft nicht!"
@@ -2606,26 +2676,24 @@ function menuautosimstop()
 
 ### !  autologdel, automatisches loeschen aller log Dateien.
 # Die Dateien samt neuer Daten werden beim naechsten start des opensimulator neu geschrieben.
-function autologdel()
-{
+function autologdel() {
 	log line
 	makeverzeichnisliste
 	sleep 2
-	for (( i = 0 ; i < "$ANZAHLVERZEICHNISSLISTE" ; i++)) do
+	for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
 		rm /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/*.log 2>/dev/null || log warn "autologdel: Ich kann die Log Datei ${VERZEICHNISSLISTE[$i]} nicht loeschen! "
 		log warn "OpenSimulator log ${VERZEICHNISSLISTE[$i]} geloescht"
 		sleep 2
 	done
 
 	# schauen ist Robust und Money da dann diese Logs auch loeschen!
-	if [[ ! $ROBUSTVERZEICHNIS == "robust" ]]
-	then
+	if [[ ! $ROBUSTVERZEICHNIS == "robust" ]]; then
 		log warn "Robust Log Dateien loeschen!"
 		log warn "Money Log Dateien loeschen!"
 		rm /$STARTVERZEICHNIS/robust/bin/*.log 2>/dev/null || return 0
 	fi
 	# if [[ ! $MONEYVERZEICHNIS == "money" ]]
-	# then 
+	# then
 	# 	rm /$STARTVERZEICHNIS/money/bin/*.log || log line
 	# fi
 
@@ -2633,35 +2701,33 @@ function autologdel()
 }
 
 ### !  menuautologdel
-function menuautologdel()
-{
+function menuautologdel() {
 	log line
 	makeverzeichnisliste
 	sleep 2
-	for (( i = 0 ; i < "$ANZAHLVERZEICHNISSLISTE" ; i++)) do
-		BERECHNUNG3=$((100/"$ANZAHLVERZEICHNISSLISTE"))
-		BALKEN3=$(("$i"*"$BERECHNUNG3"))
-		rm /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/*.log | dialog --gauge "Auto Sim stop..." 6 64 $BALKEN3; dialog --clear  || return 0
+	for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
+		BERECHNUNG3=$((100 / "$ANZAHLVERZEICHNISSLISTE"))
+		BALKEN3=$(("$i" * "$BERECHNUNG3"))
+		rm /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/*.log | dialog --gauge "Auto Sim stop..." 6 64 $BALKEN3
+		dialog --clear || return 0
 		log warn "OpenSimulator log ${VERZEICHNISSLISTE[$i]} geloescht"
 		sleep 2
 	done
 
 	# schauen ist Robust und Money da dann diese Logs auch loeschen!
-	if [[ ! $ROBUSTVERZEICHNIS == "robust" ]]
-	then
+	if [[ ! $ROBUSTVERZEICHNIS == "robust" ]]; then
 		log warn "Robust Log Dateien loeschen!"
 		log warn "Money Log Dateien loeschen!"
-		rm /$STARTVERZEICHNIS/robust/bin/*.log 2>/dev/null|| log error " menuautologdel: Ich kann die Robust und Money Log Dateien nicht loeschen! "
+		rm /$STARTVERZEICHNIS/robust/bin/*.log 2>/dev/null || log error " menuautologdel: Ich kann die Robust und Money Log Dateien nicht loeschen! "
 	fi
 }
 
 ### !  automapdel, automatisches loeschen aller Map/Karten Dateien.
 # Die Dateien samt neuer Daten werden beim naechsten start des opensimulator neu geschrieben.
-function automapdel()
-{
+function automapdel() {
 	makeverzeichnisliste
 	sleep 2
-	for (( i = 0 ; i < "$ANZAHLVERZEICHNISSLISTE" ; i++)) do
+	for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
 		cd /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin || return 1
 		rm -r maptiles/* || echo " "
 		log warn "OpenSimulator maptile ${VERZEICHNISSLISTE[$i]} geloescht"
@@ -2673,8 +2739,7 @@ function automapdel()
 
 ### !  autorobustmapdel, automatisches loeschen aller Map/Karten Dateien in Robust.
 # Die Dateien samt neuer Daten werden beim naechsten start des opensimulator neu geschrieben.
-function autorobustmapdel()
-{
+function autorobustmapdel() {
 	cd /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin || return 1
 	rm -r maptiles/* || log line
 	log warn "OpenSimulator maptile aus $ROBUSTVERZEICHNIS geloescht"
@@ -2682,8 +2747,7 @@ function autorobustmapdel()
 }
 
 ### !  cleaninstall, loeschen aller externen addon Module.
-function cleaninstall()
-{
+function cleaninstall() {
 
 	if [ ! -f "/$STARTVERZEICHNIS/opensim/addon-modules/" ]; then
 		rm -r $STARTVERZEICHNIS/opensim/addon-modules/*
@@ -2697,13 +2761,12 @@ function cleaninstall()
 # Hierbei werden keine Datenbanken oder Konfigurationen geloescht aber opensim ist anschliessend nicht mehr startbereit.
 # Um opensim wieder Funktionsbereit zu machen muss ein Upgrade oder ein oscopy vorgang ausgefuehrt werden.
 # allclean Verzeichnis
-function allclean()
-{
+function allclean() {
 	if [ -d "$1" ]; then
 		rm /$STARTVERZEICHNIS/"$1"/bin/*.log
 		rm /$STARTVERZEICHNIS/"$1"/bin/*.dll
 		rm /$STARTVERZEICHNIS/"$1"/bin/*.exe
-		rm /$STARTVERZEICHNIS/"$1"/bin/*.so		
+		rm /$STARTVERZEICHNIS/"$1"/bin/*.so
 		rm /$STARTVERZEICHNIS/"$1"/bin/*.xml
 		rm /$STARTVERZEICHNIS/"$1"/bin/*.dylib
 		rm /$STARTVERZEICHNIS/"$1"/bin/*.example
@@ -2723,16 +2786,15 @@ function allclean()
 # Hierbei werden keine Datenbanken oder Konfigurationen geloescht.
 # Hierbei werden keine Datenbanken oder Konfigurationen geloescht aber opensim ist anschliessend nicht mehr startbereit.
 # Um opensim wieder Funktionsbereit zu machen muss ein Upgrade oder ein oscopy vorgang ausgefuehrt werden.
-function autoallclean()
-{
+function autoallclean() {
 	makeverzeichnisliste
 	sleep 2
-	for (( i = 0 ; i < "$ANZAHLVERZEICHNISSLISTE" ; i++)) do
+	for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
 		# Dateien
 		rm /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/*.log
 		rm /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/*.dll
 		rm /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/*.exe
-		rm /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/*.so		
+		rm /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/*.so
 		rm /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/*.xml
 		rm /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/*.dylib
 		rm /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/*.example
@@ -2756,7 +2818,7 @@ function autoallclean()
 	rm /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/*.log
 	rm /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/*.dll
 	rm /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/*.exe
-	rm /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/*.so		
+	rm /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/*.so
 	rm /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/*.xml
 	rm /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/*.dylib
 	rm /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/*.example
@@ -2775,12 +2837,11 @@ function autoallclean()
 }
 
 ### !  autoregionbackup, automatischer Backup aller Regionen die in der Regionsliste eingetragen sind.
-function autoregionbackup()
-{
+function autoregionbackup() {
 	log info "Automatisches Backup wird gestartet."
 	makeregionsliste
 	sleep 2
-	for (( i = 0 ; i < "$ANZAHLREGIONSLISTE" ; i++)) do
+	for ((i = 0; i < "$ANZAHLREGIONSLISTE"; i++)); do
 		derscreen=$(echo "${REGIONSLISTE[$i]}" | cut -d ' ' -f 1)
 		dieregion=$(echo "${REGIONSLISTE[$i]}" | cut -d ' ' -f 2)
 		regionbackup "$derscreen" "$dieregion"
@@ -2790,23 +2851,22 @@ function autoregionbackup()
 }
 
 ### !  autoscreenstop, beendet alle laufenden simX screens.
-function autoscreenstop()
-{
+function autoscreenstop() {
 	makeverzeichnisliste
 	sleep 2
 
 	# shellcheck disable=SC2022
 	if ! screen -list | grep -q 'sim'; then
-	log info "SIMs sind bereits OFFLINE!"
+		log info "SIMs sind bereits OFFLINE!"
 	else
-		for (( i = 0 ; i < "$ANZAHLVERZEICHNISSLISTE" ; i++)) do
+		for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
 			screen -S "${VERZEICHNISSLISTE[$i]}" -X quit
 		done
 	fi
 
 	if ! screen -list | grep -q "MO"; then
 		log info "MONEY Server ist bereits OFFLINE!"
-	else	
+	else
 		screen -S MO -X quit
 	fi
 
@@ -2818,41 +2878,38 @@ function autoscreenstop()
 	return 0
 }
 ### !  menuautoscreenstop
-function menuautoscreenstop()
-{
+function menuautoscreenstop() {
 	makeverzeichnisliste
 	sleep 2
 
 	# shellcheck disable=SC2022
 	if ! screen -list | grep -q 'sim'; then
-	log info "SIMs sind bereits OFFLINE!"
+		log info "SIMs sind bereits OFFLINE!"
 	else
-		for (( i = 0 ; i < "$ANZAHLVERZEICHNISSLISTE" ; i++)) do
+		for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
 			screen -S "${VERZEICHNISSLISTE[$i]}" -X quit
 		done
 	fi
 
 	if ! screen -list | grep -q "MO"; then
-	log info "MONEY Server ist bereits OFFLINE!"
-	else	
-	screen -S MO -X quit
+		log info "MONEY Server ist bereits OFFLINE!"
+	else
+		screen -S MO -X quit
 	fi
 
 	if ! screen -list | grep -q "RO"; then
-	log info "ROBUST Server ist bereits OFFLINE!"
+		log info "ROBUST Server ist bereits OFFLINE!"
 	else
-	screen -S RO -X quit
+		screen -S RO -X quit
 	fi
 	return 0
 }
 
 ### !  autostart, startet das komplette Grid mit allen sims.
-function autostart()
-{
+function autostart() {
 	log line
 	log info "Starte das Grid!"
-	if [[ $ROBUSTVERZEICHNIS == "robust" ]]
-	then
+	if [[ $ROBUSTVERZEICHNIS == "robust" ]]; then
 		gridstart
 	fi
 	autosimstart
@@ -2864,8 +2921,7 @@ function autostart()
 }
 
 ### !  autostop, stoppt das komplette Grid mit allen sims.
-function autostop()
-{
+function autostop() {
 	log line
 	log info "Stoppe das Grid! ###"
 	# schauen ob screens laufen wenn ja beenden.
@@ -2896,11 +2952,9 @@ function autostop()
 }
 
 ### !  autostart, startet das komplette Grid mit allen sims.
-function menuautostart()
-{
+function menuautostart() {
 	echo ""
-	if [[ $ROBUSTVERZEICHNIS == "robust" ]]
-	then 
+	if [[ $ROBUSTVERZEICHNIS == "robust" ]]; then
 		menugridstart
 	fi
 	menuautosimstart
@@ -2910,8 +2964,7 @@ function menuautostart()
 }
 
 ### !  autostop, stoppt das komplette Grid mit allen sims.
-function menuautostop()
-{
+function menuautostop() {
 	# schauen ob screens laufen wenn ja beenden.
 	# shellcheck disable=SC2022
 	if ! screen -list | grep -q 'sim'; then
@@ -2937,11 +2990,10 @@ function menuautostop()
 }
 
 ### ! autorestart, startet das gesamte Grid neu und loescht die log Dateien.
-function autorestart()
-{
+function autorestart() {
 	autostop
 
-	if [ $LOGDELETE = "yes" ]; then
+	if [ "$LOGDELETE" = "yes" ]; then
 		autologdel
 		rologdel
 	fi
@@ -2952,10 +3004,9 @@ function autorestart()
 	return 0
 }
 ### ! menuautorestart
-function menuautorestart()
-{
+function menuautorestart() {
 	menuautostop
-	if [ $LOGDELETE = "yes" ]; then
+	if [ "$LOGDELETE" = "yes" ]; then
 		menuautologdel
 		rologdel
 	fi
@@ -2967,15 +3018,13 @@ function menuautorestart()
 }
 
 ### ! serverinstall, Ubuntu 18 Server zum Betrieb von OpenSim vorbereiten.
-function serverupgrade()
-{    
-    sudo apt-get update
-    sudo apt-get upgrade
+function serverupgrade() {
+	sudo apt-get update
+	sudo apt-get upgrade
 }
 ### ! Installation oder Migration von MariaDB 10.8.3 oder hoeher fuer Ubuntu 18
-function installmariadb18()
-{
-	
+function installmariadb18() {
+
 	log info "Installation oder Migration von MariaDB 10.8.3 oder hoeher fuer Ubuntu 18"
 	log info "Nach der Installation werden Fehler in den OpenSim log Dateien angezeigt bitte dann alles neustarten!"
 	# MySQL stoppen:
@@ -2984,7 +3033,7 @@ function installmariadb18()
 	sudo apt-get install apt-transport-https curl
 	sudo curl -o /etc/apt/trusted.gpg.d/mariadb_release_signing_key.asc 'https://mariadb.org/mariadb_release_signing_key.asc'
 	sudo sh -c "echo 'deb https://mirror.kumi.systems/mariadb/repo/10.8/ubuntu bionic main' >>/etc/apt/sources.list"
-	
+
 	# MariaDB installieren:
 	sudo apt-get update
 	sudo apt-get -y install mariadb-server
@@ -2993,8 +3042,7 @@ function installmariadb18()
 }
 
 ### ! Installation oder Migration von MariaDB fuer Ubuntu 22
-function installmariadb22()
-{
+function installmariadb22() {
 	# MySQL stoppen wenn es laeuft:
 	sudo service mysql stop
 
@@ -3007,14 +3055,13 @@ function installmariadb22()
 
 ### ! monoinstall18 alt
 ### Funktion monoinstall, mono 6.x installieren.
-function monoinstall() 
-{
-	if dpkg-query -s mono-complete 2>/dev/null|grep -q installed; then
+function monoinstall() {
+	if dpkg-query -s mono-complete 2>/dev/null | grep -q installed; then
 		log info "mono-complete ist installiert."
 	else
 		log info "mono-complete ist nicht installiert."
 		log info "Installation von mono 6.x fuer Ubuntu 18"
-		
+
 		sleep 2
 
 		sudo apt install gnupg ca-certificates
@@ -3028,12 +3075,11 @@ function monoinstall()
 }
 
 ### ! monoinstall18
-function monoinstall18()
-{
-	if dpkg-query -s mono-complete 2>/dev/null|grep -q installed; then
-		echo "mono-complete $bereitsinstalliert"
+function monoinstall18() {
+	if dpkg-query -s mono-complete 2>/dev/null | grep -q installed; then
+		echo "mono-complete ist bereits installiert."
 	else
-		echo "$installierejetzt mono-complete"
+		echo "Ich installiere jetzt mono-complete"
 		sleep 2
 
 		sudo apt install gnupg ca-certificates
@@ -3041,39 +3087,36 @@ function monoinstall18()
 		echo "deb https://download.mono-project.com/repo/ubuntu stable-bionic main" | sudo tee /etc/apt/sources.list.d/mono-official-stable.list
 
 		sudo apt update
-        sudo apt-get -y install mono-complete
+		sudo apt-get -y install mono-complete
 		sudo apt-get upgrade
 	fi
 }
 
 ### ! monoinstall20
-function monoinstall20()
-{
-	if dpkg-query -s mono-complete 2>/dev/null|grep -q installed; then
-		echo "mono-complete $bereitsinstalliert"
+function monoinstall20() {
+	if dpkg-query -s mono-complete 2>/dev/null | grep -q installed; then
+		echo "mono-complete ist bereits installiert."
 	else
-		echo "$installierejetzt mono-complete"
+		echo "Ich installiere jetzt mono-complete"
 		sleep 2
 
 		sudo apt install gnupg ca-certificates
-        sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
-        echo "deb https://download.mono-project.com/repo/ubuntu stable-focal main" | sudo tee /etc/apt/sources.list.d/mono-official-stable.list
+		sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
+		echo "deb https://download.mono-project.com/repo/ubuntu stable-focal main" | sudo tee /etc/apt/sources.list.d/mono-official-stable.list
 
-        sudo apt update
-        sudo apt-get -y install mono-complete
-		sudo apt-get upgrade       
+		sudo apt update
+		sudo apt-get -y install mono-complete
+		sudo apt-get upgrade
 	fi
 }
 
 ### ! monoinstall22
-function monoinstall22()
-{
+function monoinstall22() {
 	sudo apt install mono-roslyn mono-complete mono-dbg mono-xbuild -y
 }
 
 ### ! sourcelist18
-function sourcelist18()
-{
+function sourcelist18() {
 	echo "deb http://de.archive.ubuntu.com/ubuntu bionic main restricted universe multiverse"
 	echo "#deb-src http://de.archive.ubuntu.com/ubuntu bionic main restricted universe multiverse"
 
@@ -3091,8 +3134,7 @@ function sourcelist18()
 }
 
 ### !  sourcelist22
-function sourcelist22()
-{
+function sourcelist22() {
 	echo "deb http://de.archive.ubuntu.com/ubuntu jammy main restricted universe multiverse"
 	echo "#deb-src http://de.archive.ubuntu.com/ubuntu impish main restricted universe multiverse"
 
@@ -3107,29 +3149,27 @@ function sourcelist22()
 }
 
 ### !  installwordpress
-function installwordpress()
-{
+function installwordpress() {
 	#Installationen die fuer Wordpress benoetigt werden
-	iinstall apache2    
+	iinstall apache2
 	iinstall ghostscript
-    iinstall libapache2-mod-php
-    iinstall mysql-server
-    iinstall php
-    iinstall php-bcmath
-    iinstall php-curl
-    iinstall php-imagick
-    iinstall php-intl
+	iinstall libapache2-mod-php
+	iinstall mysql-server
+	iinstall php
+	iinstall php-bcmath
+	iinstall php-curl
+	iinstall php-imagick
+	iinstall php-intl
 	iinstall php-json
 	iinstall php-mbstring
 	iinstall php-mysql
 	iinstall php-xml
-	iinstall php-zip    
+	iinstall php-zip
 }
 
 ### !  installobensimulator
-function installobensimulator() 
-{
-    #Alles fuer den OpenSimulator ausser mono
+function installobensimulator() {
+	#Alles fuer den OpenSimulator ausser mono
 	iinstall apache2
 	iinstall libapache2-mod-php
 	iinstall php
@@ -3158,16 +3198,14 @@ function installobensimulator()
 }
 
 ### !  installbegin
-function installbegin()
-{
+function installbegin() {
 	apt update
 	apt upgrade
 }
 
 ### !  installubuntu22
-function installubuntu22()
-{
-    #Alles fuer den OpenSimulator ausser mono
+function installubuntu22() {
+	#Alles fuer den OpenSimulator ausser mono
 	iinstall2 screen
 	iinstall2 git
 	iinstall2 nant
@@ -3187,7 +3225,7 @@ function installubuntu22()
 	iinstall2 php-xmlrpc
 	iinstall2 php-curl
 	iinstall2 php-mbstring
-	iinstall2 php-gettext	
+	iinstall2 php-gettext
 	iinstall2 php-fpm php
 	iinstall2 libapache2-mod-php
 	iinstall2 php-xml
@@ -3209,8 +3247,7 @@ function installubuntu22()
 }
 
 ### !  ufwset
-function ufwset()
-{
+function ufwset() {
 	### Uncomplicated Firewall
 	#sudo ufw app list
 
@@ -3221,11 +3258,11 @@ function ufwset()
 
 	# Test
 	#sudo ufw status
-		# alles erlauben
-		#sudo ufw default allow
-		# alles verbieten 
-		#sudo ufw default deny
-		
+	# alles erlauben
+	#sudo ufw default allow
+	# alles verbieten
+	#sudo ufw default deny
+
 	# Port oeffnen robust
 	sudo ufw allow 8000/tcp
 	sudo ufw allow 8001/tcp
@@ -3245,38 +3282,34 @@ function ufwset()
 }
 
 ### !Installieren von PhpMyAdmin
-function installphpmyadmin()
-{
+function installphpmyadmin() {
 	### Installieren von PhpMyAdmin
 	sudo apt install phpmyadmin
 }
 
 ### !  installfinis
-function installfinish()
-{
+function installfinish() {
 	apt update
 	apt upgrade
 	apt -f install
 	# zuerst schauen das nichts mehr laeuft bevor man einfach rebootet
-    #reboot now
+	#reboot now
 }
 
 ### !HTTPS installieren: installationhttps22 "myemail@server.com" "myworld.com"
-function installationhttps22()
-{
+function installationhttps22() {
 	httpsemail=$1
 	httpsdomain=$2
 	### HTTPS installieren
 	sudo apt install python3-certbot-apache
 
-	# Jetzt haben wir Certbot von Let’s Encrypt für Ubuntu 22.04 installiert, 
-	# führen Sie diesen Befehl aus, um Ihre Zertifikate zu erhalten.
+	# Jetzt haben wir Certbot von Let’s Encrypt fuer Ubuntu 22.04 installiert,
+	# fuehren Sie diesen Befehl aus, um Ihre Zertifikate zu erhalten.
 	sudo certbot --apache --agree-tos --redirect -m "$httpsemail" -d "$httpsdomain" -d www."$httpsdomain"
 }
 
 ### !  serverinstall22
-function serverinstall22()
-{
+function serverinstall22() {
 	installbegin
 	installubuntu22
 	installmono22
@@ -3287,25 +3320,22 @@ function serverinstall22()
 }
 
 ### !Auswahl der zu installierenden Pakete (Dies ist meinem Geschmack angepasst)
-function serverinstall()
-{
+function serverinstall() {
 	# zuerst schauen ob dialog installiert ist
-	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
 		dialog --yesno "Moechten Sie wirklich alle noetigen Ubuntu Pakete installieren?" 0 0
 		# 0=ja; 1=nein
 		siantwort=$?
 		# Dialog-Bildschirm loeschen
 		dialog --clear
 		# Ausgabe auf die Konsole
-		if [ $siantwort = 0 ]
-		then
+		if [ $siantwort = 0 ]; then
 			serverupgrade
 			installobensimulator
 			monoinstall18
 			installfinish
 		fi
-		if [ $siantwort = 1 ]
-		then
+		if [ $siantwort = 1 ]; then
 			# Nein, dann zurueck zum Hauptmenu.
 			hauptmenu
 		fi
@@ -3314,8 +3344,7 @@ function serverinstall()
 	else
 		# ohne dialog erstmal einfach installieren - Test
 		read -r -p "Ubuntu Pakete installieren [y]es: " yesno
-		if [ "$yesno" = "y" ]
-		then
+		if [ "$yesno" = "y" ]; then
 			serverupgrade
 			installobensimulator
 			monoinstall18
@@ -3328,24 +3357,22 @@ function serverinstall()
 }
 
 ### !  installationen, Ubuntu 18 Server, Was habe ich alles auf meinem Server Installiert? sortiert auflisten.
-function installationen() 
-{
+function installationen() {
 	log info "Liste aller Installierten Pakete unter Linux:"
 	dpkg-query -Wf '${Package;-40}${Priority}\n' | sort -b -k2,2 -k1,1
-	dpkg-query -Wf '${Package;-40}${Priority}\n' | sort -b -k2,2 -k1,1  >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+	dpkg-query -Wf '${Package;-40}${Priority}\n' | sort -b -k2,2 -k1,1 >>"/$STARTVERZEICHNIS/$DATEIDATUM$logfilename.log"
 	return 0
 }
 
 ### !  osbuilding, test automation.
 # Beispiel: opensim-0.9.2.2Dev-1187-gcf0b1b1.zip
 # /opt/opensim.sh osbuilding 1187
-function osbuilding() 
-{
+function osbuilding() {
 	## dialog Aktionen
 	# zuerst schauen ob dialog installiert ist
-	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
 		# Alle Aktionen mit dialog
-		VERSIONSNUMMER=$( dialog --backtitle "opensimMULTITOOL $VERSION" --title "opensimMULTITOOL Eingabe" --inputbox "Versionsnummer:" 8 40 3>&1 1>&2 2>&3 3>&- )
+		VERSIONSNUMMER=$(dialog --backtitle "opensimMULTITOOL $VERSION" --title "opensimMULTITOOL Eingabe" --inputbox "Versionsnummer:" 8 40 3>&1 1>&2 2>&3 3>&-)
 		dialog --clear
 		clear
 	else
@@ -3353,16 +3380,16 @@ function osbuilding()
 		VERSIONSNUMMER=$1
 	fi
 	# dialog Aktionen Ende
-	
-    cd /$STARTVERZEICHNIS || exit
+
+	cd /$STARTVERZEICHNIS || exit
 	log info "OSBUILDING: Alten OpenSimulator sichern"
-    osdelete
+	osdelete
 
 	log line
 
 	# Neue Versionsnummer: opensim-0.9.2.2Dev-4-g5e9b3b4.zip
 	log info "OSBUILDING: Neuen OpenSimulator entpacken"
-    unzip $OSVERSION"$VERSIONSNUMMER"-*.zip
+	unzip $OSVERSION"$VERSIONSNUMMER"-*.zip
 
 	log line
 
@@ -3373,29 +3400,31 @@ function osbuilding()
 	sleep 3
 
 	log info "OSBUILDING: Prebuild des neuen OpenSimulator starten"
-    osprebuild "$VERSIONSNUMMER"
+	osprebuild "$VERSIONSNUMMER"
 
 	log line
 
 	log info "OSBUILDING: Compilieren des neuen OpenSimulator"
-    compilieren
-    
-    log line 
-    osupgrade
+	compilieren
+
+	log line
+	osupgrade
 
 	return 0
 }
 
-### !  create user [first] [last] [passw] [RegionX] [RegionY] [Email] - creates a new user and password 
-function createuser()
-{	
-	VORNAME=$1; NACHNAME=$2; PASSWORT=$3; EMAIL=$4;
+### !  create user [first] [last] [passw] [RegionX] [RegionY] [Email] - creates a new user and password
+function createuser() {
+	VORNAME=$1
+	NACHNAME=$2
+	PASSWORT=$3
+	EMAIL=$4
 
 	if [ -z "$VORNAME" ]; then echo "Der VORNAME fehlt!"; fi
 	if [ -z "$NACHNAME" ]; then echo "Der NACHNAME fehlt!"; fi
 	if [ -z "$PASSWORT" ]; then echo "Das PASSWORT fehlt!"; fi
 	if [ -z "$EMAIL" ]; then echo "Die EMAIL Adresse fehlt!"; fi
-	
+
 	if screen -list | grep -q "RO"; then
 		# Befehlskette
 		# First name [Default]: OK
@@ -3422,42 +3451,45 @@ function createuser()
 }
 
 ### !  menucreateuser() ist die dialog Version von createuser()
-function menucreateuser()
-{
-    # zuerst schauen ob dialog installiert ist
-    if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+function menucreateuser() {
+	# zuerst schauen ob dialog installiert ist
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
 
-    # Einstellungen
-    boxbacktitel="opensimMULTITOOL"
-    boxtitel="opensimMULTITOOL Eingabe"
-    formtitle="Grid Benutzer Account anlegen"
-    lable1="Vorname:"; lablename1="John"
-    lable2="Nachname:"; lablename2="Doe"
-    lable3="PASSWORT:"; lablename3="PASSWORT"
-    lable4="EMAIL:"; lablename4="EMAIL"
+		# Einstellungen
+		boxbacktitel="opensimMULTITOOL"
+		boxtitel="opensimMULTITOOL Eingabe"
+		formtitle="Grid Benutzer Account anlegen"
+		lable1="Vorname:"
+		lablename1="John"
+		lable2="Nachname:"
+		lablename2="Doe"
+		lable3="PASSWORT:"
+		lablename3="PASSWORT"
+		lable4="EMAIL:"
+		lablename4="EMAIL"
 
-    # Abfrage
-    createuserBOXERGEBNIS=$( dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 "$lable4" 4 1 "$lablename4" 4 25 25 30 3>&1 1>&2 2>&3 3>&- )
+		# Abfrage
+		createuserBOXERGEBNIS=$(dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 "$lable4" 4 1 "$lablename4" 4 25 25 30 3>&1 1>&2 2>&3 3>&-)
 
-    # Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
-    VORNAME=$(echo "$createuserBOXERGEBNIS" | sed -n '1p')
-    NACHNAME=$(echo "$createuserBOXERGEBNIS" | sed -n '2p')
-    PASSWORT=$(echo "$createuserBOXERGEBNIS" | sed -n '3p')
-    EMAIL=$(echo "$createuserBOXERGEBNIS" | sed -n '4p')
+		# Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
+		VORNAME=$(echo "$createuserBOXERGEBNIS" | sed -n '1p')
+		NACHNAME=$(echo "$createuserBOXERGEBNIS" | sed -n '2p')
+		PASSWORT=$(echo "$createuserBOXERGEBNIS" | sed -n '3p')
+		EMAIL=$(echo "$createuserBOXERGEBNIS" | sed -n '4p')
 
-    # Alles loeschen.
-    dialog --clear
-    clear
+		# Alles loeschen.
+		dialog --clear
+		clear
 	else
 		# Alle Aktionen ohne dialog
-        echo "Keine Menuelose Funktion"|exit
-	fi	# dialog Aktionen Ende
+		echo "Keine Menuelose Funktion" | exit
+	fi # dialog Aktionen Ende
 
 	if [ -z "$VORNAME" ]; then echo "Der VORNAME fehlt!"; fi
 	if [ -z "$NACHNAME" ]; then echo "Der NACHNAME fehlt!"; fi
 	if [ -z "$PASSWORT" ]; then echo "Das PASSWORT fehlt!"; fi
 	if [ -z "$EMAIL" ]; then echo "Die EMAIL Adresse fehlt!"; fi
-	
+
 	if screen -list | grep -q "RO"; then
 		# Befehlskette
 		# First name [Default]: OK
@@ -3481,8 +3513,8 @@ function menucreateuser()
 		log error "CREATEUSER: Robust existiert nicht"
 	fi
 
-    # Zum schluss alle Variablen loeschen.
-    unset VORNAME NACHNAME PASSWORT EMAIL
+	# Zum schluss alle Variablen loeschen.
+	unset VORNAME NACHNAME PASSWORT EMAIL
 
 	hauptmenu
 }
@@ -3490,9 +3522,10 @@ function menucreateuser()
 # Datenbank Befehle Achtung alles noch nicht ausgereift!!!
 
 ### !  db_anzeigen, listet alle erstellten Datenbanken auf.
-function db_anzeigen()
-{
-	username=$1; password=$2; databasename=$3;
+function db_anzeigen() {
+	username=$1
+	password=$2
+	databasename=$3
 
 	log text "PRINT DATABASE: Alle Datenbanken anzeigen."
 	mysqlrest "$username" "$password" "$databasename" "show databases"
@@ -3501,35 +3534,36 @@ function db_anzeigen()
 	return 0
 }
 ### !  db_anzeigen_dialog, listet alle erstellten Datenbanken auf.
-function db_anzeigen_dialog()
-{
-    # zuerst schauen ob dialog installiert ist
-    if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+function db_anzeigen_dialog() {
+	# zuerst schauen ob dialog installiert ist
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
 
-    # Einstellungen
-    boxbacktitel="opensimMULTITOOL"
-    boxtitel="opensimMULTITOOL Eingabe"
-    formtitle="Alle erstellten Datenbanken auflisten"
-    lable1="Benutzername:"; lablename1=""
-    lable2="Passwort:"; lablename2=""
+		# Einstellungen
+		boxbacktitel="opensimMULTITOOL"
+		boxtitel="opensimMULTITOOL Eingabe"
+		formtitle="Alle erstellten Datenbanken auflisten"
+		lable1="Benutzername:"
+		lablename1=""
+		lable2="Passwort:"
+		lablename2=""
 
-    # Abfrage
-    db_menu=$( dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 3>&1 1>&2 2>&3 3>&- )
+		# Abfrage
+		db_menu=$(dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 3>&1 1>&2 2>&3 3>&-)
 
-    # Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
-    username=$(echo "$db_menu" | sed -n '1p')
-    password=$(echo "$db_menu" | sed -n '2p')
+		# Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
+		username=$(echo "$db_menu" | sed -n '1p')
+		password=$(echo "$db_menu" | sed -n '2p')
 
-    # Alles loeschen.
-    dialog --clear
-    clear
+		# Alles loeschen.
+		dialog --clear
+		clear
 	else
 		# Alle Aktionen ohne dialog
-        echo "Keine Menuelose Funktion"|exit
-	fi	# dialog Aktionen Ende
+		echo "Keine Menuelose Funktion" | exit
+	fi # dialog Aktionen Ende
 
 	# Abfrage
-	mysqlergebniss=$(echo "show databases;" | MYSQL_PWD=$password mysql -u"$username" -N) 2> /dev/null
+	mysqlergebniss=$(echo "show databases;" | MYSQL_PWD=$password mysql -u"$username" -N) 2>/dev/null
 	# Ausgabe in Box
 	warnbox "$mysqlergebniss"
 
@@ -3537,9 +3571,10 @@ function db_anzeigen_dialog()
 }
 
 ### !db_tables tabellenabfrage, listet alle Tabellen in einer Datenbank auf.
-function db_tables()
-{
-	username=$1; password=$2; databasename=$3;
+function db_tables() {
+	username=$1
+	password=$2
+	databasename=$3
 
 	log text "PRINT DATABASE: tabellenabfrage, listet alle Tabellen in einer Datenbank auf."
 	mysqlrest "$username" "$password" "$databasename" "SHOW TABLES FROM $databasename"
@@ -3548,34 +3583,36 @@ function db_tables()
 	return 0
 }
 ### !db_tables_dialog tabellenabfrage, listet alle Tabellen in einer Datenbank auf.
-function db_tables_dialog()
-{
-    # zuerst schauen ob dialog installiert ist
-    if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+function db_tables_dialog() {
+	# zuerst schauen ob dialog installiert ist
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
 
-    # Einstellungen
-    boxbacktitel="opensimMULTITOOL"
-    boxtitel="opensimMULTITOOL Eingabe"
-    formtitle="Alle Tabellen in einer Datenbank auflisten"
-    lable1="Benutzername:"; lablename1=""
-    lable2="Passwort:"; lablename2=""
-    lable3="Datenbankname:"; lablename3=""
+		# Einstellungen
+		boxbacktitel="opensimMULTITOOL"
+		boxtitel="opensimMULTITOOL Eingabe"
+		formtitle="Alle Tabellen in einer Datenbank auflisten"
+		lable1="Benutzername:"
+		lablename1=""
+		lable2="Passwort:"
+		lablename2=""
+		lable3="Datenbankname:"
+		lablename3=""
 
-    # Abfrage
-    ASSETDELBOXERGEBNIS=$( dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30  3>&1 1>&2 2>&3 3>&- )
+		# Abfrage
+		ASSETDELBOXERGEBNIS=$(dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 3>&1 1>&2 2>&3 3>&-)
 
-    # Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
-    username=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '1p')
-    password=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '2p')
-    databasename=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '3p')
+		# Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
+		username=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '1p')
+		password=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '2p')
+		databasename=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '3p')
 
-    # Alles loeschen.
-    dialog --clear
-    clear
+		# Alles loeschen.
+		dialog --clear
+		clear
 	else
 		# Alle Aktionen ohne dialog
-        echo "Keine Menuelose Funktion"|exit
-	fi	# dialog Aktionen Ende
+		echo "Keine Menuelose Funktion" | exit
+	fi # dialog Aktionen Ende
 
 	mysqlrest "$username" "$password" "$databasename" "SHOW TABLES FROM $databasename"
 
@@ -3585,190 +3622,205 @@ function db_tables_dialog()
 }
 
 ### !  db_benutzer_anzeigen, alle angelegten Benutzer von mySQL anzeigen.
-function db_benutzer_anzeigen()
-{
-    # zuerst schauen ob dialog installiert ist
-    if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+function db_benutzer_anzeigen() {
+	# zuerst schauen ob dialog installiert ist
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
 
-    # Einstellungen
-    boxbacktitel="opensimMULTITOOL"
-    boxtitel="opensimMULTITOOL Eingabe"
-    formtitle="Alle angelegten Benutzer von mySQL anzeigen"
-    lable1="Benutzername:"; lablename1=""
-    lable2="Passwort:"; lablename2=""
+		# Einstellungen
+		boxbacktitel="opensimMULTITOOL"
+		boxtitel="opensimMULTITOOL Eingabe"
+		formtitle="Alle angelegten Benutzer von mySQL anzeigen"
+		lable1="Benutzername:"
+		lablename1=""
+		lable2="Passwort:"
+		lablename2=""
 
-    # Abfrage
-    db_benutzer_anzeigenBOXERGEBNIS=$( dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 3>&1 1>&2 2>&3 3>&- )
+		# Abfrage
+		db_benutzer_anzeigenBOXERGEBNIS=$(dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 3>&1 1>&2 2>&3 3>&-)
 
-    # Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
-    username=$(echo "$db_benutzer_anzeigenBOXERGEBNIS" | sed -n '1p')
-    password=$(echo "$db_benutzer_anzeigenBOXERGEBNIS" | sed -n '2p')
+		# Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
+		username=$(echo "$db_benutzer_anzeigenBOXERGEBNIS" | sed -n '1p')
+		password=$(echo "$db_benutzer_anzeigenBOXERGEBNIS" | sed -n '2p')
 
-    # Alles loeschen.
-    dialog --clear
-    clear
+		# Alles loeschen.
+		dialog --clear
+		clear
 	else
 		# Alle Aktionen ohne dialog
-        username=$1; password=$2;
-	fi	# dialog Aktionen Ende
+		username=$1
+		password=$2
+	fi # dialog Aktionen Ende
 
 	log text "PRINT DATABASE USER: Alle Datenbankbenutzer anzeigen."
-    result_mysqlrest=$(echo "SELECT User FROM mysql.user;" | MYSQL_PWD=$password mysql -u"$username" -N)
+	result_mysqlrest=$(echo "SELECT User FROM mysql.user;" | MYSQL_PWD=$password mysql -u"$username" -N)
 
-    # Ausgabe zuerst schauen ob dialog installiert ist
-	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
-        warnbox "$result_mysqlrest"
-    else
-        log rohtext "$result_mysqlrest"
-    fi
+	# Ausgabe zuerst schauen ob dialog installiert ist
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
+		warnbox "$result_mysqlrest"
+	else
+		log rohtext "$result_mysqlrest"
+	fi
 
 	return 0
 }
 
 ### ! Regionsabfrage, Alle Regionen listen (Dies geht nur im Grid (Grid Datenbank) oder Standalone Modus).
-function db_regions()
-{
-    # zuerst schauen ob dialog installiert ist
-    if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+function db_regions() {
+	# zuerst schauen ob dialog installiert ist
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
 
-    # Einstellungen
-    boxbacktitel="opensimMULTITOOL"
-    boxtitel="opensimMULTITOOL Eingabe"
-    formtitle="Alle Regionen auflisten"
-    lable1="Benutzername:"; lablename1=""
-    lable2="Passwort:"; lablename2=""
-    lable3="Datenbankname:"; lablename3=""
+		# Einstellungen
+		boxbacktitel="opensimMULTITOOL"
+		boxtitel="opensimMULTITOOL Eingabe"
+		formtitle="Alle Regionen auflisten"
+		lable1="Benutzername:"
+		lablename1=""
+		lable2="Passwort:"
+		lablename2=""
+		lable3="Datenbankname:"
+		lablename3=""
 
-    # Abfrage
-    db_regionsBOXERGEBNIS=$( dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30  3>&1 1>&2 2>&3 3>&- )
+		# Abfrage
+		db_regionsBOXERGEBNIS=$(dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 3>&1 1>&2 2>&3 3>&-)
 
-    # Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
-    username=$(echo "$db_regionsBOXERGEBNIS" | sed -n '1p')
-    password=$(echo "$db_regionsBOXERGEBNIS" | sed -n '2p')
-    databasename=$(echo "$db_regionsBOXERGEBNIS" | sed -n '3p')
+		# Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
+		username=$(echo "$db_regionsBOXERGEBNIS" | sed -n '1p')
+		password=$(echo "$db_regionsBOXERGEBNIS" | sed -n '2p')
+		databasename=$(echo "$db_regionsBOXERGEBNIS" | sed -n '3p')
 
-    # Alles loeschen.
-    dialog --clear
-    clear
+		# Alles loeschen.
+		dialog --clear
+		clear
 	else
 		# Alle Aktionen ohne dialog
-        username=$1; password=$2; databasename=$3;
-	fi	# dialog Aktionen Ende
+		username=$1
+		password=$2
+		databasename=$3
+	fi # dialog Aktionen Ende
 
 	log text "PRINT DATABASE: Alle Regionen listen."
 	mysqlrest "$username" "$password" "$databasename" "SELECT regionName FROM regions"
 
-    # Ausgabe zuerst schauen ob dialog installiert ist
-	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
-        warnbox "$result_mysqlrest"
-    else
-        log rohtext "$result_mysqlrest"
-    fi
+	# Ausgabe zuerst schauen ob dialog installiert ist
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
+		warnbox "$result_mysqlrest"
+	else
+		log rohtext "$result_mysqlrest"
+	fi
 
 	return 0
 }
 
 ### ! Regionsuri, Region URI pruefen sortiert nach URI (Dies geht nur im Grid (Grid Datenbank) oder Standalone Modus).
-function db_regionsuri()
-{
-    # zuerst schauen ob dialog installiert ist
-    if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+function db_regionsuri() {
+	# zuerst schauen ob dialog installiert ist
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
 
-    # Einstellungen
-    boxbacktitel="opensimMULTITOOL"
-    boxtitel="opensimMULTITOOL Eingabe"
-    formtitle="Region URI pruefen sortiert nach URI"
-    lable1="Benutzername:"; lablename1=""
-    lable2="Passwort:"; lablename2=""
-    lable3="Datenbankname:"; lablename3=""
+		# Einstellungen
+		boxbacktitel="opensimMULTITOOL"
+		boxtitel="opensimMULTITOOL Eingabe"
+		formtitle="Region URI pruefen sortiert nach URI"
+		lable1="Benutzername:"
+		lablename1=""
+		lable2="Passwort:"
+		lablename2=""
+		lable3="Datenbankname:"
+		lablename3=""
 
-    # Abfrage
-    db_regionsuriBOXERGEBNIS=$( dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30  3>&1 1>&2 2>&3 3>&- )
+		# Abfrage
+		db_regionsuriBOXERGEBNIS=$(dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 3>&1 1>&2 2>&3 3>&-)
 
-    # Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
-    username=$(echo "$db_regionsuriBOXERGEBNIS" | sed -n '1p')
-    password=$(echo "$db_regionsuriBOXERGEBNIS" | sed -n '2p')
-    databasename=$(echo "$db_regionsuriBOXERGEBNIS" | sed -n '3p')
+		# Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
+		username=$(echo "$db_regionsuriBOXERGEBNIS" | sed -n '1p')
+		password=$(echo "$db_regionsuriBOXERGEBNIS" | sed -n '2p')
+		databasename=$(echo "$db_regionsuriBOXERGEBNIS" | sed -n '3p')
 
-    # Alles loeschen.
-    dialog --clear
-    clear
+		# Alles loeschen.
+		dialog --clear
+		clear
 	else
 		# Alle Aktionen ohne dialog
-        username=$1; password=$2; databasename=$3;
-	fi	# dialog Aktionen Ende
+		username=$1
+		password=$2
+		databasename=$3
+	fi # dialog Aktionen Ende
 
 	log text "PRINT DATABASE: Region URI pruefen sortiert nach URI."
 	mysqlrest "$username" "$password" "$databasename" "SELECT regionName , serverURI FROM regions ORDER BY serverURI"
 
-    # Ausgabe zuerst schauen ob dialog installiert ist
-	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
-        warnbox "$result_mysqlrest"
-    else
-        log rohtext "$result_mysqlrest"
-    fi
+	# Ausgabe zuerst schauen ob dialog installiert ist
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
+		warnbox "$result_mysqlrest"
+	else
+		log rohtext "$result_mysqlrest"
+	fi
 
 	return 0
 }
 
 ### ! Regionsport, Ports pruefen sortiert nach Ports (Dies geht nur im Grid (Grid Datenbank) oder Standalone Modus).
-function db_regionsport()
-{
-    # zuerst schauen ob dialog installiert ist
-    if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+function db_regionsport() {
+	# zuerst schauen ob dialog installiert ist
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
 
-    # Einstellungen
-    boxbacktitel="opensimMULTITOOL"
-    boxtitel="opensimMULTITOOL Eingabe"
-    formtitle="Ports pruefen sortiert nach Ports"
-    lable1="Benutzername:"; lablename1=""
-    lable2="Passwort:"; lablename2=""
-    lable3="Datenbankname:"; lablename3=""
+		# Einstellungen
+		boxbacktitel="opensimMULTITOOL"
+		boxtitel="opensimMULTITOOL Eingabe"
+		formtitle="Ports pruefen sortiert nach Ports"
+		lable1="Benutzername:"
+		lablename1=""
+		lable2="Passwort:"
+		lablename2=""
+		lable3="Datenbankname:"
+		lablename3=""
 
-    # Abfrage
-    db_regionsportBOXERGEBNIS=$( dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30  3>&1 1>&2 2>&3 3>&- )
+		# Abfrage
+		db_regionsportBOXERGEBNIS=$(dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 3>&1 1>&2 2>&3 3>&-)
 
-    # Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
-    username=$(echo "$db_regionsportBOXERGEBNIS" | sed -n '1p')
-    password=$(echo "$db_regionsportBOXERGEBNIS" | sed -n '2p')
-    databasename=$(echo "$db_regionsportBOXERGEBNIS" | sed -n '3p')
+		# Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
+		username=$(echo "$db_regionsportBOXERGEBNIS" | sed -n '1p')
+		password=$(echo "$db_regionsportBOXERGEBNIS" | sed -n '2p')
+		databasename=$(echo "$db_regionsportBOXERGEBNIS" | sed -n '3p')
 
-    # Alles loeschen.
-    dialog --clear
-    clear
+		# Alles loeschen.
+		dialog --clear
+		clear
 	else
 		# Alle Aktionen ohne dialog
-        username=$1; password=$2; databasename=$3;
-	fi	# dialog Aktionen Ende
+		username=$1
+		password=$2
+		databasename=$3
+	fi # dialog Aktionen Ende
 
 	log text "PRINT DATABASE: Alle Datenbanken anzeigen."
 	mysqlrest "$username" "$password" "$databasename" "SELECT regionName , serverPort FROM regions ORDER BY serverPort"
 
-    # Ausgabe zuerst schauen ob dialog installiert ist
-	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
-        warnbox "$result_mysqlrest"
-    else
-        log rohtext "$result_mysqlrest"
-    fi
+	# Ausgabe zuerst schauen ob dialog installiert ist
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
+		warnbox "$result_mysqlrest"
+	else
+		log rohtext "$result_mysqlrest"
+	fi
 
 	return 0
 }
 
 ### !  create_db, erstellt eine neue Datenbank.
-function create_db()
-{
-	DBBENUTZER=$1; DBPASSWORT=$2; DATENBANKNAME=$3;
+function create_db() {
+	DBBENUTZER=$1
+	DBPASSWORT=$2
+	DATENBANKNAME=$3
 
 	echo "$(tput setaf 5)CREATE DATABASE: Datenbanken anlegen. $(tput sgr0)"
-	echo "$DATUM $(date +%H:%M:%S) CREATE DATABASE: Datenbanken anlegen" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-	echo "$DBBENUTZER, ********, $DATENBANKNAME" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+	echo "$DATUM $(date +%H:%M:%S) CREATE DATABASE: Datenbanken anlegen" >>"/$STARTVERZEICHNIS/$DATEIDATUM$logfilename.log"
+	echo "$DBBENUTZER, ********, $DATENBANKNAME" >>"/$STARTVERZEICHNIS/$DATEIDATUM$logfilename.log"
 
 	# 2>/dev/null verhindert die Fehlerausgabe - mysql warning using a password on the command line interface can be insecure. disable.
 	mysql -u"$DBBENUTZER" -p"$DBPASSWORT" -e "CREATE DATABASE IF NOT EXISTS $DATENBANKNAME CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci" 2>/dev/null
 	# utf8mb4 COLLATE utf8mb4_unicode_ci
 
 	echo "$(tput setaf 5)CREATE DATABASE: Datenbanken $DATENBANKNAME wurde angelegt. $(tput sgr0)"
-	echo "$DATUM $(date +%H:%M:%S) CREATE DATABASE: Datenbanken $DATENBANKNAME wurde angelegt" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+	echo "$DATUM $(date +%H:%M:%S) CREATE DATABASE: Datenbanken $DATENBANKNAME wurde angelegt" >>"/$STARTVERZEICHNIS/$DATEIDATUM$logfilename.log"
 
 	# Eingabe Variablen loeschen
 	unset DBBENUTZER
@@ -3779,13 +3831,15 @@ function create_db()
 }
 
 ### !  create_db_user - Operation CREATE USER failed - Fehler.
-function create_db_user()
-{
-	DBBENUTZER=$1; DBPASSWORT=$2; NEUERNAME=$3; NEUESPASSWORT=$4;
+function create_db_user() {
+	DBBENUTZER=$1
+	DBPASSWORT=$2
+	NEUERNAME=$3
+	NEUESPASSWORT=$4
 
 	echo "$(tput setaf 5)CREATE DATABASE USER: Datenbankbenutzer anlegen. $(tput sgr0)"
-	echo "$DATUM $(date +%H:%M:%S) CREATE DATABASE USER: Datenbankbenutzer anlegen" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
-	echo "$DBBENUTZER, ********, $NEUERNAME, ********" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+	echo "$DATUM $(date +%H:%M:%S) CREATE DATABASE USER: Datenbankbenutzer anlegen" >>"/$STARTVERZEICHNIS/$DATEIDATUM$logfilename.log"
+	echo "$DBBENUTZER, ********, $NEUERNAME, ********" >>"/$STARTVERZEICHNIS/$DATEIDATUM$logfilename.log"
 
 	mysql -u"$DBBENUTZER" -p"$DBPASSWORT" -e "CREATE USER '$NEUERNAME'@'localhost' IDENTIFIED BY '$NEUESPASSWORT'"
 	mysql -u"$DBBENUTZER" -p"$DBPASSWORT" -e "GRANT ALL PRIVILEGES ON * . * TO '$NEUERNAME'@'localhost'"
@@ -3801,14 +3855,15 @@ function create_db_user()
 }
 
 ### !  delete_db, loescht eine Datenbank.
-function delete_db()
-{
-	DBBENUTZER=$1; DBPASSWORT=$2; DATENBANKNAME=$3;
+function delete_db() {
+	DBBENUTZER=$1
+	DBPASSWORT=$2
+	DATENBANKNAME=$3
 
 	echo "$(tput setaf 5)DELETE DATABASE: Datenbank loeschen. $(tput sgr0)"
-	echo "$DATUM $(date +%H:%M:%S) DELETE DATABASE: Datenbank loeschen" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+	echo "$DATUM $(date +%H:%M:%S) DELETE DATABASE: Datenbank loeschen" >>"/$STARTVERZEICHNIS/$DATEIDATUM$logfilename.log"
 
-	echo "$DBBENUTZER, ********, $DATENBANKNAME" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+	echo "$DBBENUTZER, ********, $DATENBANKNAME" >>"/$STARTVERZEICHNIS/$DATEIDATUM$logfilename.log"
 	# 2>/dev/null verhindert die Fehlerausgabe - mysql warning using a password on the command line interface can be insecure. disable.
 	mysql -u"$DBBENUTZER" -p"$DBPASSWORT" -e "DROP DATABASE $DATENBANKNAME" 2>/dev/null
 
@@ -3821,34 +3876,38 @@ function delete_db()
 }
 
 ### !db_empty, loescht eine Datenbank und erstellt diese anschliessend neu. Das ist Datenbank leeren auf die schnelle Art.
-function db_empty()
-{
-    # zuerst schauen ob dialog installiert ist
-    if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+function db_empty() {
+	# zuerst schauen ob dialog installiert ist
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
 
-    # Einstellungen
-    boxbacktitel="opensimMULTITOOL"
-    boxtitel="opensimMULTITOOL Eingabe"
-    formtitle="Datenbank leeren"
-    lable1="Benutzername:"; lablename1=""
-    lable2="Passwort:"; lablename2=""
-    lable3="Datenbankname:"; lablename3=""
+		# Einstellungen
+		boxbacktitel="opensimMULTITOOL"
+		boxtitel="opensimMULTITOOL Eingabe"
+		formtitle="Datenbank leeren"
+		lable1="Benutzername:"
+		lablename1=""
+		lable2="Passwort:"
+		lablename2=""
+		lable3="Datenbankname:"
+		lablename3=""
 
-    # Abfrage
-    db_emptyRGEBNIS=$( dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30  3>&1 1>&2 2>&3 3>&- )
+		# Abfrage
+		db_emptyRGEBNIS=$(dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 3>&1 1>&2 2>&3 3>&-)
 
-    # Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
-    username=$(echo "$db_emptyRGEBNIS" | sed -n '1p')
-    password=$(echo "$db_emptyRGEBNIS" | sed -n '2p')
-    databasename=$(echo "$db_emptyRGEBNIS" | sed -n '3p')
+		# Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
+		username=$(echo "$db_emptyRGEBNIS" | sed -n '1p')
+		password=$(echo "$db_emptyRGEBNIS" | sed -n '2p')
+		databasename=$(echo "$db_emptyRGEBNIS" | sed -n '3p')
 
-    # Alles loeschen.
-    dialog --clear
-    clear
+		# Alles loeschen.
+		dialog --clear
+		clear
 	else
 		# Alle Aktionen ohne dialog
-        username=$1; password=$2; databasename=$3;
-	fi	# dialog Aktionen Ende
+		username=$1
+		password=$2
+		databasename=$3
+	fi # dialog Aktionen Ende
 
 	#log text "EMPTY DATABASE: Datenbank $databasename leeren."
 
@@ -3861,68 +3920,69 @@ function db_empty()
 	# Du solltest benutzen:
 	# CREATE DATABASE mydb CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 	# Beachten Sie, dass utf8_general_ci nicht mehr als bewaehrte Methode empfohlen wird.
-	
-    # Ausgabe zuerst schauen ob dialog installiert ist
-	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
-        warnbox "Datenbank $databasename wurde geleert"
-    else
-        log rohtext "Datenbank $databasename wurde geleert"
-    fi
+
+	# Ausgabe zuerst schauen ob dialog installiert ist
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
+		warnbox "Datenbank $databasename wurde geleert"
+	else
+		log rohtext "Datenbank $databasename wurde geleert"
+	fi
 
 	return 0
 }
 
 ### !  allrepair_db, CHECK – REPAIR – ANALYZE – OPTIMIZE, alle Datenbanken.
-function allrepair_db()
-{
-    # zuerst schauen ob dialog installiert ist
-    if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+function allrepair_db() {
+	# zuerst schauen ob dialog installiert ist
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
 
-    # Einstellungen
-    boxbacktitel="opensimMULTITOOL"
-    boxtitel="opensimMULTITOOL Eingabe"
-    formtitle="Alle Datenbanken Checken, Reparieren und Optimieren"
-    lable1="Benutzername:"; lablename1=""
-    lable2="Passwort:"; lablename2=""
+		# Einstellungen
+		boxbacktitel="opensimMULTITOOL"
+		boxtitel="opensimMULTITOOL Eingabe"
+		formtitle="Alle Datenbanken Checken, Reparieren und Optimieren"
+		lable1="Benutzername:"
+		lablename1=""
+		lable2="Passwort:"
+		lablename2=""
 
-    # Abfrage
-    landclearBOXERGEBNIS=$( dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 3>&1 1>&2 2>&3 3>&- )
+		# Abfrage
+		landclearBOXERGEBNIS=$(dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 3>&1 1>&2 2>&3 3>&-)
 
-    # Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
-    username=$(echo "$landclearBOXERGEBNIS" | sed -n '1p')
-    password=$(echo "$landclearBOXERGEBNIS" | sed -n '2p')
+		# Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
+		username=$(echo "$landclearBOXERGEBNIS" | sed -n '1p')
+		password=$(echo "$landclearBOXERGEBNIS" | sed -n '2p')
 
-    # Alles loeschen.
-    dialog --clear
-    clear
+		# Alles loeschen.
+		dialog --clear
+		clear
 	else
 		# Alle Aktionen ohne dialog
-        username=$1; password=$2;
-	fi	# dialog Aktionen Ende
-	
+		username=$1
+		password=$2
+	fi # dialog Aktionen Ende
+
 	#log text "ALL REPAIR DATABASE: Alle Datenbanken Checken, Reparieren und Optimieren"
 	mysqlcheck -u"$username" -p"$password" --check --all-databases
-	mysqlcheck -u"$username" -p"$password" --auto-repair --all-databases	
+	mysqlcheck -u"$username" -p"$password" --auto-repair --all-databases
 	mysqlcheck -u"$username" -p"$password" --optimize --all-databases
 	# Danach werden automatisiert folgende SQL Statements ausgefuehrt:
 	# – CHECK TABLE
 	# – REPAIR TABLE
 	# – ANALYZE TABLE
 	# – OPTIMIZE TABLE
-	
-    # Ausgabe zuerst schauen ob dialog installiert ist
-	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
-        warnbox "ALL REPAIR DATABASE: Fertig"
-    else
-        log rohtext "ALL REPAIR DATABASE: Fertig"
-    fi
+
+	# Ausgabe zuerst schauen ob dialog installiert ist
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
+		warnbox "ALL REPAIR DATABASE: Fertig"
+	else
+		log rohtext "ALL REPAIR DATABASE: Fertig"
+	fi
 
 	return 0
 }
 
 ### !  mysql_neustart, startet mySQL neu.
-function mysql_neustart()
-{
+function mysql_neustart() {
 	log text "MYSQL RESTART: MySQL Neu starten."
 
 	service mysql stop
@@ -3934,13 +3994,28 @@ function mysql_neustart()
 }
 
 ### !db_backup, sichert eine einzelne Datenbank. Neu
-function db_backup()
-{
-	username=$1; password=$2; databasename=$3;
+function db_backup() {
+	username=$1
+	password=$2
+	databasename=$3
 
 	log text "SAVE DATABASE: Datenbank $databasename sichern."
 
-	mysqldump -u"$username" -p"$password" "$databasename" > /$STARTVERZEICHNIS/"$databasename".sql 2>/dev/null
+	mysqldump -u"$username" -p"$password" "$databasename" >/$STARTVERZEICHNIS/"$databasename".sql 2>/dev/null
+
+	log text "SAVE DATABASE: Im Hintergrund wird die Datenbank $databasename jetzt gesichert." # Screen fehlt!
+
+	return 0
+}
+### ! db_compress_backup, sichert eine einzelne Datenbank mit gz komprimierung. Neu
+function db_compress_backup() {
+	username=$1
+	password=$2
+	databasename=$3
+
+	log text "SAVE DATABASE: Datenbank $databasename sichern."
+
+	mysqldump -u"$username" -p"$password" "$databasename" | gzip -c >"$databasename".sql.gz
 
 	log text "SAVE DATABASE: Im Hintergrund wird die Datenbank $databasename jetzt gesichert." # Screen fehlt!
 
@@ -3950,25 +4025,26 @@ function db_backup()
 ### ! Backup, eine Datenbanken Tabellenweise speichern. Test OK
 ## function db_backuptabellen DB_Benutzername DB_Passwort Datenbankname
 ## Datenbank Tabellenweise sichern im Verzeichnis Datenbankname
-function db_backuptabellen()
-{    
+function db_backuptabellen() {
 	# Hier fehlt noch das die Asset Datenbank gesplittet wird.
-    username=$1; password=$2; databasename=$3; #tabellenname=$3;
-    #DATEIDATUM=$(date +%d_%m_%Y);
+	username=$1
+	password=$2
+	databasename=$3 #tabellenname=$3;
+	#DATEIDATUM=$(date +%d_%m_%Y);
 
-    # Verzeichnis erstellen:
-    mkdir -p /$STARTVERZEICHNIS/backup/"$databasename" || exit
+	# Verzeichnis erstellen:
+	mkdir -p /$STARTVERZEICHNIS/backup/"$databasename" || exit
 	# Tabellennamen holen.
-    mysqlrest "$username" "$password" "$databasename" "SHOW TABLES FROM $databasename"
+	mysqlrest "$username" "$password" "$databasename" "SHOW TABLES FROM $databasename"
 	# Tabellennamen in eine Datei schreiben.
-	echo "$result_mysqlrest" > /$STARTVERZEICHNIS/backup/"$databasename"/liste.txt
+	echo "$result_mysqlrest" >/$STARTVERZEICHNIS/backup/"$databasename"/liste.txt
 
 	tabellenname=()
 	while IFS= read -r tabellenname; do
-	sleep 10
-	mysqldump -u"$username" -p"$password" "$databasename" "$tabellenname" | zip > /$STARTVERZEICHNIS/backup/"$databasename"/"$tabellenname".sql.zip
-	log info "Datenbank Tabelle: $databasename - $tabellenname wurde gesichert."
-	done < /$STARTVERZEICHNIS/backup/"$databasename"/liste.txt
+		sleep 10
+		mysqldump -u"$username" -p"$password" "$databasename" "$tabellenname" | zip >/$STARTVERZEICHNIS/backup/"$databasename"/"$tabellenname".sql.zip
+		log info "Datenbank Tabelle: $databasename - $tabellenname wurde gesichert."
+	done </$STARTVERZEICHNIS/backup/"$databasename"/liste.txt
 
 	return 0
 }
@@ -3976,51 +4052,90 @@ function db_backuptabellen()
 ### ! Backup Test, eine Datenbanken Tabellenweise wiederherstellen.
 ## function db_restorebackuptabellen DB_Benutzername DB_Passwort AlterDatenbankname NeuerDatenbankname
 ## Die Tabellenweise gesicherte Datenbank in einer neuen Datenbank zusammensetzen.
-function db_restorebackuptabellen()
-{  
-	username=$1; password=$2; databasename=$3; newdatabasename=$4;
+function db_restorebackuptabellen() {
+	username=$1
+	password=$2
+	databasename=$3
+	newdatabasename=$4
 
 	cd /$STARTVERZEICHNIS/backup/"$databasename" || exit
 
 	tabellenname=()
 	while IFS= read -r tabellenname; do
-	sleep 2
-	unzip -p /"$STARTVERZEICHNIS"/backup/"$databasename"/"$tabellenname".sql.zip | > MYSQL_PWD="$password" mysql -u"$username" "$newdatabasename"
-	log info "Datenbank Tabelle: $newdatabasename - $tabellenname widerhergestellt."
-	done < /$STARTVERZEICHNIS/backup/"$databasename"/liste.txt
+		sleep 2
+		unzip -p /"$STARTVERZEICHNIS"/backup/"$databasename"/"$tabellenname".sql.zip | mysql >MYSQL_PWD="$password" -u"$username" "$newdatabasename"
+		log info "Datenbank Tabelle: $newdatabasename - $tabellenname widerhergestellt."
+	done </$STARTVERZEICHNIS/backup/"$databasename"/liste.txt
+
+	return 0
+}
+### ! Backup Test, eine Datenbanken Tabellenweise wiederherstellen.
+## function db_restorebackuptabellen DB_Benutzername DB_Passwort AlterDatenbankname NeuerDatenbankname
+## Die Tabellenweise gesicherte Datenbank in einer neuen Datenbank zusammensetzen.
+function db_restorebackuptabellen2test() {
+	username=$1
+	password=$2
+	databasename=$3
+	newdatabasename=$4
+
+	cd /$STARTVERZEICHNIS/backup/"$databasename" || exit
+
+	tabellenname=()
+	while IFS= read -r tabellenname; do
+		sleep 2		
+        for file in foo*; do
+            case $(file "$file") in
+                *ASCII*) /"$STARTVERZEICHNIS"/backup/"$databasename"/"$tabellenname".sql | mysql >MYSQL_PWD="$password" -u"$username" "$newdatabasename" ;;
+                *gzip*) gunzip /"$STARTVERZEICHNIS"/backup/"$databasename"/"$tabellenname".sql.gz | mysql >MYSQL_PWD="$password" -u"$username" "$newdatabasename" ;;          
+                *zip*) unzip -p /"$STARTVERZEICHNIS"/backup/"$databasename"/"$tabellenname".sql.zip | mysql >MYSQL_PWD="$password" -u"$username" "$newdatabasename" ;;          
+                *7z*) 7z e /"$STARTVERZEICHNIS"/backup/"$databasename"/"$tabellenname".sql.7z | mysql >MYSQL_PWD="$password" -u"$username" "$newdatabasename" ;;
+                *rar*) unrar e /"$STARTVERZEICHNIS"/backup/"$databasename"/"$tabellenname".sql.rar | mysql >MYSQL_PWD="$password" -u"$username" "$newdatabasename" ;;
+                *tar.gz*) tar -xf /"$STARTVERZEICHNIS"/backup/"$databasename"/"$tabellenname".sql.tar.gz | mysql >MYSQL_PWD="$password" -u"$username" "$newdatabasename" ;;
+                *tar.bz2*) tar -xjf /"$STARTVERZEICHNIS"/backup/"$databasename"/"$tabellenname".sql.tar.bz2 | mysql >MYSQL_PWD="$password" -u"$username" "$newdatabasename" ;;
+                *tar.xz*) tar -xJf /"$STARTVERZEICHNIS"/backup/"$databasename"/"$tabellenname".sql.tar.xz | mysql >MYSQL_PWD="$password" -u"$username" "$newdatabasename" ;;
+                *bz2*) bunzip2 /"$STARTVERZEICHNIS"/backup/"$databasename"/"$tabellenname".sql.bz2 | mysql >MYSQL_PWD="$password" -u"$username" "$newdatabasename" ;;
+                *xz*) unxz /"$STARTVERZEICHNIS"/backup/"$databasename"/"$tabellenname".sql.xz | mysql >MYSQL_PWD="$password" -u"$username" "$newdatabasename" ;;
+            esac
+        done
+		log info "Datenbank Tabelle: $newdatabasename - $tabellenname widerhergestellt."
+	done </$STARTVERZEICHNIS/backup/"$databasename"/liste.txt
 
 	return 0
 }
 
 ### !create_db, erstellt eine neue Datenbank. db_create "username" "password" "databasename"
-function db_create()
-{
-    # zuerst schauen ob dialog installiert ist
-    if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+function db_create() {
+	# zuerst schauen ob dialog installiert ist
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
 
-    # Einstellungen
-    boxbacktitel="opensimMULTITOOL"
-    boxtitel="opensimMULTITOOL Eingabe"
-    formtitle="Neue Datenbank erstellen"
-    lable1="Benutzername:"; lablename1=""
-    lable2="Passwort:"; lablename2=""
-    lable3="Datenbankname:"; lablename3=""
+		# Einstellungen
+		boxbacktitel="opensimMULTITOOL"
+		boxtitel="opensimMULTITOOL Eingabe"
+		formtitle="Neue Datenbank erstellen"
+		lable1="Benutzername:"
+		lablename1=""
+		lable2="Passwort:"
+		lablename2=""
+		lable3="Datenbankname:"
+		lablename3=""
 
-    # Abfrage
-    db_regionsportBOXERGEBNIS=$( dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30  3>&1 1>&2 2>&3 3>&- )
+		# Abfrage
+		db_regionsportBOXERGEBNIS=$(dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 3>&1 1>&2 2>&3 3>&-)
 
-    # Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
-    username=$(echo "$db_regionsportBOXERGEBNIS" | sed -n '1p')
-    password=$(echo "$db_regionsportBOXERGEBNIS" | sed -n '2p')
-    databasename=$(echo "$db_regionsportBOXERGEBNIS" | sed -n '3p')
+		# Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
+		username=$(echo "$db_regionsportBOXERGEBNIS" | sed -n '1p')
+		password=$(echo "$db_regionsportBOXERGEBNIS" | sed -n '2p')
+		databasename=$(echo "$db_regionsportBOXERGEBNIS" | sed -n '3p')
 
-    # Alles loeschen.
-    dialog --clear
-    clear
+		# Alles loeschen.
+		dialog --clear
+		clear
 	else
 		# Alle Aktionen ohne dialog
-        username=$1; password=$2; databasename=$3;
-	fi	# dialog Aktionen Ende
+		username=$1
+		password=$2
+		databasename=$3
+	fi # dialog Aktionen Ende
 
 	log text "CREATE DATABASE: Datenbank anlegen."
 	#result_mysqlrest=$("CREATE DATABASE IF NOT EXISTS $databasename CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci" | MYSQL_PWD=$password mysql -u"$username" "$databasename" -N) 2> /dev/null
@@ -4032,105 +4147,112 @@ function db_create()
 	# CREATE DATABASE mydb CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 	# Beachten Sie, dass utf8_general_ci nicht mehr als bewaehrte Methode empfohlen wird.
 
-    # Ausgabe zuerst schauen ob dialog installiert ist
-	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
-        warnbox "$result_mysqlrest"
-    else
-        log rohtext "$result_mysqlrest"
-    fi
+	# Ausgabe zuerst schauen ob dialog installiert ist
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
+		warnbox "$result_mysqlrest"
+	else
+		log rohtext "$result_mysqlrest"
+	fi
 
 	return 0
 }
 
 # Test funktioniert
 ### !  db_dbuser, listet alle erstellten Datenbankbenutzer auf.
-function db_dbuser()
-{
-	username=$1; password=$2;
+function db_dbuser() {
+	username=$1
+	password=$2
 
 	log text "PRINT DATABASE: Alle Datenbankbenutzer anzeigen."
-	result_mysqlrest=$(echo "select User from mysql.user;" | MYSQL_PWD=$password mysql -u"$username" -N) 2> /dev/null
+	result_mysqlrest=$(echo "select User from mysql.user;" | MYSQL_PWD=$password mysql -u"$username" -N) 2>/dev/null
 	log rohtext "$result_mysqlrest"
 
 	return 0
 }
 
 ### ! db_benutzerrechte, listet alle erstellten Benutzerrechte auf. db_dbuserrechte root 123456 testuser
-function db_dbuserrechte()
-{
-    # zuerst schauen ob dialog installiert ist
-    if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+function db_dbuserrechte() {
+	# zuerst schauen ob dialog installiert ist
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
 
-    # Einstellungen
-    boxbacktitel="opensimMULTITOOL"
-    boxtitel="opensimMULTITOOL Eingabe"
-    formtitle="Listet alle erstellten Benutzerrechte auf"
-    lable1="Benutzername:"; lablename1=""
-    lable2="Passwort:"; lablename2=""
-    lable3="Datenbankname:"; lablename3=""
+		# Einstellungen
+		boxbacktitel="opensimMULTITOOL"
+		boxtitel="opensimMULTITOOL Eingabe"
+		formtitle="Listet alle erstellten Benutzerrechte auf"
+		lable1="Benutzername:"
+		lablename1=""
+		lable2="Passwort:"
+		lablename2=""
+		lable3="Datenbankname:"
+		lablename3=""
 
-    # Abfrage
-    db_dbuserrechteERGEBNIS=$( dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30  3>&1 1>&2 2>&3 3>&- )
+		# Abfrage
+		db_dbuserrechteERGEBNIS=$(dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 3>&1 1>&2 2>&3 3>&-)
 
-    # Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
-    username=$(echo "db_dbuserrechteERGEBNIS" | sed -n '1p')
-    password=$(echo "$db_dbuserrechteERGEBNIS" | sed -n '2p')
-    databasename=$(echo "$db_dbuserrechteERGEBNIS" | sed -n '3p')
+		# Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
+		username=$(echo "db_dbuserrechteERGEBNIS" | sed -n '1p')
+		password=$(echo "$db_dbuserrechteERGEBNIS" | sed -n '2p')
+		databasename=$(echo "$db_dbuserrechteERGEBNIS" | sed -n '3p')
 
-    # Alles loeschen.
-    dialog --clear
-    clear
+		# Alles loeschen.
+		dialog --clear
+		clear
 	else
 		# Alle Aktionen ohne dialog
-        username=$1; password=$2; databasename=$3;
-	fi	# dialog Aktionen Ende
+		username=$1
+		password=$2
+		databasename=$3
+	fi # dialog Aktionen Ende
 
-	result_mysqlrest=$(echo "SHOW GRANTS FOR '$benutzer'@'localhost';" | MYSQL_PWD=$password mysql -u"$username" -N) 2> /dev/null
+	result_mysqlrest=$(echo "SHOW GRANTS FOR '$benutzer'@'localhost';" | MYSQL_PWD=$password mysql -u"$username" -N) 2>/dev/null
 
-    # Ausgabe zuerst schauen ob dialog installiert ist
-	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
-        warnbox "$result_mysqlrest"
-    else
-        log info "$result_mysqlrest"
-    fi
+	# Ausgabe zuerst schauen ob dialog installiert ist
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
+		warnbox "$result_mysqlrest"
+	else
+		log info "$result_mysqlrest"
+	fi
 
 	return 0
 }
 
 ### !  db_deldbuser, loescht einen Datenbankbenutzer. db_deldbuser root 123456 testuser
-function db_deldbuser()
-{
-    # zuerst schauen ob dialog installiert ist
-    if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+function db_deldbuser() {
+	# zuerst schauen ob dialog installiert ist
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
 
-    # Einstellungen
-    boxbacktitel="opensimMULTITOOL"
-    boxtitel="opensimMULTITOOL Eingabe"
-    formtitle="Loescht einen Datenbankbenutzer"
-    lable1="Master Benutzername:"; lablename1=""
-    lable2="Master Passwort:"; lablename2=""
-    lable3="Zu loeschender Benutzer:"; lablename3=""
+		# Einstellungen
+		boxbacktitel="opensimMULTITOOL"
+		boxtitel="opensimMULTITOOL Eingabe"
+		formtitle="Loescht einen Datenbankbenutzer"
+		lable1="Master Benutzername:"
+		lablename1=""
+		lable2="Master Passwort:"
+		lablename2=""
+		lable3="Zu loeschender Benutzer:"
+		lablename3=""
 
-    # Abfrage
-    db_deldbuserERGEBNIS=$( dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30  3>&1 1>&2 2>&3 3>&- )
+		# Abfrage
+		db_deldbuserERGEBNIS=$(dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 3>&1 1>&2 2>&3 3>&-)
 
-    # Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
-    username=$(echo "$db_deldbuserERGEBNIS" | sed -n '1p')
-    password=$(echo "$db_deldbuserERGEBNIS" | sed -n '2p')
-    benutzer=$(echo "$db_deldbuserERGEBNIS" | sed -n '3p')
+		# Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
+		username=$(echo "$db_deldbuserERGEBNIS" | sed -n '1p')
+		password=$(echo "$db_deldbuserERGEBNIS" | sed -n '2p')
+		benutzer=$(echo "$db_deldbuserERGEBNIS" | sed -n '3p')
 
-    # Alles loeschen.
-    dialog --clear
-    clear
+		# Alles loeschen.
+		dialog --clear
+		clear
 	else
 		# Alle Aktionen ohne dialog
-        username=$1; password=$2; benutzer=$3;
-	fi	# dialog Aktionen Ende
+		username=$1
+		password=$2
+		benutzer=$3
+	fi # dialog Aktionen Ende
 
 	#echo "DROP USER '$benutzer'@'localhost';" | MYSQL_PWD=$password mysql -u"$username" -N
 
-	if [ -z "$benutzer" ]
-	then
+	if [ -z "$benutzer" ]; then
 		# Variable leer dann beenden.
 		mySQLmenu
 		return 0
@@ -4139,182 +4261,201 @@ function db_deldbuser()
 		echo "DROP USER '$benutzer'@'localhost';" | MYSQL_PWD=$password mysql -u"$username" -N
 	fi
 
-    # Ausgabe zuerst schauen ob dialog installiert ist
-	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
-        warnbox "Datenbankbenutzer $benutzer geloescht"
-    else
-        log info "Benutzer loeschen: Datenbankbenutzer $benutzer geloescht"
-    fi
+	# Ausgabe zuerst schauen ob dialog installiert ist
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
+		warnbox "Datenbankbenutzer $benutzer geloescht"
+	else
+		log info "Benutzer loeschen: Datenbankbenutzer $benutzer geloescht"
+	fi
 
 	return 0
 }
 
 ### !db_create_new_dbuser root password NEUERNAME NEUESPASSWORT
-function db_create_new_dbuser()
-{
-    # zuerst schauen ob dialog installiert ist
-    if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+function db_create_new_dbuser() {
+	# zuerst schauen ob dialog installiert ist
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
 
-    # Einstellungen
-    boxbacktitel="opensimMULTITOOL"
-    boxtitel="opensimMULTITOOL Eingabe"
-    formtitle="Neuen Datenbankbenutzer anlegen"
-    lable1="Benutzername:"; lablename1=""
-    lable2="Passwort:"; lablename2=""
-    lable3="Neuer Benutzer:"; lablename3=""
-	lable4="Neues Passwort:"; lablename4=""
+		# Einstellungen
+		boxbacktitel="opensimMULTITOOL"
+		boxtitel="opensimMULTITOOL Eingabe"
+		formtitle="Neuen Datenbankbenutzer anlegen"
+		lable1="Benutzername:"
+		lablename1=""
+		lable2="Passwort:"
+		lablename2=""
+		lable3="Neuer Benutzer:"
+		lablename3=""
+		lable4="Neues Passwort:"
+		lablename4=""
 
-    # Abfrage
-    loadinventarBOXERGEBNIS=$( dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 "$lable4" 4 1 "$lablename4" 4 25 25 30 3>&1 1>&2 2>&3 3>&- )
+		# Abfrage
+		loadinventarBOXERGEBNIS=$(dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 "$lable4" 4 1 "$lablename4" 4 25 25 30 3>&1 1>&2 2>&3 3>&-)
 
-    # Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
-    username=$(echo "$loadinventarBOXERGEBNIS" | sed -n '1p')
-    password=$(echo "$loadinventarBOXERGEBNIS" | sed -n '2p')
-    NEUERNAME=$(echo "$loadinventarBOXERGEBNIS" | sed -n '3p')
-    NEUESPASSWORT=$(echo "$loadinventarBOXERGEBNIS" | sed -n '4p')
+		# Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
+		username=$(echo "$loadinventarBOXERGEBNIS" | sed -n '1p')
+		password=$(echo "$loadinventarBOXERGEBNIS" | sed -n '2p')
+		NEUERNAME=$(echo "$loadinventarBOXERGEBNIS" | sed -n '3p')
+		NEUESPASSWORT=$(echo "$loadinventarBOXERGEBNIS" | sed -n '4p')
 
-    # Alles loeschen.
-    dialog --clear
-    clear
+		# Alles loeschen.
+		dialog --clear
+		clear
 	else
 		# Alle Aktionen ohne dialog
-        username=$1; password=$2; NEUERNAME=$3; NEUESPASSWORT=$4;
-	fi	# dialog Aktionen Ende
+		username=$1
+		password=$2
+		NEUERNAME=$3
+		NEUESPASSWORT=$4
+	fi # dialog Aktionen Ende
 
 	echo "CREATE USER $NEUERNAME@'localhost' IDENTIFIED BY '$NEUESPASSWORT';" | MYSQL_PWD=$password mysql -u"$username" -N
 	echo "GRANT ALL PRIVILEGES ON * . * TO '$NEUERNAME'@'localhost';" | MYSQL_PWD=$password mysql -u"$username" -N
 	echo "flush privileges;" | MYSQL_PWD=$password mysql -u"$username" -N
 
-    # Ausgabe zuerst schauen ob dialog installiert ist
-	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
-        warnbox "Datenbankbenutzer $NEUERNAME anleglegt"
-    else
-        log info "Datenbankbenutzer $NEUERNAME anleglegt"
-    fi
+	# Ausgabe zuerst schauen ob dialog installiert ist
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
+		warnbox "Datenbankbenutzer $NEUERNAME anleglegt"
+	else
+		log info "Datenbankbenutzer $NEUERNAME anleglegt"
+	fi
 
 	return 0
 }
 
 ### ! db_delete, loescht eine Datenbank komplett.
-function db_delete()
-{
-    # zuerst schauen ob dialog installiert ist
-    if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+function db_delete() {
+	# zuerst schauen ob dialog installiert ist
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
 
-    # Einstellungen
-    boxbacktitel="opensimMULTITOOL"
-    boxtitel="opensimMULTITOOL Eingabe"
-    formtitle="Loescht eine Datenbank komplett"
-    lable1="Benutzername:"; lablename1=""
-    lable2="Passwort:"; lablename2=""
-    lable3="Datenbankname:"; lablename3=""
+		# Einstellungen
+		boxbacktitel="opensimMULTITOOL"
+		boxtitel="opensimMULTITOOL Eingabe"
+		formtitle="Loescht eine Datenbank komplett"
+		lable1="Benutzername:"
+		lablename1=""
+		lable2="Passwort:"
+		lablename2=""
+		lable3="Datenbankname:"
+		lablename3=""
 
-    # Abfrage
-    db_deleteERGEBNIS=$( dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30  3>&1 1>&2 2>&3 3>&- )
+		# Abfrage
+		db_deleteERGEBNIS=$(dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 3>&1 1>&2 2>&3 3>&-)
 
-    # Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
-    username=$(echo "$db_deleteERGEBNIS" | sed -n '1p')
-    password=$(echo "$db_deleteERGEBNIS" | sed -n '2p')
-    databasename=$(echo "$db_deleteERGEBNIS" | sed -n '3p')
+		# Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
+		username=$(echo "$db_deleteERGEBNIS" | sed -n '1p')
+		password=$(echo "$db_deleteERGEBNIS" | sed -n '2p')
+		databasename=$(echo "$db_deleteERGEBNIS" | sed -n '3p')
 
-    # Alles loeschen.
-    dialog --clear
-    clear
+		# Alles loeschen.
+		dialog --clear
+		clear
 	else
 		# Alle Aktionen ohne dialog
-        username=$1; password=$2; databasename=$3;
-	fi	# dialog Aktionen Ende
+		username=$1
+		password=$2
+		databasename=$3
+	fi # dialog Aktionen Ende
 
 	# Vor dem Loeschen sicherzustellen dass die Datenbank existiert.
 	echo "DROP DATABASE IF EXISTS $databasename;" | MYSQL_PWD=$password mysql -u"$username" -N
 
-    # Ausgabe zuerst schauen ob dialog installiert ist
-	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
-        warnbox "Datenbank $databasename wurde geloescht"
-    else
-        log info "DELETE DATABASE: Datenbank $databasename wurde geloescht"
-    fi
+	# Ausgabe zuerst schauen ob dialog installiert ist
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
+		warnbox "Datenbank $databasename wurde geloescht"
+	else
+		log info "DELETE DATABASE: Datenbank $databasename wurde geloescht"
+	fi
 
 	return 0
 }
 
 ### ! tabellenabfrage, listet alle Tabellen in einer Datenbank auf.
 # Es geht hier um die machbarkeit und nicht den Sinn.
-function tabellenabfrage()
-{
-	DBBENUTZER=$1; DBPASSWORT=$2; DATENBANKNAME=$3;
-	
-mysql -u"$DBBENUTZER" -p"$DBPASSWORT" <<MEINE_ABFRAGE_ENDE 2>/dev/null
+function tabellenabfrage() {
+	DBBENUTZER=$1
+	DBPASSWORT=$2
+	DATENBANKNAME=$3
+
+	mysql -u"$DBBENUTZER" -p"$DBPASSWORT" <<MEINE_ABFRAGE_ENDE 2>/dev/null
 USE $DATENBANKNAME
 SHOW tables
 MEINE_ABFRAGE_ENDE
 
-return 0
+	return 0
 }
 
 ### !  regionsabfrage, Alle Regionen listen (Dies geht nur im Grid (Grid Datenbank) oder Standalone Modus).
-function regionsabfrage()
-{
-	DBBENUTZER=$1; DBPASSWORT=$2; DATENBANKNAME=$3;	
-mysql -u"$DBBENUTZER" -p"$DBPASSWORT" <<MEIN_ABFRAGE_ENDE 2>/dev/null
+function regionsabfrage() {
+	DBBENUTZER=$1
+	DBPASSWORT=$2
+	DATENBANKNAME=$3
+	mysql -u"$DBBENUTZER" -p"$DBPASSWORT" <<MEIN_ABFRAGE_ENDE 2>/dev/null
 USE $DATENBANKNAME
 SELECT regionName FROM regions
 MEIN_ABFRAGE_ENDE
 
-return 0
+	return 0
 }
 
 ### !  regionsuri, Region URI pruefen sortiert nach URI (Dies geht nur im Grid (Grid Datenbank) oder Standalone Modus).
-function regionsuri()
-{
-	DBBENUTZER=$1; DBPASSWORT=$2; DATENBANKNAME=$3;	
-mysql -u"$DBBENUTZER" -p"$DBPASSWORT" <<MEIN_ABFRAGE_ENDE 2>/dev/null
+function regionsuri() {
+	DBBENUTZER=$1
+	DBPASSWORT=$2
+	DATENBANKNAME=$3
+	mysql -u"$DBBENUTZER" -p"$DBPASSWORT" <<MEIN_ABFRAGE_ENDE 2>/dev/null
 USE $DATENBANKNAME
 SELECT regionName , serverURI FROM regions ORDER BY serverURI
 MEIN_ABFRAGE_ENDE
 
-return 0
+	return 0
 }
 
 ### !  regionsport, Ports pruefen sortiert nach Ports (Dies geht nur im Grid (Grid Datenbank) oder Standalone Modus).
-function regionsport()
-{
-	DBBENUTZER=$1; DBPASSWORT=$2; DATENBANKNAME=$3;	
-mysql -u"$DBBENUTZER" -p"$DBPASSWORT" <<MEIN_ABFRAGE_ENDE 2>/dev/null
+function regionsport() {
+	DBBENUTZER=$1
+	DBPASSWORT=$2
+	DATENBANKNAME=$3
+	mysql -u"$DBBENUTZER" -p"$DBPASSWORT" <<MEIN_ABFRAGE_ENDE 2>/dev/null
 USE $DATENBANKNAME
 SELECT regionName , serverPort FROM regions ORDER BY serverPort
 MEIN_ABFRAGE_ENDE
 
-return 0
+	return 0
 }
 
 ### !  setpartner, Partner setzen bei einer Person. Also bei beiden Partnern muss dies gemacht werden.
 # opensim.sh setpartner Datenbankbenutzer Datenbankpasswort Robustdatenbank "AvatarUUID" "PartnerUUID"
-function setpartner()
-{
-	DBBENUTZER=$1; DBPASSWORT=$2; DATENBANKNAME=$3; 
-	AVATARUUID=$4; NEUERPARTNER=$5;
-	
-	LEEREMPTY="00000000-0000-0000-0000-000000000000";
+function setpartner() {
+	DBBENUTZER=$1
+	DBPASSWORT=$2
+	DATENBANKNAME=$3
+	AVATARUUID=$4
+	NEUERPARTNER=$5
+
+	LEEREMPTY="00000000-0000-0000-0000-000000000000"
 	echo "$LEEREMPTY"
 
 	#  2>/dev/null
-mysql -u"$DBBENUTZER" -p"$DBPASSWORT" <<MEIN_ABFRAGE_ENDE 2>/dev/null
+	mysql -u"$DBBENUTZER" -p"$DBPASSWORT" <<MEIN_ABFRAGE_ENDE 2>/dev/null
 USE $DATENBANKNAME
 UPDATE userprofile SET profilePartner = '$NEUERPARTNER' WHERE userprofile.useruuid = '$AVATARUUID'
 MEIN_ABFRAGE_ENDE
 
 	echo "$(tput setaf 5)SETPARTNER: $NEUERPARTNER ist jetzt Partner von $AVATARUUID. $(tput sgr0)"
-	echo "$DATUM $(date +%H:%M:%S) SETPARTNER: $NEUERPARTNER ist jetzt Partner von $AVATARUUID" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+	echo "$DATUM $(date +%H:%M:%S) SETPARTNER: $NEUERPARTNER ist jetzt Partner von $AVATARUUID" >>"/$STARTVERZEICHNIS/$DATEIDATUM$logfilename.log"
 	return 0
 }
 ### !setpartner, Partner setzen bei einer Person. Also bei beiden Partnern muss dies gemacht werden.
 # opensim.sh setpartner Datenbankbenutzer Datenbankpasswort Robustdatenbank "AvatarUUID" "PartnerUUID"
-function db_setpartner()
-{
-	username=$1; password=$2; databasename=$3; AVATARUUID=$4; NEUERPARTNER=$5;
-	
-	LEEREMPTY="00000000-0000-0000-0000-000000000000";
+function db_setpartner() {
+	username=$1
+	password=$2
+	databasename=$3
+	AVATARUUID=$4
+	NEUERPARTNER=$5
+
+	LEEREMPTY="00000000-0000-0000-0000-000000000000"
 	log text "Leere UUID um den Partner zu loeschen: $LEEREMPTY"
 
 	log text "SETPARTNER: $NEUERPARTNER ist jetzt Partner von $AVATARUUID."
@@ -4325,11 +4466,13 @@ function db_setpartner()
 }
 ### !db_deletepartner, Partner loeschen bei einer Person. Also bei beiden Partnern muss dies gemacht werden.
 # opensim.sh setpartner Datenbankbenutzer Datenbankpasswort Robustdatenbank "AvatarUUID" "PartnerUUID"
-function db_deletepartner()
-{
-	username=$1; password=$2; databasename=$3; AVATARUUID=$4;
-	
-	LEEREMPTY="00000000-0000-0000-0000-000000000000";
+function db_deletepartner() {
+	username=$1
+	password=$2
+	databasename=$3
+	AVATARUUID=$4
+
+	LEEREMPTY="00000000-0000-0000-0000-000000000000"
 
 	log text "SETPARTNER: Leere UUID um den Partner zu loeschen von $AVATARUUID."
 	mysqlrest "$username" "$password" "$databasename" "UPDATE userprofile SET profilePartner = '$LEEREMPTY' WHERE userprofile.useruuid = '$AVATARUUID'"
@@ -4343,9 +4486,10 @@ function db_deletepartner()
 # Test: getestet und korrigiert am 05.06.2022
 
 ### !Daten von allen Benutzern anzeigen: db_all_user "username" "password" "databasename"
-function db_all_user()
-{
-	username=$1; password=$2; databasename=$3;
+function db_all_user() {
+	username=$1
+	password=$2
+	databasename=$3
 	echo "Daten von allen Benutzern anzeigen:"
 	echo " "
 	mysqlrest "$username" "$password" "$databasename" "SELECT * FROM UserAccounts" # Alles holen und in die Variable result_mysqlrest schreiben.
@@ -4354,34 +4498,36 @@ function db_all_user()
 	return 0
 }
 ### !db_all_user_dialog tabellenabfrage, Daten von allen Benutzern anzeigen.
-function db_all_user_dialog()
-{
-    # zuerst schauen ob dialog installiert ist
-    if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+function db_all_user_dialog() {
+	# zuerst schauen ob dialog installiert ist
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
 
-    # Einstellungen
-    boxbacktitel="opensimMULTITOOL"
-    boxtitel="opensimMULTITOOL Eingabe"
-    formtitle="Daten von allen Benutzern anzeigen"
-    lable1="Benutzername:"; lablename1=""
-    lable2="Passwort:"; lablename2=""
-    lable3="Datenbankname:"; lablename3=""
+		# Einstellungen
+		boxbacktitel="opensimMULTITOOL"
+		boxtitel="opensimMULTITOOL Eingabe"
+		formtitle="Daten von allen Benutzern anzeigen"
+		lable1="Benutzername:"
+		lablename1=""
+		lable2="Passwort:"
+		lablename2=""
+		lable3="Datenbankname:"
+		lablename3=""
 
-    # Abfrage
-    ASSETDELBOXERGEBNIS=$( dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30  3>&1 1>&2 2>&3 3>&- )
+		# Abfrage
+		ASSETDELBOXERGEBNIS=$(dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 3>&1 1>&2 2>&3 3>&-)
 
-    # Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
-    username=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '1p')
-    password=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '2p')
-    databasename=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '3p')
+		# Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
+		username=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '1p')
+		password=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '2p')
+		databasename=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '3p')
 
-    # Alles loeschen.
-    dialog --clear
-    clear
+		# Alles loeschen.
+		dialog --clear
+		clear
 	else
 		# Alle Aktionen ohne dialog
-        echo "Keine Menuelose Funktion"|exit
-	fi	# dialog Aktionen Ende
+		echo "Keine Menuelose Funktion" | exit
+	fi # dialog Aktionen Ende
 
 	mysqlrest "$username" "$password" "$databasename" "SELECT * FROM UserAccounts" # Alles holen und in die Variable result_mysqlrest schreiben.
 
@@ -4391,47 +4537,50 @@ function db_all_user_dialog()
 }
 
 ### !UUID von allen Benutzern anzeigen: db_all_uuid "username" "password" "databasename"
-function db_all_uuid()
-{
-	username=$1; password=$2; databasename=$3;
+function db_all_uuid() {
+	username=$1
+	password=$2
+	databasename=$3
 	echo "UUID von allen Benutzern anzeigen:"
 	echo " "
-	mysqlrest "$username" "$password" "$databasename"  "SELECT PrincipalID FROM UserAccounts"
+	mysqlrest "$username" "$password" "$databasename" "SELECT PrincipalID FROM UserAccounts"
 	log rohtext "$result_mysqlrest"
 
 	return 0
 }
 ### !UUID von allen Benutzern anzeigen.
-function db_all_uuid_dialog()
-{
-    # zuerst schauen ob dialog installiert ist
-    if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+function db_all_uuid_dialog() {
+	# zuerst schauen ob dialog installiert ist
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
 
-    # Einstellungen
-    boxbacktitel="opensimMULTITOOL"
-    boxtitel="opensimMULTITOOL Eingabe"
-    formtitle="UUID von allen Benutzern anzeigen"
-    lable1="Benutzername:"; lablename1=""
-    lable2="Passwort:"; lablename2=""
-    lable3="Datenbankname:"; lablename3=""
+		# Einstellungen
+		boxbacktitel="opensimMULTITOOL"
+		boxtitel="opensimMULTITOOL Eingabe"
+		formtitle="UUID von allen Benutzern anzeigen"
+		lable1="Benutzername:"
+		lablename1=""
+		lable2="Passwort:"
+		lablename2=""
+		lable3="Datenbankname:"
+		lablename3=""
 
-    # Abfrage
-    ASSETDELBOXERGEBNIS=$( dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30  3>&1 1>&2 2>&3 3>&- )
+		# Abfrage
+		ASSETDELBOXERGEBNIS=$(dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 3>&1 1>&2 2>&3 3>&-)
 
-    # Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
-    username=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '1p')
-    password=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '2p')
-    databasename=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '3p')
+		# Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
+		username=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '1p')
+		password=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '2p')
+		databasename=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '3p')
 
-    # Alles loeschen.
-    dialog --clear
-    clear
+		# Alles loeschen.
+		dialog --clear
+		clear
 	else
 		# Alle Aktionen ohne dialog
-        echo "Keine Menuelose Funktion"|exit
-	fi	# dialog Aktionen Ende
+		echo "Keine Menuelose Funktion" | exit
+	fi # dialog Aktionen Ende
 
-	mysqlrest "$username" "$password" "$databasename"  "SELECT PrincipalID FROM UserAccounts"
+	mysqlrest "$username" "$password" "$databasename" "SELECT PrincipalID FROM UserAccounts"
 
 	warnbox "$result_mysqlrest"
 
@@ -4439,9 +4588,10 @@ function db_all_uuid_dialog()
 }
 
 ### ! Alle Namen anzeigen: db_all_name "username" "password" "databasename"
-function db_all_name()
-{
-	username=$1; password=$2; databasename=$3;
+function db_all_name() {
+	username=$1
+	password=$2
+	databasename=$3
 	echo "Vor- und Zuname von allen Benutzern anzeigen:"
 	echo " "
 	mysqlrest "$username" "$password" "$databasename" "SELECT FirstName, LastName FROM UserAccounts"
@@ -4450,34 +4600,36 @@ function db_all_name()
 	return 0
 }
 ### ! Alle Namen anzeigen: db_all_name_dialog "username" "password" "databasename"
-function db_all_name_dialog()
-{
-    # zuerst schauen ob dialog installiert ist
-    if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+function db_all_name_dialog() {
+	# zuerst schauen ob dialog installiert ist
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
 
-    # Einstellungen
-    boxbacktitel="opensimMULTITOOL"
-    boxtitel="opensimMULTITOOL Eingabe"
-    formtitle="Alle Tabellen in einer Datenbank auflisten"
-    lable1="Benutzername:"; lablename1=""
-    lable2="Passwort:"; lablename2=""
-    lable3="Datenbankname:"; lablename3=""
+		# Einstellungen
+		boxbacktitel="opensimMULTITOOL"
+		boxtitel="opensimMULTITOOL Eingabe"
+		formtitle="Alle Tabellen in einer Datenbank auflisten"
+		lable1="Benutzername:"
+		lablename1=""
+		lable2="Passwort:"
+		lablename2=""
+		lable3="Datenbankname:"
+		lablename3=""
 
-    # Abfrage
-    db_all_name=$( dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30  3>&1 1>&2 2>&3 3>&- )
+		# Abfrage
+		db_all_name=$(dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 3>&1 1>&2 2>&3 3>&-)
 
-    # Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
-    username=$(echo "$db_all_name" | sed -n '1p')
-    password=$(echo "$db_all_name" | sed -n '2p')
-    databasename=$(echo "$db_all_name" | sed -n '3p')
+		# Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
+		username=$(echo "$db_all_name" | sed -n '1p')
+		password=$(echo "$db_all_name" | sed -n '2p')
+		databasename=$(echo "$db_all_name" | sed -n '3p')
 
-    # Alles loeschen.
-    dialog --clear
-    clear
+		# Alles loeschen.
+		dialog --clear
+		clear
 	else
 		# Alle Aktionen ohne dialog
-        echo "Keine Menuelose Funktion"|exit
-	fi	# dialog Aktionen Ende
+		echo "Keine Menuelose Funktion" | exit
+	fi # dialog Aktionen Ende
 
 	mysqlrest "$username" "$password" "$databasename" "SELECT FirstName, LastName FROM UserAccounts"
 
@@ -4487,9 +4639,12 @@ function db_all_name_dialog()
 }
 
 ### !Daten von einem Benutzer anzeigen: db_user_data "username" "password" "databasename" "firstname" "lastname"
-function db_user_data()
-{
-	username=$1; password=$2; databasename=$3; firstname=$4; lastname=$5;
+function db_user_data() {
+	username=$1
+	password=$2
+	databasename=$3
+	firstname=$4
+	lastname=$5
 	echo "Daten von einem Benutzer anzeigen:"
 	echo " "
 	mysqlrest "$username" "$password" "$databasename" "SELECT * FROM UserAccounts WHERE firstname='$firstname' AND lastname LIKE '$lastname'"
@@ -4498,38 +4653,42 @@ function db_user_data()
 	return 0
 }
 ### !Daten von einem Benutzer anzeigen: db_user_data_dialog "username" "password" "databasename" "firstname" "lastname"
-function db_user_data_dialog()
-{
-    # zuerst schauen ob dialog installiert ist
-    if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+function db_user_data_dialog() {
+	# zuerst schauen ob dialog installiert ist
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
 
-    # Einstellungen
-    boxbacktitel="opensimMULTITOOL"
-    boxtitel="opensimMULTITOOL Eingabe"
-    formtitle="Finde alle offensichtlich falschen E-Mail Adressen der Grid User und deaktiviere dauerhaft dessen Account"
-    lable1="Benutzername:"; lablename1=""
-    lable2="Passwort:"; lablename2=""
-    lable3="Datenbankname:"; lablename3=""
-	lable4="Vorname:"; lablename4=""
-	lable5="Nachname:"; lablename5=""
+		# Einstellungen
+		boxbacktitel="opensimMULTITOOL"
+		boxtitel="opensimMULTITOOL Eingabe"
+		formtitle="Finde alle offensichtlich falschen E-Mail Adressen der Grid User und deaktiviere dauerhaft dessen Account"
+		lable1="Benutzername:"
+		lablename1=""
+		lable2="Passwort:"
+		lablename2=""
+		lable3="Datenbankname:"
+		lablename3=""
+		lable4="Vorname:"
+		lablename4=""
+		lable5="Nachname:"
+		lablename5=""
 
-    # Abfrage
-    db_user_data=$( dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 "$lable4" 4 1 "$lablename4" 4 25 25 30 "$lable5" 5 1 "$lablename5" 5 25 25 30  3>&1 1>&2 2>&3 3>&- )
+		# Abfrage
+		db_user_data=$(dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 "$lable4" 4 1 "$lablename4" 4 25 25 30 "$lable5" 5 1 "$lablename5" 5 25 25 30 3>&1 1>&2 2>&3 3>&-)
 
-    # Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
-    username=$(echo "$db_user_data" | sed -n '1p')
-    password=$(echo "$db_user_data" | sed -n '2p')
-    databasename=$(echo "$db_user_data" | sed -n '3p')
-	firstname=$(echo "$db_user_data" | sed -n '4p')
-	lastname=$(echo "$db_user_data" | sed -n '5p')
+		# Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
+		username=$(echo "$db_user_data" | sed -n '1p')
+		password=$(echo "$db_user_data" | sed -n '2p')
+		databasename=$(echo "$db_user_data" | sed -n '3p')
+		firstname=$(echo "$db_user_data" | sed -n '4p')
+		lastname=$(echo "$db_user_data" | sed -n '5p')
 
-    # Alles loeschen.
-    dialog --clear
-    clear
+		# Alles loeschen.
+		dialog --clear
+		clear
 	else
 		# Alle Aktionen ohne dialog
-        echo "Keine Menuelose Funktion"|exit
-	fi	# dialog Aktionen Ende
+		echo "Keine Menuelose Funktion" | exit
+	fi # dialog Aktionen Ende
 
 	mysqlrest "$username" "$password" "$databasename" "SELECT * FROM UserAccounts WHERE firstname='$firstname' AND lastname LIKE '$lastname'"
 
@@ -4539,9 +4698,12 @@ function db_user_data_dialog()
 }
 
 ### !UUID Vor- und Nachname sowie E-Mail Adresse von einem Benutzer anzeigen: db_user_infos "username" "password" "databasename" "firstname" "lastname"
-function db_user_infos()
-{
-	username=$1; password=$2; databasename=$3; firstname=$4; lastname=$5;
+function db_user_infos() {
+	username=$1
+	password=$2
+	databasename=$3
+	firstname=$4
+	lastname=$5
 	echo "UUID Vor- und Nachname sowie E-Mail Adresse von einem Benutzer anzeigen:"
 	echo " "
 	mysqlrest "$username" "$password" "$databasename" "SELECT PrincipalID, FirstName, LastName, Email FROM UserAccounts WHERE firstname='$firstname' AND lastname LIKE '$lastname'"
@@ -4550,38 +4712,42 @@ function db_user_infos()
 	return 0
 }
 ### !UUID Vor- und Nachname sowie E-Mail Adresse von einem Benutzer anzeigen: db_user_infos "username" "password" "databasename" "firstname" "lastname"
-function db_user_infos_dialog()
-{
-    # zuerst schauen ob dialog installiert ist
-    if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+function db_user_infos_dialog() {
+	# zuerst schauen ob dialog installiert ist
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
 
-    # Einstellungen
-    boxbacktitel="opensimMULTITOOL"
-    boxtitel="opensimMULTITOOL Eingabe"
-    formtitle="Finde alle offensichtlich falschen E-Mail Adressen der Grid User und deaktiviere dauerhaft dessen Account"
-    lable1="Benutzername:"; lablename1=""
-    lable2="Passwort:"; lablename2=""
-    lable3="Datenbankname:"; lablename3=""
-	lable4="Vorname:"; lablename4=""
-	lable5="Nachname:"; lablename5=""
+		# Einstellungen
+		boxbacktitel="opensimMULTITOOL"
+		boxtitel="opensimMULTITOOL Eingabe"
+		formtitle="Finde alle offensichtlich falschen E-Mail Adressen der Grid User und deaktiviere dauerhaft dessen Account"
+		lable1="Benutzername:"
+		lablename1=""
+		lable2="Passwort:"
+		lablename2=""
+		lable3="Datenbankname:"
+		lablename3=""
+		lable4="Vorname:"
+		lablename4=""
+		lable5="Nachname:"
+		lablename5=""
 
-    # Abfrage
-    db_user_infos=$( dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 "$lable4" 4 1 "$lablename4" 4 25 25 30 "$lable5" 5 1 "$lablename5" 5 25 25 30  3>&1 1>&2 2>&3 3>&- )
+		# Abfrage
+		db_user_infos=$(dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 "$lable4" 4 1 "$lablename4" 4 25 25 30 "$lable5" 5 1 "$lablename5" 5 25 25 30 3>&1 1>&2 2>&3 3>&-)
 
-    # Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
-    username=$(echo "$db_user_infos" | sed -n '1p')
-    password=$(echo "$db_user_infos" | sed -n '2p')
-    databasename=$(echo "$db_user_infos" | sed -n '3p')
-	firstname=$(echo "$db_user_infos" | sed -n '4p')
-	lastname=$(echo "$db_user_infos" | sed -n '5p')
+		# Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
+		username=$(echo "$db_user_infos" | sed -n '1p')
+		password=$(echo "$db_user_infos" | sed -n '2p')
+		databasename=$(echo "$db_user_infos" | sed -n '3p')
+		firstname=$(echo "$db_user_infos" | sed -n '4p')
+		lastname=$(echo "$db_user_infos" | sed -n '5p')
 
-    # Alles loeschen.
-    dialog --clear
-    clear
+		# Alles loeschen.
+		dialog --clear
+		clear
 	else
 		# Alle Aktionen ohne dialog
-        echo "Keine Menuelose Funktion"|exit
-	fi	# dialog Aktionen Ende
+		echo "Keine Menuelose Funktion" | exit
+	fi # dialog Aktionen Ende
 
 	mysqlrest "$username" "$password" "$databasename" "SELECT PrincipalID, FirstName, LastName, Email FROM UserAccounts WHERE firstname='$firstname' AND lastname LIKE '$lastname'"
 
@@ -4591,9 +4757,12 @@ function db_user_infos_dialog()
 }
 
 ### !UUID von einem Benutzer anzeigen: db_user_uuid
-function db_user_uuid()
-{
-	username=$1; password=$2; databasename=$3; firstname=$4; lastname=$5;
+function db_user_uuid() {
+	username=$1
+	password=$2
+	databasename=$3
+	firstname=$4
+	lastname=$5
 	echo "UUID von einem Benutzer anzeigen:"
 	echo " "
 	mysqlrest "$username" "$password" "$databasename" "SELECT PrincipalID FROM UserAccounts WHERE FirstName='$firstname' AND LastName='$lastname'"
@@ -4602,38 +4771,42 @@ function db_user_uuid()
 	return 0
 }
 ### !UUID von einem Benutzer anzeigen: db_user_uuid_dialog
-function db_user_uuid_dialog()
-{
-    # zuerst schauen ob dialog installiert ist
-    if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+function db_user_uuid_dialog() {
+	# zuerst schauen ob dialog installiert ist
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
 
-    # Einstellungen
-    boxbacktitel="opensimMULTITOOL"
-    boxtitel="opensimMULTITOOL Eingabe"
-    formtitle="Finde alle offensichtlich falschen E-Mail Adressen der Grid User und deaktiviere dauerhaft dessen Account"
-    lable1="Benutzername:"; lablename1=""
-    lable2="Passwort:"; lablename2=""
-    lable3="Datenbankname:"; lablename3=""
-	lable4="Vorname:"; lablename4=""
-	lable5="Nachname:"; lablename5=""
+		# Einstellungen
+		boxbacktitel="opensimMULTITOOL"
+		boxtitel="opensimMULTITOOL Eingabe"
+		formtitle="Finde alle offensichtlich falschen E-Mail Adressen der Grid User und deaktiviere dauerhaft dessen Account"
+		lable1="Benutzername:"
+		lablename1=""
+		lable2="Passwort:"
+		lablename2=""
+		lable3="Datenbankname:"
+		lablename3=""
+		lable4="Vorname:"
+		lablename4=""
+		lable5="Nachname:"
+		lablename5=""
 
-    # Abfrage
-    db_user_uuid=$( dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 "$lable4" 4 1 "$lablename4" 4 25 25 30 "$lable5" 5 1 "$lablename5" 5 25 25 30  3>&1 1>&2 2>&3 3>&- )
+		# Abfrage
+		db_user_uuid=$(dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 "$lable4" 4 1 "$lablename4" 4 25 25 30 "$lable5" 5 1 "$lablename5" 5 25 25 30 3>&1 1>&2 2>&3 3>&-)
 
-    # Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
-    username=$(echo "$db_user_uuid" | sed -n '1p')
-    password=$(echo "$db_user_uuid" | sed -n '2p')
-    databasename=$(echo "$db_user_uuid" | sed -n '3p')
-	firstname=$(echo "$db_user_uuid" | sed -n '4p')
-	lastname=$(echo "$db_user_uuid" | sed -n '5p')
+		# Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
+		username=$(echo "$db_user_uuid" | sed -n '1p')
+		password=$(echo "$db_user_uuid" | sed -n '2p')
+		databasename=$(echo "$db_user_uuid" | sed -n '3p')
+		firstname=$(echo "$db_user_uuid" | sed -n '4p')
+		lastname=$(echo "$db_user_uuid" | sed -n '5p')
 
-    # Alles loeschen.
-    dialog --clear
-    clear
+		# Alles loeschen.
+		dialog --clear
+		clear
 	else
 		# Alle Aktionen ohne dialog
-        echo "Keine Menuelose Funktion"|exit
-	fi	# dialog Aktionen Ende
+		echo "Keine Menuelose Funktion" | exit
+	fi # dialog Aktionen Ende
 
 	mysqlrest "$username" "$password" "$databasename" "SELECT PrincipalID FROM UserAccounts WHERE FirstName='$firstname' AND LastName='$lastname'"
 
@@ -4643,32 +4816,36 @@ function db_user_uuid_dialog()
 }
 
 ### !Alles vom inventoryfolders type des User: db_foldertyp_user "username" "password" "databasename" "firstname" "lastname" "foldertyp"
-function db_foldertyp_user()
-{
-	username=$1; password=$2; databasename=$3; firstname=$4; lastname=$5; foldertyp=$6
+function db_foldertyp_user() {
+	username=$1
+	password=$2
+	databasename=$3
+	firstname=$4
+	lastname=$5
+	foldertyp=$6
 
 	case $foldertyp in
 	Textures | textures) foldertyp="0" ;;
-	Sounds | sounds)	foldertyp="1" ;;
+	Sounds | sounds) foldertyp="1" ;;
 	CallingCards | callingcards) foldertyp="2" ;;
 	Landmarks | landmarks) foldertyp="3" ;;
 	Clothing | clothing) foldertyp="5" ;;
-	Objects | objects) foldertyp="6" ;;		
+	Objects | objects) foldertyp="6" ;;
 	Notecards | notecards) foldertyp="7" ;;
 	MyInventory | myinventory) foldertyp="8" ;;
 	Scripts | scripts) foldertyp="10" ;;
 	BodyParts | bodyparts) foldertyp="13" ;;
 	Trash | trash) foldertyp="14" ;;
-	PhotoAlbum | photoalbum) foldertyp="15" ;;		
+	PhotoAlbum | photoalbum) foldertyp="15" ;;
 	LostandFound | lostandfound) foldertyp="16" ;;
 	Animations | animations) foldertyp="20" ;;
 	Gestures | gestures) foldertyp="21" ;;
 	Favorites | favorites) foldertyp="23" ;;
 	CurrentOutfit | currentoutfit) foldertyp="46" ;;
-	Outfits | outfits) foldertyp="47" ;;		
+	Outfits | outfits) foldertyp="47" ;;
 	Meshes | meshes) foldertyp="49" ;;
 	Settings | settings) foldertyp="56" ;;
-	userDefined | userdefined) foldertyp="-1" ;;		
+	userDefined | userdefined) foldertyp="-1" ;;
 	*) $foldertyp ;;
 	esac
 
@@ -4683,168 +4860,193 @@ function db_foldertyp_user()
 }
 
 ### ! Alles vom inventoryfolders was type -1 des User: db_all_userfailed "username" "password" "databasename" "firstname" "lastname"
-function db_all_userfailed()
-{
-    # zuerst schauen ob dialog installiert ist
-    if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+function db_all_userfailed() {
+	# zuerst schauen ob dialog installiert ist
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
 
-    # Einstellungen
-    boxbacktitel="opensimMULTITOOL"
-    boxtitel="opensimMULTITOOL Eingabe"
-    formtitle="Finde alles vom inventoryfolders was type -1 des User ist"
-    lable1="Benutzername:"; lablename1=""
-    lable2="Passwort:"; lablename2=""
-    lable3="Datenbankname:"; lablename3=""
-	lable4="Vorname:"; lablename4=""
-	lable5="Nachname:"; lablename5=""
+		# Einstellungen
+		boxbacktitel="opensimMULTITOOL"
+		boxtitel="opensimMULTITOOL Eingabe"
+		formtitle="Finde alles vom inventoryfolders was type -1 des User ist"
+		lable1="Benutzername:"
+		lablename1=""
+		lable2="Passwort:"
+		lablename2=""
+		lable3="Datenbankname:"
+		lablename3=""
+		lable4="Vorname:"
+		lablename4=""
+		lable5="Nachname:"
+		lablename5=""
 
-    # Abfrage
-    db_all_userfailed=$( dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 "$lable4" 4 1 "$lablename4" 4 25 25 30 "$lable5" 5 1 "$lablename5" 5 25 25 30  3>&1 1>&2 2>&3 3>&- )
+		# Abfrage
+		db_all_userfailed=$(dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 "$lable4" 4 1 "$lablename4" 4 25 25 30 "$lable5" 5 1 "$lablename5" 5 25 25 30 3>&1 1>&2 2>&3 3>&-)
 
-    # Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
-    username=$(echo "$db_all_userfailed" | sed -n '1p')
-    password=$(echo "$db_all_userfailed" | sed -n '2p')
-    databasename=$(echo "$db_all_userfailed" | sed -n '3p')
-	firstname=$(echo "$db_all_userfailed" | sed -n '4p')
-	lastname=$(echo "$db_all_userfailed" | sed -n '5p')
+		# Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
+		username=$(echo "$db_all_userfailed" | sed -n '1p')
+		password=$(echo "$db_all_userfailed" | sed -n '2p')
+		databasename=$(echo "$db_all_userfailed" | sed -n '3p')
+		firstname=$(echo "$db_all_userfailed" | sed -n '4p')
+		lastname=$(echo "$db_all_userfailed" | sed -n '5p')
 
-    # Alles loeschen.
-    dialog --clear
-    clear
+		# Alles loeschen.
+		dialog --clear
+		clear
 	else
 		# Alle Aktionen ohne dialog
 		log info "Finde alles vom inventoryfolders was type -1 des User ist:"
-        username=$1; password=$2; databasename=$3; firstname=$4; lastname=$5;
-	fi	# dialog Aktionen Ende
-	
+		username=$1
+		password=$2
+		databasename=$3
+		firstname=$4
+		lastname=$5
+	fi # dialog Aktionen Ende
+
 	mysqlrest "$username" "$password" "$databasename" "SELECT PrincipalID FROM UserAccounts WHERE FirstName='$firstname' AND LastName='$lastname'"
 	uf_user_uuid="$result_mysqlrest"
 	mysqlrest "$username" "$password" "$databasename" "SELECT * FROM inventoryfolders WHERE type != '-1' AND agentID='$uf_user_uuid'"
 
-    # Ausgabe zuerst schauen ob dialog installiert ist
-	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
-        warnbox "$result_mysqlrest"
-    else
-        log rohtext "$result_mysqlrest"
-    fi
+	# Ausgabe zuerst schauen ob dialog installiert ist
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
+		warnbox "$result_mysqlrest"
+	else
+		log rohtext "$result_mysqlrest"
+	fi
 
 	return 0
 }
 
 ### !Zeige Erstellungsdatum eines Users an: db_userdate "username" "password" "databasename" "firstname" "lastname"
-function db_userdate()
-{
-    # zuerst schauen ob dialog installiert ist
-    if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+function db_userdate() {
+	# zuerst schauen ob dialog installiert ist
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
 
-    # Einstellungen
-    boxbacktitel="opensimMULTITOOL"
-    boxtitel="opensimMULTITOOL Eingabe"
-    formtitle="Zeige Erstellungsdatum eines Users an"
-    lable1="Benutzername:"; lablename1=""
-    lable2="Passwort:"; lablename2=""
-    lable3="Datenbankname:"; lablename3=""
-	lable4="Vorname:"; lablename4=""
-	lable5="Nachname:"; lablename5=""
+		# Einstellungen
+		boxbacktitel="opensimMULTITOOL"
+		boxtitel="opensimMULTITOOL Eingabe"
+		formtitle="Zeige Erstellungsdatum eines Users an"
+		lable1="Benutzername:"
+		lablename1=""
+		lable2="Passwort:"
+		lablename2=""
+		lable3="Datenbankname:"
+		lablename3=""
+		lable4="Vorname:"
+		lablename4=""
+		lable5="Nachname:"
+		lablename5=""
 
-    # Abfrage
-    db_userdate=$( dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 "$lable4" 4 1 "$lablename4" 4 25 25 30 "$lable5" 5 1 "$lablename5" 5 25 25 30  3>&1 1>&2 2>&3 3>&- )
+		# Abfrage
+		db_userdate=$(dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 "$lable4" 4 1 "$lablename4" 4 25 25 30 "$lable5" 5 1 "$lablename5" 5 25 25 30 3>&1 1>&2 2>&3 3>&-)
 
-    # Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
-    username=$(echo "$db_userdate" | sed -n '1p')
-    password=$(echo "$db_userdate" | sed -n '2p')
-    databasename=$(echo "$db_userdate" | sed -n '3p')
-	firstname=$(echo "$db_userdate" | sed -n '4p')
-	lastname=$(echo "$db_userdate" | sed -n '5p')
+		# Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
+		username=$(echo "$db_userdate" | sed -n '1p')
+		password=$(echo "$db_userdate" | sed -n '2p')
+		databasename=$(echo "$db_userdate" | sed -n '3p')
+		firstname=$(echo "$db_userdate" | sed -n '4p')
+		lastname=$(echo "$db_userdate" | sed -n '5p')
 
-    # Alles loeschen.
-    dialog --clear
-    clear
+		# Alles loeschen.
+		dialog --clear
+		clear
 	else
 		# Alle Aktionen ohne dialog
 		log info "Zeige Erstellungsdatum eines Users an:"
-        username=$1; password=$2; databasename=$3; firstname=$4; lastname=$5;
-	fi	# dialog Aktionen Ende
+		username=$1
+		password=$2
+		databasename=$3
+		firstname=$4
+		lastname=$5
+	fi # dialog Aktionen Ende
 
 	mysqlrest "$username" "$password" "$databasename" "SELECT Created FROM UserAccounts WHERE firstname='$firstname' AND lastname LIKE '$lastname'"
 	#unix timestamp konvertieren in das Deutsche Datumsformat.
 	userdatum=$(date +%d.%m.%Y -d @"$result_mysqlrest")
 
-    # Ausgabe zuerst schauen ob dialog installiert ist
-	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
-        warnbox "Der Benutzer $firstname $lastname wurde am $userdatum angelegt."
-    else
-        log rohtext "Der Benutzer $firstname $lastname wurde am $userdatum angelegt."
-    fi
+	# Ausgabe zuerst schauen ob dialog installiert ist
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
+		warnbox "Der Benutzer $firstname $lastname wurde am $userdatum angelegt."
+	else
+		log rohtext "Der Benutzer $firstname $lastname wurde am $userdatum angelegt."
+	fi
 
 	return 0
 }
 
 ### ! Finde offensichtlich falsche E-Mail Adressen der User: db_false_email "username" "password" "databasename"
-function db_false_email()
-{
-    # zuerst schauen ob dialog installiert ist
-    if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+function db_false_email() {
+	# zuerst schauen ob dialog installiert ist
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
 
-    # Einstellungen
-    boxbacktitel="opensimMULTITOOL"
-    boxtitel="opensimMULTITOOL Eingabe"
-    formtitle="Finde falsche E-Mail Adressen"
-    lable1="Benutzername:"; lablename1=""
-    lable2="Passwort:"; lablename2=""
-    lable3="Datenbankname:"; lablename3=""
+		# Einstellungen
+		boxbacktitel="opensimMULTITOOL"
+		boxtitel="opensimMULTITOOL Eingabe"
+		formtitle="Finde falsche E-Mail Adressen"
+		lable1="Benutzername:"
+		lablename1=""
+		lable2="Passwort:"
+		lablename2=""
+		lable3="Datenbankname:"
+		lablename3=""
 
-    # Abfrage
-    db_false_emailBOXERGEBNIS=$( dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30  3>&1 1>&2 2>&3 3>&- )
+		# Abfrage
+		db_false_emailBOXERGEBNIS=$(dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 3>&1 1>&2 2>&3 3>&-)
 
-    # Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
-    username=$(echo "$db_false_emailBOXERGEBNIS" | sed -n '1p')
-    password=$(echo "$db_false_emailBOXERGEBNIS" | sed -n '2p')
-    databasename=$(echo "$db_false_emailBOXERGEBNIS" | sed -n '3p')
+		# Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
+		username=$(echo "$db_false_emailBOXERGEBNIS" | sed -n '1p')
+		password=$(echo "$db_false_emailBOXERGEBNIS" | sed -n '2p')
+		databasename=$(echo "$db_false_emailBOXERGEBNIS" | sed -n '3p')
 
-    # Alles loeschen.
-    dialog --clear
-    clear
+		# Alles loeschen.
+		dialog --clear
+		clear
 	else
 		# Alle Aktionen ohne dialog
 		log info "Finde offensichtlich falsche E-Mail Adressen der User ausser von $ausnahmefirstname $ausnahmelastname."
-        username=$1; password=$2; databasename=$3;
-	fi	# dialog Aktionen Ende
+		username=$1
+		password=$2
+		databasename=$3
+	fi # dialog Aktionen Ende
 
 	# Ausnahmen
-	ausnahmefirstname="GRID"; ausnahmelastname="SERVICES"
+	ausnahmefirstname="GRID"
+	ausnahmelastname="SERVICES"
 
 	mysqlrest "$username" "$password" "$databasename" "SELECT PrincipalID, FirstName, LastName, Email FROM UserAccounts WHERE Email NOT LIKE '%_@__%.__%'AND NOT firstname='$ausnahmefirstname' AND NOT lastname='$ausnahmelastname'"
 
-    # Ausgabe zuerst schauen ob dialog installiert ist
-	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
-        warnbox "$result_mysqlrest"
-    else
-        log rohtext "$result_mysqlrest"
-    fi
+	# Ausgabe zuerst schauen ob dialog installiert ist
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
+		warnbox "$result_mysqlrest"
+	else
+		log rohtext "$result_mysqlrest"
+	fi
 
 	return 0
 }
 
 ### !Einen User in der Datenbank erstellen und das ohne Inventar (Gut fuer Picker): set_empty_user "username" "password" "databasename" "firstname" "lastname" "email"
-function set_empty_user()
-{
+function set_empty_user() {
 	regex="^(([-a-zA-Z0-9\!#\$%\&\'*+/=?^_\`{\|}~]+|(\"([][,:;<>\&@a-zA-Z0-9\!#\$%\&\'*+/=?^_\`{\|}~-]|(\\\\[\\ \"]))+\"))\.)*([-a-zA-Z0-9\!#\$%\&\'*+/=?^_\`{\|}~]+|(\"([][,:;<>\&@a-zA-Z0-9\!#\$%\&\'*+/=?^_\`{\|}~-]|(\\\\[\\ \"]))+\"))@\w((-|\w)*\w)*\.(\w((-|\w)*\w)*\.)*\w{2,4}$"
-	username=$1; password=$2; databasename=$3; firstname=$4; lastname=$5; email=$6
+	username=$1
+	password=$2
+	databasename=$3
+	firstname=$4
+	lastname=$5
+	email=$6
 	UUID=$(uuidgen)
 	newPrincipalID="$UUID"
 	newScopeID="00000000-0000-0000-0000-000000000000"
 	newFirstName="$firstname"
 	newLastName="$lastname"
 	# regex email check
-	if [[ $email =~ $regex ]] ; then
-    	echo "E-Mail $email OK"
+	if [[ $email =~ $regex ]]; then
+		echo "E-Mail $email OK"
 		newEmail="$email"
 	else
 		echo "E-Mail $email not OK"
 		exit 1
 	fi
-	
+
 	newServiceURLs="HomeURI= InventoryServerURI= AssetServerURI="
 	newCreated=$(date +%s)
 	newUserLevel="0"
@@ -4858,53 +5060,58 @@ function set_empty_user()
 
 ########### Neu am 08.06.2022
 
-### ! Finde alle offensichtlich falschen E-Mail Adressen der Grid User und 
+### ! Finde alle offensichtlich falschen E-Mail Adressen der Grid User und
 ## deaktiviere dauerhaft dessen Account:
 ## /opt/opensim.sh db_email_setincorrectuseroff "GRIDdatabaseusername" "GRIDdatabasepassword" "GRIDdatabasename"
-function db_email_setincorrectuseroff()
-{
-	username=$1; password=$2; databasename=$3; 
-	ausnahmefirstname="GRID"; ausnahmelastname="SERVICES"
+function db_email_setincorrectuseroff() {
+	username=$1
+	password=$2
+	databasename=$3
+	ausnahmefirstname="GRID"
+	ausnahmelastname="SERVICES"
 
 	log warn "Finde offensichtlich falsche E-Mail Adressen der User ausser von $ausnahmefirstname $ausnahmelastname und schalte diese User ab."
-	
+
 	mysqlrest "$username" "$password" "$databasename" "UPDATE UserAccounts SET active = -1 WHERE Email NOT LIKE '%_@__%.__%'AND NOT firstname='$ausnahmefirstname' AND NOT lastname='$ausnahmelastname';"
 
 	return 0
 }
-### ! Finde alle offensichtlich falschen E-Mail Adressen der Grid User und 
+### ! Finde alle offensichtlich falschen E-Mail Adressen der Grid User und
 ## deaktiviere dauerhaft dessen Account:
 ## /opt/opensim.sh db_email_setincorrectuseroff "GRIDdatabaseusername" "GRIDdatabasepassword" "GRIDdatabasename"
-function db_email_setincorrectuseroff_dialog()
-{
-    # zuerst schauen ob dialog installiert ist
-    if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+function db_email_setincorrectuseroff_dialog() {
+	# zuerst schauen ob dialog installiert ist
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
 
-    # Einstellungen
-    boxbacktitel="opensimMULTITOOL"
-    boxtitel="opensimMULTITOOL Eingabe"
-    formtitle="Finde alle offensichtlich falschen E-Mail Adressen der Grid User und deaktiviere dauerhaft dessen Account"
-    lable1="Benutzername:"; lablename1=""
-    lable2="Passwort:"; lablename2=""
-    lable3="Datenbankname:"; lablename3=""
+		# Einstellungen
+		boxbacktitel="opensimMULTITOOL"
+		boxtitel="opensimMULTITOOL Eingabe"
+		formtitle="Finde alle offensichtlich falschen E-Mail Adressen der Grid User und deaktiviere dauerhaft dessen Account"
+		lable1="Benutzername:"
+		lablename1=""
+		lable2="Passwort:"
+		lablename2=""
+		lable3="Datenbankname:"
+		lablename3=""
 
-    # Abfrage
-    ASSETDELBOXERGEBNIS=$( dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30  3>&1 1>&2 2>&3 3>&- )
+		# Abfrage
+		ASSETDELBOXERGEBNIS=$(dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 3>&1 1>&2 2>&3 3>&-)
 
-    # Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
-    username=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '1p')
-    password=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '2p')
-    databasename=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '3p')
+		# Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
+		username=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '1p')
+		password=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '2p')
+		databasename=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '3p')
 
-    # Alles loeschen.
-    dialog --clear
-    clear
+		# Alles loeschen.
+		dialog --clear
+		clear
 	else
 		# Alle Aktionen ohne dialog
-        echo "Keine Menuelose Funktion"|exit
-	fi	# dialog Aktionen Ende
+		echo "Keine Menuelose Funktion" | exit
+	fi # dialog Aktionen Ende
 
-	ausnahmefirstname="GRID"; ausnahmelastname="SERVICES"
+	ausnahmefirstname="GRID"
+	ausnahmelastname="SERVICES"
 
 	mysqlrest "$username" "$password" "$databasename" "UPDATE UserAccounts SET active = -1 WHERE Email NOT LIKE '%_@__%.__%'AND NOT firstname='$ausnahmefirstname' AND NOT lastname='$ausnahmelastname';"
 
@@ -4913,11 +5120,14 @@ function db_email_setincorrectuseroff_dialog()
 	return 0
 }
 
-### ! Grid User dauerhaft abschalten: 
+### ! Grid User dauerhaft abschalten:
 ## /opt/opensim.sh db_setuserofline "GRIDdatabaseusername" "GRIDdatabasepassword" "GRIDdatabasename" "firstname" "lastname"
-function db_setuserofline()
-{
-	username=$1; password=$2; databasename=$3; firstname=$4; lastname=$5; 
+function db_setuserofline() {
+	username=$1
+	password=$2
+	databasename=$3
+	firstname=$4
+	lastname=$5
 
 	echo "Setze User $firstname $lastname offline."
 	echo " "
@@ -4926,40 +5136,44 @@ function db_setuserofline()
 
 	return 0
 }
-### ! Grid User dauerhaft abschalten: 
+### ! Grid User dauerhaft abschalten:
 ## /opt/opensim.sh db_setuserofline_dialog "GRIDdatabaseusername" "GRIDdatabasepassword" "GRIDdatabasename" "firstname" "lastname"
-function db_setuserofline_dialog()
-{
-    # zuerst schauen ob dialog installiert ist
-    if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+function db_setuserofline_dialog() {
+	# zuerst schauen ob dialog installiert ist
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
 
-    # Einstellungen
-    boxbacktitel="opensimMULTITOOL"
-    boxtitel="opensimMULTITOOL Eingabe"
-    formtitle="Finde alle offensichtlich falschen E-Mail Adressen der Grid User und deaktiviere dauerhaft dessen Account"
-    lable1="Benutzername:"; lablename1=""
-    lable2="Passwort:"; lablename2=""
-    lable3="Datenbankname:"; lablename3=""
-	lable4="Vorname:"; lablename4=""
-	lable5="Nachname:"; lablename5=""
+		# Einstellungen
+		boxbacktitel="opensimMULTITOOL"
+		boxtitel="opensimMULTITOOL Eingabe"
+		formtitle="Finde alle offensichtlich falschen E-Mail Adressen der Grid User und deaktiviere dauerhaft dessen Account"
+		lable1="Benutzername:"
+		lablename1=""
+		lable2="Passwort:"
+		lablename2=""
+		lable3="Datenbankname:"
+		lablename3=""
+		lable4="Vorname:"
+		lablename4=""
+		lable5="Nachname:"
+		lablename5=""
 
-    # Abfrage
-    setuserofline=$( dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 "$lable4" 4 1 "$lablename4" 4 25 25 30 "$lable5" 5 1 "$lablename5" 5 25 25 30  3>&1 1>&2 2>&3 3>&- )
+		# Abfrage
+		setuserofline=$(dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 "$lable4" 4 1 "$lablename4" 4 25 25 30 "$lable5" 5 1 "$lablename5" 5 25 25 30 3>&1 1>&2 2>&3 3>&-)
 
-    # Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
-    username=$(echo "$setuserofline" | sed -n '1p')
-    password=$(echo "$setuserofline" | sed -n '2p')
-    databasename=$(echo "$setuserofline" | sed -n '3p')	
-	firstname=$(echo "$setuserofline" | sed -n '4p')
-	lastname=$(echo "$setuserofline" | sed -n '5p')
+		# Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
+		username=$(echo "$setuserofline" | sed -n '1p')
+		password=$(echo "$setuserofline" | sed -n '2p')
+		databasename=$(echo "$setuserofline" | sed -n '3p')
+		firstname=$(echo "$setuserofline" | sed -n '4p')
+		lastname=$(echo "$setuserofline" | sed -n '5p')
 
-    # Alles loeschen.
-    dialog --clear
-    clear
+		# Alles loeschen.
+		dialog --clear
+		clear
 	else
 		# Alle Aktionen ohne dialog
-        echo "Keine Menuelose Funktion"|exit
-	fi	# dialog Aktionen Ende
+		echo "Keine Menuelose Funktion" | exit
+	fi # dialog Aktionen Ende
 
 	mysqlrest "$username" "$password" "$databasename" "UPDATE UserAccounts SET active='-1' WHERE FirstName='$firstname' AND LastName='$lastname'"
 
@@ -4968,12 +5182,15 @@ function db_setuserofline_dialog()
 	return 0
 }
 
-### ! Grid User dauerhaft aktivieren: 
+### ! Grid User dauerhaft aktivieren:
 ## /opt/opensim.sh db_setuseronline "GRIDdatabaseusername" "GRIDdatabasepassword" "GRIDdatabasename" "firstname" "lastname"
-function db_setuseronline()
-{
-	username=$1; password=$2; databasename=$3; firstname=$4; lastname=$5; 
-	
+function db_setuseronline() {
+	username=$1
+	password=$2
+	databasename=$3
+	firstname=$4
+	lastname=$5
+
 	echo "Setze User $firstname $lastname online."
 	echo " "
 	mysqlrest "$username" "$password" "$databasename" "UPDATE UserAccounts SET active='1' WHERE FirstName='$firstname' AND LastName='$lastname'"
@@ -4981,40 +5198,44 @@ function db_setuseronline()
 
 	return 0
 }
-### ! Grid User dauerhaft aktivieren: 
+### ! Grid User dauerhaft aktivieren:
 ## /opt/opensim.sh db_setuseronline "GRIDdatabaseusername" "GRIDdatabasepassword" "GRIDdatabasename" "firstname" "lastname"
-function db_setuseronline_dialog()
-{
-    # zuerst schauen ob dialog installiert ist
-    if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+function db_setuseronline_dialog() {
+	# zuerst schauen ob dialog installiert ist
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
 
-    # Einstellungen
-    boxbacktitel="opensimMULTITOOL"
-    boxtitel="opensimMULTITOOL Eingabe"
-    formtitle="Finde alle offensichtlich falschen E-Mail Adressen der Grid User und deaktiviere dauerhaft dessen Account"
-    lable1="Benutzername:"; lablename1=""
-    lable2="Passwort:"; lablename2=""
-    lable3="Datenbankname:"; lablename3=""
-	lable4="Vorname:"; lablename4=""
-	lable5="Nachname:"; lablename5=""
+		# Einstellungen
+		boxbacktitel="opensimMULTITOOL"
+		boxtitel="opensimMULTITOOL Eingabe"
+		formtitle="Finde alle offensichtlich falschen E-Mail Adressen der Grid User und deaktiviere dauerhaft dessen Account"
+		lable1="Benutzername:"
+		lablename1=""
+		lable2="Passwort:"
+		lablename2=""
+		lable3="Datenbankname:"
+		lablename3=""
+		lable4="Vorname:"
+		lablename4=""
+		lable5="Nachname:"
+		lablename5=""
 
-    # Abfrage
-    setuseronline=$( dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 "$lable4" 4 1 "$lablename4" 4 25 25 30 "$lable5" 5 1 "$lablename5" 5 25 25 30  3>&1 1>&2 2>&3 3>&- )
+		# Abfrage
+		setuseronline=$(dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 "$lable4" 4 1 "$lablename4" 4 25 25 30 "$lable5" 5 1 "$lablename5" 5 25 25 30 3>&1 1>&2 2>&3 3>&-)
 
-    # Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
-    username=$(echo "$setuseronline" | sed -n '1p')
-    password=$(echo "$setuseronline" | sed -n '2p')
-    databasename=$(echo "$setuseronline" | sed -n '3p')
-	firstname=$(echo "$setuseronline" | sed -n '4p')
-	lastname=$(echo "$setuseronline" | sed -n '5p')
+		# Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
+		username=$(echo "$setuseronline" | sed -n '1p')
+		password=$(echo "$setuseronline" | sed -n '2p')
+		databasename=$(echo "$setuseronline" | sed -n '3p')
+		firstname=$(echo "$setuseronline" | sed -n '4p')
+		lastname=$(echo "$setuseronline" | sed -n '5p')
 
-    # Alles loeschen.
-    dialog --clear
-    clear
+		# Alles loeschen.
+		dialog --clear
+		clear
 	else
 		# Alle Aktionen ohne dialog
-        echo "Keine Menuelose Funktion"|exit
-	fi	# dialog Aktionen Ende
+		echo "Keine Menuelose Funktion" | exit
+	fi # dialog Aktionen Ende
 
 	mysqlrest "$username" "$password" "$databasename" "UPDATE UserAccounts SET active='1' WHERE FirstName='$firstname' AND LastName='$lastname'"
 
@@ -5025,565 +5246,589 @@ function db_setuseronline_dialog()
 
 ########### Neu am 08.06.2022 Ende
 
-
 ### NEU mariaDB 30.06.2022 Anfang ########################################################################
 ### ! default_master_connection "$2" "$3"
-function default_master_connection()
-{
-    username=$1; password=$2;
-    if [ -z "$username" ]; then username="root"; fi
-    if [ -z "$password" ]; then password=""; fi
+function default_master_connection() {
+	username=$1
+	password=$2
+	if [ -z "$username" ]; then username="root"; fi
+	if [ -z "$password" ]; then password=""; fi
 
-    mysqlrestnodb "$username" "$password" "SET default_master_connection = '$username';"
-    mysqlrestnodb "$username" "$password" "STOP SLAVE;"
-    mysqlrestnodb "$username" "$password" "CHANGE MASTER TO MASTER_PASSWORD='$password';"
-    mysqlrestnodb "$username" "$password" "START SLAVE;"
+	mysqlrestnodb "$username" "$password" "SET default_master_connection = '$username';"
+	mysqlrestnodb "$username" "$password" "STOP SLAVE;"
+	mysqlrestnodb "$username" "$password" "CHANGE MASTER TO MASTER_PASSWORD='$password';"
+	mysqlrestnodb "$username" "$password" "START SLAVE;"
 	#shellcheck disable=SC2128
 	log text " $FUNCNAME: $result_mysqlrestnodb"
-    return 0
+	return 0
 }
 
 ### ! connection_name "$2" "$3"
-function connection_name()
-{
-    username=$1; password=$2;
-    if [ -z "$username" ]; then username="root"; fi
-    if [ -z "$password" ]; then password=""; fi
+function connection_name() {
+	username=$1
+	password=$2
+	if [ -z "$username" ]; then username="root"; fi
+	if [ -z "$password" ]; then password=""; fi
 
-    mysqlrestnodb "$username" "$password" "STOP SLAVE '$username';"
-    mysqlrestnodb "$username" "$password" "CHANGE MASTER '$username' TO MASTER_PASSWORD='$password';"
-    mysqlrestnodb "$username" "$password" "START SLAVE '$username';"
+	mysqlrestnodb "$username" "$password" "STOP SLAVE '$username';"
+	mysqlrestnodb "$username" "$password" "CHANGE MASTER '$username' TO MASTER_PASSWORD='$password';"
+	mysqlrestnodb "$username" "$password" "START SLAVE '$username';"
 	#shellcheck disable=SC2128
 	log text " $FUNCNAME: $result_mysqlrestnodb"
-    return 0
+	return 0
 }
 
 ### ! MASTER_USER "$2" "$3"
-function MASTER_USER()
-{
-    username=$1; password=$2;
-    if [ -z "$username" ]; then username="root"; fi
-    if [ -z "$password" ]; then password=""; fi
+function MASTER_USER() {
+	username=$1
+	password=$2
+	if [ -z "$username" ]; then username="root"; fi
+	if [ -z "$password" ]; then password=""; fi
 
-    mysqlrestnodb "$username" "$password" "STOP SLAVE;"
-    mysqlrestnodb "$username" "$password" "CHANGE MASTER TO MASTER_USER='$username', MASTER_PASSWORD='$password';"
-    mysqlrestnodb "$username" "$password" "START SLAVE;"
+	mysqlrestnodb "$username" "$password" "STOP SLAVE;"
+	mysqlrestnodb "$username" "$password" "CHANGE MASTER TO MASTER_USER='$username', MASTER_PASSWORD='$password';"
+	mysqlrestnodb "$username" "$password" "START SLAVE;"
 	#shellcheck disable=SC2128
 	log text " $FUNCNAME: $result_mysqlrestnodb"
-    return 0
+	return 0
 }
 
 ### ! MASTER_PASSWORD "$2" "$3"
-function MASTER_PASSWORD()
-{
-    username=$1; password=$2;
-    if [ -z "$username" ]; then username="root"; fi
-    if [ -z "$password" ]; then password=""; fi
+function MASTER_PASSWORD() {
+	username=$1
+	password=$2
+	if [ -z "$username" ]; then username="root"; fi
+	if [ -z "$password" ]; then password=""; fi
 
-    mysqlrestnodb "$username" "$password" "STOP SLAVE;"
-    mysqlrestnodb "$username" "$password" "CHANGE MASTER TO MASTER_PASSWORD=$password;"
-    mysqlrestnodb "$username" "$password" "START SLAVE;"
+	mysqlrestnodb "$username" "$password" "STOP SLAVE;"
+	mysqlrestnodb "$username" "$password" "CHANGE MASTER TO MASTER_PASSWORD=$password;"
+	mysqlrestnodb "$username" "$password" "START SLAVE;"
 	#shellcheck disable=SC2128
 	log text " $FUNCNAME: $result_mysqlrestnodb"
-    return 0
+	return 0
 }
 
 ### ! MASTER_HOST "$2" "$3" "$4"
-function MASTER_HOST()
-{
-    username=$1; password=$2; MASTERHOST=$3;
-    if [ -z "$username" ]; then username="root"; fi
-    if [ -z "$password" ]; then password=""; fi
-    if [ -z "$MASTERHOST" ]; then MASTERHOST='127.0.0.1'; fi
+function MASTER_HOST() {
+	username=$1
+	password=$2
+	MASTERHOST=$3
+	if [ -z "$username" ]; then username="root"; fi
+	if [ -z "$password" ]; then password=""; fi
+	if [ -z "$MASTERHOST" ]; then MASTERHOST='127.0.0.1'; fi
 
-    mysqlrestnodb "$username" "$password" "STOP SLAVE;"
-    mysqlrestnodb "$username" "$password" "CHANGE MASTER TO MASTER_HOST='$MASTERHOST', MASTER_USER='$username', MASTER_PASSWORD='$password', MASTER_USE_GTID=slave_pos;"
-    mysqlrestnodb "$username" "$password" "START SLAVE;"
+	mysqlrestnodb "$username" "$password" "STOP SLAVE;"
+	mysqlrestnodb "$username" "$password" "CHANGE MASTER TO MASTER_HOST='$MASTERHOST', MASTER_USER='$username', MASTER_PASSWORD='$password', MASTER_USE_GTID=slave_pos;"
+	mysqlrestnodb "$username" "$password" "START SLAVE;"
 	#shellcheck disable=SC2128
 	log text " $FUNCNAME: $result_mysqlrestnodb"
-    return 0
+	return 0
 }
 
 ### ! MASTER_PORT "$2" "$3" "$4" "$5"
-function MASTER_PORT()
-{
-    username=$1; password=$2; MASTERHOST=$3; MASTERPORT=$4;
-    if [ -z "$username" ]; then username="root"; fi
-    if [ -z "$password" ]; then password=""; fi
-    if [ -z "$MASTERHOST" ]; then MASTERHOST='127.0.0.1'; fi
-    if [ -z "$MASTERPORT" ]; then MASTERPORT='3306'; fi
+function MASTER_PORT() {
+	username=$1
+	password=$2
+	MASTERHOST=$3
+	MASTERPORT=$4
+	if [ -z "$username" ]; then username="root"; fi
+	if [ -z "$password" ]; then password=""; fi
+	if [ -z "$MASTERHOST" ]; then MASTERHOST='127.0.0.1'; fi
+	if [ -z "$MASTERPORT" ]; then MASTERPORT='3306'; fi
 
-    mysqlrestnodb "$username" "$password" "STOP SLAVE;"
-    mysqlrestnodb "$username" "$password" "CHANGE MASTER TO MASTER_HOST='$MASTERHOST', MASTER_PORT='$MASTERPORT', MASTER_USER='$username', MASTER_PASSWORD='$password', MASTER_USE_GTID=slave_pos;"
-    mysqlrestnodb "$username" "$password" "START SLAVE;"
+	mysqlrestnodb "$username" "$password" "STOP SLAVE;"
+	mysqlrestnodb "$username" "$password" "CHANGE MASTER TO MASTER_HOST='$MASTERHOST', MASTER_PORT='$MASTERPORT', MASTER_USER='$username', MASTER_PASSWORD='$password', MASTER_USE_GTID=slave_pos;"
+	mysqlrestnodb "$username" "$password" "START SLAVE;"
 	#shellcheck disable=SC2128
 	log text " $FUNCNAME: $result_mysqlrestnodb"
-    return 0
+	return 0
 }
 
 ### ! MASTER_CONNECT_RETRY "$2" "$3" "$4"
-function MASTER_CONNECT_RETRY()
-{
-    username=$1; password=$2; MASTERCONNECTRETRY=$3;
-    if [ -z "$username" ]; then username="root"; fi
-    if [ -z "$password" ]; then password=""; fi
-    if [ -z "$MASTERCONNECTRETRY" ]; then MASTERCONNECTRETRY='20'; fi
+function MASTER_CONNECT_RETRY() {
+	username=$1
+	password=$2
+	MASTERCONNECTRETRY=$3
+	if [ -z "$username" ]; then username="root"; fi
+	if [ -z "$password" ]; then password=""; fi
+	if [ -z "$MASTERCONNECTRETRY" ]; then MASTERCONNECTRETRY='20'; fi
 
-    mysqlrestnodb "$username" "$password" "STOP SLAVE;"
-    mysqlrestnodb "$username" "$password" "CHANGE MASTER TO MASTER_CONNECT_RETRY=$MASTERCONNECTRETRY;"
-    mysqlrestnodb "$username" "$password" "START SLAVE;"
+	mysqlrestnodb "$username" "$password" "STOP SLAVE;"
+	mysqlrestnodb "$username" "$password" "CHANGE MASTER TO MASTER_CONNECT_RETRY=$MASTERCONNECTRETRY;"
+	mysqlrestnodb "$username" "$password" "START SLAVE;"
 	#shellcheck disable=SC2128
 	log text " $FUNCNAME: $result_mysqlrestnodb"
-    return 0
+	return 0
 }
 
 ### ! MASTER_SSL "$2" "$3"
-function MASTER_SSL()
-{
-    username=$1; password=$2; MASTERSSL=$3;
-    if [ -z "$username" ]; then username="root"; fi
-    if [ -z "$password" ]; then password=""; fi
-    if [ -z "$MASTERSSL" ]; then MASTERSSL=1; fi
+function MASTER_SSL() {
+	username=$1
+	password=$2
+	MASTERSSL=$3
+	if [ -z "$username" ]; then username="root"; fi
+	if [ -z "$password" ]; then password=""; fi
+	if [ -z "$MASTERSSL" ]; then MASTERSSL=1; fi
 
-    mysqlrestnodb "$username" "$password" "STOP SLAVE;"
-    mysqlrestnodb "$username" "$password" "CHANGE MASTER TO MASTER_SSL=$MASTERSSL;"
-    mysqlrestnodb "$username" "$password" "START SLAVE;"
+	mysqlrestnodb "$username" "$password" "STOP SLAVE;"
+	mysqlrestnodb "$username" "$password" "CHANGE MASTER TO MASTER_SSL=$MASTERSSL;"
+	mysqlrestnodb "$username" "$password" "START SLAVE;"
 	#shellcheck disable=SC2128
 	log text " $FUNCNAME: $result_mysqlrestnodb"
-    return 0
+	return 0
 }
 
 ### ! MASTER_SSL_CA "$2" "$3"
-function MASTER_SSL_CA()
-{
-    username=$1; password=$2;
-    if [ -z "$username" ]; then username="root"; fi
-    if [ -z "$password" ]; then password=""; fi
+function MASTER_SSL_CA() {
+	username=$1
+	password=$2
+	if [ -z "$username" ]; then username="root"; fi
+	if [ -z "$password" ]; then password=""; fi
 
-    MASTERSSLCERT='/etc/my.cnf.d/certificates/server-cert.pem'
-    MASTERSSLKEY='/etc/my.cnf.d/certificates/server-key.pem'
-    MASTERSSLCA='/etc/my.cnf.d/certificates/ca.pem'
-    MASTERSSLVERIFYSERVERCERT=1
+	MASTERSSLCERT='/etc/my.cnf.d/certificates/server-cert.pem'
+	MASTERSSLKEY='/etc/my.cnf.d/certificates/server-key.pem'
+	MASTERSSLCA='/etc/my.cnf.d/certificates/ca.pem'
+	MASTERSSLVERIFYSERVERCERT=1
 
-    mysqlrestnodb "$username" "$password" "STOP SLAVE;"
-    mysqlrestnodb "$username" "$password" "CHANGE MASTER TO MASTER_SSL_CERT='$MASTERSSLCERT', MASTER_SSL_KEY='$MASTERSSLKEY', MASTER_SSL_CA='$MASTERSSLCA', MASTER_SSL_VERIFY_SERVER_CERT=$MASTERSSLVERIFYSERVERCERT;"
-    mysqlrestnodb "$username" "$password" "START SLAVE;"
+	mysqlrestnodb "$username" "$password" "STOP SLAVE;"
+	mysqlrestnodb "$username" "$password" "CHANGE MASTER TO MASTER_SSL_CERT='$MASTERSSLCERT', MASTER_SSL_KEY='$MASTERSSLKEY', MASTER_SSL_CA='$MASTERSSLCA', MASTER_SSL_VERIFY_SERVER_CERT=$MASTERSSLVERIFYSERVERCERT;"
+	mysqlrestnodb "$username" "$password" "START SLAVE;"
 	#shellcheck disable=SC2128
 	log text " $FUNCNAME: $result_mysqlrestnodb"
-    return 0
+	return 0
 }
 
 ### ! MASTER_SSL_CAPATH "$2" "$3"
-function MASTER_SSL_CAPATH()
-{
-    username=$1; password=$2;
-    if [ -z "$username" ]; then username="root"; fi
-    if [ -z "$password" ]; then password=""; fi
+function MASTER_SSL_CAPATH() {
+	username=$1
+	password=$2
+	if [ -z "$username" ]; then username="root"; fi
+	if [ -z "$password" ]; then password=""; fi
 
-    MASTERSSLCERT='/etc/my.cnf.d/certificates/server-cert.pem'
-    MASTERSSLKEY='/etc/my.cnf.d/certificates/server-key.pem'
-    MASTERSSLCAPATH='/etc/my.cnf.d/certificates/ca/'
-    MASTERSSLVERIFYSERVERCERT=1
+	MASTERSSLCERT='/etc/my.cnf.d/certificates/server-cert.pem'
+	MASTERSSLKEY='/etc/my.cnf.d/certificates/server-key.pem'
+	MASTERSSLCAPATH='/etc/my.cnf.d/certificates/ca/'
+	MASTERSSLVERIFYSERVERCERT=1
 
-    mysqlrestnodb "$username" "$password" "STOP SLAVE;"
-    mysqlrestnodb "$username" "$password" "CHANGE MASTER TO MASTER_SSL_CERT='$MASTERSSLCERT', MASTER_SSL_KEY='$MASTERSSLKEY', MASTER_SSL_CAPATH='$MASTERSSLCAPATH', MASTER_SSL_VERIFY_SERVER_CERT=$MASTERSSLVERIFYSERVERCERT;"
-    mysqlrestnodb "$username" "$password" "START SLAVE;"
+	mysqlrestnodb "$username" "$password" "STOP SLAVE;"
+	mysqlrestnodb "$username" "$password" "CHANGE MASTER TO MASTER_SSL_CERT='$MASTERSSLCERT', MASTER_SSL_KEY='$MASTERSSLKEY', MASTER_SSL_CAPATH='$MASTERSSLCAPATH', MASTER_SSL_VERIFY_SERVER_CERT=$MASTERSSLVERIFYSERVERCERT;"
+	mysqlrestnodb "$username" "$password" "START SLAVE;"
 	#shellcheck disable=SC2128
 	log text " $FUNCNAME: $result_mysqlrestnodb"
-    return 0
+	return 0
 }
 
 ### ! MASTER_SSL_CERT "$2" "$3"
-function MASTER_SSL_CERT()
-{
-    username=$1; password=$2;
-    if [ -z "$username" ]; then username="root"; fi
-    if [ -z "$password" ]; then password=""; fi
+function MASTER_SSL_CERT() {
+	username=$1
+	password=$2
+	if [ -z "$username" ]; then username="root"; fi
+	if [ -z "$password" ]; then password=""; fi
 
-    MASTERSSLCERT='/etc/my.cnf.d/certificates/server-cert.pem'
-    MASTERSSLKEY='/etc/my.cnf.d/certificates/server-key.pem'
-    MASTERSSLCA='/etc/my.cnf.d/certificates/ca.pem'
-    MASTERSSLVERIFYSERVERCERT=1
+	MASTERSSLCERT='/etc/my.cnf.d/certificates/server-cert.pem'
+	MASTERSSLKEY='/etc/my.cnf.d/certificates/server-key.pem'
+	MASTERSSLCA='/etc/my.cnf.d/certificates/ca.pem'
+	MASTERSSLVERIFYSERVERCERT=1
 
-    mysqlrestnodb "$username" "$password" "STOP SLAVE;"
-    mysqlrestnodb "$username" "$password" "CHANGE MASTER TO MASTER_SSL_CERT='$MASTERSSLCERT', MASTER_SSL_KEY='$MASTERSSLKEY', MASTER_SSL_CA='$MASTERSSLCA', MASTER_SSL_VERIFY_SERVER_CERT=$MASTERSSLVERIFYSERVERCERT;"
-    mysqlrestnodb "$username" "$password" "START SLAVE;"
+	mysqlrestnodb "$username" "$password" "STOP SLAVE;"
+	mysqlrestnodb "$username" "$password" "CHANGE MASTER TO MASTER_SSL_CERT='$MASTERSSLCERT', MASTER_SSL_KEY='$MASTERSSLKEY', MASTER_SSL_CA='$MASTERSSLCA', MASTER_SSL_VERIFY_SERVER_CERT=$MASTERSSLVERIFYSERVERCERT;"
+	mysqlrestnodb "$username" "$password" "START SLAVE;"
 	#shellcheck disable=SC2128
 	log text " $FUNCNAME: $result_mysqlrestnodb"
 
-    return 0
+	return 0
 }
 
 ### ! MASTER_SSL_CRL "$2" "$3"
-function MASTER_SSL_CRL()
-{
-    username=$1; password=$2;
-    if [ -z "$username" ]; then username="root"; fi
-    if [ -z "$password" ]; then password=""; fi
+function MASTER_SSL_CRL() {
+	username=$1
+	password=$2
+	if [ -z "$username" ]; then username="root"; fi
+	if [ -z "$password" ]; then password=""; fi
 
-    MASTERSSLCERT='/etc/my.cnf.d/certificates/server-cert.pem'
-    MASTERSSLKEY='/etc/my.cnf.d/certificates/server-key.pem'
-    MASTERSSLCA='/etc/my.cnf.d/certificates/ca.pem'
-    MASTERSSLVERIFYSERVERCERT=1
+	MASTERSSLCERT='/etc/my.cnf.d/certificates/server-cert.pem'
+	MASTERSSLKEY='/etc/my.cnf.d/certificates/server-key.pem'
+	MASTERSSLCA='/etc/my.cnf.d/certificates/ca.pem'
+	MASTERSSLVERIFYSERVERCERT=1
 
-    mysqlrestnodb "$username" "$password" "STOP SLAVE;"
-    mysqlrestnodb "$username" "$password" "CHANGE MASTER TO MASTER_SSL_CERT='$MASTERSSLCERT', MASTER_SSL_KEY='$MASTERSSLKEY', MASTER_SSL_CA='$MASTERSSLCA', MASTER_SSL_VERIFY_SERVER_CERT=$MASTERSSLVERIFYSERVERCERT, MASTER_SSL_CRL='/etc/my.cnf.d/certificates/crl.pem';"
-    mysqlrestnodb "$username" "$password" "START SLAVE;"
+	mysqlrestnodb "$username" "$password" "STOP SLAVE;"
+	mysqlrestnodb "$username" "$password" "CHANGE MASTER TO MASTER_SSL_CERT='$MASTERSSLCERT', MASTER_SSL_KEY='$MASTERSSLKEY', MASTER_SSL_CA='$MASTERSSLCA', MASTER_SSL_VERIFY_SERVER_CERT=$MASTERSSLVERIFYSERVERCERT, MASTER_SSL_CRL='/etc/my.cnf.d/certificates/crl.pem';"
+	mysqlrestnodb "$username" "$password" "START SLAVE;"
 	#shellcheck disable=SC2128
 	log text " $FUNCNAME: $result_mysqlrestnodb"
 
-    return 0
+	return 0
 }
 
 ### ! MASTER_SSL_CRLPATH "$2" "$3"
-function MASTER_SSL_CRLPATH()
-{
-    username=$1; password=$2;
-    if [ -z "$username" ]; then username="root"; fi
-    if [ -z "$password" ]; then password=""; fi
+function MASTER_SSL_CRLPATH() {
+	username=$1
+	password=$2
+	if [ -z "$username" ]; then username="root"; fi
+	if [ -z "$password" ]; then password=""; fi
 
-    MASTERSSLCERT='/etc/my.cnf.d/certificates/server-cert.pem'
-    MASTERSSLKEY='/etc/my.cnf.d/certificates/server-key.pem'
-    MASTERSSLCA='/etc/my.cnf.d/certificates/ca.pem'
-    MASTERSSLVERIFYSERVERCERT=1
+	MASTERSSLCERT='/etc/my.cnf.d/certificates/server-cert.pem'
+	MASTERSSLKEY='/etc/my.cnf.d/certificates/server-key.pem'
+	MASTERSSLCA='/etc/my.cnf.d/certificates/ca.pem'
+	MASTERSSLVERIFYSERVERCERT=1
 
-    mysqlrestnodb "$username" "$password" "STOP SLAVE;"
-    mysqlrestnodb "$username" "$password" "CHANGE MASTER TO MASTER_SSL_CERT='$MASTERSSLCERT', MASTER_SSL_KEY='$MASTERSSLKEY', MASTER_SSL_CA='$MASTERSSLCA', MASTER_SSL_VERIFY_SERVER_CERT=$MASTERSSLVERIFYSERVERCERT, MASTER_SSL_CRLPATH='/etc/my.cnf.d/certificates/crl/';"
-    mysqlrestnodb "$username" "$password" "START SLAVE;"
+	mysqlrestnodb "$username" "$password" "STOP SLAVE;"
+	mysqlrestnodb "$username" "$password" "CHANGE MASTER TO MASTER_SSL_CERT='$MASTERSSLCERT', MASTER_SSL_KEY='$MASTERSSLKEY', MASTER_SSL_CA='$MASTERSSLCA', MASTER_SSL_VERIFY_SERVER_CERT=$MASTERSSLVERIFYSERVERCERT, MASTER_SSL_CRLPATH='/etc/my.cnf.d/certificates/crl/';"
+	mysqlrestnodb "$username" "$password" "START SLAVE;"
 	#shellcheck disable=SC2128
 	log text " $FUNCNAME: $result_mysqlrestnodb"
 
-    return 0
+	return 0
 }
 
 ### ! MASTER_SSL_KEY "$2" "$3"
-function MASTER_SSL_KEY()
-{
-    username=$1; password=$2;
-    if [ -z "$username" ]; then username="root"; fi
-    if [ -z "$password" ]; then password=""; fi
+function MASTER_SSL_KEY() {
+	username=$1
+	password=$2
+	if [ -z "$username" ]; then username="root"; fi
+	if [ -z "$password" ]; then password=""; fi
 
-    MASTERSSLCERT='/etc/my.cnf.d/certificates/server-cert.pem'
-    MASTERSSLKEY='/etc/my.cnf.d/certificates/server-key.pem'
-    MASTERSSLCA='/etc/my.cnf.d/certificates/ca.pem'
-    MASTERSSLVERIFYSERVERCERT=1
+	MASTERSSLCERT='/etc/my.cnf.d/certificates/server-cert.pem'
+	MASTERSSLKEY='/etc/my.cnf.d/certificates/server-key.pem'
+	MASTERSSLCA='/etc/my.cnf.d/certificates/ca.pem'
+	MASTERSSLVERIFYSERVERCERT=1
 
-    mysqlrestnodb "$username" "$password" "STOP SLAVE;"
-    mysqlrestnodb "$username" "$password" "CHANGE MASTER TO MASTER_SSL_CERT='$MASTERSSLCERT', MASTER_SSL_KEY='$MASTERSSLKEY', MASTER_SSL_CA='$MASTERSSLCA', MASTER_SSL_VERIFY_SERVER_CERT=$MASTERSSLVERIFYSERVERCERT;"
-    mysqlrestnodb "$username" "$password" "START SLAVE;"
+	mysqlrestnodb "$username" "$password" "STOP SLAVE;"
+	mysqlrestnodb "$username" "$password" "CHANGE MASTER TO MASTER_SSL_CERT='$MASTERSSLCERT', MASTER_SSL_KEY='$MASTERSSLKEY', MASTER_SSL_CA='$MASTERSSLCA', MASTER_SSL_VERIFY_SERVER_CERT=$MASTERSSLVERIFYSERVERCERT;"
+	mysqlrestnodb "$username" "$password" "START SLAVE;"
 	#shellcheck disable=SC2128
 	log text " $FUNCNAME: $result_mysqlrestnodb"
 
-    return 0
+	return 0
 }
 
 ### ! MASTER_SSL_CIPHER "$2" "$3"
-function MASTER_SSL_CIPHER()
-{
-    username=$1; password=$2;
-    if [ -z "$username" ]; then username="root"; fi
-    if [ -z "$password" ]; then password=""; fi
+function MASTER_SSL_CIPHER() {
+	username=$1
+	password=$2
+	if [ -z "$username" ]; then username="root"; fi
+	if [ -z "$password" ]; then password=""; fi
 
-    MASTERSSLCERT='/etc/my.cnf.d/certificates/server-cert.pem'
-    MASTERSSLKEY='/etc/my.cnf.d/certificates/server-key.pem'
-    MASTERSSLCA='/etc/my.cnf.d/certificates/ca.pem'
-    MASTERSSLVERIFYSERVERCERT=1
+	MASTERSSLCERT='/etc/my.cnf.d/certificates/server-cert.pem'
+	MASTERSSLKEY='/etc/my.cnf.d/certificates/server-key.pem'
+	MASTERSSLCA='/etc/my.cnf.d/certificates/ca.pem'
+	MASTERSSLVERIFYSERVERCERT=1
 
-    mysqlrestnodb "$username" "$password" "STOP SLAVE;"
-    mysqlrestnodb "$username" "$password" "CHANGE MASTER TO MASTER_SSL_CERT='$MASTERSSLCERT', MASTER_SSL_KEY='$MASTERSSLKEY', MASTER_SSL_CA='$MASTERSSLCA', MASTER_SSL_VERIFY_SERVER_CERT=$MASTERSSLVERIFYSERVERCERT, MASTER_SSL_CIPHER='TLSv1.2';"
-    mysqlrestnodb "$username" "$password" "START SLAVE;"
+	mysqlrestnodb "$username" "$password" "STOP SLAVE;"
+	mysqlrestnodb "$username" "$password" "CHANGE MASTER TO MASTER_SSL_CERT='$MASTERSSLCERT', MASTER_SSL_KEY='$MASTERSSLKEY', MASTER_SSL_CA='$MASTERSSLCA', MASTER_SSL_VERIFY_SERVER_CERT=$MASTERSSLVERIFYSERVERCERT, MASTER_SSL_CIPHER='TLSv1.2';"
+	mysqlrestnodb "$username" "$password" "START SLAVE;"
 	#shellcheck disable=SC2128
 	log text " $FUNCNAME: $result_mysqlrestnodb"
 
-    return 0
+	return 0
 }
 
 ### ! MASTER_SSL_VERIFY_SERVER_CERT "$2" "$3"
-function MASTER_SSL_VERIFY_SERVER_CERT()
-{
-    username=$1; password=$2;
-    if [ -z "$username" ]; then username="root"; fi
-    if [ -z "$password" ]; then password=""; fi
+function MASTER_SSL_VERIFY_SERVER_CERT() {
+	username=$1
+	password=$2
+	if [ -z "$username" ]; then username="root"; fi
+	if [ -z "$password" ]; then password=""; fi
 
-    MASTERSSLCERT='/etc/my.cnf.d/certificates/server-cert.pem'
-    MASTERSSLKEY='/etc/my.cnf.d/certificates/server-key.pem'
-    MASTERSSLCA='/etc/my.cnf.d/certificates/ca.pem'
-    MASTERSSLVERIFYSERVERCERT=1
+	MASTERSSLCERT='/etc/my.cnf.d/certificates/server-cert.pem'
+	MASTERSSLKEY='/etc/my.cnf.d/certificates/server-key.pem'
+	MASTERSSLCA='/etc/my.cnf.d/certificates/ca.pem'
+	MASTERSSLVERIFYSERVERCERT=1
 
-    mysqlrestnodb "$username" "$password" "STOP SLAVE;"
-    mysqlrestnodb "$username" "$password" "CHANGE MASTER TO MASTER_SSL_CERT='$MASTERSSLCERT', MASTER_SSL_KEY='$MASTERSSLKEY', MASTER_SSL_CA='$MASTERSSLCA', MASTER_SSL_VERIFY_SERVER_CERT=$MASTERSSLVERIFYSERVERCERT;"
-    mysqlrestnodb "$username" "$password" "START SLAVE;"
+	mysqlrestnodb "$username" "$password" "STOP SLAVE;"
+	mysqlrestnodb "$username" "$password" "CHANGE MASTER TO MASTER_SSL_CERT='$MASTERSSLCERT', MASTER_SSL_KEY='$MASTERSSLKEY', MASTER_SSL_CA='$MASTERSSLCA', MASTER_SSL_VERIFY_SERVER_CERT=$MASTERSSLVERIFYSERVERCERT;"
+	mysqlrestnodb "$username" "$password" "START SLAVE;"
 	#shellcheck disable=SC2128
 	log text " $FUNCNAME: $result_mysqlrestnodb"
 
-    return 0
+	return 0
 }
 
 ### ! MASTER_LOG_FILE "$2" "$3" "$4" "$5"
-function MASTER_LOG_FILE()
-{
-username=$1; password=$2; MASTERLOGFILE=$3; MASTERLOGPOS=$4;
-    if [ -z "$username" ]; then username="root"; fi
-    if [ -z "$password" ]; then password=""; fi
-    if [ -z "$MASTERLOGPOS" ]; then MASTERLOGPOS=4; fi
-    if [ -z "$MASTERLOGFILE" ]; then MASTERLOGFILE="master2-bin.001"; fi
+function MASTER_LOG_FILE() {
+	username=$1
+	password=$2
+	MASTERLOGFILE=$3
+	MASTERLOGPOS=$4
+	if [ -z "$username" ]; then username="root"; fi
+	if [ -z "$password" ]; then password=""; fi
+	if [ -z "$MASTERLOGPOS" ]; then MASTERLOGPOS=4; fi
+	if [ -z "$MASTERLOGFILE" ]; then MASTERLOGFILE="master2-bin.001"; fi
 
-    mysqlrestnodb "$username" "$password" "STOP SLAVE;"
-    mysqlrestnodb "$username" "CHANGE MASTER TO MASTER_LOG_FILE=$MASTERLOGFILE, MASTER_LOG_POS=$MASTERLOGPOS;"
-    mysqlrestnodb "$username" "START SLAVE;"
+	mysqlrestnodb "$username" "$password" "STOP SLAVE;"
+	mysqlrestnodb "$username" "CHANGE MASTER TO MASTER_LOG_FILE=$MASTERLOGFILE, MASTER_LOG_POS=$MASTERLOGPOS;"
+	mysqlrestnodb "$username" "START SLAVE;"
 	#shellcheck disable=SC2128
 	log text " $FUNCNAME: $result_mysqlrestnodb"
 
-return 0
+	return 0
 }
 
 ### ! MASTER_LOG_POS "$2" "$3" "$4" "$5"
-function MASTER_LOG_POS()
-{
-    username=$1; password=$2; MASTERLOGFILE=$2; MASTERLOGPOS=$2;
-    if [ -z "$username" ]; then username="root"; fi
-    if [ -z "$password" ]; then password=""; fi
-    if [ -z "$MASTERLOGPOS" ]; then MASTERLOGPOS=4; fi
-    if [ -z "$MASTERLOGFILE" ]; then MASTERLOGFILE="master2-bin.001"; fi
+function MASTER_LOG_POS() {
+	username=$1
+	password=$2
+	MASTERLOGFILE=$2
+	MASTERLOGPOS=$2
+	if [ -z "$username" ]; then username="root"; fi
+	if [ -z "$password" ]; then password=""; fi
+	if [ -z "$MASTERLOGPOS" ]; then MASTERLOGPOS=4; fi
+	if [ -z "$MASTERLOGFILE" ]; then MASTERLOGFILE="master2-bin.001"; fi
 
-    mysqlrestnodb "$username" "$password" "STOP SLAVE;"
-    mysqlrestnodb "$username" "$password" "CHANGE MASTER TO MASTER_LOG_FILE=$MASTERLOGFILE, MASTER_LOG_POS=$MASTERLOGPOS;"
-    mysqlrestnodb "$username" "$password" "START SLAVE;"
+	mysqlrestnodb "$username" "$password" "STOP SLAVE;"
+	mysqlrestnodb "$username" "$password" "CHANGE MASTER TO MASTER_LOG_FILE=$MASTERLOGFILE, MASTER_LOG_POS=$MASTERLOGPOS;"
+	mysqlrestnodb "$username" "$password" "START SLAVE;"
 	#shellcheck disable=SC2128
 	log text " $FUNCNAME: $result_mysqlrestnodb"
 
-    return 0
+	return 0
 }
 
 ### ! RELAY_LOG_FILE "$2" "$3" "$4" "$5"
-function RELAY_LOG_FILE()
-{
-    username=$1; password=$2; RELAYLOGFILE=$3; RELAYLOGPOS=$4;
-    if [ -z "$username" ]; then username="root"; fi
-    if [ -z "$password" ]; then password=""; fi
-    if [ -z "$RELAYLOGPOS" ]; then RELAYLOGPOS=4025; fi
-    if [ -z "$RELAYLOGFILE" ]; then RELAYLOGFILE="slave-relay-bin.006"; fi
+function RELAY_LOG_FILE() {
+	username=$1
+	password=$2
+	RELAYLOGFILE=$3
+	RELAYLOGPOS=$4
+	if [ -z "$username" ]; then username="root"; fi
+	if [ -z "$password" ]; then password=""; fi
+	if [ -z "$RELAYLOGPOS" ]; then RELAYLOGPOS=4025; fi
+	if [ -z "$RELAYLOGFILE" ]; then RELAYLOGFILE="slave-relay-bin.006"; fi
 
-    mysqlrestnodb "$username" "$password" "STOP SLAVE SQL_THREAD;"
-    mysqlrestnodb "$username" "$password" "CHANGE MASTER TO RELAY_LOG_FILE=$RELAYLOGFILE, RELAY_LOG_POS=$RELAYLOGPOS;"
-    mysqlrestnodb "$username" "$password" "START SLAVE SQL_THREAD;"
+	mysqlrestnodb "$username" "$password" "STOP SLAVE SQL_THREAD;"
+	mysqlrestnodb "$username" "$password" "CHANGE MASTER TO RELAY_LOG_FILE=$RELAYLOGFILE, RELAY_LOG_POS=$RELAYLOGPOS;"
+	mysqlrestnodb "$username" "$password" "START SLAVE SQL_THREAD;"
 	#shellcheck disable=SC2128
 	log text " $FUNCNAME: $result_mysqlrestnodb"
 
-    return 0
+	return 0
 }
 
 ### ! RELAY_LOG_POS "$2" "$3" "$4" "$5"
-function RELAY_LOG_POS()
-{
-    username=$1; password=$2; RELAYLOGFILE=$3; RELAYLOGPOS=$4;
-    if [ -z "$username" ]; then username="root"; fi
-    if [ -z "$password" ]; then password=""; fi
-    if [ -z "$RELAYLOGPOS" ]; then RELAYLOGPOS=4025; fi
-    if [ -z "$RELAYLOGFILE" ]; then RELAYLOGFILE="slave-relay-bin.006"; fi
+function RELAY_LOG_POS() {
+	username=$1
+	password=$2
+	RELAYLOGFILE=$3
+	RELAYLOGPOS=$4
+	if [ -z "$username" ]; then username="root"; fi
+	if [ -z "$password" ]; then password=""; fi
+	if [ -z "$RELAYLOGPOS" ]; then RELAYLOGPOS=4025; fi
+	if [ -z "$RELAYLOGFILE" ]; then RELAYLOGFILE="slave-relay-bin.006"; fi
 
-    mysqlrestnodb "$username" "$password" "STOP SLAVE SQL_THREAD;"
-    mysqlrestnodb "$username" "$password" "CHANGE MASTER TO RELAY_LOG_FILE=$RELAYLOGFILE, RELAY_LOG_POS=$RELAYLOGPOS;"
-    mysqlrestnodb "$username" "$password" "START SLAVE SQL_THREAD;"
+	mysqlrestnodb "$username" "$password" "STOP SLAVE SQL_THREAD;"
+	mysqlrestnodb "$username" "$password" "CHANGE MASTER TO RELAY_LOG_FILE=$RELAYLOGFILE, RELAY_LOG_POS=$RELAYLOGPOS;"
+	mysqlrestnodb "$username" "$password" "START SLAVE SQL_THREAD;"
 	#shellcheck disable=SC2128
 	log text " $FUNCNAME: $result_mysqlrestnodb"
 
-    return 0
+	return 0
 }
 
 ### ! MASTER_USE_GTID "$2" "$3"
-function MASTER_USE_GTID()
-{
-    username=$1; password=$2;
-    if [ -z "$username" ]; then username="root"; fi
-    if [ -z "$password" ]; then password=""; fi
+function MASTER_USE_GTID() {
+	username=$1
+	password=$2
+	if [ -z "$username" ]; then username="root"; fi
+	if [ -z "$password" ]; then password=""; fi
 
-    mysqlrestnodb "$username" "$password" "STOP SLAVE;"
-    mysqlrestnodb "$username" "$password" "CHANGE MASTER TO MASTER_USE_GTID = current_pos;"
-    mysqlrestnodb "$username" "$password" "START SLAVE;"
+	mysqlrestnodb "$username" "$password" "STOP SLAVE;"
+	mysqlrestnodb "$username" "$password" "CHANGE MASTER TO MASTER_USE_GTID = current_pos;"
+	mysqlrestnodb "$username" "$password" "START SLAVE;"
 	#shellcheck disable=SC2128
 	log text " $FUNCNAME: $result_mysqlrestnodb"
 
-    return 0
+	return 0
 }
 ### ! MASTER_USE_GTID2 "$2" "$3" "$4"
-function MASTER_USE_GTID2()
-{
-    username=$1; password=$2; gtidslavepos=$3;
-    if [ -z "$username" ]; then username="root"; fi
-    if [ -z "$password" ]; then password=""; fi
-    if [ -z "$gtidslavepos" ]; then gtidslavepos='0-1-153'; fi
+function MASTER_USE_GTID2() {
+	username=$1
+	password=$2
+	gtidslavepos=$3
+	if [ -z "$username" ]; then username="root"; fi
+	if [ -z "$password" ]; then password=""; fi
+	if [ -z "$gtidslavepos" ]; then gtidslavepos='0-1-153'; fi
 
-    mysqlrestnodb "$username" "$password" "STOP SLAVE;"
-    mysqlrestnodb "$username" "$password" "SET GLOBAL gtid_slave_pos='$gtidslavepos';"
-    mysqlrestnodb "$username" "$password" "CHANGE MASTER TO MASTER_USE_GTID = slave_pos;"
-    mysqlrestnodb "$username" "$password" "START SLAVE;"
+	mysqlrestnodb "$username" "$password" "STOP SLAVE;"
+	mysqlrestnodb "$username" "$password" "SET GLOBAL gtid_slave_pos='$gtidslavepos';"
+	mysqlrestnodb "$username" "$password" "CHANGE MASTER TO MASTER_USE_GTID = slave_pos;"
+	mysqlrestnodb "$username" "$password" "START SLAVE;"
 	#shellcheck disable=SC2128
 	log text " $FUNCNAME: $result_mysqlrestnodb"
 
-    return 0
+	return 0
 }
 
 ### ! IGNORE_SERVER_IDS "$2" "$3" "$4"
-function IGNORE_SERVER_IDS()
-{
-    username=$1; password=$2; ids=$3;
-    if [ -z "$username" ]; then username="root"; fi
-    if [ -z "$password" ]; then password=""; fi
+function IGNORE_SERVER_IDS() {
+	username=$1
+	password=$2
+	ids=$3
+	if [ -z "$username" ]; then username="root"; fi
+	if [ -z "$password" ]; then password=""; fi
 
-    mysqlrestnodb "$username" "$password" "STOP SLAVE;"
-    mysqlrestnodb "$username" "$password" "CHANGE MASTER TO IGNORE_SERVER_IDS = ($ids);"
-    mysqlrestnodb "$username" "$password" "START SLAVE;"
+	mysqlrestnodb "$username" "$password" "STOP SLAVE;"
+	mysqlrestnodb "$username" "$password" "CHANGE MASTER TO IGNORE_SERVER_IDS = ($ids);"
+	mysqlrestnodb "$username" "$password" "START SLAVE;"
 	#shellcheck disable=SC2128
 	log text " $FUNCNAME: $result_mysqlrestnodb"
 
-    return 0
+	return 0
 }
 
 ### ! DO_DOMAIN_IDS "$2" "$3" "$4"
-function DO_DOMAIN_IDS()
-{
-    username=$1; password=$2; ids=$3;
-    if [ -z "$username" ]; then username="root"; fi
-    if [ -z "$password" ]; then password=""; fi
+function DO_DOMAIN_IDS() {
+	username=$1
+	password=$2
+	ids=$3
+	if [ -z "$username" ]; then username="root"; fi
+	if [ -z "$password" ]; then password=""; fi
 
-    mysqlrestnodb "$username" "$password" "STOP SLAVE;"
-    mysqlrestnodb "$username" "$password" "CHANGE MASTER TO DO_DOMAIN_IDS = ($ids);"
-    mysqlrestnodb "$username" "$password" "START SLAVE;"
+	mysqlrestnodb "$username" "$password" "STOP SLAVE;"
+	mysqlrestnodb "$username" "$password" "CHANGE MASTER TO DO_DOMAIN_IDS = ($ids);"
+	mysqlrestnodb "$username" "$password" "START SLAVE;"
 	#shellcheck disable=SC2128
 	log text " $FUNCNAME: $result_mysqlrestnodb"
 
-    return 0
+	return 0
 }
 ### ! DO_DOMAIN_IDS2 "$2" "$3"
-function DO_DOMAIN_IDS2()
-{
-    username=$1; password=$2;
-    if [ -z "$username" ]; then username="root"; fi
-    if [ -z "$password" ]; then password=""; fi
+function DO_DOMAIN_IDS2() {
+	username=$1
+	password=$2
+	if [ -z "$username" ]; then username="root"; fi
+	if [ -z "$password" ]; then password=""; fi
 
-    mysqlrestnodb "$username" "$password" "STOP SLAVE;"
-    mysqlrestnodb "$username" "$password" "CHANGE MASTER TO DO_DOMAIN_IDS = ();"
-    mysqlrestnodb "$username" "$password" "START SLAVE;"
+	mysqlrestnodb "$username" "$password" "STOP SLAVE;"
+	mysqlrestnodb "$username" "$password" "CHANGE MASTER TO DO_DOMAIN_IDS = ();"
+	mysqlrestnodb "$username" "$password" "START SLAVE;"
 	#shellcheck disable=SC2128
 	log text " $FUNCNAME: $result_mysqlrestnodb"
 
-    return 0
+	return 0
 }
 
 ### ! IGNORE_DOMAIN_IDS "$2" "$3" "$4"
-function IGNORE_DOMAIN_IDS()
-{
-    username=$1; password=$2; ids=$3;
-    if [ -z "$username" ]; then username="root"; fi
-    if [ -z "$password" ]; then password=""; fi
+function IGNORE_DOMAIN_IDS() {
+	username=$1
+	password=$2
+	ids=$3
+	if [ -z "$username" ]; then username="root"; fi
+	if [ -z "$password" ]; then password=""; fi
 
-    mysqlrestnodb "$username" "$password" "STOP SLAVE;"
-    mysqlrestnodb "$username" "$password" "CHANGE MASTER TO IGNORE_DOMAIN_IDS = ($ids);"
-    mysqlrestnodb "$username" "$password" "START SLAVE;"
+	mysqlrestnodb "$username" "$password" "STOP SLAVE;"
+	mysqlrestnodb "$username" "$password" "CHANGE MASTER TO IGNORE_DOMAIN_IDS = ($ids);"
+	mysqlrestnodb "$username" "$password" "START SLAVE;"
 	#shellcheck disable=SC2128
 	log text " $FUNCNAME: $result_mysqlrestnodb"
 
-    return 0
+	return 0
 }
 ### ! IGNORE_DOMAIN_IDS2 "$2" "$3"
-function IGNORE_DOMAIN_IDS2()
-{
-    username=$1; password=$2;
-    if [ -z "$username" ]; then username="root"; fi
-    if [ -z "$password" ]; then password=""; fi
+function IGNORE_DOMAIN_IDS2() {
+	username=$1
+	password=$2
+	if [ -z "$username" ]; then username="root"; fi
+	if [ -z "$password" ]; then password=""; fi
 
-    mysqlrestnodb "$username" "$password" "STOP SLAVE;"
-    mysqlrestnodb "$username" "$password" "CHANGE MASTER TO IGNORE_DOMAIN_IDS = ();"
-    mysqlrestnodb "$username" "$password" "START SLAVE;"
+	mysqlrestnodb "$username" "$password" "STOP SLAVE;"
+	mysqlrestnodb "$username" "$password" "CHANGE MASTER TO IGNORE_DOMAIN_IDS = ();"
+	mysqlrestnodb "$username" "$password" "START SLAVE;"
 	#shellcheck disable=SC2128
 	log text " $FUNCNAME: $result_mysqlrestnodb"
 
-    return 0
+	return 0
 }
 
 ### ! MASTER_DELAY "$2" "$3" "$4"
-function MASTER_DELAY()
-{
-    username=$1; password=$2; MASTERDELAY=$3;
-    if [ -z "$username" ]; then username="root"; fi
-    if [ -z "$password" ]; then password=""; fi
-    if [ -z "$MASTERDELAY" ]; then MASTERDELAY=3600; fi
+function MASTER_DELAY() {
+	username=$1
+	password=$2
+	MASTERDELAY=$3
+	if [ -z "$username" ]; then username="root"; fi
+	if [ -z "$password" ]; then password=""; fi
+	if [ -z "$MASTERDELAY" ]; then MASTERDELAY=3600; fi
 
-    mysqlrestnodb "$username" "$password" "STOP SLAVE;"
-    mysqlrestnodb "$username" "$password" "CHANGE MASTER TO MASTER_DELAY=$MASTERDELAY;"
-    mysqlrestnodb "$username" "$password" "START SLAVE;"
+	mysqlrestnodb "$username" "$password" "STOP SLAVE;"
+	mysqlrestnodb "$username" "$password" "CHANGE MASTER TO MASTER_DELAY=$MASTERDELAY;"
+	mysqlrestnodb "$username" "$password" "START SLAVE;"
 	#shellcheck disable=SC2128
 	log text " $FUNCNAME: $result_mysqlrestnodb"
 
-    return 0
+	return 0
 }
 
 ### ! MASTER_PASSWORD "$2" "$3"
-function MASTER_PASSWORD()
-{
-    username=$1; password=$2;
-    if [ -z "$username" ]; then username="root"; fi
-    if [ -z "$password" ]; then password=""; fi
+function MASTER_PASSWORD() {
+	username=$1
+	password=$2
+	if [ -z "$username" ]; then username="root"; fi
+	if [ -z "$password" ]; then password=""; fi
 
-
-    mysqlrestnodb "$username" "$password" "STOP SLAVE;"
-    mysqlrestnodb "$username" "$password" "CHANGE MASTER TO MASTER_PASSWORD=$password;"
-    mysqlrestnodb "$username" "$password" "START SLAVE;"
+	mysqlrestnodb "$username" "$password" "STOP SLAVE;"
+	mysqlrestnodb "$username" "$password" "CHANGE MASTER TO MASTER_PASSWORD=$password;"
+	mysqlrestnodb "$username" "$password" "START SLAVE;"
 	#shellcheck disable=SC2128
 	log text " $FUNCNAME: $result_mysqlrestnodb"
 
-    return 0
+	return 0
 }
 
 ### ! Creating a Replica from a Backup "$2" "$3" "$4" "$5"
-function Replica_Backup()
-{
-    username=$1; password=$2; MASTERLOGFILE=$3; MASTERLOGPOS=$4;
-    if [ -z "$username" ]; then username="root"; fi
-    if [ -z "$password" ]; then password=""; fi
-    if [ -z "$MASTERLOGFILE" ]; then MASTERLOGFILE="master2-bin.001"; fi
-    if [ -z "$MASTERLOGPOS" ]; then MASTERLOGPOS=4; fi
+function Replica_Backup() {
+	username=$1
+	password=$2
+	MASTERLOGFILE=$3
+	MASTERLOGPOS=$4
+	if [ -z "$username" ]; then username="root"; fi
+	if [ -z "$password" ]; then password=""; fi
+	if [ -z "$MASTERLOGFILE" ]; then MASTERLOGFILE="master2-bin.001"; fi
+	if [ -z "$MASTERLOGPOS" ]; then MASTERLOGPOS=4; fi
 
-    mysqlrestnodb "$username" "$password" "CHANGE MASTER TO MASTER_LOG_FILE=$MASTERLOGFILE, MASTER_LOG_POS=$MASTERLOGPOS;"
-    mysqlrestnodb "$username" "$password" "START SLAVE;"
+	mysqlrestnodb "$username" "$password" "CHANGE MASTER TO MASTER_LOG_FILE=$MASTERLOGFILE, MASTER_LOG_POS=$MASTERLOGPOS;"
+	mysqlrestnodb "$username" "$password" "START SLAVE;"
 	#shellcheck disable=SC2128
 	log text " $FUNCNAME: $result_mysqlrestnodb"
 
-    return 0
+	return 0
 }
 ### ! Creating a Replica from a Backup2 "$2" "$3" "$4"
-function Replica_Backup2()
-{
-    username=$1; password=$2; gtidslavepos=$3;
-    if [ -z "$username" ]; then username="root"; fi
-    if [ -z "$password" ]; then password=""; fi
-    if [ -z "$gtidslavepos" ]; then gtidslavepos='0-1-153'; fi
+function Replica_Backup2() {
+	username=$1
+	password=$2
+	gtidslavepos=$3
+	if [ -z "$username" ]; then username="root"; fi
+	if [ -z "$password" ]; then password=""; fi
+	if [ -z "$gtidslavepos" ]; then gtidslavepos='0-1-153'; fi
 
-    mysqlrestnodb "$username" "$password" "SET GLOBAL gtid_slave_pos='$gtidslavepos';"
-    mysqlrestnodb "$username" "$password" "CHANGE MASTER TO MASTER_USE_GTID=slave_pos;"
-    mysqlrestnodb "$username" "$password" "START SLAVE;"
+	mysqlrestnodb "$username" "$password" "SET GLOBAL gtid_slave_pos='$gtidslavepos';"
+	mysqlrestnodb "$username" "$password" "CHANGE MASTER TO MASTER_USE_GTID=slave_pos;"
+	mysqlrestnodb "$username" "$password" "START SLAVE;"
 	#shellcheck disable=SC2128
 	log text " $FUNCNAME: $result_mysqlrestnodb"
 
-    return 0
+	return 0
 }
 ### ! ReplikatKoordinaten - Dies aendert die Koordinaten des primaeren und des primaeren Binaerlogs "$2" "$3" "$4" "$5" "$6" "$7" "$8"
-function ReplikatKoordinaten()
-{    
-    username=$1; password=$2; MASTERHOST=$3; MASTERPORT=$4; MASTERLOGFILE=$5; MASTERLOGPOS=$6; MASTERCONNECTRETRY=$7;
-    if [ -z "$username" ]; then username="root"; fi
-    if [ -z "$password" ]; then password=""; fi
+function ReplikatKoordinaten() {
+	username=$1
+	password=$2
+	MASTERHOST=$3
+	MASTERPORT=$4
+	MASTERLOGFILE=$5
+	MASTERLOGPOS=$6
+	MASTERCONNECTRETRY=$7
+	if [ -z "$username" ]; then username="root"; fi
+	if [ -z "$password" ]; then password=""; fi
 
-    # Dies aendert die Koordinaten des primaeren und des primaeren Binaerlogs. 
-    # Dies wird verwendet, wenn Sie das Replikat so einrichten moechten, dass es das primaere repliziert:
-  
-    mysqlrestnodb "$username" "$password" "CHANGE MASTER TO  MASTER_HOST=$MASTERHOST, MASTER_USER=$username, MASTER_PASSWORD=$password, MASTER_PORT=$MASTERPORT, MASTER_LOG_FILE=$MASTERLOGFILE, MASTER_LOG_POS=$MASTERLOGPOS, MASTER_CONNECT_RETRY=$MASTERCONNECTRETRY;"
-    mysqlrestnodb "$username" "$password" "START SLAVE;"
+	# Dies aendert die Koordinaten des primaeren und des primaeren Binaerlogs.
+	# Dies wird verwendet, wenn Sie das Replikat so einrichten moechten, dass es das primaere repliziert:
+
+	mysqlrestnodb "$username" "$password" "CHANGE MASTER TO  MASTER_HOST=$MASTERHOST, MASTER_USER=$username, MASTER_PASSWORD=$password, MASTER_PORT=$MASTERPORT, MASTER_LOG_FILE=$MASTERLOGFILE, MASTER_LOG_POS=$MASTERLOGPOS, MASTER_CONNECT_RETRY=$MASTERCONNECTRETRY;"
+	mysqlrestnodb "$username" "$password" "START SLAVE;"
 	#shellcheck disable=SC2128
 	log text " $FUNCNAME: $result_mysqlrestnodb"
 
-    return 0
+	return 0
 }
 
 ### NEU mariaDB 30.06.2022 ENDE ########################################################################
@@ -5592,31 +5837,28 @@ function ReplikatKoordinaten()
 
 ### ! Alle Tabellen aus einer SQL Datensicherung in ein gleichnahmigen Verzeichniss extrahieren.
 # db_tablesplitt /Pfad/SQL_Datei.sql
-function db_tablesplitt() 
-{
+function db_tablesplitt() {
 	VERZEICHNISNAME=$(basename "$1" .sql)
 	STARTVERZEICHNIS=$(pwd)
 	TABELLEN_ZAEHLER=0
 	mkdir -p "$STARTVERZEICHNIS"/"$VERZEICHNISNAME"
 	log info "Zerlege $VERZEICHNISNAME und kopiere alle Tabellen nach $STARTVERZEICHNIS/$VERZEICHNISNAME"
 
-	#Schleife für jeden Tabellennamen, der in der bereitgestellten Dumpdatei gefunden wird
+	#Schleife fuer jeden Tabellennamen, der in der bereitgestellten Dumpdatei gefunden wird
 
 	# shellcheck disable=SC2013
-	for TABELLENNAME in $(grep "Table structure for table " "$1" | awk -F"\`" \{'print $2'\})        
-	do
+	for TABELLENNAME in $(grep "Table structure for table " "$1" | awk -F"\`" \{'print $2'\}); do
 		log info "Entpacke $TABELLENNAME..."
 		#Extrahiert den tabellenspezifischen Dump in TABELLENNAME.sql
-		sed -n "/^-- Table structure for table \`$TABELLENNAME\`/,/^-- Table structure for table/p" "$1" > "$STARTVERZEICHNIS"/"$VERZEICHNISNAME"/"$TABELLENNAME".sql
-		TABELLEN_ZAEHLER=$((TABELLEN_ZAEHLER+1))
+		sed -n "/^-- Table structure for table \`$TABELLENNAME\`/,/^-- Table structure for table/p" "$1" >"$STARTVERZEICHNIS"/"$VERZEICHNISNAME"/"$TABELLENNAME".sql
+		TABELLEN_ZAEHLER=$((TABELLEN_ZAEHLER + 1))
 		log info "Kopiere $TABELLENNAME nach $STARTVERZEICHNIS/$VERZEICHNISNAME/$TABELLENNAME.sql"
-	done;
+	done
 }
 
 ### ! Eine einzelne Tabelle aus einem SQL Datenbank Backup extrahieren.
 # db_tablextract /Pfad/SQL_Datei.sql Tabellenname
-function db_tablextract() 
-{
+function db_tablextract() {
 	VERZEICHNISNAME=$(basename "$1" .sql)
 	STARTVERZEICHNIS=$(pwd)
 	TABELLEN_ZAEHLER=0
@@ -5624,82 +5866,82 @@ function db_tablextract()
 	log info "Kopiere $TABELLENNAME nach $STARTVERZEICHNIS/$VERZEICHNISNAME/$TABELLENNAME.sql"
 
 	# shellcheck disable=SC2013
-	for TABELLENNAME in $(grep -E "Table structure for table \`$2\`" "$1"| awk -F"\`" \{'print $2'\})
-	do
+	for TABELLENNAME in $(grep -E "Table structure for table \`$2\`" "$1" | awk -F"\`" \{'print $2'\}); do
 		log info "Entpacke $TABELLENNAME..."
 		#Extrahiert den tabellenspezifischen Dump in TABELLENNAME.sql
-		sed -n "/^-- Table structure for table \`$TABELLENNAME\`/,/^-- Table structure for table/p" "$1" > "$STARTVERZEICHNIS"/"$VERZEICHNISNAME"/"$TABELLENNAME".sql
-		TABELLEN_ZAEHLER=$((TABELLEN_ZAEHLER+1))
+		sed -n "/^-- Table structure for table \`$TABELLENNAME\`/,/^-- Table structure for table/p" "$1" >"$STARTVERZEICHNIS"/"$VERZEICHNISNAME"/"$TABELLENNAME".sql
+		TABELLEN_ZAEHLER=$((TABELLEN_ZAEHLER + 1))
 		log info "Habe $TABELLENNAME nach $STARTVERZEICHNIS/$VERZEICHNISNAME/$TABELLENNAME.sql kopiert"
-	done;
+	done
 }
 
 ### ! db_tablextract_regex, Extrahiere Tabelle aus SQL Datenbank Backup unter zuhilfenahme von regex.
-# db_tablextract_regex DUMP-FILE-NAME -S TABLE-NAME-REGEXP Extrahiert 
+# db_tablextract_regex DUMP-FILE-NAME -S TABLE-NAME-REGEXP Extrahiert
 # Tabellen aus der sql Datei mit dem angegebenen regulaeren Ausdruck.
-function db_tablextract_regex() 
-{
+function db_tablextract_regex() {
 	VERZEICHNISNAME=$(basename "$1" .sql)
 	STARTVERZEICHNIS=$(pwd)
 	TABELLEN_ZAEHLER=0
 	mkdir -p "$STARTVERZEICHNIS"/"$VERZEICHNISNAME"
 
 	# shellcheck disable=SC2013
-	for TABELLENNAME in $(grep -E "Table structure for table \`$3" "$1"| awk -F"\`" \{'print $2'\})
-	do
-		
+	for TABELLENNAME in $(grep -E "Table structure for table \`$3" "$1" | awk -F"\`" \{'print $2'\}); do
+
 		log info "Entpacke $TABELLENNAME..."
-		
+
 		#Extrahiert den tabellenspezifischen Dump in TABELLENNAME.sql
-		sed -n "/^-- Table structure for table \`$TABELLENNAME\`/,/^-- Table structure for table/p" "$1" > "$STARTVERZEICHNIS"/"$VERZEICHNISNAME"/"$TABELLENNAME".sql
-		TABELLEN_ZAEHLER=$((TABELLEN_ZAEHLER+1))
+		sed -n "/^-- Table structure for table \`$TABELLENNAME\`/,/^-- Table structure for table/p" "$1" >"$STARTVERZEICHNIS"/"$VERZEICHNISNAME"/"$TABELLENNAME".sql
+		TABELLEN_ZAEHLER=$((TABELLEN_ZAEHLER + 1))
 		log info "Kopiere $TABELLENNAME structur $1 nach $STARTVERZEICHNIS/$VERZEICHNISNAME/$TABELLENNAME.sql"
-	done;
+	done
 }
 ###* NEU Datenbank splitten ENDE 03.07.2022 ENDE ########################################################################
 
 ### !  conf_write, Konfiguration schreiben ersatz fuer alle UNGETESTETEN ini Funktionen.
 # ./opensim.sh conf_write Einstellung NeuerParameter Verzeichnis Dateiname
-function conf_write()
-{
-	CONF_SEARCH=$1; CONF_ERSATZ=$2; CONF_PFAD=$3; CONF_DATEINAME=$4;
+function conf_write() {
+	CONF_SEARCH=$1
+	CONF_ERSATZ=$2
+	CONF_PFAD=$3
+	CONF_DATEINAME=$4
 	sed -i 's/'"$CONF_SEARCH"' =.*$/'"$CONF_SEARCH"' = '"$CONF_ERSATZ"'/' /"$CONF_PFAD"/"$CONF_DATEINAME"
 	echo "Einstellung $CONF_SEARCH auf Parameter $CONF_ERSATZ geaendert in Datei /$CONF_PFAD/$CONF_DATEINAME"
-	echo "$DATUM $(date +%H:%M:%S) CONF_WRITE: Einstellung $CONF_SEARCH auf Parameter $CONF_ERSATZ geaendert in Datei /$CONF_PFAD/$CONF_DATEINAME" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+	echo "$DATUM $(date +%H:%M:%S) CONF_WRITE: Einstellung $CONF_SEARCH auf Parameter $CONF_ERSATZ geaendert in Datei /$CONF_PFAD/$CONF_DATEINAME" >>"/$STARTVERZEICHNIS/$DATEIDATUM$logfilename.log"
 	return 0
 }
 
 ### !  conf_read, ganze Zeile aus der Konfigurationsdatei anzeigen.
 # ./opensim.sh conf_read Einstellungsbereich Verzeichnis Dateiname
-function conf_read()
-{
-    CONF_SEARCH=$1; CONF_PFAD=$2; CONF_DATEINAME=$3;
+function conf_read() {
+	CONF_SEARCH=$1
+	CONF_PFAD=$2
+	CONF_DATEINAME=$3
 	sed -n -e '/'"$CONF_SEARCH"'/p' /"$CONF_PFAD"/"$CONF_DATEINAME"
-    echo "Einstellung $CONF_SEARCH suchen in Datei /$CONF_PFAD/$CONF_DATEINAME"
-	echo "$DATUM $(date +%H:%M:%S) CONF_WRITE: Einstellung $CONF_SEARCH suchen in Datei /$CONF_PFAD/$CONF_DATEINAME" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+	echo "Einstellung $CONF_SEARCH suchen in Datei /$CONF_PFAD/$CONF_DATEINAME"
+	echo "$DATUM $(date +%H:%M:%S) CONF_WRITE: Einstellung $CONF_SEARCH suchen in Datei /$CONF_PFAD/$CONF_DATEINAME" >>"/$STARTVERZEICHNIS/$DATEIDATUM$logfilename.log"
 	return 0
 }
 
 ### !  conf_delete, ganze Zeile aus der Konfigurationsdatei loeschen.
 # ./opensim.sh conf_delete Einstellungsbereich Verzeichnis Dateiname
-function conf_delete()
-{
-    CONF_SEARCH=$1; CONF_PFAD=$2; CONF_DATEINAME=$3;
+function conf_delete() {
+	CONF_SEARCH=$1
+	CONF_PFAD=$2
+	CONF_DATEINAME=$3
 	sed -i 's/'"$CONF_SEARCH"' =.*$/''/' /"$CONF_PFAD"/"$CONF_DATEINAME"
-    echo "Zeile $CONF_SEARCH geloescht in Datei /$CONF_PFAD/$CONF_DATEINAME"
-	echo "$DATUM $(date +%H:%M:%S) CONF_DELETE: Zeile $CONF_SEARCH geloescht in Datei /$CONF_PFAD/$CONF_DATEINAME" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+	echo "Zeile $CONF_SEARCH geloescht in Datei /$CONF_PFAD/$CONF_DATEINAME"
+	echo "$DATUM $(date +%H:%M:%S) CONF_DELETE: Zeile $CONF_SEARCH geloescht in Datei /$CONF_PFAD/$CONF_DATEINAME" >>"/$STARTVERZEICHNIS/$DATEIDATUM$logfilename.log"
 	return 0
 }
 
 ### !  ramspeicher, den echten RAM Speicher auslesen.
-function ramspeicher()
-{
+function ramspeicher() {
 	# RAM groesse auslesen
-	dmidecode --type 17 > /tmp/raminfo.inf
+	dmidecode --type 17 >/tmp/raminfo.inf
 	RAMSPEICHER=$(awk -F ":" '/Size/ {print $2}' /tmp/raminfo.inf)
 	rm /tmp/raminfo.inf
 	# Zeichen loeschen
-	RAMSPEICHER="${RAMSPEICHER:1}" # erstes Zeichen loeschen
+	RAMSPEICHER="${RAMSPEICHER:1}"   # erstes Zeichen loeschen
 	RAMSPEICHER="${RAMSPEICHER::-3}" # letzten 3 Zeichen loeschen
 	return 0
 }
@@ -5707,21 +5949,20 @@ function ramspeicher()
 ### !  mysqleinstellen, ermitteln wieviel RAM Speicher vorhanden ist und anschliessend mySQL Einstellen.
 # Einstellungen sind in der my.cnf nicht moeglich es muss in die /etc/mysql/mysql.conf.d/mysqld.cnf
 # Hier wird nicht geprueft ob die Einstellungen schon vorhanden sind sondern nur angehaengt.
-function mysqleinstellen()
-{
+function mysqleinstellen() {
 	# Ermitteln wie viel RAM Speicher der Server hat
 	ramspeicher
 
 	# Ich nehme hier einfach 25% des RAM Speichers weil OpenSim schon so speicherhungrig ist.
-	mysqlspeicher=$((RAMSPEICHER/4)) 
-	logfilesize=512;            # (128M – 2G muss nicht groesser als der Pufferpool sein) von 256 auf 512 erhoeht"
-	iocapacitymax=400;          # standardmaessig der doppelte Wert von innodb_io_capacity sonst 2000"
-	iocapacity=200;             # 100 Harddrive, 200 SSD"
+	mysqlspeicher=$((RAMSPEICHER / 4))
+	logfilesize=512   # (128M – 2G muss nicht groesser als der Pufferpool sein) von 256 auf 512 erhoeht"
+	iocapacitymax=400 # standardmaessig der doppelte Wert von innodb_io_capacity sonst 2000"
+	iocapacity=200    # 100 Harddrive, 200 SSD"
 	MEGABYTE="M"
 
-	#Da bei SQL nicht zwischen Gross- und Kleinschreibung unterschieden wird, muessen bei Betriebssystemen, 
+	#Da bei SQL nicht zwischen Gross- und Kleinschreibung unterschieden wird, muessen bei Betriebssystemen,
 	#bei denen zwischen Gross- und Kleinschreibung unterschieden wird, alle Tabellennamen in Kleinbuchstaben geschrieben werden.
-    #Fuegen Sie die folgende Zeile hinzu: 
+	#Fuegen Sie die folgende Zeile hinzu:
 	# echo "lower_case_table_names = 1" # testen
 
 	### Zeichensatz testen
@@ -5730,13 +5971,13 @@ function mysqleinstellen()
 	# echo "[mysqld]"
 	# echo "character-set-server=utf8mb4"
 
-
-    echo "mySQL Konfiguration auf $mysqlspeicher$MEGABYTE Einstellen und neu starten"
+	echo "mySQL Konfiguration auf $mysqlspeicher$MEGABYTE Einstellen und neu starten"
 	echo "*** Bitte den Inhalt der Datei /tmp/mysqld.txt in die Datei /etc/mysql/mysql.conf.d/mysqld.cnf einfuegen. ***"
-	echo "$DATUM $(date +%H:%M:%S) MYSQLEINSTELLEN: mySQL Konfiguration auf $mysqlspeicher$MEGABYTE Einstellen und neu starten" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+	echo "$DATUM $(date +%H:%M:%S) MYSQLEINSTELLEN: mySQL Konfiguration auf $mysqlspeicher$MEGABYTE Einstellen und neu starten" >>"/$STARTVERZEICHNIS/$DATEIDATUM$logfilename.log"
 
 	# Hier wird die config geschrieben es wird angehaengt
-	{	echo "#"
+	{
+		echo "#"
 		echo "# Meine Einstellungen $mysqlspeicher"
 		# echo "[client]"
 		# echo "default-character-set=utf8mb4"
@@ -5758,7 +5999,7 @@ function mysqleinstellen()
 		# echo "max_allowed_packet=2147483648"
 		echo "# Meine Einstellungen $mysqlspeicher Ende"
 		echo "#"
-	} >> "/tmp/mysqld.txt" # lieber so damit die Leute mySQL nicht abschiessen.
+	} >>"/tmp/mysqld.txt" # lieber so damit die Leute mySQL nicht abschiessen.
 
 	echo "*** Bitte den Inhalt der Datei /tmp/mysqld.txt in die Datei /etc/mysql/mysql.conf.d/mysqld.cnf einfuegen. ***"
 	# /etc/mysql/mysql.conf.d/mysqld.cnf
@@ -5770,10 +6011,9 @@ function mysqleinstellen()
 }
 
 ### !  In Arbeit
-function neuegridconfig()
-{
+function neuegridconfig() {
 	echo "$(tput setaf 2)NEUEGRIDCONFIG: Konfigurationsdateien holen und in das ExampleConfig Verzeichnis kopieren. $(tput sgr0)"
-	echo "$DATUM $(date +%H:%M:%S) NEUEGRIDCONFIG: Konfigurationsdateien holen und in das ExampleConfig Verzeichnis kopieren" >> "/$STARTVERZEICHNIS/$DATEIDATUM-multitool.log"
+	echo "$DATUM $(date +%H:%M:%S) NEUEGRIDCONFIG: Konfigurationsdateien holen und in das ExampleConfig Verzeichnis kopieren" >>"/$STARTVERZEICHNIS/$DATEIDATUM$logfilename.log"
 
 	cd /"$STARTVERZEICHNIS" || exit
 	git clone https://github.com/BigManzai/OpenSim-Shell-Script
@@ -5789,40 +6029,38 @@ function neuegridconfig()
 }
 
 ### !  ipsetzen, setzt nach Abfrage die IP in die Konfigurationen. OK
-function ipsetzen()
-{
+function ipsetzen() {
 	cd /"$STARTVERZEICHNIS/ExampleConfig" || return 1 # gibt es das ExampleConfig Verzeichnis wenn nicht abbruch.
 
 	EINGABEIP=""
 	echo "$(tput setaf 2)IPSETZEN: Bitte geben Sie ihre externe IP ein oder druecken sie Enter fuer $(tput sgr0) $AKTUELLEIP"
-	
+
 	# Eingabe einlesen in Variable EINGABEIP
-	read -r EINGABEIP 
-	
-	# Pruefen ob Variableninhalt Enter oder eine IP ist 
-	if test "$EINGABEIP" = ""
-	then
-	# ENTER wurde gewaehlt
-	# Robust aendern
-	sed -i 's/BaseURL =.*$/BaseURL = '"$AKTUELLEIP"'/' /"$STARTVERZEICHNIS"/ExampleConfig/robust/Robust.ini
-	# OpenSim aendern
-	sed -i 's/BaseHostname =.*$/BaseHostname = '"$AKTUELLEIP"'/' /"$STARTVERZEICHNIS"/ExampleConfig/sim/OpenSim.ini
-	# MoneyServer aendern
-	sed -i 's/MoneyScriptIPaddress  =.*$/MoneyScriptIPaddress  = '"$AKTUELLEIP"'/' /"$STARTVERZEICHNIS"/ExampleConfig/robust/MoneyServer.ini
-	# GridCommon aendern
-	sed -i 's/BaseHostname =.*$/BaseHostname = '"$AKTUELLEIP"'/' /"$STARTVERZEICHNIS"/ExampleConfig/sim/config-include/GridCommon.ini
+	read -r EINGABEIP
+
+	# Pruefen ob Variableninhalt Enter oder eine IP ist
+	if test "$EINGABEIP" = ""; then
+		# ENTER wurde gewaehlt
+		# Robust aendern
+		sed -i 's/BaseURL =.*$/BaseURL = '"$AKTUELLEIP"'/' /"$STARTVERZEICHNIS"/ExampleConfig/robust/Robust.ini
+		# OpenSim aendern
+		sed -i 's/BaseHostname =.*$/BaseHostname = '"$AKTUELLEIP"'/' /"$STARTVERZEICHNIS"/ExampleConfig/sim/OpenSim.ini
+		# MoneyServer aendern
+		sed -i 's/MoneyScriptIPaddress  =.*$/MoneyScriptIPaddress  = '"$AKTUELLEIP"'/' /"$STARTVERZEICHNIS"/ExampleConfig/robust/MoneyServer.ini
+		# GridCommon aendern
+		sed -i 's/BaseHostname =.*$/BaseHostname = '"$AKTUELLEIP"'/' /"$STARTVERZEICHNIS"/ExampleConfig/sim/config-include/GridCommon.ini
 	else
-	# IP wurde gewaehlt
-	# Ausfuehrungszeichen anhaengen
-	EINGABEIP='"'$EINGABEIP'"'
-	# Robust aendern
-	sed -i 's/BaseURL =.*$/BaseURL = '"$EINGABEIP"'/' /"$STARTVERZEICHNIS"/ExampleConfig/robust/Robust.ini
-	# OpenSim aendern
-	sed -i 's/BaseHostname =.*$/BaseHostname = '"$EINGABEIP"'/' /"$STARTVERZEICHNIS"/ExampleConfig/sim/OpenSim.ini
-	# MoneyServer aendern
-	sed -i 's/MoneyScriptIPaddress  =.*$/MoneyScriptIPaddress  = '"$EINGABEIP"'/' /"$STARTVERZEICHNIS"/ExampleConfig/robust/MoneyServer.ini
-	# GridCommon aendern
-	sed -i 's/BaseHostname =.*$/BaseHostname = '"$EINGABEIP"'/' /"$STARTVERZEICHNIS"/ExampleConfig/sim/config-include/GridCommon.ini
+		# IP wurde gewaehlt
+		# Ausfuehrungszeichen anhaengen
+		EINGABEIP='"'$EINGABEIP'"'
+		# Robust aendern
+		sed -i 's/BaseURL =.*$/BaseURL = '"$EINGABEIP"'/' /"$STARTVERZEICHNIS"/ExampleConfig/robust/Robust.ini
+		# OpenSim aendern
+		sed -i 's/BaseHostname =.*$/BaseHostname = '"$EINGABEIP"'/' /"$STARTVERZEICHNIS"/ExampleConfig/sim/OpenSim.ini
+		# MoneyServer aendern
+		sed -i 's/MoneyScriptIPaddress  =.*$/MoneyScriptIPaddress  = '"$EINGABEIP"'/' /"$STARTVERZEICHNIS"/ExampleConfig/robust/MoneyServer.ini
+		# GridCommon aendern
+		sed -i 's/BaseHostname =.*$/BaseHostname = '"$EINGABEIP"'/' /"$STARTVERZEICHNIS"/ExampleConfig/sim/config-include/GridCommon.ini
 	fi
 
 	log info "IPSETZEN: IP oder DNS Einstellungen geaendert"
@@ -5830,15 +6068,14 @@ function ipsetzen()
 }
 
 ### !Aktuelle IP in die Robust.ini schreiben. UNGETESTET
-function robustini()
-{
+function robustini() {
 	# Aktuelle IP ueber Suchadresse ermitteln und Ausfuehrungszeichen anhaengen.
 	DNAAKTUELLEIP="$(wget -O - -q $SEARCHADRES)"
 
 	echo "Gebe deine Server Adresse ein: (Beispiel meinserver.de oder 192.168.2.106)"
 	echo "Enter fuer $AKTUELLEIP"
 	read -r DNANAME
-	if [ -z "$DNANAME" ]; then DNANAME=$DNAAKTUELLEIP ; fi
+	if [ -z "$DNANAME" ]; then DNANAME=$DNAAKTUELLEIP; fi
 	IP8002='"''http://'"$DNANAME"":8002"'"'
 	IP8003='"''http://'"$DNANAME"":8003"'"'
 
@@ -5854,233 +6091,233 @@ function robustini()
 	echo "Gridnick:"
 	read -r GRIDNICK
 	# shellcheck disable=SC2016
-	{	echo '[Const]' 
-		echo 'BaseURL = '"$DNANAME" 
-		echo 'PublicPort = "8002"' 
-		echo 'PrivatePort = "8003"' 
+	{
+		echo '[Const]'
+		echo 'BaseURL = '"$DNANAME"
+		echo 'PublicPort = "8002"'
+		echo 'PrivatePort = "8003"'
 		echo 'MysqlDatabase = '"$DBNAME"
 		echo 'MysqlUser = '"$DBUSER"
 		echo 'MysqlPassword = '"$DBPASSWD"
-		echo 'StartRegion = "Welcome"' 
-		echo 'Simulatorgridname = '"$GRIDNAME" 
-		echo 'Simulatorgridnick = '"$GRIDNICK" 
-		echo '[Startup]' 
-		echo 'PIDFile = "/tmp/Robust.pid"' 
-		echo 'RegistryLocation = "."' 
-		echo 'ConfigDirectory = "robust-include"' 
-		echo 'ConsoleHistoryFileEnabled = true' 
-		echo 'ConsoleHistoryFile = "RobustConsoleHistory.txt"' 
-		echo 'ConsoleHistoryFileLines = 100' 
-		echo 'NoVerifyCertChain = true' 
-		echo 'NoVerifyCertHostname = true' 
-		echo '[ServiceList]' 
-		echo 'AssetServiceConnector = "${Const|PrivatePort}/OpenSim.Server.Handlers.dll:AssetServiceConnector"' 
-		echo 'InventoryInConnector = "${Const|PrivatePort}/OpenSim.Server.Handlers.dll:XInventoryInConnector"' 
-		echo 'GridServiceConnector = "${Const|PrivatePort}/OpenSim.Server.Handlers.dll:GridServiceConnector"' 
-		echo 'GridInfoServerInConnector = "${Const|PublicPort}/OpenSim.Server.Handlers.dll:GridInfoServerInConnector"' 
-		echo 'AuthenticationServiceConnector = "${Const|PrivatePort}/OpenSim.Server.Handlers.dll:AuthenticationServiceConnector"' 
-		echo 'OpenIdServerConnector = "${Const|PublicPort}/OpenSim.Server.Handlers.dll:OpenIdServerConnector"' 
-		echo 'AvatarServiceConnector = "${Const|PrivatePort}/OpenSim.Server.Handlers.dll:AvatarServiceConnector"' 
-		echo 'LLLoginServiceInConnector = "${Const|PublicPort}/OpenSim.Server.Handlers.dll:LLLoginServiceInConnector"' 
-		echo 'PresenceServiceConnector = "${Const|PrivatePort}/OpenSim.Server.Handlers.dll:PresenceServiceConnector"' 
-		echo 'UserAccountServiceConnector = "${Const|PrivatePort}/OpenSim.Server.Handlers.dll:UserAccountServiceConnector"' 
-		echo 'GridUserServiceConnector = "${Const|PrivatePort}/OpenSim.Server.Handlers.dll:GridUserServiceConnector"' 
-		echo 'AgentPreferencesServiceConnector = "${Const|PrivatePort}/OpenSim.Server.Handlers.dll:AgentPreferencesServiceConnector"' 
-		echo 'FriendsServiceConnector = "${Const|PrivatePort}/OpenSim.Server.Handlers.dll:FriendsServiceConnector"' 
-		echo 'MapAddServiceConnector = "${Const|PrivatePort}/OpenSim.Server.Handlers.dll:MapAddServiceConnector"' 
-		echo 'MapGetServiceConnector = "${Const|PublicPort}/OpenSim.Server.Handlers.dll:MapGetServiceConnector"' 
-		echo 'OfflineIMServiceConnector = "${Const|PrivatePort}/OpenSim.Addons.OfflineIM.dll:OfflineIMServiceRobustConnector"' 
-		echo 'GroupsServiceConnector = "${Const|PrivatePort}/OpenSim.Addons.Groups.dll:GroupsServiceRobustConnector"' 
-		echo 'BakedTextureService = "${Const|PrivatePort}/OpenSim.Server.Handlers.dll:XBakesConnector"' 
-		echo 'UserProfilesServiceConnector = "${Const|PublicPort}/OpenSim.Server.Handlers.dll:UserProfilesConnector"' 
-		echo 'MuteListConnector = "${Const|PrivatePort}/OpenSim.Server.Handlers.dll:MuteListServiceConnector"' 
-		echo 'GatekeeperServiceInConnector = "${Const|PublicPort}/OpenSim.Server.Handlers.dll:GatekeeperServiceInConnector"' 
-		echo 'UserAgentServerConnector = "${Const|PublicPort}/OpenSim.Server.Handlers.dll:UserAgentServerConnector"' 
-		echo 'HeloServiceInConnector = "${Const|PublicPort}/OpenSim.Server.Handlers.dll:HeloServiceInConnector"' 
-		echo 'HGFriendsServerConnector = "${Const|PublicPort}/OpenSim.Server.Handlers.dll:HGFriendsServerConnector"' 
-		echo 'InstantMessageServerConnector = "${Const|PublicPort}/OpenSim.Server.Handlers.dll:InstantMessageServerConnector"' 
-		echo 'HGInventoryServiceConnector = "HGInventoryService@${Const|PublicPort}/OpenSim.Server.Handlers.dll:XInventoryInConnector"' 
-		echo 'HGAssetServiceConnector = "HGAssetService@${Const|PublicPort}/OpenSim.Server.Handlers.dll:AssetServiceConnector"' 
-		echo 'HGGroupsServiceConnector = "${Const|PublicPort}/OpenSim.Addons.Groups.dll:HGGroupsServiceRobustConnector"' 
-		echo '[Network]' 
-		echo 'port = ${Const|PrivatePort}' 
-		echo 'AllowllHTTPRequestIn = false' 
-		echo '[Hypergrid]' 
-		echo 'HomeURI = "${Const|BaseURL}:${Const|PublicPort}"' 
-		echo 'GatekeeperURI = "${Const|BaseURL}:${Const|PublicPort}"' 
-		echo '[AccessControl]' 
-		echo 'DeniedClients = "Imprudence|CopyBot|Twisted|Crawler|Cryolife|darkstorm|DarkStorm|Darkstorm"' 
-		echo '[DatabaseService]' 
-		echo 'StorageProvider = "OpenSim.Data.MySQL.dll"' 
+		echo 'StartRegion = "Welcome"'
+		echo 'Simulatorgridname = '"$GRIDNAME"
+		echo 'Simulatorgridnick = '"$GRIDNICK"
+		echo '[Startup]'
+		echo 'PIDFile = "/tmp/Robust.pid"'
+		echo 'RegistryLocation = "."'
+		echo 'ConfigDirectory = "robust-include"'
+		echo 'ConsoleHistoryFileEnabled = true'
+		echo 'ConsoleHistoryFile = "RobustConsoleHistory.txt"'
+		echo 'ConsoleHistoryFileLines = 100'
+		echo 'NoVerifyCertChain = true'
+		echo 'NoVerifyCertHostname = true'
+		echo '[ServiceList]'
+		echo 'AssetServiceConnector = "${Const|PrivatePort}/OpenSim.Server.Handlers.dll:AssetServiceConnector"'
+		echo 'InventoryInConnector = "${Const|PrivatePort}/OpenSim.Server.Handlers.dll:XInventoryInConnector"'
+		echo 'GridServiceConnector = "${Const|PrivatePort}/OpenSim.Server.Handlers.dll:GridServiceConnector"'
+		echo 'GridInfoServerInConnector = "${Const|PublicPort}/OpenSim.Server.Handlers.dll:GridInfoServerInConnector"'
+		echo 'AuthenticationServiceConnector = "${Const|PrivatePort}/OpenSim.Server.Handlers.dll:AuthenticationServiceConnector"'
+		echo 'OpenIdServerConnector = "${Const|PublicPort}/OpenSim.Server.Handlers.dll:OpenIdServerConnector"'
+		echo 'AvatarServiceConnector = "${Const|PrivatePort}/OpenSim.Server.Handlers.dll:AvatarServiceConnector"'
+		echo 'LLLoginServiceInConnector = "${Const|PublicPort}/OpenSim.Server.Handlers.dll:LLLoginServiceInConnector"'
+		echo 'PresenceServiceConnector = "${Const|PrivatePort}/OpenSim.Server.Handlers.dll:PresenceServiceConnector"'
+		echo 'UserAccountServiceConnector = "${Const|PrivatePort}/OpenSim.Server.Handlers.dll:UserAccountServiceConnector"'
+		echo 'GridUserServiceConnector = "${Const|PrivatePort}/OpenSim.Server.Handlers.dll:GridUserServiceConnector"'
+		echo 'AgentPreferencesServiceConnector = "${Const|PrivatePort}/OpenSim.Server.Handlers.dll:AgentPreferencesServiceConnector"'
+		echo 'FriendsServiceConnector = "${Const|PrivatePort}/OpenSim.Server.Handlers.dll:FriendsServiceConnector"'
+		echo 'MapAddServiceConnector = "${Const|PrivatePort}/OpenSim.Server.Handlers.dll:MapAddServiceConnector"'
+		echo 'MapGetServiceConnector = "${Const|PublicPort}/OpenSim.Server.Handlers.dll:MapGetServiceConnector"'
+		echo 'OfflineIMServiceConnector = "${Const|PrivatePort}/OpenSim.Addons.OfflineIM.dll:OfflineIMServiceRobustConnector"'
+		echo 'GroupsServiceConnector = "${Const|PrivatePort}/OpenSim.Addons.Groups.dll:GroupsServiceRobustConnector"'
+		echo 'BakedTextureService = "${Const|PrivatePort}/OpenSim.Server.Handlers.dll:XBakesConnector"'
+		echo 'UserProfilesServiceConnector = "${Const|PublicPort}/OpenSim.Server.Handlers.dll:UserProfilesConnector"'
+		echo 'MuteListConnector = "${Const|PrivatePort}/OpenSim.Server.Handlers.dll:MuteListServiceConnector"'
+		echo 'GatekeeperServiceInConnector = "${Const|PublicPort}/OpenSim.Server.Handlers.dll:GatekeeperServiceInConnector"'
+		echo 'UserAgentServerConnector = "${Const|PublicPort}/OpenSim.Server.Handlers.dll:UserAgentServerConnector"'
+		echo 'HeloServiceInConnector = "${Const|PublicPort}/OpenSim.Server.Handlers.dll:HeloServiceInConnector"'
+		echo 'HGFriendsServerConnector = "${Const|PublicPort}/OpenSim.Server.Handlers.dll:HGFriendsServerConnector"'
+		echo 'InstantMessageServerConnector = "${Const|PublicPort}/OpenSim.Server.Handlers.dll:InstantMessageServerConnector"'
+		echo 'HGInventoryServiceConnector = "HGInventoryService@${Const|PublicPort}/OpenSim.Server.Handlers.dll:XInventoryInConnector"'
+		echo 'HGAssetServiceConnector = "HGAssetService@${Const|PublicPort}/OpenSim.Server.Handlers.dll:AssetServiceConnector"'
+		echo 'HGGroupsServiceConnector = "${Const|PublicPort}/OpenSim.Addons.Groups.dll:HGGroupsServiceRobustConnector"'
+		echo '[Network]'
+		echo 'port = ${Const|PrivatePort}'
+		echo 'AllowllHTTPRequestIn = false'
+		echo '[Hypergrid]'
+		echo 'HomeURI = "${Const|BaseURL}:${Const|PublicPort}"'
+		echo 'GatekeeperURI = "${Const|BaseURL}:${Const|PublicPort}"'
+		echo '[AccessControl]'
+		echo 'DeniedClients = "Imprudence|CopyBot|Twisted|Crawler|Cryolife|darkstorm|DarkStorm|Darkstorm"'
+		echo '[DatabaseService]'
+		echo 'StorageProvider = "OpenSim.Data.MySQL.dll"'
 		echo 'ConnectionString = "Data Source=localhost;Database='"$DBNAME"';User ID='"$DBUSER"';Password='"$DBPASSWD"';Old Guids=true;"'
-		echo '[AssetService]' 
-		echo 'LocalServiceModule = "OpenSim.Services.AssetService.dll:AssetService"' 
-		echo 'DefaultAssetLoader = "OpenSim.Framework.AssetLoader.Filesystem.dll"' 
-		echo 'AssetLoaderArgs = "./assets/AssetSets.xml"' 
-		echo 'AllowRemoteDelete = true' 
-		echo 'AllowRemoteDeleteAllTypes = false' 
-		echo '[InventoryService]' 
-		echo 'LocalServiceModule = "OpenSim.Services.InventoryService.dll:XInventoryService"' 
-		echo 'AllowDelete = true' 
-		echo '[GridService]' 
-		echo 'LocalServiceModule = "OpenSim.Services.GridService.dll:GridService"' 
-		echo 'AssetService = "OpenSim.Services.AssetService.dll:AssetService"' 
-		echo 'MapTileDirectory = "./maptiles"' 
-		echo 'Region_${Const|StartRegion} = "DefaultRegion, DefaultHGRegion, FallbackRegion"' 
-		echo 'HypergridLinker = true' 
-		echo 'ExportSupported = true' 
-		echo 'GatekeeperURI = "${Const|BaseURL}:${Const|PublicPort}"' 
-		echo '[FreeswitchService]' 
-		echo 'LocalServiceModule = "OpenSim.Services.FreeswitchService.dll:FreeswitchService"' 
-		echo '[AuthenticationService]' 
-		echo 'LocalServiceModule = "OpenSim.Services.AuthenticationService.dll:PasswordAuthenticationService"' 
-		echo 'AllowGetAuthInfo = true' 
-		echo 'AllowSetAuthInfo = true' 
-		echo 'AllowSetPassword = true' 
-		echo '[OpenIdService]' 
-		echo 'AuthenticationServiceModule = "OpenSim.Services.AuthenticationService.dll:PasswordAuthenticationService"' 
-		echo 'UserAccountServiceModule = "OpenSim.Services.UserAccountService.dll:UserAccountService"' 
-		echo '[UserAccountService]' 
-		echo 'LocalServiceModule = "OpenSim.Services.UserAccountService.dll:UserAccountService"' 
-		echo 'AuthenticationService = "OpenSim.Services.AuthenticationService.dll:PasswordAuthenticationService"' 
-		echo 'PresenceService = "OpenSim.Services.PresenceService.dll:PresenceService"' 
-		echo 'GridService = "OpenSim.Services.GridService.dll:GridService"' 
-		echo 'InventoryService = "OpenSim.Services.InventoryService.dll:XInventoryService"' 
-		echo 'AvatarService = "OpenSim.Services.AvatarService.dll:AvatarService"' 
-		echo 'GridUserService = "OpenSim.Services.UserAccountService.dll:GridUserService"' 
-		echo 'CreateDefaultAvatarEntries = true' 
-		echo 'AllowCreateUser = true' 
-		echo 'AllowSetAccount = true' 
-		echo '[GridUserService]' 
-		echo 'LocalServiceModule = "OpenSim.Services.UserAccountService.dll:GridUserService"' 
-		echo '[AgentPreferencesService]' 
-		echo 'LocalServiceModule = "OpenSim.Services.UserAccountService.dll:AgentPreferencesService"' 
-		echo '[PresenceService]' 
-		echo 'LocalServiceModule = "OpenSim.Services.PresenceService.dll:PresenceService"' 
-		echo '[AvatarService]' 
-		echo 'LocalServiceModule = "OpenSim.Services.AvatarService.dll:AvatarService"' 
-		echo '[FriendsService]' 
-		echo 'LocalServiceModule = "OpenSim.Services.FriendsService.dll:FriendsService"' 
-		echo '[EstateService]' 
-		echo 'LocalServiceModule = "OpenSim.Services.EstateService.dll:EstateDataService"' 
-		echo '[LibraryService]' 
-		echo 'LibraryName = "OpenSim Library"' 
-		echo 'DefaultLibrary = "./inventory/Libraries.xml"' 
-		echo '[LoginService]' 
-		echo 'LocalServiceModule = "OpenSim.Services.LLLoginService.dll:LLLoginService"' 
-		echo 'UserAccountService = "OpenSim.Services.UserAccountService.dll:UserAccountService"' 
-		echo 'GridUserService = "OpenSim.Services.UserAccountService.dll:GridUserService"' 
-		echo 'AuthenticationService = "OpenSim.Services.AuthenticationService.dll:PasswordAuthenticationService"' 
-		echo 'InventoryService = "OpenSim.Services.InventoryService.dll:XInventoryService"' 
-		echo 'AvatarService = "OpenSim.Services.AvatarService.dll:AvatarService"' 
-		echo 'PresenceService = "OpenSim.Services.PresenceService.dll:PresenceService"' 
-		echo 'GridService = "OpenSim.Services.GridService.dll:GridService"' 
-		echo 'SimulationService ="OpenSim.Services.Connectors.dll:SimulationServiceConnector"' 
-		echo 'LibraryService = "OpenSim.Services.InventoryService.dll:LibraryService"' 
-		echo 'FriendsService = "OpenSim.Services.FriendsService.dll:FriendsService"' 
-		echo 'MinLoginLevel = 0' 
-		echo 'UserAgentService = "OpenSim.Services.HypergridService.dll:UserAgentService"' 
-		echo 'HGInventoryServicePlugin = "HGInventoryService@OpenSim.Services.HypergridService.dll:HGSuitcaseInventoryService"' 
-		echo 'Currency = "T$"' 
-		echo 'ClassifiedFee = 0' 
-		echo 'WelcomeMessage = "Welcome, Avatar!"' 
-		echo 'AllowRemoteSetLoginLevel = "false"' 
-		echo 'MapTileURL = "${Const|BaseURL}:${Const|PublicPort}/";' 
-		echo 'SearchURL = "${Const|BaseURL}:${Const|PublicPort}/";' 
-		echo 'GatekeeperURI = "${Const|BaseURL}:${Const|PublicPort}"' 
-		echo 'SRV_HomeURI = "${Const|BaseURL}:${Const|PublicPort}"' 
-		echo 'SRV_InventoryServerURI = "${Const|BaseURL}:${Const|PublicPort}"' 
-		echo 'SRV_AssetServerURI = "${Const|BaseURL}:${Const|PublicPort}"' 
-		echo 'SRV_ProfileServerURI = "${Const|BaseURL}:${Const|PublicPort}"' 
-		echo 'SRV_FriendsServerURI = "${Const|BaseURL}:${Const|PublicPort}"' 
-		echo 'SRV_IMServerURI = "${Const|BaseURL}:${Const|PublicPort}"' 
-		echo 'SRV_GroupsServerURI = "${Const|BaseURL}:${Const|PublicPort}"' 
-		echo 'DSTZone = "America/Los_Angeles;Pacific Standard Time"' 
-		echo '[MapImageService]' 
-		echo 'LocalServiceModule = "OpenSim.Services.MapImageService.dll:MapImageService"' 
-		echo 'TilesStoragePath = "maptiles"' 
-		echo '[GridInfoService]' 
-		echo 'login = ${Const|BaseURL}:${Const|PublicPort}/' 
-		echo 'gridname = "${Const|Simulatorgridname}"' 
-		echo 'gridnick = ${Const|Simulatorgridnick}' 
-		echo 'welcome = ${Const|BaseURL}/' 
-		echo 'economy = ${Const|BaseURL}/helper/' 
-		echo 'about = ${Const|BaseURL}/' 
-		echo 'register = ${Const|BaseURL}/' 
-		echo 'help = ${Const|BaseURL}/' 
-		echo 'password = ${Const|BaseURL}/' 
-		echo 'gatekeeper = ${Const|BaseURL}:${Const|PublicPort}/' 
-		echo 'uas = ${Const|BaseURL}:${Const|PublicPort}/' 
-		echo '[GatekeeperService]' 
-		echo 'LocalServiceModule = "OpenSim.Services.HypergridService.dll:GatekeeperService"' 
-		echo 'UserAccountService = "OpenSim.Services.UserAccountService.dll:UserAccountService"' 
-		echo 'UserAgentService = "OpenSim.Services.HypergridService.dll:UserAgentService"' 
-		echo 'PresenceService = "OpenSim.Services.PresenceService.dll:PresenceService"' 
-		echo 'GridUserService = "OpenSim.Services.UserAccountService.dll:GridUserService"' 
-		echo 'GridService = "OpenSim.Services.GridService.dll:GridService"' 
-		echo 'AuthenticationService = "OpenSim.Services.Connectors.dll:AuthenticationServicesConnector"' 
-		echo 'SimulationService ="OpenSim.Services.Connectors.dll:SimulationServiceConnector"' 
-		echo 'AllowTeleportsToAnyRegion = true' 
-		echo 'ForeignAgentsAllowed = true' 
-		echo 'AllowExcept = "http://grid.sacrarium.su:8888"' 
-		echo '[UserAgentService]' 
-		echo 'LocalServiceModule = "OpenSim.Services.HypergridService.dll:UserAgentService"' 
-		echo 'GridUserService     = "OpenSim.Services.UserAccountService.dll:GridUserService"' 
-		echo 'GridService         = "OpenSim.Services.GridService.dll:GridService"' 
-		echo 'GatekeeperService   = "OpenSim.Services.HypergridService.dll:GatekeeperService"' 
-		echo 'PresenceService     = "OpenSim.Services.PresenceService.dll:PresenceService"' 
-		echo 'FriendsService      = "OpenSim.Services.FriendsService.dll:FriendsService"' 
-		echo 'UserAccountService  = "OpenSim.Services.UserAccountService.dll:UserAccountService"' 
-		echo 'LevelOutsideContacts = 0' 
-		echo 'ShowUserDetailsInHGProfile = True' 
-		echo '[HGInventoryService]' 
-		echo 'LocalServiceModule = "OpenSim.Services.InventoryService.dll:XInventoryService"' 
-		echo 'UserAccountsService = "OpenSim.Services.UserAccountService.dll:UserAccountService"' 
-		echo 'AvatarService = "OpenSim.Services.AvatarService.dll:AvatarService"' 
-		echo 'AuthType = None' 
-		echo 'HomeURI = "${Const|BaseURL}:${Const|PublicPort}"' 
-		echo '[HGAssetService]' 
-		echo 'LocalServiceModule = "OpenSim.Services.HypergridService.dll:HGAssetService"' 
-		echo 'UserAccountsService = "OpenSim.Services.UserAccountService.dll:UserAccountService"' 
-		echo 'AuthType = None' 
-		echo 'HomeURI = "${Const|BaseURL}:${Const|PublicPort}"' 
-		echo '[HGFriendsService]' 
-		echo 'LocalServiceModule = "OpenSim.Services.HypergridService.dll:HGFriendsService"' 
-		echo 'UserAgentService = "OpenSim.Services.HypergridService.dll:UserAgentService"' 
-		echo 'FriendsService = "OpenSim.Services.FriendsService.dll:FriendsService"' 
-		echo 'UserAccountService = "OpenSim.Services.UserAccountService.dll:UserAccountService"' 
-		echo 'GridService = "OpenSim.Services.GridService.dll:GridService"' 
-		echo 'PresenceService = "OpenSim.Services.PresenceService.dll:PresenceService"' 
-		echo '[HGInstantMessageService]' 
-		echo 'LocalServiceModule  = "OpenSim.Services.HypergridService.dll:HGInstantMessageService"' 
-		echo 'GridService         = "OpenSim.Services.GridService.dll:GridService"' 
-		echo 'PresenceService     = "OpenSim.Services.PresenceService.dll:PresenceService"' 
-		echo 'UserAgentService    = "OpenSim.Services.HypergridService.dll:UserAgentService"' 
-		echo 'InGatekeeper = True' 
-		echo '[Messaging]' 
-		echo 'OfflineIMService = "OpenSim.Addons.OfflineIM.dll:OfflineIMService"' 
-		echo '[Groups]' 
-		echo 'OfflineIMService = "OpenSim.Addons.OfflineIM.dll:OfflineIMService"' 
-		echo 'UserAccountService = "OpenSim.Services.UserAccountService.dll:UserAccountService"' 
-		echo 'HomeURI = "${Const|BaseURL}:${Const|PublicPort}"' 
-		echo 'MaxAgentGroups = 42' 
-		echo '[UserProfilesService]' 
-		echo 'LocalServiceModule = "OpenSim.Services.UserProfilesService.dll:UserProfilesService"' 
-		echo 'Enabled = true' 
-		echo 'UserAccountService = OpenSim.Services.UserAccountService.dll:UserAccountService' 
-		echo 'AuthenticationServiceModule = "OpenSim.Services.AuthenticationService.dll:PasswordAuthenticationService"' 
-		echo '[BakedTextureService]' 
-		echo 'LocalServiceModule = "OpenSim.Server.Handlers.dll:XBakes"' 
-		echo 'BaseDirectory = "./bakes"' 
-		echo '[MuteListService]' 
+		echo '[AssetService]'
+		echo 'LocalServiceModule = "OpenSim.Services.AssetService.dll:AssetService"'
+		echo 'DefaultAssetLoader = "OpenSim.Framework.AssetLoader.Filesystem.dll"'
+		echo 'AssetLoaderArgs = "./assets/AssetSets.xml"'
+		echo 'AllowRemoteDelete = true'
+		echo 'AllowRemoteDeleteAllTypes = false'
+		echo '[InventoryService]'
+		echo 'LocalServiceModule = "OpenSim.Services.InventoryService.dll:XInventoryService"'
+		echo 'AllowDelete = true'
+		echo '[GridService]'
+		echo 'LocalServiceModule = "OpenSim.Services.GridService.dll:GridService"'
+		echo 'AssetService = "OpenSim.Services.AssetService.dll:AssetService"'
+		echo 'MapTileDirectory = "./maptiles"'
+		echo 'Region_${Const|StartRegion} = "DefaultRegion, DefaultHGRegion, FallbackRegion"'
+		echo 'HypergridLinker = true'
+		echo 'ExportSupported = true'
+		echo 'GatekeeperURI = "${Const|BaseURL}:${Const|PublicPort}"'
+		echo '[FreeswitchService]'
+		echo 'LocalServiceModule = "OpenSim.Services.FreeswitchService.dll:FreeswitchService"'
+		echo '[AuthenticationService]'
+		echo 'LocalServiceModule = "OpenSim.Services.AuthenticationService.dll:PasswordAuthenticationService"'
+		echo 'AllowGetAuthInfo = true'
+		echo 'AllowSetAuthInfo = true'
+		echo 'AllowSetPassword = true'
+		echo '[OpenIdService]'
+		echo 'AuthenticationServiceModule = "OpenSim.Services.AuthenticationService.dll:PasswordAuthenticationService"'
+		echo 'UserAccountServiceModule = "OpenSim.Services.UserAccountService.dll:UserAccountService"'
+		echo '[UserAccountService]'
+		echo 'LocalServiceModule = "OpenSim.Services.UserAccountService.dll:UserAccountService"'
+		echo 'AuthenticationService = "OpenSim.Services.AuthenticationService.dll:PasswordAuthenticationService"'
+		echo 'PresenceService = "OpenSim.Services.PresenceService.dll:PresenceService"'
+		echo 'GridService = "OpenSim.Services.GridService.dll:GridService"'
+		echo 'InventoryService = "OpenSim.Services.InventoryService.dll:XInventoryService"'
+		echo 'AvatarService = "OpenSim.Services.AvatarService.dll:AvatarService"'
+		echo 'GridUserService = "OpenSim.Services.UserAccountService.dll:GridUserService"'
+		echo 'CreateDefaultAvatarEntries = true'
+		echo 'AllowCreateUser = true'
+		echo 'AllowSetAccount = true'
+		echo '[GridUserService]'
+		echo 'LocalServiceModule = "OpenSim.Services.UserAccountService.dll:GridUserService"'
+		echo '[AgentPreferencesService]'
+		echo 'LocalServiceModule = "OpenSim.Services.UserAccountService.dll:AgentPreferencesService"'
+		echo '[PresenceService]'
+		echo 'LocalServiceModule = "OpenSim.Services.PresenceService.dll:PresenceService"'
+		echo '[AvatarService]'
+		echo 'LocalServiceModule = "OpenSim.Services.AvatarService.dll:AvatarService"'
+		echo '[FriendsService]'
+		echo 'LocalServiceModule = "OpenSim.Services.FriendsService.dll:FriendsService"'
+		echo '[EstateService]'
+		echo 'LocalServiceModule = "OpenSim.Services.EstateService.dll:EstateDataService"'
+		echo '[LibraryService]'
+		echo 'LibraryName = "OpenSim Library"'
+		echo 'DefaultLibrary = "./inventory/Libraries.xml"'
+		echo '[LoginService]'
+		echo 'LocalServiceModule = "OpenSim.Services.LLLoginService.dll:LLLoginService"'
+		echo 'UserAccountService = "OpenSim.Services.UserAccountService.dll:UserAccountService"'
+		echo 'GridUserService = "OpenSim.Services.UserAccountService.dll:GridUserService"'
+		echo 'AuthenticationService = "OpenSim.Services.AuthenticationService.dll:PasswordAuthenticationService"'
+		echo 'InventoryService = "OpenSim.Services.InventoryService.dll:XInventoryService"'
+		echo 'AvatarService = "OpenSim.Services.AvatarService.dll:AvatarService"'
+		echo 'PresenceService = "OpenSim.Services.PresenceService.dll:PresenceService"'
+		echo 'GridService = "OpenSim.Services.GridService.dll:GridService"'
+		echo 'SimulationService ="OpenSim.Services.Connectors.dll:SimulationServiceConnector"'
+		echo 'LibraryService = "OpenSim.Services.InventoryService.dll:LibraryService"'
+		echo 'FriendsService = "OpenSim.Services.FriendsService.dll:FriendsService"'
+		echo 'MinLoginLevel = 0'
+		echo 'UserAgentService = "OpenSim.Services.HypergridService.dll:UserAgentService"'
+		echo 'HGInventoryServicePlugin = "HGInventoryService@OpenSim.Services.HypergridService.dll:HGSuitcaseInventoryService"'
+		echo 'Currency = "T$"'
+		echo 'ClassifiedFee = 0'
+		echo 'WelcomeMessage = "Welcome, Avatar!"'
+		echo 'AllowRemoteSetLoginLevel = "false"'
+		echo 'MapTileURL = "${Const|BaseURL}:${Const|PublicPort}/";'
+		echo 'SearchURL = "${Const|BaseURL}:${Const|PublicPort}/";'
+		echo 'GatekeeperURI = "${Const|BaseURL}:${Const|PublicPort}"'
+		echo 'SRV_HomeURI = "${Const|BaseURL}:${Const|PublicPort}"'
+		echo 'SRV_InventoryServerURI = "${Const|BaseURL}:${Const|PublicPort}"'
+		echo 'SRV_AssetServerURI = "${Const|BaseURL}:${Const|PublicPort}"'
+		echo 'SRV_ProfileServerURI = "${Const|BaseURL}:${Const|PublicPort}"'
+		echo 'SRV_FriendsServerURI = "${Const|BaseURL}:${Const|PublicPort}"'
+		echo 'SRV_IMServerURI = "${Const|BaseURL}:${Const|PublicPort}"'
+		echo 'SRV_GroupsServerURI = "${Const|BaseURL}:${Const|PublicPort}"'
+		echo 'DSTZone = "America/Los_Angeles;Pacific Standard Time"'
+		echo '[MapImageService]'
+		echo 'LocalServiceModule = "OpenSim.Services.MapImageService.dll:MapImageService"'
+		echo 'TilesStoragePath = "maptiles"'
+		echo '[GridInfoService]'
+		echo 'login = ${Const|BaseURL}:${Const|PublicPort}/'
+		echo 'gridname = "${Const|Simulatorgridname}"'
+		echo 'gridnick = ${Const|Simulatorgridnick}'
+		echo 'welcome = ${Const|BaseURL}/'
+		echo 'economy = ${Const|BaseURL}/helper/'
+		echo 'about = ${Const|BaseURL}/'
+		echo 'register = ${Const|BaseURL}/'
+		echo 'help = ${Const|BaseURL}/'
+		echo 'password = ${Const|BaseURL}/'
+		echo 'gatekeeper = ${Const|BaseURL}:${Const|PublicPort}/'
+		echo 'uas = ${Const|BaseURL}:${Const|PublicPort}/'
+		echo '[GatekeeperService]'
+		echo 'LocalServiceModule = "OpenSim.Services.HypergridService.dll:GatekeeperService"'
+		echo 'UserAccountService = "OpenSim.Services.UserAccountService.dll:UserAccountService"'
+		echo 'UserAgentService = "OpenSim.Services.HypergridService.dll:UserAgentService"'
+		echo 'PresenceService = "OpenSim.Services.PresenceService.dll:PresenceService"'
+		echo 'GridUserService = "OpenSim.Services.UserAccountService.dll:GridUserService"'
+		echo 'GridService = "OpenSim.Services.GridService.dll:GridService"'
+		echo 'AuthenticationService = "OpenSim.Services.Connectors.dll:AuthenticationServicesConnector"'
+		echo 'SimulationService ="OpenSim.Services.Connectors.dll:SimulationServiceConnector"'
+		echo 'AllowTeleportsToAnyRegion = true'
+		echo 'ForeignAgentsAllowed = true'
+		echo 'AllowExcept = "http://grid.sacrarium.su:8888"'
+		echo '[UserAgentService]'
+		echo 'LocalServiceModule = "OpenSim.Services.HypergridService.dll:UserAgentService"'
+		echo 'GridUserService     = "OpenSim.Services.UserAccountService.dll:GridUserService"'
+		echo 'GridService         = "OpenSim.Services.GridService.dll:GridService"'
+		echo 'GatekeeperService   = "OpenSim.Services.HypergridService.dll:GatekeeperService"'
+		echo 'PresenceService     = "OpenSim.Services.PresenceService.dll:PresenceService"'
+		echo 'FriendsService      = "OpenSim.Services.FriendsService.dll:FriendsService"'
+		echo 'UserAccountService  = "OpenSim.Services.UserAccountService.dll:UserAccountService"'
+		echo 'LevelOutsideContacts = 0'
+		echo 'ShowUserDetailsInHGProfile = True'
+		echo '[HGInventoryService]'
+		echo 'LocalServiceModule = "OpenSim.Services.InventoryService.dll:XInventoryService"'
+		echo 'UserAccountsService = "OpenSim.Services.UserAccountService.dll:UserAccountService"'
+		echo 'AvatarService = "OpenSim.Services.AvatarService.dll:AvatarService"'
+		echo 'AuthType = None'
+		echo 'HomeURI = "${Const|BaseURL}:${Const|PublicPort}"'
+		echo '[HGAssetService]'
+		echo 'LocalServiceModule = "OpenSim.Services.HypergridService.dll:HGAssetService"'
+		echo 'UserAccountsService = "OpenSim.Services.UserAccountService.dll:UserAccountService"'
+		echo 'AuthType = None'
+		echo 'HomeURI = "${Const|BaseURL}:${Const|PublicPort}"'
+		echo '[HGFriendsService]'
+		echo 'LocalServiceModule = "OpenSim.Services.HypergridService.dll:HGFriendsService"'
+		echo 'UserAgentService = "OpenSim.Services.HypergridService.dll:UserAgentService"'
+		echo 'FriendsService = "OpenSim.Services.FriendsService.dll:FriendsService"'
+		echo 'UserAccountService = "OpenSim.Services.UserAccountService.dll:UserAccountService"'
+		echo 'GridService = "OpenSim.Services.GridService.dll:GridService"'
+		echo 'PresenceService = "OpenSim.Services.PresenceService.dll:PresenceService"'
+		echo '[HGInstantMessageService]'
+		echo 'LocalServiceModule  = "OpenSim.Services.HypergridService.dll:HGInstantMessageService"'
+		echo 'GridService         = "OpenSim.Services.GridService.dll:GridService"'
+		echo 'PresenceService     = "OpenSim.Services.PresenceService.dll:PresenceService"'
+		echo 'UserAgentService    = "OpenSim.Services.HypergridService.dll:UserAgentService"'
+		echo 'InGatekeeper = True'
+		echo '[Messaging]'
+		echo 'OfflineIMService = "OpenSim.Addons.OfflineIM.dll:OfflineIMService"'
+		echo '[Groups]'
+		echo 'OfflineIMService = "OpenSim.Addons.OfflineIM.dll:OfflineIMService"'
+		echo 'UserAccountService = "OpenSim.Services.UserAccountService.dll:UserAccountService"'
+		echo 'HomeURI = "${Const|BaseURL}:${Const|PublicPort}"'
+		echo 'MaxAgentGroups = 42'
+		echo '[UserProfilesService]'
+		echo 'LocalServiceModule = "OpenSim.Services.UserProfilesService.dll:UserProfilesService"'
+		echo 'Enabled = true'
+		echo 'UserAccountService = OpenSim.Services.UserAccountService.dll:UserAccountService'
+		echo 'AuthenticationServiceModule = "OpenSim.Services.AuthenticationService.dll:PasswordAuthenticationService"'
+		echo '[BakedTextureService]'
+		echo 'LocalServiceModule = "OpenSim.Server.Handlers.dll:XBakes"'
+		echo 'BaseDirectory = "./bakes"'
+		echo '[MuteListService]'
 		echo 'LocalServiceModule = "OpenSim.Services.MuteListService.dll:MuteListService"'
-	} > "/$STARTVERZEICHNIS/$DATEIDATUM-Robust.ini"
+	} >"/$STARTVERZEICHNIS/$DATEIDATUM-Robust.ini"
 	return 0
 }
 
 ### !Aktuelle IP in die MoneyServer.ini schreiben. UNGETESTET
-function moneyserverini()
-{	
+function moneyserverini() {
 	# Aktuelle IP ueber Suchadresse ermitteln und Ausfuehrungszeichen anhaengen.
 	DNAAKTUELLEIP="$(wget -O - -q $SEARCHADRES)"
 
@@ -6091,57 +6328,57 @@ function moneyserverini()
 	echo "Datenbank Passwort:"
 	read -r DBPASSWD
 	# shellcheck disable=SC2016
-	{ 	echo '[Startup]' 
-		echo 'PIDFile = "/tmp/money.pid"' 
-		echo '[MySql]' 
-		echo 'hostname = localhost' 
+	{
+		echo '[Startup]'
+		echo 'PIDFile = "/tmp/money.pid"'
+		echo '[MySql]'
+		echo 'hostname = localhost'
 		echo 'database = '"$DBNAME"
 		echo 'username = '"$DBUSER"
 		echo 'password = '"$DBPASSWD"
-		echo 'pooling  = true' 
-		echo 'port = 3306' 
-		echo 'MaxConnection = 20' 
-		echo '[MoneyServer]' 
-		echo 'ServerPort = 8008' 
-		echo 'DefaultBalance = 1000' 
-		echo 'EnableAmountZero = true' 
-		echo 'BankerAvatar = "00000000-0000-0000-0000-000000000000"' 
-		echo 'EnableForceTransfer = true' 
-		echo 'EnableScriptSendMoney = true' 
+		echo 'pooling  = true'
+		echo 'port = 3306'
+		echo 'MaxConnection = 20'
+		echo '[MoneyServer]'
+		echo 'ServerPort = 8008'
+		echo 'DefaultBalance = 1000'
+		echo 'EnableAmountZero = true'
+		echo 'BankerAvatar = "00000000-0000-0000-0000-000000000000"'
+		echo 'EnableForceTransfer = true'
+		echo 'EnableScriptSendMoney = true'
 		echo 'MoneyScriptAccessKey  = "123456789"'
 		echo 'MoneyScriptIPaddress  = '"$DNAAKTUELLEIP"
-		echo 'EnableHGAvatar = true' 
-		echo 'EnableGuestAvatar = true' 
-		echo 'HGAvatarDefaultBalance = 1000' 
-		echo 'GuestAvatarDefaultBalance = 1000' 
-		echo 'BalanceMessageSendGift     = "Sent Gift L${0} to {1}."' 
-		echo 'BalanceMessageReceiveGift  = "Received Gift L${0} from {1}."' 
-		echo 'BalanceMessagePayCharge    = "Paid the Money L${0} for creation."' 
-		echo 'BalanceMessageBuyObject    = "Bought the Object {2} from {1} by L${0}."' 
-		echo 'BalanceMessageSellObject   = "{1} bought the Object {2} by L${0}."' 
-		echo 'BalanceMessageLandSale     = "Paid the Money L${0} for Land."' 
-		echo 'BalanceMessageScvLandSale  = "Paid the Money L${0} for Land."' 
-		echo 'BalanceMessageGetMoney     = "Got the Money L${0} from {1}."' 
-		echo 'BalanceMessageBuyMoney     = "Bought the Money L${0}."' 
-		echo 'BalanceMessageRollBack     = "RollBack the Transaction: L${0} from/to {1}."' 
-		echo 'BalanceMessageSendMoney    = "Paid the Money L${0} to {1}."' 
-		echo 'BalanceMessageReceiveMoney = "Received L${0} from {1}."' 
-		echo '[Certificate]' 
+		echo 'EnableHGAvatar = true'
+		echo 'EnableGuestAvatar = true'
+		echo 'HGAvatarDefaultBalance = 1000'
+		echo 'GuestAvatarDefaultBalance = 1000'
+		echo 'BalanceMessageSendGift     = "Sent Gift L${0} to {1}."'
+		echo 'BalanceMessageReceiveGift  = "Received Gift L${0} from {1}."'
+		echo 'BalanceMessagePayCharge    = "Paid the Money L${0} for creation."'
+		echo 'BalanceMessageBuyObject    = "Bought the Object {2} from {1} by L${0}."'
+		echo 'BalanceMessageSellObject   = "{1} bought the Object {2} by L${0}."'
+		echo 'BalanceMessageLandSale     = "Paid the Money L${0} for Land."'
+		echo 'BalanceMessageScvLandSale  = "Paid the Money L${0} for Land."'
+		echo 'BalanceMessageGetMoney     = "Got the Money L${0} from {1}."'
+		echo 'BalanceMessageBuyMoney     = "Bought the Money L${0}."'
+		echo 'BalanceMessageRollBack     = "RollBack the Transaction: L${0} from/to {1}."'
+		echo 'BalanceMessageSendMoney    = "Paid the Money L${0} to {1}."'
+		echo 'BalanceMessageReceiveMoney = "Received L${0} from {1}."'
+		echo '[Certificate]'
 		echo 'CheckServerCert = false'
-	} > "/$STARTVERZEICHNIS/$DATEIDATUM-MoneyServer.ini"
+	} >"/$STARTVERZEICHNIS/$DATEIDATUM-MoneyServer.ini"
 	return 0
 }
 
 ### !Aktuelle IP in die OpenSim.ini schreiben.
-function opensimini()
-{
+function opensimini() {
 	# Aktuelle IP ueber Suchadresse ermitteln und Ausfuehrungszeichen anhaengen.
 	DNAAKTUELLEIP="$(wget -O - -q $SEARCHADRES)"
 
 	echo "Gebe deine Server Adresse ein: (Beispiel meinserver.de oder 192.168.2.106)"
 	echo "Enter fuer $AKTUELLEIP"
 	read -r DNANAME
-	if [ -z "$DNANAME" ]; then DNANAME=$DNAAKTUELLEIP ; fi
+	if [ -z "$DNANAME" ]; then DNANAME=$DNAAKTUELLEIP; fi
 	IP8002='"''http://'"$DNANAME"":8002"'"'
 	IP8003='"''http://'"$DNANAME"":8003"'"'
 	BASEURL='"''http://'"$DNANAME"'"'
@@ -6149,227 +6386,227 @@ function opensimini()
 	read -r GRIDNAME
 	echo "SimulatorPort (9010):"
 	read -r SIMULATORPORT
-	if [ -z "$SIMULATORPORT" ]; then SIMULATORPORT=9010 ; fi
+	if [ -z "$SIMULATORPORT" ]; then SIMULATORPORT=9010; fi
 	echo "SimulatorXmlRpcPort (20801):"
 	read -r SIMULATORXMLRPCPORT
-	if [ -z "$SIMULATORXMLRPCPORT" ]; then SIMULATORXMLRPCPORT=20801 ; fi
+	if [ -z "$SIMULATORXMLRPCPORT" ]; then SIMULATORXMLRPCPORT=20801; fi
 
 	# shellcheck disable=SC2016
-	{	echo '[Const]' 
-		echo 'BaseHostname = '"$DNANAME" 
+	{
+		echo '[Const]'
+		echo 'BaseHostname = '"$DNANAME"
 		echo 'BaseURL = '"$BASEURL"
-		echo 'PublicPort = "8002"' 
-		echo 'PrivURL = ${Const|BaseURL}' 
-		echo 'PrivatePort = "8003"' 
-		echo 'MoneyPort = "8008"' 
-		echo 'SimulatorPort = '"$SIMULATORPORT" 
-		echo 'SimulatorXmlRpcPort = '"$SIMULATORXMLRPCPORT" 
-		echo 'Simulatorgridname = '"$GRIDNAME" 
-		echo '[Startup]' 
-		echo 'ConsolePrompt = "Region (\R) "' 
-		echo 'ConsoleHistoryFileEnabled = true' 
-		echo 'ConsoleHistoryFile = "OpenSimConsoleHistory.txt"' 
-		echo 'ConsoleHistoryFileLines = 100' 
-		echo 'ConsoleHistoryTimeStamp = true' 
-		echo 'region_info_source = "filesystem"' 
-		echo 'NonPhysicalPrimMin = 0.001' 
-		echo 'NonPhysicalPrimMax = 1024' 
-		echo 'PhysicalPrimMin = 0.01' 
-		echo 'PhysicalPrimMax = 64' 
-		echo 'ClampPrimSize = false' 
-		echo 'AllowScriptCrossing = true' 
-		echo 'DefaultDrawDistance = 128.0' 
-		echo 'MaxDrawDistance = 128' 
-		echo 'MaxRegionsViewDistance = 128' 
-		echo 'MinRegionsViewDistance = 48' 
-		echo 'MinimumTimeBeforePersistenceConsidered = 60' 
-		echo 'MaximumTimeBeforePersistenceConsidered = 600' 
-		echo 'physical_prim = true' 
-		echo 'meshing = Meshmerizer' 
-		echo 'physics = BulletSim' 
-		echo 'DefaultScriptEngine = "YEngine"' 
-		echo 'SpawnPointRouting = closest' 
-		echo 'TelehubAllowLandmark = true' 
-		echo '[AccessControl]' 
-		echo 'DeniedClients = "Imprudence|CopyBot|Twisted|Crawler|Cryolife|darkstorm|DarkStorm|Darkstorm"' 
-		echo '[Map]' 
-		echo 'GenerateMaptiles = true' 
-		echo 'MapImageModule = "MapImageModule"' 
-		echo 'MaptileRefresh = 0' 
-		echo 'MaptileStaticUUID = "00000000-0000-0000-0000-000000000000"' 
-		echo 'TextureOnMapTile = true' 
-		echo 'DrawPrimOnMapTile = true' 
-		echo 'TexturePrims = true' 
-		echo 'TexturePrimSize = 48' 
-		echo 'RenderMeshes = true' 
-		echo '[Permissions]' 
-		echo 'permissionmodules = DefaultPermissionsModule' 
-		echo 'serverside_object_permissions = true' 
-		echo 'automatic_gods = false' 
-		echo 'implicit_gods = false' 
-		echo 'allow_grid_gods = true' 
-		echo 'region_owner_is_god = true' 
-		echo 'region_manager_is_god = true' 
-		echo '[Estates]' 
-		echo '[SMTP]' 
-		echo '[Network]' 
-		echo 'http_listener_port = "${Const|SimulatorPort}"' 
-		echo 'ExternalHostNameForLSL = ${Const|BaseHostname}' 
-		echo 'shard = "OpenSim"' 
-		echo 'user_agent = "OpenSim LSL (Mozilla Compatible)"' 
-		echo '[XMLRPC]' 
-		echo 'XmlRpcRouterModule = "XmlRpcRouterModule"' 
-		echo 'XmlRpcPort = "${Const|SimulatorXmlRpcPort}"' 
-		echo 'XmlRpcHubURI = ${Const|BaseHostname}' 
-		echo '[ClientStack.LindenUDP]' 
-		echo 'DisableFacelights = "true"' 
-		echo 'scene_throttle_max_bps = 625000000' 
-		echo 'client_throttle_max_bps = 500000' 
-		echo 'enable_adaptive_throttles = true' 
-		echo '[ClientStack.LindenCaps]' 
-		echo 'Cap_GetTexture = "localhost"' 
-		echo 'Cap_GetMesh = "localhost"' 
-		echo 'Cap_AvatarPickerSearch = "localhost"' 
-		echo 'Cap_GetDisplayNames = "localhost"' 
-		echo '[SimulatorFeatures]' 
-		echo 'SearchServerURI = "${Const|BaseURL}:${Const|PublicPort}"' 
-		echo 'DestinationGuideURI = "${Const|BaseURL}:${Const|PublicPort}"' 
-		echo '[Chat]' 
-		echo 'whisper_distance = 25' 
-		echo 'say_distance = 70' 
-		echo 'shout_distance = 250' 
-		echo '[EntityTransfer]' 
-		echo '[Messaging]' 
-		echo 'OfflineMessageModule = "Offline Message Module V2"' 
-		echo 'OfflineMessageURL = ${Const|BaseURL}:${Const|PrivatePort}' 
-		echo 'StorageProvider = OpenSim.Data.MySQL.dll' 
-		echo 'MuteListModule = MuteListModule' 
-		echo 'MuteListURL = ${Const|BaseHostname}/helper/mute.php' 
-		echo 'ForwardOfflineGroupMessages = true' 
-		echo '[BulletSim]' 
-		echo 'AvatarToAvatarCollisionsByDefault = true' 
-		echo 'UseSeparatePhysicsThread = false' 
-		echo 'TerrainImplementation = 0' 
-		echo 'TerrainMeshMagnification = 2' 
-		echo '[ODEPhysicsSettings]' 
-		echo '[RemoteAdmin]' 
-		echo 'enabled = false' 
-		echo 'create_region_enable_voice = true' 
-		echo 'create_region_public = true' 
-		echo 'enabled_methods = all' 
-		echo 'default_female = Default Female' 
-		echo 'default_appearance = default_appearance.xml' 
-		echo '[Wind]' 
-		echo 'enabled = true' 
-		echo 'wind_update_rate = 150' 
-		echo 'wind_plugin = SimpleRandomWind' 
-		echo 'strength = 2.0' 
-		echo '[LightShare]' 
-		echo 'enable_windlight = true' 
-		echo '[Materials]' 
-		echo 'enable_materials = true' 
-		echo 'MaxMaterialsPerTransaction = 500' 
-		echo '[DataSnapshot]' 
-		echo 'index_sims = true' 
-		echo 'data_exposure = minimum' 
-		echo 'gridname = "${Const|Simulatorgridname}"' 
-		echo 'default_snapshot_period = 7200' 
-		echo 'snapshot_cache_directory = "DataSnapshot"' 
-		echo '[Economy]' 
-		echo 'SellEnabled = true' 
-		echo 'EconomyModule = DTLNSLMoneyModule' 
-		echo 'CurrencyServer = "${Const|BaseURL}:8008/"' 
-		echo 'UserServer = "${Const|BaseURL}:8002/"' 
-		echo 'CheckServerCert = false' 
-		echo 'PriceUpload = 0' 
-		echo 'MeshModelUploadCostFactor = 1.0' 
-		echo 'MeshModelUploadTextureCostFactor = 1.0' 
-		echo 'MeshModelMinCostFactor = 1.0' 
-		echo 'PriceGroupCreate = 0' 
-		echo 'ObjectCount = 0' 
-		echo 'PriceEnergyUnit = 0' 
-		echo 'PriceObjectClaim = 0' 
-		echo 'PricePublicObjectDecay = 0' 
-		echo 'PricePublicObjectDelete = 0' 
-		echo 'PriceParcelClaim = 0' 
-		echo 'PriceParcelClaimFactor = 1' 
-		echo 'PriceRentLight = 0' 
-		echo 'TeleportMinPrice = 0' 
-		echo 'TeleportPriceExponent = 2' 
-		echo 'EnergyEfficiency = 1' 
-		echo 'PriceObjectRent = 0' 
-		echo 'PriceObjectScaleFactor = 10' 
-		echo 'PriceParcelRent = 0' 
-		echo '[YEngine]' 
-		echo 'Enabled = true' 
-		echo '[XEngine]' 
-		echo 'Enabled = false' 
-		echo 'AppDomainLoading = false' 
-		echo 'DeleteScriptsOnStartup = true' 
-		echo '[OSSL]' 
-		echo 'Include-osslDefaultEnable = "config-include/osslDefaultEnable.ini"' 
-		echo '[FreeSwitchVoice]' 
-		echo '[VivoxVoice]' 
-		echo 'Enabled = false' 
-		echo '[Groups]' 
-		echo 'Enabled = true' 
-		echo 'LevelGroupCreate = 0' 
-		echo 'Module = "Groups Module V2"' 
-		echo 'StorageProvider = OpenSim.Data.MySQL.dll' 
-		echo 'ServicesConnectorModule = "Groups HG Service Connector"' 
-		echo 'LocalService = remote' 
-		echo 'GroupsServerURI = ${Const|BaseURL}:${Const|PrivatePort}' 
-		echo 'HomeURI = "${Const|BaseURL}:${Const|PublicPort}"' 
-		echo 'MessagingEnabled = true' 
-		echo 'MessagingModule = "Groups Messaging Module V2"' 
-		echo 'NoticesEnabled = true' 
-		echo 'MessageOnlineUsersOnly = true' 
-		echo 'DebugEnabled = false' 
-		echo 'DebugMessagingEnabled = false' 
-		echo 'XmlRpcServiceReadKey    = 1234' 
-		echo 'XmlRpcServiceWriteKey   = 1234' 
-		echo '[InterestManagement]' 
-		echo 'UpdatePrioritizationScheme = BestAvatarResponsiveness' 
-		echo 'ObjectsCullingByDistance = true' 
-		echo '[MediaOnAPrim]' 
-		echo 'Enabled = true' 
-		echo '[NPC]' 
-		echo 'Enabled = true' 
-		echo 'MaxNumberNPCsPerScene = 40' 
-		echo 'AllowNotOwned = true' 
-		echo 'AllowSenseAsAvatar = true' 
-		echo 'AllowCloneOtherAvatars = true' 
-		echo 'NoNPCGroup = true' 
-		echo '[Terrain]' 
-		echo 'InitialTerrain = "flat"' 
-		echo '[LandManagement]' 
-		echo 'ShowParcelBansLines = true' 
-		echo '[UserProfiles]' 
-		echo 'ProfileServiceURL = ${Const|BaseURL}:${Const|PublicPort}' 
-		echo 'AllowUserProfileWebURLs = true' 
-		echo '[Profile]' 
-		echo 'Module = "OpenSimProfile"' 
-		echo 'ProfileURL = ${Const|BaseURL}/helper/profile.php' 
-		echo '[XBakes]' 
-		echo 'URL = ${Const|BaseURL}:${Const|PrivatePort}' 
-		echo '[AutoBackupModule]' 
-		echo ' AutoBackupModuleEnabled = false' 
-		echo '[Architecture]' 
+		echo 'PublicPort = "8002"'
+		echo 'PrivURL = ${Const|BaseURL}'
+		echo 'PrivatePort = "8003"'
+		echo 'MoneyPort = "8008"'
+		echo 'SimulatorPort = '"$SIMULATORPORT"
+		echo 'SimulatorXmlRpcPort = '"$SIMULATORXMLRPCPORT"
+		echo 'Simulatorgridname = '"$GRIDNAME"
+		echo '[Startup]'
+		echo 'ConsolePrompt = "Region (\R) "'
+		echo 'ConsoleHistoryFileEnabled = true'
+		echo 'ConsoleHistoryFile = "OpenSimConsoleHistory.txt"'
+		echo 'ConsoleHistoryFileLines = 100'
+		echo 'ConsoleHistoryTimeStamp = true'
+		echo 'region_info_source = "filesystem"'
+		echo 'NonPhysicalPrimMin = 0.001'
+		echo 'NonPhysicalPrimMax = 1024'
+		echo 'PhysicalPrimMin = 0.01'
+		echo 'PhysicalPrimMax = 64'
+		echo 'ClampPrimSize = false'
+		echo 'AllowScriptCrossing = true'
+		echo 'DefaultDrawDistance = 128.0'
+		echo 'MaxDrawDistance = 128'
+		echo 'MaxRegionsViewDistance = 128'
+		echo 'MinRegionsViewDistance = 48'
+		echo 'MinimumTimeBeforePersistenceConsidered = 60'
+		echo 'MaximumTimeBeforePersistenceConsidered = 600'
+		echo 'physical_prim = true'
+		echo 'meshing = Meshmerizer'
+		echo 'physics = BulletSim'
+		echo 'DefaultScriptEngine = "YEngine"'
+		echo 'SpawnPointRouting = closest'
+		echo 'TelehubAllowLandmark = true'
+		echo '[AccessControl]'
+		echo 'DeniedClients = "Imprudence|CopyBot|Twisted|Crawler|Cryolife|darkstorm|DarkStorm|Darkstorm"'
+		echo '[Map]'
+		echo 'GenerateMaptiles = true'
+		echo 'MapImageModule = "MapImageModule"'
+		echo 'MaptileRefresh = 0'
+		echo 'MaptileStaticUUID = "00000000-0000-0000-0000-000000000000"'
+		echo 'TextureOnMapTile = true'
+		echo 'DrawPrimOnMapTile = true'
+		echo 'TexturePrims = true'
+		echo 'TexturePrimSize = 48'
+		echo 'RenderMeshes = true'
+		echo '[Permissions]'
+		echo 'permissionmodules = DefaultPermissionsModule'
+		echo 'serverside_object_permissions = true'
+		echo 'automatic_gods = false'
+		echo 'implicit_gods = false'
+		echo 'allow_grid_gods = true'
+		echo 'region_owner_is_god = true'
+		echo 'region_manager_is_god = true'
+		echo '[Estates]'
+		echo '[SMTP]'
+		echo '[Network]'
+		echo 'http_listener_port = "${Const|SimulatorPort}"'
+		echo 'ExternalHostNameForLSL = ${Const|BaseHostname}'
+		echo 'shard = "OpenSim"'
+		echo 'user_agent = "OpenSim LSL (Mozilla Compatible)"'
+		echo '[XMLRPC]'
+		echo 'XmlRpcRouterModule = "XmlRpcRouterModule"'
+		echo 'XmlRpcPort = "${Const|SimulatorXmlRpcPort}"'
+		echo 'XmlRpcHubURI = ${Const|BaseHostname}'
+		echo '[ClientStack.LindenUDP]'
+		echo 'DisableFacelights = "true"'
+		echo 'scene_throttle_max_bps = 625000000'
+		echo 'client_throttle_max_bps = 500000'
+		echo 'enable_adaptive_throttles = true'
+		echo '[ClientStack.LindenCaps]'
+		echo 'Cap_GetTexture = "localhost"'
+		echo 'Cap_GetMesh = "localhost"'
+		echo 'Cap_AvatarPickerSearch = "localhost"'
+		echo 'Cap_GetDisplayNames = "localhost"'
+		echo '[SimulatorFeatures]'
+		echo 'SearchServerURI = "${Const|BaseURL}:${Const|PublicPort}"'
+		echo 'DestinationGuideURI = "${Const|BaseURL}:${Const|PublicPort}"'
+		echo '[Chat]'
+		echo 'whisper_distance = 25'
+		echo 'say_distance = 70'
+		echo 'shout_distance = 250'
+		echo '[EntityTransfer]'
+		echo '[Messaging]'
+		echo 'OfflineMessageModule = "Offline Message Module V2"'
+		echo 'OfflineMessageURL = ${Const|BaseURL}:${Const|PrivatePort}'
+		echo 'StorageProvider = OpenSim.Data.MySQL.dll'
+		echo 'MuteListModule = MuteListModule'
+		echo 'MuteListURL = ${Const|BaseHostname}/helper/mute.php'
+		echo 'ForwardOfflineGroupMessages = true'
+		echo '[BulletSim]'
+		echo 'AvatarToAvatarCollisionsByDefault = true'
+		echo 'UseSeparatePhysicsThread = false'
+		echo 'TerrainImplementation = 0'
+		echo 'TerrainMeshMagnification = 2'
+		echo '[ODEPhysicsSettings]'
+		echo '[RemoteAdmin]'
+		echo 'enabled = false'
+		echo 'create_region_enable_voice = true'
+		echo 'create_region_public = true'
+		echo 'enabled_methods = all'
+		echo 'default_female = Default Female'
+		echo 'default_appearance = default_appearance.xml'
+		echo '[Wind]'
+		echo 'enabled = true'
+		echo 'wind_update_rate = 150'
+		echo 'wind_plugin = SimpleRandomWind'
+		echo 'strength = 2.0'
+		echo '[LightShare]'
+		echo 'enable_windlight = true'
+		echo '[Materials]'
+		echo 'enable_materials = true'
+		echo 'MaxMaterialsPerTransaction = 500'
+		echo '[DataSnapshot]'
+		echo 'index_sims = true'
+		echo 'data_exposure = minimum'
+		echo 'gridname = "${Const|Simulatorgridname}"'
+		echo 'default_snapshot_period = 7200'
+		echo 'snapshot_cache_directory = "DataSnapshot"'
+		echo '[Economy]'
+		echo 'SellEnabled = true'
+		echo 'EconomyModule = DTLNSLMoneyModule'
+		echo 'CurrencyServer = "${Const|BaseURL}:8008/"'
+		echo 'UserServer = "${Const|BaseURL}:8002/"'
+		echo 'CheckServerCert = false'
+		echo 'PriceUpload = 0'
+		echo 'MeshModelUploadCostFactor = 1.0'
+		echo 'MeshModelUploadTextureCostFactor = 1.0'
+		echo 'MeshModelMinCostFactor = 1.0'
+		echo 'PriceGroupCreate = 0'
+		echo 'ObjectCount = 0'
+		echo 'PriceEnergyUnit = 0'
+		echo 'PriceObjectClaim = 0'
+		echo 'PricePublicObjectDecay = 0'
+		echo 'PricePublicObjectDelete = 0'
+		echo 'PriceParcelClaim = 0'
+		echo 'PriceParcelClaimFactor = 1'
+		echo 'PriceRentLight = 0'
+		echo 'TeleportMinPrice = 0'
+		echo 'TeleportPriceExponent = 2'
+		echo 'EnergyEfficiency = 1'
+		echo 'PriceObjectRent = 0'
+		echo 'PriceObjectScaleFactor = 10'
+		echo 'PriceParcelRent = 0'
+		echo '[YEngine]'
+		echo 'Enabled = true'
+		echo '[XEngine]'
+		echo 'Enabled = false'
+		echo 'AppDomainLoading = false'
+		echo 'DeleteScriptsOnStartup = true'
+		echo '[OSSL]'
+		echo 'Include-osslDefaultEnable = "config-include/osslDefaultEnable.ini"'
+		echo '[FreeSwitchVoice]'
+		echo '[VivoxVoice]'
+		echo 'Enabled = false'
+		echo '[Groups]'
+		echo 'Enabled = true'
+		echo 'LevelGroupCreate = 0'
+		echo 'Module = "Groups Module V2"'
+		echo 'StorageProvider = OpenSim.Data.MySQL.dll'
+		echo 'ServicesConnectorModule = "Groups HG Service Connector"'
+		echo 'LocalService = remote'
+		echo 'GroupsServerURI = ${Const|BaseURL}:${Const|PrivatePort}'
+		echo 'HomeURI = "${Const|BaseURL}:${Const|PublicPort}"'
+		echo 'MessagingEnabled = true'
+		echo 'MessagingModule = "Groups Messaging Module V2"'
+		echo 'NoticesEnabled = true'
+		echo 'MessageOnlineUsersOnly = true'
+		echo 'DebugEnabled = false'
+		echo 'DebugMessagingEnabled = false'
+		echo 'XmlRpcServiceReadKey    = 1234'
+		echo 'XmlRpcServiceWriteKey   = 1234'
+		echo '[InterestManagement]'
+		echo 'UpdatePrioritizationScheme = BestAvatarResponsiveness'
+		echo 'ObjectsCullingByDistance = true'
+		echo '[MediaOnAPrim]'
+		echo 'Enabled = true'
+		echo '[NPC]'
+		echo 'Enabled = true'
+		echo 'MaxNumberNPCsPerScene = 40'
+		echo 'AllowNotOwned = true'
+		echo 'AllowSenseAsAvatar = true'
+		echo 'AllowCloneOtherAvatars = true'
+		echo 'NoNPCGroup = true'
+		echo '[Terrain]'
+		echo 'InitialTerrain = "flat"'
+		echo '[LandManagement]'
+		echo 'ShowParcelBansLines = true'
+		echo '[UserProfiles]'
+		echo 'ProfileServiceURL = ${Const|BaseURL}:${Const|PublicPort}'
+		echo 'AllowUserProfileWebURLs = true'
+		echo '[Profile]'
+		echo 'Module = "OpenSimProfile"'
+		echo 'ProfileURL = ${Const|BaseURL}/helper/profile.php'
+		echo '[XBakes]'
+		echo 'URL = ${Const|BaseURL}:${Const|PrivatePort}'
+		echo '[AutoBackupModule]'
+		echo ' AutoBackupModuleEnabled = false'
+		echo '[Architecture]'
 		echo 'Include-Architecture = "config-include/GridHypergrid.ini"'
-	} > "/$STARTVERZEICHNIS/$DATEIDATUM-OpenSim.ini"
+	} >"/$STARTVERZEICHNIS/$DATEIDATUM-OpenSim.ini"
 	return 0
 }
 
 ### !Aktuelle IP in die GridCommon.ini schreiben. UNGETESTET
-function gridcommonini()
-{
+function gridcommonini() {
 	# Aktuelle IP ueber Suchadresse ermitteln und Ausfuehrungszeichen anhaengen.
 	DNAAKTUELLEIP="$(wget -O - -q $SEARCHADRES)"
 
 	echo "Gebe deine Server Adresse ein: (Beispiel meinserver.de oder 192.168.2.106)"
 	echo "Enter fuer $AKTUELLEIP"
 	read -r DNANAME
-	if [ -z "$DNANAME" ]; then DNANAME=$DNAAKTUELLEIP ; fi
+	if [ -z "$DNANAME" ]; then DNANAME=$DNAAKTUELLEIP; fi
 	IP8002='"''http://'"$DNANAME"":8002"'"'
 	IP8003='"''http://'"$DNANAME"":8003"'"'
 
@@ -6380,7 +6617,8 @@ function gridcommonini()
 	echo "Datenbank Passwort:"
 	read -r DBPASSWD
 
-	{	echo '[DatabaseService]'
+	{
+		echo '[DatabaseService]'
 		echo 'StorageProvider = "OpenSim.Data.MySQL.dll"'
 		echo 'ConnectionString = "Data Source=localhost;Database='"$DBNAME"';User ID='"$DBUSER"';Password='"$DBPASSWD"';Old Guids=true;"'
 		echo '[Hypergrid]'
@@ -6436,227 +6674,222 @@ function gridcommonini()
 		echo '[AuthorizationService]'
 		echo '[MuteListService]'
 		echo 'MuteListServerURI = '"$IP8003"
-	} > "/$STARTVERZEICHNIS/$DATEIDATUM-GridCommon.ini"
+	} >"/$STARTVERZEICHNIS/$DATEIDATUM-GridCommon.ini"
 	#/$STARTVERZEICHNIS/"$VERZEICHNIS"/bin/config-include/GridCommon.ini
 	return 0
 }
 
 ### ! Regionini Simulator Dateiname
 ### Aktuelle IP in die Regions.ini schreiben. UNGETESTET
-function regionini()
-{	
+function regionini() {
 	# Aktuelle IP ueber Suchadresse ermitteln und Ausfuehrungszeichen anhaengen.
 	DNAAKTUELLEIP="$(wget -O - -q $SEARCHADRES)"
 
 	echo "Gebe deine Server Adresse ein: (Beispiel meinserver.de oder 192.168.2.106)"
 	echo "Enter fuer $AKTUELLEIP"
 	read -r DNANAME
-	if [ -z "$DNANAME" ]; then DNANAME=$DNAAKTUELLEIP ; fi
+	if [ -z "$DNANAME" ]; then DNANAME=$DNAAKTUELLEIP; fi
 
 	echo "Startpunkt des Grid Beispiel: 4500,4500"
 	read -r STARTPUNKT
-	if [ -z "$STARTPUNKT" ]; then STARTPUNKT="4500,4500" ; fi
+	if [ -z "$STARTPUNKT" ]; then STARTPUNKT="4500,4500"; fi
 	echo "InternalPort Beispiel: 9050"
 	read -r INTERNALPORT
-	if [ -z "$INTERNALPORT" ]; then INTERNALPORT=9050 ; fi
+	if [ -z "$INTERNALPORT" ]; then INTERNALPORT=9050; fi
 
 	UUID=$(uuidgen)
 
-	{	echo '[Welcome]' 
+	{
+		echo '[Welcome]'
 		echo 'RegionUUID = '"$UUID"
-		echo 'Location = '"$STARTPUNKT" 
-		echo 'SizeX = 256' 
-		echo 'SizeY = 256' 
-		echo 'SizeZ = 256' 
-		echo 'InternalAddress = 0.0.0.0' 
-		echo 'InternalPort = '"$INTERNALPORT" 
-		echo 'ResolveAddress = False' 
+		echo 'Location = '"$STARTPUNKT"
+		echo 'SizeX = 256'
+		echo 'SizeY = 256'
+		echo 'SizeZ = 256'
+		echo 'InternalAddress = 0.0.0.0'
+		echo 'InternalPort = '"$INTERNALPORT"
+		echo 'ResolveAddress = False'
 		echo 'ExternalHostName = '"$DNANAME"
 		echo 'MaptileStaticUUID = '"$UUID"
-	} > "/$STARTVERZEICHNIS/$DATEIDATUM-welcome.ini"
+	} >"/$STARTVERZEICHNIS/$DATEIDATUM-welcome.ini"
 	return 0
 }
 
 ### !  osslenableini() erstellt eine osslenable.ini Datei und Konfiguriert diese.
-function osslenableini()
-{	
+function osslenableini() {
 	#osslEnable.ini
 	echo "OSFunctionThreatLevel Moeglichkeiten: None, VeryLow, Low, Moderate, High, VeryHigh, Severe"
 	echo "Enter = Severe"
 	read -r OSFUNCTION
-	if [ -z "$OSFUNCTION" ]; then OSFUNCTION="Severe" ; fi
+	if [ -z "$OSFUNCTION" ]; then OSFUNCTION="Severe"; fi
 
 	# shellcheck disable=SC2016
-	{	echo '[OSSL]'
+	{
+		echo '[OSSL]'
 		echo 'OSFunctionThreatLevel = '$OSFUNCTION
-		echo 'osslParcelO = "PARCEL_OWNER,"' 
-		echo 'osslParcelOG = "PARCEL_GROUP_MEMBER,PARCEL_OWNER,"' 
+		echo 'osslParcelO = "PARCEL_OWNER,"'
+		echo 'osslParcelOG = "PARCEL_GROUP_MEMBER,PARCEL_OWNER,"'
 		echo 'osslNPC = ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER'
 		echo ' '
-		echo 'Allow_osGetAgents = true' 
-		echo 'Allow_osGetAvatarList = true' 
-		echo 'Allow_osGetGender = true' 
-		echo 'Allow_osGetHealth = true' 
-		echo 'Allow_osGetHealRate = true' 
-		echo 'Allow_osGetNPCList =true' 
-		echo 'Allow_osGetRezzingObject =true' 
-		echo 'Allow_osGetSunParam = true' 
-		echo 'Allow_osNpcGetOwner = true' 
-		echo 'Allow_osSetSunParam = ESTATE_MANAGER,ESTATE_OWNER' 
-		echo 'Allow_osTeleportOwner = ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER' 
-		echo 'Allow_osWindActiveModelPluginName = true' 
-		echo 'Allow_osSetEstateSunSettings =ESTATE_MANAGER,ESTATE_OWNER' 
-		echo 'Allow_osSetRegionSunSettings =ESTATE_MANAGER,ESTATE_OWNER' 
-		echo 'Allow_osEjectFromGroup =${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER' 
-		echo 'Allow_osForceBreakAllLinks =${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER' 
-		echo 'Allow_osForceBreakLink =${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER' 
-		echo 'Allow_osGetWindParam =true' 
-		echo 'Allow_osInviteToGroup = ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER' 
-		echo 'Allow_osReplaceString = true' 
-		echo 'Allow_osSetDynamicTextureData = true' 
-		echo 'Allow_osSetDynamicTextureDataFace = true' 
-		echo 'Allow_osSetDynamicTextureDataBlend =true' 
-		echo 'Allow_osSetDynamicTextureDataBlendFace = true' 
-		echo 'Allow_osSetParcelMediaURL = true' 
-		echo 'Allow_osSetParcelMusicURL = true' 
-		echo 'Allow_osSetParcelSIPAddress = ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER' 
-		echo 'Allow_osSetPrimFloatOnWater = true' 
-		echo 'Allow_osSetWindParam =${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER' 
-		echo 'Allow_osTerrainFlush =ESTATE_MANAGER,ESTATE_OWNER' 
-		echo 'Allow_osUnixTimeToTimestamp = true' 
-		echo 'Allow_osAvatarName2Key =true' 
-		echo 'Allow_osFormatString =true' 
-		echo 'Allow_osKey2Name =true' 
-		echo 'Allow_osListenRegex = true' 
-		echo 'Allow_osLoadedCreationDate =true' 
-		echo 'Allow_osLoadedCreationID =true' 
-		echo 'Allow_osLoadedCreationTime =true' 
-		echo 'Allow_osMessageObject = true' 
-		echo 'Allow_osRegexIsMatch =true' 
-		echo 'Allow_osGetAvatarHomeURI =true' 
-		echo 'Allow_osNpcSetProfileAbout =true' 
-		echo 'Allow_osNpcSetProfileImage =true' 
-		echo 'Allow_osDie = true' 
-		echo 'Allow_osDetectedCountry = true' 
-		echo 'Allow_osDropAttachment =true' 
-		echo 'Allow_osDropAttachmentAt =true' 
-		echo 'Allow_osGetAgentCountry = true' 
-		echo 'Allow_osGetGridCustom = true' 
-		echo 'Allow_osGetGridGatekeeperURI =true' 
-		echo 'Allow_osGetGridHomeURI =true' 
-		echo 'Allow_osGetGridLoginURI = true' 
-		echo 'Allow_osGetGridName = true' 
-		echo 'Allow_osGetGridNick = true' 
-		echo 'Allow_osGetNumberOfAttachments =true' 
-		echo 'Allow_osGetRegionStats =true' 
-		echo 'Allow_osGetSimulatorMemory =true' 
-		echo 'Allow_osGetSimulatorMemoryKB =true' 
-		echo 'Allow_osMessageAttachments =true' 
-		echo 'Allow_osReplaceAgentEnvironment = true' 
-		echo 'Allow_osSetSpeed =true' 
-		echo 'Allow_osSetOwnerSpeed = true' 
-		echo 'Allow_osRequestURL =true' 
-		echo 'Allow_osRequestSecureURL =true' 
-		echo 'Allow_osCauseDamage = ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER' 
-		echo 'Allow_osCauseHealing =${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER' 
-		echo 'Allow_osSetHealth = ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER' 
-		echo 'Allow_osSetHealRate = ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER' 
-		echo 'Allow_osForceAttachToAvatar = ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER' 
-		echo 'Allow_osForceAttachToAvatarFromInventory = ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER' 
-		echo 'Allow_osForceCreateLink = ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER' 
-		echo 'Allow_osForceDropAttachment = ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER' 
-		echo 'Allow_osForceDropAttachmentAt = ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER' 
-		echo 'Allow_osGetLinkPrimitiveParams =${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER' 
-		echo 'Allow_osGetPhysicsEngineType =true' 
-		echo 'Allow_osGetRegionMapTexture = true' 
-		echo 'Allow_osGetScriptEngineName = true' 
-		echo 'Allow_osGetSimulatorVersion = true' 
-		echo 'Allow_osMakeNotecard =true' 
-		echo 'Allow_osMatchString = true' 
-		echo 'Allow_osNpcCreate = true' 
-		echo 'Allow_osNpcGetPos = true' 
-		echo 'Allow_osNpcGetRot = true' 
-		echo 'Allow_osNpcLoadAppearance = true' 
-		echo 'Allow_osNpcMoveTo = true' 
-		echo 'Allow_osNpcMoveToTarget = true' 
-		echo 'Allow_osNpcPlayAnimation =true' 
-		echo 'Allow_osNpcRemove = true' 
-		echo 'Allow_osNpcSaveAppearance = true' 
-		echo 'Allow_osNpcSay =true' 
-		echo 'Allow_osNpcSayTo =true' 
-		echo 'Allow_osNpcSetRot = true' 
-		echo 'Allow_osNpcShout =true' 
-		echo 'Allow_osNpcSit =true' 
-		echo 'Allow_osNpcStand =true' 
-		echo 'Allow_osNpcStopAnimation =true' 
-		echo 'Allow_osNpcStopMoveToTarget = true' 
-		echo 'Allow_osNpcTouch =true' 
-		echo 'Allow_osNpcWhisper =true' 
-		echo 'Allow_osOwnerSaveAppearance = ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER' 
-		echo 'Allow_osParcelJoin =ESTATE_MANAGER,ESTATE_OWNER' 
-		echo 'Allow_osParcelSubdivide = ESTATE_MANAGER,ESTATE_OWNER' 
-		echo 'Allow_osRegionRestart = ESTATE_MANAGER,ESTATE_OWNER' 
-		echo 'Allow_osRegionNotice =ESTATE_MANAGER,ESTATE_OWNER' 
-		echo 'Allow_osSetProjectionParams = ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER' 
-		echo 'Allow_osSetRegionWaterHeight =ESTATE_MANAGER,ESTATE_OWNER' 
-		echo 'Allow_osSetTerrainHeight =ESTATE_MANAGER,ESTATE_OWNER' 
-		echo 'Allow_osSetTerrainTexture = ESTATE_MANAGER,ESTATE_OWNER' 
-		echo 'Allow_osSetTerrainTextureHeight = ESTATE_MANAGER,ESTATE_OWNER' 
-		echo 'Allow_osAgentSaveAppearance = true' 
-		echo 'Allow_osAvatarPlayAnimation = true' 
-		echo 'Allow_osAvatarStopAnimation = true' 
-		echo 'Allow_osForceAttachToOtherAvatarFromInventory = ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER' 
-		echo 'Allow_osForceDetachFromAvatar = ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER' 
-		echo 'Allow_osForceOtherSit = true' 
-		echo 'Allow_osGetNotecard = true' 
-		echo 'Allow_osGetNotecardLine = true' 
-		echo 'Allow_osGetNumberOfNotecardLines = true' 
-		echo 'Allow_osSetDynamicTextureURL =true' 
-		echo 'Allow_osSetDynamicTextureURLBlend = true' 
-		echo 'Allow_osSetDynamicTextureURLBlendFace = true' 
-		echo 'Allow_osSetRot= ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER' 
-		echo 'Allow_osSetParcelDetails =${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER' 
-		echo 'Allow_osConsoleCommand =false' 
-		echo 'Allow_osKickAvatar =${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER' 
-		echo 'Allow_osTeleportAgent = ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER' 
-		echo 'Allow_osTeleportObject =${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER' 
-		echo 'Allow_osGetAgentIP =true' 
+		echo 'Allow_osGetAgents = true'
+		echo 'Allow_osGetAvatarList = true'
+		echo 'Allow_osGetGender = true'
+		echo 'Allow_osGetHealth = true'
+		echo 'Allow_osGetHealRate = true'
+		echo 'Allow_osGetNPCList =true'
+		echo 'Allow_osGetRezzingObject =true'
+		echo 'Allow_osGetSunParam = true'
+		echo 'Allow_osNpcGetOwner = true'
+		echo 'Allow_osSetSunParam = ESTATE_MANAGER,ESTATE_OWNER'
+		echo 'Allow_osTeleportOwner = ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER'
+		echo 'Allow_osWindActiveModelPluginName = true'
+		echo 'Allow_osSetEstateSunSettings =ESTATE_MANAGER,ESTATE_OWNER'
+		echo 'Allow_osSetRegionSunSettings =ESTATE_MANAGER,ESTATE_OWNER'
+		echo 'Allow_osEjectFromGroup =${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER'
+		echo 'Allow_osForceBreakAllLinks =${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER'
+		echo 'Allow_osForceBreakLink =${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER'
+		echo 'Allow_osGetWindParam =true'
+		echo 'Allow_osInviteToGroup = ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER'
+		echo 'Allow_osReplaceString = true'
+		echo 'Allow_osSetDynamicTextureData = true'
+		echo 'Allow_osSetDynamicTextureDataFace = true'
+		echo 'Allow_osSetDynamicTextureDataBlend =true'
+		echo 'Allow_osSetDynamicTextureDataBlendFace = true'
+		echo 'Allow_osSetParcelMediaURL = true'
+		echo 'Allow_osSetParcelMusicURL = true'
+		echo 'Allow_osSetParcelSIPAddress = ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER'
+		echo 'Allow_osSetPrimFloatOnWater = true'
+		echo 'Allow_osSetWindParam =${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER'
+		echo 'Allow_osTerrainFlush =ESTATE_MANAGER,ESTATE_OWNER'
+		echo 'Allow_osUnixTimeToTimestamp = true'
+		echo 'Allow_osAvatarName2Key =true'
+		echo 'Allow_osFormatString =true'
+		echo 'Allow_osKey2Name =true'
+		echo 'Allow_osListenRegex = true'
+		echo 'Allow_osLoadedCreationDate =true'
+		echo 'Allow_osLoadedCreationID =true'
+		echo 'Allow_osLoadedCreationTime =true'
+		echo 'Allow_osMessageObject = true'
+		echo 'Allow_osRegexIsMatch =true'
+		echo 'Allow_osGetAvatarHomeURI =true'
+		echo 'Allow_osNpcSetProfileAbout =true'
+		echo 'Allow_osNpcSetProfileImage =true'
+		echo 'Allow_osDie = true'
+		echo 'Allow_osDetectedCountry = true'
+		echo 'Allow_osDropAttachment =true'
+		echo 'Allow_osDropAttachmentAt =true'
+		echo 'Allow_osGetAgentCountry = true'
+		echo 'Allow_osGetGridCustom = true'
+		echo 'Allow_osGetGridGatekeeperURI =true'
+		echo 'Allow_osGetGridHomeURI =true'
+		echo 'Allow_osGetGridLoginURI = true'
+		echo 'Allow_osGetGridName = true'
+		echo 'Allow_osGetGridNick = true'
+		echo 'Allow_osGetNumberOfAttachments =true'
+		echo 'Allow_osGetRegionStats =true'
+		echo 'Allow_osGetSimulatorMemory =true'
+		echo 'Allow_osGetSimulatorMemoryKB =true'
+		echo 'Allow_osMessageAttachments =true'
+		echo 'Allow_osReplaceAgentEnvironment = true'
+		echo 'Allow_osSetSpeed =true'
+		echo 'Allow_osSetOwnerSpeed = true'
+		echo 'Allow_osRequestURL =true'
+		echo 'Allow_osRequestSecureURL =true'
+		echo 'Allow_osCauseDamage = ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER'
+		echo 'Allow_osCauseHealing =${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER'
+		echo 'Allow_osSetHealth = ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER'
+		echo 'Allow_osSetHealRate = ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER'
+		echo 'Allow_osForceAttachToAvatar = ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER'
+		echo 'Allow_osForceAttachToAvatarFromInventory = ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER'
+		echo 'Allow_osForceCreateLink = ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER'
+		echo 'Allow_osForceDropAttachment = ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER'
+		echo 'Allow_osForceDropAttachmentAt = ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER'
+		echo 'Allow_osGetLinkPrimitiveParams =${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER'
+		echo 'Allow_osGetPhysicsEngineType =true'
+		echo 'Allow_osGetRegionMapTexture = true'
+		echo 'Allow_osGetScriptEngineName = true'
+		echo 'Allow_osGetSimulatorVersion = true'
+		echo 'Allow_osMakeNotecard =true'
+		echo 'Allow_osMatchString = true'
+		echo 'Allow_osNpcCreate = true'
+		echo 'Allow_osNpcGetPos = true'
+		echo 'Allow_osNpcGetRot = true'
+		echo 'Allow_osNpcLoadAppearance = true'
+		echo 'Allow_osNpcMoveTo = true'
+		echo 'Allow_osNpcMoveToTarget = true'
+		echo 'Allow_osNpcPlayAnimation =true'
+		echo 'Allow_osNpcRemove = true'
+		echo 'Allow_osNpcSaveAppearance = true'
+		echo 'Allow_osNpcSay =true'
+		echo 'Allow_osNpcSayTo =true'
+		echo 'Allow_osNpcSetRot = true'
+		echo 'Allow_osNpcShout =true'
+		echo 'Allow_osNpcSit =true'
+		echo 'Allow_osNpcStand =true'
+		echo 'Allow_osNpcStopAnimation =true'
+		echo 'Allow_osNpcStopMoveToTarget = true'
+		echo 'Allow_osNpcTouch =true'
+		echo 'Allow_osNpcWhisper =true'
+		echo 'Allow_osOwnerSaveAppearance = ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER'
+		echo 'Allow_osParcelJoin =ESTATE_MANAGER,ESTATE_OWNER'
+		echo 'Allow_osParcelSubdivide = ESTATE_MANAGER,ESTATE_OWNER'
+		echo 'Allow_osRegionRestart = ESTATE_MANAGER,ESTATE_OWNER'
+		echo 'Allow_osRegionNotice =ESTATE_MANAGER,ESTATE_OWNER'
+		echo 'Allow_osSetProjectionParams = ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER'
+		echo 'Allow_osSetRegionWaterHeight =ESTATE_MANAGER,ESTATE_OWNER'
+		echo 'Allow_osSetTerrainHeight =ESTATE_MANAGER,ESTATE_OWNER'
+		echo 'Allow_osSetTerrainTexture = ESTATE_MANAGER,ESTATE_OWNER'
+		echo 'Allow_osSetTerrainTextureHeight = ESTATE_MANAGER,ESTATE_OWNER'
+		echo 'Allow_osAgentSaveAppearance = true'
+		echo 'Allow_osAvatarPlayAnimation = true'
+		echo 'Allow_osAvatarStopAnimation = true'
+		echo 'Allow_osForceAttachToOtherAvatarFromInventory = ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER'
+		echo 'Allow_osForceDetachFromAvatar = ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER'
+		echo 'Allow_osForceOtherSit = true'
+		echo 'Allow_osGetNotecard = true'
+		echo 'Allow_osGetNotecardLine = true'
+		echo 'Allow_osGetNumberOfNotecardLines = true'
+		echo 'Allow_osSetDynamicTextureURL =true'
+		echo 'Allow_osSetDynamicTextureURLBlend = true'
+		echo 'Allow_osSetDynamicTextureURLBlendFace = true'
+		echo 'Allow_osSetRot= ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER'
+		echo 'Allow_osSetParcelDetails =${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER'
+		echo 'Allow_osConsoleCommand =false'
+		echo 'Allow_osKickAvatar =${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER'
+		echo 'Allow_osTeleportAgent = ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER'
+		echo 'Allow_osTeleportObject =${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER'
+		echo 'Allow_osGetAgentIP =true'
 		echo 'Allow_osSetContentType =${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER'
-	} > "/$STARTVERZEICHNIS/$DATEIDATUM-osslEnable.ini"
+	} >"/$STARTVERZEICHNIS/$DATEIDATUM-osslEnable.ini"
 	return 0
 }
 
 ### ! Umbenennen der example Dateien in Konfigurationsdateien vor dem kopieren.
-function unlockexample()
-{
+function unlockexample() {
 	log info "RENAME: Alle example Dateien umbenennen"
 	UEVERZEICHNIS1="/$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin"
 	UEVERZEICHNIS2="/$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin/config-include"
 
-	for file1 in /"$STARTVERZEICHNIS"/"$OPENSIMVERZEICHNIS"/bin/*.example
-	do
-	if [ -e "$file1" ]
-	then
-		cd "$UEVERZEICHNIS1" || exit
-		for file in *.ini.example; do mv -i "${file}" "${file%%.ini.example}.ini"; done
-		for file in *.html.example; do mv -i "${file}" "${file%%.html.example}.html"; done
-		for file in *.txt.example; do mv -i "${file}" "${file%%.txt.example}.txt"; done
-		break
-	else
-		log error "RENAME: keine example Datei im Verzeichnis $UEVERZEICHNIS1 vorhanden"
-	fi
+	for file1 in /"$STARTVERZEICHNIS"/"$OPENSIMVERZEICHNIS"/bin/*.example; do
+		if [ -e "$file1" ]; then
+			cd "$UEVERZEICHNIS1" || exit
+			for file in *.ini.example; do mv -i "${file}" "${file%%.ini.example}.ini"; done
+			for file in *.html.example; do mv -i "${file}" "${file%%.html.example}.html"; done
+			for file in *.txt.example; do mv -i "${file}" "${file%%.txt.example}.txt"; done
+			break
+		else
+			log error "RENAME: keine example Datei im Verzeichnis $UEVERZEICHNIS1 vorhanden"
+		fi
 	done
 
-	for file2 in /"$STARTVERZEICHNIS"/"$OPENSIMVERZEICHNIS"/bin/config-include/*.example
-	do
-	if [ -e "$file2" ]
-	then
-		cd "$UEVERZEICHNIS2" || exit
-		for file in *.ini.example; do mv -i "${file}" "${file%%.ini.example}.ini"; done
-		break
-	else
-		log error "ENAME: keine example Datei im Verzeichnis $UEVERZEICHNIS2 vorhanden"
-	fi
+	for file2 in /"$STARTVERZEICHNIS"/"$OPENSIMVERZEICHNIS"/bin/config-include/*.example; do
+		if [ -e "$file2" ]; then
+			cd "$UEVERZEICHNIS2" || exit
+			for file in *.ini.example; do mv -i "${file}" "${file%%.ini.example}.ini"; done
+			break
+		else
+			log error "ENAME: keine example Datei im Verzeichnis $UEVERZEICHNIS2 vorhanden"
+		fi
 	done
 	return 0
 }
@@ -6666,8 +6899,7 @@ function unlockexample()
 ###########################################################################
 
 ### !  gridstop, stoppt erst Money dann Robust.
-function gridstop()
-{
+function gridstop() {
 	if screen -list | grep -q MO; then
 		mostop
 	else
@@ -6675,23 +6907,22 @@ function gridstop()
 	fi
 
 	if screen -list | grep -q RO; then
-		rostop		
+		rostop
 	else
 		log error "### RobustServer laeuft nicht ###"
 	fi
 	return 0
 }
 ### !  gridstop, stoppt erst Money dann Robust.
-function menugridstop()
-{
+function menugridstop() {
 	if screen -list | grep -q MO; then
-		menumostop		
+		menumostop
 	else
 		log error "### MoneyServer laeuft nicht ###"
 	fi
 
 	if screen -list | grep -q RO; then
-		menurostop		
+		menurostop
 	else
 		log error "### RobustServer laeuft nicht ###"
 	fi
@@ -6699,8 +6930,7 @@ function menugridstop()
 }
 
 ### !  compilieren, kompilieren des OpenSimulator.
-function compilieren()
-{
+function compilieren() {
 	log info "COMPILIEREN: Bauen eines neuen OpenSimulators wird gestartet"
 	# Nachsehen ob Verzeichnis ueberhaupt existiert.
 	if [ ! -f "/$STARTVERZEICHNIS/$SCRIPTSOURCE/" ]; then
@@ -6754,8 +6984,7 @@ function compilieren()
 	if [ ! -f "/$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/" ]; then
 
 		# AOT Aktiveren oder Deaktivieren.
-		if [[ $SETAOTON = "yes" ]]
-		then		
+		if [[ $SETAOTON = "yes" ]]; then
 			oscompiaot
 		else
 			oscompi
@@ -6768,8 +6997,7 @@ function compilieren()
 }
 
 ### !  OSGRIDCOPY, automatisches kopieren des opensimulator aus dem verzeichnis opensim.
-function osgridcopy()
-{
+function osgridcopy() {
 	log text " #############################"
 	log text "Steht hier:"
 	log text " "
@@ -6793,14 +7021,13 @@ function osgridcopy()
 	oscopyrobust
 	oscopysim
 	log line
-	# MoneyServer eventuell loeschen.	
+	# MoneyServer eventuell loeschen.
 	if [ "$MONEYVERZEICHNIS" = "keins" ] || [ "$MONEYVERZEICHNIS" = "no" ] || [ "$MONEYVERZEICHNIS" = "nein" ]; then moneydelete; fi
 	return 0
 }
 
 ### !  osupgrade, automatisches upgrade des opensimulator aus dem verzeichnis opensim.
-function osupgrade()
-{
+function osupgrade() {
 	log text " #############################"
 	log text " !!!      BEI FEHLER      !!! "
 	log text " !!! ABBRUCH MIT STRG + C !!! "
@@ -6817,7 +7044,7 @@ function osupgrade()
 	log info "OSUPGRADE: Log Dateien loeschen"
 	autologdel
 	rologdel
-	# MoneyServer eventuell loeschen.	
+	# MoneyServer eventuell loeschen.
 	if [ "$MONEYVERZEICHNIS" = "keins" ] || [ "$MONEYVERZEICHNIS" = "no" ] || [ "$MONEYVERZEICHNIS" = "nein" ]; then moneydelete; fi
 	# Grid Starten.
 	# log info "OSUPGRADE: Das Grid wird jetzt gestartet"
@@ -6826,37 +7053,36 @@ function osupgrade()
 }
 
 ### !  osupgrade, automatisches upgrade des opensimulator aus dem verzeichnis opensim.
-function oszipupgrade()
-{
+function oszipupgrade() {
 	### dialog Aktionen
 	# zuerst schauen ob dialog installiert ist
-	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
 		# Alle Aktionen mit dialog
-		VERSIONSNUMMER=$( dialog --backtitle "opensimMULTITOOL $VERSION" --title "opensimMULTITOOL Eingabe" --inputbox "Versionsnummer:" 8 40 3>&1 1>&2 2>&3 3>&- )
+		VERSIONSNUMMER=$(dialog --backtitle "opensimMULTITOOL $VERSION" --title "opensimMULTITOOL Eingabe" --inputbox "Versionsnummer:" 8 40 3>&1 1>&2 2>&3 3>&-)
 		dialog --clear
 		clear
 	else
 		# Alle Aktionen ohne dialog
-		echo "Keine Menuelose Funktion vorhanden!"|exit
+		echo "Keine Menuelose Funktion vorhanden!" | exit
 		#VERSIONSNUMMER=$1
 	fi
 	# dialog Aktionen Ende
-	
-    cd /"$STARTVERZEICHNIS" || exit
+
+	cd /"$STARTVERZEICHNIS" || exit
 
 	# Konfigurationsabfrage Neues Grid oder Upgrade.
 	log info "OSBUILDING: Alten OpenSimulator sichern"
-    osdelete
+	osdelete
 
 	log line
 
 	log info "OSBUILDING: Neuen OpenSimulator aus der ZIP entpacken"
-    unzip opensim-0.9.2.2."$VERSIONSNUMMER".zip
+	unzip opensim-0.9.2.2."$VERSIONSNUMMER".zip
 
 	log line
 
 	log info "OSBUILDING: Neuen OpenSimulator umbenennen"
-    mv /"$STARTVERZEICHNIS"/opensim-0.9.2.2."$VERSIONSNUMMER"/ /"$STARTVERZEICHNIS"/opensim/
+	mv /"$STARTVERZEICHNIS"/opensim-0.9.2.2."$VERSIONSNUMMER"/ /"$STARTVERZEICHNIS"/opensim/
 
 	log line
 
@@ -6865,8 +7091,7 @@ function oszipupgrade()
 }
 
 ### !  Hier entsteht die Automatische Konfiguration. UNGETESTET
-function autoconfig()
-{
+function autoconfig() {
 	$AUTOCONFIG # yes oder no
 	echo "ohne Funktion!"
 	return 0
@@ -6877,16 +7102,14 @@ function autoconfig()
 ###########################################################################
 
 ### ! Funktion zum Anzeigen von Informationen der Auswahl.
-function show_info()  
-{
-  dialog --title "$1" \
-    --no-collapse \
-    --msgbox "$info" 0 0
+function show_info() {
+	dialog --title "$1" \
+		--no-collapse \
+		--msgbox "$info" 0 0
 }
 
 ### ! Systeminformationen anzeigen.
-function systeminformation()
-{
+function systeminformation() {
 	# Definiert die Ausgangsstatuscodes der Dialogfelder
 	DIALOG_CANCEL=1
 	DIALOG_ESC=255
@@ -6895,71 +7118,70 @@ function systeminformation()
 
 	# Zeigt den Menuepunkt mit einer While-Schleife an
 	while true; do
-	exec 3>&1
-	selection=$(dialog \
-		--backtitle "opensimMULTITOOL $VERSION Systeminformationen" \
-		--title "[Main Menu]" \
-		--clear \
-		--cancel-label "Exit" \
-		--menu "\nPlease select:" $HEIGHT $WIDTH 4 \
-		"1" "Display OS Type" \
-		"2" "Display CPU Info" \
-		"3" "Display Memory Info" \
-		"4" "Display HardDisk Info" \
-		"5" "Display File System" \
-		2>&1 1>&3)
-	exit_status=$?
-	exec 3>&-
-	
-	# Fall, der angezeigt werden soll, wenn das Programm erfolgreich beendet oder das Programm abgebrochen wurde
-	case $exit_status in
+		exec 3>&1
+		selection=$(dialog \
+			--backtitle "opensimMULTITOOL $VERSION Systeminformationen" \
+			--title "[Main Menu]" \
+			--clear \
+			--cancel-label "Exit" \
+			--menu "\nPlease select:" $HEIGHT $WIDTH 4 \
+			"1" "Display OS Type" \
+			"2" "Display CPU Info" \
+			"3" "Display Memory Info" \
+			"4" "Display HardDisk Info" \
+			"5" "Display File System" \
+			2>&1 1>&3)
+		exit_status=$?
+		exec 3>&-
+
+		# Fall, der angezeigt werden soll, wenn das Programm erfolgreich beendet oder das Programm abgebrochen wurde
+		case $exit_status in
 		"$DIALOG_CANCEL")
-		clear
-		#echo "Program exit successfully."
-		hauptmenu
-		exit
-		;;
+			clear
+			#echo "Program exit successfully."
+			hauptmenu
+			exit
+			;;
 		"$DIALOG_ESC")
-		clear
-		#echo "Program aborted." >&2
-		hauptmenu >&2
-		exit 1
-		;;
-	esac
-	
-	# Fallauswahl, um Informationen der Benutzer Auswahl anzuzeigen
-	case $selection in
-		0 )
-		clear
-		echo "Program exit successfully."
-		;;
-		1 )
-		info=$(uname -o)
-		show_info "Operating System Type"
-		;;
-		2 )
-		info=$(lscpu)
-		show_info "CPU Information"
-		;;
-		3 )
-		info=$(less /proc/meminfo)
-		show_info "Memory Information"
-		;;
-		4 )
-		info=$(lsblk)
-		show_info "Hard disk Information"
-		;;
-		5 )
-		info=$(df)
-		show_info "File System (Mounted)"
-		;;
-	esac
+			clear
+			#echo "Program aborted." >&2
+			hauptmenu >&2
+			exit 1
+			;;
+		esac
+
+		# Fallauswahl, um Informationen der Benutzer Auswahl anzuzeigen
+		case $selection in
+		0)
+			clear
+			echo "Program exit successfully."
+			;;
+		1)
+			info=$(uname -o)
+			show_info "Operating System Type"
+			;;
+		2)
+			info=$(lscpu)
+			show_info "CPU Information"
+			;;
+		3)
+			info=$(less /proc/meminfo)
+			show_info "Memory Information"
+			;;
+		4)
+			info=$(lsblk)
+			show_info "Hard disk Information"
+			;;
+		5)
+			info=$(df)
+			show_info "File System (Mounted)"
+			;;
+		esac
 	done
 }
 
 ### !  info, Informationen auf den Bildschirm ausgeben.
-function info()
-{
+function info() {
 	echo "$(tput setab 4) Server Name: ${HOSTNAME}"
 	echo " Bash Version: ${BASH_VERSION}"
 	echo " Server IP: ${AKTUELLEIP}"
@@ -6971,8 +7193,7 @@ function info()
 }
 
 ### !  infodialog, Informationen auf den Bildschirm ausgeben.
-function infodialog()
-{
+function infodialog() {
 	TEXT1=(" Server Name: ${HOSTNAME}")
 	TEXT2=(" Bash Version: ${BASH_VERSION}")
 	TEXT3=(" Server IP: ${AKTUELLEIP}")
@@ -6990,14 +7211,13 @@ function infodialog()
 }
 
 ### !  kalender(), einfach nur ein Kalender.
-function kalender()
-{
+function kalender() {
 	HEIGHT=0
 	WIDTH=0
-    TITLE="opensimMULTITOOL $VERSION"
+	TITLE="opensimMULTITOOL $VERSION"
 
 	# zuerst schauen ob dialog installiert ist
-	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
 
 		TDATUM=$(date +%d)
 		MDATUM=$(date +%m)
@@ -7022,14 +7242,13 @@ function kalender()
 }
 
 ### !  robustbackup Grid Datenbank sichern.(Kalender) in bearbeitung
-function robustbackup()
-{
+function robustbackup() {
 	HEIGHT=0
 	WIDTH=0
-    TITLE="opensimMULTITOOL $VERSION"
+	TITLE="opensimMULTITOOL $VERSION"
 
 	# zuerst schauen ob dialog installiert ist
-	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
 
 		TDATUM=$(date +%d)
 		MDATUM=$(date +%m)
@@ -7045,7 +7264,7 @@ function robustbackup()
 		NEWDATUM=$(echo "$DATUMERGEBNIS" | sed -n '1p' | sed 's/\//./g') # erste zeile aus DATUMERGEBNIS nehmen und die Schraegstriche gegen ein leerzeichen austauschen.
 
 		#warnbox "Ihr gewaehltes Datum: $NEWDATUM" || hauptmenu
-		echo "$NEWDATUM" > /tmp/backup.tmp
+		echo "$NEWDATUM" >/tmp/backup.tmp
 
 		#hauptmenu
 	else
@@ -7058,8 +7277,7 @@ function robustbackup()
 }
 
 ### !  robustbackup Grid Datenbank sichern.(Datum auswerten) in bearbeitung
-function backupdatum()
-{
+function backupdatum() {
 	# Ist die Datei backup.tmp vorhanden?
 	if [ -f /tmp/backup.tmp ]; then echo "Datei ist vorhanden!"; fi
 	# Beispiel Text in der backup.tmp Datei - 30.06.2022
@@ -7068,7 +7286,7 @@ function backupdatum()
 	echo "Heute ist der: $DATUM"
 
 	BACKUPDATUM=()
-	while IFS= read -r line; do	BACKUPDATUM+=("$line"); done < /tmp/backup.tmp
+	while IFS= read -r line; do BACKUPDATUM+=("$line"); done </tmp/backup.tmp
 	myDATUM=$(echo "${BACKUPDATUM[@]}" | sed -n '1p')
 
 	if [ "$myDATUM" = "$DATUM" ]; then echo "Datum ist gleich! $myDATUM - $DATUM"; fi
@@ -7085,16 +7303,14 @@ function backupdatum()
 }
 
 ### !  fortschritsanzeige(), test fuer eine Fortschrittsanzeige.
-function fortschritsanzeige()
-{
+function fortschritsanzeige() {
 	# zuerst schauen ob dialog installiert ist
-	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
 
 		dialogtext="Bitte warten!"
 
-        # dialog --gauge eine Fortschritsanzeige
-		for i in $(seq 0 10 100)
-		do
+		# dialog --gauge eine Fortschritsanzeige
+		for i in $(seq 0 10 100); do
 			sleep 1
 			echo "$i" | dialog --gauge "$dialogtext" 10 70 0
 		done
@@ -7106,8 +7322,7 @@ function fortschritsanzeige()
 }
 
 ### !  menuinfo, Informationen im dialog ausgeben.
-function menuinfo()
-{
+function menuinfo() {
 	menuinfoergebnis=$(screen -ls | sed '1d' | sed '$d' | awk -F. '{print $2}' | awk -F\( '{print $1}')
 
 	infoboxtext=""
@@ -7123,31 +7338,30 @@ function menuinfo()
 	infoboxtext+=" __________________________________________________________\n"
 	infoboxtext+="$menuinfoergebnis"
 
-	dialog --msgbox  "$infoboxtext" 20 65
+	dialog --msgbox "$infoboxtext" 20 65
 	dialog --clear
 	hauptmenu
 
 	return 0
 }
 ### !  menukonsolenhilfe, menukonsolenhilfe auf dem Bildschirm anzeigen.
-function menukonsolenhilfe()
-{
+function menukonsolenhilfe() {
 	#helpergebnis=$(help)
 	#dialog --msgbox "Konsolenhilfe:\n $helpergebnis" 50 75; dialog --clear
 
-	help > help.txt	
-	dialog --textbox "help.txt" 55 85; dialog --clear
+	help >help.txt
+	dialog --textbox "help.txt" 55 85
+	dialog --clear
 
 	hauptmenu
 	return 0
 }
 
 ### !  hilfe, Hilfe auf dem Bildschirm anzeigen.
-function hilfe()
-{
-echo "$(tput setab 5)Funktion:$(tput sgr 0)		$(tput setab 2)Parameter:$(tput sgr 0)		$(tput setab 4)Informationen:$(tput sgr 0)"
+function hilfe() {
+	echo "$(tput setab 5)Funktion:$(tput sgr 0)		$(tput setab 2)Parameter:$(tput sgr 0)		$(tput setab 4)Informationen:$(tput sgr 0)"
 	echo "hilfe 			- $(tput setaf 3)hat keine Parameter$(tput sgr 0)	- Diese Hilfe."
-	echo "konsolenhilfe 		- $(tput setaf 3)hat keine Parameter$(tput sgr 0)	- konsolenhilfe ist eine Hilfe fuer Putty oder Xterm."	
+	echo "konsolenhilfe 		- $(tput setaf 3)hat keine Parameter$(tput sgr 0)	- konsolenhilfe ist eine Hilfe fuer Putty oder Xterm."
 	echo "commandhelp 		- $(tput setaf 3)hat keine Parameter$(tput sgr 0)	- Die OpenSim Commands."
 	echo "restart 		- $(tput setaf 3)hat keine Parameter$(tput sgr 0)	- Startet das gesamte Grid neu."
 	echo "autostop 		- $(tput setaf 3)hat keine Parameter$(tput sgr 0)	- Stoppt das gesamte Grid."
@@ -7159,7 +7373,7 @@ echo "$(tput setab 5)Funktion:$(tput sgr 0)		$(tput setab 2)Parameter:$(tput sgr
 	echo "autologdel		- $(tput setaf 3)hat keine Parameter$(tput sgr 0)	- Loescht alle Log Dateien."
 	echo "automapdel		- $(tput setaf 3)hat keine Parameter$(tput sgr 0)	- Loescht alle Map Karten."
 
-echo "$(tput setab 3)Erweiterte Funktionen$(tput sgr 0)"
+	echo "$(tput setab 3)Erweiterte Funktionen$(tput sgr 0)"
 	echo "regionbackup 		- $(tput setab 5)Verzeichnisname$(tput sgr 0) $(tput setab 4)Regionsname$(tput sgr 0) - Backup einer ausgewaehlten Region."
 	echo "assetdel 		- $(tput setab 5)screen_name$(tput sgr 0) $(tput setab 4)Regionsname$(tput sgr 0) $(tput setab 2)Objektname$(tput sgr 0) - Einzelnes Asset loeschen."
 	echo "oscommand 		- $(tput setab 5)Verzeichnisname$(tput sgr 0) $(tput setab 3)Region$(tput sgr 0) $(tput setab 4)Konsolenbefehl Parameter$(tput sgr 0) - Konsolenbefehl senden."
@@ -7177,7 +7391,7 @@ echo "$(tput setab 3)Erweiterte Funktionen$(tput sgr 0)"
 	echo "settings 		- $(tput setaf 3)hat keine Parameter$(tput sgr 0) - setzt Linux Einstellungen."
 	echo "configlesen 		- $(tput setab 5)Verzeichnisname$(tput sgr 0)     - Alle Regionskonfigurationen im Verzeichnis anzeigen."
 
-echo "$(tput setab 1)Experten Funktionen$(tput sgr 0)"
+	echo "$(tput setab 1)Experten Funktionen$(tput sgr 0)"
 	echo "osupgrade 		- $(tput setaf 3)hat keine Parameter$(tput sgr 0) - Installiert eine neue OpenSim Version."
 	echo "autoregionbackup	- $(tput setaf 3)hat keine Parameter$(tput sgr 0) - Backup aller Regionen."
 	echo "oscopy			- $(tput setab 5)Verzeichnisname$(tput sgr 0)     - Kopiert den Simulator."
@@ -7195,7 +7409,7 @@ echo "$(tput setab 1)Experten Funktionen$(tput sgr 0)"
 	echo "osgitholen 		- $(tput setaf 3)hat keine Parameter$(tput sgr 0) - kopiert eine OpenSimulator Git Entwicklerversion."
 	echo "terminator 		- $(tput setaf 3)hat keine Parameter$(tput sgr 0) - Killt alle laufenden Screens."
 
-echo "$(tput setab 1)Ungetestete oder zu testende Funktionen$(tput sgr 0)"
+	echo "$(tput setab 1)Ungetestete oder zu testende Funktionen$(tput sgr 0)"
 	echo "osgridcopy		- $(tput setaf 3)hat keine Parameter$(tput sgr 0) - Automatisches kopieren aus dem opensim Verzeichniss."
 	echo "makeaot			- $(tput setaf 3)hat keine Parameter$(tput sgr 0) - aot Dateien erstellen."
 	echo "cleanaot		- $(tput setaf 3)hat keine Parameter$(tput sgr 0) - aot Dateien entfernen."
@@ -7204,7 +7418,7 @@ echo "$(tput setab 1)Ungetestete oder zu testende Funktionen$(tput sgr 0)"
 	echo "serverinstall		- $(tput setaf 3)hat keine Parameter$(tput sgr 0) - alle benoetigten Linux Pakete installieren."
 	echo "osbuilding		- $(tput setab 5)Versionsnummer$(tput sgr 0) - Upgrade des OpenSimulator aus einer Source ZIP Datei."
 	echo "createuser 		- $(tput setab 5) Vorname $(tput sgr 0) $(tput setab 4) Nachname $(tput sgr 0) $(tput setab 2) Passwort $(tput sgr 0) $(tput setab 3) E-Mail $(tput sgr 0) - Grid Benutzer anlegen."
-log line
+	log line
 	echo "db_anzeigen	- $(tput setab 5) DBBENUTZER $(tput sgr 0) $(tput setab 4) DBDATENBANKNAME $(tput sgr 0) - Alle Datenbanken anzeigen."
 	echo "create_db	- $(tput setab 5) DBBENUTZER $(tput sgr 0) $(tput setab 4) DBPASSWORT $(tput sgr 0) $(tput setab 2) DATENBANKNAME $(tput sgr 0) - Datenbank anlegen."
 	#echo "create_db_user	- $(tput setab 5) DBBENUTZER $(tput sgr 0) $(tput setab 4) DBDATENBANKNAME $(tput sgr 0) $(tput setab 2) NEUERNAME $(tput sgr 0) $(tput setab 3) NEUESPASSWORT $(tput sgr 0) - DB Benutzer anlegen."
@@ -7230,7 +7444,7 @@ log line
 	echo "saveinventar - $(tput setab 5)NAME VERZEICHNIS PASSWORD DATEINAMEmitPFAD $(tput sgr 0) - speichert Inventar in einer iar"
 
 	echo "unlockexample	- $(tput setaf 3)hat keine Parameter$(tput sgr 0) - Benennt alle example Dateien um."
-	
+
 	echo "passwdgenerator - $(tput setab 5)Passwortstaerke$(tput sgr 0) - Generiert ein Passwort zur weiteren verwendung."
 
 	log line
@@ -7240,8 +7454,7 @@ log line
 }
 
 ### !  konsolenhilfe, konsolenhilfe auf dem Bildschirm anzeigen.
-function konsolenhilfe()
-{
+function konsolenhilfe() {
 	echo "$(tput setab 5)Funktion:$(tput sgr 0) $(tput setab 4)Informationen:$(tput sgr 0)"
 	echo "Tab - Dateien und Ordnernamen automatisch vervollstaendigen."
 	echo "Strg + W - Loescht das word vor dem Cursor."
@@ -7264,9 +7477,8 @@ function konsolenhilfe()
 }
 
 ### !  commandhelp
-function commandhelp()
-{
-cat << eof
+function commandhelp() {
+	cat <<eof
 $(tput setab 1)
 Help OpenSim Commands:
 Aufruf: oscommand Screen Region "Befehl mit Parameter in Hochstrichen"
@@ -7275,10 +7487,10 @@ $(tput sgr 0)
 
 $(tput setab 1)A$(tput sgr 0)
 alert <Nachricht> - sendet eine Nachricht an alle.
-alert-user <Vorname> <Nachname> <Nachricht> - sendet eine Nachricht an eine bestimmte Person. 
+alert-user <Vorname> <Nachname> <Nachricht> - sendet eine Nachricht an eine bestimmte Person.
 appearance find <uuid-oder-start-der-uuid> - herausfinden welcher Avatar das angegebene Asset als gebackene Textur verwendet, falls vorhanden.
 appearance rebake <Vorname> <Nachname> - Sendet eine Anfrage an den Viewer des Benutzers, damit er seine Aussehenstexturen neu backen und hochladen kann.
-appearance send <Vorname> <Nachname> - Sendet Aussehensdaten fuer jeden Avatar im Simulator an andere Viewer. 
+appearance send <Vorname> <Nachname> - Sendet Aussehensdaten fuer jeden Avatar im Simulator an andere Viewer.
 
 $(tput setab 1)B$(tput sgr 0)
 backup - Das momentan nicht gespeicherte Objekt wird sofort geaendert, anstatt auf den normalen Speicheraufruf zu warten.
@@ -7290,7 +7502,7 @@ clear image queues <Vorname> <Nachname> - Loescht die Bildwarteschlangen (ueber 
 command-script <Skript> - Ausfuehren eines Befehlsskripts aus einer Datei.
 config save <Pfad> - Speichert die aktuelle Konfiguration in einer Datei unter dem angegebenen Pfad.
 config set <Sektion> <key> <value> - Legt eine Konfigurationsoption fest. Dies ist in den meisten Faellen nicht sinnvoll, da geaenderte Parameter nicht dynamisch nachgeladen werden. Geaenderte Parameter bleiben auch nicht bestehen - Sie muessen eine Konfigurationsdatei manuell aendern und neu starten.
-create region ["Regionsname"] <Regionsdatei.ini> - Erstellt eine neue Region. 
+create region ["Regionsname"] <Regionsdatei.ini> - Erstellt eine neue Region.
 
 $(tput setab 1)D$(tput sgr 0)
 debug attachments log [0|1] - Debug Protokollierung fuer Anhaenge aktivieren.
@@ -7315,8 +7527,8 @@ delete object owner <UUID> - Szenenobjekte nach Besitzer loeschen.
 delete object pos <start x, start y , start z> <end x, end y, end z> - Loescht Szenenobjekte innerhalb des angegebenen Volumens.
 delete-region <name> - Loeschen einer Region von der Festplatte.
 dump asset <id> - Ein Asset ausgeben.
-dump object id <UUID-oder-localID> - Dump der formatierten Serialisierung des angegebenen Objekts in die Datei <UUID>.xml 
- 
+dump object id <UUID-oder-localID> - Dump der formatierten Serialisierung des angegebenen Objekts in die Datei <UUID>.xml
+
 $(tput setab 1)E$(tput sgr 0)
 edit scale <name> <x> <y> <z> - aendert die Groesse des benannten Prim.
 estate create <owner UUID> <estate name> - Erstellt ein neues Anwesen mit dem angegebenen Namen, das dem angegebenen Benutzer gehoert. Der Name des Anwesens muss eindeutig sein.
@@ -7435,7 +7647,7 @@ wind SimpleRandomWind strength [<value>] - Windstaerke.
 
 eof
 
-log info "HILFE: Commands Hilfe wurde angefordert"
+	log info "HILFE: Commands Hilfe wurde angefordert"
 }
 
 ###########################################################################
@@ -7443,40 +7655,39 @@ log info "HILFE: Commands Hilfe wurde angefordert"
 ###########################################################################
 
 ### !  hauptmenu
-function hauptmenu()
-{
+function hauptmenu() {
 	HEIGHT=0
 	WIDTH=0
 	CHOICE_HEIGHT=30
-    BACKTITLE="opensimMULTITOOL"
-    TITLE="Hauptmenu"
-    MENU="opensimMULTITOOL $VERSION"
+	BACKTITLE="opensimMULTITOOL"
+	TITLE="Hauptmenu"
+	MENU="opensimMULTITOOL $VERSION"
 	# zuerst schauen ob dialog installiert ist
-	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
 		OPTIONS=("OpenSim Restart" ""
-		"OpenSim Autostopp" ""
-		"OpenSim Autostart" ""
-		"--------------------------" ""
-		"Einzelner Simulator Stop" ""
-		"Einzelner Simulator Start" ""		
-		"--------------------------" ""
-		"Benutzer Account anlegen" ""
-		"Parzellen entfernen" ""
-		"Objekt entfernen" ""
-		"--------------------------" ""
-		"Systeminformationen" ""	
-		"Informationen" ""	
-		"Screen Liste" ""
-		"Server laufzeit und Neustart" ""
-		"--------------------------" ""
-		"Passwortgenerator" ""
-		"Kalender" ""
-		"----------Menu------------" ""
-		"Weitere Funktionen" ""
-		"Dateimennu" ""
-		"mySQLmenu" ""
-		"Experten Funktionen" "")
-		
+			"OpenSim Autostopp" ""
+			"OpenSim Autostart" ""
+			"--------------------------" ""
+			"Einzelner Simulator Stop" ""
+			"Einzelner Simulator Start" ""
+			"--------------------------" ""
+			"Benutzer Account anlegen" ""
+			"Parzellen entfernen" ""
+			"Objekt entfernen" ""
+			"--------------------------" ""
+			"Systeminformationen" ""
+			"Informationen" ""
+			"Screen Liste" ""
+			"Server laufzeit und Neustart" ""
+			"--------------------------" ""
+			"Passwortgenerator" ""
+			"Kalender" ""
+			"----------Menu------------" ""
+			"Weitere Funktionen" ""
+			"Dateimennu" ""
+			"mySQLmenu" ""
+			"Experten Funktionen" "")
+
 		mauswahl=$(dialog --backtitle "$BACKTITLE" --title "$TITLE" --help-button --defaultno --menu "$MENU" $HEIGHT $WIDTH $CHOICE_HEIGHT "${OPTIONS[@]}" 2>&1 >/dev/tty)
 		antwort=$?
 		dialog --clear
@@ -7488,7 +7699,7 @@ function hauptmenu()
 
 		if [[ $mauswahl = "Einzelner Simulator Stop" ]]; then menuosstop; fi
 		if [[ $mauswahl = "Einzelner Simulator Start" ]]; then menuosstart; fi
-		#if [[ $mauswahl = "Einzelner Simulator Status" ]]; then menuworks; fi		
+		#if [[ $mauswahl = "Einzelner Simulator Status" ]]; then menuworks; fi
 		#if [[ $mauswahl = "Alle Simulatoren Status" ]]; then menuwaslauft; fi
 		if [[ $mauswahl = "Informationen" ]]; then menuinfo; fi
 		if [[ $mauswahl = "Systeminformationen" ]]; then systeminformation; fi
@@ -7497,18 +7708,18 @@ function hauptmenu()
 		if [[ $mauswahl = "Parzellen entfernen" ]]; then menulandclear; fi
 		if [[ $mauswahl = "Objekt entfernen" ]]; then menuassetdel; fi
 		if [[ $mauswahl = "Benutzer Account anlegen" ]]; then menucreateuser; fi
-		if [[ $mauswahl = "Server laufzeit und Neustart" ]]; then rebootdatum; fi		
+		if [[ $mauswahl = "Server laufzeit und Neustart" ]]; then rebootdatum; fi
 
 		if [[ $mauswahl = "Passwortgenerator" ]]; then passwdgenerator; fi
 		if [[ $mauswahl = "Kalender" ]]; then kalender; fi
-		
+
 		if [[ $mauswahl = "Dateimennu" ]]; then dateimenu; fi
 		if [[ $mauswahl = "mySQLmenu" ]]; then mySQLmenu; fi
 		if [[ $mauswahl = "Weitere Funktionen" ]]; then funktionenmenu; fi
 		if [[ $mauswahl = "Experten Funktionen" ]]; then expertenmenu; fi
 
-		if [[ $antwort = 2 ]]; then hilfemenu ; fi
-		if [[ $antwort = 1 ]]; then exit ; fi
+		if [[ $antwort = 2 ]]; then hilfemenu; fi
+		if [[ $antwort = 1 ]]; then exit; fi
 	else
 		# wenn dialog nicht installiert ist die Hilfe anzeigen.
 		hilfe
@@ -7516,31 +7727,30 @@ function hauptmenu()
 }
 
 ### !  hilfemenu
-function hilfemenu()
-{
+function hilfemenu() {
 	HEIGHT=0
 	WIDTH=45
 	CHOICE_HEIGHT=30
-    BACKTITLE="opensimMULTITOOL"
-    TITLE="Hilfemenu"
-    MENU="opensimMULTITOOL $VERSION"
+	BACKTITLE="opensimMULTITOOL"
+	TITLE="Hilfemenu"
+	MENU="opensimMULTITOOL $VERSION"
 
 	# zuerst schauen ob dialog installiert ist
-	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
 		OPTIONS=("Hilfe" ""
-		"Konsolenhilfe" ""
-		"Kommandohilfe" ""
-		"Konfiguration lesen" ""
-		"Hauptmenu" "")
+			"Konsolenhilfe" ""
+			"Kommandohilfe" ""
+			"Konfiguration lesen" ""
+			"Hauptmenu" "")
 
 		hauswahl=$(dialog --clear \
-                    --backtitle "$BACKTITLE" \
-                    --title "$TITLE" \
-					--help-button --defaultno \
-                    --menu "$MENU" \
-                    $HEIGHT $WIDTH $CHOICE_HEIGHT \
-                    "${OPTIONS[@]}" \
-                    2>&1 >/dev/tty) # 3>&1 1>&2 2>&3
+			--backtitle "$BACKTITLE" \
+			--title "$TITLE" \
+			--help-button --defaultno \
+			--menu "$MENU" \
+			$HEIGHT $WIDTH $CHOICE_HEIGHT \
+			"${OPTIONS[@]}" \
+			2>&1 >/dev/tty) # 3>&1 1>&2 2>&3
 
 		antwort=$?
 		dialog --clear
@@ -7550,9 +7760,9 @@ function hilfemenu()
 		if [[ $hauswahl = "Konsolenhilfe" ]]; then menukonsolenhilfe; fi # Test menukonsolenhilfe
 		if [[ $hauswahl = "Kommandohilfe" ]]; then commandhelp; fi
 		if [[ $hauswahl = "Konfiguration lesen" ]]; then menuoswriteconfig; fi
-		
+
 		if [[ $hauswahl = "Hauptmenu" ]]; then hauptmenu; fi
-		if [[ $antwort = 1 ]]; then hauptmenu ; fi
+		if [[ $antwort = 1 ]]; then hauptmenu; fi
 	else
 		# wenn dialog nicht installiert ist die Hilfe anzeigen.
 		hilfe
@@ -7560,44 +7770,43 @@ function hilfemenu()
 }
 
 ### !  funktionenmenu
-function funktionenmenu()
-{
+function funktionenmenu() {
 	HEIGHT=0
 	WIDTH=45
 	CHOICE_HEIGHT=30
-    BACKTITLE="opensimMULTITOOL"
-    TITLE="Funktionsmenu"
-    MENU="opensimMULTITOOL $VERSION"
+	BACKTITLE="opensimMULTITOOL"
+	TITLE="Funktionsmenu"
+	MENU="opensimMULTITOOL $VERSION"
 
 	# zuerst schauen ob dialog installiert ist
-	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
 		OPTIONS=("Grid starten" ""
-		"Grid stoppen" ""
-		"--------------------------" ""
-		"Robust starten" ""
-		"Robust stoppen" ""
-		"Money starten" ""
-		"Money stoppen" ""
-		"--------------------------" ""
-		"Automatischer Sim start" ""
-		"Automatischer Sim stop" ""
-		"--------------------------" ""
-		"Automatischer Screen stop" ""
-		"Regionen anzeigen" ""		
-		"----------Menu------------" ""
-		"Hauptmennu" ""
-		"Dateimennu" ""
-		"mySQLmenu" ""
-		"Experten Funktionen" "")
+			"Grid stoppen" ""
+			"--------------------------" ""
+			"Robust starten" ""
+			"Robust stoppen" ""
+			"Money starten" ""
+			"Money stoppen" ""
+			"--------------------------" ""
+			"Automatischer Sim start" ""
+			"Automatischer Sim stop" ""
+			"--------------------------" ""
+			"Automatischer Screen stop" ""
+			"Regionen anzeigen" ""
+			"----------Menu------------" ""
+			"Hauptmennu" ""
+			"Dateimennu" ""
+			"mySQLmenu" ""
+			"Experten Funktionen" "")
 
 		fauswahl=$(dialog --clear \
-                    --backtitle "$BACKTITLE" \
-                    --title "$TITLE" \
-					--help-button --defaultno \
-                    --menu "$MENU" \
-                    $HEIGHT $WIDTH $CHOICE_HEIGHT \
-                    "${OPTIONS[@]}" \
-                    2>&1 >/dev/tty) # 3>&1 1>&2 2>&3
+			--backtitle "$BACKTITLE" \
+			--title "$TITLE" \
+			--help-button --defaultno \
+			--menu "$MENU" \
+			$HEIGHT $WIDTH $CHOICE_HEIGHT \
+			"${OPTIONS[@]}" \
+			2>&1 >/dev/tty) # 3>&1 1>&2 2>&3
 
 		antwort=$?
 		dialog --clear
@@ -7613,14 +7822,14 @@ function funktionenmenu()
 		if [[ $fauswahl = "Automatischer Sim stop" ]]; then menuautosimstop; fi
 		if [[ $fauswahl = "Automatischer Screen stop" ]]; then autoscreenstop; fi
 		if [[ $fauswahl = "Regionen anzeigen" ]]; then meineregionen; fi
-		
+
 		if [[ $fauswahl = "Dateimennu" ]]; then dateimenu; fi
 		if [[ $fauswahl = "mySQLmenu" ]]; then mySQLmenu; fi
 		if [[ $fauswahl = "Hauptmennu" ]]; then hauptmenu; fi
 		if [[ $fauswahl = "Experten Funktionen" ]]; then expertenmenu; fi
 
-		if [[ $antwort = 2 ]]; then hilfemenu ; fi
-		if [[ $antwort = 1 ]]; then exit ; fi
+		if [[ $antwort = 2 ]]; then hilfemenu; fi
+		if [[ $antwort = 1 ]]; then exit; fi
 	else
 		# wenn dialog nicht installiert ist die Hilfe anzeigen.
 		hilfe
@@ -7628,46 +7837,45 @@ function funktionenmenu()
 }
 
 ### !  dateimenu
-function dateimenu()
-{
+function dateimenu() {
 	HEIGHT=0
 	WIDTH=45
 	CHOICE_HEIGHT=30
-    BACKTITLE="opensimMULTITOOL"
-    TITLE="Dateimenu"
-    MENU="opensimMULTITOOL $VERSION"
+	BACKTITLE="opensimMULTITOOL"
+	TITLE="Dateimenu"
+	MENU="opensimMULTITOOL $VERSION"
 
 	# zuerst schauen ob dialog installiert ist
-	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
 		OPTIONS=("Inventar speichern" ""
-		"Inventar laden" ""
-		"Region OAR sichern" ""
-		"--------------------------" ""
-		"Log Dateien loeschen" ""
-		"Map Karten loeschen" ""
-		"Asset loeschen" ""
-		"--------------------------" ""
-		"OpenSim herunterladen" ""
-		"MoneyServer vom git kopieren" ""
-		"OSSL Skripte vom git kopieren" ""
-		"Configure vom git kopieren" ""		
-		"Opensim vom Github holen" ""
-		"--------------------------" ""
-		"Verzeichnisstrukturen anlegen" ""		
-		"----------Menu------------" ""
-		"Hauptmenu" ""
-		"Weitere Funktionen" ""
-		"mySQLmenu" ""
-		"Experten Funktionen" "")
+			"Inventar laden" ""
+			"Region OAR sichern" ""
+			"--------------------------" ""
+			"Log Dateien loeschen" ""
+			"Map Karten loeschen" ""
+			"Asset loeschen" ""
+			"--------------------------" ""
+			"OpenSim herunterladen" ""
+			"MoneyServer vom git kopieren" ""
+			"OSSL Skripte vom git kopieren" ""
+			"Configure vom git kopieren" ""
+			"Opensim vom Github holen" ""
+			"--------------------------" ""
+			"Verzeichnisstrukturen anlegen" ""
+			"----------Menu------------" ""
+			"Hauptmenu" ""
+			"Weitere Funktionen" ""
+			"mySQLmenu" ""
+			"Experten Funktionen" "")
 
 		dauswahl=$(dialog --clear \
-                    --backtitle "$BACKTITLE" \
-                    --title "$TITLE" \
-					--help-button --defaultno \
-                    --menu "$MENU" \
-                    $HEIGHT $WIDTH $CHOICE_HEIGHT \
-                    "${OPTIONS[@]}" \
-                    2>&1 >/dev/tty) # 3>&1 1>&2 2>&3
+			--backtitle "$BACKTITLE" \
+			--title "$TITLE" \
+			--help-button --defaultno \
+			--menu "$MENU" \
+			$HEIGHT $WIDTH $CHOICE_HEIGHT \
+			"${OPTIONS[@]}" \
+			2>&1 >/dev/tty) # 3>&1 1>&2 2>&3
 
 		antwort=$?
 		dialog --clear
@@ -7686,14 +7894,14 @@ function dateimenu()
 		if [[ $dauswahl = "Verzeichnisstrukturen anlegen" ]]; then menuosstruktur; fi
 
 		if [[ $dauswahl = "Asset loeschen" ]]; then menuassetdel; fi
-		
+
 		if [[ $dauswahl = "Hauptmenu" ]]; then hauptmenu; fi
 		if [[ $dauswahl = "mySQLmenu" ]]; then mySQLmenu; fi
 		if [[ $dauswahl = "Weitere Funktionen" ]]; then funktionenmenu; fi
 		if [[ $dauswahl = "Experten Funktionen" ]]; then expertenmenu; fi
 
-		if [[ $antwort = 2 ]]; then hilfemenu ; fi
-		if [[ $antwort = 1 ]]; then exit ; fi
+		if [[ $antwort = 2 ]]; then hilfemenu; fi
+		if [[ $antwort = 1 ]]; then exit; fi
 	else
 		# wenn dialog nicht installiert ist die Hilfe anzeigen.
 		hilfe
@@ -7701,51 +7909,50 @@ function dateimenu()
 }
 
 ### !  mySQLmenu
-function mySQLmenu()
-{
+function mySQLmenu() {
 	HEIGHT=0
 	WIDTH=0
 	CHOICE_HEIGHT=30
-    BACKTITLE="opensimMULTITOOL"
-    TITLE="mySQLmenu"
-    MENU="opensimMULTITOOL $VERSION"
+	BACKTITLE="opensimMULTITOOL"
+	TITLE="mySQLmenu"
+	MENU="opensimMULTITOOL $VERSION"
 	# zuerst schauen ob dialog installiert ist
-	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
 		OPTIONS=("Alle Datenbanken anzeigen" ""
-		"Tabellen einer Datenbank" ""
-		"Alle Benutzerdaten der ROBUST Datenbank" ""
-		"UUID von allen Benutzern anzeigen" ""
-		"Alle Benutzernamen anzeigen" ""
-		"Daten von einem Benutzer anzeigen" ""
-		"UUID, Vor, Nachname, E-Mail vom Benutzer anzeigen" ""
-		"UUID von einem Benutzer anzeigen" ""
-		"--------------------------" ""
-		"mySQL Datenbankbenutzer anzeigen" ""
-		"Alle Grid Regionen listen" ""
-		"Region URI pruefen sortiert nach URI" ""
-		"Ports pruefen sortiert nach Ports" ""
-		"Neue Datenbank erstellen" ""
-		"Benutzer inventoryfolders alles was type -1 ist anzeigen" ""
-		"Zeige Erstellungsdatum eines Users an" ""
-		"Finde falsche E-Mail Adressen" ""
-		"Datenbank komplett loeschen" ""
-		"--------------------------" ""
-		"Datenbank leeren" ""
-		"Neuen Datenbankbenutzer anlegen" ""
-		"Listet alle erstellten Benutzerrechte auf" ""
-		"Loescht einen Datenbankbenutzer" ""
-		"Alle Datenbanken Checken, Reparieren und Optimieren" ""
-		"mysqlTuner herunterladen" ""
-		"--------------------------" ""
-		"Alle Benutzer mit inkorrekter EMail abschalten" ""
-		"Benutzeracount abschalten" ""
-		"Benutzeracount einschalten" ""
-		"----------Menu------------" ""
-		"Hauptmenu" ""
-		"Weitere Funktionen" ""
-		"Dateimennu" ""
-		"Experten Funktionen" "")
-		
+			"Tabellen einer Datenbank" ""
+			"Alle Benutzerdaten der ROBUST Datenbank" ""
+			"UUID von allen Benutzern anzeigen" ""
+			"Alle Benutzernamen anzeigen" ""
+			"Daten von einem Benutzer anzeigen" ""
+			"UUID, Vor, Nachname, E-Mail vom Benutzer anzeigen" ""
+			"UUID von einem Benutzer anzeigen" ""
+			"--------------------------" ""
+			"mySQL Datenbankbenutzer anzeigen" ""
+			"Alle Grid Regionen listen" ""
+			"Region URI pruefen sortiert nach URI" ""
+			"Ports pruefen sortiert nach Ports" ""
+			"Neue Datenbank erstellen" ""
+			"Benutzer inventoryfolders alles was type -1 ist anzeigen" ""
+			"Zeige Erstellungsdatum eines Users an" ""
+			"Finde falsche E-Mail Adressen" ""
+			"Datenbank komplett loeschen" ""
+			"--------------------------" ""
+			"Datenbank leeren" ""
+			"Neuen Datenbankbenutzer anlegen" ""
+			"Listet alle erstellten Benutzerrechte auf" ""
+			"Loescht einen Datenbankbenutzer" ""
+			"Alle Datenbanken Checken, Reparieren und Optimieren" ""
+			"mysqlTuner herunterladen" ""
+			"--------------------------" ""
+			"Alle Benutzer mit inkorrekter EMail abschalten" ""
+			"Benutzeracount abschalten" ""
+			"Benutzeracount einschalten" ""
+			"----------Menu------------" ""
+			"Hauptmenu" ""
+			"Weitere Funktionen" ""
+			"Dateimennu" ""
+			"Experten Funktionen" "")
+
 		mysqlauswahl=$(dialog --backtitle "$BACKTITLE" --title "$TITLE" --help-button --defaultno --menu "$MENU" $HEIGHT $WIDTH $CHOICE_HEIGHT "${OPTIONS[@]}" 2>&1 >/dev/tty)
 		antwort=$?
 		dialog --clear
@@ -7791,8 +7998,8 @@ function mySQLmenu()
 		if [[ $mysqlauswahl = "Weitere Funktionen" ]]; then funktionenmenu; fi
 		if [[ $mysqlauswahl = "Experten Funktionen" ]]; then expertenmenu; fi
 
-		if [[ $antwort = 2 ]]; then hilfemenu ; fi
-		if [[ $antwort = 1 ]]; then exit ; fi
+		if [[ $antwort = 2 ]]; then hilfemenu; fi
+		if [[ $antwort = 1 ]]; then exit; fi
 	else
 		# wenn dialog nicht installiert ist die Hilfe anzeigen.
 		hilfe
@@ -7800,55 +8007,54 @@ function mySQLmenu()
 }
 
 ### !  expertenmenu
-function expertenmenu()
-{
+function expertenmenu() {
 	HEIGHT=0
 	WIDTH=45
 	CHOICE_HEIGHT=30
-    BACKTITLE="opensimMULTITOOL"
-    TITLE="Expertenmenu"
-    MENU="opensimMULTITOOL $VERSION"
+	BACKTITLE="opensimMULTITOOL"
+	TITLE="Expertenmenu"
+	MENU="opensimMULTITOOL $VERSION"
 
 	# zuerst schauen ob dialog installiert ist
-	if dpkg-query -s dialog 2>/dev/null|grep -q installed; then
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
 		OPTIONS=("Example Dateien umbenennen" ""
-		"Voreinstellungen setzen" ""		
-		"Opensimulator upgraden" ""
-		"Opensimulator aus zip upgraden" ""
-		"Opensimulator bauen und upgraden" ""
-		"Kompilieren" ""
-		"oscompi" ""
-		"--------------------------" ""
-		"Automatischer Regionsbackup" ""
-		"--------------------------" ""
-		"autoregionsiniteilen" ""
-		"RegionListe" ""
-		"--------------------------" ""
-		"Server Installation" ""
-		"Server Installation fuer WordPress" ""
-		"Server Installation ohne mono" ""
-		"Mono Installation" ""
-		"--------------------------" ""
-		"terminator" ""
-		"makeaot" ""
-		"cleanaot" ""
-		"Installationen anzeigen" ""
-		"--------------------------" ""
-		"Kommando an OpenSim senden" ""
-		"----------Menu------------" ""
-		"Hauptmennu" ""
-		"Dateimennu" ""
-		"mySQLmenu" ""
-		"Weitere Funktionen" "")
+			"Voreinstellungen setzen" ""
+			"Opensimulator upgraden" ""
+			"Opensimulator aus zip upgraden" ""
+			"Opensimulator bauen und upgraden" ""
+			"Kompilieren" ""
+			"oscompi" ""
+			"--------------------------" ""
+			"Automatischer Regionsbackup" ""
+			"--------------------------" ""
+			"autoregionsiniteilen" ""
+			"RegionListe" ""
+			"--------------------------" ""
+			"Server Installation" ""
+			"Server Installation fuer WordPress" ""
+			"Server Installation ohne mono" ""
+			"Mono Installation" ""
+			"--------------------------" ""
+			"terminator" ""
+			"makeaot" ""
+			"cleanaot" ""
+			"Installationen anzeigen" ""
+			"--------------------------" ""
+			"Kommando an OpenSim senden" ""
+			"----------Menu------------" ""
+			"Hauptmennu" ""
+			"Dateimennu" ""
+			"mySQLmenu" ""
+			"Weitere Funktionen" "")
 
 		feauswahl=$(dialog --clear \
-                    --backtitle "$BACKTITLE" \
-                    --title "$TITLE" \
-					--help-button --defaultno \
-                    --menu "$MENU" \
-                    $HEIGHT $WIDTH $CHOICE_HEIGHT \
-                    "${OPTIONS[@]}" \
-                    2>&1 >/dev/tty)
+			--backtitle "$BACKTITLE" \
+			--title "$TITLE" \
+			--help-button --defaultno \
+			--menu "$MENU" \
+			$HEIGHT $WIDTH $CHOICE_HEIGHT \
+			"${OPTIONS[@]}" \
+			2>&1 >/dev/tty)
 
 		antwort=$?
 		dialog --clear
@@ -7856,39 +8062,39 @@ function expertenmenu()
 
 		if [[ $feauswahl = "Example Dateien umbenennen" ]]; then unlockexample; fi
 		if [[ $feauswahl = "Voreinstellungen setzen" ]]; then ossettings; fi
-		
+
 		if [[ $feauswahl = "Kommando an OpenSim senden" ]]; then menuoscommand; fi
-		
+
 		if [[ $feauswahl = "Opensimulator upgraden" ]]; then osupgrade; fi
-		if [[ $feauswahl = "Opensimulator aus zip upgraden" ]]; then oszipupgrade; fi		
+		if [[ $feauswahl = "Opensimulator aus zip upgraden" ]]; then oszipupgrade; fi
 		if [[ $feauswahl = "Opensimulator bauen und upgraden" ]]; then osbuilding; fi
-		
+
 		if [[ $feauswahl = "Automatischer Regionsbackup" ]]; then autoregionbackup; fi
 		if [[ $feauswahl = "Kompilieren" ]]; then compilieren; fi
 		if [[ $feauswahl = "oscompi" ]]; then oscompi; fi
-		
+
 		if [[ $feauswahl = "autoregionsiniteilen" ]]; then autoregionsiniteilen; fi
 		if [[ $feauswahl = "RegionListe" ]]; then RegionListe; fi
-		
+
 		if [[ $feauswahl = "terminator" ]]; then terminator; fi
 		if [[ $feauswahl = "makeaot" ]]; then makeaot; fi
 		if [[ $feauswahl = "cleanaot" ]]; then cleanaot; fi
 		if [[ $feauswahl = "Installationen anzeigen" ]]; then installationen; fi
-			
+
 		if [[ $feauswahl = "Server Installation" ]]; then serverinstall; fi
 		if [[ $feauswahl = "Server Installation fuer WordPress" ]]; then installwordpress; fi
 		if [[ $feauswahl = "Server Installation ohne mono" ]]; then installobensimulator; fi
 		if [[ $feauswahl = "Mono Installation" ]]; then monoinstall; fi
 
 		if [[ $feauswahl = "Hilfe" ]]; then hilfemenu; fi
-		
+
 		if [[ $feauswahl = "Dateimennu" ]]; then dateimenu; fi
 		if [[ $feauswahl = "mySQLmenu" ]]; then mySQLmenu; fi
 		if [[ $feauswahl = "Hauptmennu" ]]; then hauptmenu; fi
 		if [[ $feauswahl = "Weitere Funktionen" ]]; then funktionenmenu; fi
 
-		if [[ $antwort = 2 ]]; then hilfemenu ; fi
-		if [[ $antwort = 1 ]]; then exit ; fi
+		if [[ $antwort = 2 ]]; then hilfemenu; fi
+		if [[ $antwort = 1 ]]; then exit; fi
 	else
 		# wenn dialog nicht installiert ist die Hilfe anzeigen.
 		hilfe
@@ -7898,221 +8104,222 @@ function expertenmenu()
 ###########################################################################
 # Eingabeauswertung Konsolenmenue
 ###########################################################################
-case  $KOMMANDO  in
-	schreibeinfo) schreibeinfo ;;
-	makeverzeichnisliste) makeverzeichnisliste ;;
-	makeregionsliste) makeregionsliste ;;
-	checkfile) checkfile "$2" ;;
-	r | restart) autorestart ;;
-	sta | autosimstart | simstart) autosimstart ;;
-	sto | autosimstop | simstop) autosimstop ;;
-	astart | autostart | start) autostart ;;
-	astop | autostop | stop) autostop ;;
-	amd | automapdel) automapdel ;;
-	ald | autologdel) autologdel ;;
-	s | settings)	ossettings ;;
-	rs | robuststart | rostart) rostart ;;
-	ms | moneystart | mostart) mostart ;;
-	rsto | robuststop | rostop) rostop ;;
-	mstop | moneystop | mostop) mostop ;;
-	osto | osstop) osstop "$2" ;;
-	osta | osstart) osstart "$2" ;;
-	gsta | gridstart) gridstart ;;
-	gsto | gridstop) gridstop ;;
-	sd | screendel)	autoscreenstop ;;
-	l | list | screenlist) screenlist ;;
-	w | works) works "$2" ;;
-	md | mapdel) mapdel "$2" ;;
-	ld | logdel) logdel "$2" ;;
-	ss | osscreenstop) osscreenstop "$2" ;;
-	h | hilfe | help) hilfe ;;
-	asdel | assetdel) assetdel "$2" "$3" "$4" ;;
-	e | terminator) terminator ;;
-	ou | osupgrade) osupgrade ;;
-	oscopyrobust) oscopyrobust ;;
-	oscopysim) oscopysim ;;
-	oscopy) oscopy "$2" ;;
-	rb | regionbackup) regionbackup "$2" "$3" ;;
-	arb | autoregionbackup) autoregionbackup ;;
-	compi | compilieren) compilieren ;;
-	sc | scriptcopy) scriptcopy ;;
-	mc | moneycopy) moneycopy ;;
-	oscompi) oscompi ;;
-	od | osdelete) osdelete ;;
-	os | osstruktur) osstruktur "$2" "$3" ;;
-	cl | configlesen) configlesen "$2" ;;
-	osc | com | oscommand) oscommand "$2" "$3" "$4" ;;
-	osc2 | com2 | oscommand2) oscommand2 "$2" "$3" "$4" "$5" ;;
-	rl | Regionsdateiliste | regionsconfigdateiliste) regionsconfigdateiliste "$3" "$2" ;;
-	rn | RegionListe) regionliste ;;
-	mr | meineregionen) meineregionen ;;
-	moneydelete) moneydelete ;;
-	rit | regionsiniteilen) regionsiniteilen "$2" "$3" ;;
-	arit | autoregionsiniteilen) autoregionsiniteilen ;;
-	regionsinisuchen) regionsinisuchen ;;
-	osg | osgitholen) osgitholen ;;
-	osprebuild) osprebuild "$2" ;;
-	chrisoscopy) chrisoscopy ;;
-	cleaninstall) cleaninstall ;;
-	autoallclean) autoallclean ;;
-	allclean) allclean "$2" ;;
-	makeaot) makeaot ;;
-	cleanaot) cleanaot ;;
-	pythoncopy) pythoncopy ;;
-	get_value_from_Region_key) get_value_from_Region_key ;;
-	autorobustmapdel) autorobustmapdel ;;
-	info) info ;;
-	mutelistcopy) mutelistcopy ;;
-	searchcopy) searchcopy ;;
-	monoinstall) monoinstall ;;
-	installationen) installationen ;;
-	serverinstall) serverinstall ;;
-	konsolenhilfe) konsolenhilfe ;;
-	simstats) simstats "$2" ;;
-	osbuilding) osbuilding "$2" ;;
-	createuser) createuser "$2" "$3" "$4" "$5" ;;
-	db_benutzer_anzeigen) db_benutzer_anzeigen "$2" "$3" ;;
-	create_db) create_db "$2" "$3" "$4" ;;
-	create_db_user) create_db_user "$2" "$3" "$4" "$5" ;;
-	delete_db) delete_db "$2" "$3" "$4" ;;
-	leere_db) leere_db "$2" "$3" "$4" ;;
-	allrepair_db) allrepair_db "$2" "$3" ;;
-	mysql_neustart) mysql_neustart ;;
-	db_sichern) db_sichern "$2" "$3" "$4" ;;
-	tabellenabfrage) tabellenabfrage "$2" "$3" "$4" ;;
-	regionsabfrage) regionsabfrage "$2" "$3" "$4" ;;
-	regionsuri) regionsuri "$2" "$3" "$4" ;;
-	regionsport) regionsport "$2" "$3" "$4" ;;
-	setpartner) setpartner "$2" "$3" "$4" "$5" "$6" ;;
-	makewebmaps) makewebmaps ;;
-	opensimholen) opensimholen ;;
-	autoconfig) autoconfig ;;
-	conf_write) conf_write "$2" "$3" "$4" "$5" ;;
-	conf_delete) conf_delete "$2" "$3" "$4" ;;
-	conf_read) conf_read "$2" "$3" "$4" ;;
-	ipsetzen) ipsetzen ;;
-	neuegridconfig) neuegridconfig ;;
-	ramspeicher) ramspeicher ;;
-	mysqleinstellen) mysqleinstellen ;;
-	landclear) landclear "$2" "$3" ;;
-	commandhelp) commandhelp ;;
-	gridcommonini) gridcommonini ;;
-	robustini) robustini ;;
-	opensimini) opensimini ;;
-	moneyserverini) moneyserverini ;;
-	regionini) regionini ;;
-	osslenableini) osslenableini ;;
-	loadinventar) loadinventar "$2" "$3" "$4" "$5" ;;
-	saveinventar) saveinventar "$2" "$3" "$4" "$5" ;;
-	infodialog) infodialog ;;
-	fortschritsanzeige) fortschritsanzeige ;;
-	moneygitcopy) moneygitcopy ;;
-	scriptgitcopy) scriptgitcopy ;;
-	unlockexample) unlockexample ;;
-	passwdgenerator) passwdgenerator "$2" ;;
-	configurecopy) configurecopy ;;
-	menuworks) menuworks "$2" ;;
-	waslauft) waslauft ;;
-	rebootdatum) rebootdatum ;;
-	menuinfo) menuinfo ;;
-	funktionenmenu) funktionenmenu ;;
-	expertenmenu) expertenmenu ;;
-	downloados) downloados ;;
-	oswriteconfig) oswriteconfig "$2" ;;
-	menuoswriteconfig) menuoswriteconfig "$2" ;;
-	finstall) finstall "$2" ;;
-	rologdel) rologdel ;;
-	osgridcopy) osgridcopy ;;
-	screenlistrestart) screenlistrestart ;;
-	db_all_user) db_all_user  "$2" "$3" "$4" ;;
-	db_all_uuid) db_all_uuid  "$2" "$3" "$4" ;;
-	db_all_name) db_all_name "$2" "$3" "$4" ;;
-	db_user_data) db_user_data "$2" "$3" "$4" "$5" "$6" ;;
-	db_user_infos) db_user_infos "$2" "$3" "$4" "$5" "$6" ;;
-	db_user_uuid) db_user_uuid  "$2" "$3" "$4" "$5" "$6" ;;
-	db_foldertyp_user) db_foldertyp_user "$2" "$3" "$4" "$5" "$6" "$7" ;;
-	db_all_userfailed) db_all_userfailed "$2" "$3" "$4" "$5" "$6" ;;
-	db_userdate) db_userdate "$2" "$3" "$4" "$5" "$6" ;;
-	db_false_email) db_false_email "$2" "$3" "$4" ;;
-	set_empty_user) set_empty_user "$2" "$3" "$4" "$5" "$6" "$7" ;;
-	db_create) db_create "$2" "$3" "$4" ;;
-	db_dbuserrechte) db_dbuserrechte "$2" "$3" "$4" ;;
-	db_deldbuser) db_deldbuser "$2" "$3" "$4" ;;
-	db_create_new_dbuser) db_create_new_dbuser "$2" "$3" "$4" "$5" ;;
-    db_anzeigen) db_anzeigen "$2" "$3" "$4" ;;
-	db_dbuser) db_dbuser "$2" "$3" ;;
-	db_delete) db_delete "$2" "$3" "$4" ;;
-	db_empty) db_empty "$2" "$3" "$4" ;;
-	db_tables) db_tables "$2" "$3" "$4" ;;
-	db_tables_dialog) db_tables_dialog "$2" "$3" "$4" ;;
-	db_regions) db_regions "$2" "$3" "$4" ;;
-	db_regionsuri) db_regionsuri "$2" "$3" "$4" ;;
-	db_regionsport) db_regionsport "$2" "$3" "$4" ;;
-	db_email_setincorrectuseroff) db_email_setincorrectuseroff "$2" "$3" "$4" ;;
-	db_setuserofline) db_setuserofline "$2" "$3" "$4" "$5" "$6" ;;
-	db_setuseronline) db_setuseronline "$2" "$3" "$4" "$5" "$6" ;;
-	warnbox) warnbox  "$2" ;;
-	db_anzeigen_dialog) db_anzeigen_dialog "$2" "$3" ;;
-	db_all_user_dialog) db_all_user_dialog "$2" "$3" "$4" ;;
-	db_all_uuid_dialog) db_all_uuid_dialog "$2" "$3" "$4" ;;
-	installmariadb18) installmariadb18 ;;
-	installmariadb22) installmariadb22 ;;
-	serverinstall22) serverinstall22 ;;
-	installbegin) nstallbegin ;;
-	installubuntu22) installubuntu22 ;;
-	installmono22) installmono22 ;;
-	installphpmyadmin) installphpmyadmin ;;
-	ufwset) ufwset ;;
-	installationhttps22) installationhttps22 "$2" "$3" ;;
-	installfinish) installfinish ;;
-	functionslist) functionslist ;;
-	robustbackup) robustbackup ;;
-	backupdatum) backupdatum ;;
-	db_backuptabellen) db_backuptabellen "$2" "$3" "$4" ;;
-	db_restorebackuptabellen) db_restorebackuptabellen "$2" "$3" "$4" "$5" ;;
-	default_master_connection) default_master_connection  "$2" "$3" ;;
-	connection_name) connection_name  "$2" "$3" ;;
-	MASTER_USER) MASTER_USER  "$2" "$3" ;;
-	MASTER_PASSWORD) MASTER_PASSWORD  "$2" "$3" ;;
-	MASTER_HOST) MASTER_HOST  "$2" "$3" "$4" ;;
-	MASTER_PORT) MASTER_PORT  "$2" "$3" "$4" "$5" ;;
-	MASTER_CONNECT_RETRY) MASTER_CONNECT_RETRY  "$2" "$3" "$4" ;;
-	MASTER_SSL) MASTER_SSL  "$2" "$3" ;;
-	MASTER_SSL_CA) MASTER_SSL_CA  "$2" "$3" ;;
-	MASTER_SSL_CAPATH) MASTER_SSL_CAPATH  "$2" "$3" ;;
-	MASTER_SSL_CERT) MASTER_SSL_CERT  "$2" "$3" ;;
-	MASTER_SSL_CRL) MASTER_SSL_CRL  "$2" "$3" ;;
-	MASTER_SSL_CRLPATH) MASTER_SSL_CRLPATH  "$2" "$3" ;;
-	MASTER_SSL_KEY) MASTER_SSL_KEY  "$2" "$3";;
-	MASTER_SSL_CIPHER) MASTER_SSL_CIPHER  "$2" "$3" ;;
-	MASTER_SSL_VERIFY_SERVER_CERT) MASTER_SSL_VERIFY_SERVER_CERT  "$2" "$3" ;;
-	MASTER_LOG_FILE) MASTER_LOG_FILE  "$2" "$3" "$4" "$5" ;;
-	MASTER_LOG_POS) MASTER_LOG_POS  "$2" "$3" "$4" "$5" ;;
-	RELAY_LOG_FILE) RELAY_LOG_FILE  "$2" "$3" "$4" "$5" ;;
-	RELAY_LOG_POS) RELAY_LOG_POS  "$2" "$3" "$4" "$5" ;;
-	MASTER_USE_GTID) MASTER_USE_GTID  "$2" "$3" ;;
-	MASTER_USE_GTID2) MASTER_USE_GTID2 "$2" "$3" "$4" ;;
-	IGNORE_SERVER_IDS) IGNORE_SERVER_IDS "$2" "$3" "$4" ;;
-	DO_DOMAIN_IDS) DO_DOMAIN_IDS "$2" "$3" "$4" ;;
-	DO_DOMAIN_IDS2) DO_DOMAIN_IDS2  "$2" "$3" ;;
-	IGNORE_DOMAIN_IDS) IGNORE_DOMAIN_IDS "$2" "$3" "$4" ;;
-	MASTER_DELAY) MASTER_DELAY "$2" "$3" "$4" ;;
-	Replica_Backup) Replica_Backup "$2" "$3" "$4" "$5" ;;
-	Replica_Backup2) Replica_Backup2 "$2" "$3" "$4" ;;
-	ReplikatKoordinaten) ReplikatKoordinaten "$2" "$3" "$4" "$5" "$6" "$7" "$8" ;;
-	textbox) textbox  "$8" ;;
-	apacheerror) apacheerror ;;
-	mysqldberror) mysqldberror ;;
-	mariadberror) mariadberror ;;
-	ufwlog) ufwlog ;;
-	authlog) authlog ;;
-	accesslog) accesslog ;;
-	fpspeicher) fpspeicher ;;
-	db_tablesplitt ) db_tablesplitt "$2" ;;
-	db_tablextract ) db_tablextract "$2" "$3" ;;
-	db_tablextract_regex) db_tablextract_regex "$2" "$3" "$4" ;;
-	systeminformation) systeminformation ;;
-	*) hauptmenu ;;
+case $KOMMANDO in
+schreibeinfo) schreibeinfo ;;
+makeverzeichnisliste) makeverzeichnisliste ;;
+makeregionsliste) makeregionsliste ;;
+checkfile) checkfile "$2" ;;
+r | restart) autorestart ;;
+sta | autosimstart | simstart) autosimstart ;;
+sto | autosimstop | simstop) autosimstop ;;
+astart | autostart | start) autostart ;;
+astop | autostop | stop) autostop ;;
+amd | automapdel) automapdel ;;
+ald | autologdel) autologdel ;;
+s | settings) ossettings ;;
+rs | robuststart | rostart) rostart ;;
+ms | moneystart | mostart) mostart ;;
+rsto | robuststop | rostop) rostop ;;
+mstop | moneystop | mostop) mostop ;;
+osto | osstop) osstop "$2" ;;
+osta | osstart) osstart "$2" ;;
+gsta | gridstart) gridstart ;;
+gsto | gridstop) gridstop ;;
+sd | screendel) autoscreenstop ;;
+l | list | screenlist) screenlist ;;
+w | works) works "$2" ;;
+md | mapdel) mapdel "$2" ;;
+ld | logdel) logdel "$2" ;;
+ss | osscreenstop) osscreenstop "$2" ;;
+h | hilfe | help) hilfe ;;
+asdel | assetdel) assetdel "$2" "$3" "$4" ;;
+e | terminator) terminator ;;
+ou | osupgrade) osupgrade ;;
+oscopyrobust) oscopyrobust ;;
+oscopysim) oscopysim ;;
+oscopy) oscopy "$2" ;;
+rb | regionbackup) regionbackup "$2" "$3" ;;
+arb | autoregionbackup) autoregionbackup ;;
+compi | compilieren) compilieren ;;
+sc | scriptcopy) scriptcopy ;;
+mc | moneycopy) moneycopy ;;
+oscompi) oscompi ;;
+od | osdelete) osdelete ;;
+os | osstruktur) osstruktur "$2" "$3" ;;
+cl | configlesen) configlesen "$2" ;;
+osc | com | oscommand) oscommand "$2" "$3" "$4" ;;
+osc2 | com2 | oscommand2) oscommand2 "$2" "$3" "$4" "$5" ;;
+rl | Regionsdateiliste | regionsconfigdateiliste) regionsconfigdateiliste "$3" "$2" ;;
+rn | RegionListe) regionliste ;;
+mr | meineregionen) meineregionen ;;
+moneydelete) moneydelete ;;
+rit | regionsiniteilen) regionsiniteilen "$2" "$3" ;;
+arit | autoregionsiniteilen) autoregionsiniteilen ;;
+regionsinisuchen) regionsinisuchen ;;
+osg | osgitholen) osgitholen ;;
+osprebuild) osprebuild "$2" ;;
+chrisoscopy) chrisoscopy ;;
+cleaninstall) cleaninstall ;;
+autoallclean) autoallclean ;;
+allclean) allclean "$2" ;;
+makeaot) makeaot ;;
+cleanaot) cleanaot ;;
+pythoncopy) pythoncopy ;;
+get_value_from_Region_key) get_value_from_Region_key ;;
+autorobustmapdel) autorobustmapdel ;;
+info) info ;;
+mutelistcopy) mutelistcopy ;;
+searchcopy) searchcopy ;;
+monoinstall) monoinstall ;;
+installationen) installationen ;;
+serverinstall) serverinstall ;;
+konsolenhilfe) konsolenhilfe ;;
+simstats) simstats "$2" ;;
+osbuilding) osbuilding "$2" ;;
+createuser) createuser "$2" "$3" "$4" "$5" ;;
+db_benutzer_anzeigen) db_benutzer_anzeigen "$2" "$3" ;;
+create_db) create_db "$2" "$3" "$4" ;;
+create_db_user) create_db_user "$2" "$3" "$4" "$5" ;;
+delete_db) delete_db "$2" "$3" "$4" ;;
+leere_db) leere_db "$2" "$3" "$4" ;;
+allrepair_db) allrepair_db "$2" "$3" ;;
+mysql_neustart) mysql_neustart ;;
+db_sichern) db_sichern "$2" "$3" "$4" ;;
+tabellenabfrage) tabellenabfrage "$2" "$3" "$4" ;;
+regionsabfrage) regionsabfrage "$2" "$3" "$4" ;;
+regionsuri) regionsuri "$2" "$3" "$4" ;;
+regionsport) regionsport "$2" "$3" "$4" ;;
+setpartner) setpartner "$2" "$3" "$4" "$5" "$6" ;;
+makewebmaps) makewebmaps ;;
+opensimholen) opensimholen ;;
+autoconfig) autoconfig ;;
+conf_write) conf_write "$2" "$3" "$4" "$5" ;;
+conf_delete) conf_delete "$2" "$3" "$4" ;;
+conf_read) conf_read "$2" "$3" "$4" ;;
+ipsetzen) ipsetzen ;;
+neuegridconfig) neuegridconfig ;;
+ramspeicher) ramspeicher ;;
+mysqleinstellen) mysqleinstellen ;;
+landclear) landclear "$2" "$3" ;;
+commandhelp) commandhelp ;;
+gridcommonini) gridcommonini ;;
+robustini) robustini ;;
+opensimini) opensimini ;;
+moneyserverini) moneyserverini ;;
+regionini) regionini ;;
+osslenableini) osslenableini ;;
+loadinventar) loadinventar "$2" "$3" "$4" "$5" ;;
+saveinventar) saveinventar "$2" "$3" "$4" "$5" ;;
+infodialog) infodialog ;;
+fortschritsanzeige) fortschritsanzeige ;;
+moneygitcopy) moneygitcopy ;;
+scriptgitcopy) scriptgitcopy ;;
+unlockexample) unlockexample ;;
+passwdgenerator) passwdgenerator "$2" ;;
+configurecopy) configurecopy ;;
+menuworks) menuworks "$2" ;;
+waslauft) waslauft ;;
+rebootdatum) rebootdatum ;;
+menuinfo) menuinfo ;;
+funktionenmenu) funktionenmenu ;;
+expertenmenu) expertenmenu ;;
+downloados) downloados ;;
+oswriteconfig) oswriteconfig "$2" ;;
+menuoswriteconfig) menuoswriteconfig "$2" ;;
+finstall) finstall "$2" ;;
+rologdel) rologdel ;;
+osgridcopy) osgridcopy ;;
+screenlistrestart) screenlistrestart ;;
+db_all_user) db_all_user "$2" "$3" "$4" ;;
+db_all_uuid) db_all_uuid "$2" "$3" "$4" ;;
+db_all_name) db_all_name "$2" "$3" "$4" ;;
+db_user_data) db_user_data "$2" "$3" "$4" "$5" "$6" ;;
+db_user_infos) db_user_infos "$2" "$3" "$4" "$5" "$6" ;;
+db_user_uuid) db_user_uuid "$2" "$3" "$4" "$5" "$6" ;;
+db_foldertyp_user) db_foldertyp_user "$2" "$3" "$4" "$5" "$6" "$7" ;;
+db_all_userfailed) db_all_userfailed "$2" "$3" "$4" "$5" "$6" ;;
+db_userdate) db_userdate "$2" "$3" "$4" "$5" "$6" ;;
+db_false_email) db_false_email "$2" "$3" "$4" ;;
+set_empty_user) set_empty_user "$2" "$3" "$4" "$5" "$6" "$7" ;;
+db_create) db_create "$2" "$3" "$4" ;;
+db_dbuserrechte) db_dbuserrechte "$2" "$3" "$4" ;;
+db_deldbuser) db_deldbuser "$2" "$3" "$4" ;;
+db_create_new_dbuser) db_create_new_dbuser "$2" "$3" "$4" "$5" ;;
+db_anzeigen) db_anzeigen "$2" "$3" "$4" ;;
+db_dbuser) db_dbuser "$2" "$3" ;;
+db_delete) db_delete "$2" "$3" "$4" ;;
+db_empty) db_empty "$2" "$3" "$4" ;;
+db_tables) db_tables "$2" "$3" "$4" ;;
+db_tables_dialog) db_tables_dialog "$2" "$3" "$4" ;;
+db_regions) db_regions "$2" "$3" "$4" ;;
+db_regionsuri) db_regionsuri "$2" "$3" "$4" ;;
+db_regionsport) db_regionsport "$2" "$3" "$4" ;;
+db_email_setincorrectuseroff) db_email_setincorrectuseroff "$2" "$3" "$4" ;;
+db_setuserofline) db_setuserofline "$2" "$3" "$4" "$5" "$6" ;;
+db_setuseronline) db_setuseronline "$2" "$3" "$4" "$5" "$6" ;;
+warnbox) warnbox "$2" ;;
+db_anzeigen_dialog) db_anzeigen_dialog "$2" "$3" ;;
+db_all_user_dialog) db_all_user_dialog "$2" "$3" "$4" ;;
+db_all_uuid_dialog) db_all_uuid_dialog "$2" "$3" "$4" ;;
+installmariadb18) installmariadb18 ;;
+installmariadb22) installmariadb22 ;;
+serverinstall22) serverinstall22 ;;
+installbegin) nstallbegin ;;
+installubuntu22) installubuntu22 ;;
+installmono22) installmono22 ;;
+installphpmyadmin) installphpmyadmin ;;
+ufwset) ufwset ;;
+installationhttps22) installationhttps22 "$2" "$3" ;;
+installfinish) installfinish ;;
+functionslist) functionslist ;;
+robustbackup) robustbackup ;;
+backupdatum) backupdatum ;;
+db_backuptabellen) db_backuptabellen "$2" "$3" "$4" ;;
+db_restorebackuptabellen) db_restorebackuptabellen "$2" "$3" "$4" "$5" ;;
+default_master_connection) default_master_connection "$2" "$3" ;;
+connection_name) connection_name "$2" "$3" ;;
+MASTER_USER) MASTER_USER "$2" "$3" ;;
+MASTER_PASSWORD) MASTER_PASSWORD "$2" "$3" ;;
+MASTER_HOST) MASTER_HOST "$2" "$3" "$4" ;;
+MASTER_PORT) MASTER_PORT "$2" "$3" "$4" "$5" ;;
+MASTER_CONNECT_RETRY) MASTER_CONNECT_RETRY "$2" "$3" "$4" ;;
+MASTER_SSL) MASTER_SSL "$2" "$3" ;;
+MASTER_SSL_CA) MASTER_SSL_CA "$2" "$3" ;;
+MASTER_SSL_CAPATH) MASTER_SSL_CAPATH "$2" "$3" ;;
+MASTER_SSL_CERT) MASTER_SSL_CERT "$2" "$3" ;;
+MASTER_SSL_CRL) MASTER_SSL_CRL "$2" "$3" ;;
+MASTER_SSL_CRLPATH) MASTER_SSL_CRLPATH "$2" "$3" ;;
+MASTER_SSL_KEY) MASTER_SSL_KEY "$2" "$3" ;;
+MASTER_SSL_CIPHER) MASTER_SSL_CIPHER "$2" "$3" ;;
+MASTER_SSL_VERIFY_SERVER_CERT) MASTER_SSL_VERIFY_SERVER_CERT "$2" "$3" ;;
+MASTER_LOG_FILE) MASTER_LOG_FILE "$2" "$3" "$4" "$5" ;;
+MASTER_LOG_POS) MASTER_LOG_POS "$2" "$3" "$4" "$5" ;;
+RELAY_LOG_FILE) RELAY_LOG_FILE "$2" "$3" "$4" "$5" ;;
+RELAY_LOG_POS) RELAY_LOG_POS "$2" "$3" "$4" "$5" ;;
+MASTER_USE_GTID) MASTER_USE_GTID "$2" "$3" ;;
+MASTER_USE_GTID2) MASTER_USE_GTID2 "$2" "$3" "$4" ;;
+IGNORE_SERVER_IDS) IGNORE_SERVER_IDS "$2" "$3" "$4" ;;
+DO_DOMAIN_IDS) DO_DOMAIN_IDS "$2" "$3" "$4" ;;
+DO_DOMAIN_IDS2) DO_DOMAIN_IDS2 "$2" "$3" ;;
+IGNORE_DOMAIN_IDS) IGNORE_DOMAIN_IDS "$2" "$3" "$4" ;;
+MASTER_DELAY) MASTER_DELAY "$2" "$3" "$4" ;;
+Replica_Backup) Replica_Backup "$2" "$3" "$4" "$5" ;;
+Replica_Backup2) Replica_Backup2 "$2" "$3" "$4" ;;
+ReplikatKoordinaten) ReplikatKoordinaten "$2" "$3" "$4" "$5" "$6" "$7" "$8" ;;
+textbox) textbox "$8" ;;
+apacheerror) apacheerror ;;
+mysqldberror) mysqldberror ;;
+mariadberror) mariadberror ;;
+ufwlog) ufwlog ;;
+authlog) authlog ;;
+accesslog) accesslog ;;
+fpspeicher) fpspeicher ;;
+db_tablesplitt) db_tablesplitt "$2" ;;
+db_tablextract) db_tablextract "$2" "$3" ;;
+db_tablextract_regex) db_tablextract_regex "$2" "$3" "$4" ;;
+systeminformation) systeminformation ;;
+radiolist) radiolist ;;
+*) hauptmenu ;;
 esac
 vardel
 #log info "###########ENDE################"
