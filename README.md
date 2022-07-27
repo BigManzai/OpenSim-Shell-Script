@@ -137,7 +137,7 @@ Bisher sind nur Funktionen im Menü die maximal 1 Übergabewert voraussetzen.
 
 V0.79.560
 
-opensim.sh newregionini - Erstellt eine Regionskonfiguration entweder in das Hauptverzeichnis direkt in das Regions Verzeichnis.
+opensim.sh newregionini - Erstellt eine Regionskonfiguration entweder in das Hauptverzeichnis oder direkt in das Regions Verzeichnis.
 
 V0.79.559
 
