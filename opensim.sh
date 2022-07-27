@@ -16,7 +16,7 @@
 # ! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 # ! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-# * Status 03.07.2022 280 Funktionen.
+# * Status 27.07.2022 281 Funktionen.
 
 # # Visual Studio Code # ShellCheck # shellman # Better Comments #
 
@@ -28,7 +28,7 @@
 # // Text
 
 #### ? Einstellungen ####
-VERSION="V0.79.559" # opensimMULTITOOL Versionsausgabe
+VERSION="V0.79.560" # opensimMULTITOOL Versionsausgabe
 clear               # Bildschirm loeschen
 
 # ? Alte Variablen loeschen aus eventuellen voherigen sessions
@@ -1588,9 +1588,6 @@ function mostart() {
 			sleep $MONEYWARTEZEIT
 			return 0
 		fi
-	else
-		log error "MoneyServer wurde nicht gefunden"
-		return 1
 	fi
 }
 
@@ -6715,6 +6712,7 @@ function regionini() {
 	return 0
 }
 
+
 ### !  osslenableini() erstellt eine osslenable.ini Datei und Konfiguriert diese.
 function osslenableini() {
 	#osslEnable.ini
@@ -6894,6 +6892,78 @@ function unlockexample() {
 	return 0
 }
 
+### newregionini - eine neue Regionsdatei schreiben.
+function newregionini() {
+	# Aktuelle IP ueber Suchadresse ermitteln und Ausfuehrungszeichen anhaengen.
+	DNAAKTUELLEIP="$(wget -O - -q $SEARCHADRES)"
+
+	# Wohin soll die Datei geschrieben werden 1.
+    echo "Fuer welchen Simulator moechten sie die Regionskonfigurationsdatei erstellen sim1, sim2, sim..."
+    echo "Enter fuer das Hauptverzeichnis."
+    read -r simname
+
+    echo "Regionsname [Welcome]"
+	read -r regionsname
+	if [ -z "$regionsname" ]; then regionsname="Welcome"; fi
+
+	echo "Geben Sie ihre Server Adresse ein: (Beispiel meinserver.de oder 192.168.2.1) [$AKTUELLEIP]"
+	read -r DNANAME
+	if [ -z "$DNANAME" ]; then DNANAME=$DNAAKTUELLEIP; fi
+
+	echo "Ort im Grid X Y [4500,4500]"
+	read -r STARTPUNKT
+	if [ -z "$STARTPUNKT" ]; then STARTPUNKT="4500,4500"; fi
+
+	echo "Groesse der Region: 512"
+	read -r groesseregion
+	if [ -z "$groesseregion" ]; then groesseregion=512; fi
+
+	echo "InternalPort Beispiel: 9150"
+	read -r INTERNALPORT
+	if [ -z "$INTERNALPORT" ]; then INTERNALPORT=9150; fi
+
+    # Wohin soll die Datei geschrieben werden 2.
+    if [ -z "$simname" ] 
+    then
+        # /opt/
+        pfad="/$STARTVERZEICHNIS/$regionsname.ini"
+    else
+        # /opt/sim1/bin/Regions
+        pfad="/$STARTVERZEICHNIS/$simname/bin/Regions/$regionsname.ini"
+    fi
+
+	UUID=$(uuidgen)
+
+	{
+		echo '['$regionsname']'
+		echo 'RegionUUID = '"$UUID"
+		echo 'Location = '"$STARTPUNKT"
+		echo 'SizeX = '"$groesseregion"
+		echo 'SizeY = '"$groesseregion"
+		echo 'SizeZ = '"$groesseregion"
+		echo 'InternalAddress = 0.0.0.0'
+		echo 'InternalPort = '"$INTERNALPORT"
+		echo 'ResolveAddress = False'
+        echo 'AllowAlternatePorts = False'
+		echo 'ExternalHostName = '"$DNANAME"
+		echo 'MaptileStaticUUID = '"$UUID"
+        echo 'NonPhysicalPrimMax = '"$groesseregion"
+        echo 'PhysicalPrimMax = 64'
+        echo 'ClampPrimSize = false'
+        echo 'NonPhysicalPrimMin = 0.001'
+        echo 'PhysicalPrimMin = 0.01'
+        echo ';LinksetPrims = 0'
+        echo 'MaxPrims = 250000'
+        echo 'MaxAgents = 50'
+        echo ';MaxPrimsPerUser = -1'
+		echo ';RegionType = Estate'
+		echo ';MasterAvatarFirstName = Vorname'
+		echo ';MasterAvatarLastName = Nachname'
+		echo ';MasterAvatarSandboxPassword = Passwort'
+	} > "$pfad"
+	return 0
+}
+
 ###########################################################################
 # Samples
 ###########################################################################
@@ -6902,14 +6972,10 @@ function unlockexample() {
 function gridstop() {
 	if screen -list | grep -q MO; then
 		mostop
-	else
-		log error "### MoneyServer laeuft nicht ###"
 	fi
 
 	if screen -list | grep -q RO; then
 		rostop
-	else
-		log error "### RobustServer laeuft nicht ###"
 	fi
 	return 0
 }
@@ -6917,14 +6983,10 @@ function gridstop() {
 function menugridstop() {
 	if screen -list | grep -q MO; then
 		menumostop
-	else
-		log error "### MoneyServer laeuft nicht ###"
 	fi
 
 	if screen -list | grep -q RO; then
 		menurostop
-	else
-		log error "### RobustServer laeuft nicht ###"
 	fi
 	return 0
 }
@@ -7372,6 +7434,7 @@ function hilfe() {
 	echo "meineregionen 		- $(tput setaf 3)hat keine Parameter$(tput sgr 0)   - listet alle Regionen aus den Konfigurationen auf."
 	echo "autologdel		- $(tput setaf 3)hat keine Parameter$(tput sgr 0)	- Loescht alle Log Dateien."
 	echo "automapdel		- $(tput setaf 3)hat keine Parameter$(tput sgr 0)	- Loescht alle Map Karten."
+	echo "newregionini		- $(tput setaf 4)hat Abfragen$(tput sgr 0)-Erstellt eine neue Regions.ini in ein Regions Verzeichnis."
 
 	echo "$(tput setab 3)Erweiterte Funktionen$(tput sgr 0)"
 	echo "regionbackup 		- $(tput setab 5)Verzeichnisname$(tput sgr 0) $(tput setab 4)Regionsname$(tput sgr 0) - Backup einer ausgewaehlten Region."
@@ -8319,6 +8382,7 @@ db_tablextract) db_tablextract "$2" "$3" ;;
 db_tablextract_regex) db_tablextract_regex "$2" "$3" "$4" ;;
 systeminformation) systeminformation ;;
 radiolist) radiolist ;;
+newregionini) newregionini ;;
 *) hauptmenu ;;
 esac
 vardel
