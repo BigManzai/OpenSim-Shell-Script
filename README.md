@@ -129,7 +129,7 @@ Bisher sind nur Funktionen im Menü die maximal 1 Übergabewert voraussetzen.
      oder
      sudo apt-get install dialog
 
-## Status 15.07.2022 280 Funktionen.
+## Status 27.07.2022 281 Funktionen.
 
 .
 
