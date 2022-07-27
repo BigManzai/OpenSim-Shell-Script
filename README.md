@@ -135,6 +135,10 @@ Bisher sind nur Funktionen im Menü die maximal 1 Übergabewert voraussetzen.
 
 ## TODO und Informationen
 
+V0.79.560
+
+opensim.sh newregionini - Erstellt eine Regionskonfiguration entweder in das Hauptverzeichnis direkt in das Regions Verzeichnis.
+
 V0.79.559
 
 Radio Listen Tagesaktuell für Radio & DJ Board by Rebekka Revnik. 
