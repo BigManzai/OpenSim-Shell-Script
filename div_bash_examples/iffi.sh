@@ -1,5 +1,15 @@
 #!/bin/bash
 
+# Eingabe Werte
+echo "Geben sie eine Zahl fuer a ein:"; read -r a
+echo "Geben sie eine Zahl fuer a ein:"; read -r b
+# Standart Werte
+if test -z "$a"; then a=1; fi
+if test -z "$b"; then b=2; fi
+
+f1="iffi.sh"
+f2="sed_examples.sh"
+
 ### Compound-Vergleich
 
 # -a 
@@ -14,47 +24,47 @@
 ### Ganzzahliger Vergleich
 
 # -eq ist gleich
-# if [ "$a" -eq "$b" ]
+if [ "$a" -eq "$b" ]; then echo "ist gleich"; fi
 
 # -ne
 # ist ungleich zu
-# if [ "$a" -ne "$b" ]
+if [ "$a" -ne "$b" ]; then echo "ist ungleich"; fi
 
 # -gt
 # ist groesser als
-# if [ "$a" -gt "$b" ]
+if [ "$a" -gt "$b" ]; then echo "ist groesser"; fi
 
 # -ge
-# groesser oder gleich ist
-# if [ "$a" -ge "$b" ]
+# groesser oder gleich
+if [ "$a" -ge "$b" ]; then echo "groesser oder gleich"; fi
 
 # -lt
 # ist weniger als
-# if [ "$a" -lt "$b" ]
+if [ "$a" -lt "$b" ]; then echo "ist weniger als"; fi
 
 # -le
-# kleiner oder gleich ist
-# if [ "$a" -le "$b" ]
+# kleiner oder gleich
+if [ "$a" -le "$b" ]; then echo "kleiner oder gleich"; fi
 
 # <
 # ist weniger als
 # (in doppelten Klammern)
-# (("$a" < "$b"))
+if (("$a" < "$b")); then echo "ist weniger als"; fi
 
 # <=
 # kleiner oder gleich ist
 # (in doppelten Klammern)
-# (("$a" <= "$b"))
+if (("$a" <= "$b")); then echo "kleiner oder gleich"; fi
 
 # >
 # ist groesser als
 # (in doppelten Klammern)
-# (("$a" > "$b"))
+if (("$a" > "$b")); then echo "ist groesser als"; fi
 
 # >=
 # groesser oder gleich ist
 # (in doppelten Klammern)
-# (("$a" >= "$b"))
+if (("$a" >= "$b")); then echo "groesser oder gleich"; fi
 
 ### String-Vergleich
 
@@ -63,37 +73,37 @@
 
 # ==
 # Der Vergleichsoperator == verhaelt sich innerhalb eines Tests mit doppelten Klammern anders als innerhalb von einfachen Klammern.
-# [[  $a  == z *  ]]    # Wahr, wenn $a mit einem "z" beginnt (Mustervergleich). 
-# [[  $a  ==  "z*"  ]]  # Wahr, wenn $a gleich z* ist (Literaluebereinstimmung).
+if [[ $a == z* ]]; then echo " "; fi    # Wahr, wenn $a mit einem "z" beginnt (Mustervergleich). 
+if [[ $a == "z*" ]]; then echo " "; fi  # Wahr, wenn $a gleich z* ist (Literaluebereinstimmung).
 
-# [  $a  == z *  ]      # File Globbing und Word Splitting finden statt. 
-# [  " $a "  ==  "z*"  ]  # Wahr, wenn $a gleich z* ist (Literaluebereinstimmung).
+if [ $a == "z*" ]; then echo " "; fi      # File Globbing und Word Splitting finden statt. 
+if [ "$a" == "z*" ]; then echo " "; fi  # Wahr, wenn $a gleich z* ist (Literaluebereinstimmung).
 
 # !=
 # ist ungleich zu
-# if [ "$a" != "$b" ]
+if [ "$a" != "$b" ]; then echo " "; fi
 # Dieser Operator verwendet einen Mustervergleich innerhalb eines [[ ... ]]-Konstrukts.
 
 # <
 # ist kleiner als, in alphabetischer ASCII-Reihenfolge
 # Beachten Sie, dass <innerhalb eines []-Konstrukts maskiert werden muss.
-# if  [[  " $a " < " $b "  ]] 
-# if  [  " $a "  \<  " $b "  ]
+if  [[  " $a " < " $b "  ]] ; then echo " "; fi
+if  [  " $a "  \<  " $b "  ]; then echo " "; fi
 
 # >
 # ist groesser als, in alphabetischer ASCII-Reihenfolge.
 # Beachten Sie, dass >innerhalb eines []-Konstrukts maskiert werden muss.
-# if  [[  " $a "  >  " $b "  ]] 
-# if  [  " $a "  \>  " $b "  ]
+if  [[  " $a "  >  " $b "  ]]; then echo " "; fi
+if  [  " $a "  \>  " $b "  ]; then echo " "; fi
 
 # -z
 # Zeichenfolge ist null
 # das heisst, hat eine Laenge von Null
-# wenn  [  -z  " $s "  ]
+if  [ -z "$s" ]; then echo " "; fi
 
 # -n	
 # Zeichenfolge ist nicht null.
-# wenn  [  -n  " ​​$s "  ]
+if  [ -n  "$s" ]; then echo " "; fi
 
 ### Dateitestoperatoren
 
@@ -161,17 +171,15 @@
 
 # -nt
 # Datei f1 ist neuer als f2
-
-# if [ "$f1" -nt "$f2" ]
+if [ "$f1" -nt "$f2" ]; then echo "Datei $f1 ist neuer als $f2"; fi
 
 # -ot
 # Datei f1 ist aelter als f2
-
-# if [ "$f1" -ot "$f2" ]
+if [ "$f1" -ot "$f2" ]; then echo "Datei $f1 ist aelter als $f2"; fi
 
 # -ef
 # Dateien f1 und f2 sind feste Links zu derselben Datei
-# if [ "$f1" -ef "$f2" ]
+if [ "$f1" -ef "$f2" ]; then echo "Dateien $f1 und $f2 sind feste Links zu derselben Datei"; fi
 
 # !
-# "not" - kehrt den Sinn der obigen Tests um (gibt true zurueck, wenn die Bedingung nicht vorhanden ist).
+# "not" - "nicht" kehrt den Sinn der obigen Tests um (gibt true zurueck, wenn die Bedingung nicht vorhanden ist).
