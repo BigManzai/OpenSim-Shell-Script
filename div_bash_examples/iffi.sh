@@ -2,7 +2,7 @@
 
 # Eingabe Werte
 echo "Geben sie eine Zahl fuer a ein:"; read -r a
-echo "Geben sie eine Zahl fuer a ein:"; read -r b
+echo "Geben sie eine Zahl fuer b ein:"; read -r b
 # Standart Werte
 if test -z "$a"; then a=1; fi
 if test -z "$b"; then b=2; fi
