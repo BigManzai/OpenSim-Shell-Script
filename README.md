@@ -25,7 +25,7 @@ https://eu2.contabostorage.com/52253033fae547669ac2197e11daac60:bigmanzai/opensi
 
 (Bitte die neue beiliegende opensim.sh und opensim.cfg verwenden):
 
-https://www.mediafire.com/file/vhxpwexht08quiz/opensim-0.9.2.2.233.zip/file
+https://eu2.contabostorage.com/52253033fae547669ac2197e11daac60:bigmanzai/opensim-0.9.2.2.241.zip
 
 ## Hilfe 
 
