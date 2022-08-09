@@ -16,19 +16,13 @@
 # ! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 # ! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-# * Status 27.07.2022 281 Funktionen.
+# * Status 27.07.2022 289 Funktionen.
 
 # # Visual Studio Code # ShellCheck # shellman # Better Comments #
 
-# ? Better Comments Plugin (defaults: ! * ? //)
-#    Text
-# !  Text
-# *  Text
-# ?  Text
-# // Text
-
 #### ? Einstellungen ####
-VERSION="V0.79.560" # opensimMULTITOOL Versionsausgabe
+
+VERSION="V0.79.585" # opensimMULTITOOL Versionsausgabe
 clear               # Bildschirm loeschen
 
 # ? Alte Variablen loeschen aus eventuellen voherigen sessions
@@ -46,96 +40,12 @@ unset REGIONSNAMEc
 unset REGIONSNAMEd
 unset VERZEICHNISSCREEN
 
-# Language spielereien:
-
-function _configure_locale() { 
-	# [profile]
-	local profile=${1:-EN}
-	case ${profile} in
-		DE|DE_DE|de_DE)
-			LC_ALL="de_DE.UTF-8"
-			LANG="de_DE.UTF-8"
-			LANGUAGE="de_DE:de:en_US:en"
-			;;
-		EN|EN_US|en|en_US)
-			LC_ALL="en_US.UTF-8"
-			LANG="en_US.UTF-8"
-			LANGUAGE="en_US:en"
-			;;
-		*) # shellcheck disable=SC2128
-			echo "ALERT" "${FUNCNAME}: unknown profile '${profile}'"
-			;;
-		esac
-		LC_PAPER="de_DE.UTF-8"; # independent from locale
-		LESSCHARSET="utf-8";    # independent from locale
-		MM_CHARSET="utf-8"      # independent from locale
-		echo "locale settings" "${LANG}";
-		export LC_ALL LANG LANGUAGE LC_PAPER LESSCHARSET MM_CHARSET
-}
-
-# wrap fuer gettext {{ _('') }}
-
-
-#######################
-
-# Sie muessen die folgenden Schritte ausfuehren:
-# Ermitteln Sie den Namen Ihres Projekts, gettext nennt es textdomain, 
-# Sie benoetigen es, um die uebersetzungen fuer Ihr Projekt abzurufen. Nennen wir es "opensim".
-# Markieren Sie die zu uebersetzenden Zeichenketten. Das folgende Snippet gibt ein Beispiel:
-# Nennen wir es opensim.sh:
-
-#alias GETTEXT='gettext "opensim"'
-
-## Verwenden Sie GETTEXT, um die Zeichenfolge zu markieren, die Sie uebersetzen moechten
-#HELLO_WORLD=$(GETTEXT "Hello world") 
-
-#echo "$HELLO_WORLD"
-
-# Produzieren Sie eine .pot-Datei, damit uebersetzer daran arbeiten koennen.
-# Fuehren Sie den folgenden Befehl aus, er sucht nur nach GETTEXT, die Sie tatsaechlich uebersetzen moechten.
-#? xgettext -o PRJ.pot  -L Shell --keyword --keyword=GETTEXT  opensim.sh
-# Optional : Generieren Sie .po-Dateien.
-# Fuer jedes Gebietsschema, das Sie abdecken moechten.
-#? msginit -i PRJ.pot -l fr.UTF-8
-# Beachten Sie, dass "UTF-8" vorgeschlagen wird, 
-# da Sie sonst msginitmoeglicherweise faelschlicherweise eine veraltete Codierung fuer Sie auswaehlen.
-# Fertige .po-Dateien abrufen und in eine .mo-Datei konvertieren (die Datei, die der Computer lesen kann)
-#? msgfmt -v  fr.po -o fr.mo
-# Installieren Sie .mo-Dateien. Laufen:
-#? sudo install fr.mo /usr/share/locale/fr/LC_MESSAGES/PRJ.mo 
-# Jetzt koennen Sie das Ergebnis ausprobieren:
-#? LANGUAGE=fr  ./opensim.sh
-# und Sie sollten die franzoesische uebersetzung fuer Hallo Welt sehen.
-
-#######################
-
-### Sprachen Einstellung
-#german # Sprache
-#_configure_locale DE
-
-#LANG=foo_BAR.utf8
-#TEXTDOMAIN="test" 
-#TEXTDOMAINDIR="/usr/share/locale"
-#echo $"fooMsgid"
-# bash --dump-po-strings <scriptfile>
-
-#export LC_ALL=de_DE.UTF-8   # if LC_ALL not work, you could try also "LANG" and "LANGUAGE"
-#export TEXTDOMAINDIR=/usr/share/locale
-# export TEXTDOMAIN="<textdomain>"   # <- optional, set this to save the "<textdomain>" argument for `gettext` below
-#LANG_HELLO_WORLD="$( gettext "<textdomain>" "Your message to translate" )"
-
-#echo "$TEXTDOMAIN"
-#echo "$TEXTDOMAINDIR"
-#echo "$LANG_HELLO_WORLD"
-
-# Language spielereien ende:
-
 ### ! dummyvar, Shell-Check ueberlisten wegen der Konfigurationsdatei, hat sonst keinerlei Funktion und wird auch nicht aufgerufen.
 function dummyvar() {
 	# shellcheck disable=SC2034
 	STARTVERZEICHNIS="opt"; MONEYVERZEICHNIS="robust"; ROBUSTVERZEICHNIS="robust"; OPENSIMVERZEICHNIS="opensim"; SCRIPTSOURCE="ScriptNeu"; SCRIPTZIP="opensim-ossl-example-scripts-main.zip"; MONEYSOURCE="money48"
 	MONEYZIP="OpenSimCurrencyServer-2021-master.zip"; OSVERSION="opensim-0.9.2.2Dev"; REGIONSDATEI="RegionList.ini"; SIMDATEI="SimulatorList.ini"; WARTEZEIT=30; STARTWARTEZEIT=10; STOPWARTEZEIT=30; MONEYWARTEZEIT=60; ROBUSTWARTEZEIT=60
-	BACKUPWARTEZEIT=120; AUTOSTOPZEIT=60; SETMONOTHREADS=800; SETMONOTHREADSON="yes"; OPENSIMDOWNLOAD="http://opensimulator.org/dist/"; OPENSIMVERSION="opensim-0.9.2.2.zip"; SEARCHADRES="icanhazip.com"; AUTOCONFIG="no"
+	BACKUPWARTEZEIT=120; AUTOSTOPZEIT=60; SETMONOTHREADS=800; SETMONOTHREADSON="yes"; OPENSIMDOWNLOAD="http://opensimulator.org/dist/"; OPENSIMVERSION="opensim-0.9.2.2.zip"; SEARCHADRES="icanhazip.com"; # AUTOCONFIG="no"
 	CONFIGURESOURCE="opensim-configuration-addon-modul-main"; CONFIGUREZIP="opensim-configuration-addon-modul-main.zip"
 	textfontcolor=7; textbaggroundcolor=0; debugfontcolor=4; debugbaggroundcolor=0	infofontcolor=2	infobaggroundcolor=0; warnfontcolor=3; warnbaggroundcolor=0
 	errorfontcolor=1; errorbaggroundcolor=0; SETMONOGCPARAMSON1="no"; SETMONOGCPARAMSON2="yes"	LOGDELETE="no"; LOGWRITE="no"; "$trimmvar"; logfilename="multitool"
@@ -204,10 +114,10 @@ logfilename=""
 function log() {
 	local text
 	local logtype
-	local datetime
+	#local datetime
 	logtype="$1"
 	text="$2"
-	datetime=$(date +'%F %H:%M:%S')
+	#datetime=$(date +'%F %H:%M:%S')
 	DATEIDATUM=$(date +%d_%m_%Y)
 	lline="#####################################################################################"
 
@@ -215,22 +125,22 @@ function log() {
 		case $logtype in
 		line) echo $lline >>/$STARTVERZEICHNIS/"$DATEIDATUM""$logfilename".log ;;
 		rohtext) echo "$text" >>/$STARTVERZEICHNIS/"$DATEIDATUM""$logfilename".log ;;
-		text) echo "$datetime TEXT: $text" >>/$STARTVERZEICHNIS/"$DATEIDATUM""$logfilename".log ;;
-		debug) echo "$datetime DEBUG: $text" >>/$STARTVERZEICHNIS/"$DATEIDATUM""$logfilename".log ;;
-		info) echo "$datetime INFO: $text" >>/$STARTVERZEICHNIS/"$DATEIDATUM""$logfilename".log ;;
-		warn) echo "$datetime WARNING: $text" >>/$STARTVERZEICHNIS/"$DATEIDATUM""$logfilename".log ;;
-		error) echo "$datetime ERROR: $text" >>/$STARTVERZEICHNIS/"$DATEIDATUM""$logfilename".log ;;
+		text) echo "$(date +'%d.%m.%Y - %H:%M:%S') TEXT: $text" >>/$STARTVERZEICHNIS/"$DATEIDATUM""$logfilename".log ;;
+		debug) echo "$(date +'%d.%m.%Y - %H:%M:%S') DEBUG: $text" >>/$STARTVERZEICHNIS/"$DATEIDATUM""$logfilename".log ;;
+		info) echo "$(date +'%d.%m.%Y - %H:%M:%S') INFO: $text" >>/$STARTVERZEICHNIS/"$DATEIDATUM""$logfilename".log ;;
+		warn) echo "$(date +'%d.%m.%Y - %H:%M:%S') WARNING: $text" >>/$STARTVERZEICHNIS/"$DATEIDATUM""$logfilename".log ;;
+		error) echo "$(date +'%d.%m.%Y - %H:%M:%S') ERROR: $text" >>/$STARTVERZEICHNIS/"$DATEIDATUM""$logfilename".log ;;
 		*) return 0 ;;
 		esac
 	fi
 	case $logtype in
 	line) echo "$(tput setaf $linefontcolor) $(tput setab $linebaggroundcolor)$lline $(tput sgr 0)" ;;
 	rohtext) echo "$text" ;;
-	text) echo "$(tput setaf $textfontcolor) $(tput setab $textbaggroundcolor) $datetime TEXT: $text $(tput sgr 0)" ;;
-	debug) echo "$(tput setaf $debugfontcolor) $(tput setab $debugbaggroundcolor) $datetime DEBUG: $text $(tput sgr 0)" ;;
-	info) echo "$(tput setaf $infofontcolor) $(tput setab $infobaggroundcolor) $datetime INFO: $text $(tput sgr 0)" ;;
-	warn) echo "$(tput setaf $warnfontcolor) $(tput setab $warnbaggroundcolor) $datetime WARNING: $text $(tput sgr 0)" ;;
-	error) echo "$(tput setaf $errorfontcolor) $(tput setab $errorbaggroundcolor) $datetime ERROR: $text $(tput sgr 0)" ;;
+	text) echo "$(tput setaf $textfontcolor) $(tput setab $textbaggroundcolor) $(date +'%d.%m.%Y - %H:%M:%S') TEXT: $text $(tput sgr 0)" ;;
+	debug) echo "$(tput setaf $debugfontcolor) $(tput setab $debugbaggroundcolor) $(date +'%d.%m.%Y - %H:%M:%S') DEBUG: $text $(tput sgr 0)" ;;
+	info) echo "$(tput setaf $infofontcolor) $(tput setab $infobaggroundcolor) $(date +'%d.%m.%Y - %H:%M:%S') INFO: $text $(tput sgr 0)" ;;
+	warn) echo "$(tput setaf $warnfontcolor) $(tput setab $warnbaggroundcolor) $(date +'%d.%m.%Y - %H:%M:%S') WARNING: $text $(tput sgr 0)" ;;
+	error) echo "$(tput setaf $errorfontcolor) $(tput setab $errorbaggroundcolor) $(date +'%d.%m.%Y - %H:%M:%S') ERROR: $text $(tput sgr 0)" ;;
 	*) return 0 ;;
 	esac
 	return 0
@@ -273,7 +183,7 @@ function schreibeinfo() {
 		log rohtext "$DATUM $(date +%H:%M:%S) INFO: Bash Version: ${BASH_VERSION}"
 		log rohtext "$DATUM $(date +%H:%M:%S) INFO: MONO THREAD Einstellung: ${MONO_THREADS_PER_CPU}"
 		log rohtext "$DATUM $(date +%H:%M:%S) INFO: Spracheinstellung: ${LANG}"
-		log rohtext "$DATUM $(date +%H:%M:%S) INFO: Screen Version: $(screen --version)"
+		log rohtext "$DATUM $(date +%H:%M:%S) INFO: $(screen --version)"
 		log rohtext "$DATUM $(date +%H:%M:%S) INFO: $(who -b)"
 		log line
 		log rohtext " "
@@ -307,6 +217,20 @@ trim_string() {
     : "${1#"${1%%[![:space:]]*}"}"
     : "${_%"${_##*[![:space:]]}"}"
     printf '%s\n' "$_"
+}
+
+### ! Variable auf inhalt testen.
+# testvariable="Voll"
+# vartest $testvariable
+# echo "${result}"
+function vartest () {
+    VARIABLE="$1"
+    if [ -z "$VARIABLE" ]
+    then
+        result="false"
+    else
+        result="true"
+    fi
 }
 
 ### ! Alle Zeichen entfernen
@@ -1440,12 +1364,13 @@ function menuosstart() {
 					sleep 3
 					echo "100"
 					sleep 2
-				) |
-					$DIALOG --title "$IOSSTARTSCREEN" --gauge "Start" 8 30
-				$DIALOG --clear
-				$DIALOG --msgbox "$IOSSTARTSCREEN gestartet!" 5 20
-				$DIALOG --clear
-				clear
+				) 
+				#|
+				#$DIALOG --title "$IOSSTARTSCREEN" --gauge "Start" 8 30
+				#$DIALOG --clear
+				#$DIALOG --msgbox "$IOSSTARTSCREEN gestartet!" 5 20
+				#$DIALOG --clear
+				#clear
 				return 0
 			else
 				DIALOG=dialog
@@ -1455,12 +1380,12 @@ function menuosstart() {
 					sleep 3
 					echo "100"
 					sleep 2
-				) |
-					$DIALOG --title "$IOSSTARTSCREEN" --gauge "Start" 8 30
-				$DIALOG --clear
-				$DIALOG --msgbox "$IOSSTARTSCREEN gestartet!" 5 20
-				$DIALOG --clear
-				clear
+				) #|
+					#$DIALOG --title "$IOSSTARTSCREEN" --gauge "Start" 8 30
+				#$DIALOG --clear
+				#$DIALOG --msgbox "$IOSSTARTSCREEN gestartet!" 5 20
+				#$DIALOG --clear
+				#clear
 				hauptmenu
 			fi
 		else
@@ -1505,85 +1430,85 @@ function menuosstop() {
 	fi
 }
 
-### !  rostart, Robust Server starten.
+### !  rostart, Robust starten.
 function rostart() {
 	log line
 	if checkfile /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/Robust.exe; then
 		cd /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin || return 1
 		# Start mit oder ohne AOT.
 		if [[ $SETAOTON = "yes" ]]; then
-			log info "RobustServer  wird gestartet mit aot"
+			log info "Robust wird gestartet mit aot..."
 			screen -fa -S RO -d -U -m mono --desktop -O=all Robust.exe
 			sleep $ROBUSTWARTEZEIT
 			return 0
 		else
-			log info "RobustServer  wird gestartet"
+			log info "Robust  wird gestartet..."
 			screen -fa -S RO -d -U -m mono Robust.exe
 			sleep $ROBUSTWARTEZEIT
 			return 0
 		fi
 	else
-		log error "RobustServer wurde nicht gefunden"
+		log error " Robust wurde nicht gefunden"
 		return 1
 	fi
 }
 ### ! menurostart
 function menurostart() {
-	log line
+	# log line
 	if checkfile /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/Robust.exe; then
 		cd /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin || return 1
 
 		# Start mit oder ohne AOT.
 		if [[ $SETAOTON = "yes" ]]; then
-			log info "RobustServer wird mit aot gestartet"
+			log info "Robust wird mit aot gestartet..."
 			screen -fa -S RO -d -U -m mono --desktop -O=all Robust.exe
 			sleep $ROBUSTWARTEZEIT
 		else
-			log info "RobustServer wird gestartet"
+			log info "Robust  wird gestartet..."
 			screen -fa -S RO -d -U -m mono Robust.exe
 			sleep $ROBUSTWARTEZEIT
 		fi
 	else
-		log error "RobustServer wurde nicht gefunden"
+		log error " Robust wurde nicht gefunden"
 	fi
 }
 
-### !  rostop, Robust Server herunterfahren.
+### !  rostop, Robust herunterfahren.
 function rostop() {
 	if screen -list | grep -q "RO"; then
 		screen -S RO -p 0 -X eval "stuff 'shutdown'^M"
-		log warn "RobustServer Beenden"
+		log warn "Robust Beenden"
 		sleep $WARTEZEIT
 		return 0
 	else
-		log error "RobustServer nicht vorhanden"
+		log error "Robust nicht vorhanden"
 		return 1
 	fi
 }
-### !  menurostop, Robust Server herunterfahren.
+### !  menurostop, Robust herunterfahren.
 function menurostop() {
 	if screen -list | grep -q "RO"; then
 		screen -S RO -p 0 -X eval "stuff 'shutdown'^M"
-		log warn "RobustServer Beenden"
+		log warn "Robust Beenden"
 		sleep $WARTEZEIT
 	else
-		log error "RobustServer nicht vorhanden"
+		log error "Robust nicht vorhanden"
 	fi
 }
 
-### !  mostart, Money Server starten.
+### !  mostart, Money starten.
 function mostart() {
 	if checkfile /$STARTVERZEICHNIS/$MONEYVERZEICHNIS/bin/MoneyServer.exe; then
 		cd /$STARTVERZEICHNIS/$MONEYVERZEICHNIS/bin || return 1
 
 		# AOT Aktiveren oder Deaktivieren.
 		if [[ $SETAOTON = "yes" ]]; then
-			log info "MoneyServer wird mit aot gestartet"
+			log info "Money wird mit aot gestartet..."
 			screen -fa -S MO -d -U -m mono --desktop -O=all MoneyServer.exe
 			sleep $MONEYWARTEZEIT
 			return 0
 		else
-			log info "MoneyServer wird gestartet"
+			log info "Money  wird gestartet..."
 			screen -fa -S MO -d -U -m mono MoneyServer.exe
 			sleep $MONEYWARTEZEIT
 			return 0
@@ -1591,50 +1516,50 @@ function mostart() {
 	fi
 }
 
-### !  menumostart, Money Server starten.
+### !  menumostart, Money starten.
 function menumostart() {
 	if checkfile /$STARTVERZEICHNIS/$MONEYVERZEICHNIS/bin/MoneyServer.exe; then
 		cd /$STARTVERZEICHNIS/$MONEYVERZEICHNIS/bin || return 1
 
 		# AOT Aktiveren oder Deaktivieren.
 		if [[ $SETAOTON = "yes" ]]; then
-			log info "MOSTART: Money Server Start aot"
+			log info "Money  wird gestartet mit aot..."
 			screen -fa -S MO -d -U -m mono --desktop -O=all MoneyServer.exe
 			sleep $MONEYWARTEZEIT
 			return 0
 		else
-			log info "MOSTART: Money Server Start"
+			log info "Money wird gestartet..."
 			screen -fa -S MO -d -U -m mono MoneyServer.exe
 			sleep $MONEYWARTEZEIT
 			return 0
 		fi
 	else
-		log error "Money Server wurde nicht gefunden"
+		log error "Money wurde nicht gefunden"
 		return 1
 	fi
 }
 
-### !  mostop, Money Server herunterfahren.
+### !  mostop, Money herunterfahren.
 function mostop() {
 	if screen -list | grep -q "MO"; then
 		screen -S MO -p 0 -X eval "stuff 'shutdown'^M"
-		log warn "Money Server Beenden"
+		log warn "Money Beenden"
 		sleep $MONEYWARTEZEIT
 		return 0
 	else
-		log error "Money Server nicht vorhanden"
+		log error "Money nicht vorhanden"
 		return 1
 	fi
 }
-### !  menumostop, Money Server herunterfahren.
+### !  menumostop, Money herunterfahren.
 function menumostop() {
 	if screen -list | grep -q "MO"; then
 		screen -S MO -p 0 -X eval "stuff 'shutdown'^M"
-		log warn "Money Server Beenden"
+		log warn "Money Beenden"
 		sleep $MONEYWARTEZEIT
 		return 0
 	else
-		log error "Money Server nicht vorhanden"
+		log error "Money nicht vorhanden"
 		return 1
 	fi
 }
@@ -1657,12 +1582,12 @@ function osscreenstop() {
 function gridstart() {
 	ossettings
 	if screen -list | grep -q RO; then
-		log error "RobustServer laeuft bereits"
+		log error "Robust laeuft bereits"
 	else
 		rostart
 	fi
 	if screen -list | grep -q MO; then
-		log error "MoneyServer laeuft bereits"
+		log error "Money laeuft bereits"
 	else
 		mostart
 	fi
@@ -1673,7 +1598,7 @@ function menugridstart() {
 	ossettings
 	log line
 	if screen -list | grep -q RO; then
-		log error "RobustServer laeuft bereits"
+		log error " Robust laeuft bereits"
 	else
 		menurostart
 	fi
@@ -2095,8 +2020,8 @@ function oscopyrobust() {
 function oscopysim() {
 	cd /$STARTVERZEICHNIS || return 1
 	makeverzeichnisliste
-	log info "Kopiere Simulatoren!"
-	log line
+	#log info "Kopiere Simulatoren!"
+	#log line
 	sleep 2
 	for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
 		log info "OpenSimulator ${VERZEICHNISSLISTE[$i]} kopiert"
@@ -2104,8 +2029,6 @@ function oscopysim() {
 		cp -r /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"
 		sleep 2
 	done
-	log line
-	log info "OSCOPY: OpenSim kopieren"
 	return 0
 }
 
@@ -2422,26 +2345,26 @@ function regionbackup() {
 
 	log info "OSBACKUP: Region $NSDATEINAME speichern"
 	cd /$STARTVERZEICHNIS/"$VERZEICHNISSCREENNAME"/bin || return 1
-	# Ich kann nicht pruefen ob die Region im OpenSimulator vorhanden ist.
-	# Sollte sie nicht vorhanden sein wird root also alle Regionen gespeichert.
+	log info "Ich kann nicht pruefen ob die Region im OpenSimulator vorhanden ist."
+	log info "Sollte sie nicht vorhanden sein wird root also alle Regionen gespeichert."
 	screen -S "$VERZEICHNISSCREENNAME" -p 0 -X eval "stuff 'change region ${REGIONSNAME//\"/}'^M"
 	screen -S "$VERZEICHNISSCREENNAME" -p 0 -X eval "stuff 'save oar /$STARTVERZEICHNIS/backup/'$DATUM'-$NSDATEINAME.oar'^M"
 	screen -S "$VERZEICHNISSCREENNAME" -p 0 -X eval "stuff 'terrain save /$STARTVERZEICHNIS/backup/'$DATUM'-$NSDATEINAME.png'^M"
 	screen -S "$VERZEICHNISSCREENNAME" -p 0 -X eval "stuff 'terrain save /$STARTVERZEICHNIS/backup/'$DATUM'-$NSDATEINAME.raw'^M"
-	log info "Region $DATUM-$NSDATEINAME RAW und PNG Terrain gespeichert"
+	log info "Region $DATUM-$NSDATEINAME RAW und PNG Terrain wird gespeichert"
 	log line
 	sleep 10
 	if [ ! -f /$STARTVERZEICHNIS/"$VERZEICHNISSCREENNAME"/bin/Regions/"$NSDATEINAME".ini ]; then
 		cp -r /$STARTVERZEICHNIS/"$VERZEICHNISSCREENNAME"/bin/Regions/Regions.ini /$STARTVERZEICHNIS/backup/"$DATUM"-"$NSDATEINAME".ini
-		log info "OSBACKUP: Region $DATUM-$NSDATEINAME.ini gespeichert"
+		log info "OSBACKUP: Region $DATUM-$NSDATEINAME.ini wird gespeichert"
 	fi
 	if [ ! -f /$STARTVERZEICHNIS/"$VERZEICHNISSCREENNAME"/bin/Regions/"${REGIONSNAME//\"/}".ini ]; then
 		cp -r /$STARTVERZEICHNIS/"$VERZEICHNISSCREENNAME"/bin/Regions/Regions.ini /$STARTVERZEICHNIS/backup/"$DATUM"-"$NSDATEINAME".ini
-		log info "OSBACKUP: Region $DATUM-$NSDATEINAME.ini gespeichert"
+		log info "OSBACKUP: Region $DATUM-$NSDATEINAME.ini wird gespeichert"
 	fi
 	if [ ! -f /$STARTVERZEICHNIS/"$VERZEICHNISSCREENNAME"/bin/Regions/Regions.ini ]; then
 		cp -r /$STARTVERZEICHNIS/"$VERZEICHNISSCREENNAME"/bin/Regions/"$NSDATEINAME".ini /$STARTVERZEICHNIS/backup/"$DATUM"-"$NSDATEINAME".ini
-		log info "OSBACKUP: Region $NSDATEINAME.ini gespeichert"
+		log info "OSBACKUP: Region $NSDATEINAME.ini wird gespeichert"
 	fi
 	return 0
 }
@@ -2483,26 +2406,26 @@ function menuregionbackup() {
 
 	log info "OSBACKUP: Region $NSDATEINAME speichern"
 	cd /$STARTVERZEICHNIS/"$VERZEICHNISSCREENNAME"/bin || return 1
-	# Ich kann nicht pruefen ob die Region im OpenSimulator vorhanden ist.
-	# Sollte sie nicht vorhanden sein wird root also alle Regionen gespeichert.
+	log info "Ich kann nicht pruefen ob die Region im OpenSimulator vorhanden ist."
+	log info "Sollte sie nicht vorhanden sein wird root also alle Regionen gespeichert."
 	screen -S "$VERZEICHNISSCREENNAME" -p 0 -X eval "stuff 'change region ${REGIONSNAME//\"/}'^M"
 	screen -S "$VERZEICHNISSCREENNAME" -p 0 -X eval "stuff 'save oar /$STARTVERZEICHNIS/backup/'$DATUM'-$NSDATEINAME.oar'^M"
 	screen -S "$VERZEICHNISSCREENNAME" -p 0 -X eval "stuff 'terrain save /$STARTVERZEICHNIS/backup/'$DATUM'-$NSDATEINAME.png'^M"
 	screen -S "$VERZEICHNISSCREENNAME" -p 0 -X eval "stuff 'terrain save /$STARTVERZEICHNIS/backup/'$DATUM'-$NSDATEINAME.raw'^M"
-	log info "Region $DATUM-$NSDATEINAME RAW und PNG Terrain gespeichert"
+	log info "Region $DATUM-$NSDATEINAME RAW und PNG Terrain wird gespeichert"
 	log line
 	sleep 10
 	if [ ! -f /$STARTVERZEICHNIS/"$VERZEICHNISSCREENNAME"/bin/Regions/"$NSDATEINAME".ini ]; then
 		cp -r /$STARTVERZEICHNIS/"$VERZEICHNISSCREENNAME"/bin/Regions/Regions.ini /$STARTVERZEICHNIS/backup/"$DATUM"-"$NSDATEINAME".ini
-		log info "OSBACKUP: Region $DATUM-$NSDATEINAME.ini gespeichert"
+		log info "OSBACKUP: Region $DATUM-$NSDATEINAME.ini wird gespeichert"
 	fi
 	if [ ! -f /$STARTVERZEICHNIS/"$VERZEICHNISSCREENNAME"/bin/Regions/"${REGIONSNAME//\"/}".ini ]; then
 		cp -r /$STARTVERZEICHNIS/"$VERZEICHNISSCREENNAME"/bin/Regions/Regions.ini /$STARTVERZEICHNIS/backup/"$DATUM"-"$NSDATEINAME".ini
-		log info "OSBACKUP: Region $DATUM-$NSDATEINAME.ini gespeichert"
+		log info "OSBACKUP: Region $DATUM-$NSDATEINAME.ini wird gespeichert"
 	fi
 	if [ ! -f /$STARTVERZEICHNIS/"$VERZEICHNISSCREENNAME"/bin/Regions/Regions.ini ]; then
 		cp -r /$STARTVERZEICHNIS/"$VERZEICHNISSCREENNAME"/bin/Regions/"$NSDATEINAME".ini /$STARTVERZEICHNIS/backup/"$DATUM"-"$NSDATEINAME".ini
-		log info "OSBACKUP: Region $NSDATEINAME.ini gespeichert"
+		log info "OSBACKUP: Region $NSDATEINAME.ini wird gespeichert"
 	fi
 	return 0
 }
@@ -2519,12 +2442,12 @@ function regionrestore() {
 
 	log info "OSRESTORE: Region $NSDATEINAME wiederherstellen"
 	cd /$STARTVERZEICHNIS/"$VERZEICHNISSCREENNAME"/bin || return 1
-	# Ich kann nicht pruefen ob die Region im OpenSimulator vorhanden ist.
-	# Sollte sie nicht vorhanden sein wird root also alle Regionen wiederhergestellt.
+	log info "Ich kann nicht pruefen ob die Region im OpenSimulator vorhanden ist."
+	log info "Sollte sie nicht vorhanden sein wird root also alle Regionen wiederhergestellt."
 	screen -S "$VERZEICHNISSCREENNAME" -p 0 -X eval "stuff 'change region ${REGIONSNAME//\"/}'^M"
 	screen -S "$VERZEICHNISSCREENNAME" -p 0 -X eval "stuff 'load oar /$STARTVERZEICHNIS/backup/'$DATUM'-$NSDATEINAME.oar'^M"
 
-	log info "OSRESTORE: Region $DATUM-$NSDATEINAME wiederhergestellt"
+	log info "OSRESTORE: Region $DATUM-$NSDATEINAME wird wiederhergestellt"
 	log line
 	return 0
 }
@@ -2563,12 +2486,12 @@ function menuregionrestore() {
 
 	log info "OSRESTORE: Region $NSDATEINAME wiederherstellen"
 	cd /$STARTVERZEICHNIS/"$VERZEICHNISSCREENNAME"/bin || return 1
-	# Ich kann nicht pruefen ob die Region im OpenSimulator vorhanden ist.
-	# Sollte sie nicht vorhanden sein wird root also alle Regionen wiederhergestellt.
+	log info "Ich kann nicht pruefen ob die Region im OpenSimulator vorhanden ist."
+	log info "Sollte sie nicht vorhanden sein wird root also alle Regionen wiederhergestellt."
 	screen -S "$VERZEICHNISSCREENNAME" -p 0 -X eval "stuff 'change region ${REGIONSNAME//\"/}'^M"
 	screen -S "$VERZEICHNISSCREENNAME" -p 0 -X eval "stuff 'load oar /$STARTVERZEICHNIS/backup/'$DATUM'-$NSDATEINAME.oar'^M"
 
-	log info "OSRESTORE: Region $DATUM-$NSDATEINAME wiederhergestellt"
+	log info "OSRESTORE: Region $DATUM-$NSDATEINAME wird wiederhergestellt"
 	log line
 	return 0
 }
@@ -2626,15 +2549,15 @@ function menuautosimstart() {
 
 			# AOT Aktiveren oder Deaktivieren.
 			if [[ $SETAOTON = "yes" ]]; then
-				BERECHNUNG1=$((100 / "$ANZAHLVERZEICHNISSLISTE"))
-				BALKEN1=$(("$i" * "$BERECHNUNG1"))
-				screen -fa -S "${VERZEICHNISSLISTE[$i]}" -d -U -m mono --desktop -O=all OpenSim.exe | dialog --gauge "Auto Sim start..." 6 64 $BALKEN1
-				dialog --clear
+				#BERECHNUNG1=$((100 / "$ANZAHLVERZEICHNISSLISTE"))
+				#BALKEN1=$(("$i" * "$BERECHNUNG1"))
+				screen -fa -S "${VERZEICHNISSLISTE[$i]}" -d -U -m mono --desktop -O=all OpenSim.exe | log info "${VERZEICHNISSLISTE[$i]} wurde gestartet" # dialog --gauge "Auto Sim start..." 6 64 $BALKEN1
+				#dialog --clear
 			else
-				BERECHNUNG1=$((100 / "$ANZAHLVERZEICHNISSLISTE"))
-				BALKEN1=$(("$i" * "$BERECHNUNG1"))
-				screen -fa -S "${VERZEICHNISSLISTE[$i]}" -d -U -m mono OpenSim.exe | dialog --gauge "Auto Sim start..." 6 64 $BALKEN1
-				dialog --clear
+				#BERECHNUNG1=$((100 / "$ANZAHLVERZEICHNISSLISTE"))
+				#BALKEN1=$(("$i" * "$BERECHNUNG1"))
+				screen -fa -S "${VERZEICHNISSLISTE[$i]}" -d -U -m mono OpenSim.exe | log info "${VERZEICHNISSLISTE[$i]} wurde gestartet" # dialog --gauge "Auto Sim start..." 6 64 $BALKEN1
+				#dialog --clear
 
 			fi
 			sleep $STARTWARTEZEIT
@@ -2657,12 +2580,12 @@ function menuautosimstop() {
 			#BALKEN2=$(("$i"*5))
 			#TMP2=$(("$ANZAHLVERZEICHNISSLISTE"*"$i"))
 			#BALKEN2=$(("$TMP2/100"))
-			BERECHNUNG2=$((100 / "$ANZAHLVERZEICHNISSLISTE"))
-			BALKEN2=$(("$i" * "$BERECHNUNG2"))
+			#BERECHNUNG2=$((100 / "$ANZAHLVERZEICHNISSLISTE"))
+			#BALKEN2=$(("$i" * "$BERECHNUNG2"))
 			#BALKEN2=$(( (100/"$ANZAHLVERZEICHNISSLISTE") * "${VERZEICHNISSLISTE[$i]}"))
 
-			screen -S "${VERZEICHNISSLISTE[$i]}" -p 0 -X eval "stuff 'shutdown'^M" | dialog --gauge "Alle Simulatoren werden gestoppt!" 6 64 $BALKEN2
-			dialog --clear
+			screen -S "${VERZEICHNISSLISTE[$i]}" -p 0 -X eval "stuff 'shutdown'^M" | log info "${VERZEICHNISSLISTE[$i]} wurde gestoppt" #| dialog --gauge "Alle Simulatoren werden gestoppt!" 6 64 $BALKEN2
+			#dialog --clear
 			sleep $STOPWARTEZEIT
 		else
 			log error "Regionen ${VERZEICHNISSLISTE[$i]}  laeuft nicht!"
@@ -2703,10 +2626,10 @@ function menuautologdel() {
 	makeverzeichnisliste
 	sleep 2
 	for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
-		BERECHNUNG3=$((100 / "$ANZAHLVERZEICHNISSLISTE"))
-		BALKEN3=$(("$i" * "$BERECHNUNG3"))
-		rm /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/*.log | dialog --gauge "Auto Sim stop..." 6 64 $BALKEN3
-		dialog --clear || return 0
+		#BERECHNUNG3=$((100 / "$ANZAHLVERZEICHNISSLISTE"))
+		#BALKEN3=$(("$i" * "$BERECHNUNG3"))
+		rm /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/*.log #| log info "" # dialog --gauge "Auto Sim stop..." 6 64 $BALKEN3
+		#dialog --clear || return 0
 		log warn "OpenSimulator log ${VERZEICHNISSLISTE[$i]} geloescht"
 		sleep 2
 	done
@@ -2904,8 +2827,8 @@ function menuautoscreenstop() {
 
 ### !  autostart, startet das komplette Grid mit allen sims.
 function autostart() {
-	log line
-	log info "Starte das Grid!"
+	#log line
+	#log info "Starte das Grid!"
 	if [[ $ROBUSTVERZEICHNIS == "robust" ]]; then
 		gridstart
 	fi
@@ -2920,7 +2843,7 @@ function autostart() {
 ### !  autostop, stoppt das komplette Grid mit allen sims.
 function autostop() {
 	log line
-	log info "Stoppe das Grid! ###"
+	log warn "Stoppe das Grid! ###"
 	# schauen ob screens laufen wenn ja beenden.
 	# shellcheck disable=SC2022
 	if ! screen -list | grep -q 'sim'; then
@@ -2952,38 +2875,62 @@ function autostop() {
 function menuautostart() {
 	echo ""
 	if [[ $ROBUSTVERZEICHNIS == "robust" ]]; then
+		log info "Bitte warten..."
 		menugridstart
 	fi
 	menuautosimstart
 	screenlist
-	log text "Auto Start abgeschlossen!"
+	log info "Auto Start abgeschlossen!"
 	return 0
 }
 
 ### !  autostop, stoppt das komplette Grid mit allen sims.
+# function menuautostop() {
+# 	# schauen ob screens laufen wenn ja beenden.
+# 	# shellcheck disable=SC2022
+# 	if ! screen -list | grep -q 'sim'; then
+# 		echo ""
+# 	else
+# 		menuautosimstop
+# 	fi
+
+# 	if ! screen -list | grep -q "RO"; then
+# 		echo ""
+# 	else
+# 		menugridstop
+# 	fi
+# 	# schauen ob screens laufen wenn ja warten.
+# 	# shellcheck disable=SC2022
+# 	if ! screen -list | grep -q 'sim'; then
+# 		echo ""
+# 	else
+# 		sleep $AUTOSTOPZEIT
+# 		killall screen
+# 	fi
+# 	menuautoscreenstop
+# }
+### !  autostop, stoppt das komplette Grid mit allen sims.
 function menuautostop() {
 	# schauen ob screens laufen wenn ja beenden.
-	# shellcheck disable=SC2022
-	if ! screen -list | grep -q 'sim'; then
-		echo ""
-	else
+	if screen -list | grep -q 'sim'; then
+		log info "Bitte warten..."
 		menuautosimstop
 	fi
 
-	if ! screen -list | grep -q "RO"; then
-		echo ""
-	else
+	if screen -list | grep -q "RO"; then
+		log info "Bitte warten..."
 		menugridstop
 	fi
+
 	# schauen ob screens laufen wenn ja warten.
-	# shellcheck disable=SC2022
-	if ! screen -list | grep -q 'sim'; then
-		echo ""
-	else
+	if screen -list | grep -q 'sim'; then
+		log info "Bitte warten..."
 		sleep $AUTOSTOPZEIT
 		killall screen
 	fi
+
 	menuautoscreenstop
+	hauptmenu
 }
 
 ### ! autorestart, startet das gesamte Grid neu und loescht die log Dateien.
@@ -3416,6 +3363,7 @@ function createuser() {
 	NACHNAME=$2
 	PASSWORT=$3
 	EMAIL=$4
+	userid=$5
 
 	if [ -z "$VORNAME" ]; then echo "Der VORNAME fehlt!"; fi
 	if [ -z "$NACHNAME" ]; then echo "Der NACHNAME fehlt!"; fi
@@ -3438,7 +3386,10 @@ function createuser() {
 		screen -S RO -p 0 -X eval "stuff '$NACHNAME'^M"
 		screen -S RO -p 0 -X eval "stuff '$PASSWORT'^M"
 		screen -S RO -p 0 -X eval "stuff '$EMAIL'^M"
-		screen -S RO -p 0 -X eval "stuff ^M" # bestaetigen
+		# User ID
+		#screen -S RO -p 0 -X eval "stuff ^M" # bestaetigen
+		screen -S RO -p 0 -X eval "stuff '$userid'^M"
+		# Model name
 		screen -S RO -p 0 -X eval "stuff ^M" # bestaetigen
 
 	else
@@ -6993,7 +6944,7 @@ function menugridstop() {
 
 ### !  compilieren, kompilieren des OpenSimulator.
 function compilieren() {
-	log info "COMPILIEREN: Bauen eines neuen OpenSimulators wird gestartet"
+	log info "COMPILIEREN: Bauen eines neuen OpenSimulators  wird gestartet..."
 	# Nachsehen ob Verzeichnis ueberhaupt existiert.
 	if [ ! -f "/$STARTVERZEICHNIS/$SCRIPTSOURCE/" ]; then
 		scriptcopy
@@ -7096,14 +7047,11 @@ function osupgrade() {
 	log text " #############################"
 
 	log info "OSUPGRADE: Das Grid wird jetzt upgegradet"
-	# Grid Stoppen.
-	# log info "OSUPGRADE: Alles Beenden"
 	autostop
 	# Kopieren.
 	log info "OSUPGRADE: Neue Version Installieren"
 	oscopyrobust
 	oscopysim
-	log info "OSUPGRADE: Log Dateien loeschen"
 	autologdel
 	rologdel
 	# MoneyServer eventuell loeschen.
@@ -7152,11 +7100,1008 @@ function oszipupgrade() {
 	return 0
 }
 
+###########################################################################
+# Automatische Konfigurationen Prototype
+###########################################################################
+
 ### !  Hier entsteht die Automatische Konfiguration. UNGETESTET
-function autoconfig() {
-	$AUTOCONFIG # yes oder no
-	echo "ohne Funktion!"
-	return 0
+# Aufruf: ./opensim.sh AutoInstall
+
+### Config Set - Reduziert die Konfigurationsdateien auf ein uebersichtliches Mass.
+function ConfigSet() {
+    datei=$1
+
+    echo "Loesche $datei.ini.cnf"
+    rm "$datei.ini.cnf"
+
+    echo "Kopiere $datei.ini nach $datei.ini.cnf"
+    cp "$datei.ini" "$datei.ini.cnf"
+
+    echo "Loesche alle Zeilen mit ;"
+    #sed -i -e '/string/d' input
+    sed -i -e '/;/d' "$datei.ini.cnf"
+
+    echo "Fuehrende Leerzeichen (Leerzeichen, Tabulatoren) vor jeder Zeile loeschen"
+    sed -i -e 's/^[ \t]*//' "$datei.ini.cnf"
+
+    echo "Loesche alle leeren Zeilen"
+    sed -i -e '/^$/d' "$datei.ini.cnf"
+
+    echo "Ersetze alle doppelten Hochstriche gegen einfache."
+    sed -i -e s/\"/\'/g "$datei.ini.cnf"
+
+    echo "Einstrich Sonderzeichen an den anfang und ende jeder Zeile haengen."
+    sed -i -e s/^/\"/ "$datei.ini.cnf"
+    sed -i -e s/$/\"/g "$datei.ini.cnf"
+
+    echo "Ein Array daraus machen."
+    sed -i -e 1 i\$dateiConfigList=\( "$datei.ini.cnf"
+    sed -i -e '$a)' "$datei.ini.cnf"
+}
+
+### AutoInstall
+function AutoInstall() {
+    ramspeicher
+    mysqlspeicher=$((RAMSPEICHER / 2))
+
+    echo "RAM Speicher für Simulatoren betraegt etwa: $mysqlspeicher"
+    echo "Herzlich willkommen zur Konfiguration ihrer OpenSimulator Software."
+    echo "Möchten sie eine Grundinstallation ihres Servers, "    
+    echo "damit alle für den Betrieb benötigten Linux Pakete installiert werden Ja/Nein: [Nein]"
+
+    installation=Nein; read -r installation
+    if [ "$installation" = "Ja" ]; then
+        if myCodename=jammy; then
+            echo "entdeckt Ubuntu 22"
+            installbegin
+            installubuntu22
+            installmono22
+            installphpmyadmin
+            ufwset
+            #installationhttps22
+            installfinish
+        elif myCodename=Bionic; then
+            echo "entdeckt Ubuntu 18"
+            serverupgrade
+            installobensimulator
+            monoinstall18
+            installfinish
+        else
+            echo "Ich kenne das Betriebssystem nicht"
+        fi
+    fi
+
+    echo "Als nächstes benötige ich ein Paar Daten von ihnen."
+
+    BaseHostname=$AKTUELLEIP
+    echo "Wie ist ihre IP oder URL Adresse [$AKTUELLEIP]: "; read -r BaseHostname
+	echo "Debug: $BaseHostname"
+
+    gridname="'$BaseHostname'World"
+    echo "Welchen Namen soll ihr Grid haben: ['$BaseHostname'World] "; read -r gridname
+	echo "Debug: $gridname"
+
+    ### OpenSim Verzeichnisstruktur
+    anzahlregionen=5
+    echo "Wie viele Regionsserver möchten sie anlegen: [5]"; read -r anzahlregionen
+    osstruktur 1 "$anzahlregionen"
+	echo "Debug: osstruktur 1 $anzahlregionen"
+    oscopyrobust
+	echo "Debug: oscopyrobust"
+	oscopysim
+	echo "Debug: oscopysim"
+
+    ### Datenbankbenutzer erstellen
+    datenbank_benutzer="Nein"
+    echo "Moechten Sie einen neuen Datenbankbenutzer anlegen? [Nein]"; read -r datenbank_benutzer
+    if [ "$datenbank_benutzer" = "Ja" ]
+    then 
+        DBBENUTZER="opensim"
+        echo "DBBENUTZER: [$DBBENUTZER]"; read -r DBBENUTZER
+        DBPASSWORT="opensim" 
+        echo "DBPASSWORT: [$DBPASSWORT]"; read -r DBPASSWORT
+
+        NEUERNAME="opensim"  
+        echo "DATENBANKNAME: [$NEUERNAME]"; read -r NEUERNAME
+		MysqlUser=$NEUERNAME
+        NEUESPASSWORT="opensim"  
+        echo "DATENBANKNAME: [$NEUESPASSWORT]"; read -r NEUESPASSWORT
+		MysqlPassword=$NEUESPASSWORT
+
+        create_db_user "$DBBENUTZER" "$DBPASSWORT" "$NEUERNAME" "$NEUESPASSWORT"
+        DBBENUTZER="$NEUERNAME" 
+        DBPASSWORT="$NEUESPASSWORT"
+    fi
+
+	echo "Debug: Datenbankbenutzer erstellen $datenbank_benutzer"
+
+	# MysqlUser="$DBBENUTZER"; MysqlPassword="$DBPASSWORT"; MysqlDatabase="$DATENBANKNAME"
+    # echo "Name der mySQL Datenbank [MysqlDatabase]: "; read -r MysqlDatabase
+    # echo "Benutzername der Datenbank [MysqlUser]: "; read -r MysqlUser
+    # echo "Passwort des des Benutzers der Datenbank [******]: "; read -r MysqlPassword
+	# echo "Debug: Datenbanken anlegen $datenbanken_angelegen"
+
+    ### Datenbanken erstellen
+    datenbanken_angelegen="Nein"
+    echo "Moechten sie Datenbanken anlegen?: [Nein]"; read -r datenbanken_angelegen
+	echo "Debug: Datenbanken anlegen $datenbanken_angelegen"
+    if [ "$datenbanken_angelegen" = "Ja" ]
+    then 
+        DBBENUTZER="opensim"
+        echo "DBBENUTZER: [$DBBENUTZER]"; read -r DBBENUTZER
+        DBPASSWORT="opensim" 
+        echo "DBPASSWORT: [$DBPASSWORT]"; read -r DBPASSWORT
+        DATENBANKNAME="opensim"  
+        echo "DATENBANKNAME: [$DATENBANKNAME]"; read -r DATENBANKNAME
+
+        create_db "$DBBENUTZER" "$DBPASSWORT" robust
+        
+        makeverzeichnisliste
+        for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
+			echo "Datenbank ${VERZEICHNISSLISTE[$i]} wird erstellt."
+			create_db "$DBBENUTZER" "$DBPASSWORT" "sim${VERZEICHNISSLISTE[$i]}"
+			sleep 2
+		done
+    fi    
+    
+    # # Wir müssen jetzt einen Master Avatar anlegen, 
+    # # dieser wird auch direkt der Banker für das Money System 
+    # # und verfügt über alle Skript rechte.
+    masteravatar_angelegen="Nein"
+    echo "Moechten sie einen Master Avatar anlegen?: [Nein]"; read -r masteravatar_angelegen
+	echo "Debug: Master Avatar anlegen: $masteravatar_angelegen"
+    if [ "$masteravatar_angelegen" = "Ja" ]
+    then
+        masteravatar_UUID=$(uuidgen)
+        echo "UUID: [$masteravatar_UUID]"; read -r masteravatar_UUID
+        VORNAME="Max"
+        echo "VORNAME: [$VORNAME]"; read -r VORNAME
+        NACHNAME="Mustermann"
+        echo "NACHNAME: [$NACHNAME]"; read -r NACHNAME
+        PASSWORT="123456"
+        echo "PASSWORT: [$PASSWORT]"; read -r PASSWORT
+        EMAIL="mail@mail.com"
+        echo "EMAIL: [$EMAIL]"; read -r EMAIL
+        createuser "$VORNAME" "$NACHNAME" "$PASSWORT" "$EMAIL" "$masteravatar_UUID"
+    fi
+
+    ##### OpenSimConfigSet
+    
+    #SimulatorPort=9010
+    #echo "Bitte geben sie den Simulator Port ein [9010]: "; read -r SimulatorPort
+    #AutoBackup="Nein"
+    #echo "Moechten sie den Automatischen Backup ihrer Regionen einschalten? [Nein]: "; read -r AutoBackup
+
+    ##### osslEnableConfigSet
+    echo "Alle Skript Rechte an Grid Betreiber [$masteravatar_UUID]: "; read -r Rechte # Vorher einen Robust Master User erstellen.
+
+    ##### RegionsConfigSet
+    UUID=$(uuidgen)
+    echo "RegionName [Welcome]:"; read -r RegionName
+    echo "RegionUUID [$UUID]: "; read -r RegionUUID
+    echo "Location [3333,3333]: "; read -r Location
+    echo "InternalPort [9050]: "; read -r InternalPort
+    echo "ExternalHostName [127.0.0.1]: "; read -r ExternalHostName
+    echo "Size [512]: "; read -r Size
+    echo "MaxPrims [100000]: "; read -r MaxPrims
+    echo "MaxAgents [50]: "; read -r MaxAgents
+
+    ##### RobustConfigSet
+    echo "StartRegion [Welcome]: "; read -r StartRegion
+    
+    PublicPort="8002"
+    PrivatePort="8003"
+    MoneyPort="8008"
+	BenutzerUUID=$(uuidgen)
+    
+    # Auswertung der Eingaben.
+    if test -z "$BaseHostname"; then BaseHostname="127.0.0.1"; fi
+    if test -z "$SimulatorPort"; then SimulatorPort="9010"; fi
+    if test -z "$gridname"; then gridname="myGrid"; fi
+    if test -z "$AutoBackup"; then AutoBackup="false"; fi
+    if test -z "$HomeURI"; then HomeURI="127.0.0.1"; fi
+    if test -z "$UserID"; then UserID="myName"; fi
+    if test -z "$Rechte"; then Rechte="$BenutzerUUID"; fi
+    if test -z "$RegionName"; then RegionName="Welcome"; fi
+    if test -z "$RegionUUID"; then RegionUUID="$UUID"; fi
+    if test -z "$Location"; then Location="1000,1000"; fi
+    if test -z "$InternalPort"; then InternalPort="9050"; fi
+    if test -z "$ExternalHostName"; then ExternalHostName="127.0.0.1"; fi
+    if test -z "$Size"; then Size="512"; fi
+    if test -z "$MaxPrims"; then MaxPrims="100000"; fi
+    if test -z "$MaxAgents"; then MaxAgents="50"; fi
+    if test -z "$MysqlDatabase"; then MysqlDatabase="myDatabase"; fi
+    if test -z "$MysqlUser"; then MysqlUser="myUser"; fi
+    if test -z "$MysqlPassword"; then MysqlPassword="myPassword"; fi    
+    if test -z "$StartRegion"; then StartRegion="Welcome"; fi
+
+    PrivURL=$BaseHostname
+    BaseURL="http://$BaseHostname"
+    HomeURI=$BaseHostname
+
+    ##### Start #####
+    RobustConfigSet $BaseHostname $gridname $UserID $MysqlPassword $MysqlDatabase $StartRegion $PublicPort $PrivatePort $PrivURL $BaseURL $MoneyPort
+
+    makeverzeichnisliste
+
+    for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
+        echo "OpenSimKonfiguration ${VERZEICHNISSLISTE[$i]} wird erstellt."
+        OpenSimConfigSet $BaseHostname "$SimulatorPort${VERZEICHNISSLISTE[$i]}" $gridname $AutoBackup $PublicPort $PrivatePort $BaseURL $MoneyPort
+        sleep 2
+        GridCommonConfigSet $HomeURI "$MysqlDatabase${VERZEICHNISSLISTE[$i]}" $UserID $MysqlPassword $PublicPort $PrivatePort
+        sleep 2
+        RegionsConfigSet "$RegionName${VERZEICHNISSLISTE[$i]}" "$RegionUUID" $Location "$InternalPort+${VERZEICHNISSLISTE[$i]}" $ExternalHostName $Size $MaxPrims $MaxAgents "$UUID"
+        sleep 2
+        osslEnableConfigSet "$Rechte"
+        sleep 2
+    done        
+    #OpenSimConfigSet $BaseHostname $SimulatorPort $gridname $AutoBackup $PublicPort $PrivatePort $BaseURL $MoneyPort   
+    #GridCommonConfigSet $HomeURI $MysqlDatabase $UserID $MysqlPassword $PublicPort $PrivatePort
+    #osslEnableConfigSet "$Rechte"
+    #RegionsConfigSet $RegionName "$RegionUUID" $Location $InternalPort $ExternalHostName $Size $MaxPrims $MaxAgents "$UUID"
+}
+
+### OpenSim Config
+function OpenSimConfig() {
+    # Abfrage des Benutzers.
+    echo "Bitte geben sie die IP oder DNS Adresse ihres Server oder PC ein [127.0.0.1]: "; read -r BaseHostname
+    echo "Bitte geben sie den Simulator Port ein [9010]: "; read -r SimulatorPort
+    echo "Bitte geben sie den Gridnamen ein [myGrid]: "; read -r gridname
+    echo "Moechten sie den Automatischen Backup ihrer Regionen einschalten true/false [false]: "; read -r AutoBackup
+    # Auswertung der Eingaben.
+    if test -z "$BaseHostname"; then BaseHostname="127.0.0.1"; fi
+    if test -z "$SimulatorPort"; then SimulatorPort="9010"; fi
+    if test -z "$gridname"; then gridname="myGrid"; fi
+    if test -z "$AutoBackup"; then AutoBackup="false"; fi
+
+    PublicPort="8002"
+    PrivatePort="8003"
+    PrivURL=$BaseHostname
+    BaseURL="http://$BaseHostname"
+    MoneyPort="8008"
+
+    OpenSimConfigSet $BaseHostname $SimulatorPort $gridname $AutoBackup $PublicPort $PrivatePort $BaseURL $MoneyPort
+    # OpenSimConfigSet
+}
+function OpenSimConfigSet() {
+    #  $BaseHostname,$SimulatorPort,$gridname,$AutoBackup,$PublicPort,$PrivatePort,$BaseURL,$MoneyPort
+    OpenSimdatei="OpenSim.ini"
+    OpenSimConfigList=(
+    "[Const]"
+    "BaseHostname = '$BaseHostname'"
+    "BaseURL = '$BaseURL'"
+    "PublicPort = '$PublicPort'"
+    "PrivURL = '$BaseURL'"
+    "PrivatePort = '$PrivatePort'"
+    "MoneyPort = '$MoneyPort'"
+    "SimulatorPort = '$SimulatorPort'"
+    "[Startup]"
+    "NonPhysicalPrimMax = 1024"
+    "DefaultDrawDistance = 128.0"
+    "MaxDrawDistance = 128"
+    "MaxRegionsViewDistance = 128"
+    "MinRegionsViewDistance = 48"
+    "meshing = Meshmerizer"
+    "physics = BulletSim"
+    "DefaultScriptEngine = 'YEngine'"
+    "[AccessControl]"
+    "DeniedClients = 'Imprudence|CopyBot|Twisted|Crawler|Cryolife|darkstorm|DarkStorm|Darkstorm|hydrastorm viewer|kinggoon copybot|goon squad copybot|copybot pro|darkstorm viewer|copybot club|darkstorm second life|copybot download|HydraStorm Copybot Viewer|Copybot|Firestorm Pro|DarkStorm v3|DarkStorm v2|ShoopedStorm|HydraStorm|hydrastorm|kinggoon|goon squad|goon|copybot|Shooped|ShoopedStorm|Triforce|Triforce Viewer|Firestorm Professional|ShoopedLife|Sombrero|Sombrero Firestorm|GoonSquad|Solar|SolarStorm'"
+    "[Map]"
+    "DrawPrimOnMapTile = true"
+    "RenderMeshes = true"
+    "[Permissions]"
+    "automatic_gods = false"
+    "implicit_gods = false"
+    "allow_grid_gods = true"
+    "[Estates]"
+    "[SMTP]"
+    "[Network]"
+    "http_listener_port = '$SimulatorPort'"
+    "ExternalHostNameForLSL = '$BaseURL'"
+    "shard = 'OpenSim'"
+    "user_agent = 'OpenSim LSL (Mozilla Compatible)'"
+    "[XMLRPC]"
+    "[ClientStack.LindenUDP]"
+    "DisableFacelights = 'true'"
+    "client_throttle_max_bps = 400000"
+    "scene_throttle_max_bps = 75000000"
+    "[ClientStack.LindenCaps]"
+    "Cap_GetTexture = 'localhost'"
+    "Cap_GetMesh = 'localhost'"
+    "Cap_AvatarPickerSearch = 'localhost'"
+    "Cap_GetDisplayNames = 'localhost'"
+    "[SimulatorFeatures]"
+    "SearchServerURI = $BaseURL:$PublicPort"
+    "DestinationGuideURI = $BaseURL:$PublicPort"
+    "[Chat]"
+    "whisper_distance = 25"
+    "say_distance = 70"
+    "shout_distance = 250"
+    "[EntityTransfer]"
+    "[Messaging]"
+    "OfflineMessageModule = 'Offline Message Module V2'"
+    "OfflineMessageURL = $PrivURL:$PrivatePort"
+    "StorageProvider = OpenSim.Data.MySQL.dll"
+    "MuteListModule = MuteListModule"
+    "ForwardOfflineGroupMessages = true"
+    "[BulletSim]"
+    "AvatarToAvatarCollisionsByDefault = true"
+    "[ODEPhysicsSettings]"
+    "[RemoteAdmin]"
+    "[Wind]"
+    "[Materials]"
+    "enable_materials = true"
+    "MaxMaterialsPerTransaction = 250"
+    "[DataSnapshot]"
+    "index_sims = true"
+    "data_exposure = minimum"
+    "gridname = '$gridname'"
+    "default_snapshot_period = 7200"
+    "snapshot_cache_directory = 'DataSnapshot'"
+    "[Economy]"
+    "SellEnabled = true"
+    "EconomyModule = DTLNSLMoneyModule"
+    "CurrencyServer = '$BaseURL:8008/'"
+    "UserServer = '$BaseURL:$PublicPort/'"
+    "CheckServerCert = false"
+    "PriceUpload = 0"
+    "MeshModelUploadCostFactor = 1.0"
+    "MeshModelUploadTextureCostFactor = 1.0"
+    "MeshModelMinCostFactor = 1.0"
+    "PriceGroupCreate = 0"
+    "ObjectCount = 0"
+    "PriceEnergyUnit = 0"
+    "PriceObjectClaim = 0"
+    "PricePublicObjectDecay = 0"
+    "PricePublicObjectDelete = 0"
+    "PriceParcelClaim = 0"
+    "PriceParcelClaimFactor = 1"
+    "PriceRentLight = 0"
+    "TeleportMinPrice = 0"
+    "TeleportPriceExponent = 2"
+    "EnergyEfficiency = 1"
+    "PriceObjectRent = 0"
+    "PriceObjectScaleFactor = 10"
+    "PriceParcelRent = 0"
+    "[YEngine]"
+    "Enabled = true"
+    "[XEngine]"
+    "Enabled = false"
+    "AppDomainLoading = false"
+    "DeleteScriptsOnStartup = true"
+    "[OSSL]"
+    "Include-osslDefaultEnable = 'config-include/osslDefaultEnable.ini'"
+    "[FreeSwitchVoice]"
+    "[VivoxVoice]"
+    "enabled = false"
+    "vivox_server = www.osp.vivox.com"
+    "vivox_sip_uri = osp.vivox.com"
+    "vivox_admin_user = myName"
+    "vivox_admin_password = myPassword"
+    "vivox_channel_type = positional"
+    "vivox_channel_distance_model = 2"
+    "vivox_channel_mode = 'open'"
+    "vivox_channel_roll_off = 2.0"
+    "vivox_channel_max_range = 80"
+    "vivox_channel_clamping_distance = 10"
+    "[Groups]"
+    "Enabled = true"
+    "LevelGroupCreate = 0"
+    "Module = 'Groups Module V2'"
+    "StorageProvider = OpenSim.Data.MySQL.dll"
+    "ServicesConnectorModule = Groups HG Service Connector"
+    "LocalService = remote"
+    "GroupsServerURI = '$BaseURL:$PrivatePort'"
+    "HomeURI = '$BaseURL:$PublicPort'"
+    "MessagingEnabled = true"
+    "MessagingModule = 'Groups Messaging Module V2'"
+    "NoticesEnabled = true"
+    "MessageOnlineUsersOnly = true"
+    "XmlRpcServiceReadKey    = 1234"
+    "XmlRpcServiceWriteKey   = 1234"
+    "[InterestManagement]"
+    "UpdatePrioritizationScheme = BestAvatarResponsiveness"
+    "ObjectsCullingByDistance = true"
+    "[MediaOnAPrim]"
+    "[NPC]"
+    "Enabled = true"
+    "MaxNumberNPCsPerScene = 40"
+    "AllowNotOwned = true"
+    "AllowSenseAsAvatar = true"
+    "AllowCloneOtherAvatars = true"
+    "NoNPCGroup = true"
+    "[Terrain]"
+    "InitialTerrain = 'flat'"
+    "[LandManagement]"
+    "ShowParcelBansLines = true"
+    "[UserProfiles]"
+    "ProfileServiceURL = '$BaseURL:$PublicPort'"
+    "AllowUserProfileWebURLs = true"
+    "[XBakes]"
+    "URL = '$PrivURL:$PrivatePort'"
+    "[Attachments]"
+    "[Textures]"
+    "ReuseDynamicTextures = true"
+    "ReuseDynamicLowDataTextures = true"
+    "[AutoBackupModule]"
+    "AutoBackup = '$AutoBackup'"
+    "AutoBackupModuleEnabled = '$AutoBackup'"
+    "AutoBackupInterval = 1260"
+    "AutoBackupBusyCheck = false"
+    "AutoBackupThreshold = 1"
+    "AutoBackupSkipAssets = false"
+    "AutoBackupNaming = Time"
+    "AutoBackupKeepFilesForDays = 7"
+    "AutoBackupDir = '/tmp/backup'"
+    "[Architecture]"
+    "Include-Architecture = 'config-include/GridHypergrid.ini'"
+    )
+
+    #echo "Alte $OpenSimdatei Datei loeschen falls vorhanden."
+    rm -f $OpenSimdatei # || echo "Keine $OpenSimdatei Datei vorhanden."
+
+    #echo "$OpenSimdatei schreiben"
+    printf '%s\n' "${OpenSimConfigList[@]}" > $OpenSimdatei
+
+    #echo "Tausche Hochstriche aus."
+    sed -i -e s/\'/\"/g "$OpenSimdatei"
+}
+
+### GridCommon Config
+function GridCommonConfig() {
+    # Abfrage des Benutzers.
+    echo "IP oder Adresse des Servers [127.0.0.1]: "; read -r HomeURI
+    echo "Datenbankname [sim1]: "; read -r MysqlDatabase
+    echo "Benutzername der Datenbank [myName]: "; read -r UserID
+    echo "Passwort des des Benutzers der Datenbank [myPassword]: "; read -r MysqlPassword
+    # Auswertung der Eingaben.
+    if test -z "$HomeURI"; then HomeURI="127.0.0.1"; fi
+    if test -z "$MysqlDatabase"; then MysqlDatabase="sim1"; fi
+    if test -z "$UserID"; then UserID="myName"; fi
+    if test -z "$MysqlPassword"; then MysqlPassword="myPassword"; fi
+
+    PublicPort="8002"
+    PrivatePort="8003"
+
+    GridCommonConfigSet $HomeURI $MysqlDatabase $UserID $MysqlPassword $PublicPort $PrivatePort
+}
+function GridCommonConfigSet() {
+    GridCommondatei="GridCommon.ini"
+
+    GridCommonConfigList=(
+    "[DatabaseService]"
+    "StorageProvider = 'OpenSim.Data.MySQL.dll'"
+    "ConnectionString = 'Data Source=localhost;Database='$MysqlDatabase';User ID='$UserID';Password='$MysqlPassword';Old Guids=true;SslMode=None;'"
+    "[Hypergrid]"
+    "HomeURI = '$HomeURI'"
+    "GatekeeperURI = 'http://'$HomeURI:$PublicPort'"
+    "[Modules]"
+    "AssetCaching = 'FlotsamAssetCache'"
+    "Include-FlotsamCache = 'config-include/FlotsamCache.ini'"
+    "[AssetService]"
+    "DefaultAssetLoader = 'OpenSim.Framework.AssetLoader.Filesystem.dll'"
+    "AssetLoaderArgs = 'assets/AssetSets.xml'"
+    "AssetServerURI = 'http://'$HomeURI:$PrivatePort'"
+    "[InventoryService]"
+    "InventoryServerURI = 'http://'$HomeURI:$PrivatePort'"
+    "[GridInfo]"
+    "GridInfoURI = 'http://'$HomeURI:$PublicPort'"
+    "[GridService]"
+    "GridServerURI = 'http://'$HomeURI:$PrivatePort'"
+    "AllowHypergridMapSearch = true"
+    "MapTileDirectory = './maptiles'"
+    "Gatekeeper='http://'$HomeURI:$PublicPort'"
+    "[EstateDataStore]"
+    "[EstateService]"
+    "EstateServerURI = 'http://$HomeURI:$PrivatePort'"
+    "[Messaging]"
+    "Gatekeeper = 'http://'$HomeURI:$PublicPort'"
+    "[AvatarService]"
+    "AvatarServerURI = 'http://'$HomeURI:$PrivatePort'"
+    "[AgentPreferencesService]"
+    "AgentPreferencesServerURI = 'http://'$HomeURI:$PrivatePort'"
+    "[PresenceService]"
+    "PresenceServerURI = 'http://'$HomeURI:$PrivatePort'"
+    "[UserAccountService]"
+    "UserAccountServerURI = 'http://'$HomeURI:$PrivatePort'"
+    "[GridUserService]"
+    "GridUserServerURI = 'http://'$HomeURI:$PrivatePort'"
+    "[AuthenticationService]"
+    "AuthenticationServerURI = 'http://'$HomeURI:$PrivatePort'"
+    "[FriendsService]"
+    "FriendsServerURI = 'http://'$HomeURI:$PrivatePort'"
+    "[HGInventoryAccessModule]"
+    "HomeURI = 'http://'$HomeURI:$PublicPort'"
+    "Gatekeeper = 'http://'$HomeURI:$PublicPort'"
+    "RestrictInventoryAccessAbroad = false"
+    "[HGAssetService]"
+    "HomeURI = 'http://'$HomeURI:$PublicPort'"
+    "[HGFriendsModule]"
+    "[UserAgentService]"
+    "UserAgentServerURI = 'http://'$HomeURI:$PublicPort'"
+    "[MapImageService]"
+    "MapImageServerURI = 'http://'$HomeURI:$PrivatePort'"
+    "[AuthorizationService]"
+    "[MuteListService]"
+    "MuteListServerURI = 'http://'$HomeURI:$PrivatePort'"
+    )
+    echo "Alte $GridCommondatei Datei loeschen falls vorhanden."
+    rm -f $GridCommondatei # || echo "Keine $GridCommondatei Datei vorhanden."
+
+    echo "$GridCommondatei schreiben"
+    printf '%s\n' "${GridCommonConfigList[@]}" > $GridCommondatei
+
+    echo "Tausche Hochstriche aus."
+    sed -i -e s/\'/\"/g "$GridCommondatei"
+}
+
+### osslEnable Config
+function osslEnableConfig() {
+    # Abfrage des Benutzers.
+    echo "Alle Skript Rechte an Grid Betreiber [$BenutzerUUID]: "; read -r Rechte
+    # Auswertung der Eingaben.
+    if test -z "$Rechte"; then Rechte="$BenutzerUUID"; fi
+
+    osslEnableConfigSet "$Rechte"
+}
+function osslEnableConfigSet() {
+    osslEnabledatei="osslEnable.ini"
+
+    OsslEnableConfigList=(
+    "[OSSL]"
+    "AllowOSFunctions = true"
+    "AllowMODFunctions = true"
+    "AllowLightShareFunctions = true"
+    "PermissionErrorToOwner = true"
+    "OSFunctionThreatLevel = Moderate"
+    "osslParcelO = 'PARCEL_OWNER,$Rechte,'"
+    "osslParcelOG = 'PARCEL_GROUP_MEMBER,PARCEL_OWNER,$Rechte,'"
+    "osslNPC = ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER,$Rechte"
+    "Allow_osDrawText = 				true"
+    "Allow_osGetAgents = 				true"
+    "Allow_osGetAvatarList =  			true"
+    "Allow_osGetGender =               true"
+    "Allow_osGetHealth =               true"
+    "Allow_osGetHealRate =             true"
+    "Allow_osGetNPCList =              true"
+    "Allow_osGetRezzingObject =        true"
+    "Allow_osNpcGetOwner =             ${OSSL|osslNPC}"
+    "Allow_osSetSunParam =             ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osTeleportOwner =           ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osWindActiveModelPluginName = true"
+    "Allow_osSetEstateSunSettings =    ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osSetRegionSunSettings =    ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osEjectFromGroup =          ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osForceBreakAllLinks =      ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osForceBreakLink =          ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osGetWindParam =            true"
+    "Allow_osInviteToGroup =           ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osReplaceString =           true"
+    "Allow_osSetDynamicTextureData =  true"
+    "Allow_osSetDynamicTextureDataFace =   ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osSetDynamicTextureDataBlend =  ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osSetDynamicTextureDataBlendFace = ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osSetDynamicTextureURL =        ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osSetDynamicTextureURLBlend =   ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osSetDynamicTextureURLBlendFace = ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osSetParcelMediaURL =       ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osSetParcelSIPAddress =     ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osSetPrimFloatOnWater =     true"
+    "Allow_osSetWindParam =            ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osTerrainFlush =            ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osUnixTimeToTimestamp =     true"
+    "Allow_osAvatarName2Key =          true"
+    "Allow_osFormatString =            true"
+    "Allow_osKey2Name =                ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osListenRegex =             true"
+    "Allow_osLoadedCreationDate =      ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osLoadedCreationID =        ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osLoadedCreationTime =      ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osMessageObject =           true"
+    "Allow_osRegexIsMatch =            true"
+    "Allow_osGetAvatarHomeURI =        true"
+    "Allow_osNpcSetProfileAbout =      ${OSSL|osslNPC}"
+    "Allow_osNpcSetProfileImage =      ${OSSL|osslNPC}"
+    "Allow_osDie =                     ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osDetectedCountry =         ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osDropAttachment =          ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osDropAttachmentAt =        ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osGetAgentCountry =         true"
+    "Allow_osGetGridCustom =           true"
+    "Allow_osGetGridGatekeeperURI =    true"
+    "Allow_osGetGridHomeURI =          true"
+    "Allow_osGetGridLoginURI =         true"
+    "Allow_osGetGridName =             true"
+    "Allow_osGetGridNick =             true"
+    "Allow_osGetNumberOfAttachments =  true"
+    "Allow_osGetRegionStats =          true"
+    "Allow_osGetSimulatorMemory =      true"
+    "Allow_osGetSimulatorMemoryKB =    true"
+    "Allow_osMessageAttachments =      ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osSetSpeed =                ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osSetOwnerSpeed =           ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osCauseDamage =             ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osCauseHealing =            ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osSetHealth =               ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osSetHealRate =             ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osForceAttachToAvatar =     ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osForceAttachToAvatarFromInventory = ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osForceCreateLink =         ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osForceDropAttachment =     ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osForceDropAttachmentAt =   ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osGetLinkPrimitiveParams =  ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osGetPhysicsEngineType =    ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osGetRegionMapTexture =     ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osGetScriptEngineName =     ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osGetSimulatorVersion =     ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osMakeNotecard =            ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osMatchString =             ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osNpcCreate =               ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osNpcGetPos =               ${OSSL|osslNPC}"
+    "Allow_osNpcGetRot =               ${OSSL|osslNPC}"
+    "Allow_osNpcLoadAppearance =       ${OSSL|osslNPC}"
+    "Allow_osNpcMoveTo =               ${OSSL|osslNPC}"
+    "Allow_osNpcMoveToTarget =         ${OSSL|osslNPC}"
+    "Allow_osNpcPlayAnimation =        ${OSSL|osslNPC}"
+    "Allow_osNpcRemove =               true"
+    "Allow_osNpcSaveAppearance =       ${OSSL|osslNPC}"
+    "Allow_osNpcSay =                  ${OSSL|osslNPC}"
+    "Allow_osNpcSayTo =                ${OSSL|osslNPC}"
+    "Allow_osNpcSetRot =               ${OSSL|osslNPC}"
+    "Allow_osNpcShout =                ${OSSL|osslNPC}"
+    "Allow_osNpcSit =                  ${OSSL|osslNPC}"
+    "Allow_osNpcStand =                ${OSSL|osslNPC}"
+    "Allow_osNpcStopAnimation =        ${OSSL|osslNPC}"
+    "Allow_osNpcStopMoveToTarget =     ${OSSL|osslNPC}"
+    "Allow_osNpcTouch =                ${OSSL|osslNPC}"
+    "Allow_osNpcWhisper =              ${OSSL|osslNPC}"
+    "Allow_osOwnerSaveAppearance =     ${OSSL|osslNPC}"
+    "Allow_osParcelJoin =              ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osParcelSubdivide =         ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osRegionRestart =           ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osRegionNotice =            ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osSetProjectionParams =     ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osSetRegionWaterHeight =    ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osSetTerrainHeight =        ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osSetTerrainTexture =       ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osSetTerrainTextureHeight = ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osAgentSaveAppearance =     ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osAvatarPlayAnimation =     ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osAvatarStopAnimation =     ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osForceAttachToOtherAvatarFromInventory = ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osForceDetachFromAvatar =   ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osForceOtherSit =           ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osGetNotecard =             ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osGetNotecardLine =         ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osGetNumberOfNotecardLines = ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osSetRot  =                 ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osSetParcelDetails =        ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osGrantScriptPermissions =  ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osKickAvatar =              ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osRevokeScriptPermissions = ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osTeleportAgent =           ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osTeleportObject =          ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osSetContentType =          ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    )
+    echo "Alte $osslEnabledatei Datei loeschen falls vorhanden."
+    rm -f $osslEnabledatei # || echo "Keine $osslEnabledatei Datei vorhanden."
+
+    echo "$osslEnabledatei schreiben"
+    printf '%s\n' "${OsslEnableConfigList[@]}" > $osslEnabledatei
+
+    echo "Tausche Hochstriche aus."
+    sed -i -e s/\'/\"/g "$GridCommondatei"
+}
+
+### Regions Config
+function RegionsConfig() {
+    UUID=$(uuidgen)
+    # Abfrage des Benutzers.
+    echo "RegionName [Welcome]:"; read -r RegionName
+    echo "RegionUUID [$UUID]: "; read -r RegionUUID
+    echo "Location [1000,1000]: "; read -r Location
+    echo "InternalPort [9050]: "; read -r InternalPort
+    echo "ExternalHostName [127.0.0.1]: "; read -r ExternalHostName
+    echo "Size [512]: "; read -r Size
+    echo "MaxPrims [100000]: "; read -r MaxPrims
+    echo "MaxAgents [50]: "; read -r MaxAgents
+    # Auswertung der Eingaben.
+    if test -z "$RegionName"; then RegionName="Welcome"; fi
+    if test -z "$RegionUUID"; then RegionUUID="$UUID"; fi
+    if test -z "$Location"; then Location="1000,1000"; fi
+    if test -z "$InternalPort"; then InternalPort="9050"; fi
+    if test -z "$ExternalHostName"; then ExternalHostName="127.0.0.1"; fi
+    if test -z "$Size"; then Size="512"; fi
+    if test -z "$MaxPrims"; then MaxPrims="100000"; fi
+    if test -z "$MaxAgents"; then MaxAgents="50"; fi
+
+    RegionsConfigSet $RegionName "$RegionUUID" $Location $InternalPort $ExternalHostName $Size $MaxPrims $MaxAgents "$UUID"
+}
+function RegionsConfigSet() {
+    Regionsdatei="OpenSim.ini"
+
+    RegionsConfigList=(
+    "[Erste-Region]"
+    "RegionUUID = $RegionUUID"
+    "Location = $Location"
+    "InternalAddress = 0.0.0.0"
+    "InternalPort = $InternalPort"
+    "AllowAlternatePorts = False"
+    "ExternalHostName = $ExternalHostName"
+    "SizeX = $Size"
+    "SizeY = $Size"
+    "SizeZ = $Size"
+    "NonPhysicalPrimMax = 256"
+    "PhysicalPrimMax = 64"
+    "MaxPrims = $MaxPrims"
+    "MaxAgents = $MaxAgents"
+    )
+    echo "Alte $Regionsdatei Datei loeschen falls vorhanden."
+    rm -f $Regionsdatei # || echo "Keine $Regionsdatei Datei vorhanden."
+
+    echo "$Regionsdatei schreiben"
+    printf '%s\n' "${RegionsConfigList[@]}" > $Regionsdatei
+
+    echo "Tausche Hochstriche aus."
+    sed -i -e s/\'/\"/g "$GridCommondatei"
+}
+
+### Robust Config
+function RobustConfig() {    
+    # Abfrage des Benutzers.
+    echo "BaseHostname [127.0.0.1]: "; read -r BaseHostname
+    echo "gridname [myGrid]: "; read -r gridname
+    echo "mySQL User Name [myName]: "; read -r UserID
+    echo "mySQL Password [myPassword]: "; read -r MysqlPassword
+    echo "mySQL Database [myDatabase]: "; read -r MysqlDatabase
+    echo "StartRegion [Welcome]: "; read -r StartRegion
+    # Auswertung der Eingaben.
+    if test -z "$BaseHostname"; then BaseHostname="127.0.0.1"; fi
+    if test -z "$gridname"; then gridname="myGrid"; fi
+    if test -z "$UserID"; then UserID="myName"; fi
+    if test -z "$MysqlPassword"; then MysqlPassword="myPassword"; fi
+    if test -z "$MysqlDatabase"; then MysqlDatabase="myDatabase"; fi
+    if test -z "$StartRegion"; then StartRegion="Welcome"; fi
+
+    PublicPort="8002"
+    PrivatePort="8003"
+    PrivURL=$BaseHostname
+    BaseURL="http://$BaseHostname"
+    MoneyPort="8008"
+
+    RobustConfigSet $BaseHostname $gridname $UserID $MysqlPassword $MysqlDatabase $StartRegion $PublicPort $PrivatePort $PrivURL $BaseURL $MoneyPort
+}
+function RobustConfigSet() {
+    Robustdatei="Robust.ini"    
+
+    RobustConfigList=(
+    "[Const]"
+    "BaseURL = '$BaseURL'"
+    "PublicPort = '$PublicPort'"
+    "PrivatePort = '$PrivatePort'"
+    "MysqlDatabase = '$MysqlDatabase'"
+    "MysqlUser = '$MysqlUser'"
+    "MysqlPassword = '$MysqlPassword'"
+    "StartRegion = '$StartRegion'"
+    "Simulatorgridname = '$gridname'"
+    "Simulatorgridnick = '$gridname'"
+    "[Startup]"
+    "PIDFile = '/tmp/Robust.pid'"
+    "RegistryLocation = '.'"
+    "ConfigDirectory = 'robust-include'"
+    "ConsoleHistoryFileEnabled = true"
+    "ConsoleHistoryFile = 'RobustConsoleHistory.txt'"
+    "ConsoleHistoryFileLines = 100"
+    "NoVerifyCertChain = true"
+    "NoVerifyCertHostname = true"
+    "[ServiceList]"
+    "AssetServiceConnector = '${Const|PrivatePort}/OpenSim.Server.Handlers.dll:AssetServiceConnector'"
+    "InventoryInConnector = '${Const|PrivatePort}/OpenSim.Server.Handlers.dll:XInventoryInConnector'"
+    "GridServiceConnector = '${Const|PrivatePort}/OpenSim.Server.Handlers.dll:GridServiceConnector'"
+    "GridInfoServerInConnector = '${Const|PublicPort}/OpenSim.Server.Handlers.dll:GridInfoServerInConnector'"
+    "AuthenticationServiceConnector = '${Const|PrivatePort}/OpenSim.Server.Handlers.dll:AuthenticationServiceConnector'"
+    "OpenIdServerConnector = '${Const|PublicPort}/OpenSim.Server.Handlers.dll:OpenIdServerConnector'"
+    "AvatarServiceConnector = '${Const|PrivatePort}/OpenSim.Server.Handlers.dll:AvatarServiceConnector'"
+    "LLLoginServiceInConnector = '${Const|PublicPort}/OpenSim.Server.Handlers.dll:LLLoginServiceInConnector'"
+    "PresenceServiceConnector = '${Const|PrivatePort}/OpenSim.Server.Handlers.dll:PresenceServiceConnector'"
+    "UserAccountServiceConnector = '${Const|PrivatePort}/OpenSim.Server.Handlers.dll:UserAccountServiceConnector'"
+    "GridUserServiceConnector = '${Const|PrivatePort}/OpenSim.Server.Handlers.dll:GridUserServiceConnector'"
+    "AgentPreferencesServiceConnector = '${Const|PrivatePort}/OpenSim.Server.Handlers.dll:AgentPreferencesServiceConnector'"
+    "FriendsServiceConnector = '${Const|PrivatePort}/OpenSim.Server.Handlers.dll:FriendsServiceConnector'"
+    "MapAddServiceConnector = '${Const|PrivatePort}/OpenSim.Server.Handlers.dll:MapAddServiceConnector'"
+    "MapGetServiceConnector = '${Const|PublicPort}/OpenSim.Server.Handlers.dll:MapGetServiceConnector'"
+    "OfflineIMServiceConnector = '${Const|PrivatePort}/OpenSim.Addons.OfflineIM.dll:OfflineIMServiceRobustConnector'"
+    "GroupsServiceConnector = '${Const|PrivatePort}/OpenSim.Addons.Groups.dll:GroupsServiceRobustConnector'"
+    "BakedTextureService = '${Const|PrivatePort}/OpenSim.Server.Handlers.dll:XBakesConnector'"
+    "UserProfilesServiceConnector = '${Const|PublicPort}/OpenSim.Server.Handlers.dll:UserProfilesConnector'"
+    "MuteListConnector = '${Const|PrivatePort}/OpenSim.Server.Handlers.dll:MuteListServiceConnector'"
+    "GatekeeperServiceInConnector = '${Const|PublicPort}/OpenSim.Server.Handlers.dll:GatekeeperServiceInConnector'"
+    "UserAgentServerConnector = '${Const|PublicPort}/OpenSim.Server.Handlers.dll:UserAgentServerConnector'"
+    "HeloServiceInConnector = '${Const|PublicPort}/OpenSim.Server.Handlers.dll:HeloServiceInConnector'"
+    "HGFriendsServerConnector = '${Const|PublicPort}/OpenSim.Server.Handlers.dll:HGFriendsServerConnector'"
+    "InstantMessageServerConnector = '${Const|PublicPort}/OpenSim.Server.Handlers.dll:InstantMessageServerConnector'"
+    "HGInventoryServiceConnector = 'HGInventoryService@${Const|PublicPort}/OpenSim.Server.Handlers.dll:XInventoryInConnector'"
+    "HGAssetServiceConnector = 'HGAssetService@${Const|PublicPort}/OpenSim.Server.Handlers.dll:AssetServiceConnector'"
+    "HGGroupsServiceConnector = '${Const|PublicPort}/OpenSim.Addons.Groups.dll:HGGroupsServiceRobustConnector'"
+    "[Network]"
+    "port = ${Const|PrivatePort}"
+    "AllowllHTTPRequestIn = false"
+    "[Hypergrid]"
+    "HomeURI = '${Const|BaseURL}:${Const|PublicPort}'"
+    "GatekeeperURI = '${Const|BaseURL}:${Const|PublicPort}'"
+    "[AccessControl]"
+    "DeniedClients = 'Imprudence|CopyBot|Twisted|Crawler|Cryolife|darkstorm|DarkStorm|Darkstorm|hydrastorm viewer|kinggoon copybot|goon squad copybot|copybot pro|darkstorm viewer|copybot club|darkstorm second life|copybot download|HydraStorm Copybot Viewer|Copybot|Firestorm Pro|DarkStorm v3|DarkStorm v2|ShoopedStorm|HydraStorm|hydrastorm|kinggoon|goon squad|goon|copybot|Shooped|ShoopedStorm|Triforce|Triforce Viewer|Firestorm Professional|ShoopedLife|Sombrero|Sombrero Firestorm|GoonSquad|Solar|SolarStorm'"
+    "[DatabaseService]"
+    "StorageProvider = 'OpenSim.Data.MySQL.dll'"
+    "ConnectionString = 'Data Source=localhost;Database='$MysqlDatabase';User ID='$UserID';Password='$MysqlPassword';Old Guids=true;SslMode=None;'"
+    "[AssetService]"
+    "LocalServiceModule = 'OpenSim.Services.AssetService.dll:AssetService'"
+    "DefaultAssetLoader = 'OpenSim.Framework.AssetLoader.Filesystem.dll'"
+    "AssetLoaderArgs = './assets/AssetSets.xml'"
+    "AllowRemoteDelete = true"
+    "AllowRemoteDeleteAllTypes = false"
+    "[InventoryService]"
+    "LocalServiceModule = 'OpenSim.Services.InventoryService.dll:XInventoryService'"
+    "AllowDelete = true"
+    "[GridService]"
+    "LocalServiceModule = 'OpenSim.Services.GridService.dll:GridService'"
+    "AssetService = 'OpenSim.Services.AssetService.dll:AssetService'"
+    "MapTileDirectory = './maptiles'"
+    "Region_$StartRegion = 'DefaultRegion, DefaultHGRegion'"
+    "HypergridLinker = true"
+    "ExportSupported = true"
+    "GatekeeperURI = '${Const|BaseURL}:${Const|PublicPort}'"
+    "[FreeswitchService]"
+    "LocalServiceModule = 'OpenSim.Services.FreeswitchService.dll:FreeswitchService'"
+    "[AuthenticationService]"
+    "LocalServiceModule = 'OpenSim.Services.AuthenticationService.dll:PasswordAuthenticationService'"
+    "AllowGetAuthInfo = true"
+    "AllowSetAuthInfo = true"
+    "AllowSetPassword = true"
+    "[OpenIdService]"
+    "AuthenticationServiceModule = 'OpenSim.Services.AuthenticationService.dll:PasswordAuthenticationService'"
+    "UserAccountServiceModule = 'OpenSim.Services.UserAccountService.dll:UserAccountService'"
+    "[UserAccountService]"
+    "LocalServiceModule = 'OpenSim.Services.UserAccountService.dll:UserAccountService'"
+    "AuthenticationService = 'OpenSim.Services.AuthenticationService.dll:PasswordAuthenticationService'"
+    "PresenceService = 'OpenSim.Services.PresenceService.dll:PresenceService'"
+    "GridService = 'OpenSim.Services.GridService.dll:GridService'"
+    "InventoryService = 'OpenSim.Services.InventoryService.dll:XInventoryService'"
+    "AvatarService = 'OpenSim.Services.AvatarService.dll:AvatarService'"
+    "GridUserService = 'OpenSim.Services.UserAccountService.dll:GridUserService'"
+    "CreateDefaultAvatarEntries = true"
+    "AllowCreateUser = true"
+    "AllowSetAccount = true"
+    "[GridUserService]"
+    "LocalServiceModule = 'OpenSim.Services.UserAccountService.dll:GridUserService'"
+    "[AgentPreferencesService]"
+    "LocalServiceModule = 'OpenSim.Services.UserAccountService.dll:AgentPreferencesService'"
+    "[PresenceService]"
+    "LocalServiceModule = 'OpenSim.Services.PresenceService.dll:PresenceService'"
+    "[AvatarService]"
+    "LocalServiceModule = 'OpenSim.Services.AvatarService.dll:AvatarService'"
+    "[FriendsService]"
+    "LocalServiceModule = 'OpenSim.Services.FriendsService.dll:FriendsService'"
+    "[EstateService]"
+    "LocalServiceModule = 'OpenSim.Services.EstateService.dll:EstateDataService'"
+    "[LibraryService]"
+    "LibraryName = 'OpenSim Library'"
+    "DefaultLibrary = './inventory/Libraries.xml'"
+    "[LoginService]"
+    "LocalServiceModule = 'OpenSim.Services.LLLoginService.dll:LLLoginService'"
+    "UserAccountService = 'OpenSim.Services.UserAccountService.dll:UserAccountService'"
+    "GridUserService = 'OpenSim.Services.UserAccountService.dll:GridUserService'"
+    "AuthenticationService = 'OpenSim.Services.AuthenticationService.dll:PasswordAuthenticationService'"
+    "InventoryService = 'OpenSim.Services.InventoryService.dll:XInventoryService'"
+    "AvatarService = 'OpenSim.Services.AvatarService.dll:AvatarService'"
+    "PresenceService = 'OpenSim.Services.PresenceService.dll:PresenceService'"
+    "GridService = 'OpenSim.Services.GridService.dll:GridService'"
+    "SimulationService ='OpenSim.Services.Connectors.dll:SimulationServiceConnector'"
+    "LibraryService = 'OpenSim.Services.InventoryService.dll:LibraryService'"
+    "FriendsService = 'OpenSim.Services.FriendsService.dll:FriendsService'"
+    "MinLoginLevel = 0"
+    "UserAgentService = 'OpenSim.Services.HypergridService.dll:UserAgentService'"
+    "HGInventoryServicePlugin = 'HGInventoryService@OpenSim.Services.HypergridService.dll:HGSuitcaseInventoryService'"
+    "Currency = 'T$'"
+    "ClassifiedFee = 0"
+    "WelcomeMessage = 'Welcome, Avatar!'"
+    "AllowRemoteSetLoginLevel = 'false'"
+    "GatekeeperURI = '${Const|BaseURL}:${Const|PublicPort}'"
+    "SRV_HomeURI = '${Const|BaseURL}:${Const|PublicPort}'"
+    "SRV_InventoryServerURI = '${Const|BaseURL}:${Const|PublicPort}'"
+    "SRV_AssetServerURI = '${Const|BaseURL}:${Const|PublicPort}'"
+    "SRV_ProfileServerURI = '${Const|BaseURL}:${Const|PublicPort}'"
+    "SRV_FriendsServerURI = '${Const|BaseURL}:${Const|PublicPort}'"
+    "SRV_IMServerURI = '${Const|BaseURL}:${Const|PublicPort}'"
+    "SRV_GroupsServerURI = '${Const|BaseURL}:${Const|PublicPort}'"
+    "AllowLoginFallbackToAnyRegion = false"
+    "DeniedMacs = '44ed33b396b10a5c95d04967aff8bd9c'"
+    "[MapImageService]"
+    "LocalServiceModule = 'OpenSim.Services.MapImageService.dll:MapImageService'"
+    "TilesStoragePath = 'maptiles'"
+    "[GridInfoService]"
+    "login = ${Const|BaseURL}:${Const|PublicPort}/"
+    "gridname = '$gridname'"
+    "gridnick = '$gridname'"
+    "welcome = ${Const|BaseURL}/"
+    "economy = ${Const|BaseURL}/helper/"
+    "about = ${Const|BaseURL}/"
+    "register = ${Const|BaseURL}/"
+    "help = ${Const|BaseURL}/"
+    "password = ${Const|BaseURL}/"
+    "gatekeeper = ${Const|BaseURL}:${Const|PublicPort}/"
+    "uas = ${Const|BaseURL}:${Const|PublicPort}/"
+    "[GatekeeperService]"
+    "LocalServiceModule = 'OpenSim.Services.HypergridService.dll:GatekeeperService'"
+    "UserAccountService = 'OpenSim.Services.UserAccountService.dll:UserAccountService'"
+    "UserAgentService = 'OpenSim.Services.HypergridService.dll:UserAgentService'"
+    "PresenceService = 'OpenSim.Services.PresenceService.dll:PresenceService'"
+    "GridUserService = 'OpenSim.Services.UserAccountService.dll:GridUserService'"
+    "GridService = 'OpenSim.Services.GridService.dll:GridService'"
+    "AuthenticationService = 'OpenSim.Services.Connectors.dll:AuthenticationServicesConnector'"
+    "SimulationService ='OpenSim.Services.Connectors.dll:SimulationServiceConnector'"
+    "AllowTeleportsToAnyRegion = true"
+    "ForeignAgentsAllowed = true"
+    "[UserAgentService]"
+    "LocalServiceModule = 'OpenSim.Services.HypergridService.dll:UserAgentService'"
+    "GridUserService     = 'OpenSim.Services.UserAccountService.dll:GridUserService'"
+    "GridService         = 'OpenSim.Services.GridService.dll:GridService'"
+    "GatekeeperService   = 'OpenSim.Services.HypergridService.dll:GatekeeperService'"
+    "PresenceService     = 'OpenSim.Services.PresenceService.dll:PresenceService'"
+    "FriendsService      = 'OpenSim.Services.FriendsService.dll:FriendsService'"
+    "UserAccountService  = 'OpenSim.Services.UserAccountService.dll:UserAccountService'"
+    "LevelOutsideContacts = 0"
+    "ShowUserDetailsInHGProfile = True"
+    "[HGInventoryService]"
+    "LocalServiceModule    = 'OpenSim.Services.InventoryService.dll:XInventoryService'"
+    "UserAccountsService = 'OpenSim.Services.UserAccountService.dll:UserAccountService'"
+    "AvatarService = 'OpenSim.Services.AvatarService.dll:AvatarService'"
+    "AuthType = None"
+    "HomeURI = '${Const|BaseURL}:${Const|PublicPort}'"
+    "[HGAssetService]"
+    "LocalServiceModule = 'OpenSim.Services.HypergridService.dll:HGAssetService'"
+    "UserAccountsService = 'OpenSim.Services.UserAccountService.dll:UserAccountService'"
+    "AuthType = None"
+    "HomeURI = '${Const|BaseURL}:${Const|PublicPort}'"
+    "[HGFriendsService]"
+    "LocalServiceModule = 'OpenSim.Services.HypergridService.dll:HGFriendsService'"
+    "UserAgentService = 'OpenSim.Services.HypergridService.dll:UserAgentService'"
+    "FriendsService = 'OpenSim.Services.FriendsService.dll:FriendsService'"
+    "UserAccountService = 'OpenSim.Services.UserAccountService.dll:UserAccountService'"
+    "GridService = 'OpenSim.Services.GridService.dll:GridService'"
+    "PresenceService = 'OpenSim.Services.PresenceService.dll:PresenceService'"
+    "[HGInstantMessageService]"
+    "LocalServiceModule  = 'OpenSim.Services.HypergridService.dll:HGInstantMessageService'"
+    "GridService         = 'OpenSim.Services.GridService.dll:GridService'"
+    "PresenceService     = 'OpenSim.Services.PresenceService.dll:PresenceService'"
+    "UserAgentService    = 'OpenSim.Services.HypergridService.dll:UserAgentService'"
+    "InGatekeeper = True"
+    "[Messaging]"
+    "OfflineIMService = 'OpenSim.Addons.OfflineIM.dll:OfflineIMService'"
+    "[Groups]"
+    "OfflineIMService = 'OpenSim.Addons.OfflineIM.dll:OfflineIMService'"
+    "UserAccountService = 'OpenSim.Services.UserAccountService.dll:UserAccountService'"
+    "HomeURI = '${Const|BaseURL}:${Const|PublicPort}'"
+    "MaxAgentGroups = 50"
+    "[UserProfilesService]"
+    "LocalServiceModule = 'OpenSim.Services.UserProfilesService.dll:UserProfilesService'"
+    "Enabled = true"
+    "UserAccountService = OpenSim.Services.UserAccountService.dll:UserAccountService"
+    "AuthenticationServiceModule = 'OpenSim.Services.AuthenticationService.dll:PasswordAuthenticationService'"
+    "[BakedTextureService]"
+    "LocalServiceModule = 'OpenSim.Server.Handlers.dll:XBakes'"
+    "BaseDirectory = './bakes'"
+    "[MuteListService]"
+    "LocalServiceModule = 'OpenSim.Services.MuteListService.dll:MuteListService'"
+    )
+    echo "Alte $Robustdatei Datei loeschen falls vorhanden."
+    rm -f $Robustdatei # || echo "Keine $Robustdatei Datei vorhanden."
+
+    echo "$Robustdatei schreiben"
+    printf '%s\n' "${RobustConfigList[@]}" > $Robustdatei
+
+    echo "Tausche Hochstriche aus."
+    sed -i -e s/\'/\"/g "$GridCommondatei"
 }
 
 ###########################################################################
@@ -7249,7 +8194,7 @@ function info() {
 	echo " Server IP: ${AKTUELLEIP}"
 	echo " MONO THREAD Einstellung: ${MONO_THREADS_PER_CPU}"
 	echo " Spracheinstellung: ${LANG} $(tput sgr 0)"
-	echo " Screen Version: $(screen --version)"
+	echo " $(screen --version)"
 	who -b
 	return 0
 }
@@ -7394,7 +8339,7 @@ function menuinfo() {
 	infoboxtext+=" Server IP: ${AKTUELLEIP}\n"
 	infoboxtext+=" MONO THREAD Einstellung: ${MONO_THREADS_PER_CPU}\n"
 	infoboxtext+=" Spracheinstellung: ${LANG}\n"
-	infoboxtext+=" Screen Version: $(screen --version)\n"
+	infoboxtext+=" $(screen --version)\n"
 	infoboxtext+=" Letzter$(who -b)\n\n"
 	infoboxtext+=" Aktuell laeuft im Moment:\n"
 	infoboxtext+=" __________________________________________________________\n"
@@ -8239,7 +9184,7 @@ serverinstall) serverinstall ;;
 konsolenhilfe) konsolenhilfe ;;
 simstats) simstats "$2" ;;
 osbuilding) osbuilding "$2" ;;
-createuser) createuser "$2" "$3" "$4" "$5" ;;
+createuser) createuser "$2" "$3" "$4" "$5" "$6" ;;
 db_benutzer_anzeigen) db_benutzer_anzeigen "$2" "$3" ;;
 create_db) create_db "$2" "$3" "$4" ;;
 create_db_user) create_db_user "$2" "$3" "$4" "$5" ;;
@@ -8255,7 +9200,6 @@ regionsport) regionsport "$2" "$3" "$4" ;;
 setpartner) setpartner "$2" "$3" "$4" "$5" "$6" ;;
 makewebmaps) makewebmaps ;;
 opensimholen) opensimholen ;;
-autoconfig) autoconfig ;;
 conf_write) conf_write "$2" "$3" "$4" "$5" ;;
 conf_delete) conf_delete "$2" "$3" "$4" ;;
 conf_read) conf_read "$2" "$3" "$4" ;;
@@ -8383,6 +9327,13 @@ db_tablextract_regex) db_tablextract_regex "$2" "$3" "$4" ;;
 systeminformation) systeminformation ;;
 radiolist) radiolist ;;
 newregionini) newregionini ;;
+ConfigSet) ConfigSet "$2" ;;
+AutoInstall) AutoInstall ;;
+OpenSimConfig) OpenSimConfig ;;
+GridCommonConfig) GridCommonConfig ;;
+osslEnableConfig) osslEnableConfig ;;
+RegionsConfig) RegionsConfig ;;
+RobustConfig) RobustConfig ;;
 *) hauptmenu ;;
 esac
 vardel
