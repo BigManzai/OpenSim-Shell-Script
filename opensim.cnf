@@ -1,20 +1,19 @@
-### Einstellungen VERSION V0.79.551
+### Einstellungen VERSION V0.79.591
 
 : "${DIALOG=dialog}"
-
-: "${DIALOG_OK=0}"
 : "${DIALOG_CANCEL=1}"
-: "${DIALOG_HELP=2}"
-: "${DIALOG_EXTRA=3}"
-: "${DIALOG_ITEM_HELP=4}"
 : "${DIALOG_ESC=255}"
 
-: "${SIG_NONE=0}"
-: "${SIG_HUP=1}"
-: "${SIG_INT=2}"
-: "${SIG_QUIT=3}"
-: "${SIG_KILL=9}"
-: "${SIG_TERM=15}"
+# : "${DIALOG_OK=0}"
+# : "${DIALOG_HELP=2}"
+# : "${DIALOG_EXTRA=3}"
+# : "${DIALOG_ITEM_HELP=4}"
+# : "${SIG_NONE=0}"
+# : "${SIG_HUP=1}"
+# : "${SIG_INT=2}"
+# : "${SIG_QUIT=3}"
+# : "${SIG_KILL=9}"
+# : "${SIG_TERM=15}"
 
 ## Das Startverzeichnis home oder opt zum Beispiel.
 	STARTVERZEICHNIS="opt"
@@ -35,24 +34,25 @@
 	OSSEARCHSOURCE="OpenSimSearch"
 	OSSEARCHSZIP="OpenSimSearch-master.zip"
 
-## mySQL
+## mySQL noch keine Funktion
 	#hostname="localhost"; 
-	username="username"; 
-	password="userpasswd"; 
-	databasename="grid";
+	# username="username"; 
+	# password="userpasswd"; 
+	# databasename="grid";
 	#swpfilename="/opt/opensim.swp"
 
 ## Schrift- und Hintergrundfarben
 ##  0 – Black, 1 – Red, 2 – Green, 3 – Yellow, 4 – Blue, 5 – Magenta, 6 – Cyan, 7 – White
-# font color
+# font color;	background color;
 	textfontcolor=7;    textbaggroundcolor=0;
 	debugfontcolor=4;   debugbaggroundcolor=0;
 	infofontcolor=2;    infobaggroundcolor=0;
 	warnfontcolor=3;    warnbaggroundcolor=0;
 	errorfontcolor=1;   errorbaggroundcolor=7;
 	linefontcolor=7;    linebaggroundcolor=0;
-	# create Logfile yes/no
-	LOGWRITE="yes" # yes/no
+
+	ScreenLogLevel=0; # ScreenLogLevel=0 nichts machen. - ScreenLogLevel=1 Bildschirm zwischenzeitlich loeschen.- ScreenLogLevel=2 Funktionsname mit ausgeben.
+	LOGWRITE="no" # yes/no
 	logfilename="multitool";
 	line="############################################################";
 	

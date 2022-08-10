@@ -16,14 +16,17 @@
 # ! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 # ! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-# * Status 27.07.2022 289 Funktionen.
+# * Status 27.07.2022 291 Funktionen.
 
 # # Visual Studio Code # ShellCheck # shellman # Better Comments #
 
 #### ? Einstellungen ####
 
-VERSION="V0.79.585" # opensimMULTITOOL Versionsausgabe
-clear               # Bildschirm loeschen
+VERSION="V0.79.593" # opensimMULTITOOL Versionsausgabe
+#clear # Bildschirmausgabe loeschen.
+#reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
+tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
+# printf '\e[3J' # Bildschirmausgabe sauber loeschen inklusive dem Scrollbereich.
 
 # ? Alte Variablen loeschen aus eventuellen voherigen sessions
 unset STARTVERZEICHNIS
@@ -50,8 +53,9 @@ function dummyvar() {
 	textfontcolor=7; textbaggroundcolor=0; debugfontcolor=4; debugbaggroundcolor=0	infofontcolor=2	infobaggroundcolor=0; warnfontcolor=3; warnbaggroundcolor=0
 	errorfontcolor=1; errorbaggroundcolor=0; SETMONOGCPARAMSON1="no"; SETMONOGCPARAMSON2="yes"	LOGDELETE="no"; LOGWRITE="no"; "$trimmvar"; logfilename="multitool"
 	username="username"	password="userpasswd"	databasename="grid"	linefontcolor=7	linebaggroundcolor=0; apache2errorlog="/var/log/apache2/error.log"; apache2accesslog="/var/log/apache2/access.log"
-	authlog="/var/log/auth.log"	ufwlog="/var/log/ufw.log"	mysqlmariadberor="/var/log/mysql/mariadb.err"; mysqlerrorlog="/var/log/mysql/error.log"; listVar=""
-	# DIALOG_OK=0; DIALOG_HELP=2 DIALOG_CANCEL=1; DIALOG_EXTRA=3; DIALOG_ITEM_HELP=4; DIALOG_ESC=255; DIALOG=dialog; SIG_NONE=0; SIG_HUP=1; SIG_INT=2; SIG_QUIT=3; SIG_KILL=9; SIG_TERM=15
+	authlog="/var/log/auth.log"	ufwlog="/var/log/ufw.log"	mysqlmariadberor="/var/log/mysql/mariadb.err"; mysqlerrorlog="/var/log/mysql/error.log"; listVar=""; ScreenLogLevel=0
+	# DIALOG_OK=0; DIALOG_HELP=2; DIALOG_EXTRA=3; DIALOG_ITEM_HELP=4; SIG_NONE=0; SIG_HUP=1; SIG_INT=2; SIG_QUIT=3; SIG_KILL=9; SIG_TERM=15
+	DIALOG_CANCEL=1; DIALOG_ESC=255; DIALOG=dialog; 
 }
 
 ### Datumsvariablen Datum, Dateidatum und Uhrzeit
@@ -109,6 +113,58 @@ function vardel() {
 	unset VERZEICHNISSCREEN
 	return 0
 }
+
+### ScreenLog Bildschirmausgabe reduzieren. TEST
+function ScreenLog() {
+	if (( ScreenLogLevel == 1 )); then
+		clear # Bildschirmausgabe loeschen Scrollbereich bleibt zum ueberpruefen.
+	fi	
+	if (( ScreenLogLevel == 2 )); then
+		reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
+	fi
+	if (( ScreenLogLevel == 3 )); then
+		tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich (schneller).
+	fi
+	if (( ScreenLogLevel == 4 )); then
+		printf '\e[3J' # Bildschirmausgabe sauber loeschen inklusive dem Scrollbereich.
+	fi
+	if (( ScreenLogLevel == 5 )); then
+		MYFUNCNAME=${FUNCNAME[0]};
+		echo "$MYFUNCNAME" # Funktionsname mit ausgeben.
+	fi
+	unset MYFUNCNAME
+	return 0
+}
+
+### ScreenLog Bildschirmausgabe reduzieren. TEST
+function dialogclear() {
+	dialog --clear
+	return 0
+}
+
+### Log Dateien von Ubuntu loeschen Beispiel: historylogclear "history"
+function historylogclear() {
+	hlclear=$1
+	case $hlclear in
+		history) 
+		history -cw; history -c; history -w
+		;;
+		apache2error) 
+			echo "" >$apache2errorlog  
+		;;
+		mysqlerror) 
+			echo "" >$mysqlerrorlog  
+		;;
+		mysqlmariadb) 
+			echo "" >$mysqlmariadberor  
+		;;
+		*) 
+			log info "  Nur das loeschen von history, apache2error, mysqlerror,"
+			log info "  und mysqlmariadb Error Log Dateien ist zur Zeit moeglich!"
+		;;
+	esac
+}
+
 logfilename=""
 ### ! Log Dateien und Funktionen
 function log() {
@@ -125,22 +181,22 @@ function log() {
 		case $logtype in
 		line) echo $lline >>/$STARTVERZEICHNIS/"$DATEIDATUM""$logfilename".log ;;
 		rohtext) echo "$text" >>/$STARTVERZEICHNIS/"$DATEIDATUM""$logfilename".log ;;
-		text) echo "$(date +'%d.%m.%Y - %H:%M:%S') TEXT: $text" >>/$STARTVERZEICHNIS/"$DATEIDATUM""$logfilename".log ;;
-		debug) echo "$(date +'%d.%m.%Y - %H:%M:%S') DEBUG: $text" >>/$STARTVERZEICHNIS/"$DATEIDATUM""$logfilename".log ;;
-		info) echo "$(date +'%d.%m.%Y - %H:%M:%S') INFO: $text" >>/$STARTVERZEICHNIS/"$DATEIDATUM""$logfilename".log ;;
-		warn) echo "$(date +'%d.%m.%Y - %H:%M:%S') WARNING: $text" >>/$STARTVERZEICHNIS/"$DATEIDATUM""$logfilename".log ;;
-		error) echo "$(date +'%d.%m.%Y - %H:%M:%S') ERROR: $text" >>/$STARTVERZEICHNIS/"$DATEIDATUM""$logfilename".log ;;
+		text) echo "$(date +'%d.%m.%Y-%H:%M:%S') TEXT: $text" >>/$STARTVERZEICHNIS/"$DATEIDATUM""$logfilename".log ;;
+		debug) echo "$(date +'%d.%m.%Y-%H:%M:%S') DEBUG: $text" >>/$STARTVERZEICHNIS/"$DATEIDATUM""$logfilename".log ;;
+		info) echo "$(date +'%d.%m.%Y-%H:%M:%S') INFO: $text" >>/$STARTVERZEICHNIS/"$DATEIDATUM""$logfilename".log ;;
+		warn) echo "$(date +'%d.%m.%Y-%H:%M:%S') WARNING: $text" >>/$STARTVERZEICHNIS/"$DATEIDATUM""$logfilename".log ;;
+		error) echo "$(date +'%d.%m.%Y-%H:%M:%S') ERROR: $text" >>/$STARTVERZEICHNIS/"$DATEIDATUM""$logfilename".log ;;
 		*) return 0 ;;
 		esac
 	fi
 	case $logtype in
 	line) echo "$(tput setaf $linefontcolor) $(tput setab $linebaggroundcolor)$lline $(tput sgr 0)" ;;
 	rohtext) echo "$text" ;;
-	text) echo "$(tput setaf $textfontcolor) $(tput setab $textbaggroundcolor) $(date +'%d.%m.%Y - %H:%M:%S') TEXT: $text $(tput sgr 0)" ;;
-	debug) echo "$(tput setaf $debugfontcolor) $(tput setab $debugbaggroundcolor) $(date +'%d.%m.%Y - %H:%M:%S') DEBUG: $text $(tput sgr 0)" ;;
-	info) echo "$(tput setaf $infofontcolor) $(tput setab $infobaggroundcolor) $(date +'%d.%m.%Y - %H:%M:%S') INFO: $text $(tput sgr 0)" ;;
-	warn) echo "$(tput setaf $warnfontcolor) $(tput setab $warnbaggroundcolor) $(date +'%d.%m.%Y - %H:%M:%S') WARNING: $text $(tput sgr 0)" ;;
-	error) echo "$(tput setaf $errorfontcolor) $(tput setab $errorbaggroundcolor) $(date +'%d.%m.%Y - %H:%M:%S') ERROR: $text $(tput sgr 0)" ;;
+	text) echo "$(tput setaf $textfontcolor) $(tput setab $textbaggroundcolor) $(date +'%d.%m.%Y-%H:%M:%S') TEXT: $text $(tput sgr 0)" ;;
+	debug) echo "$(tput setaf $debugfontcolor) $(tput setab $debugbaggroundcolor) $(date +'%d.%m.%Y-%H:%M:%S') DEBUG: $text $(tput sgr 0)" ;;
+	info) echo "$(tput setaf $infofontcolor) $(tput setab $infobaggroundcolor) $(date +'%d.%m.%Y-%H:%M:%S') INFO: $text $(tput sgr 0)" ;;
+	warn) echo "$(tput setaf $warnfontcolor) $(tput setab $warnbaggroundcolor) $(date +'%d.%m.%Y-%H:%M:%S') WARNING: $text $(tput sgr 0)" ;;
+	error) echo "$(tput setaf $errorfontcolor) $(tput setab $errorbaggroundcolor) $(date +'%d.%m.%Y-%H:%M:%S') ERROR: $text $(tput sgr 0)" ;;
 	*) return 0 ;;
 	esac
 	return 0
@@ -288,8 +344,8 @@ function menufinstall() {
 		boxtitel="opensimMULTITOOL Eingabe"
 		boxtext="Screen Name:"
 		TXTLISTE=$(dialog --backtitle "opensimMULTITOOL $VERSION" --title "$boxtitel" --inputbox "$boxtext" 8 40 3>&1 1>&2 2>&3 3>&-)
-		dialog --clear
-		clear
+		dialogclear
+		ScreenLog
 
 		while read -r line; do
 			if dpkg-query -s "$line" 2>/dev/null | grep -q installed; then
@@ -365,7 +421,7 @@ function downloados() {
 		"Download25: " "$LINK25" \
 		"Download26: " "$LINK26" 3>&1 1>&2 2>&3 3>&-)
 
-	dialog --clear
+	dialogclear
 
 	DownloadAntwort=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '1p')
 
@@ -475,8 +531,8 @@ function rebootdatum() {
 	antwort=$?
 
 	# Alles loeschen.
-	dialog --clear
-	clear
+	dialogclear
+	ScreenLog
 
 	# Auswertung Ja / Nein
 	if [ $antwort = 0 ]; then
@@ -496,8 +552,8 @@ function rebootdatum() {
 ### ! warnbox Medung anzeigen.
 function warnbox() {
 	dialog --msgbox "$1" 0 0
-	dialog --clear
-	clear
+	dialogclear
+	ScreenLog
 	hauptmenu
 }
 
@@ -506,8 +562,8 @@ function edittextbox() {
 	#--editbox 	DATEI HOEHE BREITE
 	dialog --editbox "$1" 0 0
 	#NEWTEXT=$(dialog --editbox "$1" 0 0)
-	dialog --clear
-	clear
+	dialogclear
+	ScreenLog
 	#echo "$NEWTEXT"
 	hauptmenu
 }
@@ -516,8 +572,8 @@ function edittextbox() {
 function textbox() {
 	#--editbox 	DATEI HOEHE BREITE
 	dialog --textbox "$1" 0 0
-	dialog --clear
-	clear
+	dialogclear
+	ScreenLog
 	hauptmenu
 }
 
@@ -675,8 +731,8 @@ function passwdgenerator() {
 		boxtitel="opensimMULTITOOL Eingabe"
 		boxtext="Passwortstaerke:"
 		STARK=$(dialog --backtitle "opensimMULTITOOL $VERSION" --title "$boxtitel" --inputbox "$boxtext" 8 40 3>&1 1>&2 2>&3 3>&-)
-		dialog --clear
-		clear
+		dialogclear
+		ScreenLog
 		PASSWD=$(tr -dc 'A-Za-z0-9!"#$%&'\''()*+,-./:;<=>?@[\]^_`{|}~' </dev/urandom | head -c "$STARK")
 		echo "$PASSWD"
 		unset PASSWD
@@ -736,8 +792,8 @@ function menuassetdel() {
 		OBJEKT=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '3p')
 
 		# Alles loeschen.
-		dialog --clear
-		clear
+		dialogclear
+		ScreenLog
 	else
 		# Alle Aktionen ohne dialog
 		echo "Keine Menuelose Funktion" | exit
@@ -797,8 +853,8 @@ function menulandclear() {
 		REGION=$(echo "$landclearBOXERGEBNIS" | sed -n '2p')
 
 		# Alles loeschen.
-		dialog --clear
-		clear
+		dialogclear
+		ScreenLog
 	else
 		# Alle Aktionen ohne dialog
 		echo "Keine Menuelose Funktion" | exit
@@ -863,8 +919,8 @@ function menuloadinventar() {
 		DATEI=$(echo "$loadinventarBOXERGEBNIS" | sed -n '4p')
 
 		# Alles loeschen.
-		dialog --clear
-		clear
+		dialogclear
+		ScreenLog
 	else
 		# Alle Aktionen ohne dialog
 		echo "Keine Menuelose Funktion" | exit
@@ -929,8 +985,8 @@ function menusaveinventar() {
 		DATEI=$(echo "$saveinventarBOXERGEBNIS" | sed -n '4p')
 
 		# Alles loeschen.
-		dialog --clear
-		clear
+		dialogclear
+		ScreenLog
 	else
 		# Alle Aktionen ohne dialog
 		echo "Keine Menuelose Funktion" | exit
@@ -992,8 +1048,8 @@ function menuoscommand() {
 		COMMAND=$(echo "$oscommandBOXERGEBNIS" | sed -n '3p')
 
 		# Alles loeschen.
-		dialog --clear
-		clear
+		dialogclear
+		ScreenLog
 	else
 		# Alle Aktionen ohne dialog
 		echo "Keine Menuelose Funktion" | exit
@@ -1029,14 +1085,14 @@ function menuoswriteconfig() {
 		boxtitel="opensimMULTITOOL Eingabe"
 		boxtext="Screen Name:"
 		SETSIMULATOR=$(dialog --backtitle "opensimMULTITOOL $VERSION" --title "$boxtitel" --inputbox "$boxtext" 8 40 3>&1 1>&2 2>&3 3>&-)
-		dialog --clear
-		clear
+		dialogclear
+		ScreenLog
 
 		if ! screen -list | grep -q "$SETSIMULATOR"; then
 			# es laeuft nicht - not work
 			dialog --backtitle "opensimMULTITOOL $VERSION" --msgbox "OpenSimulator $SETSIMULATOR OFFLINE!" 5 40
-			dialog --clear
-			clear
+			dialogclear
+			ScreenLog
 		else
 			# es laeuft - work
 			# Konfig schreiben
@@ -1047,8 +1103,8 @@ function menuoswriteconfig() {
 			dialog --backtitle "opensimMULTITOOL $VERSION" --msgbox "$CONFIGREAD" 0 0
 			#dialog --editbox "$CONFIGREAD" 0 0
 			#dialog --textbox "$CONFIGREAD" 0 0
-			dialog --clear
-			#clear
+			dialogclear
+			ScreenLog
 		fi
 	else
 		# Alle Aktionen ohne dialog
@@ -1078,19 +1134,19 @@ function menuworks() {
 		boxtitel="opensimMULTITOOL Eingabe"
 		boxtext="Screen Name:"
 		WORKSSCREEN=$(dialog --backtitle "opensimMULTITOOL $VERSION" --title "$boxtitel" --inputbox "$boxtext" 8 40 3>&1 1>&2 2>&3 3>&-)
-		dialog --clear
-		clear
+		dialogclear
+		ScreenLog
 
 		if ! screen -list | grep -q "$WORKSSCREEN"; then
 			# es laeuft nicht - not work
 			dialog --backtitle "opensimMULTITOOL $VERSION" --msgbox "OpenSimulator $WORKSSCREEN OFFLINE!" 5 40
-			dialog --clear
-			clear
+			dialogclear
+			ScreenLog
 		else
 			# es laeuft - work
 			dialog --backtitle "opensimMULTITOOL $VERSION" --msgbox "OpenSimulator $WORKSSCREEN ONLINE!" 5 40
-			dialog --clear
-			clear
+			dialogclear
+			ScreenLog
 		fi
 	else
 		# Alle Aktionen ohne dialog
@@ -1140,9 +1196,9 @@ function menuwaslauft() {
 	# awk -F. alles vor dem Punkt entfernen - -F\( alles hinter dem  ( loeschen.
 	ergebnis=$(screen -ls | sed '1d' | sed '$d' | awk -F. '{print $2}' | awk -F\( '{print $1}')
 	echo "$ergebnis"
-	# dialog --infobox      "Laufende Simulatoren: $ergebnis" $HEIGHT $WIDTH; dialog --clear
+	# dialog --infobox      "Laufende Simulatoren: $ergebnis" $HEIGHT $WIDTH; dialogclear
 	dialog --msgbox "Laufende Simulatoren:\n $ergebnis" 20 60
-	dialog --clear
+	dialogclear
 	hauptmenu
 	return 0
 }
@@ -1173,13 +1229,13 @@ function mapdel() {
 function logdel() {
 	VERZEICHNIS=$1
 	if [ -d "$VERZEICHNIS" ]; then
-		rm /$STARTVERZEICHNIS/"$VERZEICHNIS"/bin/*.log 2>/dev/null || echo "$VERZEICHNIS logs nicht gefunden."
-		log info "LOGDEL: OpenSimulator log $VERZEICHNIS geloescht"
-		return 0
+		rm /$STARTVERZEICHNIS/"$VERZEICHNIS"/bin/*.log 2>/dev/null || echo "Ich habe die $VERZEICHNIS log nicht gefunden!"		
 	else
 		log error "LOGDEL: $VERZEICHNIS logs nicht gefunden"
 		return 1
 	fi
+	log info "OpenSimulator log Verzeichnisse geloescht"
+	return 0
 }
 
 ### !  rologdel, loescht die Log Dateien. # Aufruf: rologdel Verzeichnis
@@ -1187,13 +1243,13 @@ function rologdel() {
 	# /opt/robust/bin
 	RVERZEICHNIS="robust"
 	if [ -d /$STARTVERZEICHNIS/$RVERZEICHNIS ]; then
-		rm /$STARTVERZEICHNIS/"$RVERZEICHNIS"/bin/*.log 2>/dev/null || echo "Robust und Money logs nicht gefunden."
-		log warn "Robust und Money logs geloescht"
-		return 0
+		rm /$STARTVERZEICHNIS/"$RVERZEICHNIS"/bin/*.log 2>/dev/null || echo "Ich habe die Robust und/oder Money logs nicht gefunden."		
 	else
-		log error "Robust logs nicht gefunden"
+		log info "Robust Verzeichnis wurden nicht gefunden"
 		return 1
 	fi
+	log info "Robust und Money logs wurden geloescht"
+	return 0
 }
 
 ### !  menumapdel, loescht die Log Dateien. # Aufruf: mapdel Verzeichnis
@@ -1205,8 +1261,8 @@ function menumapdel() {
 		boxtitel="opensimMULTITOOL Eingabe"
 		boxtext="Verzeichnis:"
 		VERZEICHNIS=$(dialog --backtitle "opensimMULTITOOL $VERSION" --title "$boxtitel" --inputbox "$boxtext" 8 40 3>&1 1>&2 2>&3 3>&-)
-		dialog --clear
-		clear
+		dialogclear
+		ScreenLog
 	else
 		# Alle Aktionen ohne dialog
 		VERZEICHNIS=$1
@@ -1233,8 +1289,8 @@ function menulogdel() {
 		boxtitel="opensimMULTITOOL Eingabe"
 		boxtext="Verzeichnis:"
 		VERZEICHNIS=$(dialog --backtitle "opensimMULTITOOL $VERSION" --title "$boxtitel" --inputbox "$boxtext" 8 40 3>&1 1>&2 2>&3 3>&-)
-		dialog --clear
-		clear
+		dialogclear
+		ScreenLog
 	else
 		# Alle Aktionen ohne dialog
 		VERZEICHNIS=$1
@@ -1345,8 +1401,8 @@ function menuosstart() {
 			3>&1 1>&2 2>&3 3>&-
 	)
 
-	dialog --clear
-	clear
+	dialogclear
+	ScreenLog
 
 	if ! screen -list | grep -q "$IOSSTARTSCREEN"; then
 		# es laeuft nicht - not work
@@ -1367,10 +1423,10 @@ function menuosstart() {
 				) 
 				#|
 				#$DIALOG --title "$IOSSTARTSCREEN" --gauge "Start" 8 30
-				#$DIALOG --clear
+				#$dialogclear
 				#$DIALOG --msgbox "$IOSSTARTSCREEN gestartet!" 5 20
-				#$DIALOG --clear
-				#clear
+				#$dialogclear
+				ScreenLog
 				return 0
 			else
 				DIALOG=dialog
@@ -1382,10 +1438,10 @@ function menuosstart() {
 					sleep 2
 				) #|
 					#$DIALOG --title "$IOSSTARTSCREEN" --gauge "Start" 8 30
-				#$DIALOG --clear
+				#$dialogclear
 				#$DIALOG --msgbox "$IOSSTARTSCREEN gestartet!" 5 20
-				#$DIALOG --clear
-				#clear
+				#$dialogclear
+				ScreenLog
 				hauptmenu
 			fi
 		else
@@ -1407,8 +1463,8 @@ function menuosstop() {
 			--inputbox "Simulator:" 8 40 \
 			3>&1 1>&2 2>&3 3>&-
 	)
-	dialog --clear
-	clear
+	dialogclear
+	ScreenLog
 
 	if screen -list | grep -q "$IOSSTOPSCREEN"; then
 		DIALOG=dialog
@@ -1420,10 +1476,10 @@ function menuosstop() {
 			sleep 2
 		) |
 			$DIALOG --title "$IOSSTOPSCREEN" --gauge "Stop" 8 30
-		$DIALOG --clear
+		dialogclear
 		$DIALOG --msgbox "$IOSSTOPSCREEN beendet!" 5 20
-		$DIALOG --clear
-		clear
+		dialogclear
+		ScreenLog
 		hauptmenu
 	else
 		hauptmenu
@@ -1442,7 +1498,7 @@ function rostart() {
 			sleep $ROBUSTWARTEZEIT
 			return 0
 		else
-			log info "Robust  wird gestartet..."
+			log info "Robust wird gestartet..."
 			screen -fa -S RO -d -U -m mono Robust.exe
 			sleep $ROBUSTWARTEZEIT
 			return 0
@@ -1464,7 +1520,7 @@ function menurostart() {
 			screen -fa -S RO -d -U -m mono --desktop -O=all Robust.exe
 			sleep $ROBUSTWARTEZEIT
 		else
-			log info "Robust  wird gestartet..."
+			log info "Robust wird gestartet..."
 			screen -fa -S RO -d -U -m mono Robust.exe
 			sleep $ROBUSTWARTEZEIT
 		fi
@@ -1508,7 +1564,7 @@ function mostart() {
 			sleep $MONEYWARTEZEIT
 			return 0
 		else
-			log info "Money  wird gestartet..."
+			log info "Money wird gestartet..."
 			screen -fa -S MO -d -U -m mono MoneyServer.exe
 			sleep $MONEYWARTEZEIT
 			return 0
@@ -1523,7 +1579,7 @@ function menumostart() {
 
 		# AOT Aktiveren oder Deaktivieren.
 		if [[ $SETAOTON = "yes" ]]; then
-			log info "Money  wird gestartet mit aot..."
+			log info "Money wird gestartet mit aot..."
 			screen -fa -S MO -d -U -m mono --desktop -O=all MoneyServer.exe
 			sleep $MONEYWARTEZEIT
 			return 0
@@ -1639,11 +1695,11 @@ function terminator() {
 
 ### !  oscompi, kompilieren des OpenSimulator.
 function oscompi() {
-	log info "OSCOMPI: Kompilierungsvorgang startet"
+	log info " Kompilierungsvorgang startet"
 	# In das opensim Verzeichnis wechseln wenn es das gibt ansonsten beenden.
 	cd /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS || return 1
 
-	log info "OSCOMPI: Prebuildvorgang startet"
+	log info " Prebuildvorgang startet"
 	# runprebuild19.sh startbar machen und starten.
 	chmod +x runprebuild19.sh || chmod +x runprebuild48.sh
 	./runprebuild19.sh || ./runprebuild48.sh
@@ -1660,7 +1716,7 @@ function oscompi() {
 	if [[ $SETAOTON = "yes" ]]; then
 		makeaot
 	fi
-	log info "OSCOMPI: Kompilierung wurde durchgefuehrt"
+	log info "Kompilierung wurde durchgefuehrt"
 	return 0
 }
 
@@ -1959,8 +2015,8 @@ function menuosstruktur() {
 		EINGABE2=$(echo "$osstrukturBOXERGEBNIS" | sed -n '2p')
 
 		# Alles loeschen.
-		dialog --clear
-		clear
+		dialogclear
+		ScreenLog
 	else
 		# Alle Aktionen ohne dialog
 		echo "Keine Menuelose Funktion" | exit
@@ -2003,12 +2059,12 @@ function osdelete() {
 function oscopyrobust() {
 	cd /$STARTVERZEICHNIS || return 1
 	if [ -d /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/ ]; then
-		log info "Kopiere Robust, Money!"
 		log line
-		sleep 2
-		log info "Robust und Money kopiert"
+		log info "Kopiere Robust, Money!"
+		sleep 2		
 		cd /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin || return 1
 		cp -r /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS
+		log info "Robust und Money wurden kopiert"
 		log line
 	else
 		log line
@@ -2391,8 +2447,8 @@ function menuregionbackup() {
 		REGIONSNAME=$(echo "$regionbackupBOXERGEBNIS" | sed -n '2p')
 
 		# Alles loeschen.
-		dialog --clear
-		clear
+		dialogclear
+		ScreenLog
 	else
 		# Alle Aktionen ohne dialog
 		echo "Keine Menuelose Funktion" | exit
@@ -2474,8 +2530,8 @@ function menuregionrestore() {
 		REGIONSNAME=$(echo "$regionrestoreBOXERGEBNIS" | sed -n '2p')
 
 		# Alles loeschen.
-		dialog --clear
-		clear
+		dialogclear
+		ScreenLog
 	else
 		# Alle Aktionen ohne dialog
 		echo "Keine Menuelose Funktion" | exit
@@ -2552,12 +2608,12 @@ function menuautosimstart() {
 				#BERECHNUNG1=$((100 / "$ANZAHLVERZEICHNISSLISTE"))
 				#BALKEN1=$(("$i" * "$BERECHNUNG1"))
 				screen -fa -S "${VERZEICHNISSLISTE[$i]}" -d -U -m mono --desktop -O=all OpenSim.exe | log info "${VERZEICHNISSLISTE[$i]} wurde gestartet" # dialog --gauge "Auto Sim start..." 6 64 $BALKEN1
-				#dialog --clear
+				#dialogclear
 			else
 				#BERECHNUNG1=$((100 / "$ANZAHLVERZEICHNISSLISTE"))
 				#BALKEN1=$(("$i" * "$BERECHNUNG1"))
 				screen -fa -S "${VERZEICHNISSLISTE[$i]}" -d -U -m mono OpenSim.exe | log info "${VERZEICHNISSLISTE[$i]} wurde gestartet" # dialog --gauge "Auto Sim start..." 6 64 $BALKEN1
-				#dialog --clear
+				#dialogclear
 
 			fi
 			sleep $STARTWARTEZEIT
@@ -2585,7 +2641,7 @@ function menuautosimstop() {
 			#BALKEN2=$(( (100/"$ANZAHLVERZEICHNISSLISTE") * "${VERZEICHNISSLISTE[$i]}"))
 
 			screen -S "${VERZEICHNISSLISTE[$i]}" -p 0 -X eval "stuff 'shutdown'^M" | log info "${VERZEICHNISSLISTE[$i]} wurde gestoppt" #| dialog --gauge "Alle Simulatoren werden gestoppt!" 6 64 $BALKEN2
-			#dialog --clear
+			#dialogclear
 			sleep $STOPWARTEZEIT
 		else
 			log error "Regionen ${VERZEICHNISSLISTE[$i]}  laeuft nicht!"
@@ -2601,8 +2657,8 @@ function autologdel() {
 	makeverzeichnisliste
 	sleep 2
 	for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
-		rm /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/*.log 2>/dev/null || log warn "autologdel: Ich kann die Log Datei ${VERZEICHNISSLISTE[$i]} nicht loeschen! "
-		log warn "OpenSimulator log ${VERZEICHNISSLISTE[$i]} geloescht"
+		rm /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/*.log 2>/dev/null || log warn "Die Log Datei ${VERZEICHNISSLISTE[$i]} ist nicht vorhanden! "
+		log info "OpenSimulator log Datei ${VERZEICHNISSLISTE[$i]} geloescht"
 		sleep 2
 	done
 
@@ -2629,8 +2685,8 @@ function menuautologdel() {
 		#BERECHNUNG3=$((100 / "$ANZAHLVERZEICHNISSLISTE"))
 		#BALKEN3=$(("$i" * "$BERECHNUNG3"))
 		rm /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/*.log #| log info "" # dialog --gauge "Auto Sim stop..." 6 64 $BALKEN3
-		#dialog --clear || return 0
-		log warn "OpenSimulator log ${VERZEICHNISSLISTE[$i]} geloescht"
+		#dialogclear || return 0
+		log info "OpenSimulator log ${VERZEICHNISSLISTE[$i]} geloescht"
 		sleep 2
 	done
 
@@ -2842,18 +2898,17 @@ function autostart() {
 
 ### !  autostop, stoppt das komplette Grid mit allen sims.
 function autostop() {
-	log line
-	log warn "Stoppe das Grid! ###"
+	log warn "### Stoppe das Grid! ###"
 	# schauen ob screens laufen wenn ja beenden.
 	# shellcheck disable=SC2022
 	if ! screen -list | grep -q 'sim'; then
-		log error "SIMs OFFLINE!"
+		log info "SIMs OFFLINE!"
 	else
 		autosimstop
 	fi
 
 	if ! screen -list | grep -q "RO"; then
-		log error "ROBUST OFFLINE!"
+		log info "ROBUST OFFLINE!"
 	else
 		gridstop
 	fi
@@ -2912,22 +2967,10 @@ function menuautostart() {
 ### !  autostop, stoppt das komplette Grid mit allen sims.
 function menuautostop() {
 	# schauen ob screens laufen wenn ja beenden.
-	if screen -list | grep -q 'sim'; then
-		log info "Bitte warten..."
-		menuautosimstop
-	fi
-
-	if screen -list | grep -q "RO"; then
-		log info "Bitte warten..."
-		menugridstop
-	fi
-
+	if screen -list | grep -q 'sim'; then log info "Bitte warten..."; menuautosimstop; fi
+	if screen -list | grep -q "RO"; then log info "Bitte warten..."; menugridstop; fi
 	# schauen ob screens laufen wenn ja warten.
-	if screen -list | grep -q 'sim'; then
-		log info "Bitte warten..."
-		sleep $AUTOSTOPZEIT
-		killall screen
-	fi
+	if screen -list | grep -q 'sim'; then log info "Bitte warten..."; sleep $AUTOSTOPZEIT; killall screen; fi
 
 	menuautoscreenstop
 	hauptmenu
@@ -2936,12 +2979,7 @@ function menuautostop() {
 ### ! autorestart, startet das gesamte Grid neu und loescht die log Dateien.
 function autorestart() {
 	autostop
-
-	if [ "$LOGDELETE" = "yes" ]; then
-		autologdel
-		rologdel
-	fi
-
+	if [ "$LOGDELETE" = "yes" ]; then autologdel; rologdel; fi
 	gridstart
 	autosimstart
 	screenlistrestart
@@ -2950,11 +2988,7 @@ function autorestart() {
 ### ! menuautorestart
 function menuautorestart() {
 	menuautostop
-	if [ "$LOGDELETE" = "yes" ]; then
-		menuautologdel
-		rologdel
-	fi
-
+	if [ "$LOGDELETE" = "yes" ]; then menuautologdel; rologdel; fi
 	menugridstart
 	menuautosimstart
 	menuinfo
@@ -3142,10 +3176,10 @@ function installobensimulator() {
 }
 
 ### !  installbegin
-function installbegin() {
-	apt update
-	apt upgrade
-}
+function installbegin() { apt update && apt upgrade; }
+
+### !  linuxupgrade
+function linuxupgrade() { apt update && apt upgrade -y; }
 
 ### !  installubuntu22
 function installubuntu22() {
@@ -3271,7 +3305,7 @@ function serverinstall() {
 		# 0=ja; 1=nein
 		siantwort=$?
 		# Dialog-Bildschirm loeschen
-		dialog --clear
+		dialogclear
 		# Ausgabe auf die Konsole
 		if [ $siantwort = 0 ]; then
 			serverupgrade
@@ -3284,7 +3318,7 @@ function serverinstall() {
 			hauptmenu
 		fi
 		# Bildschirm loeschen
-		clear
+		ScreenLog
 	else
 		# ohne dialog erstmal einfach installieren - Test
 		read -r -p "Ubuntu Pakete installieren [y]es: " yesno
@@ -3317,8 +3351,8 @@ function osbuilding() {
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
 		# Alle Aktionen mit dialog
 		VERSIONSNUMMER=$(dialog --backtitle "opensimMULTITOOL $VERSION" --title "opensimMULTITOOL Eingabe" --inputbox "Versionsnummer:" 8 40 3>&1 1>&2 2>&3 3>&-)
-		dialog --clear
-		clear
+		dialogclear
+		ScreenLog
 	else
 		# Alle Aktionen ohne dialog
 		VERSIONSNUMMER=$1
@@ -3426,8 +3460,8 @@ function menucreateuser() {
 		EMAIL=$(echo "$createuserBOXERGEBNIS" | sed -n '4p')
 
 		# Alles loeschen.
-		dialog --clear
-		clear
+		dialogclear
+		ScreenLog
 	else
 		# Alle Aktionen ohne dialog
 		echo "Keine Menuelose Funktion" | exit
@@ -3503,8 +3537,8 @@ function db_anzeigen_dialog() {
 		password=$(echo "$db_menu" | sed -n '2p')
 
 		# Alles loeschen.
-		dialog --clear
-		clear
+		dialogclear
+		ScreenLog
 	else
 		# Alle Aktionen ohne dialog
 		echo "Keine Menuelose Funktion" | exit
@@ -3555,8 +3589,8 @@ function db_tables_dialog() {
 		databasename=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '3p')
 
 		# Alles loeschen.
-		dialog --clear
-		clear
+		dialogclear
+		ScreenLog
 	else
 		# Alle Aktionen ohne dialog
 		echo "Keine Menuelose Funktion" | exit
@@ -3591,8 +3625,8 @@ function db_benutzer_anzeigen() {
 		password=$(echo "$db_benutzer_anzeigenBOXERGEBNIS" | sed -n '2p')
 
 		# Alles loeschen.
-		dialog --clear
-		clear
+		dialogclear
+		ScreenLog
 	else
 		# Alle Aktionen ohne dialog
 		username=$1
@@ -3637,8 +3671,8 @@ function db_regions() {
 		databasename=$(echo "$db_regionsBOXERGEBNIS" | sed -n '3p')
 
 		# Alles loeschen.
-		dialog --clear
-		clear
+		dialogclear
+		ScreenLog
 	else
 		# Alle Aktionen ohne dialog
 		username=$1
@@ -3684,8 +3718,8 @@ function db_regionsuri() {
 		databasename=$(echo "$db_regionsuriBOXERGEBNIS" | sed -n '3p')
 
 		# Alles loeschen.
-		dialog --clear
-		clear
+		dialogclear
+		ScreenLog
 	else
 		# Alle Aktionen ohne dialog
 		username=$1
@@ -3731,8 +3765,8 @@ function db_regionsport() {
 		databasename=$(echo "$db_regionsportBOXERGEBNIS" | sed -n '3p')
 
 		# Alles loeschen.
-		dialog --clear
-		clear
+		dialogclear
+		ScreenLog
 	else
 		# Alle Aktionen ohne dialog
 		username=$1
@@ -3848,8 +3882,8 @@ function db_empty() {
 		databasename=$(echo "$db_emptyRGEBNIS" | sed -n '3p')
 
 		# Alles loeschen.
-		dialog --clear
-		clear
+		dialogclear
+		ScreenLog
 	else
 		# Alle Aktionen ohne dialog
 		username=$1
@@ -3901,8 +3935,8 @@ function allrepair_db() {
 		password=$(echo "$landclearBOXERGEBNIS" | sed -n '2p')
 
 		# Alles loeschen.
-		dialog --clear
-		clear
+		dialogclear
+		ScreenLog
 	else
 		# Alle Aktionen ohne dialog
 		username=$1
@@ -4076,8 +4110,8 @@ function db_create() {
 		databasename=$(echo "$db_regionsportBOXERGEBNIS" | sed -n '3p')
 
 		# Alles loeschen.
-		dialog --clear
-		clear
+		dialogclear
+		ScreenLog
 	else
 		# Alle Aktionen ohne dialog
 		username=$1
@@ -4143,8 +4177,8 @@ function db_dbuserrechte() {
 		databasename=$(echo "$db_dbuserrechteERGEBNIS" | sed -n '3p')
 
 		# Alles loeschen.
-		dialog --clear
-		clear
+		dialogclear
+		ScreenLog
 	else
 		# Alle Aktionen ohne dialog
 		username=$1
@@ -4189,8 +4223,8 @@ function db_deldbuser() {
 		benutzer=$(echo "$db_deldbuserERGEBNIS" | sed -n '3p')
 
 		# Alles loeschen.
-		dialog --clear
-		clear
+		dialogclear
+		ScreenLog
 	else
 		# Alle Aktionen ohne dialog
 		username=$1
@@ -4247,8 +4281,8 @@ function db_create_new_dbuser() {
 		NEUESPASSWORT=$(echo "$loadinventarBOXERGEBNIS" | sed -n '4p')
 
 		# Alles loeschen.
-		dialog --clear
-		clear
+		dialogclear
+		ScreenLog
 	else
 		# Alle Aktionen ohne dialog
 		username=$1
@@ -4296,8 +4330,8 @@ function db_delete() {
 		databasename=$(echo "$db_deleteERGEBNIS" | sed -n '3p')
 
 		# Alles loeschen.
-		dialog --clear
-		clear
+		dialogclear
+		ScreenLog
 	else
 		# Alle Aktionen ohne dialog
 		username=$1
@@ -4470,8 +4504,8 @@ function db_all_user_dialog() {
 		databasename=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '3p')
 
 		# Alles loeschen.
-		dialog --clear
-		clear
+		dialogclear
+		ScreenLog
 	else
 		# Alle Aktionen ohne dialog
 		echo "Keine Menuelose Funktion" | exit
@@ -4521,8 +4555,8 @@ function db_all_uuid_dialog() {
 		databasename=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '3p')
 
 		# Alles loeschen.
-		dialog --clear
-		clear
+		dialogclear
+		ScreenLog
 	else
 		# Alle Aktionen ohne dialog
 		echo "Keine Menuelose Funktion" | exit
@@ -4572,8 +4606,8 @@ function db_all_name_dialog() {
 		databasename=$(echo "$db_all_name" | sed -n '3p')
 
 		# Alles loeschen.
-		dialog --clear
-		clear
+		dialogclear
+		ScreenLog
 	else
 		# Alle Aktionen ohne dialog
 		echo "Keine Menuelose Funktion" | exit
@@ -4631,8 +4665,8 @@ function db_user_data_dialog() {
 		lastname=$(echo "$db_user_data" | sed -n '5p')
 
 		# Alles loeschen.
-		dialog --clear
-		clear
+		dialogclear
+		ScreenLog
 	else
 		# Alle Aktionen ohne dialog
 		echo "Keine Menuelose Funktion" | exit
@@ -4690,8 +4724,8 @@ function db_user_infos_dialog() {
 		lastname=$(echo "$db_user_infos" | sed -n '5p')
 
 		# Alles loeschen.
-		dialog --clear
-		clear
+		dialogclear
+		ScreenLog
 	else
 		# Alle Aktionen ohne dialog
 		echo "Keine Menuelose Funktion" | exit
@@ -4749,8 +4783,8 @@ function db_user_uuid_dialog() {
 		lastname=$(echo "$db_user_uuid" | sed -n '5p')
 
 		# Alles loeschen.
-		dialog --clear
-		clear
+		dialogclear
+		ScreenLog
 	else
 		# Alle Aktionen ohne dialog
 		echo "Keine Menuelose Funktion" | exit
@@ -4838,8 +4872,8 @@ function db_all_userfailed() {
 		lastname=$(echo "$db_all_userfailed" | sed -n '5p')
 
 		# Alles loeschen.
-		dialog --clear
-		clear
+		dialogclear
+		ScreenLog
 	else
 		# Alle Aktionen ohne dialog
 		log info "Finde alles vom inventoryfolders was type -1 des User ist:"
@@ -4895,8 +4929,8 @@ function db_userdate() {
 		lastname=$(echo "$db_userdate" | sed -n '5p')
 
 		# Alles loeschen.
-		dialog --clear
-		clear
+		dialogclear
+		ScreenLog
 	else
 		# Alle Aktionen ohne dialog
 		log info "Zeige Erstellungsdatum eines Users an:"
@@ -4946,8 +4980,8 @@ function db_false_email() {
 		databasename=$(echo "$db_false_emailBOXERGEBNIS" | sed -n '3p')
 
 		# Alles loeschen.
-		dialog --clear
-		clear
+		dialogclear
+		ScreenLog
 	else
 		# Alle Aktionen ohne dialog
 		log info "Finde offensichtlich falsche E-Mail Adressen der User ausser von $ausnahmefirstname $ausnahmelastname."
@@ -5051,8 +5085,8 @@ function db_email_setincorrectuseroff_dialog() {
 		databasename=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '3p')
 
 		# Alles loeschen.
-		dialog --clear
-		clear
+		dialogclear
+		ScreenLog
 	else
 		# Alle Aktionen ohne dialog
 		echo "Keine Menuelose Funktion" | exit
@@ -5116,8 +5150,8 @@ function db_setuserofline_dialog() {
 		lastname=$(echo "$setuserofline" | sed -n '5p')
 
 		# Alles loeschen.
-		dialog --clear
-		clear
+		dialogclear
+		ScreenLog
 	else
 		# Alle Aktionen ohne dialog
 		echo "Keine Menuelose Funktion" | exit
@@ -5178,8 +5212,8 @@ function db_setuseronline_dialog() {
 		lastname=$(echo "$setuseronline" | sed -n '5p')
 
 		# Alles loeschen.
-		dialog --clear
-		clear
+		dialogclear
+		ScreenLog
 	else
 		# Alle Aktionen ohne dialog
 		echo "Keine Menuelose Funktion" | exit
@@ -7024,13 +7058,13 @@ function osgridcopy() {
 	log warn " !!! ABBRUCH MIT STRG + C !!! "
 	log text " #############################"
 
-	log info "OSGRIDCOPY: Das Grid wird jetzt kopiert/aktualisiert"
+	log info "Das Grid wird jetzt kopiert/aktualisiert"
 	log line
 	# Grid Stoppen.
-	log info "OSGRIDCOPY: Alles Beenden falls da etwas laeuft"
+	log info "Alles Beenden falls da etwas laeuft"
 	autostop
 	# Kopieren.
-	log info "OSGRIDCOPY: Neue Version kopieren"
+	log info "Neue Version kopieren"
 	oscopyrobust
 	oscopysim
 	log line
@@ -7046,10 +7080,11 @@ function osupgrade() {
 	log text " !!! ABBRUCH MIT STRG + C !!! "
 	log text " #############################"
 
-	log info "OSUPGRADE: Das Grid wird jetzt upgegradet"
+	log info "Das Grid wird jetzt upgegradet"
 	autostop
 	# Kopieren.
-	log info "OSUPGRADE: Neue Version Installieren"
+	log line
+	log info "Neue Version Installieren"
 	oscopyrobust
 	oscopysim
 	autologdel
@@ -7057,7 +7092,7 @@ function osupgrade() {
 	# MoneyServer eventuell loeschen.
 	if [ "$MONEYVERZEICHNIS" = "keins" ] || [ "$MONEYVERZEICHNIS" = "no" ] || [ "$MONEYVERZEICHNIS" = "nein" ]; then moneydelete; fi
 	# Grid Starten.
-	# log info "OSUPGRADE: Das Grid wird jetzt gestartet"
+	# log info "Das Grid wird jetzt gestartet"
 	autostart
 	return 0
 }
@@ -7069,8 +7104,8 @@ function oszipupgrade() {
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
 		# Alle Aktionen mit dialog
 		VERSIONSNUMMER=$(dialog --backtitle "opensimMULTITOOL $VERSION" --title "opensimMULTITOOL Eingabe" --inputbox "Versionsnummer:" 8 40 3>&1 1>&2 2>&3 3>&-)
-		dialog --clear
-		clear
+		dialogclear
+		ScreenLog
 	else
 		# Alle Aktionen ohne dialog
 		echo "Keine Menuelose Funktion vorhanden!" | exit
@@ -8144,13 +8179,13 @@ function systeminformation() {
 		# Fall, der angezeigt werden soll, wenn das Programm erfolgreich beendet oder das Programm abgebrochen wurde
 		case $exit_status in
 		"$DIALOG_CANCEL")
-			clear
+			ScreenLog
 			#echo "Program exit successfully."
 			hauptmenu
 			exit
 			;;
 		"$DIALOG_ESC")
-			clear
+			ScreenLog
 			#echo "Program aborted." >&2
 			hauptmenu >&2
 			exit 1
@@ -8160,7 +8195,7 @@ function systeminformation() {
 		# Fallauswahl, um Informationen der Benutzer Auswahl anzuzeigen
 		case $selection in
 		0)
-			clear
+			ScreenLog
 			echo "Program exit successfully."
 			;;
 		1)
@@ -8211,9 +8246,9 @@ function infodialog() {
 	# shellcheck disable=SC2128
 	dialog --backtitle "opensimMULTITOOL $VERSION" --msgbox "$TEXT0\n$TEXT1\n$TEXT2\n$TEXT3\n$TEXT4\n$TEXT5\n$TEXT6" 0 0
 	# Dialog-Bildschirm loeschen
-	dialog --clear
+	dialogclear
 	# Bildschirm loeschen
-	#clear
+	ScreenLog
 	hauptmenu
 }
 
@@ -8233,8 +8268,8 @@ function kalender() {
 
 		DATUMERGEBNIS=$(dialog --calendar "calendar" $HEIGHT $WIDTH "$TDATUM" "$MDATUM" "$JDATUM" 3>&1 1>&2 2>&3) # Unbekannter Fehler
 
-		dialog --clear
-		clear
+		dialogclear
+		ScreenLog
 
 		# Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
 		NEWDATUM=$(echo "$DATUMERGEBNIS" | sed -n '1p' | sed 's/\//./g') # erste zeile aus DATUMERGEBNIS nehmen und die Schraegstriche gegen ein leerzeichen austauschen.
@@ -8264,8 +8299,8 @@ function robustbackup() {
 
 		DATUMERGEBNIS=$(dialog --calendar "calendar" $HEIGHT $WIDTH "$TDATUM" "$MDATUM" "$JDATUM" 3>&1 1>&2 2>&3) # Unbekannter Fehler
 
-		dialog --clear
-		clear
+		dialogclear
+		ScreenLog
 
 		# Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
 		NEWDATUM=$(echo "$DATUMERGEBNIS" | sed -n '1p' | sed 's/\//./g') # erste zeile aus DATUMERGEBNIS nehmen und die Schraegstriche gegen ein leerzeichen austauschen.
@@ -8346,7 +8381,7 @@ function menuinfo() {
 	infoboxtext+="$menuinfoergebnis"
 
 	dialog --msgbox "$infoboxtext" 20 65
-	dialog --clear
+	dialogclear
 	hauptmenu
 
 	return 0
@@ -8354,11 +8389,11 @@ function menuinfo() {
 ### !  menukonsolenhilfe, menukonsolenhilfe auf dem Bildschirm anzeigen.
 function menukonsolenhilfe() {
 	#helpergebnis=$(help)
-	#dialog --msgbox "Konsolenhilfe:\n $helpergebnis" 50 75; dialog --clear
+	#dialog --msgbox "Konsolenhilfe:\n $helpergebnis" 50 75; dialogclear
 
 	help >help.txt
 	dialog --textbox "help.txt" 55 85
-	dialog --clear
+	dialogclear
 
 	hauptmenu
 	return 0
@@ -8698,8 +8733,8 @@ function hauptmenu() {
 
 		mauswahl=$(dialog --backtitle "$BACKTITLE" --title "$TITLE" --help-button --defaultno --menu "$MENU" $HEIGHT $WIDTH $CHOICE_HEIGHT "${OPTIONS[@]}" 2>&1 >/dev/tty)
 		antwort=$?
-		dialog --clear
-		clear
+		dialogclear
+		ScreenLog
 
 		if [[ $mauswahl = "OpenSim Autostart" ]]; then menuautostart; fi
 		if [[ $mauswahl = "OpenSim Autostopp" ]]; then menuautostop; fi
@@ -8751,7 +8786,7 @@ function hilfemenu() {
 			"Konfiguration lesen" ""
 			"Hauptmenu" "")
 
-		hauswahl=$(dialog --clear \
+		hauswahl=$(dialogclear \
 			--backtitle "$BACKTITLE" \
 			--title "$TITLE" \
 			--help-button --defaultno \
@@ -8761,8 +8796,8 @@ function hilfemenu() {
 			2>&1 >/dev/tty) # 3>&1 1>&2 2>&3
 
 		antwort=$?
-		dialog --clear
-		clear
+		dialogclear
+		ScreenLog
 
 		if [[ $hauswahl = "Hilfe" ]]; then hilfe; fi
 		if [[ $hauswahl = "Konsolenhilfe" ]]; then menukonsolenhilfe; fi # Test menukonsolenhilfe
@@ -8807,7 +8842,7 @@ function funktionenmenu() {
 			"mySQLmenu" ""
 			"Experten Funktionen" "")
 
-		fauswahl=$(dialog --clear \
+		fauswahl=$(dialogclear \
 			--backtitle "$BACKTITLE" \
 			--title "$TITLE" \
 			--help-button --defaultno \
@@ -8817,8 +8852,8 @@ function funktionenmenu() {
 			2>&1 >/dev/tty) # 3>&1 1>&2 2>&3
 
 		antwort=$?
-		dialog --clear
-		clear
+		dialogclear
+		ScreenLog
 
 		if [[ $fauswahl = "Grid starten" ]]; then gridstart; fi
 		if [[ $fauswahl = "Grid stoppen" ]]; then gridstop; fi
@@ -8876,7 +8911,7 @@ function dateimenu() {
 			"mySQLmenu" ""
 			"Experten Funktionen" "")
 
-		dauswahl=$(dialog --clear \
+		dauswahl=$(dialogclear \
 			--backtitle "$BACKTITLE" \
 			--title "$TITLE" \
 			--help-button --defaultno \
@@ -8886,8 +8921,8 @@ function dateimenu() {
 			2>&1 >/dev/tty) # 3>&1 1>&2 2>&3
 
 		antwort=$?
-		dialog --clear
-		clear
+		dialogclear
+		ScreenLog
 
 		if [[ $dauswahl = "Inventar speichern" ]]; then menusaveinventar; fi
 		if [[ $dauswahl = "Inventar laden" ]]; then menuloadinventar; fi
@@ -8963,8 +8998,8 @@ function mySQLmenu() {
 
 		mysqlauswahl=$(dialog --backtitle "$BACKTITLE" --title "$TITLE" --help-button --defaultno --menu "$MENU" $HEIGHT $WIDTH $CHOICE_HEIGHT "${OPTIONS[@]}" 2>&1 >/dev/tty)
 		antwort=$?
-		dialog --clear
-		clear
+		dialogclear
+		ScreenLog
 
 		# db_anzeigen_dialog, db_tables_dialog, db_all_user_dialog, db_all_uuid_dialog, db_email_setincorrectuseroff_dialog, db_setuseronline_dialog, db_setuserofline_dialog
 		# db_all_name_dialog, db_user_data_dialog, db_user_infos_dialog, db_user_uuid_dialog
@@ -9055,7 +9090,7 @@ function expertenmenu() {
 			"mySQLmenu" ""
 			"Weitere Funktionen" "")
 
-		feauswahl=$(dialog --clear \
+		feauswahl=$(dialogclear \
 			--backtitle "$BACKTITLE" \
 			--title "$TITLE" \
 			--help-button --defaultno \
@@ -9065,8 +9100,8 @@ function expertenmenu() {
 			2>&1 >/dev/tty)
 
 		antwort=$?
-		dialog --clear
-		clear
+		dialogclear
+		ScreenLog
 
 		if [[ $feauswahl = "Example Dateien umbenennen" ]]; then unlockexample; fi
 		if [[ $feauswahl = "Voreinstellungen setzen" ]]; then ossettings; fi
@@ -9271,7 +9306,8 @@ db_all_uuid_dialog) db_all_uuid_dialog "$2" "$3" "$4" ;;
 installmariadb18) installmariadb18 ;;
 installmariadb22) installmariadb22 ;;
 serverinstall22) serverinstall22 ;;
-installbegin) nstallbegin ;;
+installbegin) installbegin ;;
+linuxupgrade) linuxupgrade ;;
 installubuntu22) installubuntu22 ;;
 installmono22) installmono22 ;;
 installphpmyadmin) installphpmyadmin ;;
@@ -9334,6 +9370,8 @@ GridCommonConfig) GridCommonConfig ;;
 osslEnableConfig) osslEnableConfig ;;
 RegionsConfig) RegionsConfig ;;
 RobustConfig) RobustConfig ;;
+historylogclear) historylogclear "$2" ;;
+ScreenLog) ScreenLog ;;
 *) hauptmenu ;;
 esac
 vardel
