@@ -22,7 +22,7 @@
 
 #### ? Einstellungen ####
 
-VERSION="V0.79.593" # opensimMULTITOOL Versionsausgabe
+VERSION="V0.79.594" # opensimMULTITOOL Versionsausgabe
 #clear # Bildschirmausgabe loeschen.
 #reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
@@ -8733,7 +8733,8 @@ function hauptmenu() {
 
 		mauswahl=$(dialog --backtitle "$BACKTITLE" --title "$TITLE" --help-button --defaultno --menu "$MENU" $HEIGHT $WIDTH $CHOICE_HEIGHT "${OPTIONS[@]}" 2>&1 >/dev/tty)
 		antwort=$?
-		dialogclear
+		#dialogclear
+		dialog --clear
 		ScreenLog
 
 		if [[ $mauswahl = "OpenSim Autostart" ]]; then menuautostart; fi
@@ -8786,7 +8787,7 @@ function hilfemenu() {
 			"Konfiguration lesen" ""
 			"Hauptmenu" "")
 
-		hauswahl=$(dialogclear \
+		hauswahl=$(dialog --clear \
 			--backtitle "$BACKTITLE" \
 			--title "$TITLE" \
 			--help-button --defaultno \
@@ -8796,7 +8797,8 @@ function hilfemenu() {
 			2>&1 >/dev/tty) # 3>&1 1>&2 2>&3
 
 		antwort=$?
-		dialogclear
+		#dialogclear
+		dialog --clear
 		ScreenLog
 
 		if [[ $hauswahl = "Hilfe" ]]; then hilfe; fi
@@ -8842,7 +8844,7 @@ function funktionenmenu() {
 			"mySQLmenu" ""
 			"Experten Funktionen" "")
 
-		fauswahl=$(dialogclear \
+		fauswahl=$(dialog --clear \
 			--backtitle "$BACKTITLE" \
 			--title "$TITLE" \
 			--help-button --defaultno \
@@ -8852,7 +8854,8 @@ function funktionenmenu() {
 			2>&1 >/dev/tty) # 3>&1 1>&2 2>&3
 
 		antwort=$?
-		dialogclear
+		#dialogclear
+		dialog --clear
 		ScreenLog
 
 		if [[ $fauswahl = "Grid starten" ]]; then gridstart; fi
@@ -8911,7 +8914,7 @@ function dateimenu() {
 			"mySQLmenu" ""
 			"Experten Funktionen" "")
 
-		dauswahl=$(dialogclear \
+		dauswahl=$(dialog --clear \
 			--backtitle "$BACKTITLE" \
 			--title "$TITLE" \
 			--help-button --defaultno \
@@ -8921,7 +8924,8 @@ function dateimenu() {
 			2>&1 >/dev/tty) # 3>&1 1>&2 2>&3
 
 		antwort=$?
-		dialogclear
+		#dialogclear
+		dialog --clear
 		ScreenLog
 
 		if [[ $dauswahl = "Inventar speichern" ]]; then menusaveinventar; fi
@@ -8998,7 +9002,8 @@ function mySQLmenu() {
 
 		mysqlauswahl=$(dialog --backtitle "$BACKTITLE" --title "$TITLE" --help-button --defaultno --menu "$MENU" $HEIGHT $WIDTH $CHOICE_HEIGHT "${OPTIONS[@]}" 2>&1 >/dev/tty)
 		antwort=$?
-		dialogclear
+		#dialogclear
+		dialog --clear
 		ScreenLog
 
 		# db_anzeigen_dialog, db_tables_dialog, db_all_user_dialog, db_all_uuid_dialog, db_email_setincorrectuseroff_dialog, db_setuseronline_dialog, db_setuserofline_dialog
@@ -9090,7 +9095,7 @@ function expertenmenu() {
 			"mySQLmenu" ""
 			"Weitere Funktionen" "")
 
-		feauswahl=$(dialogclear \
+		feauswahl=$(dialog --clear \
 			--backtitle "$BACKTITLE" \
 			--title "$TITLE" \
 			--help-button --defaultno \
@@ -9100,7 +9105,8 @@ function expertenmenu() {
 			2>&1 >/dev/tty)
 
 		antwort=$?
-		dialogclear
+		#dialogclear
+		dialog --clear
 		ScreenLog
 
 		if [[ $feauswahl = "Example Dateien umbenennen" ]]; then unlockexample; fi
