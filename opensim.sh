@@ -16,13 +16,14 @@
 # ! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 # ! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-# * Status 27.07.2022 291 Funktionen.
+# * Status 27.07.2022 292 Funktionen.
 
 # # Visual Studio Code # ShellCheck # shellman # Better Comments #
 
 #### ? Einstellungen ####
 
-VERSION="V0.79.594" # opensimMULTITOOL Versionsausgabe
+SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe
+VERSION="V0.79.601" # opensimMULTITOOL Versionsausgabe
 #clear # Bildschirmausgabe loeschen.
 #reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
@@ -142,6 +143,18 @@ function dialogclear() {
 	return 0
 }
 
+### Beenden mit ausgabe der letzten Meldung.
+function ende() {
+	return
+	log info "$?" # Beenden mit ausgabe der letzten Meldung.
+}
+
+### Den aufrufenden Prozess mit der letzten Meldung beenden.
+function fehler() {
+	exit
+	log error "$?" # Den aufrufenden Prozess mit der letzten Meldung beenden.
+}
+
 ### Log Dateien von Ubuntu loeschen Beispiel: historylogclear "history"
 function historylogclear() {
 	hlclear=$1
@@ -227,20 +240,20 @@ function schreibeinfo() {
 		log rohtext "  \____/ |  __/  \___||_| |_||_____/ |_||_| |_| |_| \____||_| \____| \__|\___/ |_|   "
 		log rohtext "         | |                                                                         "
 		log rohtext "         |_|                                                                         "
-		log rohtext " $VERSION"
+		log rohtext "            $SCRIPTNAME $VERSION"
 		log rohtext " "
 		log line
-		log rohtext "$DATUM $(date +%H:%M:%S) MULTITOOL: wurde gestartet am $(date +%d.%m.%Y) um $(date +%H:%M:%S) Uhr"
-		log rohtext "$DATUM $(date +%H:%M:%S) INFO: Server Name: ${HOSTNAME}"
-		log rohtext "$DATUM $(date +%H:%M:%S) INFO: Server IP: ${AKTUELLEIP}"
-		log rohtext "$DATUM $(date +%H:%M:%S) INFO: Linux Version: $ubuntuDescription"
-		log rohtext "$DATUM $(date +%H:%M:%S) INFO: Release Nummer: $ubuntuRelease"
-		log rohtext "$DATUM $(date +%H:%M:%S) INFO: Linux Name: $ubuntuCodename"
-		log rohtext "$DATUM $(date +%H:%M:%S) INFO: Bash Version: ${BASH_VERSION}"
-		log rohtext "$DATUM $(date +%H:%M:%S) INFO: MONO THREAD Einstellung: ${MONO_THREADS_PER_CPU}"
-		log rohtext "$DATUM $(date +%H:%M:%S) INFO: Spracheinstellung: ${LANG}"
-		log rohtext "$DATUM $(date +%H:%M:%S) INFO: $(screen --version)"
-		log rohtext "$DATUM $(date +%H:%M:%S) INFO: $(who -b)"
+		log rohtext " $DATUM $(date +%H:%M:%S) MULTITOOL: wurde gestartet am $(date +%d.%m.%Y) um $(date +%H:%M:%S) Uhr"
+		log rohtext " $DATUM $(date +%H:%M:%S) INFO: Server Name: ${HOSTNAME}"
+		log rohtext " $DATUM $(date +%H:%M:%S) INFO: Server IP: ${AKTUELLEIP}"
+		log rohtext " $DATUM $(date +%H:%M:%S) INFO: Linux Version: $ubuntuDescription"
+		log rohtext " $DATUM $(date +%H:%M:%S) INFO: Release Nummer: $ubuntuRelease"
+		log rohtext " $DATUM $(date +%H:%M:%S) INFO: Linux Name: $ubuntuCodename"
+		log rohtext " $DATUM $(date +%H:%M:%S) INFO: Bash Version: ${BASH_VERSION}"
+		log rohtext " $DATUM $(date +%H:%M:%S) INFO: MONO THREAD Einstellung: ${MONO_THREADS_PER_CPU}"
+		log rohtext " $DATUM $(date +%H:%M:%S) INFO: Spracheinstellung: ${LANG}"
+		log rohtext " $DATUM $(date +%H:%M:%S) INFO: $(screen --version)"
+		log rohtext " $DATUM $(date +%H:%M:%S) INFO: $(who -b)"
 		log line
 		log rohtext " "
 	fi
@@ -2640,7 +2653,7 @@ function menuautosimstop() {
 			#BALKEN2=$(("$i" * "$BERECHNUNG2"))
 			#BALKEN2=$(( (100/"$ANZAHLVERZEICHNISSLISTE") * "${VERZEICHNISSLISTE[$i]}"))
 
-			screen -S "${VERZEICHNISSLISTE[$i]}" -p 0 -X eval "stuff 'shutdown'^M" | log info "${VERZEICHNISSLISTE[$i]} wurde gestoppt" #| dialog --gauge "Alle Simulatoren werden gestoppt!" 6 64 $BALKEN2
+			screen -S "${VERZEICHNISSLISTE[$i]}" -p 0 -X eval "stuff 'shutdown'^M" | log info "${VERZEICHNISSLISTE[$i]} wurde angewiesen zu stoppen." #| dialog --gauge "Alle Simulatoren werden gestoppt!" 6 64 $BALKEN2
 			#dialogclear
 			sleep $STOPWARTEZEIT
 		else
@@ -2983,16 +2996,24 @@ function autorestart() {
 	gridstart
 	autosimstart
 	screenlistrestart
+	log info "Auto Restart abgeschlossen."
 	return 0
 }
 ### ! menuautorestart
 function menuautorestart() {
-	menuautostop
-	if [ "$LOGDELETE" = "yes" ]; then menuautologdel; rologdel; fi
-	menugridstart
-	menuautosimstart
+	# menuautostop
+	# if [ "$LOGDELETE" = "yes" ]; then autologdel; rologdel; fi
+	# menugridstart
+	# menuautosimstart
+	# menuinfo
+
+	autostop
+	if [ "$LOGDELETE" = "yes" ]; then autologdel; rologdel; fi
+	gridstart
+	autosimstart
+	screenlistrestart
+	# log info "Auto Restart abgeschlossen."
 	menuinfo
-	log info "Auto Restart abgeschlossen."
 }
 
 ### ! serverinstall, Ubuntu 18 Server zum Betrieb von OpenSim vorbereiten.
@@ -3360,29 +3381,29 @@ function osbuilding() {
 	# dialog Aktionen Ende
 
 	cd /$STARTVERZEICHNIS || exit
-	log info "OSBUILDING: Alten OpenSimulator sichern"
+	log info "Alten OpenSimulator sichern"
 	osdelete
 
 	log line
 
 	# Neue Versionsnummer: opensim-0.9.2.2Dev-4-g5e9b3b4.zip
-	log info "OSBUILDING: Neuen OpenSimulator entpacken"
+	log info "Neuen OpenSimulator entpacken"
 	unzip $OSVERSION"$VERSIONSNUMMER"-*.zip
 
 	log line
 
-	log info "OSBUILDING: Neuen OpenSimulator umbenennen"
+	log info "Neuen OpenSimulator umbenennen"
 	mv /$STARTVERZEICHNIS/$OSVERSION"$VERSIONSNUMMER"-*/ /$STARTVERZEICHNIS/opensim/
 
 	log line
 	sleep 3
 
-	log info "OSBUILDING: Prebuild des neuen OpenSimulator starten"
+	log info "Prebuild des neuen OpenSimulator starten"
 	osprebuild "$VERSIONSNUMMER"
 
 	log line
 
-	log info "OSBUILDING: Compilieren des neuen OpenSimulator"
+	log info "Compilieren des neuen OpenSimulator"
 	compilieren
 
 	log line
@@ -7116,17 +7137,17 @@ function oszipupgrade() {
 	cd /"$STARTVERZEICHNIS" || exit
 
 	# Konfigurationsabfrage Neues Grid oder Upgrade.
-	log info "OSBUILDING: Alten OpenSimulator sichern"
+	log info "Alten OpenSimulator sichern"
 	osdelete
 
 	log line
 
-	log info "OSBUILDING: Neuen OpenSimulator aus der ZIP entpacken"
+	log info "Neuen OpenSimulator aus der ZIP entpacken"
 	unzip opensim-0.9.2.2."$VERSIONSNUMMER".zip
 
 	log line
 
-	log info "OSBUILDING: Neuen OpenSimulator umbenennen"
+	log info "Neuen OpenSimulator umbenennen"
 	mv /"$STARTVERZEICHNIS"/opensim-0.9.2.2."$VERSIONSNUMMER"/ /"$STARTVERZEICHNIS"/opensim/
 
 	log line
@@ -8399,6 +8420,20 @@ function menukonsolenhilfe() {
 	return 0
 }
 
+### dotnetinfo .NET und CSharp Informationen.
+function dotnetinfo()
+{
+	echo "dotNET-7.x = C# 11"
+	echo "dotNET-6.x = C# 10"
+	echo "dotNET-5.x = C# 9.0"
+	echo "dotNET Core-3.x = C# 8.0"
+	echo "dotNET Core-2.x = C# 7.3"
+	echo "dotNET-Standard-2.1 = C# 8.0"
+	echo "dotNET-Standard-2.0 = C# 7.3"
+	echo "dotNET-Standard-1.x = C# 7.3"
+	echo "dotNET Framework-alle = C# 7.3"
+}
+
 ### !  hilfe, Hilfe auf dem Bildschirm anzeigen.
 function hilfe() {
 	echo "$(tput setab 5)Funktion:$(tput sgr 0)		$(tput setab 2)Parameter:$(tput sgr 0)		$(tput setab 4)Informationen:$(tput sgr 0)"
@@ -9378,6 +9413,9 @@ RegionsConfig) RegionsConfig ;;
 RobustConfig) RobustConfig ;;
 historylogclear) historylogclear "$2" ;;
 ScreenLog) ScreenLog ;;
+dotnetinfo) dotnetinfo ;;
+ende) ende ;; # Test
+fehler) fehler ;; # Test
 *) hauptmenu ;;
 esac
 vardel
