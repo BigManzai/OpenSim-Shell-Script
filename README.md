@@ -135,6 +135,10 @@ Bisher sind nur Funktionen im Menü die maximal 1 Übergabewert voraussetzen.
 
 ## TODO und Informationen
 
+V0.79.601
+
+Fix Menü Restart, dies muss ich später mal neu machen.
+
 V0.79.560
 
 opensim.sh newregionini - Erstellt eine Regionskonfiguration entweder in das Hauptverzeichnis oder direkt in das Regions Verzeichnis.
