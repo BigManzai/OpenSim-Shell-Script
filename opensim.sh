@@ -23,7 +23,7 @@
 #### ? Einstellungen ####
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe
-VERSION="V0.79.601" # opensimMULTITOOL Versionsausgabe
+VERSION="V0.79.602" # opensimMULTITOOL Versionsausgabe
 #clear # Bildschirmausgabe loeschen.
 #reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
@@ -4028,6 +4028,7 @@ function db_compress_backup() {
 ### ! Backup, eine Datenbanken Tabellenweise speichern. Test OK
 ## function db_backuptabellen DB_Benutzername DB_Passwort Datenbankname
 ## Datenbank Tabellenweise sichern im Verzeichnis Datenbankname
+# /opt/opensim.sh db_backuptabellen username password databasename
 function db_backuptabellen() {
 	# Hier fehlt noch das die Asset Datenbank gesplittet wird.
 	username=$1
@@ -4055,6 +4056,7 @@ function db_backuptabellen() {
 ### ! Backup Test, eine Datenbanken Tabellenweise wiederherstellen.
 ## function db_restorebackuptabellen DB_Benutzername DB_Passwort AlterDatenbankname NeuerDatenbankname
 ## Die Tabellenweise gesicherte Datenbank in einer neuen Datenbank zusammensetzen.
+# /opt/opensim.sh db_restorebackuptabellen username password databasename newdatabasename
 function db_restorebackuptabellen() {
 	username=$1
 	password=$2
@@ -4075,6 +4077,7 @@ function db_restorebackuptabellen() {
 ### ! Backup Test, eine Datenbanken Tabellenweise wiederherstellen.
 ## function db_restorebackuptabellen DB_Benutzername DB_Passwort AlterDatenbankname NeuerDatenbankname
 ## Die Tabellenweise gesicherte Datenbank in einer neuen Datenbank zusammensetzen.
+
 function db_restorebackuptabellen2test() {
 	username=$1
 	password=$2
@@ -8518,6 +8521,13 @@ function hilfe() {
 	echo "landclear 	- $(tput setab 5)screen_name$(tput sgr 0) $(tput setab 4)Regionsname$(tput sgr 0) - Land clear - Loescht alle Parzellen auf dem Land."
 
 	log line
+	echo "db_tablesplitt - $(tput setab 5) /Pfad/SQL_Datei.sql $(tput sgr 0) Alle Tabellen aus SQL Sicherung in ein gleichnamigen Verzeichnis extrahieren."
+	echo "db_tablextract - $(tput setab 5) /Pfad/SQL_Datei.sql $(tput setab 4) Tabellenname $(tput sgr 0) Einzelne Tabelle aus SQL Backup extrahieren."
+	echo " "
+	echo "db_backuptabellen - $(tput setab 5)username $(tput setab 4)password $(tput setab 3)databasename $(tput sgr 0) Backup eine Datenbanken Tabellenweise speichern."
+	echo "db_restorebackuptabellen - $(tput setab 5)username $(tput setab 4)password $(tput setab 3)databasename $(tput setab 2)newdatabasename $(tput sgr 0) Restore Datenbank Tabellenweise wiederherstellen."
+
+	log line
 	echo "loadinventar - $(tput setab 5)NAME VERZEICHNIS PASSWORD DATEINAMEmitPFAD $(tput sgr 0) - laedt Inventar aus einer iar"
 	echo "saveinventar - $(tput setab 5)NAME VERZEICHNIS PASSWORD DATEINAMEmitPFAD $(tput sgr 0) - speichert Inventar in einer iar"
 
@@ -8528,7 +8538,7 @@ function hilfe() {
 	log line
 	echo "$(tput setaf 3)  Der Verzeichnisname ist gleichzeitig auch der Screen Name!$(tput sgr 0)"
 
-	log info "HILFE: Hilfe wurde angefordert."
+	# log info "HILFE: Hilfe wurde angefordert."
 }
 
 ### !  konsolenhilfe, konsolenhilfe auf dem Bildschirm anzeigen.
@@ -8551,7 +8561,7 @@ function konsolenhilfe() {
 	echo "Strg + D - Beendet Putty oder Xterm."
 	echo "Strg + Z - Setzt alles, was Sie ausfuehren, in einen angehaltenen Hintergrundprozess."
 
-	log info "HILFE: Konsolenhilfe wurde angefordert"
+	# log info "HILFE: Konsolenhilfe wurde angefordert"
 }
 
 ### !  commandhelp
@@ -8725,7 +8735,7 @@ wind SimpleRandomWind strength [<value>] - Windstaerke.
 
 eof
 
-	log info "HILFE: Commands Hilfe wurde angefordert"
+	# log info "HILFE: Commands Hilfe wurde angefordert"
 }
 
 ###########################################################################
