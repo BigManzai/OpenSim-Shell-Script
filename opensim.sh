@@ -16,14 +16,14 @@
 # ! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 # ! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-# * Status 27.07.2022 292 Funktionen.
+# * Status 27.07.2022 294 Funktionen.
 
 # # Visual Studio Code # ShellCheck # shellman # Better Comments #
 
 #### ? Einstellungen ####
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe
-VERSION="V0.79.602" # opensimMULTITOOL Versionsausgabe
+VERSION="V0.79.607" # opensimMULTITOOL Versionsausgabe
 #clear # Bildschirmausgabe loeschen.
 #reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
@@ -56,7 +56,7 @@ function dummyvar() {
 	username="username"	password="userpasswd"	databasename="grid"	linefontcolor=7	linebaggroundcolor=0; apache2errorlog="/var/log/apache2/error.log"; apache2accesslog="/var/log/apache2/access.log"
 	authlog="/var/log/auth.log"	ufwlog="/var/log/ufw.log"	mysqlmariadberor="/var/log/mysql/mariadb.err"; mysqlerrorlog="/var/log/mysql/error.log"; listVar=""; ScreenLogLevel=0
 	# DIALOG_OK=0; DIALOG_HELP=2; DIALOG_EXTRA=3; DIALOG_ITEM_HELP=4; SIG_NONE=0; SIG_HUP=1; SIG_INT=2; SIG_QUIT=3; SIG_KILL=9; SIG_TERM=15
-	DIALOG_CANCEL=1; DIALOG_ESC=255; DIALOG=dialog; 
+	DIALOG_CANCEL=1; DIALOG_ESC=255; DIALOG=dialog; VISITORLIST="yes"; #DELREGIONS="no";
 }
 
 ### Datumsvariablen Datum, Dateidatum und Uhrzeit
@@ -1255,12 +1255,17 @@ function logdel() {
 function rologdel() {
 	# /opt/robust/bin
 	RVERZEICHNIS="robust"
-	if [ -d /$STARTVERZEICHNIS/$RVERZEICHNIS ]; then
+	if [ -d /$STARTVERZEICHNIS/$RVERZEICHNIS ]; then	
+		if [ "$VISITORLIST" = "yes" ]; then 
+			# Schreibe alle Besucher in eine Datei namens DATUM_visitorlist.log
+			sed -n -e '/'"INFO  (Thread Pool Worker)"'/p' /$STARTVERZEICHNIS/$RVERZEICHNIS/bin/Robust.log >> /$STARTVERZEICHNIS/"$DATEIDATUM"_visitorlist.log; 
+			log info "Besucherliste wird geschrieben..."; 
+		fi
 		rm /$STARTVERZEICHNIS/"$RVERZEICHNIS"/bin/*.log 2>/dev/null || echo "Ich habe die Robust und/oder Money logs nicht gefunden."		
 	else
 		log info "Robust Verzeichnis wurden nicht gefunden"
 		return 1
-	fi
+	fi	
 	log info "Robust und Money logs wurden geloescht"
 	return 0
 }
@@ -1345,12 +1350,12 @@ function ossettings() {
 		export MONO_GC_PARAMS="minor=split,promotion-age=14,nursery-size=64m"
 	fi
 	if [[ $SETMONOGCPARAMSON2 = "yes" ]]; then
-		log info "Setze die Einstellung: nursery-size=32m,promotion-age=14,"
+		log info "Setze die Einstellung: promotion-age=14,"
 		log info "minor=split,major=marksweep,no-lazy-sweep,alloc-ratio=50,"
 		log info "nursery-size=64m"
 
 		# Test 26.02.2022
-		export MONO_GC_PARAMS="nursery-size=32m,promotion-age=14,minor=split,major=marksweep,no-lazy-sweep,alloc-ratio=50,nursery-size=64m"
+		export MONO_GC_PARAMS="promotion-age=14,minor=split,major=marksweep,no-lazy-sweep,alloc-ratio=50,nursery-size=64m"
 		export MONO_GC_DEBUG=""
 		export MONO_ENV_OPTIONS="--desktop"
 	fi
@@ -2933,7 +2938,8 @@ function autostop() {
 		sleep $AUTOSTOPZEIT
 	fi
 	log info "Alle noch offenen OpenSimulator bestandteile,"
-	log info "die nicht innerhalb von $AUTOSTOPZEIT Sekunden heruntergefahren werden konnten,"
+	log info "die nicht innerhalb von $AUTOSTOPZEIT Sekunden"
+	log info "nach Robust heruntergefahren werden konnten,"
 	log info "werden jetzt zwangsbeendet!"
 	autoscreenstop
 	return 0
@@ -2993,6 +2999,7 @@ function menuautostop() {
 function autorestart() {
 	autostop
 	if [ "$LOGDELETE" = "yes" ]; then autologdel; rologdel; fi
+	#if [ "$DELREGIONS" = "yes" ]; then deleteregionfromdatabase; fi
 	gridstart
 	autosimstart
 	screenlistrestart
@@ -3009,6 +3016,7 @@ function menuautorestart() {
 
 	autostop
 	if [ "$LOGDELETE" = "yes" ]; then autologdel; rologdel; fi
+	#if [ "$DELREGIONS" = "yes" ]; then deleteregionfromdatabase; fi
 	gridstart
 	autosimstart
 	screenlistrestart
@@ -3523,6 +3531,23 @@ function menucreateuser() {
 }
 
 # Datenbank Befehle Achtung alles noch nicht ausgereift!!!
+
+### !  deleteregionfromdatabase.
+# function deleteregionfromdatabase() {
+# 	username=$1
+# 	password=$2
+# 	databasename=$3
+
+# 	log text "Die - regions - Tabelle aus der Grid Datenbank leeren."
+# 	log text "Dies ist erforderlich wenn eine Region in der Datenbank haengen bleibt."
+# 	log text "Diese Aktion muss nach dem herunterfahren von Robust gestartet werden."
+# 	log text "Anschliessend muss Robust neu gestartet werden."
+	
+# 	mysqlrest "$username" "$password" "$databasename" "TRUNCATE TABLE regions"
+# 	log rohtext "$result_mysqlrest"
+
+# 	return 0
+# }
 
 ### !  db_anzeigen, listet alle erstellten Datenbanken auf.
 function db_anzeigen() {
