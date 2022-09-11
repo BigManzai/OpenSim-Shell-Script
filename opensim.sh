@@ -23,7 +23,7 @@
 #### ? Einstellungen ####
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe
-VERSION="V0.79.607" # opensimMULTITOOL Versionsausgabe
+VERSION="V0.79.608" # opensimMULTITOOL Versionsausgabe
 #clear # Bildschirmausgabe loeschen.
 #reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
@@ -1257,8 +1257,16 @@ function rologdel() {
 	RVERZEICHNIS="robust"
 	if [ -d /$STARTVERZEICHNIS/$RVERZEICHNIS ]; then	
 		if [ "$VISITORLIST" = "yes" ]; then 
-			# Schreibe alle Besucher in eine Datei namens DATUM_visitorlist.log
-			sed -n -e '/'"INFO  (Thread Pool Worker)"'/p' /$STARTVERZEICHNIS/$RVERZEICHNIS/bin/Robust.log >> /$STARTVERZEICHNIS/"$DATEIDATUM"_visitorlist.log; 
+			# Schreibe alle Besucher in eine Datei namens DATUM_visitorlist.log.
+			sed -n -e '/'"INFO  (Thread Pool Worker)"'/p' /$STARTVERZEICHNIS/$RVERZEICHNIS/bin/Robust.log >> /$STARTVERZEICHNIS/"$DATEIDATUM"_visitorlist.log;
+			# Zeilenumgruch nach jeder Zeile.
+			sed -i 's/$/\n/g' /$STARTVERZEICHNIS/"$DATEIDATUM"_visitorlist.log
+
+			# Hiermit wird das ganze etwas lesbarer.
+			# Etwas umstaendlich aber was besseres faellt mir auf die schnelle nicht ein.
+			text1="INFO  (Thread Pool Worker) - OpenSim.Services.LLLoginService.LLLoginService \[LLOGIN SERVICE\]: "
+			text2="INFO  (Thread Pool Worker) - OpenSim.Services.HypergridService.GatekeeperService \[GATEKEEPER SERVICE\]: "
+			cat /$STARTVERZEICHNIS/"$DATEIDATUM"_visitorlist.log | sed -e 's/, /\n/g' -e 's/'"$text1"'/\n/g' -e 's/'"$text2"'/\n/g' -e 's/ using/\nusing/g' > /$STARTVERZEICHNIS/"$DATEIDATUM"_visitorlist.txt
 			log info "Besucherliste wird geschrieben..."; 
 		fi
 		rm /$STARTVERZEICHNIS/"$RVERZEICHNIS"/bin/*.log 2>/dev/null || echo "Ich habe die Robust und/oder Money logs nicht gefunden."		
