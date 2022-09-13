@@ -129,6 +129,17 @@ Bisher sind nur Funktionen im Menü die maximal 1 Übergabewert voraussetzen.
 
 ## TODO und Informationen
 
+VERSION 0.79.623
+
+Automatisiert Simulatoren aus der SimulatorList.ini ein und austragen.
+
+     osdauerstop simX
+     osstarteintrag simX
+     menuosdauerstop simX
+     osdauerstart simX
+     menuosdauerstart simX
+     osstarteintragdel simX
+
 V0.79.601
 
 Fix Menü Restart, dies muss ich später mal neu machen.
