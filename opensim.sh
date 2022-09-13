@@ -1,5 +1,15 @@
 #!/bin/bash
 
+### #!/bin/sh — Fuehrt die Datei mit sh, der Bourne-Shell oder einer kompatiblen Shell aus
+### #!/bin/csh — Fuehrt die Datei mit csh, der C-Shell oder einer kompatiblen Shell aus
+### #!/usr/bin/perl -T — Ausfuehren mit Perl mit der Option fuer Taint Pruefungen
+### #!/usr/bin/php — Fuehrt die Datei mit dem PHP-Befehlszeileninterpreter aus
+### #!/usr/bin/python -O — Ausfuehrung mit Python mit Codeoptimierungen
+### #!/usr/bin/ruby — Mit Ruby ausfuehren
+### #!/bin/ksh
+### #!/bin/awk
+### #!/bin/expect
+
 # ? opensimMULTITOOL Copyright (c) 2021 2022 BigManzai Manfred Aabye
 # opensim.sh Basiert auf meinen Einzelscripten, an denen ich bereits 7 Jahre Arbeite und verbessere.
 # Da Server unterschiedlich sind, kann eine einwandfreie fuunktion nicht gewaehrleistet werden, also bitte mit bedacht verwenden.
@@ -16,14 +26,14 @@
 # ! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 # ! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-# * Status 27.07.2022 294 Funktionen.
+# * Status 27.07.2022 301 Funktionen.
 
 # # Visual Studio Code # ShellCheck # shellman # Better Comments #
 
 #### ? Einstellungen ####
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe
-VERSION="V0.79.608" # opensimMULTITOOL Versionsausgabe
+VERSION="V0.79.623" # opensimMULTITOOL Versionsausgabe
 #clear # Bildschirmausgabe loeschen.
 #reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
@@ -56,7 +66,7 @@ function dummyvar() {
 	username="username"	password="userpasswd"	databasename="grid"	linefontcolor=7	linebaggroundcolor=0; apache2errorlog="/var/log/apache2/error.log"; apache2accesslog="/var/log/apache2/access.log"
 	authlog="/var/log/auth.log"	ufwlog="/var/log/ufw.log"	mysqlmariadberor="/var/log/mysql/mariadb.err"; mysqlerrorlog="/var/log/mysql/error.log"; listVar=""; ScreenLogLevel=0
 	# DIALOG_OK=0; DIALOG_HELP=2; DIALOG_EXTRA=3; DIALOG_ITEM_HELP=4; SIG_NONE=0; SIG_HUP=1; SIG_INT=2; SIG_QUIT=3; SIG_KILL=9; SIG_TERM=15
-	DIALOG_CANCEL=1; DIALOG_ESC=255; DIALOG=dialog; VISITORLIST="yes"; #DELREGIONS="no";
+	DIALOG_CANCEL=1; DIALOG_ESC=255; DIALOG=dialog; VISITORLIST="yes"; REGIONSANZEIGE="yes"; #DELREGIONS="no";
 }
 
 ### Datumsvariablen Datum, Dateidatum und Uhrzeit
@@ -1555,6 +1565,180 @@ function menurostart() {
 	fi
 }
 
+##################################################################################################
+
+### !  osstarteintrag fuegt der SimulatorList.ini einen Region Simulator hinzu und sortiert diese.
+function osstarteintrag() {
+	OSEINTRAG=$1 # OpenSimulator, Verzeichnis und Screen Name
+	log info "OpenSimulator $OSEINTRAG wird der Datei $SIMDATEI hinzugefuegt!"
+	sed -i '1s/.*$/'"$OSEINTRAG"'\n&/g' /"$STARTVERZEICHNIS"/$SIMDATEI
+	sort /"$STARTVERZEICHNIS"/$SIMDATEI -o /"$STARTVERZEICHNIS"/$SIMDATEI
+}
+
+### !  osstarteintragdel entfernt einen Region Simulator aus  der SimulatorList.ini und sortiert diese.
+function osstarteintragdel() {
+	OSEINTRAGDEL=$1 # OpenSimulator, Verzeichnis und Screen Name
+	log info "OpenSimulator $OSEINTRAGDEL wird aus der Datei $SIMDATEI entfernt!"
+	sed -i '/'"$OSEINTRAGDEL"'/d' /"$STARTVERZEICHNIS"/$SIMDATEI
+	sort /"$STARTVERZEICHNIS"/$SIMDATEI -o /"$STARTVERZEICHNIS"/$SIMDATEI
+}
+
+### !  osdauerstop, stoppt Region Server. # Beispiel-Example: /opt/opensim.sh osdauerstop sim1
+function osdauerstop() {
+	OSDAUERSTOPSCREEN=$1 # OpenSimulator, Verzeichnis und Screen Name
+	if screen -list | grep -q "$OSDAUERSTOPSCREEN"; then
+		log warn "OpenSimulator $OSDAUERSTOPSCREEN Beenden und aus der Startliste loeschen!"
+		osstarteintrag "$OSDAUERSTOPSCREEN"
+
+		screen -S "$OSDAUERSTOPSCREEN" -p 0 -X eval "stuff 'shutdown'^M"
+		sleep 10
+		return 0
+	else
+		log error "OpenSimulator $OSDAUERSTOPSCREEN nicht vorhanden"
+		osstarteintrag "$OSDAUERSTOPSCREEN"
+		return 1
+	fi
+
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then hauptmenu; fi
+}
+
+### !  menuosdauerstop() ist die dialog Version von osdauerstop()
+function menuosdauerstop() {
+	IOSDAUERSTOPSCREEN=$(
+		dialog --backtitle "opensimMULTITOOL $VERSION" --title "opensimMULTITOOL Eingabe" \
+			--inputbox "Simulator:" 8 40 \
+			3>&1 1>&2 2>&3 3>&-
+	)
+	dialogclear
+	ScreenLog
+
+	if screen -list | grep -q "$IOSDAUERSTOPSCREEN"; then
+		DIALOG=dialog
+		(
+			echo "10"
+			screen -S "$IOSDAUERSTOPSCREEN" -p 0 -X eval "stuff 'shutdown'^M"
+			osstarteintragdel "$IOSDAUERSTOPSCREEN"
+			sleep 3
+			echo "100"
+			sleep 2
+		) |
+			$DIALOG --title "$IOSDAUERSTOPSCREEN" --gauge "Stop" 8 30
+		dialogclear
+		
+		$DIALOG --msgbox "$IOSDAUERSTOPSCREEN beendet!" 5 20
+		dialogclear
+		ScreenLog
+		osstarteintragdel "$IOSDAUERSTOPSCREEN"
+		dateimenu
+	else
+		osstarteintragdel "$IOSDAUERSTOPSCREEN"
+		dateimenu
+	fi
+}
+
+### !  osdauerstart, startet Region Server. # Beispiel-Example: /opt/opensim.sh osdauerstart sim1
+function osdauerstart() {
+	OSDAUERSTARTSCREEN=$1 # OpenSimulator, Verzeichnis und Screen Name
+	osstarteintrag "$OSDAUERSTARTSCREEN"
+
+	if ! screen -list | grep -q "$OSDAUERSTARTSCREEN"; then
+		if [ -d "$OSDAUERSTARTSCREEN" ]; then
+
+			cd /$STARTVERZEICHNIS/"$OSDAUERSTARTSCREEN"/bin || return 1
+
+			# AOT Aktiveren oder Deaktivieren.
+			if [[ $SETAOTON = "yes" ]]; then
+				log info "OpenSimulator $OSDAUERSTARTSCREEN Starten mit aot"
+				screen -fa -S "$OSDAUERSTARTSCREEN" -d -U -m mono --desktop -O=all OpenSim.exe
+				return 0
+				log info "OpenSimulator $OSDAUERSTARTSCREEN Starten"
+				screen -fa -S "$OSDAUERSTARTSCREEN" -d -U -m mono OpenSim.exe
+				return 0
+			fi
+			sleep 10
+		else
+			log error "OpenSimulator $OSDAUERSTARTSCREEN nicht vorhanden"
+			return 1
+		fi
+
+	else
+		# es laeuft - work
+		log warn "OpenSimulator $OSDAUERSTARTSCREEN laeuft bereits"
+		return 1
+	fi
+
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then hauptmenu; fi
+}
+
+### !  menuosdauerstart() ist die dialog Version von osdauerstart()
+function menuosdauerstart() {
+	IOSDAUERSTARTSCREEN=$(
+		dialog --backtitle "opensimMULTITOOL $VERSION" --title "opensimMULTITOOL Eingabe" \
+			--inputbox "Simulator:" 8 40 \
+			3>&1 1>&2 2>&3 3>&-
+	)
+
+	dialogclear
+	ScreenLog
+
+	osstarteintrag "$IOSDAUERSTARTSCREEN"
+	cd /$STARTVERZEICHNIS/"$IOSDAUERSTARTSCREEN"/bin || return 1
+	screen -fa -S "$IOSDAUERSTARTSCREEN" -d -U -m mono OpenSim.exe
+
+	if ! screen -list | grep -q "$IOSDAUERSTARTSCREEN"; then
+		# es laeuft nicht - not work
+
+		if [ -d "$IOSDAUERSTARTSCREEN" ]; then
+
+			cd /$STARTVERZEICHNIS/"$IOSDAUERSTARTSCREEN"/bin || return 1
+
+			# AOT Aktiveren oder Deaktivieren.
+			if [[ $SETAOTON = "yes" ]]; then
+				DIALOG=dialog
+				(
+					echo "10"
+					screen -fa -S "$IOSDAUERSTARTSCREEN" -d -U -m mono --desktop -O=all OpenSim.exe
+					sleep 3
+					echo "100"
+					sleep 2
+				) 
+				#|
+				#$DIALOG --title "$IOSDAUERSTARTSCREEN" --gauge "Start" 8 30
+				#$dialogclear
+				#$DIALOG --msgbox "$IOSDAUERSTARTSCREEN gestartet!" 5 20
+				#$dialogclear
+				ScreenLog
+				return 0
+			else
+				DIALOG=dialog
+				(
+					echo "10"
+					screen -fa -S "$IOSDAUERSTARTSCREEN" -d -U -m mono OpenSim.exe
+					sleep 3
+					echo "100"
+					sleep 2
+				) #|
+					#$DIALOG --title "$IOSDAUERSTARTSCREEN" --gauge "Start" 8 30
+				#$dialogclear
+				#$DIALOG --msgbox "$IOSDAUERSTARTSCREEN gestartet!" 5 20
+				#$dialogclear
+				ScreenLog
+				dateimenu
+			fi
+		else
+			echo "OpenSimulator $IOSDAUERSTARTSCREEN nicht vorhanden"
+			dateimenu
+		fi
+	else
+		# es laeuft - work
+		log error "OpenSimulator $IOSDAUERSTARTSCREEN laeuft bereits"
+		dateimenu
+	fi
+
+}
+
+##################################################################################################
+
 ### !  rostop, Robust herunterfahren.
 function rostop() {
 	if screen -list | grep -q "RO"; then
@@ -2000,7 +2184,7 @@ function osprebuild() {
 }
 
 ### !  osstruktur, legt die Verzeichnisstruktur fuer OpenSim an. # Aufruf: opensim.sh osstruktur ersteSIM letzteSIM
-# Beispiel: ./opensim.sh osstruktur 1 10 - erstellt ein Grid Verzeichnis fuer 10 Simulatoren inklusive der SimulatorList.ini.
+# Beispiel: ./opensim.sh osstruktur 1 10 - erstellt ein Grid Verzeichnis fuer 10 Simulatoren inklusive der $SIMDATEI.
 function osstruktur() {
 	if [ ! -f "/$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/" ]; then
 		log info "OSSTRUKTUR: Lege robust an im Verzeichnis $ROBUSTVERZEICHNIS"
@@ -2588,6 +2772,15 @@ function autosimstart() {
 			log info "Regionen ${VERZEICHNISSLISTE[$i]} werden gestartet"
 			cd /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin || return 1
 
+			if [ "$REGIONSANZEIGE" = "yes" ]; then
+				# Zeigt die Regionsnamen aus einer Regions.ini an
+				STARTREGIONSAUSGABE=$(awk -F "[" '/\[/ {print $1 $2 $3}' /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/Regions/*.ini | sed s/'\]'//g);
+				log info "${VERZEICHNISSLISTE[$i]} hat folgende Regionen:";
+				#sed 's/^\(.\)/     \1/' "$STARTREGIONSAUSGABE"
+				echo "$STARTREGIONSAUSGABE";
+				#printf '%s' "$STARTREGIONSAUSGABE";
+			fi
+
 			# AOT Aktiveren oder Deaktivieren.
 			if [[ $SETAOTON = "yes" ]]; then
 				screen -fa -S "${VERZEICHNISSLISTE[$i]}" -d -U -m mono --desktop -O=all OpenSim.exe
@@ -2628,6 +2821,15 @@ function menuautosimstart() {
 		for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
 			log info "Regionen ${VERZEICHNISSLISTE[$i]} werden gestartet"
 			cd /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin || return 1
+
+			if [ "$REGIONSANZEIGE" = "yes" ]; then
+				# Zeigt die Regionsnamen aus den Regions.ini an
+				STARTREGIONSAUSGABE=$(awk -F "[" '/\[/ {print $1 $2 $3}' /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/Regions/*.ini | sed s/'\]'//g);
+				log info "${VERZEICHNISSLISTE[$i]} hat folgende Regionen:";
+				#sed 's/^\(.\)/     \1/' "$STARTREGIONSAUSGABE"
+				echo "$STARTREGIONSAUSGABE";
+				#printf '%s' "$STARTREGIONSAUSGABE";
+			fi
 
 			# AOT Aktiveren oder Deaktivieren.
 			if [[ $SETAOTON = "yes" ]]; then
@@ -8986,6 +9188,8 @@ function dateimenu() {
 			"Opensim vom Github holen" ""
 			"--------------------------" ""
 			"Verzeichnisstrukturen anlegen" ""
+			"Sim in Startkonfiguration einfuegen" ""
+			"Sim aus Startkonfiguration entfernen" ""
 			"----------Menu------------" ""
 			"Hauptmenu" ""
 			"Weitere Funktionen" ""
@@ -9016,7 +9220,10 @@ function dateimenu() {
 		if [[ $dauswahl = "OSSL Skripte vom git kopieren" ]]; then scriptgitcopy; fi
 		if [[ $dauswahl = "Configure vom git kopieren" ]]; then configuregitcopy; fi
 		if [[ $dauswahl = "Opensim vom Github holen" ]]; then osgitholen; fi
+
 		if [[ $dauswahl = "Verzeichnisstrukturen anlegen" ]]; then menuosstruktur; fi
+		if [[ $dauswahl = "Sim in Startkonfiguration einfuegen" ]]; then menuosdauerstart; fi
+		if [[ $dauswahl = "Sim aus Startkonfiguration entfernen" ]]; then menuosdauerstop; fi
 
 		if [[ $dauswahl = "Asset loeschen" ]]; then menuassetdel; fi
 
@@ -9459,6 +9666,12 @@ ScreenLog) ScreenLog ;;
 dotnetinfo) dotnetinfo ;;
 ende) ende ;; # Test
 fehler) fehler ;; # Test
+osdauerstop) osdauerstop "$2" ;; # Test
+osstarteintrag) osstarteintrag "$2" ;; # Test
+menuosdauerstop) menuosdauerstop "$2" ;; # Test
+osdauerstart) osdauerstart "$2" ;; # Test
+menuosdauerstart) menuosdauerstart "$2" ;; # Test
+osstarteintragdel) osstarteintragdel "$2" ;; # Test
 *) hauptmenu ;;
 esac
 vardel

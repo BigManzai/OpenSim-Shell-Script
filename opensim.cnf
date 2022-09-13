@@ -1,4 +1,4 @@
-### Einstellungen VERSION V0.79.607
+### Einstellungen VERSION V0.79.609
 
 : "${DIALOG=dialog}"
 : "${DIALOG_CANCEL=1}"
@@ -62,6 +62,8 @@
 	OPENSIMDOWNLOAD="http://opensimulator.org/dist/"
 	OPENSIMVERSION="opensim-0.9.2.2Dev"
 	SEARCHADRES="icanhazip.com" # Suchadresse
+
+	REGIONSANZEIGE="yes"
 
 	LOGDELETE="yes" # yes/no
 	VISITORLIST="yes" # yes/no - schreibt vor dem loeschen alle Besucher samt mac in eine log Datei.
