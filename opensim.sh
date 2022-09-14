@@ -1,5 +1,8 @@
 #!/bin/bash
 
+### * #!/Pfad/aufrufbares_Programm
+### #!/bin/bash
+### #!/bin/dash
 ### #!/bin/sh — Fuehrt die Datei mit sh, der Bourne-Shell oder einer kompatiblen Shell aus
 ### #!/bin/csh — Fuehrt die Datei mit csh, der C-Shell oder einer kompatiblen Shell aus
 ### #!/usr/bin/perl -T — Ausfuehren mit Perl mit der Option fuer Taint Pruefungen
@@ -9,6 +12,7 @@
 ### #!/bin/ksh
 ### #!/bin/awk
 ### #!/bin/expect
+### #!/usr/bin/env instantfpc
 
 # ? opensimMULTITOOL Copyright (c) 2021 2022 BigManzai Manfred Aabye
 # opensim.sh Basiert auf meinen Einzelscripten, an denen ich bereits 7 Jahre Arbeite und verbessere.
@@ -28,12 +32,12 @@
 
 # * Status 27.07.2022 301 Funktionen.
 
-# # Visual Studio Code # ShellCheck # shellman # Better Comments #
+# # Visual Studio Code # ShellCheck # shellman # Better Comments # outline map #
 
 #### ? Einstellungen ####
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe
-VERSION="V0.79.623" # opensimMULTITOOL Versionsausgabe
+VERSION="V0.79.625" # opensimMULTITOOL Versionsausgabe
 #clear # Bildschirmausgabe loeschen.
 #reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
@@ -1574,6 +1578,22 @@ function osstarteintrag() {
 	sed -i '1s/.*$/'"$OSEINTRAG"'\n&/g' /"$STARTVERZEICHNIS"/$SIMDATEI
 	sort /"$STARTVERZEICHNIS"/$SIMDATEI -o /"$STARTVERZEICHNIS"/$SIMDATEI
 }
+### !  menuosstarteintrag ist die dialog Version von osstarteintrag
+function menuosstarteintrag() {
+	MENUOSEINTRAG=$(
+		dialog --backtitle "opensimMULTITOOL $VERSION" --title "opensimMULTITOOL Eingabe" \
+			--inputbox "Simulator:" 8 40 \
+			3>&1 1>&2 2>&3 3>&-
+	)
+	dialogclear
+	ScreenLog
+
+	log info "OpenSimulator $MENUOSEINTRAG wird der Datei $SIMDATEI hinzugefuegt!"
+	sed -i '1s/.*$/'"$MENUOSEINTRAG"'\n&/g' /"$STARTVERZEICHNIS"/$SIMDATEI
+	sort /"$STARTVERZEICHNIS"/$SIMDATEI -o /"$STARTVERZEICHNIS"/$SIMDATEI
+
+	dateimenu
+}
 
 ### !  osstarteintragdel entfernt einen Region Simulator aus  der SimulatorList.ini und sortiert diese.
 function osstarteintragdel() {
@@ -1582,6 +1602,24 @@ function osstarteintragdel() {
 	sed -i '/'"$OSEINTRAGDEL"'/d' /"$STARTVERZEICHNIS"/$SIMDATEI
 	sort /"$STARTVERZEICHNIS"/$SIMDATEI -o /"$STARTVERZEICHNIS"/$SIMDATEI
 }
+### !  menuosstarteintragdel ist die dialog Version von osstarteintragdel
+function menuosstarteintragdel() {
+	MENUOSEINTRAGDEL=$(
+		dialog --backtitle "opensimMULTITOOL $VERSION" --title "opensimMULTITOOL Eingabe" \
+			--inputbox "Simulator:" 8 40 \
+			3>&1 1>&2 2>&3 3>&-
+	)
+	dialogclear
+	ScreenLog
+
+	log info "OpenSimulator $MENUOSEINTRAGDEL wird der Datei $SIMDATEI hinzugefuegt!"
+	sed -i '/'"$MENUOSEINTRAGDEL"'/d' /"$STARTVERZEICHNIS"/$SIMDATEI
+	sort /"$STARTVERZEICHNIS"/$SIMDATEI -o /"$STARTVERZEICHNIS"/$SIMDATEI
+
+	dateimenu
+}
+
+
 
 ### !  osdauerstop, stoppt Region Server. # Beispiel-Example: /opt/opensim.sh osdauerstop sim1
 function osdauerstop() {
@@ -8658,7 +8696,7 @@ function menukonsolenhilfe() {
 	return 0
 }
 
-### dotnetinfo .NET und CSharp Informationen.
+### ! dotnetinfo .NET und CSharp Informationen.
 function dotnetinfo()
 {
 	echo "dotNET-7.x = C# 11"
@@ -9188,6 +9226,8 @@ function dateimenu() {
 			"Opensim vom Github holen" ""
 			"--------------------------" ""
 			"Verzeichnisstrukturen anlegen" ""
+			"Sim in Verzeichnisstrukturen eintragen" ""
+			"Sim in Verzeichnisstrukturen austragen" ""
 			"Sim in Startkonfiguration einfuegen" ""
 			"Sim aus Startkonfiguration entfernen" ""
 			"----------Menu------------" ""
@@ -9224,6 +9264,10 @@ function dateimenu() {
 		if [[ $dauswahl = "Verzeichnisstrukturen anlegen" ]]; then menuosstruktur; fi
 		if [[ $dauswahl = "Sim in Startkonfiguration einfuegen" ]]; then menuosdauerstart; fi
 		if [[ $dauswahl = "Sim aus Startkonfiguration entfernen" ]]; then menuosdauerstop; fi
+
+		if [[ $dauswahl = "Sim eintragen" ]]; then menuosstarteintrag; fi
+		if [[ $dauswahl = "Sim austragen" ]]; then menuosstarteintragdel; fi
+		
 
 		if [[ $dauswahl = "Asset loeschen" ]]; then menuassetdel; fi
 
