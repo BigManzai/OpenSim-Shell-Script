@@ -28,19 +28,18 @@ if ($_GET['stop']) {
     # Dieser Code wird ausgefuehrt, wenn ?stop=true gesetzt ist.
     exec("/opt/opensim.sh autostop");
   }
-  if ($_GET['restart']) {
-    # Dieser Code wird ausgefuehrt, wenn ?restart=true gesetzt ist.
-    exec("/opt/opensim.sh restart");
-  }
-    
+if ($_GET['restart']) {
+# Dieser Code wird ausgefuehrt, wenn ?restart=true gesetzt ist.
+exec("/opt/opensim.sh restart");
+}    
 ?>
 
 <div class="w3-container">
-  <!-- Dieser Link fuegt Ihrer URL myfilename.php?start=true ?start=true hinzu -->
+  <!-- Dieser Link fuegt Ihrer URL ostools.php?start=true ?start=true hinzu -->
   <p><a href="?start=true" class="w3-button w3-blue w3-hover-green">Grid Start</a> Startet das gesamte Grid.</p>
-  <!-- Dieser Link fuegt Ihrer URL myfilename.php?stop=true ?stop=true hinzu -->
+  <!-- Dieser Link fuegt Ihrer URL ostools.php?stop=true ?stop=true hinzu -->
   <p><a href="?stop=true" class="w3-button w3-blue w3-hover-green">Grid Stop</a> Stoppt das gesamte Grid.</p>
-  <!-- Dieser Link fuegt Ihrer URL myfilename.php?restart=true ?restart=true hinzu -->
+  <!-- Dieser Link fuegt Ihrer URL ostools.php?restart=true ?restart=true hinzu -->
   <p><a href="?restart=true" class="w3-button w3-blue w3-hover-green">Grid Restart</a> Das gesamte Grid neu starten.</p>
 </div>
 
