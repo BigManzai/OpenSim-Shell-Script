@@ -3,6 +3,7 @@
 <title>opensimMultitool</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <body>
 
 <?php
@@ -21,31 +22,28 @@ else
 }
 ?>
 
-
 <div class="w3-container w3-blue">
   <h1>opensimMultitool</h1>
 </div>
 
-<!-- Diese Links fuegen eine Navigation hinzu
+<!-- Diese Links fuegen eine Navigation mit Google icons hinzu https://www.w3schools.com/icons/google_icons_intro.asp -->
 <div class="w3-bar w3-green">
-  <a href="#" class="w3-bar-item w3-button">Home</a>
-  <a href="#" class="w3-bar-item w3-button">Link 1</a>
-  <a href="#" class="w3-bar-item w3-button">Link 2</a>
-  <a href="#" class="w3-bar-item w3-button">Link 3</a>
+  <a href="?home=true" class="w3-bar-item w3-button"><i class="material-icons">home</i></a>
+  <a href="?cloud=true" class="w3-bar-item w3-button"><i class="material-icons">cloud_queue</i></a>
+  <a href="?filedownload=true" class="w3-bar-item w3-button"><i class="material-icons">file_download</i></a>
+  <a href="?fileupload=true" class="w3-bar-item w3-button"><i class="material-icons">file_upload</i></a>
+  <a href="?storage=true" class="w3-bar-item w3-button"><i class="material-icons">storage</i></a>
+  <a href="?devicesother=true" class="w3-bar-item w3-button"><i class="material-icons">devices_other</i></a>
 </div>
- -->
 
 <img src="opensimMultitool.jpg" alt="opensimMultitool" style="width:60%">
 
 <style>
-.w3-button {width:150px;}
-
+.w3-button {width:250px;}
 .alert {
   padding: 20px;
   background-color: #0F3C4E;
-  color: white;
-}
-
+  color: white;}
 .closebtn {
   margin-left: 15px;
   color: white;
@@ -54,12 +52,8 @@ else
   font-size: 22px;
   line-height: 20px;
   cursor: pointer;
-  transition: 0.3s;
-}
-
-.closebtn:hover {
-  color: black;
-}
+  transition: 0.3s;}
+.closebtn:hover {color: black;}
 </style>
 
 <div class="w3-container">
@@ -89,18 +83,178 @@ function commandaufruf(string $funktionsname)
 ?>
 
 <?php
-if ($_GET['start']) {
-  # Dieser Code wird ausgefuehrt, wenn ?start=true gesetzt ist.
-  commandaufruf("autostart");
+// Test
+if ($_GET['home']) {
+	# Dieser Code wird ausgefuehrt, wenn ?home=true gesetzt ist.
+	?>
+	 	<div class="alert">
+		<span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
+		<li>Sie haben home ausgewählt.</li>
+		<p>Klick auf das X zum scließen.</p>
+		</div> 
+	<?php
 }
-if ($_GET['stop']) {
-    # Dieser Code wird ausgefuehrt, wenn ?stop=true gesetzt ist.
-	commandaufruf("autostop");
+if ($_GET['cloud']) {
+	# Dieser Code wird ausgefuehrt, wenn ?cloud=true gesetzt ist.
+	?>
+		<div class="alert">
+		<span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
+		<li>Sie haben cloud ausgewählt.</li>
+		<p>Klick auf das X zum scließen.</p>
+		</div> 
+	<?php
 }
-if ($_GET['restart']) {
-	# Dieser Code wird ausgefuehrt, wenn ?restart=true gesetzt ist.
-	commandaufruf("restart");
+if ($_GET['filedownload']) {
+	# Dieser Code wird ausgefuehrt, wenn ?filedownload=true gesetzt ist.
+	?>
+		<div class="alert">
+		<span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
+		<li>Sie haben filedownload ausgewählt.</li>
+		<p>Klick auf das X zum scließen.</p>
+		</div> 
+	<?php
 }
+if ($_GET['fileupload']) {
+	# Dieser Code wird ausgefuehrt, wenn ?fileupload=true gesetzt ist.
+	?>
+		<div class="alert">
+		<span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
+		<li>Sie haben fileupload ausgewählt.</li>
+		<p>Klick auf das X zum scließen.</p>
+		</div> 
+	<?php
+}
+if ($_GET['storage']) {
+	# Dieser Code wird ausgefuehrt, wenn ?storage=true gesetzt ist.
+	?>
+		<div class="alert">
+		<span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
+		<li>Sie haben storage ausgewählt.</li>
+		<p>Klick auf das X zum scließen.</p>
+		</div> 
+	<?php
+}
+if ($_GET['devicesother']) {
+	# Dieser Code wird ausgefuehrt, wenn ?devicesother=true gesetzt ist.
+	?>
+		<div class="alert">
+		<span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
+		<li>Sie haben devicesother ausgewählt.</li>
+		<p>Klick auf das X zum scließen.</p>
+		</div> 
+	<?php
+}
+
+// ####################################################################################################
+
+if ($_GET['start']) {commandaufruf("autostart");}
+if ($_GET['stop']) {commandaufruf("autostop");}
+if ($_GET['restart']) {commandaufruf("restart");}
+
+// NEU ################################################################
+
+if ($_GET['meineregionen']) {commandaufruf("meineregionen");}
+if ($_GET['autologdel']) {commandaufruf("autologdel");}
+if ($_GET['automapdel']) {commandaufruf("automapdel");}
+if ($_GET['rostart']) {commandaufruf("rostart");}
+if ($_GET['rostop']) {commandaufruf("rostop");}
+if ($_GET['mostart']) {commandaufruf("mostart");}
+if ($_GET['mostop']) {commandaufruf("mostop");}
+if ($_GET['autosimstart']) {commandaufruf("autosimstart");}
+if ($_GET['autosimstop']) {commandaufruf("autosimstop");}
+if ($_GET['autoscreenstop']) {commandaufruf("autoscreenstop");}
+if ($_GET['settings']) {commandaufruf("settings");}
+if ($_GET['osupgrade']) {commandaufruf("osupgrade");}
+if ($_GET['autoregionbackup']) {commandaufruf("autoregionbackup");}
+if ($_GET['compilieren']) {commandaufruf("compilieren");}
+if ($_GET['oscompi']) {commandaufruf("oscompi");}
+if ($_GET['scriptcopy']) {commandaufruf("scriptcopy");}
+if ($_GET['moneycopy']) {commandaufruf("moneycopy");}
+if ($_GET['osdelete']) {commandaufruf("osdelete");}
+if ($_GET['autoregionsiniteilen']) {commandaufruf("autoregionsiniteilen");}
+if ($_GET['RegionListe']) {commandaufruf("RegionListe");}
+if ($_GET['osgitholen']) {commandaufruf("osgitholen");}
+if ($_GET['terminator']) {commandaufruf("terminator");}
+if ($_GET['osgridcopy']) {commandaufruf("osgridcopy");}
+if ($_GET['makeaot']) {commandaufruf("makeaot");}
+if ($_GET['cleanaot']) {commandaufruf("cleanaot");}
+if ($_GET['monoinstall']) {commandaufruf("monoinstall");}
+if ($_GET['installationen']) {commandaufruf("installationen");}
+if ($_GET['serverinstall']) {commandaufruf("serverinstall");}
+if ($_GET['mysql_neustart']) {commandaufruf("mysql_neustart");}
+if ($_GET['opensimholen']) {commandaufruf("opensimholen");}
+if ($_GET['mysqleinstellen']) {commandaufruf("mysqleinstellen");}
+if ($_GET['unlockexample']) {commandaufruf("unlockexample");}
+if ($_GET['makeverzeichnisliste']) {commandaufruf("makeverzeichnisliste");}
+if ($_GET['makeregionsliste']) {commandaufruf("makeregionsliste");}
+if ($_GET['schreibeinfo']) {commandaufruf("schreibeinfo");}
+if ($_GET['screenlist']) {commandaufruf("screenlist");}
+if ($_GET['hilfe']) {commandaufruf("hilfe");}
+if ($_GET['oscopyrobust']) {commandaufruf("oscopyrobust");}
+if ($_GET['oscopysim']) {commandaufruf("oscopysim");}
+if ($_GET['moneydelete']) {commandaufruf("moneydelete");}
+if ($_GET['regionsinisuchen']) {commandaufruf("regionsinisuchen");}
+if ($_GET['chrisoscopy']) {commandaufruf("chrisoscopy");}
+if ($_GET['cleaninstall']) {commandaufruf("cleaninstall");}
+if ($_GET['autoallclean']) {commandaufruf("autoallclean");}
+if ($_GET['pythoncopy']) {commandaufruf("pythoncopy");}
+if ($_GET['get_value_from_Region_key']) {commandaufruf("get_value_from_Region_key");}
+if ($_GET['autorobustmapdel']) {commandaufruf("autorobustmapdel");}
+if ($_GET['info']) {commandaufruf("info");}
+if ($_GET['mutelistcopy']) {commandaufruf("mutelistcopy");}
+if ($_GET['searchcopy']) {commandaufruf("searchcopy");}
+if ($_GET['konsolenhilfe']) {commandaufruf("konsolenhilfe");}
+if ($_GET['makewebmaps']) {commandaufruf("makewebmaps");}
+if ($_GET['ipsetzen']) {commandaufruf("ipsetzen");}
+if ($_GET['neuegridconfig']) {commandaufruf("neuegridconfig");}
+if ($_GET['ramspeicher']) {commandaufruf("ramspeicher");}
+if ($_GET['commandhelp']) {commandaufruf("commandhelp");}
+if ($_GET['gridcommonini']) {commandaufruf("gridcommonini");}
+if ($_GET['robustini']) {commandaufruf("robustini");}
+if ($_GET['opensimini']) {commandaufruf("opensimini");}
+if ($_GET['moneyserverini']) {commandaufruf("moneyserverini");}
+if ($_GET['regionini']) {commandaufruf("regionini");}
+if ($_GET['osslenableini']) {commandaufruf("osslenableini");}
+if ($_GET['moneygitcopy']) {commandaufruf("moneygitcopy");}
+if ($_GET['scriptgitcopy']) {commandaufruf("scriptgitcopy");}
+if ($_GET['configurecopy']) {commandaufruf("configurecopy");}
+if ($_GET['waslauft']) {commandaufruf("waslauft");}
+if ($_GET['rebootdatum']) {commandaufruf("rebootdatum");}
+if ($_GET['downloados']) {commandaufruf("downloados");}
+if ($_GET['rologdel']) {commandaufruf("rologdel");}
+if ($_GET['screenlistrestart']) {commandaufruf("screenlistrestart");}
+if ($_GET['installmariadb18']) {commandaufruf("installmariadb18");}
+if ($_GET['installmariadb22']) {commandaufruf("installmariadb22");}
+if ($_GET['serverinstall22']) {commandaufruf("serverinstall22");}
+if ($_GET['installbegin']) {commandaufruf("installbegin");}
+if ($_GET['linuxupgrade']) {commandaufruf("linuxupgrade");}
+if ($_GET['installubuntu22']) {commandaufruf("installubuntu22");}
+if ($_GET['installmono22']) {commandaufruf("installmono22");}
+if ($_GET['installphpmyadmin']) {commandaufruf("installphpmyadmin");}
+if ($_GET['ufwset']) {commandaufruf("ufwset");}
+if ($_GET['installfinish']) {commandaufruf("installfinish");}
+if ($_GET['functionslist']) {commandaufruf("functionslist");}
+if ($_GET['robustbackup']) {commandaufruf("robustbackup");}
+if ($_GET['backupdatum']) {commandaufruf("backupdatum");}
+if ($_GET['apacheerror']) {commandaufruf("apacheerror");}
+if ($_GET['mysqldberror']) {commandaufruf("mysqldberror");}
+if ($_GET['mariadberror']) {commandaufruf("mariadberror");}
+if ($_GET['ufwlog']) {commandaufruf("ufwlog");}
+if ($_GET['authlog']) {commandaufruf("authlog");}
+if ($_GET['accesslog']) {commandaufruf("accesslog");}
+if ($_GET['fpspeicher']) {commandaufruf("fpspeicher");}
+if ($_GET['systeminformation']) {commandaufruf("systeminformation");}
+if ($_GET['radiolist']) {commandaufruf("radiolist");}
+if ($_GET['newregionini']) {commandaufruf("newregionini");}
+if ($_GET['AutoInstall']) {commandaufruf("AutoInstall");}
+if ($_GET['OpenSimConfig']) {commandaufruf("OpenSimConfig");}
+if ($_GET['GridCommonConfig']) {commandaufruf("GridCommonConfig");}
+if ($_GET['osslEnableConfig']) {commandaufruf("osslEnableConfig");}
+if ($_GET['RegionsConfig']) {commandaufruf("RegionsConfig");}
+if ($_GET['RobustConfig']) {commandaufruf("RobustConfig");}
+if ($_GET['ScreenLog']) {commandaufruf("ScreenLog");}
+if ($_GET['dotnetinfo']) {commandaufruf("dotnetinfo");}
+
 ?>
 
 <div class="w3-container">
@@ -110,9 +264,110 @@ if ($_GET['restart']) {
   <p><a href="?stop=true" class="w3-button w3-blue w3-hover-green">Grid Stop</a> Stoppt das gesamte Grid.</p>
   <!-- Dieser Link fuegt Ihrer URL ostools.php?restart=true ?restart=true hinzu -->
   <p><a href="?restart=true" class="w3-button w3-blue w3-hover-green">Grid Restart</a> Das gesamte Grid neu starten.</p>
+
+<p><a href="?meineregionen=true" class="w3-button w3-blue w3-hover-green">meineregionen</a> meineregionen.</p> 
+<p><a href="?autologdel=true" class="w3-button w3-blue w3-hover-green">autologdel</a> autologdel.</p> 
+<p><a href="?automapdel=true" class="w3-button w3-blue w3-hover-green">automapdel</a> automapdel.</p> 
+<p><a href="?rostart=true" class="w3-button w3-blue w3-hover-green">rostart</a> rostart.</p> 
+<p><a href="?rostop=true" class="w3-button w3-blue w3-hover-green">rostop</a> rostop.</p> 
+<p><a href="?mostart=true" class="w3-button w3-blue w3-hover-green">mostart</a> mostart.</p> 
+<p><a href="?mostop=true" class="w3-button w3-blue w3-hover-green">mostop</a> mostop.</p> 
+<p><a href="?autosimstart=true" class="w3-button w3-blue w3-hover-green">autosimstart</a> autosimstart.</p> 
+<p><a href="?autosimstop=true" class="w3-button w3-blue w3-hover-green">autosimstop</a> autosimstop.</p> 
+<p><a href="?autoscreenstop=true" class="w3-button w3-blue w3-hover-green">autoscreenstop</a> autoscreenstop.</p> 
+<p><a href="?settings=true" class="w3-button w3-blue w3-hover-green">settings</a> settings.</p> 
+<p><a href="?osupgrade=true" class="w3-button w3-blue w3-hover-green">osupgrade</a> osupgrade.</p> 
+<p><a href="?autoregionbackup=true" class="w3-button w3-blue w3-hover-green">autoregionbackup</a> autoregionbackup.</p> 
+<p><a href="?compilieren=true" class="w3-button w3-blue w3-hover-green">compilieren</a> compilieren.</p> 
+<p><a href="?oscompi=true" class="w3-button w3-blue w3-hover-green">oscompi</a> oscompi.</p> 
+<p><a href="?scriptcopy=true" class="w3-button w3-blue w3-hover-green">scriptcopy</a> scriptcopy.</p> 
+<p><a href="?moneycopy=true" class="w3-button w3-blue w3-hover-green">moneycopy</a> moneycopy.</p> 
+<p><a href="?osdelete=true" class="w3-button w3-blue w3-hover-green">osdelete</a> osdelete.</p> 
+<p><a href="?autoregionsiniteilen=true" class="w3-button w3-blue w3-hover-green">autoregionsiniteilen</a> autoregionsiniteilen.</p> 
+<p><a href="?RegionListe=true" class="w3-button w3-blue w3-hover-green">RegionListe</a> RegionListe.</p> 
+<p><a href="?osgitholen=true" class="w3-button w3-blue w3-hover-green">osgitholen</a> osgitholen.</p> 
+<p><a href="?terminator=true" class="w3-button w3-blue w3-hover-green">terminator</a> terminator.</p> 
+<p><a href="?osgridcopy=true" class="w3-button w3-blue w3-hover-green">osgridcopy</a> osgridcopy.</p> 
+<p><a href="?makeaot=true" class="w3-button w3-blue w3-hover-green">makeaot</a> makeaot.</p> 
+<p><a href="?cleanaot=true" class="w3-button w3-blue w3-hover-green">cleanaot</a> cleanaot.</p> 
+<p><a href="?monoinstall=true" class="w3-button w3-blue w3-hover-green">monoinstall</a> monoinstall.</p> 
+<p><a href="?installationen=true" class="w3-button w3-blue w3-hover-green">installationen</a> installationen.</p> 
+<p><a href="?serverinstall=true" class="w3-button w3-blue w3-hover-green">serverinstall</a> serverinstall.</p> 
+<p><a href="?mysql_neustart=true" class="w3-button w3-blue w3-hover-green">mysql_neustart</a> mysql_neustart.</p> 
+<p><a href="?opensimholen=true" class="w3-button w3-blue w3-hover-green">opensimholen</a> opensimholen.</p> 
+<p><a href="?mysqleinstellen=true" class="w3-button w3-blue w3-hover-green">mysqleinstellen</a> mysqleinstellen.</p> 
+<p><a href="?unlockexample=true" class="w3-button w3-blue w3-hover-green">unlockexample</a> unlockexample.</p> 
+<p><a href="?makeverzeichnisliste=true" class="w3-button w3-blue w3-hover-green">makeverzeichnisliste</a> makeverzeichnisliste.</p> 
+<p><a href="?makeregionsliste=true" class="w3-button w3-blue w3-hover-green">makeregionsliste</a> makeregionsliste.</p> 
+<p><a href="?schreibeinfo=true" class="w3-button w3-blue w3-hover-green">schreibeinfo</a> schreibeinfo.</p> 
+<p><a href="?screenlist=true" class="w3-button w3-blue w3-hover-green">screenlist</a> screenlist.</p> 
+<p><a href="?hilfe=true" class="w3-button w3-blue w3-hover-green">hilfe</a> hilfe.</p> 
+<p><a href="?oscopyrobust=true" class="w3-button w3-blue w3-hover-green">oscopyrobust</a> oscopyrobust.</p> 
+<p><a href="?oscopysim=true" class="w3-button w3-blue w3-hover-green">oscopysim</a> oscopysim.</p> 
+<p><a href="?moneydelete=true" class="w3-button w3-blue w3-hover-green">moneydelete</a> moneydelete.</p> 
+<p><a href="?regionsinisuchen=true" class="w3-button w3-blue w3-hover-green">regionsinisuchen</a> regionsinisuchen.</p> 
+<p><a href="?chrisoscopy=true" class="w3-button w3-blue w3-hover-green">chrisoscopy</a> chrisoscopy.</p> 
+<p><a href="?cleaninstall=true" class="w3-button w3-blue w3-hover-green">cleaninstall</a> cleaninstall.</p> 
+<p><a href="?autoallclean=true" class="w3-button w3-blue w3-hover-green">autoallclean</a> autoallclean.</p> 
+<p><a href="?pythoncopy=true" class="w3-button w3-blue w3-hover-green">pythoncopy</a> pythoncopy.</p> 
+<p><a href="?get_value_from_Region_key=true" class="w3-button w3-blue w3-hover-green">get_value_from_Region_key</a> get_value_from_Region_key.</p> 
+<p><a href="?autorobustmapdel=true" class="w3-button w3-blue w3-hover-green">autorobustmapdel</a> autorobustmapdel.</p> 
+<p><a href="?info=true" class="w3-button w3-blue w3-hover-green">info</a> info.</p> 
+<p><a href="?mutelistcopy=true" class="w3-button w3-blue w3-hover-green">mutelistcopy</a> mutelistcopy.</p> 
+<p><a href="?searchcopy=true" class="w3-button w3-blue w3-hover-green">searchcopy</a> searchcopy.</p> 
+<p><a href="?konsolenhilfe=true" class="w3-button w3-blue w3-hover-green">konsolenhilfe</a> konsolenhilfe.</p> 
+<p><a href="?makewebmaps=true" class="w3-button w3-blue w3-hover-green">makewebmaps</a> makewebmaps.</p> 
+<p><a href="?ipsetzen=true" class="w3-button w3-blue w3-hover-green">ipsetzen</a> ipsetzen.</p> 
+<p><a href="?neuegridconfig=true" class="w3-button w3-blue w3-hover-green">neuegridconfig</a> neuegridconfig.</p> 
+<p><a href="?ramspeicher=true" class="w3-button w3-blue w3-hover-green">ramspeicher</a> ramspeicher.</p> 
+<p><a href="?commandhelp=true" class="w3-button w3-blue w3-hover-green">commandhelp</a> commandhelp.</p> 
+<p><a href="?gridcommonini=true" class="w3-button w3-blue w3-hover-green">gridcommonini</a> gridcommonini.</p> 
+<p><a href="?robustini=true" class="w3-button w3-blue w3-hover-green">robustini</a> robustini.</p> 
+<p><a href="?opensimini=true" class="w3-button w3-blue w3-hover-green">opensimini</a> opensimini.</p> 
+<p><a href="?moneyserverini=true" class="w3-button w3-blue w3-hover-green">moneyserverini</a> moneyserverini.</p> 
+<p><a href="?regionini=true" class="w3-button w3-blue w3-hover-green">regionini</a> regionini.</p> 
+<p><a href="?osslenableini=true" class="w3-button w3-blue w3-hover-green">osslenableini</a> osslenableini.</p> 
+<p><a href="?moneygitcopy=true" class="w3-button w3-blue w3-hover-green">moneygitcopy</a> moneygitcopy.</p> 
+<p><a href="?scriptgitcopy=true" class="w3-button w3-blue w3-hover-green">scriptgitcopy</a> scriptgitcopy.</p> 
+<p><a href="?configurecopy=true" class="w3-button w3-blue w3-hover-green">configurecopy</a> configurecopy.</p> 
+<p><a href="?waslauft=true" class="w3-button w3-blue w3-hover-green">waslauft</a> waslauft.</p> 
+<p><a href="?rebootdatum=true" class="w3-button w3-blue w3-hover-green">rebootdatum</a> rebootdatum.</p> 
+<p><a href="?downloados=true" class="w3-button w3-blue w3-hover-green">downloados</a> downloados.</p> 
+<p><a href="?rologdel=true" class="w3-button w3-blue w3-hover-green">rologdel</a> rologdel.</p> 
+<p><a href="?screenlistrestart=true" class="w3-button w3-blue w3-hover-green">screenlistrestart</a> screenlistrestart.</p> 
+<p><a href="?installmariadb18=true" class="w3-button w3-blue w3-hover-green">installmariadb18</a> installmariadb18.</p> 
+<p><a href="?installmariadb22=true" class="w3-button w3-blue w3-hover-green">installmariadb22</a> installmariadb22.</p> 
+<p><a href="?serverinstall22=true" class="w3-button w3-blue w3-hover-green">serverinstall22</a> serverinstall22.</p> 
+<p><a href="?installbegin=true" class="w3-button w3-blue w3-hover-green">installbegin</a> installbegin.</p> 
+<p><a href="?linuxupgrade=true" class="w3-button w3-blue w3-hover-green">linuxupgrade</a> linuxupgrade.</p> 
+<p><a href="?installubuntu22=true" class="w3-button w3-blue w3-hover-green">installubuntu22</a> installubuntu22.</p> 
+<p><a href="?installmono22=true" class="w3-button w3-blue w3-hover-green">installmono22</a> installmono22.</p> 
+<p><a href="?installphpmyadmin=true" class="w3-button w3-blue w3-hover-green">installphpmyadmin</a> installphpmyadmin.</p> 
+<p><a href="?ufwset=true" class="w3-button w3-blue w3-hover-green">ufwset</a> ufwset.</p> 
+<p><a href="?installfinish=true" class="w3-button w3-blue w3-hover-green">installfinish</a> installfinish.</p> 
+<p><a href="?functionslist=true" class="w3-button w3-blue w3-hover-green">functionslist</a> functionslist.</p> 
+<p><a href="?robustbackup=true" class="w3-button w3-blue w3-hover-green">robustbackup</a> robustbackup.</p> 
+<p><a href="?backupdatum=true" class="w3-button w3-blue w3-hover-green">backupdatum</a> backupdatum.</p> 
+<p><a href="?apacheerror=true" class="w3-button w3-blue w3-hover-green">apacheerror</a> apacheerror.</p> 
+<p><a href="?mysqldberror=true" class="w3-button w3-blue w3-hover-green">mysqldberror</a> mysqldberror.</p> 
+<p><a href="?mariadberror=true" class="w3-button w3-blue w3-hover-green">mariadberror</a> mariadberror.</p> 
+<p><a href="?ufwlog=true" class="w3-button w3-blue w3-hover-green">ufwlog</a> ufwlog.</p> 
+<p><a href="?authlog=true" class="w3-button w3-blue w3-hover-green">authlog</a> authlog.</p> 
+<p><a href="?accesslog=true" class="w3-button w3-blue w3-hover-green">accesslog</a> accesslog.</p> 
+<p><a href="?fpspeicher=true" class="w3-button w3-blue w3-hover-green">fpspeicher</a> fpspeicher.</p> 
+<p><a href="?systeminformation=true" class="w3-button w3-blue w3-hover-green">systeminformation</a> systeminformation.</p> 
+<p><a href="?radiolist=true" class="w3-button w3-blue w3-hover-green">radiolist</a> radiolist.</p> 
+<p><a href="?newregionini=true" class="w3-button w3-blue w3-hover-green">newregionini</a> newregionini.</p> 
+<p><a href="?AutoInstall=true" class="w3-button w3-blue w3-hover-green">AutoInstall</a> AutoInstall.</p> 
+<p><a href="?OpenSimConfig=true" class="w3-button w3-blue w3-hover-green">OpenSimConfig</a> OpenSimConfig.</p> 
+<p><a href="?GridCommonConfig=true" class="w3-button w3-blue w3-hover-green">GridCommonConfig</a> GridCommonConfig.</p> 
+<p><a href="?osslEnableConfig=true" class="w3-button w3-blue w3-hover-green">osslEnableConfig</a> osslEnableConfig.</p> 
+<p><a href="?RegionsConfig=true" class="w3-button w3-blue w3-hover-green">RegionsConfig</a> RegionsConfig.</p> 
+<p><a href="?RobustConfig=true" class="w3-button w3-blue w3-hover-green">RobustConfig</a> RobustConfig.</p> 
+<p><a href="?ScreenLog=true" class="w3-button w3-blue w3-hover-green">ScreenLog</a> ScreenLog.</p> 
+<p><a href="?dotnetinfo=true" class="w3-button w3-blue w3-hover-green">dotnetinfo</a> dotnetinfo.</p> 
+
 </div>
-
-
 
 </body>
 <div class="w3-container w3-green">
@@ -120,62 +375,34 @@ if ($_GET['restart']) {
 </div>
 </html>
 
-
-
 <?php
 // ##### Weitere moeglichkeiten aus der Hilfe: #####
 
-	//"restart 		    - hat keine Parameter	- Startet das gesamte Grid neu."
-	//"autostop 		- hat keine Parameter	- Stoppt das gesamte Grid."
-	//"autostart 		- hat keine Parameter	- Startet das gesamte Grid."
 	//"works 			- Verzeichnisname	- Einzelne screens auf Existenz pruefen."
 	//"osstart 		    - Verzeichnisname	- Startet einen einzelnen Simulator."
 	//"osstop 			- Verzeichnisname	- Stoppt einen einzelnen Simulator."
-	//"meineregionen 	- hat keine Parameter   - listet alle Regionen aus den Konfigurationen auf."
-	//"autologdel		- hat keine Parameter	- Loescht alle Log Dateien."
-	//"automapdel		- hat keine Parameter	- Loescht alle Map Karten."
+
 	//"newregionini		- $(tput setaf 4)hat Abfragen-Erstellt eine neue Regions.ini in ein Regions Verzeichnis."
 
 	//"regionbackup 	- Verzeichnisname $(tput setab 4)Regionsname - Backup einer ausgewaehlten Region."
 	//"assetdel 		- screen_name $(tput setab 4)Regionsname $(tput setab 2)Objektname - Einzelnes Asset loeschen."
 	//"oscommand 		- Verzeichnisname $(tput setab 3)Region $(tput setab 4)Konsolenbefehl Parameter - Konsolenbefehl senden."
-	//"gridstart 		- hat keine Parameter - Startet Robust und Money. "
-	//"gridstop 		- hat keine Parameter - Beendet Robust und Money. "
-	//"rostart 		    - hat keine Parameter - Startet Robust Server."
-	//"rostop 			- hat keine Parameter - Stoppt Robust Server."
-	//"mostart 		    - hat keine Parameter - Startet Money Server."
-	//"mostop 			- hat keine Parameter - Stoppt Money Server."
-	//"autosimstart 	- hat keine Parameter - Startet alle Regionen."
-	//"autosimstop 		- hat keine Parameter - Beendet alle Regionen. "
-	//"autoscreenstop	- hat keine Parameter - Killt alle OpenSim Screens."
+
 	//"logdel 			- Verzeichnisname     - Loescht alle Simulator Log Dateien im Verzeichnis."
 	//"mapdel 			- Verzeichnisname     - Loescht alle Simulator Map-Karten im Verzeichnis."
-	//"settings 		- hat keine Parameter - setzt Linux Einstellungen."
+
 	//"configlesen 		- Verzeichnisname     - Alle Regionskonfigurationen im Verzeichnis anzeigen."
 
-	//"osupgrade 		- hat keine Parameter - Installiert eine neue OpenSim Version."
-	//"autoregionbackup	- hat keine Parameter - Backup aller Regionen."
+
 	//"oscopy			- Verzeichnisname     - Kopiert den Simulator."
 	//"osstruktur		- ersteSIM $(tput setab 4)letzteSIM  - Legt eine Verzeichnisstruktur an."
 	//"osprebuild		- $(tput setab 2)Versionsnummer      - Aendert die Versionseinstellungen 0.9.2.XXXX"
-	//"compilieren 		- hat keine Parameter - Kopiert fehlende Dateien und Kompiliert."
-	//"oscompi 		    - hat keine Parameter - Kompiliert einen neuen OpenSimulator ohne kopieren."
-	//"scriptcopy 		- hat keine Parameter - Kopiert die Scripte in den Source."
-	//"moneycopy 		- hat keine Parameter - Kopiert Money Source in den OpenSimulator Source."
-	//"osdelete 		- hat keine Parameter - Loescht alte OpenSim Version."
+
 	//"regionsiniteilen 	- Verzeichnisname $(tput setab 3)Region - kopiert aus der Regions.ini eine Region heraus."
 	//"autoregionsiniteilen 	- hat keine Parameter - aus allen Regions.ini alle Regionen vereinzeln."
-	//"RegionListe 		- hat keine Parameter - Die RegionList.ini erstellen."
-	//"Regionsdateiliste 	- $(tput setab 4)-b Bildschirm oder -d Datei Verzeichnisname - Regionsdateiliste erstellen."
-	//"osgitholen 		- hat keine Parameter - kopiert eine OpenSimulator Git Entwicklerversion."
-	//"terminator 		- hat keine Parameter - Killt alle laufenden Screens."
 
-	//"osgridcopy		- hat keine Parameter - Automatisches kopieren aus dem opensim Verzeichniss."
-	//"makeaot			- hat keine Parameter - aot Dateien erstellen."
-	//"cleanaot		    - hat keine Parameter - aot Dateien entfernen."
-	//"monoinstall		- hat keine Parameter - mono 6.x installation."
-	//"installationen	- hat keine Parameter - Linux Pakete - installationen aufisten."
-	//"serverinstall	- hat keine Parameter - alle benoetigten Linux Pakete installieren."
+	//"Regionsdateiliste 	- $(tput setab 4)-b Bildschirm oder -d Datei Verzeichnisname - Regionsdateiliste erstellen."
+
 	//"osbuilding		- Versionsnummer - Upgrade des OpenSimulator aus einer Source ZIP Datei."
 	//"createuser 		-  Vorname  $(tput setab 4) Nachname  $(tput setab 2) Passwort  $(tput setab 3) E-Mail  - Grid Benutzer anlegen."
 
@@ -186,14 +413,11 @@ if ($_GET['restart']) {
 	//"leere_db	        -  DBBENUTZER  $(tput setab 4) DBPASSWORT  $(tput setab 2) DATENBANKNAME  - Datenbank leeren."
 	//"allrepair_db	    -  DBBENUTZER  $(tput setab 4) DBPASSWORT  - Alle Datenbanken Reparieren und Optimieren."
 	//"db_sichern	    -  DBBENUTZER  $(tput setab 4) DBPASSWORT  $(tput setab 2) DATENBANKNAME  - Datenbank sichern."
-	//"mysql_neustart	- hat keine Parameter - MySQL neu starten."
 
 	//"regionsabfrage	-  DBBENUTZER  $(tput setab 4) DBPASSWORT  $(tput setab 2) DATENBANKNAME  - Regionsliste."
 	//"regionsuri	    -  DBBENUTZER  $(tput setab 4) DBPASSWORT  $(tput setab 2) DATENBANKNAME  - URI pruefen sortiert nach URI."
 	//"regionsport	    -  DBBENUTZER  $(tput setab 4) DBPASSWORT  $(tput setab 2) DATENBANKNAME  - Ports pruefen sortiert nach Ports."
 
-	//"opensimholen	    - hat keine Parameter - Laedt eine Regulaere OpenSimulator Version herunter."
-	//"mysqleinstellen	- hat keine Parameter - mySQL Konfiguration auf Server Einstellen und neu starten."
 	//"conf_write	    -  SUCHWORT  $(tput setab 4) ERSATZWORT  $(tput setab 2) PFAD  $(tput setab 3) DATEINAME  - Konfigurationszeile schreiben."
 	//"conf_delete	    -  SUCHWORT  $(tput setab 4) PFAD  $(tput setab 2) DATEINAME  - Konfigurationszeile loeschen."
 	//"conf_read	    -  SUCHWORT  $(tput setab 4) PFAD  $(tput setab 2) DATEINAME  - Konfigurationszeile lesen."
@@ -206,79 +430,28 @@ if ($_GET['restart']) {
 
 	//"loadinventar     - NAME VERZEICHNIS PASSWORD DATEINAMEmitPFAD  - laedt Inventar aus einer iar"
 	//"saveinventar     - NAME VERZEICHNIS PASSWORD DATEINAMEmitPFAD  - speichert Inventar in einer iar"
-	//"unlockexample	- hat keine Parameter - Benennt alle example Dateien um."
+
 
 	// ##### Alle moeglichkeiten kurz und knapp: #####
 
-	// 	schreibeinfo) schreibeinfo ;;
-	// makeverzeichnisliste) makeverzeichnisliste ;;
-	// makeregionsliste) makeregionsliste ;;
 	// checkfile) checkfile "$2" ;;
-	// r | restart) autorestart ;;
-	// sta | autosimstart | simstart) autosimstart ;;
-	// sto | autosimstop | simstop) autosimstop ;;
-	// astart | autostart | start) autostart ;;
-	// astop | autostop | stop) autostop ;;
-	// amd | automapdel) automapdel ;;
-	// ald | autologdel) autologdel ;;
-	// s | settings) ossettings ;;
-	// rs | robuststart | rostart) rostart ;;
-	// ms | moneystart | mostart) mostart ;;
-	// rsto | robuststop | rostop) rostop ;;
-	// mstop | moneystop | mostop) mostop ;;
 	// osto | osstop) osstop "$2" ;;
 	// osta | osstart) osstart "$2" ;;
-	// gsta | gridstart) gridstart ;;
-	// gsto | gridstop) gridstop ;;
-	// sd | screendel) autoscreenstop ;;
-	// l | list | screenlist) screenlist ;;
 	// w | works) works "$2" ;;
 	// md | mapdel) mapdel "$2" ;;
 	// ld | logdel) logdel "$2" ;;
 	// ss | osscreenstop) osscreenstop "$2" ;;
-	// h | hilfe | help) hilfe ;;
 	// asdel | assetdel) assetdel "$2" "$3" "$4" ;;
-	// e | terminator) terminator ;;
-	// ou | osupgrade) osupgrade ;;
-	// oscopyrobust) oscopyrobust ;;
-	// oscopysim) oscopysim ;;
 	// oscopy) oscopy "$2" ;;
 	// rb | regionbackup) regionbackup "$2" "$3" ;;
-	// arb | autoregionbackup) autoregionbackup ;;
-	// compi | compilieren) compilieren ;;
-	// sc | scriptcopy) scriptcopy ;;
-	// mc | moneycopy) moneycopy ;;
-	// oscompi) oscompi ;;
-	// od | osdelete) osdelete ;;
 	// os | osstruktur) osstruktur "$2" "$3" ;;
 	// cl | configlesen) configlesen "$2" ;;
 	// osc | com | oscommand) oscommand "$2" "$3" "$4" ;;
 	// osc2 | com2 | oscommand2) oscommand2 "$2" "$3" "$4" "$5" ;;
 	// rl | Regionsdateiliste | regionsconfigdateiliste) regionsconfigdateiliste "$3" "$2" ;;
-	// rn | RegionListe) regionliste ;;
-	// mr | meineregionen) meineregionen ;;
-	// moneydelete) moneydelete ;;
 	// rit | regionsiniteilen) regionsiniteilen "$2" "$3" ;;
-	// arit | autoregionsiniteilen) autoregionsiniteilen ;;
-	// regionsinisuchen) regionsinisuchen ;;
-	// osg | osgitholen) osgitholen ;;
 	// osprebuild) osprebuild "$2" ;;
-	// chrisoscopy) chrisoscopy ;;
-	// cleaninstall) cleaninstall ;;
-	// autoallclean) autoallclean ;;
 	// allclean) allclean "$2" ;;
-	// makeaot) makeaot ;;
-	// cleanaot) cleanaot ;;
-	// pythoncopy) pythoncopy ;;
-	// get_value_from_Region_key) get_value_from_Region_key ;;
-	// autorobustmapdel) autorobustmapdel ;;
-	// info) info ;;
-	// mutelistcopy) mutelistcopy ;;
-	// searchcopy) searchcopy ;;
-	// monoinstall) monoinstall ;;
-	// installationen) installationen ;;
-	// serverinstall) serverinstall ;;
-	// konsolenhilfe) konsolenhilfe ;;
 	// simstats) simstats "$2" ;;
 	// osbuilding) osbuilding "$2" ;;
 	// createuser) createuser "$2" "$3" "$4" "$5" "$6" ;;
@@ -288,52 +461,24 @@ if ($_GET['restart']) {
 	// delete_db) delete_db "$2" "$3" "$4" ;;
 	// leere_db) leere_db "$2" "$3" "$4" ;;
 	// allrepair_db) allrepair_db "$2" "$3" ;;
-	// mysql_neustart) mysql_neustart ;;
 	// db_sichern) db_sichern "$2" "$3" "$4" ;;
 	// tabellenabfrage) tabellenabfrage "$2" "$3" "$4" ;;
 	// regionsabfrage) regionsabfrage "$2" "$3" "$4" ;;
 	// regionsuri) regionsuri "$2" "$3" "$4" ;;
 	// regionsport) regionsport "$2" "$3" "$4" ;;
 	// setpartner) setpartner "$2" "$3" "$4" "$5" "$6" ;;
-	// makewebmaps) makewebmaps ;;
-	// opensimholen) opensimholen ;;
 	// conf_write) conf_write "$2" "$3" "$4" "$5" ;;
 	// conf_delete) conf_delete "$2" "$3" "$4" ;;
 	// conf_read) conf_read "$2" "$3" "$4" ;;
-	// ipsetzen) ipsetzen ;;
-	// neuegridconfig) neuegridconfig ;;
-	// ramspeicher) ramspeicher ;;
-	// mysqleinstellen) mysqleinstellen ;;
 	// landclear) landclear "$2" "$3" ;;
-	// commandhelp) commandhelp ;;
-	// gridcommonini) gridcommonini ;;
-	// robustini) robustini ;;
-	// opensimini) opensimini ;;
-	// moneyserverini) moneyserverini ;;
-	// regionini) regionini ;;
-	// osslenableini) osslenableini ;;
 	// loadinventar) loadinventar "$2" "$3" "$4" "$5" ;;
 	// saveinventar) saveinventar "$2" "$3" "$4" "$5" ;;
 	// infodialog) infodialog ;;
 	// fortschritsanzeige) fortschritsanzeige ;;
-	// moneygitcopy) moneygitcopy ;;
-	// scriptgitcopy) scriptgitcopy ;;
-	// unlockexample) unlockexample ;;
 	// passwdgenerator) passwdgenerator "$2" ;;
-	// configurecopy) configurecopy ;;
-	// menuworks) menuworks "$2" ;;
-	// waslauft) waslauft ;;
-	// rebootdatum) rebootdatum ;;
-	// menuinfo) menuinfo ;;
-	// funktionenmenu) funktionenmenu ;;
-	// expertenmenu) expertenmenu ;;
-	// downloados) downloados ;;
 	// oswriteconfig) oswriteconfig "$2" ;;
 	// menuoswriteconfig) menuoswriteconfig "$2" ;;
 	// finstall) finstall "$2" ;;
-	// rologdel) rologdel ;;
-	// osgridcopy) osgridcopy ;;
-	// screenlistrestart) screenlistrestart ;;
 	// db_all_user) db_all_user "$2" "$3" "$4" ;;
 	// db_all_uuid) db_all_uuid "$2" "$3" "$4" ;;
 	// db_all_name) db_all_name "$2" "$3" "$4" ;;
@@ -365,20 +510,8 @@ if ($_GET['restart']) {
 	// db_anzeigen_dialog) db_anzeigen_dialog "$2" "$3" ;;
 	// db_all_user_dialog) db_all_user_dialog "$2" "$3" "$4" ;;
 	// db_all_uuid_dialog) db_all_uuid_dialog "$2" "$3" "$4" ;;
-	// installmariadb18) installmariadb18 ;;
-	// installmariadb22) installmariadb22 ;;
-	// serverinstall22) serverinstall22 ;;
-	// installbegin) installbegin ;;
-	// linuxupgrade) linuxupgrade ;;
-	// installubuntu22) installubuntu22 ;;
-	// installmono22) installmono22 ;;
-	// installphpmyadmin) installphpmyadmin ;;
-	// ufwset) ufwset ;;
 	// installationhttps22) installationhttps22 "$2" "$3" ;;
-	// installfinish) installfinish ;;
-	// functionslist) functionslist ;;
-	// robustbackup) robustbackup ;;
-	// backupdatum) backupdatum ;;
+
 	// db_backuptabellen) db_backuptabellen "$2" "$3" "$4" ;;
 	// db_restorebackuptabellen) db_restorebackuptabellen "$2" "$3" "$4" "$5" ;;
 	// default_master_connection) default_master_connection "$2" "$3" ;;
@@ -412,31 +545,13 @@ if ($_GET['restart']) {
 	// Replica_Backup2) Replica_Backup2 "$2" "$3" "$4" ;;
 	// ReplikatKoordinaten) ReplikatKoordinaten "$2" "$3" "$4" "$5" "$6" "$7" "$8" ;;
 	// textbox) textbox "$8" ;;
-	// apacheerror) apacheerror ;;
-	// mysqldberror) mysqldberror ;;
-	// mariadberror) mariadberror ;;
-	// ufwlog) ufwlog ;;
-	// authlog) authlog ;;
-	// accesslog) accesslog ;;
-	// fpspeicher) fpspeicher ;;
+
 	// db_tablesplitt) db_tablesplitt "$2" ;;
 	// db_tablextract) db_tablextract "$2" "$3" ;;
 	// db_tablextract_regex) db_tablextract_regex "$2" "$3" "$4" ;;
-	// systeminformation) systeminformation ;;
-	// radiolist) radiolist ;;
-	// newregionini) newregionini ;;
 	// ConfigSet) ConfigSet "$2" ;;
-	// AutoInstall) AutoInstall ;;
-	// OpenSimConfig) OpenSimConfig ;;
-	// GridCommonConfig) GridCommonConfig ;;
-	// osslEnableConfig) osslEnableConfig ;;
-	// RegionsConfig) RegionsConfig ;;
-	// RobustConfig) RobustConfig ;;
+
 	// historylogclear) historylogclear "$2" ;;
-	// ScreenLog) ScreenLog ;;
-	// dotnetinfo) dotnetinfo ;;
-	// ende) ende ;; # Test
-	// fehler) fehler ;; # Test
 	// osdauerstop) osdauerstop "$2" ;; # Test
 	// osstarteintrag) osstarteintrag "$2" ;; # Test
 	// menuosdauerstop) menuosdauerstop "$2" ;; # Test
