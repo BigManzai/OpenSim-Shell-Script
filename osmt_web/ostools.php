@@ -11,7 +11,7 @@ session_start();
 if($_SESSION['userid'] === 1)
 {
  // geschützer bereich
- echo "Du bist eingeloggt.";
+ echo " ";
 }
 else 
 {
@@ -39,6 +39,27 @@ else
 
 <style>
 .w3-button {width:150px;}
+
+.alert {
+  padding: 20px;
+  background-color: #0F3C4E;
+  color: white;
+}
+
+.closebtn {
+  margin-left: 15px;
+  color: white;
+  font-weight: bold;
+  float: right;
+  font-size: 22px;
+  line-height: 20px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.closebtn:hover {
+  color: black;
+}
 </style>
 
 <div class="w3-container">
@@ -50,13 +71,20 @@ else
 function commandaufruf(string $funktionsname)
 {
     $ausgabe=null; $rueckgabewert=null;
-    $zusammengesetzt="/opt/opensim.sh $funktionsname";
+	$datei="/opt/opensim.sh";
+    $zusammengesetzt="$datei $funktionsname";
     exec($zusammengesetzt, $ausgabe, $rueckgabewert);
+
+	?> 	<div class="alert">
+		<span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
+	<?php 
 
     foreach ($ausgabe as $bildschirmausgabe)
     {
-        echo "<li>$bildschirmausgabe</li>";        
+		echo "<li>".$bildschirmausgabe."</li>";		
     }
+
+	?> </div> <?php
 }
 ?>
 
@@ -95,7 +123,7 @@ if ($_GET['restart']) {
 
 
 <?php
-// Weitere moeglichkeiten aus der Hilfe:
+// ##### Weitere moeglichkeiten aus der Hilfe: #####
 
 	//"restart 		    - hat keine Parameter	- Startet das gesamte Grid neu."
 	//"autostop 		- hat keine Parameter	- Stoppt das gesamte Grid."
@@ -180,7 +208,7 @@ if ($_GET['restart']) {
 	//"saveinventar     - NAME VERZEICHNIS PASSWORD DATEINAMEmitPFAD  - speichert Inventar in einer iar"
 	//"unlockexample	- hat keine Parameter - Benennt alle example Dateien um."
 
-	// Alle moeglichkeiten kurz und knapp:
+	// ##### Alle moeglichkeiten kurz und knapp: #####
 
 	// 	schreibeinfo) schreibeinfo ;;
 	// makeverzeichnisliste) makeverzeichnisliste ;;
