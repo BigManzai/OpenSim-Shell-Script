@@ -131,6 +131,11 @@ Bisher sind nur Funktionen im Menü die maximal 1 Übergabewert voraussetzen.
 
 ## TODO und Informationen
 
+V0.79.631
+
+Landclear alle Parzellen vom Land löschen. Fehler behoben.
+Diverse kleinere Probleme behoben.
+
 VERSION 0.79.623
 
 Automatisiert Simulatoren aus der SimulatorList.ini ein und austragen.
