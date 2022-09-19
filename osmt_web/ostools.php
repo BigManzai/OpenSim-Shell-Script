@@ -29,11 +29,11 @@ else
 <!-- Diese Links fuegen eine Navigation mit Google icons hinzu https://www.w3schools.com/icons/google_icons_intro.asp -->
 <div class="w3-bar w3-green">
   <a href="?home=true" class="w3-bar-item w3-button"><i class="material-icons">home</i></a>
-  <a href="?cloud=true" class="w3-bar-item w3-button"><i class="material-icons">cloud_queue</i></a>
-  <a href="?filedownload=true" class="w3-bar-item w3-button"><i class="material-icons">file_download</i></a>
-  <a href="?fileupload=true" class="w3-bar-item w3-button"><i class="material-icons">file_upload</i></a>
+  <a href="?more=true" class="w3-bar-item w3-button"><i class="material-icons">cloud_queue</i></a>
+  <a href="?filed=true" class="w3-bar-item w3-button"><i class="material-icons">file_download</i></a>
+  <!--<a href="?fileupload=true" class="w3-bar-item w3-button"><i class="material-icons">file_upload</i></a>-->
   <a href="?storage=true" class="w3-bar-item w3-button"><i class="material-icons">storage</i></a>
-  <a href="?devicesother=true" class="w3-bar-item w3-button"><i class="material-icons">devices_other</i></a>
+  <a href="?expert=true" class="w3-bar-item w3-button"><i class="material-icons">devices_other</i></a>
 </div>
 
 <img src="opensimMultitool.jpg" alt="opensimMultitool" style="width:60%">
@@ -94,12 +94,12 @@ if ($_GET['home']) {
 		</div> 
 	<?php
 }
-if ($_GET['cloud']) {
-	# Dieser Code wird ausgefuehrt, wenn ?cloud=true gesetzt ist.
+if ($_GET['more']) {
+	# Dieser Code wird ausgefuehrt, wenn ?more=true gesetzt ist.
 	?>
 		<div class="alert">
 		<span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
-		<li>Sie haben cloud ausgewählt.</li>
+		<li>Sie haben more ausgewählt.</li>
 		<p>Klick auf das X zum scließen.</p>
 		</div> 
 	<?php
@@ -134,12 +134,12 @@ if ($_GET['storage']) {
 		</div> 
 	<?php
 }
-if ($_GET['devicesother']) {
-	# Dieser Code wird ausgefuehrt, wenn ?devicesother=true gesetzt ist.
+if ($_GET['expert']) {
+	# Dieser Code wird ausgefuehrt, wenn ?expert=true gesetzt ist.
 	?>
 		<div class="alert">
 		<span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
-		<li>Sie haben devicesother ausgewählt.</li>
+		<li>Sie haben expert ausgewählt.</li>
 		<p>Klick auf das X zum scließen.</p>
 		</div> 
 	<?php
