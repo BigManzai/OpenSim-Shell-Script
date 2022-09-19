@@ -3,16 +3,40 @@
 ### * #!/Pfad/aufrufbares_Programm
 ### #!/bin/bash
 ### #!/bin/dash
-### #!/bin/sh — Fuehrt die Datei mit sh, der Bourne-Shell oder einer kompatiblen Shell aus
-### #!/bin/csh — Fuehrt die Datei mit csh, der C-Shell oder einer kompatiblen Shell aus
-### #!/usr/bin/perl -T — Ausfuehren mit Perl mit der Option fuer Taint Pruefungen
-### #!/usr/bin/php — Fuehrt die Datei mit dem PHP-Befehlszeileninterpreter aus
-### #!/usr/bin/python -O — Ausfuehrung mit Python mit Codeoptimierungen
-### #!/usr/bin/ruby — Mit Ruby ausfuehren
+### #!/bin/sh
+### #!/bin/csh
+### #!/usr/bin/perl
+### #!/usr/bin/php
+### #!/usr/bin/python -O
+### #!/usr/bin/ruby
 ### #!/bin/ksh
 ### #!/bin/awk
 ### #!/bin/expect
 ### #!/usr/bin/env instantfpc
+### #!/usr/bin/env bash
+### #!expect 
+### #!/usr/bin/expect -f
+### #!perl
+### #!/usr/bin/env perl
+### #!lua
+### #!/usr/bin/env lua
+### #!python
+### #!/usr/bin/env python
+### #!python+encoding
+### #!php
+### #!/usr/bin/env php
+### #!node
+### #!/usr/bin/env node
+### #!fsharp
+### #!/usr/bin/env fsharpi --exec
+### #!ruby
+### #!/usr/bin/env ruby
+### #!ruby+encoding
+### #!groovy
+### #!/usr/bin/env groovy
+### #!pwsh
+### #!powershell
+### #!/usr/bin/env pwsh
 
 # ? opensimMULTITOOL Copyright (c) 2021 2022 BigManzai Manfred Aabye
 # opensim.sh Basiert auf meinen Einzelscripten, an denen ich bereits 7 Jahre Arbeite und verbessere.
@@ -37,7 +61,7 @@
 #### ? Einstellungen ####
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe
-VERSION="V0.79.625" # opensimMULTITOOL Versionsausgabe
+VERSION="V0.79.627" # opensimMULTITOOL Versionsausgabe
 #clear # Bildschirmausgabe loeschen.
 #reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
@@ -192,7 +216,6 @@ function historylogclear() {
 	esac
 }
 
-logfilename=""
 ### ! Log Dateien und Funktionen
 function log() {
 	local text
@@ -1612,7 +1635,7 @@ function menuosstarteintragdel() {
 	dialogclear
 	ScreenLog
 
-	log info "OpenSimulator $MENUOSEINTRAGDEL wird der Datei $SIMDATEI hinzugefuegt!"
+	log info "OpenSimulator $MENUOSEINTRAGDEL wird aus der Datei $SIMDATEI entfernt!"
 	sed -i '/'"$MENUOSEINTRAGDEL"'/d' /"$STARTVERZEICHNIS"/$SIMDATEI
 	sort /"$STARTVERZEICHNIS"/$SIMDATEI -o /"$STARTVERZEICHNIS"/$SIMDATEI
 
@@ -3004,28 +3027,29 @@ function cleaninstall() {
 # Um opensim wieder Funktionsbereit zu machen muss ein Upgrade oder ein oscopy vorgang ausgefuehrt werden.
 # allclean Verzeichnis
 function allclean() {
-	if [ -d "$1" ]; then
-		rm /$STARTVERZEICHNIS/"$1"/bin/*.log
-		rm /$STARTVERZEICHNIS/"$1"/bin/*.dll
-		rm /$STARTVERZEICHNIS/"$1"/bin/*.exe
-		rm /$STARTVERZEICHNIS/"$1"/bin/*.so
-		rm /$STARTVERZEICHNIS/"$1"/bin/*.xml
-		rm /$STARTVERZEICHNIS/"$1"/bin/*.dylib
-		rm /$STARTVERZEICHNIS/"$1"/bin/*.example
-		rm /$STARTVERZEICHNIS/"$1"/bin/*.sample
-		rm /$STARTVERZEICHNIS/"$1"/bin/*.txt
-		rm /$STARTVERZEICHNIS/"$1"/bin/*.config
-		rm /$STARTVERZEICHNIS/"$1"/bin/*.py
-		rm /$STARTVERZEICHNIS/"$1"/bin/*.old
-		log warn "clean: Dateien in $1 geloescht"
+	ALLCLEANVERZEICHNIS=$1
+
+	if [ -d "$ALLCLEANVERZEICHNIS" ]; then
+		rm /$STARTVERZEICHNIS/"$ALLCLEANVERZEICHNIS"/bin/*.log
+		rm /$STARTVERZEICHNIS/"$ALLCLEANVERZEICHNIS"/bin/*.dll
+		rm /$STARTVERZEICHNIS/"$ALLCLEANVERZEICHNIS"/bin/*.exe
+		rm /$STARTVERZEICHNIS/"$ALLCLEANVERZEICHNIS"/bin/*.so
+		rm /$STARTVERZEICHNIS/"$ALLCLEANVERZEICHNIS"/bin/*.xml
+		rm /$STARTVERZEICHNIS/"$ALLCLEANVERZEICHNIS"/bin/*.dylib
+		rm /$STARTVERZEICHNIS/"$ALLCLEANVERZEICHNIS"/bin/*.example
+		rm /$STARTVERZEICHNIS/"$ALLCLEANVERZEICHNIS"/bin/*.sample
+		rm /$STARTVERZEICHNIS/"$ALLCLEANVERZEICHNIS"/bin/*.txt
+		rm /$STARTVERZEICHNIS/"$ALLCLEANVERZEICHNIS"/bin/*.config
+		rm /$STARTVERZEICHNIS/"$ALLCLEANVERZEICHNIS"/bin/*.py
+		rm /$STARTVERZEICHNIS/"$ALLCLEANVERZEICHNIS"/bin/*.old
+		log warn "Dateien in $ALLCLEANVERZEICHNIS geloescht"
 	else
-		log error "clean: Dateien in $1 nicht gefunden"
+		log error "Dateien in $ALLCLEANVERZEICHNIS nicht gefunden"
 	fi
 	return 0
 }
 
 ### !  autoallclean, loescht Log, dll, so, exe, aot Dateien fuer einen saubere neue installation, mit Robust.
-# Hierbei werden keine Datenbanken oder Konfigurationen geloescht.
 # Hierbei werden keine Datenbanken oder Konfigurationen geloescht aber opensim ist anschliessend nicht mehr startbereit.
 # Um opensim wieder Funktionsbereit zu machen muss ein Upgrade oder ein oscopy vorgang ausgefuehrt werden.
 function autoallclean() {
@@ -3052,6 +3076,23 @@ function autoallclean() {
 		rm -r /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/MeshCache/*
 		rm -r /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/j2kDecodeCache/*
 		rm -r /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/ScriptEngines/*
+
+		if [[ $AUTOCLEANALL = "yes" ]]; then
+			rm -r /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/addin-db-002/*
+			rm -r /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/addon-modules/*
+			rm -r /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/assets/*
+			rm -r /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/bakes/*
+			rm -r /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/data/*
+			rm -r /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/Estates/*
+			rm -r /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/inventory/*
+			rm -r /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/lib/*
+			rm -r /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/lib32/*
+			rm -r /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/lib64/*
+			rm -r /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/Library/*
+			rm -r /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/openmetaverse_data/*
+			rm -r /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/robust-include/*
+		fi
+
 		log warn "autoallclean: ${VERZEICHNISSLISTE[$i]} geloescht"
 		sleep 2
 	done
@@ -3075,6 +3116,23 @@ function autoallclean() {
 	rm -r /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/MeshCache/*
 	rm -r /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/j2kDecodeCache/*
 	rm -r /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/ScriptEngines/*
+
+	if [[ $AUTOCLEANALL = "yes" ]]; then
+	rm -r /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/addin-db-002/*
+	rm -r /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/addon-modules/*
+	rm -r /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/assets/*
+	rm -r /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/bakes/*
+	rm -r /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/data/*
+	rm -r /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/Estates/*
+	rm -r /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/inventory/*
+	rm -r /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/lib/*
+	rm -r /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/lib32/*
+	rm -r /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/lib64/*
+	rm -r /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/Library/*
+	rm -r /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/openmetaverse_data/*
+	rm -r /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/robust-include/*
+	fi
+
 	return 0
 }
 

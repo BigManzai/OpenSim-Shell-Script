@@ -1,4 +1,4 @@
-### Einstellungen VERSION V0.79.609
+### Einstellungen VERSION V0.79.627
 
 : "${DIALOG=dialog}"
 : "${DIALOG_CANCEL=1}"
@@ -52,8 +52,8 @@
 	linefontcolor=7;    linebaggroundcolor=0;
 
 	ScreenLogLevel=0; # ScreenLogLevel=0 nichts machen, bis ScreenLogLevel=5 Funktionsnamen ausgeben.
-	LOGWRITE="no" # yes/no
-	logfilename="multitool";
+	LOGWRITE="yes" # yes/no
+	logfilename="multitool"
 	line="############################################################";
 	
 ## Dateien
@@ -109,6 +109,7 @@
 	SETAOTON="no"
 	# opensim-0.9.2.2Dev-4-g5e9b3b4.zip
 	OSVERSION="opensim-0.9.2.2Dev-"
+	AUTOCLEANALL="yes"
 
 ## OpenSim Downloads
 	LINK01="http://opensimulator.org/dist/OpenSim-LastAutoBuild.zip"
