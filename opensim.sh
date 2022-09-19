@@ -61,7 +61,7 @@
 #### ? Einstellungen ####
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe
-VERSION="V0.79.627" # opensimMULTITOOL Versionsausgabe
+VERSION="V0.79.631" # opensimMULTITOOL Versionsausgabe
 #clear # Bildschirmausgabe loeschen.
 #reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
@@ -837,7 +837,7 @@ function menuassetdel() {
 		ASSETDELBOXERGEBNIS=$(dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 3>&1 1>&2 2>&3 3>&-)
 
 		# Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
-		VERZEICHNISSCREEN=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '1p')
+		ASSETVERZEICHNISSCREEN=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '1p')
 		REGION=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '2p')
 		OBJEKT=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '3p')
 
@@ -850,12 +850,12 @@ function menuassetdel() {
 	fi # dialog Aktionen Ende
 
 	# Nachschauen ob der Screen und die Region existiert.
-	if screen -list | grep -q "$VERZEICHNISSCREEN"; then
+	if screen -list | grep -q "$ASSETVERZEICHNISSCREEN"; then
 		log warn "$OBJEKT Asset von der Region $REGION loeschen"
-		screen -S "$VERZEICHNISSCREEN" -p 0 -X eval "stuff 'change region ""$REGION""'^M"                  # Region wechseln
-		screen -S "$VERZEICHNISSCREEN" -p 0 -X eval "stuff 'alert "Loesche: "$OBJEKT" von der Region!"'^M" # Mit einer loesch Meldung
-		screen -S "$VERZEICHNISSCREEN" -p 0 -X eval "stuff 'delete object name ""$OBJEKT""'^M"             # Objekt loeschen
-		screen -S "$VERZEICHNISSCREEN" -p 0 -X eval "stuff 'y'^M"                                          # Mit y also yes bestaetigen
+		screen -S "$ASSETVERZEICHNISSCREEN" -p 0 -X eval "stuff 'change region ""$REGION""'^M"                  # Region wechseln
+		screen -S "$ASSETVERZEICHNISSCREEN" -p 0 -X eval "stuff 'alert "Loesche: "$OBJEKT" von der Region!"'^M" # Mit einer loesch Meldung
+		screen -S "$ASSETVERZEICHNISSCREEN" -p 0 -X eval "stuff 'delete object name ""$OBJEKT""'^M"             # Objekt loeschen
+		screen -S "$ASSETVERZEICHNISSCREEN" -p 0 -X eval "stuff 'y'^M"                                          # Mit y also yes bestaetigen
 		return 0
 	else
 		log error "ASSETDEL: $OBJEKT Asset von der Region $REGION loeschen fehlgeschlagen"
@@ -863,25 +863,26 @@ function menuassetdel() {
 	fi
 }
 
-### !  landclear, Land clear - Loescht alle Parzellen auf dem Land. # Aufruf: landclear screen_name Regionsname Objektname
+### !  landclear, Land clear - Loescht alle Parzellen auf dem Land. # Aufruf: landclear screen_name Regionsname
 function landclear() {
 	LANDCLEARSCREEN=$1
 	REGION=$2
 	# Nachschauen ob der Screen und die Region existiert.
 	if screen -list | grep -q "$LANDCLEARSCREEN"; then
-		log warn "$OBJEKT Parzellen von der Region $REGION loeschen"
+		log warn "$LANDCLEARSCREEN Parzellen von der Region $REGION loeschen"
 		screen -S "$LANDCLEARSCREEN" -p 0 -X eval "stuff 'change region ""$REGION""'^M"                 # Region wechseln
 		screen -S "$LANDCLEARSCREEN" -p 0 -X eval "stuff 'alert "Loesche Parzellen von der Region!"'^M" # Mit einer loesch Meldung
 		screen -S "$LANDCLEARSCREEN" -p 0 -X eval "stuff 'land clear'^M"                                # Objekt loeschen
 		screen -S "$LANDCLEARSCREEN" -p 0 -X eval "stuff 'y'^M"                                         # Mit y also yes bestaetigen
 		return 0
+		log info "Bitte die Region neu starten."
 	else
-		log error "LANDCLEAR: $OBJEKT Parzellen von der Region $REGION loeschen fehlgeschlagen"
+		log error "LANDCLEAR: $LANDCLEARSCREEN Parzellen von der Region $REGION loeschen fehlgeschlagen"
 		return 1
 	fi
 }
 
-### !  menulandclear, Land clear - Loescht alle Parzellen auf dem Land. # Aufruf: landclear screen_name Regionsname Objektname
+### !  menulandclear, Land clear - Loescht alle Parzellen auf dem Land. # Aufruf: landclear screen_name Regionsname
 function menulandclear() {
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
@@ -899,7 +900,7 @@ function menulandclear() {
 		landclearBOXERGEBNIS=$(dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 3>&1 1>&2 2>&3 3>&-)
 
 		# Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
-		VERZEICHNISSCREEN=$(echo "$landclearBOXERGEBNIS" | sed -n '1p')
+		MLANDCLEARSCREEN=$(echo "$landclearBOXERGEBNIS" | sed -n '1p')
 		REGION=$(echo "$landclearBOXERGEBNIS" | sed -n '2p')
 
 		# Alles loeschen.
@@ -911,15 +912,16 @@ function menulandclear() {
 	fi # dialog Aktionen Ende
 
 	# Nachschauen ob der Screen und die Region existiert.
-	if screen -list | grep -q "$VERZEICHNISSCREEN"; then
-		log warn "$OBJEKT Parzellen von der Region $REGION loeschen"
-		screen -S "$VERZEICHNISSCREEN" -p 0 -X eval "stuff 'change region ""$REGION""'^M"                 # Region wechseln
-		screen -S "$VERZEICHNISSCREEN" -p 0 -X eval "stuff 'alert "Loesche Parzellen von der Region!"'^M" # Mit einer loesch Meldung
-		screen -S "$VERZEICHNISSCREEN" -p 0 -X eval "stuff 'land clear'^M"                                # Objekt loeschen
-		screen -S "$VERZEICHNISSCREEN" -p 0 -X eval "stuff 'y'^M"                                         # Mit y also yes bestaetigen
+	if screen -list | grep -q "$MLANDCLEARSCREEN"; then
+		log warn "$MLANDCLEARSCREEN Parzellen von der Region $REGION loeschen"
+		screen -S "$MLANDCLEARSCREEN" -p 0 -X eval "stuff 'change region ""$REGION""'^M"                 # Region wechseln
+		screen -S "$MLANDCLEARSCREEN" -p 0 -X eval "stuff 'alert "Loesche Parzellen von der Region!"'^M" # Mit einer loesch Meldung
+		screen -S "$MLANDCLEARSCREEN" -p 0 -X eval "stuff 'land clear'^M"                                # Objekt loeschen
+		screen -S "$MLANDCLEARSCREEN" -p 0 -X eval "stuff 'y'^M"                                         # Mit y also yes bestaetigen
 		return 0
+		log info "Bitte die Region neu starten."
 	else
-		log error "LANDCLEAR: $OBJEKT Parzellen von der Region $REGION loeschen fehlgeschlagen"
+		log error "LANDCLEAR: $MLANDCLEARSCREEN Parzellen von der Region $REGION loeschen fehlgeschlagen"
 		return 1
 	fi
 }
@@ -2665,32 +2667,32 @@ function regionbackup() {
 	# Backup Verzeichnis anlegen.
 	mkdir -p /$STARTVERZEICHNIS/backup/
 	sleep 2
-	VERZEICHNISSCREENNAME=$1
+	BACKUPVERZEICHNISSCREENNAME=$1
 	REGIONSNAME=$2
 	DATEINAME=${REGIONSNAME//\"/}
 	NSDATEINAME=${DATEINAME// /}
 
 	log info "OSBACKUP: Region $NSDATEINAME speichern"
-	cd /$STARTVERZEICHNIS/"$VERZEICHNISSCREENNAME"/bin || return 1
+	cd /$STARTVERZEICHNIS/"$BACKUPVERZEICHNISSCREENNAME"/bin || return 1
 	log info "Ich kann nicht pruefen ob die Region im OpenSimulator vorhanden ist."
 	log info "Sollte sie nicht vorhanden sein wird root also alle Regionen gespeichert."
-	screen -S "$VERZEICHNISSCREENNAME" -p 0 -X eval "stuff 'change region ${REGIONSNAME//\"/}'^M"
-	screen -S "$VERZEICHNISSCREENNAME" -p 0 -X eval "stuff 'save oar /$STARTVERZEICHNIS/backup/'$DATUM'-$NSDATEINAME.oar'^M"
-	screen -S "$VERZEICHNISSCREENNAME" -p 0 -X eval "stuff 'terrain save /$STARTVERZEICHNIS/backup/'$DATUM'-$NSDATEINAME.png'^M"
-	screen -S "$VERZEICHNISSCREENNAME" -p 0 -X eval "stuff 'terrain save /$STARTVERZEICHNIS/backup/'$DATUM'-$NSDATEINAME.raw'^M"
+	screen -S "$BACKUPVERZEICHNISSCREENNAME" -p 0 -X eval "stuff 'change region ${REGIONSNAME//\"/}'^M"
+	screen -S "$BACKUPVERZEICHNISSCREENNAME" -p 0 -X eval "stuff 'save oar /$STARTVERZEICHNIS/backup/'$DATUM'-$NSDATEINAME.oar'^M"
+	screen -S "$BACKUPVERZEICHNISSCREENNAME" -p 0 -X eval "stuff 'terrain save /$STARTVERZEICHNIS/backup/'$DATUM'-$NSDATEINAME.png'^M"
+	screen -S "$BACKUPVERZEICHNISSCREENNAME" -p 0 -X eval "stuff 'terrain save /$STARTVERZEICHNIS/backup/'$DATUM'-$NSDATEINAME.raw'^M"
 	log info "Region $DATUM-$NSDATEINAME RAW und PNG Terrain wird gespeichert"
 	log line
 	sleep 10
-	if [ ! -f /$STARTVERZEICHNIS/"$VERZEICHNISSCREENNAME"/bin/Regions/"$NSDATEINAME".ini ]; then
-		cp -r /$STARTVERZEICHNIS/"$VERZEICHNISSCREENNAME"/bin/Regions/Regions.ini /$STARTVERZEICHNIS/backup/"$DATUM"-"$NSDATEINAME".ini
+	if [ ! -f /$STARTVERZEICHNIS/"$BACKUPVERZEICHNISSCREENNAME"/bin/Regions/"$NSDATEINAME".ini ]; then
+		cp -r /$STARTVERZEICHNIS/"$BACKUPVERZEICHNISSCREENNAME"/bin/Regions/Regions.ini /$STARTVERZEICHNIS/backup/"$DATUM"-"$NSDATEINAME".ini
 		log info "OSBACKUP: Region $DATUM-$NSDATEINAME.ini wird gespeichert"
 	fi
-	if [ ! -f /$STARTVERZEICHNIS/"$VERZEICHNISSCREENNAME"/bin/Regions/"${REGIONSNAME//\"/}".ini ]; then
-		cp -r /$STARTVERZEICHNIS/"$VERZEICHNISSCREENNAME"/bin/Regions/Regions.ini /$STARTVERZEICHNIS/backup/"$DATUM"-"$NSDATEINAME".ini
+	if [ ! -f /$STARTVERZEICHNIS/"$BACKUPVERZEICHNISSCREENNAME"/bin/Regions/"${REGIONSNAME//\"/}".ini ]; then
+		cp -r /$STARTVERZEICHNIS/"$BACKUPVERZEICHNISSCREENNAME"/bin/Regions/Regions.ini /$STARTVERZEICHNIS/backup/"$DATUM"-"$NSDATEINAME".ini
 		log info "OSBACKUP: Region $DATUM-$NSDATEINAME.ini wird gespeichert"
 	fi
-	if [ ! -f /$STARTVERZEICHNIS/"$VERZEICHNISSCREENNAME"/bin/Regions/Regions.ini ]; then
-		cp -r /$STARTVERZEICHNIS/"$VERZEICHNISSCREENNAME"/bin/Regions/"$NSDATEINAME".ini /$STARTVERZEICHNIS/backup/"$DATUM"-"$NSDATEINAME".ini
+	if [ ! -f /$STARTVERZEICHNIS/"$BACKUPVERZEICHNISSCREENNAME"/bin/Regions/Regions.ini ]; then
+		cp -r /$STARTVERZEICHNIS/"$BACKUPVERZEICHNISSCREENNAME"/bin/Regions/"$NSDATEINAME".ini /$STARTVERZEICHNIS/backup/"$DATUM"-"$NSDATEINAME".ini
 		log info "OSBACKUP: Region $NSDATEINAME.ini wird gespeichert"
 	fi
 	return 0
@@ -2714,7 +2716,7 @@ function menuregionbackup() {
 		regionbackupBOXERGEBNIS=$(dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 3>&1 1>&2 2>&3 3>&-)
 
 		# Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
-		VERZEICHNISSCREENNAME=$(echo "$regionbackupBOXERGEBNIS" | sed -n '1p')
+		MBACKUPVERZEICHNISSCREENNAME=$(echo "$regionbackupBOXERGEBNIS" | sed -n '1p')
 		REGIONSNAME=$(echo "$regionbackupBOXERGEBNIS" | sed -n '2p')
 
 		# Alles loeschen.
@@ -2732,13 +2734,13 @@ function menuregionbackup() {
 	NSDATEINAME=${DATEINAME// /}
 
 	log info "OSBACKUP: Region $NSDATEINAME speichern"
-	cd /$STARTVERZEICHNIS/"$VERZEICHNISSCREENNAME"/bin || return 1
+	cd /$STARTVERZEICHNIS/"$MBACKUPVERZEICHNISSCREENNAME"/bin || return 1
 	log info "Ich kann nicht pruefen ob die Region im OpenSimulator vorhanden ist."
 	log info "Sollte sie nicht vorhanden sein wird root also alle Regionen gespeichert."
-	screen -S "$VERZEICHNISSCREENNAME" -p 0 -X eval "stuff 'change region ${REGIONSNAME//\"/}'^M"
-	screen -S "$VERZEICHNISSCREENNAME" -p 0 -X eval "stuff 'save oar /$STARTVERZEICHNIS/backup/'$DATUM'-$NSDATEINAME.oar'^M"
-	screen -S "$VERZEICHNISSCREENNAME" -p 0 -X eval "stuff 'terrain save /$STARTVERZEICHNIS/backup/'$DATUM'-$NSDATEINAME.png'^M"
-	screen -S "$VERZEICHNISSCREENNAME" -p 0 -X eval "stuff 'terrain save /$STARTVERZEICHNIS/backup/'$DATUM'-$NSDATEINAME.raw'^M"
+	screen -S "$MBACKUPVERZEICHNISSCREENNAME" -p 0 -X eval "stuff 'change region ${REGIONSNAME//\"/}'^M"
+	screen -S "$MBACKUPVERZEICHNISSCREENNAME" -p 0 -X eval "stuff 'save oar /$STARTVERZEICHNIS/backup/'$DATUM'-$NSDATEINAME.oar'^M"
+	screen -S "$MBACKUPVERZEICHNISSCREENNAME" -p 0 -X eval "stuff 'terrain save /$STARTVERZEICHNIS/backup/'$DATUM'-$NSDATEINAME.png'^M"
+	screen -S "$MBACKUPVERZEICHNISSCREENNAME" -p 0 -X eval "stuff 'terrain save /$STARTVERZEICHNIS/backup/'$DATUM'-$NSDATEINAME.raw'^M"
 	log info "Region $DATUM-$NSDATEINAME RAW und PNG Terrain wird gespeichert"
 	log line
 	sleep 10
@@ -2762,17 +2764,17 @@ function menuregionbackup() {
 # Ich kann nicht pruefen ob die Region im OpenSimulator vorhanden ist.
 # Sollte sie nicht vorhanden sein wird root (Alle) oder die letzte ausgewaehlte Region wiederhergestellt. Dies zerstoert eventuell vorhandene Regionen.
 function regionrestore() {
-	VERZEICHNISSCREENNAME=$1
+	RESTOREVERZEICHNISSCREENNAME=$1
 	REGIONSNAME=$2
 	DATEINAME=${REGIONSNAME//\"/}
 	NSDATEINAME=${DATEINAME// /}
 
 	log info "OSRESTORE: Region $NSDATEINAME wiederherstellen"
-	cd /$STARTVERZEICHNIS/"$VERZEICHNISSCREENNAME"/bin || return 1
+	cd /$STARTVERZEICHNIS/"$RESTOREVERZEICHNISSCREENNAME"/bin || return 1
 	log info "Ich kann nicht pruefen ob die Region im OpenSimulator vorhanden ist."
 	log info "Sollte sie nicht vorhanden sein wird root also alle Regionen wiederhergestellt."
-	screen -S "$VERZEICHNISSCREENNAME" -p 0 -X eval "stuff 'change region ${REGIONSNAME//\"/}'^M"
-	screen -S "$VERZEICHNISSCREENNAME" -p 0 -X eval "stuff 'load oar /$STARTVERZEICHNIS/backup/'$DATUM'-$NSDATEINAME.oar'^M"
+	screen -S "$RESTOREVERZEICHNISSCREENNAME" -p 0 -X eval "stuff 'change region ${REGIONSNAME//\"/}'^M"
+	screen -S "$RESTOREVERZEICHNISSCREENNAME" -p 0 -X eval "stuff 'load oar /$STARTVERZEICHNIS/backup/'$DATUM'-$NSDATEINAME.oar'^M"
 
 	log info "OSRESTORE: Region $DATUM-$NSDATEINAME wird wiederhergestellt"
 	log line
@@ -2797,7 +2799,7 @@ function menuregionrestore() {
 		regionrestoreBOXERGEBNIS=$(dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 3>&1 1>&2 2>&3 3>&-)
 
 		# Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
-		VERZEICHNISSCREENNAME=$(echo "$regionrestoreBOXERGEBNIS" | sed -n '1p')
+		MRESTOREVERZEICHNISSCREENNAME=$(echo "$regionrestoreBOXERGEBNIS" | sed -n '1p')
 		REGIONSNAME=$(echo "$regionrestoreBOXERGEBNIS" | sed -n '2p')
 
 		# Alles loeschen.
@@ -2812,11 +2814,11 @@ function menuregionrestore() {
 	NSDATEINAME=${DATEINAME// /}
 
 	log info "OSRESTORE: Region $NSDATEINAME wiederherstellen"
-	cd /$STARTVERZEICHNIS/"$VERZEICHNISSCREENNAME"/bin || return 1
+	cd /$STARTVERZEICHNIS/"$MRESTOREVERZEICHNISSCREENNAME"/bin || return 1
 	log info "Ich kann nicht pruefen ob die Region im OpenSimulator vorhanden ist."
 	log info "Sollte sie nicht vorhanden sein wird root also alle Regionen wiederhergestellt."
-	screen -S "$VERZEICHNISSCREENNAME" -p 0 -X eval "stuff 'change region ${REGIONSNAME//\"/}'^M"
-	screen -S "$VERZEICHNISSCREENNAME" -p 0 -X eval "stuff 'load oar /$STARTVERZEICHNIS/backup/'$DATUM'-$NSDATEINAME.oar'^M"
+	screen -S "$MRESTOREVERZEICHNISSCREENNAME" -p 0 -X eval "stuff 'change region ${REGIONSNAME//\"/}'^M"
+	screen -S "$MRESTOREVERZEICHNISSCREENNAME" -p 0 -X eval "stuff 'load oar /$STARTVERZEICHNIS/backup/'$DATUM'-$NSDATEINAME.oar'^M"
 
 	log info "OSRESTORE: Region $DATUM-$NSDATEINAME wird wiederhergestellt"
 	log line
@@ -2838,7 +2840,8 @@ function autosimstart() {
 				STARTREGIONSAUSGABE=$(awk -F "[" '/\[/ {print $1 $2 $3}' /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/Regions/*.ini | sed s/'\]'//g);
 				log info "${VERZEICHNISSLISTE[$i]} hat folgende Regionen:";
 				#sed 's/^\(.\)/     \1/' "$STARTREGIONSAUSGABE"
-				echo "$STARTREGIONSAUSGABE";
+				#echo "$STARTREGIONSAUSGABE";
+				log info "$STARTREGIONSAUSGABE";
 				#printf '%s' "$STARTREGIONSAUSGABE";
 			fi
 
@@ -2888,7 +2891,8 @@ function menuautosimstart() {
 				STARTREGIONSAUSGABE=$(awk -F "[" '/\[/ {print $1 $2 $3}' /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/Regions/*.ini | sed s/'\]'//g);
 				log info "${VERZEICHNISSLISTE[$i]} hat folgende Regionen:";
 				#sed 's/^\(.\)/     \1/' "$STARTREGIONSAUSGABE"
-				echo "$STARTREGIONSAUSGABE";
+				#echo "$STARTREGIONSAUSGABE";
+				log info "$STARTREGIONSAUSGABE";
 				#printf '%s' "$STARTREGIONSAUSGABE";
 			fi
 
