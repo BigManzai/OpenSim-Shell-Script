@@ -239,6 +239,42 @@ function abfrage1()
 ?>
 
 <?php
+function testfunktion()
+{
+// Testfunktionen opensim.sh wiparameter0
+// commandaufruf("wiparameter0");
+// commandaufruf("wiparameter1 $2");
+// commandaufruf("wiparameter2 $2 $3");
+// commandaufruf("wiparameter3 $2 $3 $4");
+// commandaufruf("wiparameter4 $2 $3 $4 $5");
+// commandaufruf("wiparameter5 $2 $3 $4 $5 $6");
+// commandaufruf("wiparameter6 $2 $3 $4 $5 $6 $7");
+// commandaufruf("wiparameter7 $2 $3 $4 $5 $6 $7 $8");
+// commandaufruf("wiparameter8 $2 $3 $4 $5 $6 $7 $8 $9");
+
+  if ($_GET['wiparameter0']) {commandaufruf("wiparameter0");}
+  if ($_GET['wiparameter1']) {commandaufruf("wiparameter1 $2");}
+  if ($_GET['wiparameter2']) {commandaufruf("wiparameter2 $2 $3");}
+  if ($_GET['wiparameter3']) {commandaufruf("wiparameter3 $2 $3 $4");}
+  if ($_GET['wiparameter4']) {commandaufruf("wiparameter4 $2 $3 $4 $5");}
+  if ($_GET['wiparameter5']) {commandaufruf("wiparameter5 $2 $3 $4 $5 $6");}
+  if ($_GET['wiparameter6']) {commandaufruf("wiparameter6 $2 $3 $4 $5 $6 $7");}
+  if ($_GET['wiparameter7']) {commandaufruf("wiparameter7 $2 $3 $4 $5 $6 $7 $8");}
+  if ($_GET['wiparameter8']) {commandaufruf("wiparameter8 $2 $3 $4 $5 $6 $7 $8 $9");}
+
+  // <p><a href="?wiparameter0=true" class="w3-button w3-blue w3-hover-green">Parameter0</a> Funktionsaufruf 0 Parameter.</p>
+  // <p><a href="?wiparameter1=true" class="w3-button w3-blue w3-hover-green">Parameter1</a> Funktionsaufruf 1 Parameter.</p>
+  // <p><a href="?wiparameter2=true" class="w3-button w3-blue w3-hover-green">Parameter2</a> Funktionsaufruf 2 Parameter.</p>
+  // <p><a href="?wiparameter3=true" class="w3-button w3-blue w3-hover-green">Parameter3</a> Funktionsaufruf 3 Parameter.</p>
+  // <p><a href="?wiparameter4=true" class="w3-button w3-blue w3-hover-green">Parameter4</a> Funktionsaufruf 4 Parameter.</p>
+  // <p><a href="?wiparameter5=true" class="w3-button w3-blue w3-hover-green">Parameter5</a> Funktionsaufruf 5 Parameter.</p>
+  // <p><a href="?wiparameter6=true" class="w3-button w3-blue w3-hover-green">Parameter6</a> Funktionsaufruf 6 Parameter.</p>
+  // <p><a href="?wiparameter7=true" class="w3-button w3-blue w3-hover-green">Parameter7</a> Funktionsaufruf 7 Parameter.</p>
+
+}
+?>
+
+<?php
 $parameter2 = $_POST['parameter2'];
 
 // Get commandaufruf
@@ -249,6 +285,18 @@ if ($_GET['stop']) {commandaufruf("autostop");}
 // parameter2
 if ($_GET['osstart']) {abfrage1(); commandaufruf2("osstart " . $parameter2);}
 if ($_GET['osstop']) {abfrage1(); commandaufruf2("osstop " . $_POST['parameter2']);}
+
+$var2="Test1"; $var3="Test2"; $var4="Test3"; $var5="Test4"; $var6="Test5"; $var7="Test6"; $var8="Test7"; $var9="Test8";
+
+if ($_GET['wiparameter0']) {commandaufruf("wiparameter0");}
+if ($_GET['wiparameter1']) {commandaufruf("wiparameter1 $var2");}
+if ($_GET['wiparameter2']) {commandaufruf("wiparameter2 $var2 $var3");}
+if ($_GET['wiparameter3']) {commandaufruf("wiparameter3 $var2 $var3 $var4");}
+if ($_GET['wiparameter4']) {commandaufruf("wiparameter4 $var2 $var3 $var4 $var5");}
+if ($_GET['wiparameter5']) {commandaufruf("wiparameter5 $var2 $var3 $var4 $var5 $var6");}
+if ($_GET['wiparameter6']) {commandaufruf("wiparameter6 $var2 $var3 $var4 $var5 $var6 $var7");}
+if ($_GET['wiparameter7']) {commandaufruf("wiparameter7 $var2 $var3 $var4 $var5 $var6 $var7 $var8");}
+if ($_GET['wiparameter8']) {commandaufruf("wiparameter8 $var2 $var3 $var4 $var5 $var6 $var7 $var8 $var9");}
 ?>
 
 <!-- href im container -->
@@ -260,6 +308,15 @@ if ($_GET['osstop']) {abfrage1(); commandaufruf2("osstop " . $_POST['parameter2'
 
 <p><a href="?osstart=true" class="w3-button w3-blue w3-hover-green">osstart</a> Ein einzelner Simulator Start.</p> 
 <p><a href="?osstop=true" class="w3-button w3-blue w3-hover-green">osstop</a> Ein einzelner Simulator Stop.</p>
+
+<p><a href="?wiparameter0=true" class="w3-button w3-blue w3-hover-green">Parameter0</a> Funktionsaufruf 0 Parameter.</p>
+<p><a href="?wiparameter1=true" class="w3-button w3-blue w3-hover-green">Parameter1</a> Funktionsaufruf 1 Parameter.</p>
+<p><a href="?wiparameter2=true" class="w3-button w3-blue w3-hover-green">Parameter2</a> Funktionsaufruf 2 Parameter.</p>
+<p><a href="?wiparameter3=true" class="w3-button w3-blue w3-hover-green">Parameter3</a> Funktionsaufruf 3 Parameter.</p>
+<p><a href="?wiparameter4=true" class="w3-button w3-blue w3-hover-green">Parameter4</a> Funktionsaufruf 4 Parameter.</p>
+<p><a href="?wiparameter5=true" class="w3-button w3-blue w3-hover-green">Parameter5</a> Funktionsaufruf 5 Parameter.</p>
+<p><a href="?wiparameter6=true" class="w3-button w3-blue w3-hover-green">Parameter6</a> Funktionsaufruf 6 Parameter.</p>
+<p><a href="?wiparameter7=true" class="w3-button w3-blue w3-hover-green">Parameter7</a> Funktionsaufruf 7 Parameter.</p>
 </div>
 
 </body>
