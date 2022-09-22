@@ -61,7 +61,7 @@
 #### ? Einstellungen ####
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe
-VERSION="V0.79.631" # opensimMULTITOOL Versionsausgabe
+VERSION="V0.79.632" # opensimMULTITOOL Versionsausgabe
 #clear # Bildschirmausgabe loeschen.
 #reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
@@ -9542,6 +9542,66 @@ function expertenmenu() {
 }
 
 ###########################################################################
+# Web Interface Test
+
+### wiparameter0 - Webinterface ohne Parameterangabe gestartet.
+function wiparameter0() {
+	echo "Rueckgabe: Webinterface ohne Parameterangabe gestartet."
+}
+### wiparameter1 - Webinterface mit 1 Parameterangabe gestartet.
+function wiparameter1() {
+	parameter1=$1;
+	echo "Rueckgabe: Webinterface mit 1 Parameterangabe gestartet."
+	echo "Parameter1= $parameter1"
+}
+### wiparameter2 - Webinterface mit 2 Parameterangabe gestartet.
+function wiparameter2() {
+	parameter1=$1; parameter2=$2;
+	echo "Rueckgabe: Webinterface mit 1 Parameterangabe gestartet."
+	echo "Parameter1= $parameter1 Parameter2= $parameter2"
+}
+### wiparameter3 - Webinterface mit 3 Parameterangabe gestartet.
+function wiparameter3() {
+	parameter1=$1; parameter2=$2; parameter3=$3;
+	echo "Rueckgabe: Webinterface mit 3 Parameterangabe gestartet."
+	echo "Parameter1= $parameter1 Parameter2= $parameter2 Parameter3= $parameter3"
+}
+### wiparameter4 - Webinterface mit 4 Parameterangabe gestartet.
+function wiparameter4() {
+	parameter1=$1; parameter2=$2; parameter3=$3; parameter4=$4;
+	echo "Rueckgabe: Webinterface mit 4 Parameterangabe gestartet."
+	echo "Parameter1= $parameter1 Parameter2= $parameter2 Parameter3= $parameter3 Parameter4= $parameter4"
+}
+### wiparameter5 - Webinterface mit 5 Parameterangabe gestartet.
+function wiparameter5() {
+	parameter1=$1; parameter2=$2; parameter3=$3; parameter4=$4; parameter5=$5;
+	echo "Rueckgabe: Webinterface mit 5 Parameterangabe gestartet."
+	echo "Parameter1= $parameter1 Parameter2= $parameter2 Parameter3= $parameter3 Parameter4= $parameter4 Parameter5= $parameter5"
+}
+### wiparameter6 - Webinterface mit 6 Parameterangabe gestartet.
+function wiparameter6() {
+	parameter1=$1; parameter2=$2; parameter3=$3; parameter4=$4; parameter5=$5; parameter6=$6;
+	echo "Rueckgabe: Webinterface mit 6 Parameterangabe gestartet."
+	echo "Parameter1= $parameter1 Parameter2= $parameter2 Parameter3= $parameter3 Parameter4= $parameter4"
+	echo "Parameter5= $parameter5 Parameter6= $parameter6"
+}
+### wiparameter7 - Webinterface mit 7 Parameterangabe gestartet.
+function wiparameter7() {
+	parameter1=$1; parameter2=$2; parameter3=$3; parameter4=$4; parameter5=$5; parameter6=$6; parameter7=$7;
+	echo "Rueckgabe: Webinterface mit 7 Parameterangabe gestartet."
+	echo "Parameter1= $parameter1 Parameter2= $parameter2 Parameter3= $parameter3 Parameter4= $parameter4"
+	echo "Parameter5= $parameter5 Parameter6= $parameter6 Parameter7= $parameter7"
+}
+### wiparameter8 - Webinterface mit 8 Parameterangabe gestartet.
+#  test1 test2 test3 test4 test5 test6 test7 test8
+function wiparameter8() {
+	parameter1=$1; parameter2=$2; parameter3=$3; parameter4=$4; parameter5=$5; parameter6=$6; parameter7=$7; parameter8=$8;
+	echo "Rueckgabe: Webinterface mit 8 Parameterangabe gestartet."
+	echo "Parameter1= $parameter1 Parameter2= $parameter2 Parameter3= $parameter3 Parameter4= $parameter4"
+	echo "Parameter5= $parameter5 Parameter6= $parameter6 Parameter7= $parameter7 Parameter8= $parameter8"
+}
+
+###########################################################################
 # Eingabeauswertung Konsolenmenue
 ###########################################################################
 case $KOMMANDO in
@@ -9778,6 +9838,15 @@ menuosdauerstop) menuosdauerstop "$2" ;; # Test
 osdauerstart) osdauerstart "$2" ;; # Test
 menuosdauerstart) menuosdauerstart "$2" ;; # Test
 osstarteintragdel) osstarteintragdel "$2" ;; # Test
+wiparameter0) wiparameter0 ;;
+wiparameter1) wiparameter1 "$2" ;;
+wiparameter2) wiparameter2 "$2" "$3" ;;
+wiparameter3) wiparameter3 "$2" "$3" "$4" ;;
+wiparameter4) wiparameter4 "$2" "$3" "$4" "$5" ;;
+wiparameter5) wiparameter5 "$2" "$3" "$4" "$5" "$6" ;;
+wiparameter6) wiparameter6 "$2" "$3" "$4" "$5" "$6" "$7" ;;
+wiparameter7) wiparameter7 "$2" "$3" "$4" "$5" "$6" "$7" "$8" ;;
+wiparameter8) wiparameter8 "$2" "$3" "$4" "$5" "$6" "$7" "$8" "$9" ;;
 *) hauptmenu ;;
 esac
 vardel
