@@ -54,14 +54,14 @@
 # ! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 # ! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-# * Status 27.07.2022 301 Funktionen.
+# * Status 27.07.2022 303 Funktionen.
 
 # # Visual Studio Code # ShellCheck # shellman # Better Comments # outline map #
 
 #### ? Einstellungen ####
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe
-VERSION="V0.79.632" # opensimMULTITOOL Versionsausgabe
+VERSION="V0.79.638" # opensimMULTITOOL Versionsausgabe
 #clear # Bildschirmausgabe loeschen.
 #reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
@@ -1371,6 +1371,35 @@ function menulogdel() {
 		return 1
 	fi
 	hauptmenu
+}
+
+### !  assetcachedel, loescht die asset cache Dateien. # Aufruf: assetcachedel Verzeichnis
+# assetdel.sh sim1
+# Das Verzeichnis samt neuer Daten werden beim naechsten start des opensimulator neu geschrieben.
+function assetcachedel() {
+	VERZEICHNIS=$1
+	if [ -d "$VERZEICHNIS" ]; then
+		rm -r /$STARTVERZEICHNIS/"$VERZEICHNIS"/bin/assetcache 2>/dev/null || echo "Ich habe das $VERZEICHNIS assetcache Verzeichnis nicht gefunden!"	
+	else
+		log error "assetcachedel: $VERZEICHNIS assetcache Verzeichnis wurde nicht gefunden"
+		return 1
+	fi
+	log info "OpenSimulator $VERZEICHNIS assetcache Verzeichnisse geloescht"
+	return 0
+}
+
+### !  autoassetcachedel, automatisches loeschen aller asset cache Dateien.
+# Die Verzeichnisse samt neuer Daten werden beim naechsten start des opensimulator neu geschrieben.
+function autoassetcachedel() {
+	#log line
+	makeverzeichnisliste
+	sleep 2
+	for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
+		rm -r /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/assetcache 2>/dev/null | log info "OpenSimulator ${VERZEICHNISSLISTE[$i]} assetcache Verzeichnisse geloescht" || log warn "${VERZEICHNISSLISTE[$i]} assetcache Verzeichnis wurde nicht gefunden! "
+		
+		sleep 2
+	done
+	return 0
 }
 
 ### !  ossettings, stellt den Linux Server fuer OpenSim ein.
@@ -2840,8 +2869,8 @@ function autosimstart() {
 				STARTREGIONSAUSGABE=$(awk -F "[" '/\[/ {print $1 $2 $3}' /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/Regions/*.ini | sed s/'\]'//g);
 				log info "${VERZEICHNISSLISTE[$i]} hat folgende Regionen:";
 				#sed 's/^\(.\)/     \1/' "$STARTREGIONSAUSGABE"
-				#echo "$STARTREGIONSAUSGABE";
-				log info "$STARTREGIONSAUSGABE";
+				echo "$STARTREGIONSAUSGABE";
+				#log info "$STARTREGIONSAUSGABE";
 				#printf '%s' "$STARTREGIONSAUSGABE";
 			fi
 
@@ -2891,8 +2920,8 @@ function menuautosimstart() {
 				STARTREGIONSAUSGABE=$(awk -F "[" '/\[/ {print $1 $2 $3}' /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/Regions/*.ini | sed s/'\]'//g);
 				log info "${VERZEICHNISSLISTE[$i]} hat folgende Regionen:";
 				#sed 's/^\(.\)/     \1/' "$STARTREGIONSAUSGABE"
-				#echo "$STARTREGIONSAUSGABE";
-				log info "$STARTREGIONSAUSGABE";
+				echo "$STARTREGIONSAUSGABE";
+				#log info "$STARTREGIONSAUSGABE";
 				#printf '%s' "$STARTREGIONSAUSGABE";
 			fi
 
@@ -9279,6 +9308,7 @@ function dateimenu() {
 			"--------------------------" ""
 			"Log Dateien loeschen" ""
 			"Map Karten loeschen" ""
+			"Asset Cache loeschen" ""
 			"Asset loeschen" ""
 			"--------------------------" ""
 			"OpenSim herunterladen" ""
@@ -9332,6 +9362,7 @@ function dateimenu() {
 		
 
 		if [[ $dauswahl = "Asset loeschen" ]]; then menuassetdel; fi
+		if [[ $dauswahl = "Asset Cache loeschen" ]]; then autoassetcachedel; fi
 
 		if [[ $dauswahl = "Hauptmenu" ]]; then hauptmenu; fi
 		if [[ $dauswahl = "mySQLmenu" ]]; then mySQLmenu; fi
@@ -9554,49 +9585,49 @@ function wiparameter1() {
 	echo "Rueckgabe: Webinterface mit 1 Parameterangabe gestartet."
 	echo "Parameter1= $parameter1"
 }
-### wiparameter2 - Webinterface mit 2 Parameterangabe gestartet.
+### wiparameter2 - Webinterface mit 2 Parameterangaben gestartet.
 function wiparameter2() {
 	parameter1=$1; parameter2=$2;
-	echo "Rueckgabe: Webinterface mit 1 Parameterangabe gestartet."
+	echo "Rueckgabe: Webinterface mit 1 Parameterangaben gestartet."
 	echo "Parameter1= $parameter1 Parameter2= $parameter2"
 }
-### wiparameter3 - Webinterface mit 3 Parameterangabe gestartet.
+### wiparameter3 - Webinterface mit 3 Parameterangaben gestartet.
 function wiparameter3() {
 	parameter1=$1; parameter2=$2; parameter3=$3;
-	echo "Rueckgabe: Webinterface mit 3 Parameterangabe gestartet."
+	echo "Rueckgabe: Webinterface mit 3 Parameterangaben gestartet."
 	echo "Parameter1= $parameter1 Parameter2= $parameter2 Parameter3= $parameter3"
 }
-### wiparameter4 - Webinterface mit 4 Parameterangabe gestartet.
+### wiparameter4 - Webinterface mit 4 Parameterangaben gestartet.
 function wiparameter4() {
 	parameter1=$1; parameter2=$2; parameter3=$3; parameter4=$4;
-	echo "Rueckgabe: Webinterface mit 4 Parameterangabe gestartet."
+	echo "Rueckgabe: Webinterface mit 4 Parameterangaben gestartet."
 	echo "Parameter1= $parameter1 Parameter2= $parameter2 Parameter3= $parameter3 Parameter4= $parameter4"
 }
-### wiparameter5 - Webinterface mit 5 Parameterangabe gestartet.
+### wiparameter5 - Webinterface mit 5 Parameterangaben gestartet.
 function wiparameter5() {
 	parameter1=$1; parameter2=$2; parameter3=$3; parameter4=$4; parameter5=$5;
-	echo "Rueckgabe: Webinterface mit 5 Parameterangabe gestartet."
+	echo "Rueckgabe: Webinterface mit 5 Parameterangaben gestartet."
 	echo "Parameter1= $parameter1 Parameter2= $parameter2 Parameter3= $parameter3 Parameter4= $parameter4 Parameter5= $parameter5"
 }
-### wiparameter6 - Webinterface mit 6 Parameterangabe gestartet.
+### wiparameter6 - Webinterface mit 6 Parameterangaben gestartet.
 function wiparameter6() {
 	parameter1=$1; parameter2=$2; parameter3=$3; parameter4=$4; parameter5=$5; parameter6=$6;
-	echo "Rueckgabe: Webinterface mit 6 Parameterangabe gestartet."
+	echo "Rueckgabe: Webinterface mit 6 Parameterangaben gestartet."
 	echo "Parameter1= $parameter1 Parameter2= $parameter2 Parameter3= $parameter3 Parameter4= $parameter4"
 	echo "Parameter5= $parameter5 Parameter6= $parameter6"
 }
-### wiparameter7 - Webinterface mit 7 Parameterangabe gestartet.
+### wiparameter7 - Webinterface mit 7 Parameterangaben gestartet.
 function wiparameter7() {
 	parameter1=$1; parameter2=$2; parameter3=$3; parameter4=$4; parameter5=$5; parameter6=$6; parameter7=$7;
-	echo "Rueckgabe: Webinterface mit 7 Parameterangabe gestartet."
+	echo "Rueckgabe: Webinterface mit 7 Parameterangaben gestartet."
 	echo "Parameter1= $parameter1 Parameter2= $parameter2 Parameter3= $parameter3 Parameter4= $parameter4"
 	echo "Parameter5= $parameter5 Parameter6= $parameter6 Parameter7= $parameter7"
 }
-### wiparameter8 - Webinterface mit 8 Parameterangabe gestartet.
+### wiparameter8 - Webinterface mit 8 Parameterangaben gestartet.
 #  test1 test2 test3 test4 test5 test6 test7 test8
 function wiparameter8() {
 	parameter1=$1; parameter2=$2; parameter3=$3; parameter4=$4; parameter5=$5; parameter6=$6; parameter7=$7; parameter8=$8;
-	echo "Rueckgabe: Webinterface mit 8 Parameterangabe gestartet."
+	echo "Rueckgabe: Webinterface mit 8 Parameterangaben gestartet."
 	echo "Parameter1= $parameter1 Parameter2= $parameter2 Parameter3= $parameter3 Parameter4= $parameter4"
 	echo "Parameter5= $parameter5 Parameter6= $parameter6 Parameter7= $parameter7 Parameter8= $parameter8"
 }
@@ -9838,6 +9869,8 @@ menuosdauerstop) menuosdauerstop "$2" ;; # Test
 osdauerstart) osdauerstart "$2" ;; # Test
 menuosdauerstart) menuosdauerstart "$2" ;; # Test
 osstarteintragdel) osstarteintragdel "$2" ;; # Test
+assetcachedel) assetcachedel "$2" ;; # Test
+autoassetcachedel) autoassetcachedel ;;
 wiparameter0) wiparameter0 ;;
 wiparameter1) wiparameter1 "$2" ;;
 wiparameter2) wiparameter2 "$2" "$3" ;;
