@@ -129,6 +129,21 @@ Bisher sind nur Funktionen im Menü die maximal 1 Übergabewert voraussetzen.
 
 ## TODO und Informationen
 
+V0.79.638
+
+Cache Assets werden ja nicht gelöscht, habe deswegen neue Funktionen in das opensimMULTITOOL eingebaut.
+     assetcachedel simX
+     autoassetcachedel
+Im Menü unter Punkt: 
+     Datei „Asset Cache loeschen“ 
+löscht aus aktuellen Simulatoren den Asset Cache und beschleunigt so den OpenSimulator sowie macht er auf der Festplatte etwas Platz.
+Vorteile:
+```
+Alter ungenutzter Cache ist weg.
+Defekter Cache ist weg.
+Etc.
+```
+
 V0.79.631
 
 Landclear alle Parzellen vom Land löschen. Fehler behoben.
