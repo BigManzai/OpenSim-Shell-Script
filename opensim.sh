@@ -61,7 +61,7 @@
 #### ? Einstellungen ####
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe
-VERSION="V0.79.638" # opensimMULTITOOL Versionsausgabe
+VERSION="V0.79.647" # opensimMULTITOOL Versionsausgabe
 #clear # Bildschirmausgabe loeschen.
 #reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
@@ -95,6 +95,7 @@ function dummyvar() {
 	authlog="/var/log/auth.log"	ufwlog="/var/log/ufw.log"	mysqlmariadberor="/var/log/mysql/mariadb.err"; mysqlerrorlog="/var/log/mysql/error.log"; listVar=""; ScreenLogLevel=0
 	# DIALOG_OK=0; DIALOG_HELP=2; DIALOG_EXTRA=3; DIALOG_ITEM_HELP=4; SIG_NONE=0; SIG_HUP=1; SIG_INT=2; SIG_QUIT=3; SIG_KILL=9; SIG_TERM=15
 	DIALOG_CANCEL=1; DIALOG_ESC=255; DIALOG=dialog; VISITORLIST="yes"; REGIONSANZEIGE="yes"; #DELREGIONS="no";
+	netversion="1946";
 }
 
 ### Datumsvariablen Datum, Dateidatum und Uhrzeit
@@ -770,6 +771,15 @@ function mysqlbackup() {
 	databasename=$3
 	result_mysqlrest=$("MYSQL_PWD=$password" "mysqldump -u$username $databasename" -N)
 	# mysqldump -u root -p omlgrid assets > AssetService.sql
+}
+### !  passgen, Passwortgenerator
+function passgen() {
+		# Alle Aktionen ohne dialog
+		STARK=$1
+		PASSWD=$(tr -dc 'A-Za-z0-9!"#$%&'\''()*+,-./:;<=>?@[\]^_`{|}~' </dev/urandom | head -c "$STARK")
+		echo "$PASSWD"
+		unset PASSWD
+		return 0
 }
 
 ### !  passwdgenerator, Passwortgenerator
@@ -1997,14 +2007,112 @@ function terminator() {
 
 ### !  oscompi, kompilieren des OpenSimulator.
 function oscompi() {
+	# Wenn keine Einstellung vorhanden ist dann VS2019 mit mono 4.6
+	if [[ "$netversion" = "" ]]; then
+		netversion="1946"
+	fi
+
 	log info " Kompilierungsvorgang startet"
 	# In das opensim Verzeichnis wechseln wenn es das gibt ansonsten beenden.
 	cd /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS || return 1
 
 	log info " Prebuildvorgang startet"
-	# runprebuild19.sh startbar machen und starten.
-	chmod +x runprebuild19.sh || chmod +x runprebuild48.sh
-	./runprebuild19.sh || ./runprebuild48.sh
+
+	# Funktionierend
+	# Visual Studio 2019 mit mono 4.6
+	if [[ "$netversion" = "1946" ]]; then
+
+		log info " Prebuildvorgang mono 4.6"
+		# Kopiere runprebuild.sh in das OpenSim Verzeichnis:
+		cp -r /$STARTVERZEICHNIS/dotnet/*.* /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS
+		# runprebuild.sh startbar machen:
+		chmod +x runprebuild.sh
+		# runprebuild.sh starten:
+		./runprebuild.sh
+	fi
+	# Visual Studio 2019 mit mono 4.8
+	if [[ "$netversion" = "1948" ]]; then
+		log info " Prebuildvorgang mono 4.8"
+		# Kopiere runprebuild48.sh in das OpenSim Verzeichnis:
+		cp -r /$STARTVERZEICHNIS/dotnet/*.* /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS
+		# runprebuild48.sh startbar machen:
+		chmod +x runprebuild48.sh
+		# runprebuild48.sh starten:
+		./runprebuild48.sh
+	fi
+
+	# Visual Studio 2022 mit mono 4.8
+	if [[ "$netversion" = "2248" ]]; then
+		log info " Prebuildvorgang mono 4.8"
+		# Kopiere runprebuild2248.sh in das OpenSim Verzeichnis:
+		cp -r /$STARTVERZEICHNIS/dotnet/*.* /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS
+		# runprebuild2248.sh startbar machen:
+		chmod +x runprebuild2248.sh
+		# runprebuild2248.sh starten:
+		./runprebuild2248.sh
+	fi
+	# Funktionierend Ende
+
+	# Visual Studio 2022 mit mono 5.0
+	if [[ "$netversion" = "2250" ]]; then
+		log info " Prebuildvorgang mono 5.0 VS2022"
+		# Kopiere runprebuild2250.sh in das OpenSim Verzeichnis:
+		cp -r /$STARTVERZEICHNIS/dotnet/*.* /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS
+		# runprebuild2250.sh startbar machen:
+		chmod +x runprebuild2250.sh
+		# runprebuild2250.sh starten:
+		./runprebuild2250.sh
+	fi
+	# Visual Studio 2022 mit mono 6.0
+	if [[ "$netversion" = "2260" ]]; then
+		log info " Prebuildvorgang mono 6.0 VS2022"
+		# Kopiere runprebuild2260.sh in das OpenSim Verzeichnis:
+		cp -r /$STARTVERZEICHNIS/dotnet/*.* /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS
+		# runprebuild2260.sh startbar machen:
+		chmod +x runprebuild2260.sh
+		# runprebuild2260.sh starten:
+		./runprebuild2260.sh
+	fi
+	# Visual Studio 2022 mit mono 7.0
+	if [[ "$netversion" = "2270" ]]; then
+		log info " Prebuildvorgang mono 7.0 VS2022"
+		# Kopiere runprebuild2270.sh in das OpenSim Verzeichnis:
+		cp -r /$STARTVERZEICHNIS/dotnet/*.* /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS
+		# runprebuild2270.sh startbar machen:
+		chmod +x runprebuild2270.sh
+		# runprebuild2270.sh starten:
+		./runprebuild2270.sh
+	fi
+		# Visual Studio 2019 mit mono 5.0
+		if [[ "$netversion" = "1950" ]]; then
+		log info " Prebuildvorgang mono 5.0 VS2019"
+		# Kopiere runprebuild1950.sh in das OpenSim Verzeichnis:
+		cp -r /$STARTVERZEICHNIS/dotnet/*.* /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS
+		# runprebuild1950.sh startbar machen:
+		chmod +x runprebuild1950.sh
+		# runprebuild1950.sh starten:
+		./runprebuild1950.sh
+	fi
+		# Visual Studio 2019 mit mono 6.0
+	if [[ "$netversion" = "1960" ]]; then
+		log info " Prebuildvorgang mono 6.0 VS2019"
+		# Kopiere runprebuild1960.sh in das OpenSim Verzeichnis:
+		cp -r /$STARTVERZEICHNIS/dotnet/*.* /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS
+		# runprebuild1960.sh startbar machen:
+		chmod +x runprebuild1960.sh
+		# runprebuild1960.sh starten:
+		./runprebuild1960.sh
+	fi
+		# Visual Studio 2019 mit mono 7.0
+	if [[ "$netversion" = "1970" ]]; then
+		log info " Prebuildvorgang mono 7.0 VS2019"
+		# Kopiere runprebuild1970.sh in das OpenSim Verzeichnis:
+		cp -r /$STARTVERZEICHNIS/dotnet/*.* /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS
+		# runprebuild1970.sh startbar machen:
+		chmod +x runprebuild1970.sh
+		# runprebuild1970.sh starten:
+		./runprebuild1970.sh
+	fi
 
 	# ohne log Datei.
 	if [[ $SETOSCOMPION = "no" ]]; then
@@ -9880,6 +9988,7 @@ wiparameter5) wiparameter5 "$2" "$3" "$4" "$5" "$6" ;;
 wiparameter6) wiparameter6 "$2" "$3" "$4" "$5" "$6" "$7" ;;
 wiparameter7) wiparameter7 "$2" "$3" "$4" "$5" "$6" "$7" "$8" ;;
 wiparameter8) wiparameter8 "$2" "$3" "$4" "$5" "$6" "$7" "$8" "$9" ;;
+passgen) passgen "$2" ;;
 *) hauptmenu ;;
 esac
 vardel

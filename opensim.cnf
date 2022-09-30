@@ -1,4 +1,4 @@
-### Einstellungen VERSION V0.79.627
+### Einstellungen VERSION="V0.79.647"
 
 : "${DIALOG=dialog}"
 : "${DIALOG_CANCEL=1}"
@@ -103,6 +103,9 @@
 	SETMONOGCPARAMSON1="no"
 	SETMONOGCPARAMSON2="yes"
 	#SETMANUALPAGES="yes"
+
+## Mono Version fuer Build Vorgang
+	netversion="2248"
 
 ## Divers
 	SETOSCOMPION="no" # Mit oder ohne log Datei kompilieren. yes oder no.
