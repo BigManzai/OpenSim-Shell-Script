@@ -129,6 +129,10 @@ Bisher sind nur Funktionen im Menü die maximal 1 Übergabewert voraussetzen.
 
 ## TODO und Informationen
 
+V0.79.647
+
+Build Funktionen (oscompi) überarbeitet für Visual Studio 2022 und .net 5.0, 6.0, 7.0 sowie zukünftig mono 5.0, 6.0, 7.0.
+
 V0.79.638
 
 Cache Assets werden ja nicht gelöscht, habe deswegen neue Funktionen in das opensimMULTITOOL eingebaut.
