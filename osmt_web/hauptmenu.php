@@ -30,149 +30,23 @@ else
 <?php include "./header.php" ?>
 
 <?php
-// Funktion zum aufruf von opensim.sh Funktionen.
-function commandaufruf(string $funktionsname)
+// Funktion zum aufruf von opensim.sh Funktionen. Funktioniert
+function abfrage(string $funktionsname)
 {
     $ausgabe=null; $rueckgabewert=null;
-	$datei="/opt/opensim.sh";
+	  $datei="/opt/opensim.sh";
     $zusammengesetzt="$datei $funktionsname";
     exec($zusammengesetzt, $ausgabe, $rueckgabewert);
 
-	?> 	<div class="alert">
-		<span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
+	?> 	
+  <div class="w3-card-4 w3-sand">
+  <h2>Bildschirmausgabe</h2>
+  <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
 	<?php 
 
     foreach ($ausgabe as $bildschirmausgabe)
     {
-		echo "<li>".$bildschirmausgabe."</li>";		
-    }
-
-	?> </div> <?php
-}
-// Funktion zum aufruf von opensim.sh Funktionen mit mehreren Parametern.
-function commandaufruf2(string $funktionsname, string $parameter2)
-{
-    $ausgabe=null; $rueckgabewert=null;
-	$datei="/opt/opensim.sh";
-    $zusammengesetzt="$datei $funktionsname $parameter2";
-    exec($zusammengesetzt, $ausgabe, $rueckgabewert);
-
-	?> 	<div class="alert">
-		<span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
-	<?php
-
-    foreach ($ausgabe as $bildschirmausgabe)
-    {
-		echo "<li>".$bildschirmausgabe."</li>";		
-    }
-
-	?> </div> <?php
-}
-
-function commandaufruf3(string $funktionsname, string $parameter2, string $parameter3)
-{
-    $ausgabe=null; $rueckgabewert=null;
-	$datei="/opt/opensim.sh";
-    $zusammengesetzt="$datei $funktionsname $parameter2 $parameter3";
-    exec($zusammengesetzt, $ausgabe, $rueckgabewert);
-
-	?> 	<div class="alert">
-		<span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
-	<?php 
-
-    foreach ($ausgabe as $bildschirmausgabe)
-    {
-		echo "<li>".$bildschirmausgabe."</li>";		
-    }
-
-	?> </div> <?php
-}
-function commandaufruf4(string $funktionsname, string $parameter2, string $parameter3, string $parameter4)
-{
-    $ausgabe=null; $rueckgabewert=null;
-	$datei="/opt/opensim.sh";
-    $zusammengesetzt="$datei $funktionsname $parameter2 $parameter3 $parameter4";
-    exec($zusammengesetzt, $ausgabe, $rueckgabewert);
-
-	?> 	<div class="alert">
-		<span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
-	<?php 
-
-    foreach ($ausgabe as $bildschirmausgabe)
-    {
-		echo "<li>".$bildschirmausgabe."</li>";		
-    }
-
-	?> </div> <?php
-}
-function commandaufruf5(string $funktionsname, string $parameter2, string $parameter3, string $parameter4, string $parameter5)
-{
-    $ausgabe=null; $rueckgabewert=null;
-	$datei="/opt/opensim.sh";
-    $zusammengesetzt="$datei $funktionsname $parameter2 $parameter3 $parameter4 $parameter5";
-    exec($zusammengesetzt, $ausgabe, $rueckgabewert);
-
-	?> 	<div class="alert">
-		<span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
-	<?php 
-
-    foreach ($ausgabe as $bildschirmausgabe)
-    {
-		echo "<li>".$bildschirmausgabe."</li>";		
-    }
-
-	?> </div> <?php
-}
-function commandaufruf6(string $funktionsname, string $parameter2, string $parameter3, string $parameter4, string $parameter5, string $parameter6)
-{
-    $ausgabe=null; $rueckgabewert=null;
-	$datei="/opt/opensim.sh";
-    $zusammengesetzt="$datei $funktionsname $parameter2 $parameter3 $parameter4 $parameter5 $parameter6";
-    exec($zusammengesetzt, $ausgabe, $rueckgabewert);
-
-	?> 	<div class="alert">
-		<span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
-	<?php 
-
-    foreach ($ausgabe as $bildschirmausgabe)
-    {
-		echo "<li>".$bildschirmausgabe."</li>";		
-    }
-
-	?> </div> <?php
-}
-function commandaufruf7(string $funktionsname, string $parameter2, string $parameter3, string $parameter4, string $parameter5, string $parameter6, string $parameter7)
-{
-    $ausgabe=null; $rueckgabewert=null;
-	$datei="/opt/opensim.sh";
-    $zusammengesetzt="$datei $funktionsname $parameter2 $parameter3 $parameter4 $parameter5 $parameter6 $parameter7";
-    exec($zusammengesetzt, $ausgabe, $rueckgabewert);
-
-	?> 	<div class="alert">
-		<span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
-	<?php 
-
-    foreach ($ausgabe as $bildschirmausgabe)
-    {
-		echo "<li>".$bildschirmausgabe."</li>";		
-    }
-
-	?> </div> <?php
-}
-function commandaufruf8(string $funktionsname, string $parameter2, string $parameter3, string $parameter4, string $parameter5, string $parameter6, string $parameter7, string $parameter8)
-{
-    $ausgabe=null; $rueckgabewert=null;
-	$datei="/opt/opensim.sh";
-    $zusammengesetzt="$datei $funktionsname $parameter2 $parameter3 $parameter4 $parameter5 $parameter6 $parameter7 $parameter8";
-    exec($zusammengesetzt, $ausgabe, $rueckgabewert);
-
-	?> 	<div class="alert">
-		<span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
-	<?php 
-
-    foreach ($ausgabe as $bildschirmausgabe)
-    {
-		echo "<li>".$bildschirmausgabe."</li>";		
+    echo "<pre>".$bildschirmausgabe."</pre>";
     }
 
 	?> </div> <?php
@@ -180,55 +54,142 @@ function commandaufruf8(string $funktionsname, string $parameter2, string $param
 ?>
 
 <?php
-$uebergabeparameter2 = "";
-// abfrage1 geht nicht
-function abfrage1()
+// Abfrage mit Titel und Information. Status OK
+function abfrage1($funktionsname, $Titel, $Information1)
 {
-    // Abfrage Card einzelner Parameter.
-    ?>
-    <div class="w3-card-4">
-      <div class="w3-container w3-green">
-        <h2>Eingabe erforderlich</h2>
-      </div>
-      <form class="w3-container" action="hauptmenu.php" method="POST">
-        <p>      
-        <label class="w3-text-green"><b>Simulator auswählen:</b></label>
-        <input class="w3-input w3-border w3-sand" type="text" name="parameter2"></input></p>
+?>
+  <div class="w3-card-4"><div class="w3-container w3-green"><h2><?php echo $Titel; ?></h2></div>
+    <p><form class="w3-container" method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
+    <?php echo $Information1; ?> <input class="w3-input w3-border w3-sand" type="text" name="ergebnisseingabe1"></p>
+    <p><button class="w3-btn w3-green">Senden</button></p>
+    </form>
+  </div>
+
+  <?php
+  if ($_SERVER["REQUEST_METHOD"] == "POST") 
+  {
+      // Wert des Eingabefeldes sammeln.
+      $ergebniss2 = $_POST['ergebnisseingabe1']; trim($ergebniss2);      
+      if (empty($ergebniss2)) {
+        ?>    
+        <div class="w3-card-4 w3-sand">
+        <h2>Bildschirmausgabe</h2>
+        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+        <pre> Eingabe ist leer oder unvollständig!</pre></div>
+        <?php
+      } else {
+      $ausgabe=null; $rueckgabewert=null;
+      $datei="/opt/opensim.sh";
+      $zusammengesetzt="$datei $funktionsname $ergebniss2";
+      exec($zusammengesetzt, $ausgabe, $rueckgabewert);
+      ?> 	
     
+      <div class="w3-card-4 w3-sand">
+      <h2>Bildschirmausgabe</h2>
+      <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
     
-        <p><button class="w3-btn w3-green">Senden</button></p>
-      </form>
-    </div>
-        
+        <?php
+          foreach ($ausgabe as $bildschirmausgabe)
+          {
+            echo "<pre>".$bildschirmausgabe."</pre>";
+          }
+        ?> 
+    
+      </div> 
+    
     <?php
-    $uebergabeparameter2 =  $_POST['parameter2'];
+    }
+  }
 }
 ?>
 
 <?php
-$parameter2 = $_POST['parameter2'];
+// Abfrage mit Titel und Information. Status OK
+function abfrage2($funktionsname, $Titel, $Information1, $Information2)
+{
+?>
+  <div class="w3-card-4"><div class="w3-container w3-green"><h2><?php echo $Titel; ?></h2></div>
+    <p><form class="w3-container" method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
+    <?php echo $Information1; ?> <input class="w3-input w3-border w3-sand" type="text" name="ergebnisseingabe1"></p><br/>    
+    <?php echo $Information2; ?> <input class="w3-input w3-border w3-sand" type="text" name="ergebnisseingabe2">
+    <p><button class="w3-btn w3-green">Senden</button></p>
+    </form>
+  </div>
 
-// Get commandaufruf
-if ($_GET['hilfe']) {commandaufruf("hilfe");}
-if ($_GET['restart']) {commandaufruf("restart");}
-if ($_GET['start']) {commandaufruf("autostart");}
-if ($_GET['stop']) {commandaufruf("autostop");}
+  <?php
+  if ($_SERVER["REQUEST_METHOD"] == "POST") 
+  {
+      // Wert des Eingabefeldes sammeln.
+      $ergebniss2 = $_POST['ergebnisseingabe1']; trim($ergebniss2);
+	    $ergebniss3 = $_POST['ergebnisseingabe2']; trim($ergebniss3);    
+      if (empty($ergebniss2) or empty($ergebniss3)) {
+        ?>    
+        <div class="w3-card-4 w3-sand">
+        <h2>Bildschirmausgabe</h2>
+        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+        <pre> Eingabe ist leer oder unvollständig!</pre></div>
+        <?php
+      } else {
+      $ausgabe=null; $rueckgabewert=null;
+      $datei="/opt/opensim.sh";
+      $zusammengesetzt="$datei $funktionsname $ergebniss2 $ergebniss3";
+      exec($zusammengesetzt, $ausgabe, $rueckgabewert);
+      ?> 	
+    
+      <div class="alert">
+      <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+    
+        <?php
+          foreach ($ausgabe as $bildschirmausgabe)
+          {
+            echo "<pre>".$bildschirmausgabe."</pre>";
+          }
+        ?> 
+    
+      </div> 
+    
+    <?php
+      }
+  }
+}
+?>
+
+
+<?php
+// Direktaufruf Simulator stoppen funktioniert:
+// abfrage1("osstop", "Simulator Stoppen", "Verzeichnis oder Screen Name des Simulators");
+// Direktaufruf Simulator starten funktioniert nicht:
+// abfrage1("osstart", "Simulator Start", "Verzeichnis oder Screen Name des Simulators");
+// abfrage1("passgen", "Passwortgenerator", "Anzahl Zeichen des Passwortes:");
+
+// Get abfrage
+if ($_GET['hilfe']) {abfrage("hilfe");}
+if ($_GET['restart']) {abfrage("restart");}
+if ($_GET['start']) {abfrage("autostart");}
+if ($_GET['stop']) {abfrage("autostop");}
 // parameter2
-if ($_GET['osstart']) {abfrage1(); commandaufruf2("osstart " . $parameter2);} //test
-if ($_GET['osstop']) {abfrage1(); commandaufruf2("osstop " . $_POST['parameter2']);} //test
+//if ($_GET['osstart']) {abfrage1("osstart", "Simulator Start", "Verzeichnis oder Screen Name des Simulators");}
+//abfrage1("osstart", "Simulator Start", "Verzeichnis oder Screen Name des Simulators")
+
+//if ($_GET['osstop']) {abfrage1("osstop", "Simulator Stoppen", "Verzeichnis oder Screen Name des Simulators");}
+//abfrage1("osstop", "Simulator Stoppen", "Verzeichnis oder Screen Name des Simulators")
 //neu
 
-//if ($_GET['createuser']) {commandaufruf("createuser Max Mustermann 123456 email@email.de");} //6
-//if ($_GET['landclear']) {commandaufruf("landclear sim3");} //3
-//if ($_GET['assetdel']) {commandaufruf("assetdel sim3 Musterhausen stuhl");} //4
+//if ($_GET['createuser']) {abfrage("createuser Max Mustermann 123456 email@email.de");} //6
 
+if ($_GET['landclear']) {abfrage2("landclear", "Loescht alle Parzellen auf dem Land.", "Verzeichnis oder Screen Name:", "Regionsname:");} //3
+//landclear screen_name Regionsname
+//abfrage2("landclear", "Loescht alle Parzellen auf dem Land.", "Verzeichnis oder Screen Name:", "Regionsname:");
 
-if ($_GET['info']) {commandaufruf("info");}
-// if ($_GET['rebootdatum']) {commandaufruf("rebootdatum");} // geht nicht da es eine Menuefunktion ist!!!
-if ($_GET['screenlist']) {commandaufruf("screenlist");}
+//if ($_GET['assetdel']) {abfrage3("assetdel", "Loescht ein Asset auf dem Land.", "Verzeichnis oder Screen Name:", "Regionsname:", "Asset Name:");} //4
+//abfrage3("assetdel", "Loescht ein Asset auf dem Land.", "Verzeichnis oder Screen Name:", "Regionsname:", "Asset Name:");
 
-//if ($_GET['passgen']) {commandaufruf("passgen 32");}
-if ($_GET['passgen']) {abfrage1(); commandaufruf2("passgen " . $uebergabeparameter2);} //test
+if ($_GET['info']) {abfrage("info");}
+// if ($_GET['rebootdatum']) {abfrage("rebootdatum");} // geht nicht da es eine Menuefunktion ist!!!
+if ($_GET['screenlist']) {abfrage("screenlist");}
+
+if ($_GET['passgen']) {abfrage1("passgen", "Passwortgenerator", "Anzahl Zeichen des Passwortes:");} //test
+
 ?>
 
 <!-- href im container -->
@@ -241,9 +202,9 @@ if ($_GET['passgen']) {abfrage1(); commandaufruf2("passgen " . $uebergabeparamet
 <p><a href="?osstart=true" class="w3-button w3-blue w3-hover-green">osstart</a> Einzelner Simulator Start.</p> <!-- 2 -->
 <p><a href="?osstop=true" class="w3-button w3-blue w3-hover-green">osstop</a> Einzelner Simulator Stop.</p> <!-- 2 -->
 
-<!-- <p><a href="?createuser=true" class="w3-button w3-blue w3-hover-green">createuser</a> Benutzer Account anlegen.</p> <!-- 6 -->
-<!-- <p><a href="?landclear=true" class="w3-button w3-blue w3-hover-green">landclear</a> Parzellen von der Region entfernen.</p> <!-- 3 -->
-<!-- <p><a href="?assetdel=true" class="w3-button w3-blue w3-hover-green">assetdel</a> Objekt von der Region entfernen.</p> <!-- 4 -->
+<!-- <p><a href="?createuser=true" class="w3-button w3-blue w3-hover-green">createuser</a> Benutzer Account anlegen.</p>  6 -->
+<p><a href="?landclear=true" class="w3-button w3-blue w3-hover-green">landclear</a> Parzellen von der Region entfernen.</p>
+<!-- <p><a href="?assetdel=true" class="w3-button w3-blue w3-hover-green">assetdel</a> Objekt von der Region entfernen.</p>  4 -->
 
 <p><a href="?info=true" class="w3-button w3-blue w3-hover-green">info</a> Informationen anzeigen.</p> 
 <p><a href="?screenlist=true" class="w3-button w3-blue w3-hover-green">screenlist</a> Screen Liste anzeigen.</p> 

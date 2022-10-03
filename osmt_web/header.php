@@ -43,7 +43,7 @@ expertenmenu
 <style>
 .w3-button {width:250px;}
 .w3-input {width:250px;}
-.w3-card-4 {width:450px;}
+.w3-card-4 {width:750px;}
 .alert {
     width:900px;
     padding: 20px;
