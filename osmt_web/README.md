@@ -3,4 +3,6 @@ OpenSim bitte herunterfahren dann mit dem osmt-webinterface hochfahren.
 
 Durch das Webinterface läuft OpenSim mit dem Benutzer www oder www-data.
 
-In postings.php der Testdatei funktioniert es, im Menu selber aber nicht.
+Ich habe das ganze umstrukturiert und vereinfacht.
+
+Alle Menüpunkte sind schon drin, aber nur ein paar wenige funktionieren ordnungsgemäß.
