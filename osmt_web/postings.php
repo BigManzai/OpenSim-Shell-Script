@@ -47,7 +47,7 @@
 ?>
 
 <?php
-//abfrage(string $funktionsname, string $Information1)
+//abfrage1(string $funktionsname, string $Information1)
 //abfrage2(string $funktionsname, string $Information1, string $Information2)
 //abfrage3(string $funktionsname, string $Information1, string $Information2, string $Information3)
 //abfrage4(string $funktionsname, string $Information1, string $Information2, string $Information3, string $Information4)
