@@ -43,7 +43,7 @@ expertenmenu
 <style>
 .w3-button {width:250px;}
 .w3-input {width:250px;}
-.w3-card-4 {width:750px;}
+.w3-card-4 {padding: 20px; width:60%;}
 .alert {
     width:900px;
     padding: 20px;
@@ -52,11 +52,13 @@ expertenmenu
 .closebtn {
     margin-left: 15px;
     color: white;
+    background-color: red;
     font-weight: bold;
     float: right;
-    font-size: 22px;
-    line-height: 20px;
-    cursor: pointer;
+    font-size: 50px;
+    line-height: 40px;
+    border-radius: 100%;
+    cursor: grab;
     transition: 0.3s;}
 .closebtn:hover {color: black;}
 </style>
