@@ -123,9 +123,6 @@ Bisher sind nur Funktionen im Menü die maximal 1 Übergabewert voraussetzen.
      oder
      sudo apt-get install dialog
 
-## Status 27.07.2022 281 Funktionen.
-
-.
 
 ## TODO und Informationen
 
