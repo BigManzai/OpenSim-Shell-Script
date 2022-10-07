@@ -29,38 +29,38 @@ else
 
 <?php include "./header.php" ?>
 
-<?php include("osmtclass.php"); ?>
+<?php include("osmt2.class.php"); ?>
 
 <?php
 // Get abfrage
-if ($_GET['db_anzeigen_dialog']) {abfrage1("db_anzeigen_dialog", "Alle Datenbanken anzeigen", "Alle Datenbanken anzeigen:");}
-if ($_GET['db_tables_dialog']) {abfrage1("db_tables_dialog", "Tabellen einer Datenbank", "Tabellen einer Datenbank:");}
-if ($_GET['db_all_user_dialog']) {abfrage1("db_all_user_dialog", "Alle Benutzerdaten der ROBUST Datenbank", "Alle Benutzerdaten der ROBUST Datenbank:");}
-if ($_GET['db_all_uuid_dialog']) {abfrage1("db_all_uuid_dialog", "UUID von allen Benutzern anzeigen", "UUID von allen Benutzern anzeigen:");}
-if ($_GET['db_all_name_dialog']) {abfrage1("db_all_name_dialog", "Alle Benutzernamen anzeigen", "Alle Benutzernamen anzeigen:");}
-if ($_GET['db_user_data_dialog']) {abfrage1("db_user_data_dialog", "Daten von einem Benutzer anzeigen", "ADaten von einem Benutzer anzeigen:");}
-if ($_GET['db_user_infos_dialog']) {abfrage1("db_user_infos_dialog", "UUID, Vor, Nachname, E-Mail vom Benutzer anzeigen", "UUID, Vor, Nachname, E-Mail vom Benutzer anzeigen:");}
-if ($_GET['db_user_uuid_dialog']) {abfrage1("db_user_uuid_dialog", "UUID von einem Benutzer anzeigen", "UUID von einem Benutzer anzeigen:");}
-if ($_GET['db_benutzer_anzeigen']) {abfrage1("db_benutzer_anzeigen", "mySQL Datenbankbenutzer anzeigen", "mySQL Datenbankbenutzer anzeigen:");}
-if ($_GET['db_regions']) {abfrage1("db_regions", "Alle Grid Regionen listen", "Alle Grid Regionen listen:");}
-if ($_GET['db_regionsuri']) {abfrage1("db_regionsuri", "Region URI pruefen sortiert nach URI", "Region URI pruefen sortiert nach URI:");}
-if ($_GET['db_regionsport']) {abfrage1("db_regionsport", "Ports pruefen sortiert nach Ports", "Ports pruefen sortiert nach Ports:");}
-if ($_GET['db_create']) {abfrage1("db_create", "Neue Datenbank erstellen", "Neue Datenbank erstellen:");}
-if ($_GET['db_all_userfailed']) {abfrage1("db_all_userfailed", "Benutzer inventoryfolders alles was type -1 ist anzeigen", "Benutzer inventoryfolders alles was type -1 ist anzeigen:");}
-if ($_GET['db_userdate']) {abfrage1("db_userdate", "Zeige Erstellungsdatum eines Users an", "Zeige Erstellungsdatum eines Users an:");}
+// if ($_GET['db_anzeigen_dialog']) {abfrage1("db_anzeigen_dialog", "Alle Datenbanken anzeigen", "Alle Datenbanken anzeigen:");}
+// if ($_GET['db_tables_dialog']) {abfrage1("db_tables_dialog", "Tabellen einer Datenbank", "Tabellen einer Datenbank:");}
+// if ($_GET['db_all_user_dialog']) {abfrage1("db_all_user_dialog", "Alle Benutzerdaten der ROBUST Datenbank", "Alle Benutzerdaten der ROBUST Datenbank:");}
+// if ($_GET['db_all_uuid_dialog']) {abfrage1("db_all_uuid_dialog", "UUID von allen Benutzern anzeigen", "UUID von allen Benutzern anzeigen:");}
+// if ($_GET['db_all_name_dialog']) {abfrage1("db_all_name_dialog", "Alle Benutzernamen anzeigen", "Alle Benutzernamen anzeigen:");}
+// if ($_GET['db_user_data_dialog']) {abfrage1("db_user_data_dialog", "Daten von einem Benutzer anzeigen", "ADaten von einem Benutzer anzeigen:");}
+// if ($_GET['db_user_infos_dialog']) {abfrage1("db_user_infos_dialog", "UUID, Vor, Nachname, E-Mail vom Benutzer anzeigen", "UUID, Vor, Nachname, E-Mail vom Benutzer anzeigen:");}
+// if ($_GET['db_user_uuid_dialog']) {abfrage1("db_user_uuid_dialog", "UUID von einem Benutzer anzeigen", "UUID von einem Benutzer anzeigen:");}
+// if ($_GET['db_benutzer_anzeigen']) {abfrage1("db_benutzer_anzeigen", "mySQL Datenbankbenutzer anzeigen", "mySQL Datenbankbenutzer anzeigen:");}
+// if ($_GET['db_regions']) {abfrage1("db_regions", "Alle Grid Regionen listen", "Alle Grid Regionen listen:");}
+// if ($_GET['db_regionsuri']) {abfrage1("db_regionsuri", "Region URI pruefen sortiert nach URI", "Region URI pruefen sortiert nach URI:");}
+// if ($_GET['db_regionsport']) {abfrage1("db_regionsport", "Ports pruefen sortiert nach Ports", "Ports pruefen sortiert nach Ports:");}
+// if ($_GET['db_create']) {abfrage1("db_create", "Neue Datenbank erstellen", "Neue Datenbank erstellen:");}
+// if ($_GET['db_all_userfailed']) {abfrage1("db_all_userfailed", "Benutzer inventoryfolders alles was type -1 ist anzeigen", "Benutzer inventoryfolders alles was type -1 ist anzeigen:");}
+// if ($_GET['db_userdate']) {abfrage1("db_userdate", "Zeige Erstellungsdatum eines Users an", "Zeige Erstellungsdatum eines Users an:");}
 
-if ($_GET['db_false_email']) {abfrage1("db_false_email", "Finde falsche E-Mail Adressen", "Finde falsche E-Mail Adressen:");}
-if ($_GET['db_delete']) {abfrage1("db_delete", "Datenbank komplett loeschen", "Datenbank komplett loeschen:");}
-if ($_GET['db_empty']) {abfrage1("db_empty", "Datenbank leeren", "Datenbank leeren:");}
-if ($_GET['db_create_new_dbuser']) {abfrage1("db_create_new_dbuser", "Neuen Datenbankbenutzer anlegen", "Neuen Datenbankbenutzer anlegen:");}
+// if ($_GET['db_false_email']) {abfrage1("db_false_email", "Finde falsche E-Mail Adressen", "Finde falsche E-Mail Adressen:");}
+// if ($_GET['db_delete']) {abfrage1("db_delete", "Datenbank komplett loeschen", "Datenbank komplett loeschen:");}
+// if ($_GET['db_empty']) {abfrage1("db_empty", "Datenbank leeren", "Datenbank leeren:");}
+// if ($_GET['db_create_new_dbuser']) {abfrage1("db_create_new_dbuser", "Neuen Datenbankbenutzer anlegen", "Neuen Datenbankbenutzer anlegen:");}
 
-if ($_GET['db_dbuserrechte']) {abfrage1("db_dbuserrechte", "Listet alle erstellten Benutzerrechte auf", "Listet alle erstellten Benutzerrechte auf");}
-if ($_GET['db_deldbuser']) {abfrage1("db_deldbuser", "Loescht einen Datenbankbenutzer", "Loescht einen Datenbankbenutzer:");}
-if ($_GET['allrepair_db']) {abfrage1("allrepair_db", "Alle Datenbanken Checken, Reparieren und Optimieren", "Alle Datenbanken Checken, Reparieren und Optimieren:");}
-if ($_GET['install_mysqltuner']) {abfrage1("install_mysqltuner", "mysqlTuner herunterladen", "mysqlTuner herunterladen:");}
-if ($_GET['db_email_setincorrectuseroff_dialog']) {abfrage1("db_email_setincorrectuseroff_dialog", "Alle Benutzer mit inkorrekter EMail abschalten", "Alle Benutzer mit inkorrekter EMail abschalten:");}
-if ($_GET['db_setuserofline_dialog']) {abfrage1("db_setuserofline_dialog", "Benutzeracount abschalten", "Benutzeracount abschalten:");}
-if ($_GET['db_setuseronline_dialog']) {abfrage1("db_setuseronline_dialog", "Benutzeracount einschalten", "Benutzeracount einschalten:");}
+// if ($_GET['db_dbuserrechte']) {abfrage1("db_dbuserrechte", "Listet alle erstellten Benutzerrechte auf", "Listet alle erstellten Benutzerrechte auf");}
+// if ($_GET['db_deldbuser']) {abfrage1("db_deldbuser", "Loescht einen Datenbankbenutzer", "Loescht einen Datenbankbenutzer:");}
+// if ($_GET['allrepair_db']) {abfrage1("allrepair_db", "Alle Datenbanken Checken, Reparieren und Optimieren", "Alle Datenbanken Checken, Reparieren und Optimieren:");}
+// if ($_GET['install_mysqltuner']) {abfrage1("install_mysqltuner", "mysqlTuner herunterladen", "mysqlTuner herunterladen:");}
+// if ($_GET['db_email_setincorrectuseroff_dialog']) {abfrage1("db_email_setincorrectuseroff_dialog", "Alle Benutzer mit inkorrekter EMail abschalten", "Alle Benutzer mit inkorrekter EMail abschalten:");}
+// if ($_GET['db_setuserofline_dialog']) {abfrage1("db_setuserofline_dialog", "Benutzeracount abschalten", "Benutzeracount abschalten:");}
+// if ($_GET['db_setuseronline_dialog']) {abfrage1("db_setuseronline_dialog", "Benutzeracount einschalten", "Benutzeracount einschalten:");}
 ?>
 
 <!-- href im container -->

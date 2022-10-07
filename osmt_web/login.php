@@ -1,19 +1,17 @@
 <!DOCTYPE html>
 <html>
-<title>opensimMultitool login</title>
+<title>opensimMultitool</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link href="https://www.w3schools.com/icons/google_icons_intro.asp">
 <body>
 
 <div class="w3-container w3-blue">
-  <h1>opensimMultitool</h1>
+  <h1>opensimMultitool Login</h1>
 </div>
 
-<img src="opensimMultitool.jpg" alt="opensimMultitool" style="width:60%">
-
-<style>
-.w3-btn {width:150px;}
-</style>
+<?php include "./header.php" ?>
 
 <div class="w3-container">
   <h2>opensimMultitool login</h2>
@@ -21,13 +19,15 @@
 
 <?php
 session_start();
+
 if(isset($_POST['send']))
 {
     $user = $_POST['user'];
     $pass = $_POST['pass'];
     
-    $username = 'opensim'; //hier wird der Benutzer eingetragen den Ihr zum Login in die Seite verwenden wollt.
-    $password = 'opensim';//hier wird das Passwort eingetragen den Ihr zum Login in die Seite verwenden wollt.
+    //$username = 'opensim'; //hier wird der Benutzer eingetragen den Ihr zum Login in die Seite verwenden wollt.
+    //$password = 'opensim';//hier wird das Passwort eingetragen den Ihr zum Login in die Seite verwenden wollt.
+    include('config.php');
     
     if($user == $username && $pass == $password)
     {
@@ -63,13 +63,19 @@ else
 }
 if(isset($error) && $error == true)
 {
-    echo '<br>FEHLER: Da hat etwas nicht gestimmt!<br>';
+  ob_implicit_flush(true);
+  ob_end_flush();
+
+  $anmeldeversuch=30;
+  echo '<br>FEHLER: Da hat etwas nicht gestimmt!<br>';
+  echo '<br>Nächster anmeldeversuch erst in "'.$anmeldeversuch.'" Sekunden erlaubt!<br>';
+
+  @ob_flush();
+  sleep($anmeldeversuch);
 }
 ?>
 
-<br><div class="w3-container w3-green">
-  <h5>opensimMultitool</h5>
-</div>
+<?php include "./footer.php" ?>
 
 </body>
 </html>

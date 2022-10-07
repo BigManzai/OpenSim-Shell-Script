@@ -10,57 +10,82 @@
 <?php
 // Login
 session_start();
-if($_SESSION['userid'] === 1)
+if($_SESSION["userid"] === 1)
 {
  // geschützer bereich
  echo " ";
 }
 else 
 {
-    //echo '<a href="login.php">Log dich bitte ein</a>';
-	header('Location: hilfemenu.php'); // Zurueck zum Login.
-	//exit ();
+	header("Location: hilfemenu.php"); // Zurueck zum Login.
 }
 ?>
 
 <div class="w3-container w3-blue">
   <h1>opensimMultitool Hilfe</h1>
 </div>
-
 <?php include "./header.php" ?>
 
-<?php include("osmtclass.php"); ?>
+<body>
+
+<?php include("osmt2.class.php"); ?>
 <?php
 
 // Get abfrage
-if ($_GET['hilfe']) {abfrage("hilfe");}
+if ($_GET["hilfe"]) {abfrage("hilfe", "Überschrift");}
+if ($_GET["konsolenhilfe"]) {abfrage("konsolenhilfe", "Überschrift");}
+if ($_GET["commandhelp"]) {abfrage("commandhelp");}
+if ($_GET["oswriteconfig"]) {abfrage("oswriteconfig");}
 
-if ($_GET['konsolenhilfe']) {abfrage("konsolenhilfe");}
-if ($_GET['commandhelp']) {abfrage("commandhelp");}
-if ($_GET['oswriteconfig']) {abfrage("oswriteconfig");}
+if ($_GET["testeingabe"]) {testeingabe();}
 
-if ($_GET['wiparameter0']) {abfrage("wiparameter0");}
-if ($_GET['wiparameter1']) {abfrage("wiparameter1 test1");} 
-if ($_GET['wiparameter2']) {abfrage("wiparameter2 test1 test2");}
-if ($_GET['wiparameter3']) {abfrage("wiparameter3 test1 test2 test3");}
-if ($_GET['wiparameter4']) {abfrage("wiparameter4 test1 test2 test3 test4");}
-if ($_GET['wiparameter5']) {abfrage("wiparameter5 test1 test2 test3 test4 test5");}
-if ($_GET['wiparameter6']) {abfrage("wiparameter6 test1 test2 test3 test4 test5 test6");}
-if ($_GET['wiparameter7']) {abfrage("wiparameter7 test1 test2 test3 test4 test5 test6 test7");}
-if ($_GET['wiparameter8']) {abfrage("wiparameter8 test1 test2 test3 test4 test5 test6 test7 test8");}
+// testfunktionsname="wiparameterX";
+$uparameter1="Dies-ist-Parameter-1!";
+$uparameter2="Dies-ist-Parameter-2!";
+$uparameter3="Dies-ist-Parameter-3!";
+$uparameter4="Dies-ist-Parameter-4!";
+$uparameter5="Dies-ist-Parameter-5!";
+$uparameter6="Dies-ist-Parameter-6!";
+$uparameter7="Dies-ist-Parameter-7!";
+$uparameter8="Dies-ist-Parameter-8!";
+
+$parameter0 = array( "wiparameter0" );
+$parameter1 = array( "wiparameter1", $uparameter1);
+$parameter2 = array( "wiparameter2", $uparameter1, $uparameter2);
+$parameter3 = array( "wiparameter3", $uparameter1, $uparameter2, $uparameter3);
+$parameter4 = array( "wiparameter4", $uparameter1, $uparameter2, $uparameter3, $uparameter4);
+$parameter5 = array( "wiparameter5", $uparameter1, $uparameter2, $uparameter3, $uparameter4, $uparameter5);
+$parameter6 = array( "wiparameter6", $uparameter1, $uparameter2, $uparameter3, $uparameter4, $uparameter5, $uparameter6);
+$parameter7 = array( "wiparameter7", $uparameter1, $uparameter2, $uparameter3, $uparameter4, $uparameter5, $uparameter6, $uparameter7);
+$parameter8 = array( "wiparameter8", $uparameter1, $uparameter2, $uparameter3, $uparameter4, $uparameter5, $uparameter6, $uparameter7, $uparameter8);
+
+if ($_GET["wiparameter0"]) {call_user_func_array("abfrage", array($parameter0));}
+if ($_GET["wiparameter1"]) {call_user_func_array("abfrage", array($parameter1));}
+if ($_GET["wiparameter2"]) {call_user_func_array("abfrage", array($parameter2));}
+if ($_GET["wiparameter3"]) {call_user_func_array("abfrage", array($parameter3));}
+if ($_GET["wiparameter4"]) {call_user_func_array("abfrage", array($parameter4));}
+if ($_GET["wiparameter5"]) {call_user_func_array("abfrage", array($parameter5));}
+if ($_GET["wiparameter6"]) {call_user_func_array("abfrage", array($parameter6));}
+if ($_GET["wiparameter7"]) {call_user_func_array("abfrage", array($parameter7));}
+if ($_GET["wiparameter8"]) {call_user_func_array("abfrage", array($parameter8));}
+
+// echo count($parameter8);
+
 ?>
 
 
 <!-- href im container -->
 <div class="w3-container">
 <!-- Hauptmenu -->
-<p><a href="?hilfe=true" class="w3-button w3-blue w3-hover-green">Hilfe</a> Zeigt eine Hilfe an.</p>
 
+<p><a href="?hilfe=true" class="w3-button w3-blue w3-hover-green">Hilfe</a> Zeigt eine Hilfe an.</p>
 <p><a href="?konsolenhilfe=true" class="w3-button w3-blue w3-hover-green">Konsolenhilfe</a> Zeigt eine Konsolenhilfe an.</p>
 <p><a href="?commandhelp=true" class="w3-button w3-blue w3-hover-green">Kommandohilfe</a> Zeigt eine Kommandohilfe an.</p>
 <p><a href="?oswriteconfig=true" class="w3-button w3-blue w3-hover-green">Konfiguration lesen</a> Konfiguration lesen.</p>
 
 <p><h3>Es folgen tests:</h3></p>
+
+<p><a href="?testeingabe=true" class="w3-button w3-blue w3-hover-green">testeingabe</a> testeingabe.</p>
 
 <p><a href="?wiparameter0=true" class="w3-button w3-blue w3-hover-green">wiparameter0</a> wiparameter 0 Test.</p>
 <p><a href="?wiparameter1=true" class="w3-button w3-blue w3-hover-green">wiparameter1</a> wiparameter 1 Test.</p>
@@ -73,6 +98,6 @@ if ($_GET['wiparameter8']) {abfrage("wiparameter8 test1 test2 test3 test4 test5 
 <p><a href="?wiparameter8=true" class="w3-button w3-blue w3-hover-green">wiparameter8</a> wiparameter 8 Test.</p>
 
 </div>
-
+</body>
 
 <?php include "./footer.php" ?>

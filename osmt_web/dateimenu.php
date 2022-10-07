@@ -29,29 +29,41 @@ else
 
 <?php include "./header.php" ?>
 
-<?php include("osmtclass.php"); ?>
+<?php include("osmt2.class.php"); ?>
 
 <?php
 // Get abfrage
-if ($_GET['saveinventar']) {abfrage1("saveinventar", "Inventar speichern", "Inventar speichern");}
-if ($_GET['loadinventar']) {abfrage1("loadinventar", "Inventar laden", "Inventar laden");}
-if ($_GET['regionbackup']) {abfrage1("regionbackup", "Region OAR sichern", "Region OAR sichern");}
-if ($_GET['autologdel']) {abfrage("autologdel");}
-if ($_GET['automapdel']) {abfrage("automapdel");}
-if ($_GET['autoassetcachedel']) {abfrage("autoassetcachedel");}
-if ($_GET['assetdel']) {abfrage3("assetdel", "Simulator:", "Region:", "Asset:");}
 
-if ($_GET['downloados']) {abfrage1("downloados", "OpenSim herunterladen", "OpenSim herunterladen");}
-if ($_GET['moneygitcopy']) {abfrage1("moneygitcopy", "MoneyServer vom git kopieren", "MoneyServer vom git kopieren");}
-if ($_GET['scriptgitcopy']) {abfrage1("scriptgitcopy", "OSSL Skripte vom git kopieren", "OSSL Skripte vom git kopieren");}
-if ($_GET['configuregitcopy']) {abfrage1("configuregitcopy", "Configure vom git kopieren", "Configure vom git kopieren");}
-if ($_GET['osgitholen']) {abfrage1("osgitholen", "Opensim vom Github holen", "Opensim vom Github holen");}
+// if ($_GET['saveinventar']) {abfrage1("saveinventar", "Inventar speichern", "Inventar speichern");}
+// if ($_GET['loadinventar']) {abfrage1("loadinventar", "Inventar laden", "Inventar laden");}
+// if ($_GET['regionbackup']) {abfrage1("regionbackup", "Region OAR sichern", "Region OAR sichern");}
 
-if ($_GET['osstruktur']) {abfrage1("osstruktur", "Verzeichnisstrukturen anlegen", "Verzeichnisstrukturen anlegen");}
-if ($_GET['osstarteintrag']) {abfrage1("osstarteintrag", "Sim eintragen", "Sim eintragen");}
-if ($_GET['osstarteintragdel']) {abfrage1("osstarteintragdel", "Sim austragen", "Sim austragen");}
-if ($_GET['osdauerstart']) {abfrage1("osdauerstart", "Sim in Startkonfiguration einfuegen", "Sim Name: ");}
-if ($_GET['osdauerstop']) {abfrage1("passgen", "Sim aus Startkonfiguration entfernen", "Sim Name: ");}
+//if ($_GET['autologdel']) {abfrage("autologdel");}
+$autologdelparameter = array( "autologdel" );
+if ($_GET["autologdel"]) {call_user_func_array("abfrage", array($autologdelparameter));}
+
+//if ($_GET['automapdel']) {abfrage("automapdel");}
+$automapdelparameter = array( "automapdel" );
+if ($_GET["automapdel"]) {call_user_func_array("abfrage", array($automapdelparameter));}
+
+
+//if ($_GET['autoassetcachedel']) {abfrage("autoassetcachedel");}
+$autoassetcachedelparameter = array( "autoassetcachedel" );
+if ($_GET["autoassetcachedel"]) {call_user_func_array("abfrage", array($autoassetcachedelparameter));}
+
+// if ($_GET['assetdel']) {abfrage3("assetdel", "Simulator:", "Region:", "Asset:");}
+
+// if ($_GET['downloados']) {abfrage1("downloados", "OpenSim herunterladen", "OpenSim herunterladen");}
+// if ($_GET['moneygitcopy']) {abfrage1("moneygitcopy", "MoneyServer vom git kopieren", "MoneyServer vom git kopieren");}
+// if ($_GET['scriptgitcopy']) {abfrage1("scriptgitcopy", "OSSL Skripte vom git kopieren", "OSSL Skripte vom git kopieren");}
+// if ($_GET['configuregitcopy']) {abfrage1("configuregitcopy", "Configure vom git kopieren", "Configure vom git kopieren");}
+// if ($_GET['osgitholen']) {abfrage1("osgitholen", "Opensim vom Github holen", "Opensim vom Github holen");}
+
+// if ($_GET['osstruktur']) {abfrage1("osstruktur", "Verzeichnisstrukturen anlegen", "Verzeichnisstrukturen anlegen");}
+// if ($_GET['osstarteintrag']) {abfrage1("osstarteintrag", "Sim eintragen", "Sim eintragen");}
+// if ($_GET['osstarteintragdel']) {abfrage1("osstarteintragdel", "Sim austragen", "Sim austragen");}
+// if ($_GET['osdauerstart']) {abfrage1("osdauerstart", "Sim in Startkonfiguration einfuegen", "Sim Name: ");}
+// if ($_GET['osdauerstop']) {abfrage1("passgen", "Sim aus Startkonfiguration entfernen", "Sim Name: ");}
 ?>
 
 <!-- href im container -->

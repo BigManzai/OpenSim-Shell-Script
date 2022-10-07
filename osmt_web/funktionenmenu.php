@@ -29,23 +29,49 @@ else
 
 <?php include "./header.php" ?>
 
-<?php include("osmtclass.php"); ?>
+<?php include("osmt2.class.php"); ?>
 
 <?php
 // Get abfrage
-if ($_GET['gridstart']) {abfrage("gridstart", "Grid starten");}
-if ($_GET['gridstop']) {abfrage("gridstop", "Grid stoppen");}
+// if ($_GET['gridstart']) {abfrage("gridstart", "Grid starten");}
+$gridstartparameter = array( "gridstart" );
+if ($_GET["gridstart"]) {call_user_func_array("abfrage", array($gridstartparameter));}
 
-if ($_GET['rostart']) {abfrage("rostart", "Robust starten");}
-if ($_GET['rostop']) {abfrage("rostop", "Grid stoppen");}
-if ($_GET['mostart']) {abfrage("mostart", "Money starten");}
-if ($_GET['mostop']) {abfrage("mostop", "Money stoppen");}
+// if ($_GET['gridstop']) {abfrage("gridstop", "Grid stoppen");}
+$gridstopparameter = array( "gridstop" );
+if ($_GET["gridstop"]) {call_user_func_array("abfrage", array($gridstopparameter));}
 
-if ($_GET['autosimstart']) {abfrage("autosimstart", "Automatischer Sim start");}
-if ($_GET['autosimstop']) {abfrage("autosimstop", "Automatischer Sim stop");}
+// if ($_GET['rostart']) {abfrage("rostart", "Robust starten");}
+$rostartparameter = array( "rostart" );
+if ($_GET["rostart"]) {call_user_func_array("abfrage", array($rostartparameter));}
 
-if ($_GET['autoscreenstop']) {abfrage("autoscreenstop", "Automatischer Screen stop");}
-if ($_GET['meineregionen']) {abfrage("meineregionen", "Regionen anzeigen");}
+// if ($_GET['rostop']) {abfrage("rostop", "Grid stoppen");}
+$rostopparameter = array( "rostop" );
+if ($_GET["rostop"]) {call_user_func_array("abfrage", array($rostopparameter));}
+
+// if ($_GET['mostart']) {abfrage("mostart", "Money starten");}
+$mostartparameter = array( "mostart" );
+if ($_GET["mostart"]) {call_user_func_array("abfrage", array($mostartparameter));}
+
+// if ($_GET['mostop']) {abfrage("mostop", "Money stoppen");}
+$mostopparameter = array( "mostop" );
+if ($_GET["mostop"]) {call_user_func_array("abfrage", array($mostopparameter));}
+
+// if ($_GET['autosimstart']) {abfrage("autosimstart", "Automatischer Sim start");}
+$autosimstartparameter = array( "autosimstart" );
+if ($_GET["autosimstart"]) {call_user_func_array("abfrage", array($autosimstartparameter));}
+
+// if ($_GET['autosimstop']) {abfrage("autosimstop", "Automatischer Sim stop");}
+$autosimstopparameter = array( "autosimstop" );
+if ($_GET["autosimstop"]) {call_user_func_array("abfrage", array($autosimstopparameter));}
+
+// if ($_GET['autoscreenstop']) {abfrage("autoscreenstop", "Automatischer Screen stop");}
+$autoscreenstopparameter = array( "autoscreenstop" );
+if ($_GET["autoscreenstop"]) {call_user_func_array("abfrage", array($autoscreenstopparameter));}
+
+// if ($_GET['meineregionen']) {abfrage("meineregionen", "Regionen anzeigen");}
+$meineregionenparameter = array( "meineregionen" );
+if ($_GET["meineregionen"]) {call_user_func_array("abfrage", array($meineregionenparameter));}
 ?>
 
 

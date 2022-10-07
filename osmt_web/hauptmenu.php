@@ -28,29 +28,48 @@ else
 </div>
 
 <?php include "./header.php" ?>
-<?php include("osmtclass.php"); ?>
+<?php include("osmt2.class.php"); ?>
 
 <?php
-// Get abfrage
+  // Get abfrage
+  // Der aufbau von if get hier:
+  // if ($_GET['BashBefehlCommand']) {abfrage1("BashBefehlCommand", "Die Ueberschrift", "Parameter");}
+  // Die Anzahl der Parameter ist gleich die Nummer der Abfrage. abfrage1 gleich ein Parameter.
+  // Die abfragen stehen in der Datei osmtclass.php
 
-if ($_GET['hilfe']) {abfrage("hilfe");}
-if ($_GET['restart']) {abfrage("restart");}
-if ($_GET['start']) {abfrage("autostart");}
-if ($_GET['stop']) {abfrage("autostop");}
+//if ($_GET['restart']) {abfrage("restart", "Restart gestartet!");} //1
+$restartparameter = array( "restart" );
+if ($_GET["restart"]) {call_user_func_array("abfrage", array($restartparameter));}
 
-if ($_GET['osstart']) {abfrage1("osstart", "Simulator Start", "Verzeichnis oder Screen Name des Simulators");}
-if ($_GET['osstop']) {abfrage1("osstop", "Simulator Stoppen", "Verzeichnis oder Screen Name des Simulators");}
+//if ($_GET['start']) {abfrage("autostart", "Autostart gestartet!");} //1
+$autostartparameter = array( "autostart" );
+if ($_GET["start"]) {call_user_func_array("abfrage", array($autostartparameter));}
 
-if ($_GET['createuser']) {abfrage5("createuser Max Mustermann 123456 email@email.de");}
+//if ($_GET['stop']) {abfrage("autostop", "Autostop gestartet!");} //1
+$autostopparameter = array( "autostop" );
+if ($_GET["stop"]) {call_user_func_array("abfrage", array($autostopparameter));}
 
-if ($_GET['landclear']) {abfrage2("landclear", "Loescht alle Parzellen auf dem Land.", "Verzeichnis oder Screen Name:", "Regionsname:");}
-if ($_GET['assetdel']) {abfrage3("assetdel", "Loescht ein Asset auf dem Land.", "Verzeichnis oder Screen Name:", "Regionsname:", "Asset Name:");}
+// if ($_GET['osstart']) {abfrage1("osstart", "Simulator Start", "Verzeichnis oder Screen Name des Simulators");} //2
+// if ($_GET['osstop']) {abfrage1("osstop", "Simulator Stoppen", "Verzeichnis oder Screen Name des Simulators");} //2
 
-if ($_GET['info']) {abfrage("info");}
-if ($_GET['lastrebootdatum']) {abfrage("lastrebootdatum");}
-if ($_GET['screenlist']) {abfrage("screenlist");}
+// if ($_GET['createuser']) {abfrage4("createuser", "Benutzer Account erstellen", "Vorname:", "Nachname:", "Passwort:", "E-Mail:");} //5
 
-if ($_GET['passgen']) {abfrage1("passgen", "Passwortgenerator", "Anzahl Zeichen des Passwortes:");}
+// if ($_GET['landclear']) {abfrage2("landclear", "Loescht alle Parzellen auf dem Land.", "Verzeichnis oder Screen Name:", "Regionsname:");} //3
+// if ($_GET['assetdel']) {abfrage3("assetdel", "Loescht ein Asset auf dem Land.", "Verzeichnis oder Screen Name:", "Regionsname:", "Asset Name:");} //4
+
+//if ($_GET['info']) {abfrage("info", "Informationen");} //1
+$infoparameter = array( "info" );
+if ($_GET["info"]) {call_user_func_array("abfrage", array($infoparameter));}
+
+// if ($_GET['lastrebootdatum']) {abfrage("lastrebootdatum", "Informationen");}
+$lastrebootdatumparameter = array( "lastrebootdatum" );
+if ($_GET["lastrebootdatum"]) {call_user_func_array("abfrage", array($lastrebootdatumparameter));}
+
+// if ($_GET['screenlist']) {abfrage("screenlist", "Screen Liste");}
+$screenlistparameter = array( "screenlist" );
+if ($_GET["screenlist"]) {call_user_func_array("abfrage", array($screenlistparameter));}
+
+// if ($_GET['passgen']) {abfrage1("passgen", "Passwortgenerator", "Anzahl Zeichen des Passwortes:");} //2
 ?>
 
 <!-- href im container -->

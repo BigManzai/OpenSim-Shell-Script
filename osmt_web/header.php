@@ -44,6 +44,7 @@ expertenmenu
 .w3-button {width:250px;}
 .w3-input {width:250px;}
 .w3-card-4 {padding: 20px; width:60%;}
+.w3-panel {padding: 20px; width:60%;}
 .alert {
     width:900px;
     padding: 20px;
