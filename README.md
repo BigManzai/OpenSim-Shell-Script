@@ -130,7 +130,7 @@ V0.79.653
 
 Autobackup für OAR, PNG, RAW und INI jetzt im Dateimenü.
 
-Zuerst muss aber "Regionsliste erstellen (Backup)" damit Autobackup eine Liste der Regionen samt Simulatoren hat.
+Zuerst muss aber "Regionsliste erstellen (Backup)" ausgeführt werden, damit Autobackup eine Liste der Regionen und Simulatoren hat.
 
 V0.79.647
 
