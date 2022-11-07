@@ -53,7 +53,7 @@
 
 	ScreenLogLevel=0; # ScreenLogLevel=0 nichts machen, bis ScreenLogLevel=5 Funktionsnamen ausgeben.
 	LOGWRITE="yes" # yes/no
-	logfilename="multitool"
+	logfilename="_multitool"
 	line="############################################################";
 	
 ## Dateien
@@ -104,7 +104,8 @@
 	SETMONOGCPARAMSON2="yes"
 	#SETMANUALPAGES="yes"
 
-## Mono Version fuer Build Vorgang
+## Mono Version fuer Build Vorgang Visual Studio 2019 oder 2022 - Zweite Zahl net/mono framework.
+# 1948, 1950, 1960, 1970 - 2248, 2250, 2260, 2270
 	netversion="2248"
 
 ## Divers
