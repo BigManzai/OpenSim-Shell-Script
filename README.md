@@ -126,6 +126,12 @@ Bisher sind nur Funktionen im Menü die maximal 1 Übergabewert voraussetzen.
 
 ## TODO und Informationen
 
+V0.79.653
+
+Autobackup für OAR, PNG, RAW und INI jetzt im Dateimenü.
+
+Zuerst muss aber "Regionsliste erstellen (Backup)" damit Autobackup eine Liste der Regionen samt Simulatoren hat.
+
 V0.79.647
 
 Build Funktionen (oscompi) überarbeitet für Visual Studio 2022 und .net 5.0, 6.0, 7.0 sowie zukünftig mono 5.0, 6.0, 7.0.
