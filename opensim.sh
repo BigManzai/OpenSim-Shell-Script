@@ -61,7 +61,7 @@
 #### ? Einstellungen ####
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe
-VERSION="V0.79.653" # opensimMULTITOOL Versionsausgabe
+VERSION="V0.79.654" # opensimMULTITOOL Versionsausgabe
 #clear # Bildschirmausgabe loeschen.
 #reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
@@ -228,11 +228,6 @@ function log() {
 	DATEIDATUM=$(date +%d_%m_%Y)
 	lline="#####################################################################################"
 
-	# Wenn die Datei nicht existiert muss sie erstellt werden sonst gibt es eine Fehlermeldung.
-	if [ -f /$STARTVERZEICHNIS/"$DATEIDATUM""$logfilename".log ]; then
-		echo " " >/$STARTVERZEICHNIS/"$DATEIDATUM""$logfilename".log
-	fi
-
 	if [ "$LOGWRITE" = "yes" ]; then
 		case $logtype in
 		line) echo $lline >>/$STARTVERZEICHNIS/"$DATEIDATUM""$logfilename".log ;;
@@ -274,10 +269,7 @@ function schreibeinfo() {
 		FILENAME="/$STARTVERZEICHNIS/$DATEIDATUM$logfilename.log" # Name der Datei
 		FILESIZE=$(stat -c%s "$FILENAME")                         # Wie Gross ist die Datei.
 	fi
-	# Wenn die Datei nicht existiert muss sie erstellt werden sonst gibt es eine Fehlermeldung.
-	if [ -f /$STARTVERZEICHNIS/"$DATEIDATUM""$logfilename".log ]; then
-		echo " " >/$STARTVERZEICHNIS/"$DATEIDATUM""$logfilename".log
-	fi
+
 	NULL=0
 	# Ist die Datei Groesser als null, dann Kopfzeile nicht erneut schreiben.
 	if [ "$FILESIZE" \< "$NULL" ]; then
