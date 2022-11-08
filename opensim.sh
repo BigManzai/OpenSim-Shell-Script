@@ -61,7 +61,7 @@
 #### ? Einstellungen ####
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe
-VERSION="V0.79.654" # opensimMULTITOOL Versionsausgabe
+VERSION="V0.79.656" # opensimMULTITOOL Versionsausgabe
 #clear # Bildschirmausgabe loeschen.
 #reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
@@ -265,14 +265,25 @@ function schreibeinfo() {
 	
 
 	# Wenn das schreiben abgeschaltet ist dann braucht man nicht zu schauen ob was in der Datei steht.
+	# if [ "$LOGWRITE" = "yes" ]; then
+	# 	FILENAME="/$STARTVERZEICHNIS/$DATEIDATUM$logfilename.log" # Name der Datei
+	# 	FILESIZE=$(stat -c%s "$FILENAME")                         # Wie Gross ist die Datei.
+	# fi
+
+	# *Wenn die Log Datei nicht existiert muss sie erstellt werden sonst gibt es eine Fehlermeldung.
 	if [ "$LOGWRITE" = "yes" ]; then
-		FILENAME="/$STARTVERZEICHNIS/$DATEIDATUM$logfilename.log" # Name der Datei
-		FILESIZE=$(stat -c%s "$FILENAME")                         # Wie Gross ist die Datei.
+		if [ -f /$STARTVERZEICHNIS/"$DATEIDATUM""$logfilename".log ]; then
+			# echo "/$STARTVERZEICHNIS/$DATEIDATUM$logfilename.log ist vorhanden!"
+			echo " "
+		else
+			# echo "/$STARTVERZEICHNIS/$DATEIDATUM$logfilename.log ist nicht vorhanden und wird jetzt angelegt!"
+			echo " " >/$STARTVERZEICHNIS/"$DATEIDATUM""$logfilename".log
+		fi
 	fi
 
-	NULL=0
+	# NULL=0
 	# Ist die Datei Groesser als null, dann Kopfzeile nicht erneut schreiben.
-	if [ "$FILESIZE" \< "$NULL" ]; then
+	# if [ "$FILESIZE" \< "$NULL" ]; then
 		log rohtext "   ____                        _____  _                    _         _               "
 		log rohtext "  / __ \                      / ____|(_)                  | |       | |              "
 		log rohtext " | |  | | _ __    ___  _ __  | (___   _  _ __ ___   _   _ | |  __ _ | |_  ___   _ __ "
@@ -297,12 +308,14 @@ function schreibeinfo() {
 		log rohtext " $DATUM $(date +%H:%M:%S) INFO: $(who -b)"
 		log line
 		log rohtext " "
-	fi
+	# fi
 	return 0
 }
 
 # *Kopfzeile in die Log Datei schreiben.
 schreibeinfo
+
+
 
 ### ! Leerzeichen korrigieren,
 # trimm "   Beispiel   Text    "
