@@ -61,7 +61,7 @@
 #### ? Einstellungen ####
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe
-VERSION="V0.79.664" # opensimMULTITOOL Versionsausgabe
+VERSION="V0.80.667" # opensimMULTITOOL Versionsausgabe
 #clear # Bildschirmausgabe loeschen.
 #reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
@@ -674,7 +674,7 @@ function nachrichtbox() {
 
 ### ! php log anzeigen.
 function apacheerror() {
-	###php log Datei:
+	###php log Datei
 	if [ -f "$apache2errorlog" ]; then
 		textbox "$apache2errorlog"
 	else
@@ -684,7 +684,7 @@ function apacheerror() {
 
 ### ! mysql log anzeigen.
 function mysqldberror() {
-	###mysql log Datei:
+	###mysql log Datei
 	if [ -f "$mysqlerrorlog" ]; then
 		textbox "$mysqlerrorlog"
 	else
@@ -694,7 +694,7 @@ function mysqldberror() {
 
 ### ! mariadb error anzeigen.
 function mariadberror() {
-	###mariaDB log Datei:
+	###mariaDB log Datei
 	if [ -f "$mysqlmariadberor" ]; then
 		textbox "$mysqlmariadberor"
 	else
@@ -704,7 +704,7 @@ function mariadberror() {
 
 ### ! ufw log anzeigen.
 function ufwlog() {
-	###mariaDB log Datei:
+	###mariaDB log Datei
 	if [ -f "$ufwlog" ]; then
 		textbox "$ufwlog"
 	else
@@ -714,7 +714,7 @@ function ufwlog() {
 
 ### ! auth log anzeigen.
 function authlog() {
-	###auth.log Datei:
+	###auth.log Datei
 	if [ -f "$authlog" ]; then
 		textbox "$authlog"
 	else
@@ -724,7 +724,7 @@ function authlog() {
 
 ### ! access log anzeigen.
 function accesslog() {
-	###access.log Datei:
+	###access.log Datei
 	if [ -f "$apache2accesslog" ]; then
 		textbox "$apache2accesslog"
 	else
@@ -1358,7 +1358,7 @@ function rologdel() {
 
 		# schauen ist Robust und Money da dann diese Logs auch loeschen!
 		if [[ $ROBUSTVERZEICHNIS == "robust" ]]; then
-			log warn "Robust Log Dateien loeschen!"
+			# log warn "Robust Log Dateien loeschen!"
 			rm /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/*.log 2>/dev/null || return 0
 		else
 			log info "Robust Log Dateien loeschen ist abgeschaltet!"
@@ -2197,10 +2197,10 @@ function moneygitcopy() {
 function scriptgitcopy() {
 	#Money und Scripte vom Git holen
 	if [[ $SCRIPTCOPY = "yes" ]]; then
-		log info "SCRIPTCOPY: Script Assets werden vom GIT geholt"
+		log info "Script Assets werden vom GIT geholt"
 		git clone https://github.com/BigManzai/opensim-ossl-example-scripts /$STARTVERZEICHNIS/opensim-ossl-example-scripts-main
 	else
-		log error "SCRIPTCOPY: Script Assets sind nicht vorhanden"
+		log error "Script Assets sind nicht vorhanden"
 	fi
 	return 0
 }
@@ -2233,21 +2233,21 @@ function searchgitcopy() {
 function scriptcopy() {
 	if [[ $SCRIPTCOPY = "yes" ]]; then
 		if [ -d /$STARTVERZEICHNIS/$SCRIPTSOURCE/ ]; then
-			log info "SCRIPTCOPY: Script Assets werden kopiert"
+			log info "Script Assets werden kopiert"
 			cp -r /$STARTVERZEICHNIS/$SCRIPTSOURCE/assets /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin
 			cp -r /$STARTVERZEICHNIS/$SCRIPTSOURCE/inventory /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin
 			log line
 		else
 			# entpacken und kopieren
-			log info "SCRIPTCOPY: Script Assets werden entpackt"
+			log info "Script Assets werden entpackt"
 			unzip "$SCRIPTZIP"
-			log info "SCRIPTCOPY: Script Assets werden kopiert"
+			log info "Script Assets werden kopiert"
 			cp -r /$STARTVERZEICHNIS/$SCRIPTSOURCE/assets /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin
 			cp -r /$STARTVERZEICHNIS/$SCRIPTSOURCE/inventory /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin
 			log line
 		fi
 	else
-		log warn "SCRIPTCOPY: Skripte werden nicht kopiert."
+		log warn "Skripte wurden nicht kopiert."
 	fi
 	return 0
 }
@@ -2256,20 +2256,20 @@ function scriptcopy() {
 function moneycopy() {
 	if [[ $MONEYCOPY = "yes" ]]; then
 		if [ -d /$STARTVERZEICHNIS/$MONEYSOURCE/ ]; then
-			log info "MONEYCOPY: Money Kopiervorgang gestartet"
+			log info "Money Server Kopiervorgang gestartet"
 			cp -r /$STARTVERZEICHNIS/$MONEYSOURCE/bin /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS
 			cp -r /$STARTVERZEICHNIS/$MONEYSOURCE/addon-modules /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS
 			log line
 		else
 			# Entpacken und kopieren
-			log info "MONEYCOPY: Money entpacken"
+			log info "Money Server entpacken"
 			unzip "$MONEYZIP"
-			log info "MONEYCOPY: Money Kopiervorgang gestartet"
+			log info "Money Server Kopiervorgang gestartet"
 			cp -r /$STARTVERZEICHNIS/$MONEYSOURCE/bin /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS
 			cp -r /$STARTVERZEICHNIS/$MONEYSOURCE/addon-modules /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS
 		fi
 	else
-		log warn "SCRIPTCOPY: Money wird nicht kopiert."
+		log warn "Money Server wird nicht kopiert."
 	fi
 	return 0
 }
@@ -2418,7 +2418,7 @@ function cleanaot() {
 # sed -i schreibt sofort - s/Suchwort/Ersatzwort/g - /Verzeichnis/Dateiname.Endung
 function osprebuild() {
 	NUMMER=$1
-	log info "PREBUILD: Version umbenennen und Release auf $NUMMER einstellen"
+	log info "OpenSim Version umbenennen und Release auf $NUMMER einstellen"
 
 	echo "V$NUMMER " >/$STARTVERZEICHNIS/opensim/bin/'.version'
 
@@ -2502,10 +2502,10 @@ function menuosstruktur() {
 ### !  osdelete, altes opensim loeschen und letztes opensim als Backup umbenennen.
 function osdelete() {
 	if [ -d /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/ ]; then
-		log info "OSDELETE: Loesche altes opensim1 Verzeichnis"
+		log info "Loesche altes opensim1 Verzeichnis"
 		cd /$STARTVERZEICHNIS || return 1
 		rm -r /$STARTVERZEICHNIS/opensim1
-		log info "OSDELETE: Umbenennen von $OPENSIMVERZEICHNIS nach opensim1 zur sicherung"
+		log info "Umbenennen von $OPENSIMVERZEICHNIS nach opensim1 zur sicherung"
 		mv /$STARTVERZEICHNIS/opensim /$STARTVERZEICHNIS/opensim1
 		log line
 
@@ -3026,10 +3026,7 @@ function autosimstart() {
 				# Zeigt die Regionsnamen aus einer Regions.ini an
 				STARTREGIONSAUSGABE=$(awk -F "[" '/\[/ {print $1 $2 $3}' /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/Regions/*.ini | sed s/'\]'//g);
 				log info "${VERZEICHNISSLISTE[$i]} hat folgende Regionen:";
-				#sed 's/^\(.\)/     \1/' "$STARTREGIONSAUSGABE"
-				echo "$STARTREGIONSAUSGABE";
-				#log info "$STARTREGIONSAUSGABE";
-				#printf '%s' "$STARTREGIONSAUSGABE";
+				for regionen in "${STARTREGIONSAUSGABE[@]}"; do log rohtext "$regionen"; done
 			fi
 
 			# AOT Aktiveren oder Deaktivieren.
@@ -7513,54 +7510,54 @@ function menugridstop() {
 
 ### !  compilieren, kompilieren des OpenSimulator.
 function compilieren() {
-	log info "COMPILIEREN: Bauen eines neuen OpenSimulators  wird gestartet..."
+	log info "Bauen eines neuen OpenSimulators  wird gestartet..."
 	# Nachsehen ob Verzeichnis ueberhaupt existiert.
 	if [ ! -f "/$STARTVERZEICHNIS/$SCRIPTSOURCE/" ]; then
 		scriptcopy
 	else
-		log error "COMPILIEREN: OSSL Script Verzeichnis existiert nicht"
+		log error "OSSL Script Verzeichnis existiert nicht"
 	fi
 
 	if [ ! -f "/$STARTVERZEICHNIS/$MONEYSOURCE/" ]; then
 		moneycopy
 	else
-		log error "COMPILIEREN: MoneyServer Verzeichnis existiert nicht"
+		log error "MoneyServer Verzeichnis existiert nicht"
 	fi
 
 	if [ ! -f "/$STARTVERZEICHNIS/$CONFIGURESOURCE/" ]; then
 		configurecopy
 	else
-		log error "COMPILIEREN: Configure Verzeichnis existiert nicht"
+		log error "Configure Verzeichnis existiert nicht"
 	fi
 
 	if [ ! -f "/$STARTVERZEICHNIS/$OSSEARCHCOPY/" ]; then
 		searchgitcopy
 	else
-		log error "COMPILIEREN: OpenSimSearch Verzeichnis existiert nicht"
+		log error "OpenSimSearch Verzeichnis existiert nicht"
 	fi
 
 	if [ ! -f "/$STARTVERZEICHNIS/OpensimPython/" ]; then
 		pythoncopy
 	else
-		log error "COMPILIEREN: OpensimPython Verzeichnis existiert nicht"
+		log error "OpensimPython Verzeichnis existiert nicht"
 	fi
 
 	if [ ! -f "/$STARTVERZEICHNIS/OpenSimSearch/" ]; then
 		searchcopy
 	else
-		log error "COMPILIEREN: OpenSimSearch Verzeichnis existiert nicht"
+		log error "OpenSimSearch Verzeichnis existiert nicht"
 	fi
 
 	if [ ! -f "/$STARTVERZEICHNIS/OpenSimMutelist/" ]; then
 		mutelistcopy
 	else
-		log error "COMPILIEREN: OpenSimMutelist Verzeichnis existiert nicht"
+		log error "OpenSimMutelist Verzeichnis existiert nicht"
 	fi
 
 	if [ ! -f "/$STARTVERZEICHNIS/Chris.OS.Additions/" ]; then
 		chrisoscopy
 	else
-		log error "COMPILIEREN: Chris.OS.Additions Verzeichnis existiert nicht"
+		log error "Chris.OS.Additions Verzeichnis existiert nicht"
 	fi
 
 	if [ ! -f "/$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/" ]; then
@@ -7573,7 +7570,7 @@ function compilieren() {
 		fi
 
 	else
-		log error "COMPILIEREN: opensim Verzeichnis existiert nicht"
+		log error "OpenSim Verzeichnis zum Kompilieren existiert nicht"
 	fi
 	return 0
 }
