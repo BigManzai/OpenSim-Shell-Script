@@ -61,7 +61,7 @@
 #### ? Einstellungen ####
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe
-VERSION="V0.79.656" # opensimMULTITOOL Versionsausgabe
+VERSION="V0.79.664" # opensimMULTITOOL Versionsausgabe
 #clear # Bildschirmausgabe loeschen.
 #reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
@@ -1353,7 +1353,7 @@ function rologdel() {
 			text1="INFO  (Thread Pool Worker) - OpenSim.Services.LLLoginService.LLLoginService \[LLOGIN SERVICE\]: "
 			text2="INFO  (Thread Pool Worker) - OpenSim.Services.HypergridService.GatekeeperService \[GATEKEEPER SERVICE\]: "
 			cat /$STARTVERZEICHNIS/"$DATEIDATUM"_visitorlist.log | sed -e 's/, /\n/g' -e 's/'"$text1"'/\n/g' -e 's/'"$text2"'/\n/g' -e 's/ using/\nusing/g' > /$STARTVERZEICHNIS/"$DATEIDATUM"_visitorlist.txt
-			log info "Besucherliste wird geschrieben..."; 
+			log info "Besucherlisten wurden geschrieben!"; 
 		fi
 
 		# schauen ist Robust und Money da dann diese Logs auch loeschen!
@@ -2223,8 +2223,8 @@ function searchgitcopy() {
 	if [[ $OSSEARCHCOPY = "yes" ]]; then
 		log info "COPY: OpenSimSearch wird vom GIT geholt"
 		git clone https://github.com/BigManzai/OpenSimSearch
-	else
-		log error "COPY: OpenSimSearch ist nicht vorhanden"
+	# else
+	# 	log info "COPY: OpenSimSearch ist nicht vorhanden"
 	fi
 	return 0
 }
@@ -2293,8 +2293,8 @@ function configurecopy() {
 			//mv /opt/opensim/addon-modules/opensim-configuration-addon-modul /opt/opensim/addon-modules/Configuration
 			log line
 		fi
-	else
-		log warn "CONFIGURE: Configure wird nicht kopiert."
+	# else
+	# 	log info "CONFIGURE: Configure wird nicht kopiert."
 	fi
 	return 0
 }
@@ -2308,8 +2308,8 @@ function pythoncopy() {
 		else
 			log warn "PYTHONCOPY: python ist nicht vorhanden"
 		fi
-	else
-		log warn "PYTHONCOPY: Python wird nicht kopiert."
+	# else
+	# 	log warn "PYTHONCOPY: Python wird nicht kopiert."
 	fi
 	return 0
 }
@@ -2324,8 +2324,8 @@ function searchcopy() {
 		else
 			log info "OpenSimSearch: python ist nicht vorhanden"
 		fi
-	else
-		log info "OpenSimSearch: OpenSimSearch wird nicht kopiert."
+	# else
+	# 	log info "OpenSimSearch: OpenSimSearch wird nicht kopiert."
 	fi
 	return 0
 }
@@ -2340,8 +2340,8 @@ function mutelistcopy() {
 		else
 			log error "OpenSimMutelist: python ist nicht vorhanden"
 		fi
-	else
-		log warn "OpenSimMutelist: OpenSimMutelist wird nicht kopiert."
+	# else
+	# 	log warn "OpenSimMutelist: OpenSimMutelist wird nicht kopiert."
 	fi
 	return 0
 }
@@ -2357,8 +2357,8 @@ function chrisoscopy() {
 		else
 			log error "CHRISOSCOPY: Chris.OS.Additions ist nicht vorhanden"
 		fi
-	else
-		log warn "CHRISOSCOPY: Chris.OS.Additions werden nicht kopiert."
+	# else
+	# 	log warn "CHRISOSCOPY: Chris.OS.Additions werden nicht kopiert."
 	fi
 	return 0
 }
@@ -7623,7 +7623,6 @@ function osupgrade() {
 	oscopyrobust
 	oscopysim
 	autologdel
-	rologdel
 	# MoneyServer eventuell loeschen.
 	if [ "$MONEYVERZEICHNIS" = "keins" ] || [ "$MONEYVERZEICHNIS" = "no" ] || [ "$MONEYVERZEICHNIS" = "nein" ]; then moneydelete; fi
 	# Grid Starten.
