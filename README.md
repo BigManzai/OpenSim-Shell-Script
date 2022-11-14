@@ -126,6 +126,10 @@ Bisher sind nur Funktionen im Menü die maximal 1 Übergabewert voraussetzen.
 
 ## TODO und Informationen
 
+V0.80.692
+
+Zwei neue Menüpunkte eingefügt (Avatar Menü - Build Menü), hiermit wird alles etwas übersichtlicher.
+
 V0.79.653
 
 Autobackup für OAR, PNG, RAW und INI jetzt im Dateimenü.
