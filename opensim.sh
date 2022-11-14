@@ -61,7 +61,7 @@
 #### ? Einstellungen ####
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe
-VERSION="V0.80.667" # opensimMULTITOOL Versionsausgabe
+VERSION="V0.80.678" # opensimMULTITOOL Versionsausgabe
 #clear # Bildschirmausgabe loeschen.
 #reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
@@ -3862,9 +3862,13 @@ function osbuilding() {
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
 		# Alle Aktionen mit dialog
-		VERSIONSNUMMER=$(dialog --backtitle "opensimMULTITOOL $VERSION" --title "opensimMULTITOOL Eingabe" --inputbox "Versionsnummer:" 8 40 3>&1 1>&2 2>&3 3>&-)
+		VERSIONSNUMMER=$(dialog --backtitle "opensimMULTITOOL $VERSION" --title "opensimMULTITOOL Eingabe" --help-button --defaultno --inputbox "Versionsnummer:" 8 40 3>&1 1>&2 2>&3 3>&-)
+		antwort=$?
 		dialogclear
 		ScreenLog
+
+		if [[ $antwort = 2 ]]; then hilfemenu; fi
+		if [[ $antwort = 1 ]]; then exit; fi
 	else
 		# Alle Aktionen ohne dialog
 		VERSIONSNUMMER=$1
@@ -7634,9 +7638,13 @@ function oszipupgrade() {
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
 		# Alle Aktionen mit dialog
-		VERSIONSNUMMER=$(dialog --backtitle "opensimMULTITOOL $VERSION" --title "opensimMULTITOOL Eingabe" --inputbox "Versionsnummer:" 8 40 3>&1 1>&2 2>&3 3>&-)
+		VERSIONSNUMMER=$(dialog --backtitle "opensimMULTITOOL $VERSION" --title "opensimMULTITOOL Eingabe" --help-button --defaultno --inputbox "Versionsnummer:" 8 40 3>&1 1>&2 2>&3 3>&-)
+		antwort=$?
 		dialogclear
 		ScreenLog
+
+		if [[ $antwort = 2 ]]; then hilfemenu; fi
+		if [[ $antwort = 1 ]]; then exit; fi	
 	else
 		# Alle Aktionen ohne dialog
 		echo "Keine Menuelose Funktion vorhanden!" | exit
@@ -9274,13 +9282,11 @@ function hauptmenu() {
 			"Informationen" ""
 			"Screen Liste" ""
 			"Server laufzeit und Neustart" ""
-			"--------------------------" ""
-			"Passwortgenerator" ""
-			"Kalender" ""
 			"----------Menu------------" ""
 			"Weitere Funktionen" ""
 			"Dateimennu" ""
 			"mySQLmenu" ""
+			"Build Funktionen" ""
 			"Experten Funktionen" "")
 
 		mauswahl=$(dialog --backtitle "$BACKTITLE" --title "$TITLE" --help-button --defaultno --menu "$MENU" $HEIGHT $WIDTH $CHOICE_HEIGHT "${OPTIONS[@]}" 2>&1 >/dev/tty)
@@ -9306,13 +9312,12 @@ function hauptmenu() {
 		if [[ $mauswahl = "Benutzer Account anlegen" ]]; then menucreateuser; fi
 		if [[ $mauswahl = "Server laufzeit und Neustart" ]]; then rebootdatum; fi
 
-		if [[ $mauswahl = "Passwortgenerator" ]]; then passwdgenerator; fi
-		if [[ $mauswahl = "Kalender" ]]; then kalender; fi
-
 		if [[ $mauswahl = "Dateimennu" ]]; then dateimenu; fi
 		if [[ $mauswahl = "mySQLmenu" ]]; then mySQLmenu; fi
 		if [[ $mauswahl = "Weitere Funktionen" ]]; then funktionenmenu; fi
 		if [[ $mauswahl = "Experten Funktionen" ]]; then expertenmenu; fi
+
+		if [[ $mauswahl = "Build Funktionen" ]]; then buildmenu; fi
 
 		if [[ $antwort = 2 ]]; then hilfemenu; fi
 		if [[ $antwort = 1 ]]; then exit; fi
@@ -9337,6 +9342,10 @@ function hilfemenu() {
 			"Konsolenhilfe" ""
 			"Kommandohilfe" ""
 			"Konfiguration lesen" ""
+			"--------------------------" ""
+			"Passwortgenerator" ""
+			"Kalender" ""
+			"--------------------------" ""
 			"Hauptmenu" "")
 
 		hauswahl=$(dialog --clear \
@@ -9357,6 +9366,9 @@ function hilfemenu() {
 		if [[ $hauswahl = "Konsolenhilfe" ]]; then menukonsolenhilfe; fi # Test menukonsolenhilfe
 		if [[ $hauswahl = "Kommandohilfe" ]]; then commandhelp; fi
 		if [[ $hauswahl = "Konfiguration lesen" ]]; then menuoswriteconfig; fi
+
+		if [[ $hauswahl = "Passwortgenerator" ]]; then passwdgenerator; fi
+		if [[ $hauswahl = "Kalender" ]]; then kalender; fi
 
 		if [[ $hauswahl = "Hauptmenu" ]]; then hauptmenu; fi
 		if [[ $antwort = 1 ]]; then hauptmenu; fi
@@ -9394,6 +9406,7 @@ function funktionenmenu() {
 			"Hauptmennu" ""
 			"Dateimennu" ""
 			"mySQLmenu" ""
+			"Build Funktionen" ""
 			"Experten Funktionen" "")
 
 		fauswahl=$(dialog --clear \
@@ -9425,6 +9438,7 @@ function funktionenmenu() {
 		if [[ $fauswahl = "mySQLmenu" ]]; then mySQLmenu; fi
 		if [[ $fauswahl = "Hauptmennu" ]]; then hauptmenu; fi
 		if [[ $fauswahl = "Experten Funktionen" ]]; then expertenmenu; fi
+		if [[ $fauswahl = "Build Funktionen" ]]; then buildmenu; fi
 
 		if [[ $antwort = 2 ]]; then hilfemenu; fi
 		if [[ $antwort = 1 ]]; then exit; fi
@@ -9454,24 +9468,11 @@ function dateimenu() {
 			"Map Karten loeschen" ""
 			"Asset Cache loeschen" ""
 			"Asset loeschen" ""
-			"--------------------------" ""
-			"OpenSim herunterladen" ""
-			"MoneyServer vom git kopieren" ""
-			"OSSL Skripte vom git kopieren" ""
-			"Configure vom git kopieren" ""
-			"Opensim vom Github holen" ""
-			"--------------------------" ""
-			"Verzeichnisstrukturen anlegen" ""
-			"Regionsliste erstellen (Backup)" ""
-			"--------------------------" ""
-			"Sim in Verzeichnisstrukturen eintragen" ""
-			"Sim in Verzeichnisstrukturen austragen" ""
-			"Sim in Startkonfiguration einfuegen" ""
-			"Sim aus Startkonfiguration entfernen" ""
 			"----------Menu------------" ""
 			"Hauptmenu" ""
 			"Weitere Funktionen" ""
 			"mySQLmenu" ""
+			"Build Funktionen" ""
 			"Experten Funktionen" "")
 
 		dauswahl=$(dialog --clear \
@@ -9490,34 +9491,19 @@ function dateimenu() {
 
 		if [[ $dauswahl = "Inventar speichern" ]]; then menusaveinventar; fi
 		if [[ $dauswahl = "Inventar laden" ]]; then menuloadinventar; fi
-
 		if [[ $dauswahl = "Region OAR sichern" ]]; then menuregionbackup; fi
 		if [[ $feauswahl = "Automatischer Regionsbackup" ]]; then autoregionbackup; fi
-
-		if [[ $dauswahl = "OpenSim herunterladen" ]]; then downloados; fi
+		# -----	
 		if [[ $dauswahl = "Log Dateien loeschen" ]]; then autologdel; fi
-		if [[ $dauswahl = "Map Karten loeschen" ]]; then automapdel; fi
-		if [[ $dauswahl = "MoneyServer vom git kopieren" ]]; then moneygitcopy; fi
-		if [[ $dauswahl = "OSSL Skripte vom git kopieren" ]]; then scriptgitcopy; fi
-		if [[ $dauswahl = "Configure vom git kopieren" ]]; then configuregitcopy; fi
-		if [[ $dauswahl = "Opensim vom Github holen" ]]; then osgitholen; fi
-
-		if [[ $dauswahl = "Verzeichnisstrukturen anlegen" ]]; then menuosstruktur; fi
-		if [[ $dauswahl = "Sim in Startkonfiguration einfuegen" ]]; then menuosdauerstart; fi
-		if [[ $dauswahl = "Sim aus Startkonfiguration entfernen" ]]; then menuosdauerstop; fi
-
-		if [[ $dauswahl = "Sim eintragen" ]]; then menuosstarteintrag; fi
-		if [[ $dauswahl = "Sim austragen" ]]; then menuosstarteintragdel; fi
-
-		if [[ $dauswahl = "Regionsliste erstellen (Backup)" ]]; then regionliste; fi
-		
+		if [[ $dauswahl = "Map Karten loeschen" ]]; then automapdel; fi		
 		if [[ $dauswahl = "Asset loeschen" ]]; then menuassetdel; fi
 		if [[ $dauswahl = "Asset Cache loeschen" ]]; then autoassetcachedel; fi
-
+		# -----
 		if [[ $dauswahl = "Hauptmenu" ]]; then hauptmenu; fi
 		if [[ $dauswahl = "mySQLmenu" ]]; then mySQLmenu; fi
 		if [[ $dauswahl = "Weitere Funktionen" ]]; then funktionenmenu; fi
 		if [[ $dauswahl = "Experten Funktionen" ]]; then expertenmenu; fi
+		if [[ $dauswahl = "Build Funktionen" ]]; then buildmenu; fi
 
 		if [[ $antwort = 2 ]]; then hilfemenu; fi
 		if [[ $antwort = 1 ]]; then exit; fi
@@ -9570,6 +9556,7 @@ function mySQLmenu() {
 			"Hauptmenu" ""
 			"Weitere Funktionen" ""
 			"Dateimennu" ""
+			"Build Funktionen" ""
 			"Experten Funktionen" "")
 
 		mysqlauswahl=$(dialog --backtitle "$BACKTITLE" --title "$TITLE" --help-button --defaultno --menu "$MENU" $HEIGHT $WIDTH $CHOICE_HEIGHT "${OPTIONS[@]}" 2>&1 >/dev/tty)
@@ -9617,6 +9604,7 @@ function mySQLmenu() {
 		if [[ $mysqlauswahl = "Dateimennu" ]]; then dateimenu; fi
 		if [[ $mysqlauswahl = "Weitere Funktionen" ]]; then funktionenmenu; fi
 		if [[ $mysqlauswahl = "Experten Funktionen" ]]; then expertenmenu; fi
+		if [[ $mysqlauswahl = "Build Funktionen" ]]; then buildmenu; fi
 
 		if [[ $antwort = 2 ]]; then hilfemenu; fi
 		if [[ $antwort = 1 ]]; then exit; fi
@@ -9639,11 +9627,6 @@ function expertenmenu() {
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
 		OPTIONS=("Example Dateien umbenennen" ""
 			"Voreinstellungen setzen" ""
-			"Opensimulator upgraden" ""
-			"Opensimulator aus zip upgraden" ""
-			"Opensimulator bauen und upgraden" ""
-			"Kompilieren" ""
-			"oscompi" ""
 			"--------------------------" ""
 			"autoregionsiniteilen" ""
 			"RegionListe" ""
@@ -9663,6 +9646,7 @@ function expertenmenu() {
 			"Hauptmennu" ""
 			"Dateimennu" ""
 			"mySQLmenu" ""
+			"Build Funktionen" ""
 			"Weitere Funktionen" "")
 
 		feauswahl=$(dialog --clear \
@@ -9684,13 +9668,6 @@ function expertenmenu() {
 
 		if [[ $feauswahl = "Kommando an OpenSim senden" ]]; then menuoscommand; fi
 
-		if [[ $feauswahl = "Opensimulator upgraden" ]]; then osupgrade; fi
-		if [[ $feauswahl = "Opensimulator aus zip upgraden" ]]; then oszipupgrade; fi
-		if [[ $feauswahl = "Opensimulator bauen und upgraden" ]]; then osbuilding; fi
-
-		if [[ $feauswahl = "Kompilieren" ]]; then compilieren; fi
-		if [[ $feauswahl = "oscompi" ]]; then oscompi; fi
-
 		if [[ $feauswahl = "autoregionsiniteilen" ]]; then autoregionsiniteilen; fi
 		if [[ $feauswahl = "RegionListe" ]]; then RegionListe; fi
 
@@ -9710,6 +9687,83 @@ function expertenmenu() {
 		if [[ $feauswahl = "mySQLmenu" ]]; then mySQLmenu; fi
 		if [[ $feauswahl = "Hauptmennu" ]]; then hauptmenu; fi
 		if [[ $feauswahl = "Weitere Funktionen" ]]; then funktionenmenu; fi
+		if [[ $feauswahl = "Build Funktionen" ]]; then buildmenu; fi
+
+		if [[ $antwort = 2 ]]; then hilfemenu; fi
+		if [[ $antwort = 1 ]]; then exit; fi
+	else
+		# wenn dialog nicht installiert ist die Hilfe anzeigen.
+		hilfe
+	fi
+}
+
+### !  buildmenu
+function buildmenu() {
+	HEIGHT=0
+	WIDTH=45
+	CHOICE_HEIGHT=30
+	BACKTITLE="opensimMULTITOOL"
+	TITLE="Buildmenu"
+	MENU="opensimMULTITOOL $VERSION"
+
+	# zuerst schauen ob dialog installiert ist
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
+		OPTIONS=("OpenSim herunterladen" ""
+			"MoneyServer vom git kopieren" ""
+			"OSSL Skripte vom git kopieren" ""
+			"Configure vom git kopieren" ""
+			"Opensim vom Github holen" ""
+			"--------------------------" ""
+			"Kompilieren" ""
+			"oscompi" ""
+			"Opensimulator upgraden" ""
+			"Opensimulator aus zip upgraden" ""
+			"Opensimulator bauen und upgraden" ""
+			"--------------------------" ""
+			"Verzeichnisstrukturen anlegen" ""
+			"Regionsliste erstellen (Backup)" ""
+			"--------------------------" ""
+			"Sim in Verzeichnisstrukturen eintragen" ""
+			"Sim in Verzeichnisstrukturen austragen" ""
+			"Sim in Startkonfiguration einfuegen" ""
+			"Sim aus Startkonfiguration entfernen" ""
+			"----------Menu------------" ""
+			"Weitere Funktionen" ""
+			"Dateimennu" ""
+			"mySQLmenu" ""
+			"Experten Funktionen" ""
+			"Hauptmenu" "")
+		buildauswahl=$(dialog --backtitle "$BACKTITLE" --title "$TITLE" --help-button --defaultno --menu "$MENU" $HEIGHT $WIDTH $CHOICE_HEIGHT "${OPTIONS[@]}" 2>&1 >/dev/tty)
+		antwort=$?
+		#dialogclear
+		dialog --clear
+		ScreenLog
+
+		if [[ $buildauswahl = "OpenSim herunterladen" ]]; then downloados; fi
+		if [[ $buildauswahl = "MoneyServer vom git kopieren" ]]; then moneygitcopy; fi
+		if [[ $buildauswahl = "OSSL Skripte vom git kopieren" ]]; then scriptgitcopy; fi
+		if [[ $buildauswahl = "Configure vom git kopieren" ]]; then configuregitcopy; fi
+		if [[ $buildauswahl = "Opensim vom Github holen" ]]; then osgitholen; fi
+		# -----
+		if [[ $buildauswahl = "Kompilieren" ]]; then compilieren; fi
+		if [[ $buildauswahl = "oscompi" ]]; then oscompi; fi
+		if [[ $buildauswahl = "Opensimulator upgraden" ]]; then osupgrade; fi
+		if [[ $buildauswahl = "Opensimulator aus zip upgraden" ]]; then oszipupgrade; fi
+		if [[ $buildauswahl = "Opensimulator bauen und upgraden" ]]; then osbuilding; fi
+		# -----
+		if [[ $buildauswahl = "Verzeichnisstrukturen anlegen" ]]; then menuosstruktur; fi
+		if [[ $buildauswahl = "Regionsliste erstellen (Backup)" ]]; then regionliste; fi
+		# -----
+		if [[ $buildauswahl = "Sim in Verzeichnisstrukturen eintragen" ]]; then menuosstarteintrag; fi
+		if [[ $buildauswahl = "Sim in Verzeichnisstrukturen austragen" ]]; then menuosstarteintragdel; fi
+		if [[ $buildauswahl = "Sim in Startkonfiguration einfuegen" ]]; then menuosdauerstart; fi
+		if [[ $buildauswahl = "Sim aus Startkonfiguration entfernen" ]]; then menuosdauerstop; fi
+
+		if [[ $buildauswahl = "Hauptmenu" ]]; then hauptmenu; fi
+		if [[ $buildauswahl = "Dateimennu" ]]; then dateimenu; fi
+		if [[ $buildauswahl = "mySQLmenu" ]]; then mySQLmenu; fi
+		if [[ $buildauswahl = "Weitere Funktionen" ]]; then funktionenmenu; fi
+		if [[ $buildauswahl = "Experten Funktionen" ]]; then expertenmenu; fi
 
 		if [[ $antwort = 2 ]]; then hilfemenu; fi
 		if [[ $antwort = 1 ]]; then exit; fi
