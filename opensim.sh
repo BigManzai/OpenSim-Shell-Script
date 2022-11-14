@@ -61,7 +61,7 @@
 #### ? Einstellungen ####
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe
-VERSION="V0.80.678" # opensimMULTITOOL Versionsausgabe
+VERSION="V0.80.692" # opensimMULTITOOL Versionsausgabe
 #clear # Bildschirmausgabe loeschen.
 #reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
@@ -9283,6 +9283,7 @@ function hauptmenu() {
 			"Screen Liste" ""
 			"Server laufzeit und Neustart" ""
 			"----------Menu------------" ""
+			"Avatarmennu" ""
 			"Weitere Funktionen" ""
 			"Dateimennu" ""
 			"mySQLmenu" ""
@@ -9316,8 +9317,8 @@ function hauptmenu() {
 		if [[ $mauswahl = "mySQLmenu" ]]; then mySQLmenu; fi
 		if [[ $mauswahl = "Weitere Funktionen" ]]; then funktionenmenu; fi
 		if [[ $mauswahl = "Experten Funktionen" ]]; then expertenmenu; fi
-
 		if [[ $mauswahl = "Build Funktionen" ]]; then buildmenu; fi
+		if [[ $mauswahl = "Avatarmennu" ]]; then avatarmenu; fi
 
 		if [[ $antwort = 2 ]]; then hilfemenu; fi
 		if [[ $antwort = 1 ]]; then exit; fi
@@ -9330,7 +9331,7 @@ function hauptmenu() {
 ### !  hilfemenu
 function hilfemenu() {
 	HEIGHT=0
-	WIDTH=45
+	WIDTH=0
 	CHOICE_HEIGHT=30
 	BACKTITLE="opensimMULTITOOL"
 	TITLE="Hilfemenu"
@@ -9381,7 +9382,7 @@ function hilfemenu() {
 ### !  funktionenmenu
 function funktionenmenu() {
 	HEIGHT=0
-	WIDTH=45
+	WIDTH=0
 	CHOICE_HEIGHT=30
 	BACKTITLE="opensimMULTITOOL"
 	TITLE="Funktionsmenu"
@@ -9404,6 +9405,7 @@ function funktionenmenu() {
 			"Regionen anzeigen" ""
 			"----------Menu------------" ""
 			"Hauptmennu" ""
+			"Avatarmennu" ""
 			"Dateimennu" ""
 			"mySQLmenu" ""
 			"Build Funktionen" ""
@@ -9439,6 +9441,7 @@ function funktionenmenu() {
 		if [[ $fauswahl = "Hauptmennu" ]]; then hauptmenu; fi
 		if [[ $fauswahl = "Experten Funktionen" ]]; then expertenmenu; fi
 		if [[ $fauswahl = "Build Funktionen" ]]; then buildmenu; fi
+		if [[ $fauswahl = "Avatarmennu" ]]; then avatarmenu; fi
 
 		if [[ $antwort = 2 ]]; then hilfemenu; fi
 		if [[ $antwort = 1 ]]; then exit; fi
@@ -9451,7 +9454,7 @@ function funktionenmenu() {
 ### !  dateimenu
 function dateimenu() {
 	HEIGHT=0
-	WIDTH=45
+	WIDTH=0
 	CHOICE_HEIGHT=30
 	BACKTITLE="opensimMULTITOOL"
 	TITLE="Dateimenu"
@@ -9470,6 +9473,7 @@ function dateimenu() {
 			"Asset loeschen" ""
 			"----------Menu------------" ""
 			"Hauptmenu" ""
+			"Avatarmennu" ""
 			"Weitere Funktionen" ""
 			"mySQLmenu" ""
 			"Build Funktionen" ""
@@ -9504,6 +9508,7 @@ function dateimenu() {
 		if [[ $dauswahl = "Weitere Funktionen" ]]; then funktionenmenu; fi
 		if [[ $dauswahl = "Experten Funktionen" ]]; then expertenmenu; fi
 		if [[ $dauswahl = "Build Funktionen" ]]; then buildmenu; fi
+		if [[ $dauswahl = "Avatarmennu" ]]; then avatarmenu; fi
 
 		if [[ $antwort = 2 ]]; then hilfemenu; fi
 		if [[ $antwort = 1 ]]; then exit; fi
@@ -9525,13 +9530,6 @@ function mySQLmenu() {
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
 		OPTIONS=("Alle Datenbanken anzeigen" ""
 			"Tabellen einer Datenbank" ""
-			"Alle Benutzerdaten der ROBUST Datenbank" ""
-			"UUID von allen Benutzern anzeigen" ""
-			"Alle Benutzernamen anzeigen" ""
-			"Daten von einem Benutzer anzeigen" ""
-			"UUID, Vor, Nachname, E-Mail vom Benutzer anzeigen" ""
-			"UUID von einem Benutzer anzeigen" ""
-			"--------------------------" ""
 			"mySQL Datenbankbenutzer anzeigen" ""
 			"Alle Grid Regionen listen" ""
 			"Region URI pruefen sortiert nach URI" ""
@@ -9548,12 +9546,9 @@ function mySQLmenu() {
 			"Loescht einen Datenbankbenutzer" ""
 			"Alle Datenbanken Checken, Reparieren und Optimieren" ""
 			"mysqlTuner herunterladen" ""
-			"--------------------------" ""
-			"Alle Benutzer mit inkorrekter EMail abschalten" ""
-			"Benutzeracount abschalten" ""
-			"Benutzeracount einschalten" ""
 			"----------Menu------------" ""
 			"Hauptmenu" ""
+			"Avatarmennu" ""
 			"Weitere Funktionen" ""
 			"Dateimennu" ""
 			"Build Funktionen" ""
@@ -9569,9 +9564,7 @@ function mySQLmenu() {
 		# db_all_name_dialog, db_user_data_dialog, db_user_infos_dialog, db_user_uuid_dialog
 
 		if [[ $mysqlauswahl = "Alle Datenbanken anzeigen" ]]; then db_anzeigen_dialog; fi
-		if [[ $mysqlauswahl = "Tabellen einer Datenbank" ]]; then db_tables_dialog; fi
-		if [[ $mysqlauswahl = "Alle Benutzerdaten der ROBUST Datenbank" ]]; then db_all_user_dialog; fi
-		if [[ $mysqlauswahl = "UUID von allen Benutzern anzeigen" ]]; then db_all_uuid_dialog; fi
+		if [[ $mysqlauswahl = "Tabellen einer Datenbank" ]]; then db_tables_dialog; fi		
 
 		if [[ $mysqlauswahl = "mySQL Datenbankbenutzer anzeigen" ]]; then db_benutzer_anzeigen; fi
 		if [[ $mysqlauswahl = "Alle Grid Regionen listen" ]]; then db_regions; fi
@@ -9588,23 +9581,83 @@ function mySQLmenu() {
 		if [[ $mysqlauswahl = "Listet alle erstellten Benutzerrechte auf" ]]; then db_dbuserrechte; fi
 		if [[ $mysqlauswahl = "Loescht einen Datenbankbenutzer" ]]; then db_deldbuser; fi
 		if [[ $mysqlauswahl = "Alle Datenbanken Checken, Reparieren und Optimieren" ]]; then allrepair_db; fi
-
 		if [[ $mysqlauswahl = "mysqlTuner herunterladen" ]]; then install_mysqltuner; fi
-
-		if [[ $mysqlauswahl = "Alle Benutzernamen anzeigen" ]]; then db_all_name_dialog; fi
-		if [[ $mysqlauswahl = "Daten von einem Benutzer anzeigen" ]]; then db_user_data_dialog; fi
-		if [[ $mysqlauswahl = "UUID, Vor, Nachname, E-Mail vom Benutzer anzeigen" ]]; then db_user_infos_dialog; fi
-		if [[ $mysqlauswahl = "UUID von einem Benutzer anzeigen" ]]; then db_user_uuid_dialog; fi
-
-		if [[ $mysqlauswahl = "Alle Benutzer mit inkorrekter EMail abschalten" ]]; then db_email_setincorrectuseroff_dialog; fi
-		if [[ $mysqlauswahl = "Benutzeracount abschalten" ]]; then db_setuserofline_dialog; fi
-		if [[ $mysqlauswahl = "Benutzeracount einschalten" ]]; then db_setuseronline_dialog; fi
-
+		# -----
 		if [[ $mysqlauswahl = "Hauptmenu" ]]; then hauptmenu; fi
 		if [[ $mysqlauswahl = "Dateimennu" ]]; then dateimenu; fi
 		if [[ $mysqlauswahl = "Weitere Funktionen" ]]; then funktionenmenu; fi
 		if [[ $mysqlauswahl = "Experten Funktionen" ]]; then expertenmenu; fi
 		if [[ $mysqlauswahl = "Build Funktionen" ]]; then buildmenu; fi
+		if [[ $mysqlauswahl = "Avatarmennu" ]]; then avatarmenu; fi
+
+		if [[ $antwort = 2 ]]; then hilfemenu; fi
+		if [[ $antwort = 1 ]]; then exit; fi
+	else
+		# wenn dialog nicht installiert ist die Hilfe anzeigen.
+		hilfe
+	fi
+}
+
+### !  avatarmenu
+function avatarmenu() {
+	HEIGHT=0
+	WIDTH=0
+	CHOICE_HEIGHT=30
+	BACKTITLE="opensimMULTITOOL"
+	TITLE="Avatarmenu"
+	MENU="opensimMULTITOOL $VERSION"
+
+	# zuerst schauen ob dialog installiert ist
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
+		OPTIONS=("Alle Benutzerdaten der ROBUST Datenbank" ""
+			"UUID von allen Benutzern anzeigen" ""
+			"Alle Benutzernamen anzeigen" ""
+			"Daten von einem Benutzer anzeigen" ""
+			"UUID, Vor, Nachname, E-Mail vom Benutzer anzeigen" ""
+			"UUID von einem Benutzer anzeigen" ""
+			"--------------------------" ""
+			"Alle Benutzer mit inkorrekter EMail abschalten" ""
+			"Benutzeracount abschalten" ""
+			"Benutzeracount einschalten" ""
+			"----------Menu------------" ""
+			"Hauptmennu" ""
+			"Avatarmennu" ""
+			"Dateimennu" ""
+			"mySQLmenu" ""
+			"Build Funktionen" ""
+			"Experten Funktionen" "")
+
+		avatarauswahl=$(dialog --clear \
+			--backtitle "$BACKTITLE" \
+			--title "$TITLE" \
+			--help-button --defaultno \
+			--menu "$MENU" \
+			$HEIGHT $WIDTH $CHOICE_HEIGHT \
+			"${OPTIONS[@]}" \
+			2>&1 >/dev/tty) # 3>&1 1>&2 2>&3
+
+		antwort=$?
+		#dialogclear
+		dialog --clear
+		ScreenLog
+
+		if [[ $avatarauswahl = "Alle Benutzerdaten der ROBUST Datenbank" ]]; then db_all_user_dialog; fi
+		if [[ $avatarauswahl = "UUID von allen Benutzern anzeigen" ]]; then db_all_uuid_dialog; fi
+		
+		if [[ $avatarauswahl = "Alle Benutzernamen anzeigen" ]]; then db_all_name_dialog; fi
+		if [[ $avatarauswahl = "Daten von einem Benutzer anzeigen" ]]; then db_user_data_dialog; fi
+		if [[ $avatarauswahl = "UUID, Vor, Nachname, E-Mail vom Benutzer anzeigen" ]]; then db_user_infos_dialog; fi
+		if [[ $avatarauswahl = "UUID von einem Benutzer anzeigen" ]]; then db_user_uuid_dialog; fi
+		
+		if [[ $avatarauswahl = "Alle Benutzer mit inkorrekter EMail abschalten" ]]; then db_email_setincorrectuseroff_dialog; fi
+		if [[ $avatarauswahl = "Benutzeracount abschalten" ]]; then db_setuserofline_dialog; fi
+		if [[ $avatarauswahl = "Benutzeracount einschalten" ]]; then db_setuseronline_dialog; fi
+
+		if [[ $avatarauswahl = "Dateimennu" ]]; then dateimenu; fi
+		if [[ $avatarauswahl = "mySQLmenu" ]]; then mySQLmenu; fi
+		if [[ $avatarauswahl = "Hauptmennu" ]]; then hauptmenu; fi
+		if [[ $avatarauswahl = "Experten Funktionen" ]]; then expertenmenu; fi
+		if [[ $avatarauswahl = "Build Funktionen" ]]; then buildmenu; fi
 
 		if [[ $antwort = 2 ]]; then hilfemenu; fi
 		if [[ $antwort = 1 ]]; then exit; fi
@@ -9617,7 +9670,7 @@ function mySQLmenu() {
 ### !  expertenmenu
 function expertenmenu() {
 	HEIGHT=0
-	WIDTH=45
+	WIDTH=0
 	CHOICE_HEIGHT=30
 	BACKTITLE="opensimMULTITOOL"
 	TITLE="Expertenmenu"
@@ -9644,6 +9697,7 @@ function expertenmenu() {
 			"Kommando an OpenSim senden" ""
 			"----------Menu------------" ""
 			"Hauptmennu" ""
+			"Avatarmennu" ""
 			"Dateimennu" ""
 			"mySQLmenu" ""
 			"Build Funktionen" ""
@@ -9688,6 +9742,7 @@ function expertenmenu() {
 		if [[ $feauswahl = "Hauptmennu" ]]; then hauptmenu; fi
 		if [[ $feauswahl = "Weitere Funktionen" ]]; then funktionenmenu; fi
 		if [[ $feauswahl = "Build Funktionen" ]]; then buildmenu; fi
+		if [[ $feauswahl = "Avatarmennu" ]]; then avatarmenu; fi
 
 		if [[ $antwort = 2 ]]; then hilfemenu; fi
 		if [[ $antwort = 1 ]]; then exit; fi
@@ -9700,7 +9755,7 @@ function expertenmenu() {
 ### !  buildmenu
 function buildmenu() {
 	HEIGHT=0
-	WIDTH=45
+	WIDTH=0
 	CHOICE_HEIGHT=30
 	BACKTITLE="opensimMULTITOOL"
 	TITLE="Buildmenu"
@@ -9728,11 +9783,13 @@ function buildmenu() {
 			"Sim in Startkonfiguration einfuegen" ""
 			"Sim aus Startkonfiguration entfernen" ""
 			"----------Menu------------" ""
+			"Hauptmenu" ""
+			"Avatarmennu" ""
 			"Weitere Funktionen" ""
 			"Dateimennu" ""
 			"mySQLmenu" ""
-			"Experten Funktionen" ""
-			"Hauptmenu" "")
+			"Experten Funktionen" "")
+
 		buildauswahl=$(dialog --backtitle "$BACKTITLE" --title "$TITLE" --help-button --defaultno --menu "$MENU" $HEIGHT $WIDTH $CHOICE_HEIGHT "${OPTIONS[@]}" 2>&1 >/dev/tty)
 		antwort=$?
 		#dialogclear
@@ -9764,6 +9821,7 @@ function buildmenu() {
 		if [[ $buildauswahl = "mySQLmenu" ]]; then mySQLmenu; fi
 		if [[ $buildauswahl = "Weitere Funktionen" ]]; then funktionenmenu; fi
 		if [[ $buildauswahl = "Experten Funktionen" ]]; then expertenmenu; fi
+		if [[ $buildauswahl = "Avatarmennu" ]]; then avatarmenu; fi
 
 		if [[ $antwort = 2 ]]; then hilfemenu; fi
 		if [[ $antwort = 1 ]]; then exit; fi
