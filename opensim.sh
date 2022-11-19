@@ -54,14 +54,14 @@
 # ! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 # ! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-# * Status 27.07.2022 303 Funktionen.
+# * Status 19.11.2022 314 Funktionen.
 
 # # Visual Studio Code # ShellCheck # shellman # Better Comments # outline map #
 
 #### ? Einstellungen ####
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe
-VERSION="V0.80.692" # opensimMULTITOOL Versionsausgabe
+VERSION="V0.80.704" # opensimMULTITOOL Versionsausgabe
 #clear # Bildschirmausgabe loeschen.
 #reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
@@ -4035,6 +4035,156 @@ function menucreateuser() {
 
 # 	return 0
 # }
+
+# Neu 19.11.2022
+
+### !db_friends OK
+function db_friends() {
+	username=$1
+	password=$2
+	databasename=$3
+	useruuid=$4
+
+	echo "Listet alle internen Freunde auf, keine hg freunde:"
+	mysqlrest "$username" "$password" "$databasename" "SELECT Friends.PrincipalID, CONCAT(UserAccounts.FirstName, ' ', UserAccounts.LastName) AS 'Friend' FROM Friends,UserAccounts WHERE Friends.Friend = '$useruuid' AND UserAccounts.PrincipalID = Friends.PrincipalID UNION SELECT Friends.Friend, CONCAT(UserAccounts.FirstName, ' ', UserAccounts.LastName) AS 'Friend'  FROM Friends, UserAccounts WHERE Friends.PrincipalID ='$useruuid' AND UserAccounts.PrincipalID = Friends.Friend"
+	echo "$result_mysqlrest"
+
+	return 0
+}
+
+
+### !db_online OK
+function db_online() {
+	username=$1
+	password=$2
+	databasename=$3
+
+	echo "Listet Online User auf:"
+	mysqlrest "$username" "$password" "$databasename" "SELECT concat(FirstName, ' ', LastName) AS 'Online Users' FROM UserAccounts INNER JOIN GridUser ON UserAccounts.PrincipalID = GridUser.UserID WHERE GridUser.Online = 'True'"
+	echo "$result_mysqlrest"
+
+	return 0
+}
+
+### !db_region OK
+function db_region() {
+	username=$1
+	password=$2
+	databasename=$3
+
+	echo "Listet die Regionen in Ihrer Datenbank auf:"
+	mysqlrest "$username" "$password" "$databasename" "SELECT regionName as 'Regions' FROM regions"
+	echo "$result_mysqlrest"
+
+	return 0
+}
+
+### !db_inv_search OK
+function db_inv_search() {
+	username=$1
+	password=$2
+	databasename=$3
+    invname=$4
+
+	echo "Inventareinträge mit einem bestimmten Namen auflisten:"
+	mysqlrest "$username" "$password" "$databasename" "SELECT concat(inventoryName, ' - ',  replace(inventoryID, '-', '')) AS 'Inventory', concat(assets.name, ' - ', hex(assets.id)) AS 'Asset' FROM inventoryitems LEFT JOIN assets ON replace(assetID, '-', '')=hex(assets.id) WHERE inventoryName = '$invname'"
+	echo "$result_mysqlrest"
+
+	return 0
+}
+
+### !db_user_anzahl OK
+function db_user_anzahl() {
+	username=$1
+	password=$2
+	databasename=$3
+
+	echo "Zaehlt die Gesamtzahl der Benutzer:"
+	mysqlrest "$username" "$password" "$databasename" "SELECT count(PrincipalID) AS 'Users' FROM UserAccounts"
+	echo "$result_mysqlrest"
+
+	return 0
+}
+
+### !db_user_online
+function db_user_online() {
+	username=$1
+	password=$2
+	databasename=$3
+
+	echo "Users Online:"
+	mysqlrest "$username" "$password" "$databasename" "SELECT count(UserID) AS 'Online' FROM GridUser WHERE Online = 'True'"
+	echo "$result_mysqlrest"
+
+	return 0
+}
+
+### !db_region_parzelle
+function db_region_parzelle() {
+	username=$1
+	password=$2
+	databasename=$3
+
+	echo "Zaehlt die Regionen mit Parzellen:"
+	mysqlrest "$username" "$password" "$databasename" "SELECT count(DISTINCT regionUUID) FROM parcels"
+	echo "$result_mysqlrest"
+
+	return 0
+}
+
+### !db_region_parzelle_pakete
+function db_region_parzelle_pakete() {
+	username=$1
+	password=$2
+	databasename=$3
+
+	echo "Zaehlt die Gesamtzahl der Pakete:"
+	mysqlrest "$username" "$password" "$databasename" "SELECT count(parcelUUID) AS 'Parcels' FROM parcels"
+	echo "$result_mysqlrest"
+
+	return 0
+}
+
+### !db_region_anzahl_regionsnamen OK
+function db_region_anzahl_regionsnamen() {
+	username=$1
+	password=$2
+	databasename=$3
+
+	echo "Zaehlt eindeutige Regionsnamen:"
+	mysqlrest "$username" "$password" "$databasename" "SELECT count(DISTINCT regionName) AS 'Regions' FROM regions"
+	echo "$result_mysqlrest"
+
+	return 0
+}
+
+### !db_region_anzahl_regionsid
+function db_region_anzahl_regionsid() {
+	username=$1
+	password=$2
+	databasename=$3
+
+	echo "Zaehlt RegionIDs:"
+	mysqlrest "$username" "$password" "$databasename" "SELECT count(UUID) AS 'Regions' FROM regions"
+	echo "$result_mysqlrest"
+
+	return 0
+}
+
+### !db_inventar_no_assets stichprobe alle assets sind vorhanden
+function db_inventar_no_assets() {
+	username=$1
+	password=$2
+	databasename=$3
+
+	echo "Listet alle Inventareintraege auf, die auf nicht vorhandene Assets verweisen:"
+	mysqlrest "$username" "$password" "$databasename" "SELECT inventoryname, inventoryID, assetID FROM inventoryitems WHERE replace(assetID, '-', '') NOT IN (SELECT hex(id) FROM assets)"
+	echo "$result_mysqlrest"
+
+	return 0
+}
+
+# Neu 19.11.2022 Ende
 
 ### !  db_anzeigen, listet alle erstellten Datenbanken auf.
 function db_anzeigen() {
@@ -10141,6 +10291,17 @@ case $KOMMANDO in
 	wiparameter7) wiparameter7 "$2" "$3" "$4" "$5" "$6" "$7" "$8" ;;
 	wiparameter8) wiparameter8 "$2" "$3" "$4" "$5" "$6" "$7" "$8" "$9" ;;
 	lastrebootdatum) lastrebootdatum ;;
+	db_friends) db_friends "$2" "$3" "$4" "$5" ;;
+	db_online) db_online "$2" "$3" "$4" ;;
+	db_region) db_region "$2" "$3" "$4" ;;
+	db_inv_search) db_inv_search "$2" "$3" "$4" "$5" ;;
+	db_user_anzahl) db_user_anzahl "$2" "$3" "$4" ;;
+	db_user_online) db_user_online "$2" "$3" "$4" ;;
+	db_region_parzelle) db_region_parzelle "$2" "$3" "$4" ;;
+	db_region_parzelle_pakete) db_region_parzelle_pakete "$2" "$3" "$4" ;;
+	db_region_anzahl_regionsnamen) db_region_anzahl_regionsnamen "$2" "$3" "$4" ;;
+	db_region_anzahl_regionsid) db_region_anzahl_regionsid "$2" "$3" "$4" ;;
+	db_inventar_no_assets) db_inventar_no_assets "$2" "$3" "$4" ;;
 	*) hauptmenu ;;
 esac
 vardel
