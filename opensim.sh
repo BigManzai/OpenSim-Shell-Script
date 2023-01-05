@@ -38,7 +38,7 @@
 ### #!powershell
 ### #!/usr/bin/env pwsh
 
-# ? opensimMULTITOOL Copyright (c) 2021 2022 BigManzai Manfred Aabye
+# ? opensimMULTITOOL Copyright (c) 2021 2023 BigManzai Manfred Aabye
 # opensim.sh Basiert auf meinen Einzelscripten, an denen ich bereits 7 Jahre Arbeite und verbessere.
 # Da Server unterschiedlich sind, kann eine einwandfreie fuunktion nicht gewaehrleistet werden, also bitte mit bedacht verwenden.
 # Die Benutzung dieses Scriptes, oder deren Bestandteile, erfolgt auf eigene Gefahr!!!
@@ -54,14 +54,14 @@
 # ! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 # ! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-# * Status 19.11.2022 314 Funktionen.
+# * Status 05.01.2023 316 Funktionen.
 
 # # Visual Studio Code # ShellCheck # shellman # Better Comments # outline map #
 
 #### ? Einstellungen ####
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe
-VERSION="V0.80.704" # opensimMULTITOOL Versionsausgabe
+VERSION="V0.80.709" # opensimMULTITOOL Versionsausgabe
 #clear # Bildschirmausgabe loeschen.
 #reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
@@ -3685,6 +3685,13 @@ function installobensimulator() {
 	iinstall dialog
 	iinstall at
 	iinstall mysqltuner
+	# Sicherheit 2023
+	iinstall2 iptables
+	iinstall2 fail2ban
+	# fail2ban - In der Datei jail.local werden alle von der jail.conf abweichenden Einträge eingestellt.
+	# maxfailures = 3 
+	# bantime = 900 
+	# findtime = 600
 }
 
 ### !  installbegin
@@ -3734,6 +3741,34 @@ function installubuntu22() {
 	iinstall2 graphicsmagick
 	iinstall2 git
 	iinstall2 libopenjp3d7
+	iinstall2 iptables
+	iinstall2 fail2ban
+}
+
+### !  iptablesset
+function iptablesset() {
+	ipsperradresse=$1
+	# Eine IP-Adresse für eingehende Datenpakete sperren
+	iptables -A INPUT -s $ipsperradresse -j DROP
+
+	# Eine IP-Adresse für ausgehende Datenpakete sperren
+	iptables -A OUTPUT -s $ipsperradresse -j DROP
+
+	# Alle IP-Adressen in den IPTABLES mitsamt Zeilennummern anzeigen, die momentan gesperrt sind
+	iptables -L INPUT -n --line-numbers
+}
+### !  fail2banset
+function fail2banset() {
+	echo ""
+	# /etc/fail2ban/jail.local
+	# fail2ban - In der Datei jail.local werden alle von der jail.conf abweichenden Eintraege eingestellt.
+	# maxfailures = 3 
+	# bantime = 900 
+	# findtime = 600
+
+	echo "maxfailures = 3 
+bantime = 900 
+findtime = 600" >/etc/fail2ban/jail.local
 }
 
 ### !  ufwset
@@ -10302,6 +10337,8 @@ case $KOMMANDO in
 	db_region_anzahl_regionsnamen) db_region_anzahl_regionsnamen "$2" "$3" "$4" ;;
 	db_region_anzahl_regionsid) db_region_anzahl_regionsid "$2" "$3" "$4" ;;
 	db_inventar_no_assets) db_inventar_no_assets "$2" "$3" "$4" ;;
+	iptablesset) iptablesset "$2" ;;
+	fail2banset) fail2banset ;;
 	*) hauptmenu ;;
 esac
 vardel
