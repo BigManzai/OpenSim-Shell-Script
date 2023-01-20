@@ -125,5 +125,5 @@ Bisher sind nur Funktionen im Menü die maximal 1 Übergabewert voraussetzen.
 
 
 ## TODO und Informationen
-configure.sh eine teilautomatisierte konfiguration aller im OpenSimulator enthaltenden Konfigurationsdateien.
-Configure befindet sich im Entwurfs- und frühen Teststadium.
+     configure.sh eine teilautomatisierte konfiguration aller im OpenSimulator enthaltenden Konfigurationsdateien.
+     Configure befindet sich im Entwurfs- und frühen Teststadium.
