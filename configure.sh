@@ -19,7 +19,7 @@
 STARTVERZEICHNIS="opt";
 
 SCRIPTNAME="configure" # Versionsausgabe
-VERSION="0.1.4" # Versionsausgabe
+VERSION="0.1.6 ALPHA" # Versionsausgabe
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 echo "$SCRIPTNAME Version $VERSION"
 echo " "
@@ -213,7 +213,14 @@ function MoneyServersetup() {
 
     if [ "$auswahlMoneyServersetup" = "ja" ]
     then
+        echo "Ein Fehler der immer wieder begangen wird,"
+        echo "ist das man nicht einen extra Banker anlegt,"
+        echo "der nur für die Grid Vermögenswerte,"
+        echo "beziehungsweise Grid Geldautomaten/Glücksspielautomaten zuständig ist."
+        echo "Ein Avatar der Banker ist, kann sich nicht selbst Geld geben oder verdienen."
+        echo " "
         echo "Datenbankeinstellungen für den Money Server"
+        echo " "
         echo "Money Server Adresse [localhost]"
         read -r localhost
         if [ "$localhost" = "" ]; then localhost="localhost"; fi
@@ -242,6 +249,59 @@ function MoneyServersetup() {
         crudini --set /$STARTVERZEICHNIS/AutoConfig/MoneyServer.ini MoneyServer EnableScriptSendMoney "\"true\""
         crudini --set /$STARTVERZEICHNIS/AutoConfig/MoneyServer.ini MoneyServer MoneyScriptAccessKey  "\"$AccessKey\""
         crudini --set /$STARTVERZEICHNIS/AutoConfig/MoneyServer.ini MoneyServer MoneyScriptIPaddress  "\"$ScriptIPaddress\""
+
+        # Die MoneyServer einstellungen für die Regionen
+        # [Economy]OpenSim.ini
+        # SellEnabled = true
+        # EconomyModule = DTLNSLMoneyModule
+        # CurrencyServer = "${Const|BaseURL}:8008/"
+        # UserServer = "${Const|BaseURL}:8002/"
+        # CheckServerCert = false
+        # PriceUpload = 0
+        # MeshModelUploadCostFactor = 1.0
+        # MeshModelUploadTextureCostFactor = 1.0
+        # MeshModelMinCostFactor = 1.0
+        # PriceGroupCreate = 0
+        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Economy SellEnabled "true"
+        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Economy EconomyModule "DTLNSLMoneyModule"
+        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Economy CurrencyServer "\"\${Const|BaseURL}:8008/\""
+        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Economy UserServer "\"\${Const|BaseURL}:8002/\""
+        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Economy CheckServerCert "false"
+        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Economy PriceUpload "0"
+        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Economy MeshModelUploadCostFactor "1.0"
+        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Economy MeshModelUploadTextureCostFactor "1.0"
+        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Economy MeshModelMinCostFactor "1.0"
+        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Economy PriceGroupCreate "0"
+        
+        # ObjectCount = 0
+        # PriceEnergyUnit = 0
+        # PriceObjectClaim = 0
+        # PricePublicObjectDecay = 0
+        # PricePublicObjectDelete = 0
+        # PriceParcelClaim = 0
+        # PriceParcelClaimFactor = 1
+        # PriceRentLight = 0
+        # TeleportMinPrice = 0
+        # TeleportPriceExponent = 2
+        # EnergyEfficiency = 1
+        # PriceObjectRent = 0
+        # PriceObjectScaleFactor = 10
+        # PriceParcelRent = 0
+        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Economy ObjectCount "0"
+        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Economy PriceEnergyUnit "0"
+        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Economy PriceObjectClaim "0"
+        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Economy PricePublicObjectDecay "0"
+        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Economy PricePublicObjectDelete "0"
+        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Economy PriceParcelClaim "0"
+        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Economy PriceParcelClaimFactor "1"
+        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Economy PriceRentLight "0"
+        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Economy TeleportMinPrice "0"
+        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Economy TeleportPriceExponent "2"
+        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Economy EnergyEfficiency "1"
+        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Economy PriceObjectRent "0"
+        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Economy PriceObjectScaleFactor "10"
+        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Economy PriceParcelRent "0"
+
     fi
 if [ "$auswahlMoneyServersetup" = "nein" ]; then echo "weiter..."; fi
 }
@@ -509,7 +569,7 @@ function RobustHGsetup() {
         crudini --set /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini GatekeeperService DeniedMacs "\"44ed33b396b10a5c95d04967aff8bd9c|5574234b1336a4523b6acb803737b608\""
         crudini --set /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini GatekeeperService DeniedID0s "\"d1fdb346d01a3bda2dcb82322bd88456\""
         #[UserAgentService]/$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini UserAgentService ShowUserDetailsInHGProfile "\"True\""
+        crudini --set /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini UserAgentService ShowUserDetailsInHGProfile "\"True\""  
     fi
 if [ "$auswahlRobustHGsetup" = "nein" ]; then echo "weiter..."; fi
 }
@@ -863,6 +923,25 @@ function hypergridsetup() {
 if [ "$auswahlhypergrid" = "nein" ]; then echo "weiter..."; fi
 }
 
+### ! Messaging Konfigurationen schreiben
+function Messagingsetup() {
+echo "OpenSim.ini Messagingsetup"
+
+# [Messaging]OpenSim.ini
+# OfflineMessageModule = "Offline Message Module V2"
+# OfflineMessageURL = ${Const|PrivURL}:${Const|PrivatePort}
+# StorageProvider = OpenSim.Data.MySQL.dll
+# MuteListModule = MuteListModule
+# ForwardOfflineGroupMessages = true
+crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Messaging OfflineMessageModule "Offline Message Module V2"
+crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Messaging OfflineMessageURL "\${Const|PrivURL}:\${Const|PrivatePort}"
+crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Messaging StorageProvider "OpenSim.Data.MySQL.dll"
+crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Messaging MuteListModule "MuteListModule"
+crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Messaging ForwardOfflineGroupMessages "true"
+
+}
+
+
 # Programmablauf: Funktionen aufrufen
 linstall
 configsetup
@@ -881,6 +960,7 @@ Robustsetup
 StandaloneCommonsetup
 LaunchSLClientsetup
 regionconfig
+#Messagingsetup
 
 # TODO
 # Zum schluss müssen alle Konfigurationen an ihren richtigen Platz kopiert werden.
