@@ -17,7 +17,7 @@
 #? Der nachteil dieser art von konfiguration ist, das die Zeilen keine leerzeichen und Tabs am anfang haben dürfen.
 
 SCRIPTNAME="configure" # opensimMULTITOOL Versionsausgabe
-VERSION="0.1.1" # opensimMULTITOOL Versionsausgabe
+VERSION="0.1.2" # opensimMULTITOOL Versionsausgabe
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 echo "$SCRIPTNAME Version $VERSION"
 echo " "
@@ -29,6 +29,10 @@ echo " "
 echo "ABBRUCH MIT DER TASTENKOMBINATION"
 echo "########  STRG + C  #############"
 echo " "; echo " ";
+# echo "Möchten sie die automatische konfiguration starten?"
+# echo "ja oder [nein]"
+# read -r starten
+# if [ "$starten" = "" ]; then starten="nein"; fi
 
 #! Die ganzen Konfigurationen im Überblick:
 # Estates.ini.example
@@ -85,27 +89,29 @@ echo " "; echo " ";
 
 ### ! Linux Installation
 function linstall() {
-auswahllinstall="ja" # Vorgabe ja
-echo "Haben sie ihren Ubuntu 22 Server bereits vorbereitet, für die Installation des OpenSimulator?"
-echo "Tippen sie nein ein um ihren Server zu Installieren."
-echo "Bitte tippen Sie [ja] oder nein ein:"
+echo "Möchten sie ihren Ubuntu 22 Server vorbereitet, für die Installation des OpenSimulator?"
+echo "Tippen sie nein ja um ihren Server zu Installieren."
+echo "Bitte tippen Sie ja oder [nein] ein:"
 read -r auswahllinstall
-if [ "$auswahllinstall" = "ja" ]; then echo "weiter..."; fi
-if [ "$auswahllinstall" = "nein" ]
+if [ "$auswahllinstall" = "" ]; then auswahllinstall="nein"; fi
+
+if [ "$auswahllinstall" = "ja" ]
     then 
         cd /opt || exit
         echo "Server wird installiert..."
         /opt/opensim.sh serverinstall22
     fi
+if [ "$auswahllinstall" = "nein" ]; then echo "weiter..."; fi
 }
 
-### ! Konfigurationen umbenennen
+### ! Konfigurationen vorbereiten für weitere verarbeitungen
 function configsetup() {
-auswahlconfigsetup="nein" # Vorgabe nein
-echo "Möchten Sie ihre Konfigurationen umbenennen von .ini.example in bearbeitbare .ini?"
+echo "Möchten Sie ihre Konfigurationen vorbereiten für die weitere verarbeitung?"
 echo "Keine Angst die Originaldateien werden als *.backup gesichert."
 echo "ja oder [nein]"
 read -r auswahlconfigsetup
+if [ "$auswahlconfigsetup" = "" ]; then auswahlconfigsetup="nein"; fi
+
 if [ "$auswahlconfigsetup" = "ja" ] 
 then
     # INI Datei von Leerzeichen und Tabs am anfang des Textes befreien.
@@ -142,125 +148,165 @@ then
     cp Robust.HG.ini.example Robust.HG.ini
     cp Robust.ini.example Robust.ini
     cp StandaloneCommon.ini.example StandaloneCommon.ini
-fi
+    fi
 if [ "$auswahlconfigsetup" = "nein" ]; then echo "weiter..."; fi
 }
 
 ### ! Estates.ini
 function Estatessetup() {
-    echo " "; echo " ";
-    UUID=$(uuidgen)
-    echo "Estates.ini"
-    echo "Estate Name eingeben [Example Estate]"
-    read -r Example_Estate
-    echo "Benutzer UUID eingeben [$UUID]"
-    read -r Owner
-    echo "Estate ID eingeben [0]"
-    read -r EstateID
+    echo "Möchten Sie ihre Estates vorgeben?"
+    echo "ja oder [nein]"
+    read -r auswahlEstatessetup
+    if [ "$auswahlEstatessetup" = "" ]; then auswahlEstatessetup="nein"; fi
 
-    if [ "$Example_Estate" = "" ]; then Example_Estate="Example Estate"; fi
-    if [ "$Owner" = "" ]; then Owner="$UUID"; fi
-    if [ "$EstateID" = "" ]; then EstateID="0"; fi
+    if [ "$auswahlEstatessetup" = "ja" ]
+    then
+        echo " "; echo " ";
+        UUID=$(uuidgen)
+        echo "Estates.ini"
+        echo "Estate Name eingeben [Example Estate]"
+        read -r Example_Estate
+        echo "Benutzer UUID eingeben [$UUID]"
+        read -r Owner
+        echo "Estate ID eingeben [0]"
+        read -r EstateID
 
-    crudini --set Estates.ini "$Example_Estate"
-    crudini --set Estates.ini "$Example_Estate" Owner "\"$Owner\""
-    crudini --set Estates.ini "$Example_Estate" EstateID "\"$EstateID\""
+        if [ "$Example_Estate" = "" ]; then Example_Estate="Example Estate"; fi
+        if [ "$Owner" = "" ]; then Owner="$UUID"; fi
+        if [ "$EstateID" = "" ]; then EstateID="0"; fi
+
+        crudini --set Estates.ini "$Example_Estate"
+        crudini --set Estates.ini "$Example_Estate" Owner "\"$Owner\""
+        crudini --set Estates.ini "$Example_Estate" EstateID "\"$EstateID\""
+    fi
+if [ "$auswahlEstatessetup" = "nein" ]; then echo "weiter..."; fi
 }
 ### ! FlotsamCache.ini
 function FlotsamCachesetup() {
     echo " "; echo " ";
-    echo "FlotsamCache.ini"
-    echo "Wie oft in Stunden soll die Festplatte auf abgelaufene Dateien überprüft werden? Geben Sie 0 an, um die Ablaufprüfung zu deaktivieren [48.0]"
-    read -r FlotsamTime
-    if [ "$FlotsamTime" = "" ]; then FlotsamTime="48.0"; fi
-    #[AssetCache]FlotsamCache.ini
-    crudini --set FlotsamCache.ini AssetCache FileCleanupTimer "\"$FlotsamTime\""
+    echo "Möchten Sie Flotsam Cache einstellen?"
+    echo "ja oder [nein]"
+    read -r auswahlFlotsamCachesetup
+    if [ "$auswahlFlotsamCachesetup" = "" ]; then auswahlFlotsamCachesetup="nein"; fi
+
+    if [ "$auswahlFlotsamCachesetup" = "ja" ]
+    then
+        echo "FlotsamCache.ini"
+        echo "Wie oft in Stunden soll die Festplatte auf abgelaufene Dateien überprüft werden?"
+        echo "Geben Sie 0 an, um die Ablaufprüfung zu deaktivieren [24.0]"
+        read -r FlotsamTime
+        if [ "$FlotsamTime" = "" ]; then FlotsamTime="24.0"; fi
+        #[AssetCache]FlotsamCache.ini
+        crudini --set FlotsamCache.ini AssetCache FileCleanupTimer "\"$FlotsamTime\""
+    fi
+if [ "$auswahlFlotsamCachesetup" = "nein" ]; then echo "weiter..."; fi
 }
 ### ! MoneyServer.ini
 function MoneyServersetup() {
-    echo " "; echo " ";
-    echo "MoneyServer.ini"
+    echo " "; echo " "; echo "MoneyServer.ini";
+    echo "Möchten Sie den Money Server konfigurieren?"
+    echo "ja oder [nein]"
+    read -r auswahlMoneyServersetup
+    if [ "$auswahlMoneyServersetup" = "" ]; then auswahlMoneyServersetup="nein"; fi
 
-    echo "Datenbankeinstellungen für den Money Server"
-    echo "Money Server Adresse [localhost]"
-    read -r localhost
-    if [ "$localhost" = "" ]; then localhost="localhost"; fi
-    echo "Datenbankname [name]"
-    read -r Database_name
-    if [ "$Database_name" = "" ]; then Database_name="name"; fi
-    echo "Datenbank Benutzername [opensim]"
-    read -r Database_user
-    if [ "$Database_user" = "" ]; then Database_user="opensim"; fi
-    echo "Datenbank Passwort [opensim]"
-    read -r Database_password
-    if [ "$Database_password" = "" ]; then Database_password="opensim"; fi
-    echo "Money Server Zugangsschlüssel [123456789]"
-    read -r AccessKey
-    if [ "$AccessKey" = "" ]; then AccessKey="123456789"; fi
-    echo "Money Server IP Adresse [$AKTUELLEIP]"
-    read -r ScriptIPaddress
-    if [ "$ScriptIPaddress" = "" ]; then ScriptIPaddress="$AKTUELLEIP"; fi
+    if [ "$auswahlMoneyServersetup" = "ja" ]
+    then
+        echo "Datenbankeinstellungen für den Money Server"
+        echo "Money Server Adresse [localhost]"
+        read -r localhost
+        if [ "$localhost" = "" ]; then localhost="localhost"; fi
+        echo "Datenbankname [name]"
+        read -r Database_name
+        if [ "$Database_name" = "" ]; then Database_name="name"; fi
+        echo "Datenbank Benutzername [opensim]"
+        read -r Database_user
+        if [ "$Database_user" = "" ]; then Database_user="opensim"; fi
+        echo "Datenbank Passwort [opensim]"
+        read -r Database_password
+        if [ "$Database_password" = "" ]; then Database_password="opensim"; fi
+        echo "Money Server Zugangsschlüssel [123456789]"
+        read -r AccessKey
+        if [ "$AccessKey" = "" ]; then AccessKey="123456789"; fi
+        echo "Money Server IP Adresse [$AKTUELLEIP]"
+        read -r ScriptIPaddress
+        if [ "$ScriptIPaddress" = "" ]; then ScriptIPaddress="$AKTUELLEIP"; fi
 
-    #[MySql]MoneyServer.ini
-    crudini --set MoneyServer.ini MySql hostname "\"$localhost\""
-    crudini --set MoneyServer.ini MySql database "\"$Database_name\""
-    crudini --set MoneyServer.ini MySql username "\"$Database_user\""
-    crudini --set MoneyServer.ini MySql password = "\"$Database_password\""
-    #[MoneyServer]MoneyServer.ini 
-    crudini --set MoneyServer.ini MoneyServer EnableScriptSendMoney "\"true\""
-    crudini --set MoneyServer.ini MoneyServer MoneyScriptAccessKey  "\"$AccessKey\""
-    crudini --set MoneyServer.ini MoneyServer MoneyScriptIPaddress  "\"$ScriptIPaddress\""
+        #[MySql]MoneyServer.ini
+        crudini --set MoneyServer.ini MySql hostname "\"$localhost\""
+        crudini --set MoneyServer.ini MySql database "\"$Database_name\""
+        crudini --set MoneyServer.ini MySql username "\"$Database_user\""
+        crudini --set MoneyServer.ini MySql password = "\"$Database_password\""
+        #[MoneyServer]MoneyServer.ini 
+        crudini --set MoneyServer.ini MoneyServer EnableScriptSendMoney "\"true\""
+        crudini --set MoneyServer.ini MoneyServer MoneyScriptAccessKey  "\"$AccessKey\""
+        crudini --set MoneyServer.ini MoneyServer MoneyScriptIPaddress  "\"$ScriptIPaddress\""
+    fi
+if [ "$auswahlMoneyServersetup" = "nein" ]; then echo "weiter..."; fi
 }
 
 ### ! OpenSim.ini
 function OpenSimsetup() {
-    echo " "; echo " ";
-    echo "OpenSim.ini"
-    # [DataSnapshot]OpenSim.ini
-    crudini --set OpenSim.ini DataSnapshot index_sims "\"true\""
-    crudini --set OpenSim.ini DataSnapshot data_exposure "\"minimum\""
-    crudini --set OpenSim.ini DataSnapshot default_snapshot_period "\"7200\""
-    crudini --set OpenSim.ini DataSnapshot snapshot_cache_directory "\"DataSnapshot\""
-    # [Startup]OpenSim.ini
-    crudini --set OpenSim.ini Startup NonPhysicalPrimMax "\"1024\""
-    crudini --set OpenSim.ini Startup AllowScriptCrossing "\"false\""
-    crudini --set OpenSim.ini Startup DefaultDrawDistance "\"128.0\""
-    crudini --set OpenSim.ini Startup MaxDrawDistance "\"128\""
-    crudini --set OpenSim.ini Startup MaxRegionsViewDistance "\"128\""
-    crudini --set OpenSim.ini Startup MinRegionsViewDistance "\"48\""
-    # [AccessControl]OpenSim.ini
-    crudini --set OpenSim.ini AccessControl DeniedClients "\"Imprudence,CopyBot,Twisted,Crawler,Cryolife,darkstorm,DarkStorm,Darkstorm\""
-    # [Map]OpenSim.ini
-    crudini --set OpenSim.ini Map DrawPrimOnMapTile "\"true\""
-    crudini --set OpenSim.ini Map RenderMeshes "\"true\""
-    # [Permissions]OpenSim.ini
-    crudini --set OpenSim.ini Permissions allow_grid_gods "\"true\""
-    # [Network]OpenSim.ini
-    crudini --set OpenSim.ini Network user_agent "\"OpenSim LSL (Mozilla Compatible)\""
-    # [ClientStack.LindenUDP]OpenSim.ini
-    crudini --set OpenSim.ini ClientStack.LindenUDP DisableFacelights "\"true\""
-    crudini --set OpenSim.ini ClientStack.LindenUDP client_throttle_max_bps "\"400000\""
-    crudini --set OpenSim.ini ClientStack.LindenUDP scene_throttle_max_bps "\"70000000\""
-    # [SimulatorFeatures]OpenSim.ini
-    crudini --set OpenSim.ini SimulatorFeatures SearchServerURI "\"\$\{Const\|BaseURL\}:\$\{Const\|PublicPort\}\""
-    crudini --set OpenSim.ini SimulatorFeatures DestinationGuideURI "\"\$\{Const\|BaseURL\}:\$\{Const\|PublicPort\}\""
-    # [InterestManagement]OpenSim.ini
-    crudini --set OpenSim.ini InterestManagement UpdatePrioritizationScheme "\"BestAvatarResponsiveness\""
-    crudini --set OpenSim.ini InterestManagement ObjectsCullingByDistance "\"true\""
-    # [Terrain]OpenSim.ini
-    crudini --set OpenSim.ini Terrain InitialTerrain "\"flat\""
-    # [UserProfiles]OpenSim.ini
-    crudini --set OpenSim.ini UserProfiles ProfileServiceURL "\"\$\{Const\|BaseURL\}:\$\{Const\|PublicPort\}\""
-    crudini --set OpenSim.ini UserProfiles AllowUserProfileWebURLs "\"true\""
-    # [Materials]OpenSim.ini
-    crudini --set OpenSim.ini Materials enable_materials "\"true\""
-    crudini --set OpenSim.ini Materials MaxMaterialsPerTransaction "\"250\""
+    echo " "; echo " "; echo "OpenSim.ini";
+    echo "Möchten Sie den OpenSimulator konfigurieren?"
+    echo "ja oder [nein]"
+    read -r auswahlOpenSimsetup
+    if [ "$auswahlOpenSimsetup" = "" ]; then auswahlOpenSimsetup="nein"; fi
+
+    if [ "$auswahlOpenSimsetup" = "ja" ]
+    then
+        # [DataSnapshot]OpenSim.ini
+        crudini --set OpenSim.ini DataSnapshot index_sims "\"true\""
+        crudini --set OpenSim.ini DataSnapshot data_exposure "\"minimum\""
+        crudini --set OpenSim.ini DataSnapshot default_snapshot_period "\"7200\""
+        crudini --set OpenSim.ini DataSnapshot snapshot_cache_directory "\"DataSnapshot\""
+        # [Startup]OpenSim.ini
+        crudini --set OpenSim.ini Startup NonPhysicalPrimMax "\"1024\""
+        crudini --set OpenSim.ini Startup AllowScriptCrossing "\"false\""
+        crudini --set OpenSim.ini Startup DefaultDrawDistance "\"128.0\""
+        crudini --set OpenSim.ini Startup MaxDrawDistance "\"128\""
+        crudini --set OpenSim.ini Startup MaxRegionsViewDistance "\"128\""
+        crudini --set OpenSim.ini Startup MinRegionsViewDistance "\"48\""
+        # [AccessControl]OpenSim.ini
+        crudini --set OpenSim.ini AccessControl DeniedClients "\"Imprudence,CopyBot,Twisted,Crawler,Cryolife,darkstorm,DarkStorm,Darkstorm\""
+        # [Map]OpenSim.ini
+        crudini --set OpenSim.ini Map DrawPrimOnMapTile "\"true\""
+        crudini --set OpenSim.ini Map RenderMeshes "\"true\""
+        # [Permissions]OpenSim.ini
+        crudini --set OpenSim.ini Permissions allow_grid_gods "\"true\""
+        # [Network]OpenSim.ini
+        crudini --set OpenSim.ini Network user_agent "\"OpenSim LSL (Mozilla Compatible)\""
+        # [ClientStack.LindenUDP]OpenSim.ini
+        crudini --set OpenSim.ini ClientStack.LindenUDP DisableFacelights "\"true\""
+        crudini --set OpenSim.ini ClientStack.LindenUDP client_throttle_max_bps "\"400000\""
+        crudini --set OpenSim.ini ClientStack.LindenUDP scene_throttle_max_bps "\"70000000\""
+        # [SimulatorFeatures]OpenSim.ini
+        crudini --set OpenSim.ini SimulatorFeatures SearchServerURI "\"\$\{Const\|BaseURL\}:\$\{Const\|PublicPort\}\""
+        crudini --set OpenSim.ini SimulatorFeatures DestinationGuideURI "\"\$\{Const\|BaseURL\}:\$\{Const\|PublicPort\}\""
+        # [InterestManagement]OpenSim.ini
+        crudini --set OpenSim.ini InterestManagement UpdatePrioritizationScheme "\"BestAvatarResponsiveness\""
+        crudini --set OpenSim.ini InterestManagement ObjectsCullingByDistance "\"true\""
+        # [Terrain]OpenSim.ini
+        crudini --set OpenSim.ini Terrain InitialTerrain "\"flat\""
+        # [UserProfiles]OpenSim.ini
+        crudini --set OpenSim.ini UserProfiles ProfileServiceURL "\"\$\{Const\|BaseURL\}:\$\{Const\|PublicPort\}\""
+        crudini --set OpenSim.ini UserProfiles AllowUserProfileWebURLs "\"true\""
+        # [Materials]OpenSim.ini
+        crudini --set OpenSim.ini Materials enable_materials "\"true\""
+        crudini --set OpenSim.ini Materials MaxMaterialsPerTransaction "\"250\""
+    fi
+if [ "$auswahlOpenSimsetup" = "nein" ]; then echo "weiter..."; fi
 }
 
 ### ! osslEnable.ini
 function osslEnablesetup() {
-    echo " "; echo " ";
-    echo "osslEnable.ini"
+    echo " "; echo " "; echo "osslEnable.ini";
+    echo "Möchten Sie den osslEnable konfigurieren?"
+    echo "ja oder [nein]"
+    read -r auswahlosslEnablesetup
+    if [ "$auswahlosslEnablesetup" = "" ]; then auswahlosslEnablesetup="nein"; fi
+
+    if [ "$auswahlosslEnablesetup" = "ja" ]
+    then
     echo "OpenSimulator Skript Level Einstellungen"
     echo "Weitere Informationen zu diesen Ebenen finden Sie unter http://opensimulator.org/wiki/Threat_level."
     echo "Die flächendeckende Aktivierung der ossl-Funktionen ist gefährlich und wir empfehlen keine höhere Einstellung als [VeryLow]"
@@ -420,85 +466,119 @@ Allow_osTeleportObject =          ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER
 ; ThreatLevel  Severe with additional internal restrictions
 Allow_osGetAgentIP =              true   ; always restricted to Administrators (true or false to disable)
 Allow_osSetContentType =          false" >> osslEnable.ini
+fi
+if [ "$auswahlosslEnablesetup" = "nein" ]; then echo "weiter..."; fi
 }
 
 ### ! Robust.HG.ini
 function RobustHGsetup() {
-    echo " "; echo " ";
-    echo "Robust.HG.ini"
-    #[ServiceList]Robust.HG.ini
-    crudini --set Robust.HG.ini ServiceList OfflineIMServiceConnector "\"\${Const|PrivatePort}/OpenSim.Addons.OfflineIM.dll:OfflineIMServiceRobustConnector\""
-    crudini --set Robust.HG.ini ServiceList GroupsServiceConnector "\"\${Const|PrivatePort}/OpenSim.Addons.Groups.dll:GroupsServiceRobustConnector\""
-    crudini --set Robust.HG.ini ServiceList BakedTextureService "\"\${Const|PrivatePort}/OpenSim.Server.Handlers.dll:XBakesConnector\""
-    crudini --set Robust.HG.ini ServiceList UserProfilesServiceConnector "\"\${Const|PublicPort}/OpenSim.Server.Handlers.dll:UserProfilesConnector\""
-    crudini --set Robust.HG.ini ServiceList HGGroupsServiceConnector "\"\${Const|PublicPort}/OpenSim.Addons.Groups.dll:HGGroupsServiceRobustConnector\""
-    #[Hypergrid]Robust.HG.ini
-    crudini --set Robust.HG.ini Hypergrid HomeURI "\"\${Const|BaseURL}:\${Const|PublicPort}\""
-    crudini --set Robust.HG.ini Hypergrid GatekeeperURI "\"\${Const|BaseURL}:\${Const|PublicPort}\""
-    #[AccessControl]Robust.HG.ini
-    crudini --set Robust.HG.ini AccessControl DeniedClients "\"Imprudence|CopyBot|Twisted|Crawler|Cryolife|darkstorm|DarkStorm|Darkstorm|hydrastorm viewer|kinggoon copybot|goon squad copybot|copybot pro|darkstorm viewer|copybot club|darkstorm second life|copybot download|HydraStorm Copybot Viewer|Copybot|Firestorm Pro|DarkStorm v3|DarkStorm v2|ShoopedStorm|HydraStorm|hydrastorm|kinggoon|goon squad|goon|copybot|Shooped|ShoopedStorm|Triforce|Triforce Viewer|Firestorm Professional|ShoopedLife|Sombrero|Sombrero Firestorm|GoonSquad|Solar|SolarStorm\""
-    #[GridService]Robust.HG.ini
-    crudini --set Robust.HG.ini GridService MapTileDirectory "\"./maptiles\""
-    #[LoginService]Robust.HG.ini
-    crudini --set Robust.HG.ini LoginService Currency "\"T$\""
-    crudini --set Robust.HG.ini LoginService ClassifiedFee 0
-    crudini --set Robust.HG.ini LoginService DeniedMacs "\"44ed33b396b10a5c95d04967aff8bd9c|5574234b1336a4523b6acb803737b608\""
-    crudini --set Robust.HG.ini LoginService DeniedID0s "\"d1fdb346d01a3bda2dcb82322bd88456\""
-    #[MapImageService]Robust.HG.ini
-    crudini --set Robust.HG.ini MapImageService TilesStoragePath "\"maptiles\""
-    #[GridInfoService]Robust.HG.ini
-    crudini --set Robust.HG.ini GridInfoService gridname "\"the lost continent of hippo\""
-    crudini --set Robust.HG.ini GridInfoService gridnick "\"hippogrid"
-    crudini --set Robust.HG.ini GridInfoService economy "\"\${Const|BaseURL}/opensim/helper/\""
-    crudini --set Robust.HG.ini GridInfoService about "\"\${Const|BaseURL}/opensim/helper/\""
-    crudini --set Robust.HG.ini GridInfoService register "\"\${Const|BaseURL}/opensim/helper/\""
-    crudini --set Robust.HG.ini GridInfoService help "\"\${Const|BaseURL}/opensim/helper/\""
-    crudini --set Robust.HG.ini GridInfoService password "\${Const|BaseURL}/opensim/helper/\""
-    crudini --set Robust.HG.ini GridInfoService gatekeeper "\"\${Const|BaseURL}:\${Const|PublicPort}/\""
-    crudini --set Robust.HG.ini GridInfoService uas "\"\${Const|BaseURL}:\${Const|PublicPort}/\""
-    #[GatekeeperService]Robust.HG.ini
-    crudini --set Robust.HG.ini GatekeeperService DeniedMacs "\"44ed33b396b10a5c95d04967aff8bd9c|5574234b1336a4523b6acb803737b608\""
-    crudini --set Robust.HG.ini GatekeeperService DeniedID0s "\"d1fdb346d01a3bda2dcb82322bd88456\""
-    #[UserAgentService]Robust.HG.ini
-    crudini --set Robust.HG.ini UserAgentService ShowUserDetailsInHGProfile "\"True\""
+    echo " "; echo " "; echo "Robust.HG.ini";
+    echo "Möchten Sie den Robust Hypergrid konfigurieren?"
+    echo "ja oder [nein]"
+    read -r auswahlRobustHGsetup
+    if [ "$auswahlRobustHGsetup" = "" ]; then auswahlRobustHGsetup="nein"; fi
+
+    if [ "$auswahlRobustHGsetup" = "ja" ]
+    then
+        #[ServiceList]Robust.HG.ini
+        crudini --set Robust.HG.ini ServiceList OfflineIMServiceConnector "\"\${Const|PrivatePort}/OpenSim.Addons.OfflineIM.dll:OfflineIMServiceRobustConnector\""
+        crudini --set Robust.HG.ini ServiceList GroupsServiceConnector "\"\${Const|PrivatePort}/OpenSim.Addons.Groups.dll:GroupsServiceRobustConnector\""
+        crudini --set Robust.HG.ini ServiceList BakedTextureService "\"\${Const|PrivatePort}/OpenSim.Server.Handlers.dll:XBakesConnector\""
+        crudini --set Robust.HG.ini ServiceList UserProfilesServiceConnector "\"\${Const|PublicPort}/OpenSim.Server.Handlers.dll:UserProfilesConnector\""
+        crudini --set Robust.HG.ini ServiceList HGGroupsServiceConnector "\"\${Const|PublicPort}/OpenSim.Addons.Groups.dll:HGGroupsServiceRobustConnector\""
+        #[Hypergrid]Robust.HG.ini
+        crudini --set Robust.HG.ini Hypergrid HomeURI "\"\${Const|BaseURL}:\${Const|PublicPort}\""
+        crudini --set Robust.HG.ini Hypergrid GatekeeperURI "\"\${Const|BaseURL}:\${Const|PublicPort}\""
+        #[AccessControl]Robust.HG.ini
+        crudini --set Robust.HG.ini AccessControl DeniedClients "\"Imprudence|CopyBot|Twisted|Crawler|Cryolife|darkstorm|DarkStorm|Darkstorm|hydrastorm viewer|kinggoon copybot|goon squad copybot|copybot pro|darkstorm viewer|copybot club|darkstorm second life|copybot download|HydraStorm Copybot Viewer|Copybot|Firestorm Pro|DarkStorm v3|DarkStorm v2|ShoopedStorm|HydraStorm|hydrastorm|kinggoon|goon squad|goon|copybot|Shooped|ShoopedStorm|Triforce|Triforce Viewer|Firestorm Professional|ShoopedLife|Sombrero|Sombrero Firestorm|GoonSquad|Solar|SolarStorm\""
+        #[GridService]Robust.HG.ini
+        crudini --set Robust.HG.ini GridService MapTileDirectory "\"./maptiles\""
+        #[LoginService]Robust.HG.ini
+        crudini --set Robust.HG.ini LoginService Currency "\"T$\""
+        crudini --set Robust.HG.ini LoginService ClassifiedFee 0
+        crudini --set Robust.HG.ini LoginService DeniedMacs "\"44ed33b396b10a5c95d04967aff8bd9c|5574234b1336a4523b6acb803737b608\""
+        crudini --set Robust.HG.ini LoginService DeniedID0s "\"d1fdb346d01a3bda2dcb82322bd88456\""
+        #[MapImageService]Robust.HG.ini
+        crudini --set Robust.HG.ini MapImageService TilesStoragePath "\"maptiles\""
+        #[GridInfoService]Robust.HG.ini
+        crudini --set Robust.HG.ini GridInfoService gridname "\"the lost continent of hippo\""
+        crudini --set Robust.HG.ini GridInfoService gridnick "\"hippogrid"
+        crudini --set Robust.HG.ini GridInfoService economy "\"\${Const|BaseURL}/opensim/helper/\""
+        crudini --set Robust.HG.ini GridInfoService about "\"\${Const|BaseURL}/opensim/helper/\""
+        crudini --set Robust.HG.ini GridInfoService register "\"\${Const|BaseURL}/opensim/helper/\""
+        crudini --set Robust.HG.ini GridInfoService help "\"\${Const|BaseURL}/opensim/helper/\""
+        crudini --set Robust.HG.ini GridInfoService password "\${Const|BaseURL}/opensim/helper/\""
+        crudini --set Robust.HG.ini GridInfoService gatekeeper "\"\${Const|BaseURL}:\${Const|PublicPort}/\""
+        crudini --set Robust.HG.ini GridInfoService uas "\"\${Const|BaseURL}:\${Const|PublicPort}/\""
+        #[GatekeeperService]Robust.HG.ini
+        crudini --set Robust.HG.ini GatekeeperService DeniedMacs "\"44ed33b396b10a5c95d04967aff8bd9c|5574234b1336a4523b6acb803737b608\""
+        crudini --set Robust.HG.ini GatekeeperService DeniedID0s "\"d1fdb346d01a3bda2dcb82322bd88456\""
+        #[UserAgentService]Robust.HG.ini
+        crudini --set Robust.HG.ini UserAgentService ShowUserDetailsInHGProfile "\"True\""
+    fi
+if [ "$auswahlRobustHGsetup" = "nein" ]; then echo "weiter..."; fi
 }
 ### ! Robust.ini
 function Robustsetup() {
-    echo " "; echo " ";
-    echo "Robust.ini"
-    #[ServiceList]Robust.ini
-    crudini --set Robust.ini ServiceList OfflineIMServiceConnector "\"\${Const|PrivatePort}/OpenSim.Addons.OfflineIM.dll:OfflineIMServiceRobustConnector\""
-    crudini --set Robust.ini ServiceList GroupsServiceConnector "\"\${Const|PrivatePort}/OpenSim.Addons.Groups.dll:GroupsServiceRobustConnector\""
-    crudini --set Robust.ini ServiceList BakedTextureService "\"\${Const|PrivatePort}/OpenSim.Server.Handlers.dll:XBakesConnector\""
-    crudini --set Robust.ini ServiceList UserProfilesServiceConnector "\"\${Const|PublicPort}/OpenSim.Server.Handlers.dll:UserProfilesConnector\""
+    echo " "; echo " "; echo "Robust.ini";
+    echo "Möchten Sie den Robust konfigurieren?"
+    echo "ja oder [nein]"
+    read -r auswahlRobustsetup
+    if [ "$auswahlRobustsetup" = "" ]; then auswahlRobustsetup="nein"; fi
+
+    if [ "$auswahlRobustsetup" = "ja" ]
+    then
+        #[ServiceList]Robust.ini
+        crudini --set Robust.ini ServiceList OfflineIMServiceConnector "\"\${Const|PrivatePort}/OpenSim.Addons.OfflineIM.dll:OfflineIMServiceRobustConnector\""
+        crudini --set Robust.ini ServiceList GroupsServiceConnector "\"\${Const|PrivatePort}/OpenSim.Addons.Groups.dll:GroupsServiceRobustConnector\""
+        crudini --set Robust.ini ServiceList BakedTextureService "\"\${Const|PrivatePort}/OpenSim.Server.Handlers.dll:XBakesConnector\""
+        crudini --set Robust.ini ServiceList UserProfilesServiceConnector "\"\${Const|PublicPort}/OpenSim.Server.Handlers.dll:UserProfilesConnector\""
+    fi
+if [ "$auswahlRobustsetup" = "nein" ]; then echo "weiter..."; fi
 }
 
 
 ### ! IP oder DNS in die Konfigurationen schreiben
 function ipdnssetup() {
     echo " "; echo " ";
-    #auswahlipdnssetup="$AKTUELLEIP" # Vorgabe ExterneIP
-    echo "Geben Sie ihre IP Adresse ($AKTUELLEIP) oder ihre DNS (meingrid.de) ein:"
+    echo "Möchten Sie den Konfigurationen ihre IP oder DNS Adresse eintragen?"
+    echo "ja oder [nein]"
     read -r auswahlipdnssetup
+    if [ "$auswahlipdnssetup" = "" ]; then auswahlipdnssetup="nein"; fi
 
-    echo "Robust.ini"
-    #[Const]Robust.ini
-    crudini --set Robust.ini Const BaseURL "\"$auswahlipdnssetup\""
+    if [ "$auswahlipdnssetup" = "ja" ]
+    then
+        #auswahlipdnssetup="$AKTUELLEIP" # Vorgabe ExterneIP
+        echo "Geben Sie ihre IP Adresse ($AKTUELLEIP) oder ihre DNS (meingrid.de) ein:"
+        read -r auswahlipdnssetup
 
-    echo "Robust.HG.ini"
-    #[Const]Robust.HG.ini
-    crudini --set Robust.HG.ini Const BaseURL "\"$auswahlipdnssetup\""
+        echo "Robust.ini"
+        #[Const]Robust.ini
+        crudini --set Robust.ini Const BaseURL "\"$auswahlipdnssetup\""
 
-    echo "OpenSim.ini"
-    # [Const]OpenSim.ini
-    crudini --set OpenSim.ini Const BaseHostname "\"$auswahlipdnssetup\""
-    # [DataSnapshot]OpenSim.ini
-    crudini --set OpenSim.ini DataSnapshot gridname "\"$auswahlipdnssetup\""
+        echo "Robust.HG.ini"
+        #[Const]Robust.HG.ini
+        crudini --set Robust.HG.ini Const BaseURL "\"$auswahlipdnssetup\""
+
+        echo "OpenSim.ini"
+        # [Const]OpenSim.ini
+        crudini --set OpenSim.ini Const BaseHostname "\"$auswahlipdnssetup\""
+        # [DataSnapshot]OpenSim.ini
+        crudini --set OpenSim.ini DataSnapshot gridname "\"$auswahlipdnssetup\""
+    fi
+if [ "$auswahlipdnssetup" = "nein" ]; then echo "weiter..."; fi
 }
 
 ### ! GridCommon.ini und StandaloneCommon.ini Const anlegen
 function constsetup() {
     echo " "; echo " ";
+    echo "Möchten Sie die fehlenden Const bereiche in den GridCommon und StandaloneCommon eintragen?"
+    echo "ja oder [nein]"
+    read -r auswahlconstsetup
+    if [ "$auswahlconstsetup" = "" ]; then auswahlconstsetup="nein"; fi
+
+    if [ "$auswahlconstsetup" = "ja" ]
+    then
     echo "GridCommon.ini Const anlegen"
 
     # Prüfen ob Const vorhanden ist:
@@ -544,197 +624,248 @@ function constsetup() {
         sed -i '5s/.*$/PrivURL = "$\{Const|BaseURL}"\n&/g' StandaloneCommon.ini.ini
         sed -i '6s/.*$/\n&/g' StandaloneCommon.ini.ini
     fi
+    fi
+if [ "$auswahlconstsetup" = "nein" ]; then echo "weiter..."; fi
 }
 ### ! StandaloneCommon.ini
 function StandaloneCommonsetup() {
-    echo " "; echo " ";
-    echo "StandaloneCommon.ini"
-    
-    # [Hypergrid]StandaloneCommon.ini
-    crudini --set StandaloneCommon.ini Hypergrid GatekeeperURI "\"\$\{Const\|BaseURL\}:\$\{Const\|PublicPort\}\""
-    # [Modules]StandaloneCommon.ini
-    crudini --set StandaloneCommon.ini Modules AuthorizationServices "\"RemoteAuthorizationServicesConnector\""
-    # [GridService]StandaloneCommon.ini
-    crudini --set StandaloneCommon.ini GridService AllowHypergridMapSearch "\"true\""
-    crudini --set StandaloneCommon.ini GridService MapTileDirectory "\"./maptiles\""
-    # [HGInventoryAccessModule]StandaloneCommon.ini
-    crudini --set StandaloneCommon.ini HGInventoryAccessModule HomeURI "\"\$\{Const\|BaseURL\}:\$\{Const\|PublicPort\}\""
-    crudini --set StandaloneCommon.ini HGInventoryAccessModule Gatekeeper "\"\$\{Const\|BaseURL\}:\$\{Const\|PublicPort\}\""
-    crudini --set StandaloneCommon.ini HGInventoryAccessModule RestrictInventoryAccessAbroad "\"false\""
-    # [HGFriendsModule]StandaloneCommon.ini
-    crudini --set StandaloneCommon.ini HGFriendsModule LevelHGFriends "0;"
+    echo " "; echo " "; echo "StandaloneCommon.ini";
+    echo "Möchten Sie StandaloneCommon einstellen?"
+    echo "ja oder [nein]"
+    read -r auswahlStandaloneCommon
+    if [ "$auswahlStandaloneCommon" = "" ]; then auswahlStandaloneCommon="nein"; fi
+
+    if [ "$auswahlStandaloneCommon" = "ja" ]
+    then
+        # [Hypergrid]StandaloneCommon.ini
+        crudini --set StandaloneCommon.ini Hypergrid GatekeeperURI "\"\$\{Const\|BaseURL\}:\$\{Const\|PublicPort\}\""
+        # [Modules]StandaloneCommon.ini
+        crudini --set StandaloneCommon.ini Modules AuthorizationServices "\"RemoteAuthorizationServicesConnector\""
+        # [GridService]StandaloneCommon.ini
+        crudini --set StandaloneCommon.ini GridService AllowHypergridMapSearch "\"true\""
+        crudini --set StandaloneCommon.ini GridService MapTileDirectory "\"./maptiles\""
+        # [HGInventoryAccessModule]StandaloneCommon.ini
+        crudini --set StandaloneCommon.ini HGInventoryAccessModule HomeURI "\"\$\{Const\|BaseURL\}:\$\{Const\|PublicPort\}\""
+        crudini --set StandaloneCommon.ini HGInventoryAccessModule Gatekeeper "\"\$\{Const\|BaseURL\}:\$\{Const\|PublicPort\}\""
+        crudini --set StandaloneCommon.ini HGInventoryAccessModule RestrictInventoryAccessAbroad "\"false\""
+        # [HGFriendsModule]StandaloneCommon.ini
+        crudini --set StandaloneCommon.ini HGFriendsModule LevelHGFriends "0;"
+    fi
+if [ "$auswahlStandaloneCommon" = "nein" ]; then echo "weiter..."; fi
 }
 
 ### ! GridCommon.ini
 function GridCommonsetup() {
-    echo " "; echo " ";
-    echo "GridCommon.ini"
-    # [Hypergrid]GridCommon.ini
-    crudini --set GridCommon.ini Hypergrid GatekeeperURI "\"\$\{Const\|BaseURL\}:\$\{Const\|PublicPort\}\""
-    # [Modules]GridCommon.ini
-    crudini --set GridCommon.ini Modules AuthorizationServices "\"RemoteAuthorizationServicesConnector\""
-    # [GridService]GridCommon.ini
-    crudini --set GridCommon.ini GridService AllowHypergridMapSearch "\"true\""
-    crudini --set GridCommon.ini GridService MapTileDirectory "\"./maptiles\""
-    # [HGInventoryAccessModule]GridCommon.ini
-    crudini --set GridCommon.ini HGInventoryAccessModule HomeURI "\"\$\{Const\|BaseURL\}:\$\{Const\|PublicPort\}\""
-    crudini --set GridCommon.ini HGInventoryAccessModule Gatekeeper "\"\$\{Const\|BaseURL\}:\$\{Const\|PublicPort\}\""
-    crudini --set GridCommon.ini HGInventoryAccessModule RestrictInventoryAccessAbroad "\"false\""
-    # [HGFriendsModule]GridCommon.ini
-    crudini --set GridCommon.ini HGFriendsModule LevelHGFriends "0;"
+    echo " "; echo " "; echo "GridCommon.ini";
+    echo "Möchten Sie GridCommon einstellen?"
+    echo "ja oder [nein]"
+    read -r auswahlGridCommon
+    if [ "$auswahlGridCommon" = "" ]; then auswahlGridCommon="nein"; fi
+
+    if [ "$auswahlGridCommon" = "ja" ]
+    then
+        # [Hypergrid]GridCommon.ini
+        crudini --set GridCommon.ini Hypergrid GatekeeperURI "\"\$\{Const\|BaseURL\}:\$\{Const\|PublicPort\}\""
+        # [Modules]GridCommon.ini
+        crudini --set GridCommon.ini Modules AuthorizationServices "\"RemoteAuthorizationServicesConnector\""
+        # [GridService]GridCommon.ini
+        crudini --set GridCommon.ini GridService AllowHypergridMapSearch "\"true\""
+        crudini --set GridCommon.ini GridService MapTileDirectory "\"./maptiles\""
+        # [HGInventoryAccessModule]GridCommon.ini
+        crudini --set GridCommon.ini HGInventoryAccessModule HomeURI "\"\$\{Const\|BaseURL\}:\$\{Const\|PublicPort\}\""
+        crudini --set GridCommon.ini HGInventoryAccessModule Gatekeeper "\"\$\{Const\|BaseURL\}:\$\{Const\|PublicPort\}\""
+        crudini --set GridCommon.ini HGInventoryAccessModule RestrictInventoryAccessAbroad "\"false\""
+        # [HGFriendsModule]GridCommon.ini
+        crudini --set GridCommon.ini HGFriendsModule LevelHGFriends "0;"
+    fi
+if [ "$auswahlGridCommon" = "nein" ]; then echo "weiter..."; fi
 }
 
 ### ! LaunchSLClient.ini
 function LaunchSLClientsetup() {
-    echo " "; echo " ";
-    echo "LaunchSLClient.ini"
-    # [OSGrid]LaunchSLClient.ini
-    crudini --set LaunchSLClient.ini "$auswahlipdnssetup"
-    crudini --set LaunchSLClient.ini "$auswahlipdnssetup" loginURI "http://$auswahlipdnssetup:8002/"
-    crudini --set LaunchSLClient.ini "$auswahlipdnssetup" URL "$auswahlipdnssetup"
+    echo " "; echo " "; echo "LaunchSLClient.ini";
+    echo "Möchten Sie LaunchSLClient einstellen?"
+    echo "ja oder [nein]"
+    read -r auswahlLaunchSLClient
+    if [ "$auswahlLaunchSLClient" = "" ]; then auswahlLaunchSLClient="nein"; fi
+
+    if [ "$auswahlLaunchSLClient" = "ja" ]
+    then
+        # [OSGrid]LaunchSLClient.ini
+        crudini --set LaunchSLClient.ini "$auswahlipdnssetup"
+        crudini --set LaunchSLClient.ini "$auswahlipdnssetup" loginURI "http://$auswahlipdnssetup:8002/"
+        crudini --set LaunchSLClient.ini "$auswahlipdnssetup" URL "$auswahlipdnssetup"
+    fi
+if [ "$auswahlLaunchSLClient" = "nein" ]; then echo "weiter..."; fi
 }
 
 ### ! Datenbank sqlite oder mysql
 function databasesetup() {
     echo " "; echo " ";
-    # [DatabaseService] mysql oder sqlite
+    echo "Möchten Sie ihre Datenbank sqlite oder mysql einstellen?"
+    echo "ja oder [nein]"
+    read -r auswahldatabasesetup
+    if [ "$auswahldatabasesetup" = "" ]; then auswahldatabasesetup="nein"; fi
 
-    echo "Bei der Datenbank hat man 2 möglichkeiten sqlite oder mysql/mariaDB"
-    echo "Bei einem Grid muss Robust mit mysql/mariaDB laufen wärend der Opensimulator mit sqlite laufen kann."
-    echo "Ich empfehle den kompletten betrieb mit mysql/mariaDB"
-    echo "Möchten sie SQlite nutzen [nein]"
-    read -r auswahlmysql
-    echo "Bitte geben sie den Ort ihrer Datenbank an [localhost]:"
-    read -r auswahlsource
-    echo "Bitte geben sie den Datenbanknamen an [opensim]:"
-    read -r auswahldatabase
-    echo "Bitte geben sie den Benutzernamen ihrer Datenbank an [opensim]:"
-    read -r auswahluserid
-    echo "Bitte geben sie das Passwort ihrer Datenbank an [opensim]:"
-    read -r auswahlpassword
-
-    if [ "$auswahlmysql" = "" ]; then auswahlmysql="nein"; fi
-    if [ "$auswahlsource" = "" ]; then Source="localhost"; fi
-    if [ "$auswahldatabase" = "" ]; then Database="opensim"; fi
-    if [ "$auswahluserid" = "" ]; then User_ID="opensim"; fi
-    if [ "$auswahlpassword" = "" ]; then Password="opensim"; fi
-
-    # GridCommon.ini Robust.HG.ini Robust.ini
-    crudini --set Robust.ini DatabaseService StorageProvider "\"OpenSim.Data.MySQL.dll\""
-    crudini --set Robust.ini DatabaseService ConnectionString "\"Data Source=$Source;Database=$Database;User ID=$User_ID;Password=$Password;Old Guids=true;SslMode=None;\""
-    crudini --set Robust.HG.ini DatabaseService StorageProvider "\"OpenSim.Data.MySQL.dll\""
-    crudini --set Robust.HG.ini DatabaseService ConnectionString "\"Data Source=$Source;Database=$Database;User ID=$User_ID;Password=$Password;Old Guids=true;SslMode=None;\""
-
-    # Wird mysql/mariaDB ausgewählt dann ändern
-    if [ "$auswahlmysql" = "ja" ]
+    if [ "$auswahldatabasesetup" = "ja" ]
     then
-    # SQlite kommentieren
-    sed -i s/Include-Storage = \"config-include/storage/SQLiteStandalone.ini\"\;/\;Include-Storage = \"config-include/storage/SQLiteStandalone.ini\"\;/g /GridCommon.ini
-    # mysql/mariaDB eintragen
-    crudini --set GridCommon.ini DatabaseService StorageProvider "\"OpenSim.Data.MySQL.dll\""
-    crudini --set GridCommon.ini DatabaseService ConnectionString = "\"Data Source=$Source;Database=$Database;User ID=$User_ID;Password=$Password;Old Guids=true;SslMode=None;\""
-    else
-    echo "SQlite wird beibehalten"
+        # [DatabaseService] mysql oder sqlite
+        echo "Bei der Datenbank hat man 2 möglichkeiten sqlite oder mysql/mariaDB"
+        echo "Bei einem Grid muss Robust mit mysql/mariaDB laufen wärend der Opensimulator mit sqlite laufen kann."
+        echo "Ich empfehle den kompletten betrieb mit mysql/mariaDB"
+        echo "Möchten sie SQlite nutzen [nein]"
+        read -r auswahlmysql
+        echo "Bitte geben sie den Ort ihrer Datenbank an [localhost]:"
+        read -r auswahlsource
+        echo "Bitte geben sie den Datenbanknamen an [opensim]:"
+        read -r auswahldatabase
+        echo "Bitte geben sie den Benutzernamen ihrer Datenbank an [opensim]:"
+        read -r auswahluserid
+        echo "Bitte geben sie das Passwort ihrer Datenbank an [opensim]:"
+        read -r auswahlpassword
+
+        if [ "$auswahlmysql" = "" ]; then auswahlmysql="nein"; fi
+        if [ "$auswahlsource" = "" ]; then Source="localhost"; fi
+        if [ "$auswahldatabase" = "" ]; then Database="opensim"; fi
+        if [ "$auswahluserid" = "" ]; then User_ID="opensim"; fi
+        if [ "$auswahlpassword" = "" ]; then Password="opensim"; fi
+
+        # GridCommon.ini Robust.HG.ini Robust.ini
+        crudini --set Robust.ini DatabaseService StorageProvider "\"OpenSim.Data.MySQL.dll\""
+        crudini --set Robust.ini DatabaseService ConnectionString "\"Data Source=$Source;Database=$Database;User ID=$User_ID;Password=$Password;Old Guids=true;SslMode=None;\""
+        crudini --set Robust.HG.ini DatabaseService StorageProvider "\"OpenSim.Data.MySQL.dll\""
+        crudini --set Robust.HG.ini DatabaseService ConnectionString "\"Data Source=$Source;Database=$Database;User ID=$User_ID;Password=$Password;Old Guids=true;SslMode=None;\""
+
+        # Wird mysql/mariaDB ausgewählt dann ändern
+        if [ "$auswahlmysql" = "ja" ]
+        then
+        # SQlite kommentieren
+        sed -i s/Include-Storage = \"config-include/storage/SQLiteStandalone.ini\"\;/\;Include-Storage = \"config-include/storage/SQLiteStandalone.ini\"\;/g /GridCommon.ini
+        # mysql/mariaDB eintragen
+        crudini --set GridCommon.ini DatabaseService StorageProvider "\"OpenSim.Data.MySQL.dll\""
+        crudini --set GridCommon.ini DatabaseService ConnectionString = "\"Data Source=$Source;Database=$Database;User ID=$User_ID;Password=$Password;Old Guids=true;SslMode=None;\""
+        else
+        echo "SQlite wird beibehalten"
+        fi
+
     fi
-    return 0
+if [ "$auswahldatabasesetup" = "nein" ]; then echo "weiter..."; fi
 }
 
 ### ! Region Konfigurationen schreiben
 function regionconfig() {
-    echo " "; echo " ";
-    echo "Bitte geben sie einen Regionsnamen ein für ihre Start-Welcome-Center Region [WelcomeCenter]"
-    read -r regionsname
-    echo "Bitte geben sie die Größe ihrer Region an [256]:"
-    read -r size
-    echo "Bitte geben sie den Ort ihrer Region an [1000,1000]:"
-    read -r location
+    echo "Möchten Sie ihre Region Konfigurationen erstellen?"
+    echo "ja oder [nein]"
+    read -r auswahlregioncon
+    if [ "$auswahlregioncon" = "" ]; then auswahlregioncon="nein"; fi
 
-    if [ "$regionsname" = "" ]; then regionsname="WelcomeCenter"; fi
-    if [ "$size" = "" ]; then size="256"; fi
-    if [ "$location" = "" ]; then location="1000,1000"; fi
+    if [ "$auswahlregioncon" = "ja" ]
+    then
+        echo " "; echo " ";
+        echo "Bitte geben sie einen Regionsnamen ein für ihre Start-Welcome-Center Region [WelcomeCenter]"
+        read -r regionsname
+        echo "Bitte geben sie die Größe ihrer Region an [256]:"
+        read -r size
+        echo "Bitte geben sie den Ort ihrer Region an [1000,1000]:"
+        read -r location
 
-    UUID=$(uuidgen)
-    #[Regionsname]Regions.ini
-    crudini --set Regions.ini "$regionsname"
-    crudini --set Regions.ini "$regionsname" RegionUUID "\"$UUID\""
-    crudini --set Regions.ini "$regionsname" Location "\"$location\""
-    crudini --set Regions.ini "$regionsname" SizeX "\"$size\""
-    crudini --set Regions.ini "$regionsname" SizeY "\"$size\""
-    crudini --set Regions.ini "$regionsname" SizeZ "\"$size\""
-    crudini --set Regions.ini "$regionsname" InternalAddress "\"0.0.0.0\""
-    crudini --set Regions.ini "$regionsname" InternalPort "\"9100\""
-    crudini --set Regions.ini "$regionsname" ResolveAddress "\"False\""
-    crudini --set Regions.ini "$regionsname" ExternalHostName "\"$auswahlipdnssetup\""
-    crudini --set Regions.ini "$regionsname" MaptileStaticUUID "\"$UUID\""
-    crudini --set Regions.ini "$regionsname" DefaultLanding "\"<128,128,25>\""
-    crudini --set Regions.ini "$regionsname" \;MaxPrimsPerUser "\"-1\""
-    crudini --set Regions.ini "$regionsname" \;ScopeID "\"$UUID\""
-    crudini --set Regions.ini "$regionsname" \;RegionType "\"Mainland\""
-    crudini --set Regions.ini "$regionsname" \;MapImageModule "\"Warp3DImageModule\""
-    crudini --set Regions.ini "$regionsname" \;TextureOnMapTile "\"true\""
-    crudini --set Regions.ini "$regionsname" \;DrawPrimOnMapTile "\"true\""
-    crudini --set Regions.ini "$regionsname" \;GenerateMaptiles "\"true\""
-    crudini --set Regions.ini "$regionsname" \;MaptileRefresh "\"0\""
-    crudini --set Regions.ini "$regionsname" \;MaptileStaticFile "\"water-logo-info.png"\"
-    crudini --set Regions.ini "$regionsname" \;MasterAvatarFirstName "\"John\""
-    crudini --set Regions.ini "$regionsname" \;MasterAvatarLastName "\"Doe\""
-    crudini --set Regions.ini "$regionsname" \;MasterAvatarSandboxPassword "\"passwd\""
-    #[GridService]Robust.HG.ini Region als Default eintragen.
-    crudini --set Robust.HG.ini GridService Region_"$regionsname" "\"DefaultRegion, DefaultHGRegion\""
+        if [ "$regionsname" = "" ]; then regionsname="WelcomeCenter"; fi
+        if [ "$size" = "" ]; then size="256"; fi
+        if [ "$location" = "" ]; then location="1000,1000"; fi
+
+        UUID=$(uuidgen)
+        #[Regionsname]Regions.ini
+        crudini --set Regions.ini "$regionsname"
+        crudini --set Regions.ini "$regionsname" RegionUUID "\"$UUID\""
+        crudini --set Regions.ini "$regionsname" Location "\"$location\""
+        crudini --set Regions.ini "$regionsname" SizeX "\"$size\""
+        crudini --set Regions.ini "$regionsname" SizeY "\"$size\""
+        crudini --set Regions.ini "$regionsname" SizeZ "\"$size\""
+        crudini --set Regions.ini "$regionsname" InternalAddress "\"0.0.0.0\""
+        crudini --set Regions.ini "$regionsname" InternalPort "\"9100\""
+        crudini --set Regions.ini "$regionsname" ResolveAddress "\"False\""
+        crudini --set Regions.ini "$regionsname" ExternalHostName "\"$auswahlipdnssetup\""
+        crudini --set Regions.ini "$regionsname" MaptileStaticUUID "\"$UUID\""
+        crudini --set Regions.ini "$regionsname" DefaultLanding "\"<128,128,25>\""
+        crudini --set Regions.ini "$regionsname" \;MaxPrimsPerUser "\"-1\""
+        crudini --set Regions.ini "$regionsname" \;ScopeID "\"$UUID\""
+        crudini --set Regions.ini "$regionsname" \;RegionType "\"Mainland\""
+        crudini --set Regions.ini "$regionsname" \;MapImageModule "\"Warp3DImageModule\""
+        crudini --set Regions.ini "$regionsname" \;TextureOnMapTile "\"true\""
+        crudini --set Regions.ini "$regionsname" \;DrawPrimOnMapTile "\"true\""
+        crudini --set Regions.ini "$regionsname" \;GenerateMaptiles "\"true\""
+        crudini --set Regions.ini "$regionsname" \;MaptileRefresh "\"0\""
+        crudini --set Regions.ini "$regionsname" \;MaptileStaticFile "\"water-logo-info.png"\"
+        crudini --set Regions.ini "$regionsname" \;MasterAvatarFirstName "\"John\""
+        crudini --set Regions.ini "$regionsname" \;MasterAvatarLastName "\"Doe\""
+        crudini --set Regions.ini "$regionsname" \;MasterAvatarSandboxPassword "\"passwd\""
+        #[GridService]Robust.HG.ini Region als Default eintragen.
+        crudini --set Robust.HG.ini GridService Region_"$regionsname" "\"DefaultRegion, DefaultHGRegion\""
+    fi
+if [ "$auswahlregioncon" = "nein" ]; then echo "weiter..."; fi
 }
 
 ### ! Hypergrid Konfigurationen schreiben
 function hypergridsetup() {
-auswahlhg="hggrid" # Vorgabe hggrid
-echo " "; echo " "
-echo "Möchten Sie ein Eigenständiges Grid"
-echo "oder eine OpenSimulator Region mit Reisemöglichkeit zu anderen Grids?"
-echo "dann tippen sie hggrid oder hgos ein."
-echo " "
-echo "Wenn, sie kein Hypergrid möchten,"
-echo "sondern lieber in sichere Umgebung ihres Netzwerkes agieren?"
-echo "dann geben sie grid oder os ein."
-read -r auswahlhg
+    echo "Möchten Sie ihre OpenSim/Grid Konfigurationen erstellen?"
+    echo "ja oder [nein]"
+    read -r auswahlhypergrid
+    if [ "$auswahlhypergrid" = "" ]; then auswahlhypergrid="nein"; fi
 
-if [ "$auswahlhg" = "hggrid" ]
-then
-# PublicPort = "8002"
-crudini --set OpenSim.ini Const PublicPort "\"8002\""
-# Network http_listener_port = "9000"
-crudini --set OpenSim.ini Network http_listener_port "\"9010\""
-# Include-Architecture "config-include/GridHypergrid.ini"
-crudini --set OpenSim.ini Architecture Include-Architecture "\"config-include/GridHypergrid.ini\""
-# [XBakes]
-crudini --set OpenSim.ini XBakes URL "\"\$\{Const\|BaseURL\}:\$\{Const\|PrivatePort\}\""
-fi
+    if [ "$auswahlhypergrid" = "ja" ]
+    then
+        echo " "; echo " "
+        echo "Möchten Sie ein Eigenständiges Grid"
+        echo "oder eine OpenSimulator Region mit Reisemöglichkeit zu anderen Grids?"
+        echo "dann tippen sie hggrid oder hgos ein."
+        echo " "
+        echo "Wenn, sie kein Hypergrid möchten,"
+        echo "sondern lieber in sichere Umgebung ihres Netzwerkes agieren?"
+        echo "dann geben sie grid oder os ein."
+        read -r auswahlhg
 
-if [ "$auswahlhg" = "hgos" ]
-then
-# PublicPort = "9000" besser 9010 weil 9000 und 9001 belegt sein könnten
-crudini --set OpenSim.ini Const PublicPort "\"9010\""
-# Include-Architecture "config-include/StandaloneHypergrid.ini"
-crudini --set OpenSim.ini Architecture Include-Architecture "\"config-include/StandaloneHypergrid.ini\""
-fi
+        if [ "$auswahlhg" = "hggrid" ]
+        then
+        # PublicPort = "8002"
+        crudini --set OpenSim.ini Const PublicPort "\"8002\""
+        # Network http_listener_port = "9000"
+        crudini --set OpenSim.ini Network http_listener_port "\"9010\""
+        # Include-Architecture "config-include/GridHypergrid.ini"
+        crudini --set OpenSim.ini Architecture Include-Architecture "\"config-include/GridHypergrid.ini\""
+        # [XBakes]
+        crudini --set OpenSim.ini XBakes URL "\"\$\{Const\|BaseURL\}:\$\{Const\|PrivatePort\}\""
+        fi
 
-if [ "$auswahlhg" = "grid" ]
-then
-# PublicPort = "8002"
-crudini --set OpenSim.ini Const PublicPort "\"8002\""
-# Network http_listener_port = "9000"
-crudini --set OpenSim.ini Network http_listener_port "\"9010\""
-# Include-Architecture "config-include/Grid.ini"
-crudini --set OpenSim.ini Architecture Include-Architecture "\"config-include/Grid.ini\""
-# [XBakes]
-crudini --set OpenSim.ini XBakes URL "\"\$\{Const\|BaseURL\}:\$\{Const\|PrivatePort\}\""
-fi
+        if [ "$auswahlhg" = "hgos" ]
+        then
+        # PublicPort = "9000" besser 9010 weil 9000 und 9001 belegt sein könnten
+        crudini --set OpenSim.ini Const PublicPort "\"9010\""
+        # Include-Architecture "config-include/StandaloneHypergrid.ini"
+        crudini --set OpenSim.ini Architecture Include-Architecture "\"config-include/StandaloneHypergrid.ini\""
+        fi
 
-if [ "$auswahlhg" = "os" ]
-then 
-# PublicPort = "9000" besser 9010 weil 9000 und 9001 belegt sein könnten
-crudini --set OpenSim.ini Const PublicPort "\"9010\""
-# Include-Architecture "config-include/Standalone.ini"
-crudini --set OpenSim.ini Architecture Include-Architecture "\"config-include/Standalone.ini\"" 
-fi
+        if [ "$auswahlhg" = "grid" ]
+        then
+        # PublicPort = "8002"
+        crudini --set OpenSim.ini Const PublicPort "\"8002\""
+        # Network http_listener_port = "9000"
+        crudini --set OpenSim.ini Network http_listener_port "\"9010\""
+        # Include-Architecture "config-include/Grid.ini"
+        crudini --set OpenSim.ini Architecture Include-Architecture "\"config-include/Grid.ini\""
+        # [XBakes]
+        crudini --set OpenSim.ini XBakes URL "\"\$\{Const\|BaseURL\}:\$\{Const\|PrivatePort\}\""
+        fi
+
+        if [ "$auswahlhg" = "os" ]
+        then 
+        # PublicPort = "9000" besser 9010 weil 9000 und 9001 belegt sein könnten
+        crudini --set OpenSim.ini Const PublicPort "\"9010\""
+        # Include-Architecture "config-include/Standalone.ini"
+        crudini --set OpenSim.ini Architecture Include-Architecture "\"config-include/Standalone.ini\"" 
+        fi
+
+    fi
+if [ "$auswahlhypergrid" = "nein" ]; then echo "weiter..."; fi
 }
 
 # Programmablauf: Funktionen aufrufen
