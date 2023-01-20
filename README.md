@@ -125,36 +125,5 @@ Bisher sind nur Funktionen im Menü die maximal 1 Übergabewert voraussetzen.
 
 
 ## TODO und Informationen
-
-V0.80.692
-
-Zwei neue Menüpunkte eingefügt (Avatar Menü - Build Menü), hiermit wird alles etwas übersichtlicher.
-
-V0.79.653
-
-Autobackup für OAR, PNG, RAW und INI jetzt im Dateimenü.
-
-Zuerst muss aber "Regionsliste erstellen (Backup)" ausgeführt werden, damit Autobackup eine Liste der Regionen und Simulatoren hat.
-
-V0.79.647
-
-Build Funktionen (oscompi) überarbeitet für Visual Studio 2022 und .net 5.0, 6.0, 7.0 sowie zukünftig mono 5.0, 6.0, 7.0.
-
-V0.79.638
-
-Cache Assets werden ja nicht gelöscht, habe deswegen neue Funktionen in das opensimMULTITOOL eingebaut.
-```
-     assetcachedel simX
-     autoassetcachedel
-```
-Im Menü unter Punkt:
-```
-     Datei "Asset Cache loeschen"
-```
-löscht aus aktuellen Simulatoren den Asset Cache und beschleunigt so den OpenSimulator sowie macht er auf der Festplatte etwas Platz.
-Vorteile:
-```
-Alter ungenutzter Cache ist weg.
-Defekter Cache ist weg.
-Etc.
-```
+configure.sh eine teilautomatisierte konfiguration aller im OpenSimulator enthaltenden Konfigurationsdateien.
+Configure befindet sich im Entwurfs- und frühen Teststadium.
