@@ -126,6 +126,6 @@ Bisher sind nur Funktionen im Menü die maximal 1 Übergabewert voraussetzen.
 
 ## TODO und Informationen
      configure.sh eine teilautomatisierte konfiguration aller im OpenSimulator enthaltenden Konfigurationsdateien.
-     Ich habe mich von Diva Configure.exe inspirieren lassen nur werden hier alle Konfigurationen bearbeitet.
-     OpenSim Standalone, OpenSim Standalone Hypergrid, Robust (Grid), Robust Hypergrid (Grid Hypergrid).
+     Ich habe mich von Diva Configure.exe inspirieren lassen, nur werden hier alle Konfigurationen bearbeitet.
+     OpenSim Standalone, OpenSim Standalone Hypergrid, OpenSim Robust (Grid), OpenSim Robust Hypergrid (Grid Hypergrid).
      Configure befindet sich im Entwurfs- und frühen Teststadium.
