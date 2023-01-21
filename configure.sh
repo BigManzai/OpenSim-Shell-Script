@@ -17,9 +17,10 @@
 #? Der nachteil dieser art von konfiguration ist, das die Zeilen keine leerzeichen und Tabs am anfang haben dürfen.
 # Variables
 STARTVERZEICHNIS="opt";
+lline="#####################################################################################"
 
 SCRIPTNAME="configure" # Versionsausgabe
-VERSION="0.1.6 ALPHA" # Versionsausgabe
+VERSION="0.1.15 ALPHA" # Versionsausgabe
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 echo "$SCRIPTNAME Version $VERSION"
 echo " "
@@ -89,73 +90,78 @@ echo " "; echo " ";
 
 #* crudini schreibt nur in dateien die keine Leerzeichen am anfang enthalten.
 
-### ! Linux Installation
+### ! Linux Installation  Test 21.01.2023 geprüft OK
 function linstall() {
-echo "Möchten sie ihren Ubuntu 18 oder 22 Server vorbereitet, für die verwendung des OpenSimulator?"
-echo "Tippen sie nein ja um die benötigten Server Komponenten zu Installieren."
-echo "Bitte tippen Sie ja oder [nein] ein:"
-read -r auswahllinstall
-if [ "$auswahllinstall" = "" ]; then auswahllinstall="nein"; fi
+    echo "$lline"
+    echo "Möchten sie ihren Ubuntu 18 oder 22 Server vorbereitet, für die verwendung des OpenSimulator?"
+    echo "Tippen sie nein ja um die benötigten Server Komponenten zu Installieren."
+    echo "Bitte tippen Sie ja oder [nein] ein:"
+    read -r auswahllinstall
+    if [ "$auswahllinstall" = "" ]; then auswahllinstall="nein"; fi
 
-if [ "$auswahllinstall" = "ja" ]
-    then 
-        cd /$STARTVERZEICHNIS || exit
-        echo "Server wird installation wird gestartet..."
-        /$STARTVERZEICHNIS/opensim.sh AutoInstall
-    fi
+    if [ "$auswahllinstall" = "ja" ]
+        then 
+            cd /$STARTVERZEICHNIS || exit
+            echo "Server wird installation wird gestartet..."
+            /$STARTVERZEICHNIS/opensim.sh AutoInstall
+        fi
 if [ "$auswahllinstall" = "nein" ]; then echo "weiter..."; fi
 }
 
-### ! Konfigurationen vorbereiten für weitere verarbeitungen
+### ! Konfigurationen vorbereiten für weitere verarbeitungen  Test 21.01.2023 geprüft OK
 function configsetup() {
-echo "Möchten Sie ihre Konfigurationen vorbereiten für die weitere verarbeitung?"
-echo "Keine Angst die Originaldateien werden als *.backup gesichert."
-echo "ja oder [nein]"
-read -r auswahlconfigsetup
-if [ "$auswahlconfigsetup" = "" ]; then auswahlconfigsetup="nein"; fi
+    echo "$lline"
+    echo "Möchten Sie ihre Konfigurationen vorbereiten für die weitere verarbeitung?"
+    echo "Keine Angst die Originaldateien werden als *.backup gesichert."
+    echo "ja oder [nein]"
+    read -r auswahlconfigsetup
+    if [ "$auswahlconfigsetup" = "" ]; then auswahlconfigsetup="nein"; fi
 
-if [ "$auswahlconfigsetup" = "ja" ] 
-then
-    # INI Datei von Leerzeichen und Tabs am anfang des Textes befreien.
-    # sed TAB = \t
-    sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/AutoConfig/Estates.ini.example
-    sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/AutoConfig/FlotsamCache.ini.example
-    sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/AutoConfig/Grid.ini
-    sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/AutoConfig/GridCommon.ini.example
-    sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/AutoConfig/GridHypergrid.ini
-    sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/AutoConfig/LaunchSLClient.ini
-    sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/AutoConfig/MoneyServer.ini.example
-    sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/AutoConfig/OpenSim.ConsoleClient.ini.example
-    sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini.example
-    sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/AutoConfig/OpenSimDefaults.ini
-    sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/AutoConfig/osslDefaultEnable.ini
-    sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/AutoConfig/osslEnable.ini.example
-    sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/AutoConfig/pCampBot.ini.example
-    sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/AutoConfig/Regions.ini.example
-    sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini.example
-    sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/AutoConfig/Robust.ini.example
-    sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/AutoConfig/Robust.Tests.ini
-    sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/AutoConfig/SQLiteStandalone.ini
-    sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/AutoConfig/Standalone.ini
-    sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/AutoConfig/StandaloneCommon.ini.example
-    sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/AutoConfig/StandaloneHypergrid.ini
 
-    # Jetzt werden die wichtigen Dateien umkopiert von *.ini.example in *.ini
-    cp /$STARTVERZEICHNIS/AutoConfig/Estates.ini.example /$STARTVERZEICHNIS/AutoConfig/Estates.ini
-    cp /$STARTVERZEICHNIS/AutoConfig/FlotsamCache.ini.example /$STARTVERZEICHNIS/AutoConfig/FlotsamCache.ini
-    cp /$STARTVERZEICHNIS/AutoConfig/GridCommon.ini.example /$STARTVERZEICHNIS/AutoConfig/GridCommon.ini
-    cp /$STARTVERZEICHNIS/AutoConfig/MoneyServer.ini.example /$STARTVERZEICHNIS/AutoConfig/MoneyServer.ini
-    cp /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini.example /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini
-    cp /$STARTVERZEICHNIS/AutoConfig/osslEnable.ini.example /$STARTVERZEICHNIS/AutoConfig/osslEnable.ini
-    cp /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini.example /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini
-    cp /$STARTVERZEICHNIS/AutoConfig/Robust.ini.example /$STARTVERZEICHNIS/AutoConfig/Robust.ini
-    cp /$STARTVERZEICHNIS/AutoConfig/StandaloneCommon.ini.example /$STARTVERZEICHNIS/AutoConfig/StandaloneCommon.ini
-    fi
-if [ "$auswahlconfigsetup" = "nein" ]; then echo "weiter..."; fi
+    if [ "$auswahlconfigsetup" = "ja" ] 
+    then
+    echo "Bitte warten..."
+        # INI Datei von Leerzeichen und Tabs am anfang des Textes befreien.
+        # sed TAB = \t
+        sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/AutoConfig/Estates.ini.example
+        sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/AutoConfig/FlotsamCache.ini.example
+        sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/AutoConfig/Grid.ini
+        sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/AutoConfig/GridCommon.ini.example
+        sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/AutoConfig/GridHypergrid.ini
+        sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/AutoConfig/LaunchSLClient.ini
+        sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/AutoConfig/MoneyServer.ini.example
+        sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/AutoConfig/OpenSim.ConsoleClient.ini.example
+        sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini.example
+        sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/AutoConfig/OpenSimDefaults.ini
+        sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/AutoConfig/osslDefaultEnable.ini
+        sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/AutoConfig/osslEnable.ini.example
+        sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/AutoConfig/pCampBot.ini.example
+        sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/AutoConfig/Regions.ini.example
+        sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini.example
+        sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/AutoConfig/Robust.ini.example
+        sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/AutoConfig/Robust.Tests.ini
+        sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/AutoConfig/SQLiteStandalone.ini
+        sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/AutoConfig/Standalone.ini
+        sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/AutoConfig/StandaloneCommon.ini.example
+        sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/AutoConfig/StandaloneHypergrid.ini
+
+        # Jetzt werden die wichtigen Dateien umkopiert von *.ini.example in *.ini
+        cp /$STARTVERZEICHNIS/AutoConfig/Estates.ini.example /$STARTVERZEICHNIS/AutoConfig/Estates.ini
+        cp /$STARTVERZEICHNIS/AutoConfig/FlotsamCache.ini.example /$STARTVERZEICHNIS/AutoConfig/FlotsamCache.ini
+        cp /$STARTVERZEICHNIS/AutoConfig/GridCommon.ini.example /$STARTVERZEICHNIS/AutoConfig/GridCommon.ini
+        cp /$STARTVERZEICHNIS/AutoConfig/MoneyServer.ini.example /$STARTVERZEICHNIS/AutoConfig/MoneyServer.ini
+        cp /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini.example /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini
+        cp /$STARTVERZEICHNIS/AutoConfig/osslEnable.ini.example /$STARTVERZEICHNIS/AutoConfig/osslEnable.ini
+        cp /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini.example /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini
+        cp /$STARTVERZEICHNIS/AutoConfig/Robust.ini.example /$STARTVERZEICHNIS/AutoConfig/Robust.ini
+        cp /$STARTVERZEICHNIS/AutoConfig/StandaloneCommon.ini.example /$STARTVERZEICHNIS/AutoConfig/StandaloneCommon.ini
+        fi
+    if [ "$auswahlconfigsetup" = "nein" ]; then echo "weiter..."; fi
 }
 
-### ! Estates.ini
+### ! Estates.ini  Test 21.01.2023 geprüft OK
 function Estatessetup() {
+    echo "$lline"
     echo "Möchten Sie ihre Estates vorgeben?"
     echo "ja oder [nein]"
     read -r auswahlEstatessetup
@@ -170,8 +176,10 @@ function Estatessetup() {
         read -r Example_Estate
         echo "Benutzer UUID eingeben [$UUID]"
         read -r Owner
-        echo "Estate ID eingeben [0]"
+        echo "Estate ID eingeben [0] Null für Auto-Increment-ID (empfohlen)."
         read -r EstateID
+
+        echo "Bitte warten..."
 
         if [ "$Example_Estate" = "" ]; then Example_Estate="Example Estate"; fi
         if [ "$Owner" = "" ]; then Owner="$UUID"; fi
@@ -183,8 +191,9 @@ function Estatessetup() {
     fi
 if [ "$auswahlEstatessetup" = "nein" ]; then echo "weiter..."; fi
 }
-### ! FlotsamCache.ini
+### ! FlotsamCache.ini  Test 21.01.2023 geprüft OK
 function FlotsamCachesetup() {
+    echo "$lline"
     echo " "; echo " ";
     echo "Möchten Sie Flotsam Cache einstellen?"
     echo "ja oder [nein]"
@@ -198,13 +207,17 @@ function FlotsamCachesetup() {
         echo "Geben Sie 0 an, um die Ablaufprüfung zu deaktivieren [24.0]"
         read -r FlotsamTime
         if [ "$FlotsamTime" = "" ]; then FlotsamTime="24.0"; fi
+
+        echo "Bitte warten..."
+
         #[AssetCache]FlotsamCache.ini
         crudini --set /$STARTVERZEICHNIS/AutoConfig/FlotsamCache.ini AssetCache FileCleanupTimer "\"$FlotsamTime\""
     fi
 if [ "$auswahlFlotsamCachesetup" = "nein" ]; then echo "weiter..."; fi
 }
-### ! MoneyServer.ini Test 21.01.2023 OK
+### ! MoneyServer.ini Test 21.01.2023 geprüft OK
 function MoneyServersetup() {
+    echo "$lline"
     echo " "; echo " "; echo "MoneyServer.ini";
     echo "Möchten Sie den Money Server konfigurieren?"
     echo "ja oder [nein]"
@@ -239,29 +252,47 @@ function MoneyServersetup() {
         echo "Money Server IP Adresse [$AKTUELLEIP]"
         read -r ScriptIPaddress
         if [ "$ScriptIPaddress" = "" ]; then ScriptIPaddress="$AKTUELLEIP"; fi
+        echo "Maximale Datenbank Verbindungen [40]"
+        read -r MaxConnection
+        if [ "$MaxConnection" = "" ]; then MaxConnection="40"; fi
+        echo "Server Port [8008]"
+        read -r ServerPort
+        if [ "$ServerPort" = "" ]; then ServerPort="8008"; fi
+        echo "Höhe des Standardsaldo Startkapital eines Avatars [1000]"
+        read -r DefaultBalance
+        if [ "$DefaultBalance" = "" ]; then DefaultBalance="1000"; fi
+        echo "Höhe des Standardsaldo Startkapital eines HG Avatars [1000]"
+        read -r DefaultBalance
+        if [ "$DefaultBalance" = "" ]; then DefaultBalance="1000"; fi
+        echo "Höhe des Standardsaldo Startkapital eines Gast Avatars [1000]"
+        read -r DefaultBalance
+        if [ "$DefaultBalance" = "" ]; then DefaultBalance="1000"; fi
+        echo "UUID des Bankier-Avatar [00000000-0000-0000-0000-000000000000]"
+        read -r BankerAvatar
+        if [ "$BankerAvatar" = "" ]; then BankerAvatar="00000000-0000-0000-0000-000000000000"; fi
+
+        echo "Bitte warten..."
 
         #[MySql]MoneyServer.ini
         crudini --set /$STARTVERZEICHNIS/AutoConfig/MoneyServer.ini MySql hostname "\"$localhost\""
         crudini --set /$STARTVERZEICHNIS/AutoConfig/MoneyServer.ini MySql database "\"$Database_name\""
         crudini --set /$STARTVERZEICHNIS/AutoConfig/MoneyServer.ini MySql username "\"$Database_user\""
         crudini --set /$STARTVERZEICHNIS/AutoConfig/MoneyServer.ini MySql password "\"$Database_password\""
-        #[MoneyServer]MoneyServer.ini 
+        crudini --set /$STARTVERZEICHNIS/AutoConfig/MoneyServer.ini MySql MaxConnection "\"$MaxConnection\""
+        #[MoneyServer]MoneyServer.ini
+        sed -i s/\;EnableScriptSendMoney/EnableScriptSendMoney/g /$STARTVERZEICHNIS/AutoConfig/MoneyServer.ini
+        sed -i s/\;MoneyScriptAccessKey/MoneyScriptAccessKey/g /$STARTVERZEICHNIS/AutoConfig/MoneyServer.ini
+        sed -i s/\;MoneyScriptIPaddress/MoneyScriptIPaddress/g /$STARTVERZEICHNIS/AutoConfig/MoneyServer.ini
+
+        crudini --set /$STARTVERZEICHNIS/AutoConfig/MoneyServer.ini MoneyServer ServerPort "\"8008\""
+        crudini --set /$STARTVERZEICHNIS/AutoConfig/MoneyServer.ini MoneyServer DefaultBalance "\"1000\""
+        crudini --set /$STARTVERZEICHNIS/AutoConfig/MoneyServer.ini MoneyServer HGAvatarDefaultBalance "\"1000\""
+        crudini --set /$STARTVERZEICHNIS/AutoConfig/MoneyServer.ini MoneyServer GuestAvatarDefaultBalance "\"1000\""
+        crudini --set /$STARTVERZEICHNIS/AutoConfig/MoneyServer.ini MoneyServer BankerAvatar "\"00000000-0000-0000-0000-000000000000\""
         crudini --set /$STARTVERZEICHNIS/AutoConfig/MoneyServer.ini MoneyServer EnableScriptSendMoney "\"true\""
         crudini --set /$STARTVERZEICHNIS/AutoConfig/MoneyServer.ini MoneyServer MoneyScriptAccessKey  "\"$AccessKey\""
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/MoneyServer.ini MoneyServer MoneyScriptIPaddress  "\"$ScriptIPaddress\""
-
-        # Die MoneyServer einstellungen für die Regionen
-        # [Economy]OpenSim.ini
-        # SellEnabled = true
-        # EconomyModule = DTLNSLMoneyModule
-        # CurrencyServer = "${Const|BaseURL}:8008/"
-        # UserServer = "${Const|BaseURL}:8002/"
-        # CheckServerCert = false
-        # PriceUpload = 0
-        # MeshModelUploadCostFactor = 1.0
-        # MeshModelUploadTextureCostFactor = 1.0
-        # MeshModelMinCostFactor = 1.0
-        # PriceGroupCreate = 0
+        crudini --set /$STARTVERZEICHNIS/AutoConfig/MoneyServer.ini MoneyServer MoneyScriptIPaddress  "$ScriptIPaddress"
+        #[Economy]OpenSim.ini
         crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Economy SellEnabled "true"
         crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Economy EconomyModule "DTLNSLMoneyModule"
         crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Economy CurrencyServer "\"\${Const|BaseURL}:8008/\""
@@ -272,21 +303,6 @@ function MoneyServersetup() {
         crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Economy MeshModelUploadTextureCostFactor "1.0"
         crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Economy MeshModelMinCostFactor "1.0"
         crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Economy PriceGroupCreate "0"
-        
-        # ObjectCount = 0
-        # PriceEnergyUnit = 0
-        # PriceObjectClaim = 0
-        # PricePublicObjectDecay = 0
-        # PricePublicObjectDelete = 0
-        # PriceParcelClaim = 0
-        # PriceParcelClaimFactor = 1
-        # PriceRentLight = 0
-        # TeleportMinPrice = 0
-        # TeleportPriceExponent = 2
-        # EnergyEfficiency = 1
-        # PriceObjectRent = 0
-        # PriceObjectScaleFactor = 10
-        # PriceParcelRent = 0
         crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Economy ObjectCount "0"
         crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Economy PriceEnergyUnit "0"
         crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Economy PriceObjectClaim "0"
@@ -301,13 +317,14 @@ function MoneyServersetup() {
         crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Economy PriceObjectRent "0"
         crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Economy PriceObjectScaleFactor "10"
         crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Economy PriceParcelRent "0"
-
+        echo "weiter..."
     fi
 if [ "$auswahlMoneyServersetup" = "nein" ]; then echo "weiter..."; fi
 }
 
 ### ! OpenSim.ini
 function OpenSimsetup() {
+    echo "$lline"
     echo " "; echo " "; echo "OpenSim.ini";
     echo "Möchten Sie den OpenSimulator konfigurieren?"
     echo "ja oder [nein]"
@@ -316,6 +333,7 @@ function OpenSimsetup() {
 
     if [ "$auswahlOpenSimsetup" = "ja" ]
     then
+    echo "Bitte warten..."
         # [DataSnapshot]OpenSim.ini
         crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini DataSnapshot index_sims "\"true\""
         crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini DataSnapshot data_exposure "\"minimum\""
@@ -359,8 +377,9 @@ function OpenSimsetup() {
 if [ "$auswahlOpenSimsetup" = "nein" ]; then echo "weiter..."; fi
 }
 
-### ! osslEnable.ini
+### ! osslEnable.ini  Test 21.01.2023 geprüft OK
 function osslEnablesetup() {
+    echo "$lline"
     echo " "; echo " "; echo "osslEnable.ini";
     echo "Möchten Sie den osslEnable konfigurieren?"
     echo "ja oder [nein]"
@@ -375,6 +394,9 @@ function osslEnablesetup() {
     echo "Mögliche Einstellungen sind:  None, VeryLow, Low, Moderate, High, VeryHigh, Severe."
     read -r SkriptLevel
     if [ "$SkriptLevel" = "" ]; then SkriptLevel="VeryLow"; fi
+
+    echo "Bitte warten..."
+
     #[OSSL]/$STARTVERZEICHNIS/AutoConfig/osslEnable.ini    
     crudini --set /$STARTVERZEICHNIS/AutoConfig/osslEnable.ini OSSL OSFunctionThreatLevel "\"$SkriptLevel\""
     echo "PARCEL_GROUP_MEMBER,PARCEL_OWNER,ESTATE_MANAGER und ESTATE_OWNER freigeben [ja]"
@@ -527,6 +549,7 @@ if [ "$auswahlosslEnablesetup" = "nein" ]; then echo "weiter..."; fi
 
 ### ! Robust.HG.ini
 function RobustHGsetup() {
+    echo "$lline"
     echo " "; echo " "; echo "Robust.HG.ini";
     echo "Möchten Sie den Robust Hypergrid konfigurieren?"
     echo "ja oder [nein]"
@@ -535,12 +558,19 @@ function RobustHGsetup() {
 
     if [ "$auswahlRobustHGsetup" = "ja" ]
     then
+    echo "Bitte warten..."
         #[ServiceList]/$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini ServiceList OfflineIMServiceConnector "\"\${Const|PrivatePort}/OpenSim.Addons.OfflineIM.dll:OfflineIMServiceRobustConnector\""
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini ServiceList GroupsServiceConnector "\"\${Const|PrivatePort}/OpenSim.Addons.Groups.dll:GroupsServiceRobustConnector\""
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini ServiceList BakedTextureService "\"\${Const|PrivatePort}/OpenSim.Server.Handlers.dll:XBakesConnector\""
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini ServiceList UserProfilesServiceConnector "\"\${Const|PublicPort}/OpenSim.Server.Handlers.dll:UserProfilesConnector\""
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini ServiceList HGGroupsServiceConnector "\"\${Const|PublicPort}/OpenSim.Addons.Groups.dll:HGGroupsServiceRobustConnector\""
+        #sed -i s/Anton/Berta/g /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini
+        sed -i s/\;OfflineIMServiceConnector/OfflineIMServiceConnector/g /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini
+        sed -i s/\;GroupsServiceConnector/GroupsServiceConnector/g /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini
+        sed -i s/\;BakedTextureService/BakedTextureService/g /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini
+        sed -i s/\;UserProfilesServiceConnector/UserProfilesServiceConnector/g /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini
+        sed -i s/\;HGGroupsServiceConnector/HGGroupsServiceConnector/g /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini
+        #crudini --set /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini ServiceList OfflineIMServiceConnector "\"\${Const|PrivatePort}/OpenSim.Addons.OfflineIM.dll:OfflineIMServiceRobustConnector\""
+        #crudini --set /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini ServiceList GroupsServiceConnector "\"\${Const|PrivatePort}/OpenSim.Addons.Groups.dll:GroupsServiceRobustConnector\""
+        #crudini --set /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini ServiceList BakedTextureService "\"\${Const|PrivatePort}/OpenSim.Server.Handlers.dll:XBakesConnector\""
+        #crudini --set /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini ServiceList UserProfilesServiceConnector "\"\${Const|PublicPort}/OpenSim.Server.Handlers.dll:UserProfilesConnector\""
+        #crudini --set /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini ServiceList HGGroupsServiceConnector "\"\${Const|PublicPort}/OpenSim.Addons.Groups.dll:HGGroupsServiceRobustConnector\""
         #[Hypergrid]/$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini
         crudini --set /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini Hypergrid HomeURI "\"\${Const|BaseURL}:\${Const|PublicPort}\""
         crudini --set /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini Hypergrid GatekeeperURI "\"\${Const|BaseURL}:\${Const|PublicPort}\""
@@ -575,6 +605,7 @@ if [ "$auswahlRobustHGsetup" = "nein" ]; then echo "weiter..."; fi
 }
 ### ! Robust.ini
 function Robustsetup() {
+    echo "$lline"
     echo " "; echo " "; echo "Robust.ini";
     echo "Möchten Sie den Robust konfigurieren?"
     echo "ja oder [nein]"
@@ -583,11 +614,17 @@ function Robustsetup() {
 
     if [ "$auswahlRobustsetup" = "ja" ]
     then
+    echo "Bitte warten..."
         #[ServiceList]/$STARTVERZEICHNIS/AutoConfig/Robust.ini
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/Robust.ini ServiceList OfflineIMServiceConnector "\"\${Const|PrivatePort}/OpenSim.Addons.OfflineIM.dll:OfflineIMServiceRobustConnector\""
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/Robust.ini ServiceList GroupsServiceConnector "\"\${Const|PrivatePort}/OpenSim.Addons.Groups.dll:GroupsServiceRobustConnector\""
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/Robust.ini ServiceList BakedTextureService "\"\${Const|PrivatePort}/OpenSim.Server.Handlers.dll:XBakesConnector\""
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/Robust.ini ServiceList UserProfilesServiceConnector "\"\${Const|PublicPort}/OpenSim.Server.Handlers.dll:UserProfilesConnector\""
+        #sed -i s/Anton/Berta/g /$STARTVERZEICHNIS/AutoConfig/Robust.ini
+        sed -i s/\;OfflineIMServiceConnector/OfflineIMServiceConnector/g /$STARTVERZEICHNIS/AutoConfig/Robust.ini
+        sed -i s/\;GroupsServiceConnector/GroupsServiceConnector/g /$STARTVERZEICHNIS/AutoConfig/Robust.ini
+        sed -i s/\;BakedTextureService/BakedTextureService/g /$STARTVERZEICHNIS/AutoConfig/Robust.ini
+        sed -i s/\;UserProfilesServiceConnector/UserProfilesServiceConnector/g /$STARTVERZEICHNIS/AutoConfig/Robust.ini
+        #crudini --set /$STARTVERZEICHNIS/AutoConfig/Robust.ini ServiceList OfflineIMServiceConnector "\"\${Const|PrivatePort}/OpenSim.Addons.OfflineIM.dll:OfflineIMServiceRobustConnector\""
+        #crudini --set /$STARTVERZEICHNIS/AutoConfig/Robust.ini ServiceList GroupsServiceConnector "\"\${Const|PrivatePort}/OpenSim.Addons.Groups.dll:GroupsServiceRobustConnector\""
+        #crudini --set /$STARTVERZEICHNIS/AutoConfig/Robust.ini ServiceList BakedTextureService "\"\${Const|PrivatePort}/OpenSim.Server.Handlers.dll:XBakesConnector\""
+        #crudini --set /$STARTVERZEICHNIS/AutoConfig/Robust.ini ServiceList UserProfilesServiceConnector "\"\${Const|PublicPort}/OpenSim.Server.Handlers.dll:UserProfilesConnector\""
     fi
 if [ "$auswahlRobustsetup" = "nein" ]; then echo "weiter..."; fi
 }
@@ -595,6 +632,7 @@ if [ "$auswahlRobustsetup" = "nein" ]; then echo "weiter..."; fi
 
 ### ! IP oder DNS in die Konfigurationen schreiben
 function ipdnssetup() {
+    echo "$lline"
     echo " "; echo " ";
     echo "Möchten Sie den Konfigurationen ihre IP oder DNS Adresse eintragen?"
     echo "ja oder [nein]"
@@ -606,6 +644,8 @@ function ipdnssetup() {
         #auswahlipdnssetup="$AKTUELLEIP" # Vorgabe ExterneIP
         echo "Geben Sie ihre IP Adresse ($AKTUELLEIP) oder ihre DNS (meingrid.de) ein:"
         read -r auswahlipdnssetup
+
+        echo "Bitte warten..."
 
         echo "Robust.ini"
         #[Const]Robust.ini
@@ -626,6 +666,7 @@ if [ "$auswahlipdnssetup" = "nein" ]; then echo "weiter..."; fi
 
 ### ! GridCommon.ini und StandaloneCommon.ini Const anlegen
 function constsetup() {
+    echo "$lline"
     echo " "; echo " ";
     echo "Möchten Sie die fehlenden Const bereiche in den GridCommon und StandaloneCommon eintragen?"
     echo "ja oder [nein]"
@@ -643,11 +684,13 @@ function constsetup() {
     if [ "$CONSTOK" = "Const" ]
     then
         echo "Nur die neue IP/DNS eintragen"
+        echo "Bitte warten..."
         crudini --set /$STARTVERZEICHNIS/AutoConfig/GridCommon.ini Const BaseURL "\"$auswahlipdnssetup\""
     fi
     # Const ist nicht vorhanden
     if [ "$CONSTOK" = "" ]
     then
+    echo "Bitte warten..."
         echo "Const neu anlegen am anfang der GridCommon.ini"
         sed -i '1s/.*$/\[Const\]\n&/g' /$STARTVERZEICHNIS/AutoConfig/GridCommon.ini
         sed -i '2s/.*$/BaseURL = "http:\/\/'"\"$auswahlipdnssetup\""'"\n&/g' /$STARTVERZEICHNIS/AutoConfig/GridCommon.ini
@@ -671,6 +714,7 @@ function constsetup() {
     # Const ist nicht vorhanden
     if [ "$CONSTOK" = "" ]
     then
+    echo "Bitte warten..."
         echo "Const neu anlegen am anfang der StandaloneCommon.ini"
         sed -i '1s/.*$/\[Const\]\n&/g' /$STARTVERZEICHNIS/AutoConfig/StandaloneCommon.ini
         sed -i '2s/.*$/BaseURL = "http:\/\/'"\"$auswahlipdnssetup\""'"\n&/g' /$STARTVERZEICHNIS/AutoConfig/StandaloneCommon.ini
@@ -684,6 +728,7 @@ if [ "$auswahlconstsetup" = "nein" ]; then echo "weiter..."; fi
 }
 ### ! StandaloneCommon.ini
 function StandaloneCommonsetup() {
+    echo "$lline"
     echo " "; echo " "; echo "StandaloneCommon.ini";
     echo "Möchten Sie StandaloneCommon einstellen?"
     echo "ja oder [nein]"
@@ -692,6 +737,7 @@ function StandaloneCommonsetup() {
 
     if [ "$auswahlStandaloneCommon" = "ja" ]
     then
+    echo "Bitte warten..."
         # [Hypergrid]/$STARTVERZEICHNIS/AutoConfig/StandaloneCommon.ini
         crudini --set /$STARTVERZEICHNIS/AutoConfig/StandaloneCommon.ini Hypergrid GatekeeperURI "\"\$\{Const\|BaseURL\}:\$\{Const\|PublicPort\}\""
         # [Modules]/$STARTVERZEICHNIS/AutoConfig/StandaloneCommon.ini
@@ -711,6 +757,7 @@ if [ "$auswahlStandaloneCommon" = "nein" ]; then echo "weiter..."; fi
 
 ### ! GridCommon.ini
 function GridCommonsetup() {
+    echo "$lline"
     echo " "; echo " "; echo "GridCommon.ini";
     echo "Möchten Sie GridCommon einstellen?"
     echo "ja oder [nein]"
@@ -719,6 +766,7 @@ function GridCommonsetup() {
 
     if [ "$auswahlGridCommon" = "ja" ]
     then
+    echo "Bitte warten..."
         # [Hypergrid]GridCommon.ini
         crudini --set /$STARTVERZEICHNIS/AutoConfig/GridCommon.ini Hypergrid GatekeeperURI "\"\$\{Const\|BaseURL\}:\$\{Const\|PublicPort\}\""
         # [Modules]GridCommon.ini
@@ -738,6 +786,7 @@ if [ "$auswahlGridCommon" = "nein" ]; then echo "weiter..."; fi
 
 ### ! LaunchSLClient.ini Test 21.01.2023 OK
 function LaunchSLClientsetup() {
+    echo "$lline"
     echo " "; echo " "; echo "LaunchSLClient.ini";
     echo "Möchten Sie LaunchSLClient einstellen?"
     echo "ja oder [nein]"
@@ -746,6 +795,7 @@ function LaunchSLClientsetup() {
 
     if [ "$auswahlLaunchSLClient" = "ja" ]
     then
+    echo "Bitte warten..."
         # [OSGrid]LaunchSLClient.ini
         crudini --set /$STARTVERZEICHNIS/AutoConfig/LaunchSLClient.ini "$auswahlipdnssetup"
         crudini --set /$STARTVERZEICHNIS/AutoConfig/LaunchSLClient.ini "$auswahlipdnssetup" loginURI "http://$auswahlipdnssetup:8002/"
@@ -756,6 +806,7 @@ if [ "$auswahlLaunchSLClient" = "nein" ]; then echo "weiter..."; fi
 
 ### ! Datenbank sqlite oder mysql
 function databasesetup() {
+    echo "$lline"
     echo " "; echo " ";
     echo "Möchten Sie ihre Datenbank für mysql einstellen?"
     echo "ja für mysql oder [nein] für sqlite"
@@ -778,6 +829,8 @@ function databasesetup() {
         read -r auswahluserid
         echo "Bitte geben sie das Passwort ihrer Datenbank an [opensim]:"
         read -r auswahlpassword
+
+        echo "Bitte warten..."
 
         if [ "$auswahlmysql" = "" ]; then auswahlmysql="nein"; fi
         if [ "$auswahlsource" = "" ]; then Source="localhost"; fi
@@ -809,6 +862,7 @@ if [ "$auswahldatabasesetup" = "nein" ]; then echo "weiter..."; fi
 
 ### ! Region Konfigurationen schreiben
 function regionconfig() {
+    echo "$lline"
     echo "Möchten Sie ihre Region Konfigurationen erstellen?"
     echo "ja oder [nein]"
     read -r auswahlregioncon
@@ -823,6 +877,8 @@ function regionconfig() {
         read -r size
         echo "Bitte geben sie den Ort ihrer Region an [1000,1000]:"
         read -r location
+
+        echo "Bitte warten..."
 
         if [ "$regionsname" = "" ]; then regionsname="WelcomeCenter"; fi
         if [ "$size" = "" ]; then size="256"; fi
@@ -862,6 +918,7 @@ if [ "$auswahlregioncon" = "nein" ]; then echo "weiter..."; fi
 
 ### ! Hypergrid Konfigurationen schreiben
 function hypergridsetup() {
+    echo "$lline"
     echo "Möchten Sie ihre OpenSim/Grid Konfigurationen erstellen?"
     echo "ja oder [nein]"
     read -r auswahlhypergrid
@@ -881,6 +938,7 @@ function hypergridsetup() {
 
         if [ "$auswahlhg" = "hggrid" ]
         then
+        echo "Bitte warten..."
         # PublicPort = "8002"
         crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Const PublicPort "\"8002\""
         # Network http_listener_port = "9000"
@@ -893,6 +951,7 @@ function hypergridsetup() {
 
         if [ "$auswahlhg" = "hgos" ]
         then
+        echo "Bitte warten..."
         # PublicPort = "9000" besser 9010 weil 9000 und 9001 belegt sein könnten
         crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Const PublicPort "\"9010\""
         # Include-Architecture "config-include/StandaloneHypergrid.ini"
@@ -901,6 +960,7 @@ function hypergridsetup() {
 
         if [ "$auswahlhg" = "grid" ]
         then
+        echo "Bitte warten..."
         # PublicPort = "8002"
         crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Const PublicPort "\"8002\""
         # Network http_listener_port = "9000"
@@ -912,7 +972,8 @@ function hypergridsetup() {
         fi
 
         if [ "$auswahlhg" = "os" ]
-        then 
+        then
+        echo "Bitte warten..."
         # PublicPort = "9000" besser 9010 weil 9000 und 9001 belegt sein könnten
         crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Const PublicPort "\"9010\""
         # Include-Architecture "config-include/Standalone.ini"
@@ -925,19 +986,15 @@ if [ "$auswahlhypergrid" = "nein" ]; then echo "weiter..."; fi
 
 ### ! Messaging Konfigurationen schreiben
 function Messagingsetup() {
-echo "OpenSim.ini Messagingsetup"
+    echo "$lline"
+    echo "OpenSim.ini Messagingsetup"
 
-# [Messaging]OpenSim.ini
-# OfflineMessageModule = "Offline Message Module V2"
-# OfflineMessageURL = ${Const|PrivURL}:${Const|PrivatePort}
-# StorageProvider = OpenSim.Data.MySQL.dll
-# MuteListModule = MuteListModule
-# ForwardOfflineGroupMessages = true
-crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Messaging OfflineMessageModule "Offline Message Module V2"
-crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Messaging OfflineMessageURL "\${Const|PrivURL}:\${Const|PrivatePort}"
-crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Messaging StorageProvider "OpenSim.Data.MySQL.dll"
-crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Messaging MuteListModule "MuteListModule"
-crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Messaging ForwardOfflineGroupMessages "true"
+    # [Messaging]OpenSim.ini
+    crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Messaging OfflineMessageModule "Offline Message Module V2"
+    crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Messaging OfflineMessageURL "\${Const|PrivURL}:\${Const|PrivatePort}"
+    crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Messaging StorageProvider "OpenSim.Data.MySQL.dll"
+    crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Messaging MuteListModule "MuteListModule"
+    crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Messaging ForwardOfflineGroupMessages "true"
 
 }
 
