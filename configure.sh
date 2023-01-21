@@ -203,7 +203,7 @@ function FlotsamCachesetup() {
     fi
 if [ "$auswahlFlotsamCachesetup" = "nein" ]; then echo "weiter..."; fi
 }
-### ! MoneyServer.ini
+### ! MoneyServer.ini Test 21.01.2023 OK
 function MoneyServersetup() {
     echo " "; echo " "; echo "MoneyServer.ini";
     echo "Möchten Sie den Money Server konfigurieren?"
@@ -244,7 +244,7 @@ function MoneyServersetup() {
         crudini --set /$STARTVERZEICHNIS/AutoConfig/MoneyServer.ini MySql hostname "\"$localhost\""
         crudini --set /$STARTVERZEICHNIS/AutoConfig/MoneyServer.ini MySql database "\"$Database_name\""
         crudini --set /$STARTVERZEICHNIS/AutoConfig/MoneyServer.ini MySql username "\"$Database_user\""
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/MoneyServer.ini MySql password = "\"$Database_password\""
+        crudini --set /$STARTVERZEICHNIS/AutoConfig/MoneyServer.ini MySql password "\"$Database_password\""
         #[MoneyServer]MoneyServer.ini 
         crudini --set /$STARTVERZEICHNIS/AutoConfig/MoneyServer.ini MoneyServer EnableScriptSendMoney "\"true\""
         crudini --set /$STARTVERZEICHNIS/AutoConfig/MoneyServer.ini MoneyServer MoneyScriptAccessKey  "\"$AccessKey\""
@@ -736,7 +736,7 @@ function GridCommonsetup() {
 if [ "$auswahlGridCommon" = "nein" ]; then echo "weiter..."; fi
 }
 
-### ! LaunchSLClient.ini
+### ! LaunchSLClient.ini Test 21.01.2023 OK
 function LaunchSLClientsetup() {
     echo " "; echo " "; echo "LaunchSLClient.ini";
     echo "Möchten Sie LaunchSLClient einstellen?"
@@ -757,8 +757,8 @@ if [ "$auswahlLaunchSLClient" = "nein" ]; then echo "weiter..."; fi
 ### ! Datenbank sqlite oder mysql
 function databasesetup() {
     echo " "; echo " ";
-    echo "Möchten Sie ihre Datenbank sqlite oder mysql einstellen?"
-    echo "ja oder [nein]"
+    echo "Möchten Sie ihre Datenbank für mysql einstellen?"
+    echo "ja für mysql oder [nein] für sqlite"
     read -r auswahldatabasesetup
     if [ "$auswahldatabasesetup" = "" ]; then auswahldatabasesetup="nein"; fi
 
@@ -963,4 +963,7 @@ regionconfig
 #Messagingsetup
 
 # TODO
+#[Messaging] OpenSim.ini fehlt
+#[XEngine] OpenSim.ini fehlt
+#[YEngine] OpenSim.ini fehlt
 # Zum schluss müssen alle Konfigurationen an ihren richtigen Platz kopiert werden.

@@ -61,7 +61,7 @@
 #### ? Einstellungen ####
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe
-VERSION="V0.80.709" # opensimMULTITOOL Versionsausgabe
+VERSION="V0.80.711" # opensimMULTITOOL Versionsausgabe
 #clear # Bildschirmausgabe loeschen.
 #reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
@@ -3685,9 +3685,10 @@ function installobensimulator() {
 	iinstall dialog
 	iinstall at
 	iinstall mysqltuner
+	iinstall crudini
 	# Sicherheit 2023
-	iinstall2 iptables
-	iinstall2 fail2ban
+	iinstall iptables
+	iinstall fail2ban	
 	# fail2ban - In der Datei jail.local werden alle von der jail.conf abweichenden Einträge eingestellt.
 	# maxfailures = 3 
 	# bantime = 900 
@@ -3741,8 +3742,9 @@ function installubuntu22() {
 	iinstall2 graphicsmagick
 	iinstall2 git
 	iinstall2 libopenjp3d7
+	iinstall2 crudini
 	iinstall2 iptables
-	iinstall2 fail2ban
+	iinstall2 fail2ban	
 }
 
 ### !  iptablesset
@@ -7900,18 +7902,30 @@ function ConfigSet() {
 
 ### AutoInstall
 function AutoInstall() {
-    ramspeicher
-    mysqlspeicher=$((RAMSPEICHER / 2))
+    #ramspeicher
+    #mysqlspeicher=$((RAMSPEICHER / 2))
+	# Linux Version
+	myDescription=$(lsb_release -d) # Description: Ubuntu 22.04 LTS
+	myRelease=$(lsb_release -r)     # Release: 22.04
+	myCodename=$(lsb_release -sc)   # jammy
 
-    echo "RAM Speicher für Simulatoren betraegt etwa: $mysqlspeicher"
-    echo "Herzlich willkommen zur Konfiguration ihrer OpenSimulator Software."
-    echo "Möchten sie eine Grundinstallation ihres Servers, "    
-    echo "damit alle für den Betrieb benötigten Linux Pakete installiert werden Ja/Nein: [Nein]"
+	ubuntuDescription=$(cut -f2 <<<"$myDescription") # Ubuntu 22.04 LTS
+	ubuntuRelease=$(cut -f2 <<<"$myRelease")         # 22.04
+	ubuntuCodename=$(cut -f2 <<<"$myCodename")       # jammy
 
-    installation=Nein; read -r installation
-    if [ "$installation" = "Ja" ]; then
-        if myCodename=jammy; then
-            echo "entdeckt Ubuntu 22"
+	if [ "$ubuntuCodename" = "jammy" ]; then MYSERVER="Ubuntu 22 jammy"; fi
+	if [ "$ubuntuCodename" = "Bionic" ]; then MYSERVER="Ubuntu 18 Bionic"; fi
+
+    echo "Herzlich willkommen zur Grundinstallation ihreres Servers."
+    echo "Möchten sie eine Grundinstallation ihres $MYSERVER Servers, "
+
+    echo "damit alle für den Betrieb benötigten Linux Pakete installiert werden ja/nein: [nein]"
+	read -r installation
+	if [ "$installation" = "" ]; then installation="nein"; fi
+
+    if [ "$installation" = "ja" ]; then
+        if [ "$ubuntuCodename" = "jammy" ]; then
+            #echo "entdeckt Ubuntu 22"
             installbegin
             installubuntu22
             installmono22
@@ -7919,185 +7933,16 @@ function AutoInstall() {
             ufwset
             #installationhttps22
             installfinish
-        elif myCodename=Bionic; then
-            echo "entdeckt Ubuntu 18"
+        elif [ "$ubuntuCodename" = "Bionic" ]; then
+            #echo "entdeckt Ubuntu 18"
             serverupgrade
             installobensimulator
             monoinstall18
             installfinish
         else
-            echo "Ich kenne das Betriebssystem nicht"
+            echo "Ich erkenne das Betriebssystem nicht"
         fi
     fi
-
-    echo "Als nächstes benötige ich ein Paar Daten von ihnen."
-
-    BaseHostname=$AKTUELLEIP
-    echo "Wie ist ihre IP oder URL Adresse [$AKTUELLEIP]: "; read -r BaseHostname
-	echo "Debug: $BaseHostname"
-
-    gridname="'$BaseHostname'World"
-    echo "Welchen Namen soll ihr Grid haben: ['$BaseHostname'World] "; read -r gridname
-	echo "Debug: $gridname"
-
-    ### OpenSim Verzeichnisstruktur
-    anzahlregionen=5
-    echo "Wie viele Regionsserver möchten sie anlegen: [5]"; read -r anzahlregionen
-    osstruktur 1 "$anzahlregionen"
-	echo "Debug: osstruktur 1 $anzahlregionen"
-    oscopyrobust
-	echo "Debug: oscopyrobust"
-	oscopysim
-	echo "Debug: oscopysim"
-
-    ### Datenbankbenutzer erstellen
-    datenbank_benutzer="Nein"
-    echo "Moechten Sie einen neuen Datenbankbenutzer anlegen? [Nein]"; read -r datenbank_benutzer
-    if [ "$datenbank_benutzer" = "Ja" ]
-    then 
-        DBBENUTZER="opensim"
-        echo "DBBENUTZER: [$DBBENUTZER]"; read -r DBBENUTZER
-        DBPASSWORT="opensim" 
-        echo "DBPASSWORT: [$DBPASSWORT]"; read -r DBPASSWORT
-
-        NEUERNAME="opensim"  
-        echo "DATENBANKNAME: [$NEUERNAME]"; read -r NEUERNAME
-		MysqlUser=$NEUERNAME
-        NEUESPASSWORT="opensim"  
-        echo "DATENBANKNAME: [$NEUESPASSWORT]"; read -r NEUESPASSWORT
-		MysqlPassword=$NEUESPASSWORT
-
-        create_db_user "$DBBENUTZER" "$DBPASSWORT" "$NEUERNAME" "$NEUESPASSWORT"
-        DBBENUTZER="$NEUERNAME" 
-        DBPASSWORT="$NEUESPASSWORT"
-    fi
-
-	echo "Debug: Datenbankbenutzer erstellen $datenbank_benutzer"
-
-	# MysqlUser="$DBBENUTZER"; MysqlPassword="$DBPASSWORT"; MysqlDatabase="$DATENBANKNAME"
-    # echo "Name der mySQL Datenbank [MysqlDatabase]: "; read -r MysqlDatabase
-    # echo "Benutzername der Datenbank [MysqlUser]: "; read -r MysqlUser
-    # echo "Passwort des des Benutzers der Datenbank [******]: "; read -r MysqlPassword
-	# echo "Debug: Datenbanken anlegen $datenbanken_angelegen"
-
-    ### Datenbanken erstellen
-    datenbanken_angelegen="Nein"
-    echo "Moechten sie Datenbanken anlegen?: [Nein]"; read -r datenbanken_angelegen
-	echo "Debug: Datenbanken anlegen $datenbanken_angelegen"
-    if [ "$datenbanken_angelegen" = "Ja" ]
-    then 
-        DBBENUTZER="opensim"
-        echo "DBBENUTZER: [$DBBENUTZER]"; read -r DBBENUTZER
-        DBPASSWORT="opensim" 
-        echo "DBPASSWORT: [$DBPASSWORT]"; read -r DBPASSWORT
-        DATENBANKNAME="opensim"  
-        echo "DATENBANKNAME: [$DATENBANKNAME]"; read -r DATENBANKNAME
-
-        create_db "$DBBENUTZER" "$DBPASSWORT" robust
-        
-        makeverzeichnisliste
-        for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
-			echo "Datenbank ${VERZEICHNISSLISTE[$i]} wird erstellt."
-			create_db "$DBBENUTZER" "$DBPASSWORT" "sim${VERZEICHNISSLISTE[$i]}"
-			sleep 2
-		done
-    fi    
-    
-    # # Wir müssen jetzt einen Master Avatar anlegen, 
-    # # dieser wird auch direkt der Banker für das Money System 
-    # # und verfügt über alle Skript rechte.
-    masteravatar_angelegen="Nein"
-    echo "Moechten sie einen Master Avatar anlegen?: [Nein]"; read -r masteravatar_angelegen
-	echo "Debug: Master Avatar anlegen: $masteravatar_angelegen"
-    if [ "$masteravatar_angelegen" = "Ja" ]
-    then
-        masteravatar_UUID=$(uuidgen)
-        echo "UUID: [$masteravatar_UUID]"; read -r masteravatar_UUID
-        VORNAME="Max"
-        echo "VORNAME: [$VORNAME]"; read -r VORNAME
-        NACHNAME="Mustermann"
-        echo "NACHNAME: [$NACHNAME]"; read -r NACHNAME
-        PASSWORT="123456"
-        echo "PASSWORT: [$PASSWORT]"; read -r PASSWORT
-        EMAIL="mail@mail.com"
-        echo "EMAIL: [$EMAIL]"; read -r EMAIL
-        createuser "$VORNAME" "$NACHNAME" "$PASSWORT" "$EMAIL" "$masteravatar_UUID"
-    fi
-
-    ##### OpenSimConfigSet
-    
-    #SimulatorPort=9010
-    #echo "Bitte geben sie den Simulator Port ein [9010]: "; read -r SimulatorPort
-    #AutoBackup="Nein"
-    #echo "Moechten sie den Automatischen Backup ihrer Regionen einschalten? [Nein]: "; read -r AutoBackup
-
-    ##### osslEnableConfigSet
-    echo "Alle Skript Rechte an Grid Betreiber [$masteravatar_UUID]: "; read -r Rechte # Vorher einen Robust Master User erstellen.
-
-    ##### RegionsConfigSet
-    UUID=$(uuidgen)
-    echo "RegionName [Welcome]:"; read -r RegionName
-    echo "RegionUUID [$UUID]: "; read -r RegionUUID
-    echo "Location [3333,3333]: "; read -r Location
-    echo "InternalPort [9050]: "; read -r InternalPort
-    echo "ExternalHostName [127.0.0.1]: "; read -r ExternalHostName
-    echo "Size [512]: "; read -r Size
-    echo "MaxPrims [100000]: "; read -r MaxPrims
-    echo "MaxAgents [50]: "; read -r MaxAgents
-
-    ##### RobustConfigSet
-    echo "StartRegion [Welcome]: "; read -r StartRegion
-    
-    PublicPort="8002"
-    PrivatePort="8003"
-    MoneyPort="8008"
-	BenutzerUUID=$(uuidgen)
-    
-    # Auswertung der Eingaben.
-    if test -z "$BaseHostname"; then BaseHostname="127.0.0.1"; fi
-    if test -z "$SimulatorPort"; then SimulatorPort="9010"; fi
-    if test -z "$gridname"; then gridname="myGrid"; fi
-    if test -z "$AutoBackup"; then AutoBackup="false"; fi
-    if test -z "$HomeURI"; then HomeURI="127.0.0.1"; fi
-    if test -z "$UserID"; then UserID="myName"; fi
-    if test -z "$Rechte"; then Rechte="$BenutzerUUID"; fi
-    if test -z "$RegionName"; then RegionName="Welcome"; fi
-    if test -z "$RegionUUID"; then RegionUUID="$UUID"; fi
-    if test -z "$Location"; then Location="1000,1000"; fi
-    if test -z "$InternalPort"; then InternalPort="9050"; fi
-    if test -z "$ExternalHostName"; then ExternalHostName="127.0.0.1"; fi
-    if test -z "$Size"; then Size="512"; fi
-    if test -z "$MaxPrims"; then MaxPrims="100000"; fi
-    if test -z "$MaxAgents"; then MaxAgents="50"; fi
-    if test -z "$MysqlDatabase"; then MysqlDatabase="myDatabase"; fi
-    if test -z "$MysqlUser"; then MysqlUser="myUser"; fi
-    if test -z "$MysqlPassword"; then MysqlPassword="myPassword"; fi    
-    if test -z "$StartRegion"; then StartRegion="Welcome"; fi
-
-    PrivURL=$BaseHostname
-    BaseURL="http://$BaseHostname"
-    HomeURI=$BaseHostname
-
-    ##### Start #####
-    RobustConfigSet $BaseHostname $gridname $UserID $MysqlPassword $MysqlDatabase $StartRegion $PublicPort $PrivatePort $PrivURL $BaseURL $MoneyPort
-
-    makeverzeichnisliste
-
-    for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
-        echo "OpenSimKonfiguration ${VERZEICHNISSLISTE[$i]} wird erstellt."
-        OpenSimConfigSet $BaseHostname "$SimulatorPort${VERZEICHNISSLISTE[$i]}" $gridname $AutoBackup $PublicPort $PrivatePort $BaseURL $MoneyPort
-        sleep 2
-        GridCommonConfigSet $HomeURI "$MysqlDatabase${VERZEICHNISSLISTE[$i]}" $UserID $MysqlPassword $PublicPort $PrivatePort
-        sleep 2
-        RegionsConfigSet "$RegionName${VERZEICHNISSLISTE[$i]}" "$RegionUUID" $Location "$InternalPort+${VERZEICHNISSLISTE[$i]}" $ExternalHostName $Size $MaxPrims $MaxAgents "$UUID"
-        sleep 2
-        osslEnableConfigSet "$Rechte"
-        sleep 2
-    done        
-    #OpenSimConfigSet $BaseHostname $SimulatorPort $gridname $AutoBackup $PublicPort $PrivatePort $BaseURL $MoneyPort   
-    #GridCommonConfigSet $HomeURI $MysqlDatabase $UserID $MysqlPassword $PublicPort $PrivatePort
-    #osslEnableConfigSet "$Rechte"
-    #RegionsConfigSet $RegionName "$RegionUUID" $Location $InternalPort $ExternalHostName $Size $MaxPrims $MaxAgents "$UUID"
 }
 
 ### OpenSim Config
