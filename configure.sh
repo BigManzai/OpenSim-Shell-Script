@@ -17,25 +17,42 @@
 #? Der nachteil dieser art von konfiguration ist, das die Zeilen keine leerzeichen und Tabs am anfang haben dürfen.
 # Variables
 STARTVERZEICHNIS="opt";
-lline="#####################################################################################"
-
+linefontcolor=2	linebaggroundcolor=0;
+lline="$(tput setaf $linefontcolor)$(tput setab $linebaggroundcolor)#####################################################################################$(tput sgr 0)"
 SCRIPTNAME="configure" # Versionsausgabe
-VERSION="0.1.15 ALPHA" # Versionsausgabe
-tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
-echo "$SCRIPTNAME Version $VERSION"
-echo " "
+VERSION="0.1.23 ALPHA" # Versionsausgabe
 ### Aktuelle IP ueber Suchadresse ermitteln und Ausfuehrungszeichen anhaengen.
 SEARCHADRES="icanhazip.com"
 AKTUELLEIP='"'$(wget -O - -q $SEARCHADRES)'"'
+tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
+# Schauen ob crudini installiert ist
+if [[ -f $(which "crudini" 2>/dev/null) ]]
+    then
+	echo " "
+    else
+	echo "crudini gibt es nicht, zumindest nicht mit dem Namen crudini"
+    echo "möchten sie crudini installieren?"
+    echo "Bitte tippen Sie ja oder [nein] ein:"
+    read -r auswahlcrudini
+    if [ "$auswahlcrudini" = "" ]; then auswahlcrudini="nein"; fi
+
+    if [ "$auswahlcrudini" = "ja" ] || [ "$auswahlcrudini" = "j" ]
+    then
+        sudo apt-get update -y
+        sudo apt-get install -y crudini
+        sudo apt-get -f install -y
+    fi
+    if [ "$auswahlconfigsetup" = "nein" ]; then echo "weiter..."; fi
+fi
+
+# Ausgabe Kopfzeilen
+echo "$SCRIPTNAME Version $VERSION"
+echo " "
 echo "Ihre aktuelle externe IP ist $AKTUELLEIP"
 echo " "
+echo "#################################"
 echo "ABBRUCH MIT DER TASTENKOMBINATION"
 echo "########  STRG + C  #############"
-echo " "; echo " ";
-# echo "Möchten sie die automatische konfiguration starten?"
-# echo "ja oder [nein]"
-# read -r starten
-# if [ "$starten" = "" ]; then starten="nein"; fi
 
 #! Die ganzen Konfigurationen im Überblick:
 # Estates.ini.example
@@ -88,19 +105,20 @@ echo " "; echo " ";
 #? output an ini processable by text utils - gibt eine ini aus, die von text utils verarbeitet werden kann
 #crudini --get --format=lines config_file
 
-#* crudini schreibt nur in dateien die keine Leerzeichen am anfang enthalten.
+#* crudini schreibt nur in dateien die keine Leerzeichen oder Tabs am anfang der Zeile haben.
 
 ### ! Linux Installation  Test 21.01.2023 geprüft OK
 function linstall() {
     echo "$lline"
     echo "Möchten sie ihren Ubuntu 18 oder 22 Server vorbereitet, für die verwendung des OpenSimulator?"
-    echo "Tippen sie nein ja um die benötigten Server Komponenten zu Installieren."
+    echo "Wählen sie ja, um die benötigten Server Komponenten jetzt zu Installieren."
     echo "Bitte tippen Sie ja oder [nein] ein:"
     read -r auswahllinstall
     if [ "$auswahllinstall" = "" ]; then auswahllinstall="nein"; fi
 
-    if [ "$auswahllinstall" = "ja" ]
-        then 
+    if [ "$auswahllinstall" = "ja" ] || [ "$auswahllinstall" = "j" ]
+        then
+        echo "Bitte warten..."
             cd /$STARTVERZEICHNIS || exit
             echo "Server wird installation wird gestartet..."
             /$STARTVERZEICHNIS/opensim.sh AutoInstall
@@ -117,8 +135,7 @@ function configsetup() {
     read -r auswahlconfigsetup
     if [ "$auswahlconfigsetup" = "" ]; then auswahlconfigsetup="nein"; fi
 
-
-    if [ "$auswahlconfigsetup" = "ja" ] 
+    if [ "$auswahlconfigsetup" = "ja" ] || [ "$auswahlconfigsetup" = "j" ]
     then
     echo "Bitte warten..."
         # INI Datei von Leerzeichen und Tabs am anfang des Textes befreien.
@@ -167,9 +184,8 @@ function Estatessetup() {
     read -r auswahlEstatessetup
     if [ "$auswahlEstatessetup" = "" ]; then auswahlEstatessetup="nein"; fi
 
-    if [ "$auswahlEstatessetup" = "ja" ]
+    if [ "$auswahlEstatessetup" = "ja" ] || [ "$auswahlEstatessetup" = "j" ]
     then
-        echo " "; echo " ";
         UUID=$(uuidgen)
         echo "Estates.ini"
         echo "Estate Name eingeben [Example Estate]"
@@ -194,13 +210,13 @@ if [ "$auswahlEstatessetup" = "nein" ]; then echo "weiter..."; fi
 ### ! FlotsamCache.ini  Test 21.01.2023 geprüft OK
 function FlotsamCachesetup() {
     echo "$lline"
-    echo " "; echo " ";
+    
     echo "Möchten Sie Flotsam Cache einstellen?"
     echo "ja oder [nein]"
     read -r auswahlFlotsamCachesetup
     if [ "$auswahlFlotsamCachesetup" = "" ]; then auswahlFlotsamCachesetup="nein"; fi
 
-    if [ "$auswahlFlotsamCachesetup" = "ja" ]
+    if [ "$auswahlFlotsamCachesetup" = "ja" ] || [ "$auswahlFlotsamCachesetup" = "j" ]
     then
         echo "FlotsamCache.ini"
         echo "Wie oft in Stunden soll die Festplatte auf abgelaufene Dateien überprüft werden?"
@@ -218,13 +234,13 @@ if [ "$auswahlFlotsamCachesetup" = "nein" ]; then echo "weiter..."; fi
 ### ! MoneyServer.ini Test 21.01.2023 geprüft OK
 function MoneyServersetup() {
     echo "$lline"
-    echo " "; echo " "; echo "MoneyServer.ini";
+    echo "MoneyServer.ini";
     echo "Möchten Sie den Money Server konfigurieren?"
     echo "ja oder [nein]"
     read -r auswahlMoneyServersetup
     if [ "$auswahlMoneyServersetup" = "" ]; then auswahlMoneyServersetup="nein"; fi
 
-    if [ "$auswahlMoneyServersetup" = "ja" ]
+    if [ "$auswahlMoneyServersetup" = "ja" ] || [ "$auswahlMoneyServersetup" = "j" ]
     then
         echo "Ein Fehler der immer wieder begangen wird,"
         echo "ist das man nicht einen extra Banker anlegt,"
@@ -325,13 +341,13 @@ if [ "$auswahlMoneyServersetup" = "nein" ]; then echo "weiter..."; fi
 ### ! OpenSim.ini
 function OpenSimsetup() {
     echo "$lline"
-    echo " "; echo " "; echo "OpenSim.ini";
+    echo "OpenSim.ini";
     echo "Möchten Sie den OpenSimulator konfigurieren?"
     echo "ja oder [nein]"
     read -r auswahlOpenSimsetup
     if [ "$auswahlOpenSimsetup" = "" ]; then auswahlOpenSimsetup="nein"; fi
 
-    if [ "$auswahlOpenSimsetup" = "ja" ]
+    if [ "$auswahlOpenSimsetup" = "ja" ] || [ "$auswahlOpenSimsetup" = "j" ]
     then
     echo "Bitte warten..."
         # [DataSnapshot]OpenSim.ini
@@ -380,29 +396,30 @@ if [ "$auswahlOpenSimsetup" = "nein" ]; then echo "weiter..."; fi
 ### ! osslEnable.ini  Test 21.01.2023 geprüft OK
 function osslEnablesetup() {
     echo "$lline"
-    echo " "; echo " "; echo "osslEnable.ini";
+    echo "osslEnable.ini";
     echo "Möchten Sie den osslEnable konfigurieren?"
     echo "ja oder [nein]"
     read -r auswahlosslEnablesetup
     if [ "$auswahlosslEnablesetup" = "" ]; then auswahlosslEnablesetup="nein"; fi
 
-    if [ "$auswahlosslEnablesetup" = "ja" ]
+    if [ "$auswahlosslEnablesetup" = "ja" ] || [ "$auswahlosslEnablesetup" = "j" ]
     then
     echo "OpenSimulator Skript Level Einstellungen"
     echo "Weitere Informationen zu diesen Ebenen finden Sie unter http://opensimulator.org/wiki/Threat_level."
     echo "Die flächendeckende Aktivierung der ossl-Funktionen ist gefährlich und wir empfehlen keine höhere Einstellung als [VeryLow]"
-    echo "Mögliche Einstellungen sind:  None, VeryLow, Low, Moderate, High, VeryHigh, Severe."
+    echo "Mögliche Einstellungen sind:  None, [VeryLow], Low, Moderate, High, VeryHigh, Severe."
     read -r SkriptLevel
     if [ "$SkriptLevel" = "" ]; then SkriptLevel="VeryLow"; fi
-
-    echo "Bitte warten..."
 
     #[OSSL]/$STARTVERZEICHNIS/AutoConfig/osslEnable.ini    
     crudini --set /$STARTVERZEICHNIS/AutoConfig/osslEnable.ini OSSL OSFunctionThreatLevel "\"$SkriptLevel\""
     echo "PARCEL_GROUP_MEMBER,PARCEL_OWNER,ESTATE_MANAGER und ESTATE_OWNER freigeben [ja]"
     read -r SkriptOwner
     if [ "$SkriptOwner" = "" ]; then SkriptOwner="ja"; fi
-    if [ "$SkriptOwner" = "ja" ]
+
+    echo "Bitte warten..."
+
+    if [ "$SkriptOwner" = "ja" ] || [ "$SkriptOwner" = "j" ]
     then
         crudini --set /$STARTVERZEICHNIS/AutoConfig/osslEnable.ini OSSL osslParcelO "\"PARCEL_OWNER,ESTATE_MANAGER,ESTATE_OWNER,\""
         crudini --set /$STARTVERZEICHNIS/AutoConfig/osslEnable.ini OSSL osslParcelOG "\"PARCEL_GROUP_MEMBER,PARCEL_OWNER,ESTATE_MANAGER,ESTATE_OWNER,\"" 
@@ -547,33 +564,31 @@ if [ "$auswahlosslEnablesetup" = "nein" ]; then echo "weiter..."; fi
 
 }
 
-### ! Robust.HG.ini
+### ! Robust.HG.ini  Test 22.01.2023 geprüft OK
 function RobustHGsetup() {
     echo "$lline"
-    echo " "; echo " "; echo "Robust.HG.ini";
-    echo "Möchten Sie den Robust Hypergrid konfigurieren?"
+     echo "Robust.HG.ini";
+    echo "Möchten Sie Robust Hypergrid konfigurieren?"
     echo "ja oder [nein]"
     read -r auswahlRobustHGsetup
     if [ "$auswahlRobustHGsetup" = "" ]; then auswahlRobustHGsetup="nein"; fi
 
-    if [ "$auswahlRobustHGsetup" = "ja" ]
+    if [ "$auswahlRobustHGsetup" = "ja" ] || [ "$auswahlRobustHGsetup" = "j" ]
     then
     echo "Bitte warten..."
         #[ServiceList]/$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini
         #sed -i s/Anton/Berta/g /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini
-        sed -i s/\;OfflineIMServiceConnector/OfflineIMServiceConnector/g /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini
-        sed -i s/\;GroupsServiceConnector/GroupsServiceConnector/g /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini
-        sed -i s/\;BakedTextureService/BakedTextureService/g /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini
-        sed -i s/\;UserProfilesServiceConnector/UserProfilesServiceConnector/g /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini
-        sed -i s/\;HGGroupsServiceConnector/HGGroupsServiceConnector/g /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini
-        #crudini --set /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini ServiceList OfflineIMServiceConnector "\"\${Const|PrivatePort}/OpenSim.Addons.OfflineIM.dll:OfflineIMServiceRobustConnector\""
-        #crudini --set /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini ServiceList GroupsServiceConnector "\"\${Const|PrivatePort}/OpenSim.Addons.Groups.dll:GroupsServiceRobustConnector\""
-        #crudini --set /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini ServiceList BakedTextureService "\"\${Const|PrivatePort}/OpenSim.Server.Handlers.dll:XBakesConnector\""
-        #crudini --set /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini ServiceList UserProfilesServiceConnector "\"\${Const|PublicPort}/OpenSim.Server.Handlers.dll:UserProfilesConnector\""
-        #crudini --set /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini ServiceList HGGroupsServiceConnector "\"\${Const|PublicPort}/OpenSim.Addons.Groups.dll:HGGroupsServiceRobustConnector\""
+        sed -i s/\;\ OfflineIMServiceConnector/OfflineIMServiceConnector/g /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini
+        sed -i s/\;\ GroupsServiceConnector/GroupsServiceConnector/g /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini
+        sed -i s/\;\ BakedTextureService/BakedTextureService/g /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini
+        sed -i s/\;\ UserProfilesServiceConnector/UserProfilesServiceConnector/g /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini
+        sed -i s/\;\ HGGroupsServiceConnector/HGGroupsServiceConnector/g /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini
+
         #[Hypergrid]/$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini Hypergrid HomeURI "\"\${Const|BaseURL}:\${Const|PublicPort}\""
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini Hypergrid GatekeeperURI "\"\${Const|BaseURL}:\${Const|PublicPort}\""
+        sed -i s/\;\ HomeURI/HomeURI/g /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini
+        sed -i s/\;\ GatekeeperURI/GatekeeperURI/g /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini
+        #crudini --set /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini Hypergrid HomeURI "\"\${Const|BaseURL}:\${Const|PublicPort}\""
+        #crudini --set /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini Hypergrid GatekeeperURI "\"\${Const|BaseURL}:\${Const|PublicPort}\""
         #[AccessControl]/$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini
         crudini --set /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini AccessControl DeniedClients "\"Imprudence|CopyBot|Twisted|Crawler|Cryolife|darkstorm|DarkStorm|Darkstorm|hydrastorm viewer|kinggoon copybot|goon squad copybot|copybot pro|darkstorm viewer|copybot club|darkstorm second life|copybot download|HydraStorm Copybot Viewer|Copybot|Firestorm Pro|DarkStorm v3|DarkStorm v2|ShoopedStorm|HydraStorm|hydrastorm|kinggoon|goon squad|goon|copybot|Shooped|ShoopedStorm|Triforce|Triforce Viewer|Firestorm Professional|ShoopedLife|Sombrero|Sombrero Firestorm|GoonSquad|Solar|SolarStorm\""
         #[GridService]/$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini
@@ -603,43 +618,39 @@ function RobustHGsetup() {
     fi
 if [ "$auswahlRobustHGsetup" = "nein" ]; then echo "weiter..."; fi
 }
-### ! Robust.ini
+### ! Robust.ini  Test 22.01.2023 geprüft OK
 function Robustsetup() {
     echo "$lline"
-    echo " "; echo " "; echo "Robust.ini";
-    echo "Möchten Sie den Robust konfigurieren?"
+     echo "Robust.ini";
+    echo "Möchten Sie Robust konfigurieren?"
     echo "ja oder [nein]"
     read -r auswahlRobustsetup
     if [ "$auswahlRobustsetup" = "" ]; then auswahlRobustsetup="nein"; fi
 
-    if [ "$auswahlRobustsetup" = "ja" ]
+    if [ "$auswahlRobustsetup" = "ja" ] || [ "$auswahlRobustsetup" = "j" ]
     then
     echo "Bitte warten..."
         #[ServiceList]/$STARTVERZEICHNIS/AutoConfig/Robust.ini
         #sed -i s/Anton/Berta/g /$STARTVERZEICHNIS/AutoConfig/Robust.ini
-        sed -i s/\;OfflineIMServiceConnector/OfflineIMServiceConnector/g /$STARTVERZEICHNIS/AutoConfig/Robust.ini
-        sed -i s/\;GroupsServiceConnector/GroupsServiceConnector/g /$STARTVERZEICHNIS/AutoConfig/Robust.ini
-        sed -i s/\;BakedTextureService/BakedTextureService/g /$STARTVERZEICHNIS/AutoConfig/Robust.ini
-        sed -i s/\;UserProfilesServiceConnector/UserProfilesServiceConnector/g /$STARTVERZEICHNIS/AutoConfig/Robust.ini
-        #crudini --set /$STARTVERZEICHNIS/AutoConfig/Robust.ini ServiceList OfflineIMServiceConnector "\"\${Const|PrivatePort}/OpenSim.Addons.OfflineIM.dll:OfflineIMServiceRobustConnector\""
-        #crudini --set /$STARTVERZEICHNIS/AutoConfig/Robust.ini ServiceList GroupsServiceConnector "\"\${Const|PrivatePort}/OpenSim.Addons.Groups.dll:GroupsServiceRobustConnector\""
-        #crudini --set /$STARTVERZEICHNIS/AutoConfig/Robust.ini ServiceList BakedTextureService "\"\${Const|PrivatePort}/OpenSim.Server.Handlers.dll:XBakesConnector\""
-        #crudini --set /$STARTVERZEICHNIS/AutoConfig/Robust.ini ServiceList UserProfilesServiceConnector "\"\${Const|PublicPort}/OpenSim.Server.Handlers.dll:UserProfilesConnector\""
+        sed -i s/\;\ OfflineIMServiceConnector/OfflineIMServiceConnector/g /$STARTVERZEICHNIS/AutoConfig/Robust.ini
+        sed -i s/\;\ GroupsServiceConnector/GroupsServiceConnector/g /$STARTVERZEICHNIS/AutoConfig/Robust.ini
+        sed -i s/\;\ BakedTextureService/BakedTextureService/g /$STARTVERZEICHNIS/AutoConfig/Robust.ini
+        sed -i s/\;\ UserProfilesServiceConnector/UserProfilesServiceConnector/g /$STARTVERZEICHNIS/AutoConfig/Robust.ini
     fi
 if [ "$auswahlRobustsetup" = "nein" ]; then echo "weiter..."; fi
 }
 
 
-### ! IP oder DNS in die Konfigurationen schreiben
+### ! IP oder DNS in die Konfigurationen schreiben  Test 22.01.2023 geprüft OK
 function ipdnssetup() {
     echo "$lline"
-    echo " "; echo " ";
+    
     echo "Möchten Sie den Konfigurationen ihre IP oder DNS Adresse eintragen?"
     echo "ja oder [nein]"
     read -r auswahlipdnssetup
     if [ "$auswahlipdnssetup" = "" ]; then auswahlipdnssetup="nein"; fi
 
-    if [ "$auswahlipdnssetup" = "ja" ]
+    if [ "$auswahlipdnssetup" = "ja" ] || [ "$auswahlipdnssetup" = "j" ]
     then
         #auswahlipdnssetup="$AKTUELLEIP" # Vorgabe ExterneIP
         echo "Geben Sie ihre IP Adresse ($AKTUELLEIP) oder ihre DNS (meingrid.de) ein:"
@@ -664,16 +675,16 @@ function ipdnssetup() {
 if [ "$auswahlipdnssetup" = "nein" ]; then echo "weiter..."; fi
 }
 
-### ! GridCommon.ini und StandaloneCommon.ini Const anlegen
+### ! GridCommon.ini und StandaloneCommon.ini Const anlegen  Test 22.01.2023 geprüft OK
 function constsetup() {
     echo "$lline"
-    echo " "; echo " ";
+    
     echo "Möchten Sie die fehlenden Const bereiche in den GridCommon und StandaloneCommon eintragen?"
     echo "ja oder [nein]"
     read -r auswahlconstsetup
     if [ "$auswahlconstsetup" = "" ]; then auswahlconstsetup="nein"; fi
 
-    if [ "$auswahlconstsetup" = "ja" ]
+    if [ "$auswahlconstsetup" = "ja" ] || [ "$auswahlconstsetup" = "j" ]
     then
     echo "GridCommon.ini Const anlegen"
 
@@ -729,13 +740,13 @@ if [ "$auswahlconstsetup" = "nein" ]; then echo "weiter..."; fi
 ### ! StandaloneCommon.ini
 function StandaloneCommonsetup() {
     echo "$lline"
-    echo " "; echo " "; echo "StandaloneCommon.ini";
+     echo "StandaloneCommon.ini";
     echo "Möchten Sie StandaloneCommon einstellen?"
     echo "ja oder [nein]"
     read -r auswahlStandaloneCommon
     if [ "$auswahlStandaloneCommon" = "" ]; then auswahlStandaloneCommon="nein"; fi
 
-    if [ "$auswahlStandaloneCommon" = "ja" ]
+    if [ "$auswahlStandaloneCommon" = "ja" ] || [ "$auswahlStandaloneCommon" = "j" ]
     then
     echo "Bitte warten..."
         # [Hypergrid]/$STARTVERZEICHNIS/AutoConfig/StandaloneCommon.ini
@@ -755,16 +766,16 @@ function StandaloneCommonsetup() {
 if [ "$auswahlStandaloneCommon" = "nein" ]; then echo "weiter..."; fi
 }
 
-### ! GridCommon.ini
+### ! GridCommon.ini  Test 22.01.2023 geprüft OK
 function GridCommonsetup() {
     echo "$lline"
-    echo " "; echo " "; echo "GridCommon.ini";
+     echo "GridCommon.ini";
     echo "Möchten Sie GridCommon einstellen?"
     echo "ja oder [nein]"
     read -r auswahlGridCommon
     if [ "$auswahlGridCommon" = "" ]; then auswahlGridCommon="nein"; fi
 
-    if [ "$auswahlGridCommon" = "ja" ]
+    if [ "$auswahlGridCommon" = "ja" ] || [ "$auswahlGridCommon" = "j" ]
     then
     echo "Bitte warten..."
         # [Hypergrid]GridCommon.ini
@@ -787,13 +798,13 @@ if [ "$auswahlGridCommon" = "nein" ]; then echo "weiter..."; fi
 ### ! LaunchSLClient.ini Test 21.01.2023 OK
 function LaunchSLClientsetup() {
     echo "$lline"
-    echo " "; echo " "; echo "LaunchSLClient.ini";
+     echo "LaunchSLClient.ini";
     echo "Möchten Sie LaunchSLClient einstellen?"
     echo "ja oder [nein]"
     read -r auswahlLaunchSLClient
     if [ "$auswahlLaunchSLClient" = "" ]; then auswahlLaunchSLClient="nein"; fi
 
-    if [ "$auswahlLaunchSLClient" = "ja" ]
+    if [ "$auswahlLaunchSLClient" = "ja" ] || [ "$auswahlLaunchSLClient" = "j" ]
     then
     echo "Bitte warten..."
         # [OSGrid]LaunchSLClient.ini
@@ -804,16 +815,16 @@ function LaunchSLClientsetup() {
 if [ "$auswahlLaunchSLClient" = "nein" ]; then echo "weiter..."; fi
 }
 
-### ! Datenbank sqlite oder mysql
+### ! Datenbank sqlite oder mysql  Test 22.01.2023 geprüft OK
 function databasesetup() {
     echo "$lline"
-    echo " "; echo " ";
+    
     echo "Möchten Sie ihre Datenbank für mysql einstellen?"
     echo "ja für mysql oder [nein] für sqlite"
     read -r auswahldatabasesetup
     if [ "$auswahldatabasesetup" = "" ]; then auswahldatabasesetup="nein"; fi
 
-    if [ "$auswahldatabasesetup" = "ja" ]
+    if [ "$auswahldatabasesetup" = "ja" ] || [ "$auswahldatabasesetup" = "j" ]
     then
         # [DatabaseService] mysql oder sqlite
         echo "Bei der Datenbank hat man 2 möglichkeiten sqlite oder mysql/mariaDB"
@@ -845,7 +856,7 @@ function databasesetup() {
         crudini --set /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini DatabaseService ConnectionString "\"Data Source=$Source;Database=$Database;User ID=$User_ID;Password=$Password;Old Guids=true;SslMode=None;\""
 
         # Wird mysql/mariaDB ausgewählt dann ändern
-        if [ "$auswahlmysql" = "ja" ]
+        if [ "$auswahlmysql" = "ja" ] || [ "$auswahlmysql" = "j" ]
         then
         # SQlite kommentieren
         sed -i s/Include-Storage = \"config-include/storage/SQLiteStandalone.ini\"\;/\;Include-Storage = \"config-include/storage/SQLiteStandalone.ini\"\;/g /$STARTVERZEICHNIS/AutoConfig/GridCommon.ini
@@ -860,7 +871,7 @@ function databasesetup() {
 if [ "$auswahldatabasesetup" = "nein" ]; then echo "weiter..."; fi
 }
 
-### ! Region Konfigurationen schreiben
+### ! Region Konfigurationen schreiben  Test 22.01.2023 geprüft OK
 function regionconfig() {
     echo "$lline"
     echo "Möchten Sie ihre Region Konfigurationen erstellen?"
@@ -868,9 +879,9 @@ function regionconfig() {
     read -r auswahlregioncon
     if [ "$auswahlregioncon" = "" ]; then auswahlregioncon="nein"; fi
 
-    if [ "$auswahlregioncon" = "ja" ]
+    if [ "$auswahlregioncon" = "ja" ] || [ "$auswahlregioncon" = "j" ]
     then
-        echo " "; echo " ";
+        
         echo "Bitte geben sie einen Regionsnamen ein für ihre Start-Welcome-Center Region [WelcomeCenter]"
         read -r regionsname
         echo "Bitte geben sie die Größe ihrer Region an [256]:"
@@ -916,7 +927,7 @@ function regionconfig() {
 if [ "$auswahlregioncon" = "nein" ]; then echo "weiter..."; fi
 }
 
-### ! Hypergrid Konfigurationen schreiben
+### ! Hypergrid Konfigurationen schreiben  Test 22.01.2023 geprüft OK
 function hypergridsetup() {
     echo "$lline"
     echo "Möchten Sie ihre OpenSim/Grid Konfigurationen erstellen?"
@@ -924,17 +935,18 @@ function hypergridsetup() {
     read -r auswahlhypergrid
     if [ "$auswahlhypergrid" = "" ]; then auswahlhypergrid="nein"; fi
 
-    if [ "$auswahlhypergrid" = "ja" ]
+    if [ "$auswahlhypergrid" = "ja" ] || [ "$auswahlhypergrid" = "j" ]
     then
         echo " "; echo " "
         echo "Möchten Sie ein Eigenständiges Grid"
         echo "oder eine OpenSimulator Region mit Reisemöglichkeit zu anderen Grids?"
-        echo "dann tippen sie hggrid oder hgos ein."
+        echo "dann tippen sie [hggrid] oder hgos ein."
         echo " "
         echo "Wenn, sie kein Hypergrid möchten,"
         echo "sondern lieber in sichere Umgebung ihres Netzwerkes agieren?"
         echo "dann geben sie grid oder os ein."
         read -r auswahlhg
+        if [ "$auswahlhg" = "" ]; then auswahlhg="hggrid"; fi
 
         if [ "$auswahlhg" = "hggrid" ]
         then
@@ -987,17 +999,24 @@ if [ "$auswahlhypergrid" = "nein" ]; then echo "weiter..."; fi
 ### ! Messaging Konfigurationen schreiben
 function Messagingsetup() {
     echo "$lline"
-    echo "OpenSim.ini Messagingsetup"
+    echo "Möchten Sie ihre Offline Nachrichten Konfigurieren?"
+    echo "ja oder [nein]"
+    read -r auswahlMessagingsetup
+    if [ "$auswahlMessagingsetup" = "" ]; then auswahlMessagingsetup="nein"; fi
 
+    if [ "$auswahlMessagingsetup" = "ja" ] || [ "$auswahlMessagingsetup" = "j" ]
+    then
+    echo "Bitte warten..."
     # [Messaging]OpenSim.ini
-    crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Messaging OfflineMessageModule "Offline Message Module V2"
-    crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Messaging OfflineMessageURL "\${Const|PrivURL}:\${Const|PrivatePort}"
-    crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Messaging StorageProvider "OpenSim.Data.MySQL.dll"
-    crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Messaging MuteListModule "MuteListModule"
-    crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Messaging ForwardOfflineGroupMessages "true"
+    sed -i s/\;\ OfflineMessageModule/OfflineMessageModule/g /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini
+    sed -i s/\;\ OfflineMessageURL/OfflineMessageURL/g /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini
+    sed -i s/\;\ StorageProvider/StorageProvider/g /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini
+    sed -i s/\;\ MuteListModule/MuteListModule/g /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini
+    sed -i s/\;\ ForwardOfflineGroupMessages/ForwardOfflineGroupMessages/g /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini
+    fi
 
+    if [ "$auswahlMessagingsetup" = "nein" ]; then echo "weiter..."; fi
 }
-
 
 # Programmablauf: Funktionen aufrufen
 linstall
@@ -1017,10 +1036,41 @@ Robustsetup
 StandaloneCommonsetup
 LaunchSLClientsetup
 regionconfig
-#Messagingsetup
+Messagingsetup
+
+echo "$lline"
+echo "Das konfigurieren mit configure, können sie so oft wiederholen wie sie möchten."
+echo "Als nächstes müssen sie die Robust.exe starten und \"create avatar\" eingeben."
+echo "Anschließend werden sie abgefragt, wichtig sind nur Vorname, Nachname, Passwort und ihre E-Mail Adresse."
+echo "Bitte Notieren sie diese Informationen und ihre UUID."
+echo "Optional könnten sie direkt einen Banker Avatar erstellen."
+echo "$lline"
+
+# Sollte keine IP oder DNS eingetragen sein dann 127.0.0.1 damit das nicht leer bleibt und doert nein steht.
+if [ "$auswahlipdnssetup" = "" ] || [ "$auswahlipdnssetup" = "nein" ]; then auswahlipdnssetup="127.0.0.1"; fi
 
 # TODO
-#[Messaging] OpenSim.ini fehlt
-#[XEngine] OpenSim.ini fehlt
-#[YEngine] OpenSim.ini fehlt
-# Zum schluss müssen alle Konfigurationen an ihren richtigen Platz kopiert werden.
+# Konfigurationen prüfen und Informationen zur einwahl mit dem Viewer anzeigen.
+# if [ "$auswahlLaunchSLClient" = "" ]
+# then
+# LaunchSLClientsetup ist für den eintrag im Viewer zuständig.
+echo "So melden Sie sich in ihrem Grid an"
+echo "Falls ihr Viewer ihre Grid-Manager-Einstellungen nicht eingetragen hat:"
+# echo "LoginURI: http://$auswahlipdnssetup/"
+# echo "Login Page: https://$auswahlipdnssetup/"
+# echo "Helper URI: http://$auswahlipdnssetup/"
+# echo "Website: https://$auswahlipdnssetup"
+# echo "Support: https://$auswahlipdnssetup"
+# echo "Account: https://$auswahlipdnssetup/"
+# echo "Password: https://$auswahlipdnssetup/"
+echo " "
+echo "Grid"
+echo "loginURI http://$auswahlipdnssetup:8002/"
+echo "URL $auswahlipdnssetup"
+echo " "
+echo "OpenSimulator"
+echo "loginURI http://$auswahlipdnssetup:9000/"
+echo "URL $auswahlipdnssetup"
+#fi
+
+# Zum schluss müssen alle Konfigurationen, an ihren richtigen Platz kopiert werden.
