@@ -14,15 +14,17 @@
 # ! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 # ! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#? Der nachteil dieser art von konfiguration ist, das die Zeilen keine leerzeichen und Tabs am anfang haben dürfen.
+#? Der nachteil dieser art von konfiguration ist, 
+#? das die Zeilen keine leerzeichen und Tabs am anfang haben dürfen, deswegen muss ich diese löschen.
+
 # Variables
 STARTVERZEICHNIS="opt"; # Hauptverzeichnis
-CONFIGVERZEICHNIS="AutoConfig" # Arbeitsverzeichnis
-OPENSIMVERZEICHNIS="opensim"
+CONFIGVERZEICHNIS="AutoConfig" # Arbeitsverzeichnis im Hauptverzeichnis
+OPENSIMVERZEICHNIS="opensim" # OpenSimulator Verzeichnis im Hauptverzeichnis
 linefontcolor=2	linebaggroundcolor=0;
 lline="$(tput setaf $linefontcolor)$(tput setab $linebaggroundcolor)#####################################################################################$(tput sgr 0)"
 SCRIPTNAME="configure" # Versionsausgabe
-VERSION="0.1.27 ALPHA" # Versionsausgabe
+VERSION="0.1.29 ALPHA" # Versionsausgabe
 ### Aktuelle IP ueber Suchadresse ermitteln und Ausfuehrungszeichen anhaengen.
 SEARCHADRES="icanhazip.com"
 AKTUELLEIP='"'$(wget -O - -q $SEARCHADRES)'"'
@@ -331,7 +333,6 @@ function MoneyServersetup() {
         sed -i s/\;EnableScriptSendMoney/EnableScriptSendMoney/g /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/MoneyServer.ini
         sed -i s/\;MoneyScriptAccessKey/MoneyScriptAccessKey/g /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/MoneyServer.ini
         sed -i s/\;MoneyScriptIPaddress/MoneyScriptIPaddress/g /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/MoneyServer.ini
-
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/MoneyServer.ini MoneyServer ServerPort "\"8008\""
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/MoneyServer.ini MoneyServer DefaultBalance "\"1000\""
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/MoneyServer.ini MoneyServer HGAvatarDefaultBalance "\"1000\""
@@ -340,6 +341,8 @@ function MoneyServersetup() {
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/MoneyServer.ini MoneyServer EnableScriptSendMoney "\"true\""
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/MoneyServer.ini MoneyServer MoneyScriptAccessKey  "\"$AccessKey\""
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/MoneyServer.ini MoneyServer MoneyScriptIPaddress  "$ScriptIPaddress"
+        #[Certificate]MoneyServer.ini
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/MoneyServer.ini Certificate CheckServerCert "false"
         #[Economy]OpenSim.ini
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini Economy SellEnabled "true"
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini Economy EconomyModule "DTLNSLMoneyModule"
@@ -1101,7 +1104,7 @@ echo "$lline"
 echo "Das konfigurieren mit configure, können sie so oft wiederholen, wie sie möchten."
 echo "Als nächstes müssen sie die Robust.exe starten und \"create avatar\" eingeben."
 echo "Anschließend werden sie abgefragt, wichtig sind nur Vorname, Nachname, Passwort und ihre E-Mail Adresse,"
-echo "bei einem upgrade benötigen sie noch die Original UUID ihres alten Avatars."
+echo "bei einem upgrade mit vorhandener Datenbank, benötigen sie noch die Original UUID ihres alten Avatars."
 echo "Bitte Notieren sie alle Informationen sorgfältig und bewahren sie diese sicher auf."
 echo "Optional könnten sie direkt einen Banker Avatar erstellen."
 echo "$lline"
