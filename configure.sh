@@ -24,7 +24,7 @@ OPENSIMVERZEICHNIS="opensim" # OpenSimulator Verzeichnis im Hauptverzeichnis
 linefontcolor=2	linebaggroundcolor=0;
 lline="$(tput setaf $linefontcolor)$(tput setab $linebaggroundcolor)#####################################################################################$(tput sgr 0)"
 SCRIPTNAME="configure" # Versionsausgabe
-VERSION="0.1.29 ALPHA" # Versionsausgabe
+VERSION="0.1.34 ALPHA" # Versionsausgabe
 ### Aktuelle IP ueber Suchadresse ermitteln und Ausfuehrungszeichen anhaengen.
 SEARCHADRES="icanhazip.com"
 AKTUELLEIP='"'$(wget -O - -q $SEARCHADRES)'"'
@@ -390,6 +390,7 @@ function OpenSimsetup() {
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini DataSnapshot data_exposure "\"minimum\""
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini DataSnapshot default_snapshot_period "\"7200\""
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini DataSnapshot snapshot_cache_directory "\"DataSnapshot\""
+        
         # [Startup]OpenSim.ini
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini Startup NonPhysicalPrimMax "\"1024\""
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini Startup AllowScriptCrossing "\"false\""
@@ -397,33 +398,73 @@ function OpenSimsetup() {
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini Startup MaxDrawDistance "\"128\""
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini Startup MaxRegionsViewDistance "\"128\""
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini Startup MinRegionsViewDistance "\"48\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini Startup meshing "\"Meshmerizer\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini Startup physics "\"BulletSim\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini Startup DefaultScriptEngine "\"YEngine\""
+
         # [AccessControl]OpenSim.ini
-        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini AccessControl DeniedClients "\"Imprudence,CopyBot,Twisted,Crawler,Cryolife,darkstorm,DarkStorm,Darkstorm\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini AccessControl DeniedClients "\"Imprudence|CopyBot|Twisted|Crawler|Cryolife|darkstorm|DarkStorm|Darkstorm|hydrastorm viewer|kinggoon copybot|goon squad copybot|copybot pro|darkstorm viewer|copybot club|darkstorm second life|copybot download|HydraStorm Copybot Viewer|Copybot|Firestorm Pro|DarkStorm v3|DarkStorm v2|ShoopedStorm|HydraStorm|hydrastorm|kinggoon|goon squad|goon|copybot|Shooped|ShoopedStorm|Triforce|Triforce Viewer|Firestorm Professional|ShoopedLife|Sombrero|Sombrero Firestorm|GoonSquad|Solar|SolarStorm\""
+
+        # [Permissions]OpenSim.ini
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini Permissions permissionmodules "\"DefaultPermissionsModule\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini Permissions serverside_object_permissions "\"true\""
+
         # [Map]OpenSim.ini
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini Map DrawPrimOnMapTile "\"true\""
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini Map RenderMeshes "\"true\""
+        
         # [Permissions]OpenSim.ini
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini Permissions allow_grid_gods "\"true\""
+        
         # [Network]OpenSim.ini
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini Network user_agent "\"OpenSim LSL (Mozilla Compatible)\""
+        
         # [ClientStack.LindenUDP]OpenSim.ini
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini ClientStack.LindenUDP DisableFacelights "\"true\""
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini ClientStack.LindenUDP client_throttle_max_bps "\"400000\""
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini ClientStack.LindenUDP scene_throttle_max_bps "\"70000000\""
+        
         # [SimulatorFeatures]/$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini SimulatorFeatures SearchServerURI "\"\$\{Const\|BaseURL\}:\$\{Const\|PublicPort\}\""
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini SimulatorFeatures DestinationGuideURI "\"\$\{Const\|BaseURL\}:\$\{Const\|PublicPort\}\""
+        
         # [InterestManagement]/$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini InterestManagement UpdatePrioritizationScheme "\"BestAvatarResponsiveness\""
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini InterestManagement ObjectsCullingByDistance "\"true\""
+        
         # [Terrain]/$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini Terrain InitialTerrain "\"flat\""
+        
         # [UserProfiles]/$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini UserProfiles ProfileServiceURL "\"\$\{Const\|BaseURL\}:\$\{Const\|PublicPort\}\""
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini UserProfiles AllowUserProfileWebURLs "\"true\""
+        
         # [Materials]/$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini Materials enable_materials "\"true\""
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini Materials MaxMaterialsPerTransaction "\"250\""
+
+        #[XEngine]/$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini XEngine Enabled "false"
+
+        #[YEngine]/$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini XEngine Enabled "true"
+
+        #[Groups]
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini Groups Enabled "true"
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini Groups LevelGroupCreate "0"
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini Groups Module "\"Groups Module V2\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini Groups StorageProvider "OpenSim.Data.MySQL.dll"
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini Groups ServicesConnectorModule "Groups HG Service Connector"
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini Groups LocalService "remote"
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini Groups GroupsServerURI "\$\{Const\|BaseURL\}:\$\{Const\|PrivatePort\}"
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini Groups HomeURI "\$\{Const\|BaseURL\}:\$\{Const\|PublicPort\}"
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini Groups MessagingEnabled "true"
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini Groups MessagingModule "Groups Messaging Module V2"
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini Groups NoticesEnabled "true"
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini Groups MessageOnlineUsersOnly "true"
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini Groups  XmlRpcServiceReadKey "1234"
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini Groups XmlRpcServiceWriteKey "1234"
+
     fi
 if [ "$auswahlOpenSimsetup" = "nein" ]; then echo "weiter..."; fi
 }
@@ -610,9 +651,23 @@ function RobustHGsetup() {
 
     if [ "$auswahlRobustHGsetup" = "ja" ] || [ "$auswahlRobustHGsetup" = "j" ]
     then
-    echo "Bitte warten..."
+        echo "Der Name des Grids?"
+        read -r osgridname
+        echo "Abkürzung des Namens Des Grids?"
+        read -r osgridnick
+
+        echo "Bitte warten..."
+        #[Const]/$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini Const BaseURL "\"http://$auswahlipdnssetup\""
+
+        #[AssetService]
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini AssetService AllowRemoteDelete "true"
+
+        #[UserAccountService]
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini UserAccountService AllowCreateUser "true"
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini UserAccountService AllowSetAccount "true"
+
         #[ServiceList]/$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini
-        #sed -i s/Anton/Berta/g /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini
         sed -i s/\;\ OfflineIMServiceConnector/OfflineIMServiceConnector/g /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini
         sed -i s/\;\ GroupsServiceConnector/GroupsServiceConnector/g /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini
         sed -i s/\;\ BakedTextureService/BakedTextureService/g /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini
@@ -622,22 +677,32 @@ function RobustHGsetup() {
         #[Hypergrid]/$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini
         sed -i s/\;\ HomeURI/HomeURI/g /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini
         sed -i s/\;\ GatekeeperURI/GatekeeperURI/g /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini
-        #crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini Hypergrid HomeURI "\"\${Const|BaseURL}:\${Const|PublicPort}\""
-        #crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini Hypergrid GatekeeperURI "\"\${Const|BaseURL}:\${Const|PublicPort}\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini Hypergrid HomeURI "\"\${Const|BaseURL}:\${Const|PublicPort}\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini Hypergrid GatekeeperURI "\"\${Const|BaseURL}:\${Const|PublicPort}\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini Hypergrid GatekeeperURIAlias "\"\${Const|BaseURL}:\${Const|PublicPort}\""
+        
         #[AccessControl]/$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini AccessControl DeniedClients "\"Imprudence|CopyBot|Twisted|Crawler|Cryolife|darkstorm|DarkStorm|Darkstorm|hydrastorm viewer|kinggoon copybot|goon squad copybot|copybot pro|darkstorm viewer|copybot club|darkstorm second life|copybot download|HydraStorm Copybot Viewer|Copybot|Firestorm Pro|DarkStorm v3|DarkStorm v2|ShoopedStorm|HydraStorm|hydrastorm|kinggoon|goon squad|goon|copybot|Shooped|ShoopedStorm|Triforce|Triforce Viewer|Firestorm Professional|ShoopedLife|Sombrero|Sombrero Firestorm|GoonSquad|Solar|SolarStorm\""
+        
         #[GridService]/$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini GridService MapTileDirectory "\"./maptiles\""
+        
         #[LoginService]/$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini LoginService MinLoginLevel "0"
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini LoginService WelcomeMessage "\"Welcome, Avatar!\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini LoginService AllowRemoteSetLoginLevel "false"
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini LoginService SearchURL "\"\${Const|BaseURL}:\${Const|PublicPort}/\""
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini LoginService Currency "\"T$\""
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini LoginService ClassifiedFee 0
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini LoginService DeniedMacs "\"44ed33b396b10a5c95d04967aff8bd9c|5574234b1336a4523b6acb803737b608\""
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini LoginService DeniedID0s "\"d1fdb346d01a3bda2dcb82322bd88456\""
+        
         #[MapImageService]/$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini MapImageService TilesStoragePath "\"maptiles\""
+        
         #[GridInfoService]/$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini
-        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini GridInfoService gridname "\"the lost continent of hippo\""
-        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini GridInfoService gridnick "\"hippogrid"
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini GridInfoService gridname "\"$osgridname\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini GridInfoService gridnick "\"$osgridnick"
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini GridInfoService economy "\"\${Const|BaseURL}/opensim/helper/\""
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini GridInfoService about "\"\${Const|BaseURL}/opensim/helper/\""
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini GridInfoService register "\"\${Const|BaseURL}/opensim/helper/\""
@@ -645,11 +710,20 @@ function RobustHGsetup() {
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini GridInfoService password "\${Const|BaseURL}/opensim/helper/\""
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini GridInfoService gatekeeper "\"\${Const|BaseURL}:\${Const|PublicPort}/\""
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini GridInfoService uas "\"\${Const|BaseURL}:\${Const|PublicPort}/\""
+        
         #[GatekeeperService]/$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini GatekeeperService LocalServiceModule "\"OpenSim.Services.InventoryService.dll:XInventoryService\""
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini GatekeeperService DeniedMacs "\"44ed33b396b10a5c95d04967aff8bd9c|5574234b1336a4523b6acb803737b608\""
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini GatekeeperService DeniedID0s "\"d1fdb346d01a3bda2dcb82322bd88456\""
+        
         #[UserAgentService]/$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini
-        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini UserAgentService ShowUserDetailsInHGProfile "\"True\""  
+        #;LevelOutsideContacts = 0
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini UserAgentService ShowUserDetailsInHGProfile "\"true\""
+
+      
+        #[UserProfilesService]/$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini UserProfilesService Enabled "\"true\""
+
     fi
 if [ "$auswahlRobustHGsetup" = "nein" ]; then echo "weiter..."; fi
 }
@@ -867,6 +941,7 @@ function databasesetup() {
         echo "Ich empfehle den kompletten betrieb mit mysql/mariaDB"
         echo "Möchten sie SQlite nutzen [nein]"
         read -r auswahlmysql
+
         echo "Bitte geben sie den Ort ihrer Datenbank an [localhost]:"
         read -r auswahlsource
         echo "Bitte geben sie den Datenbanknamen an [opensim]:"
@@ -886,9 +961,9 @@ function databasesetup() {
 
         # GridCommon.ini Robust.HG.ini Robust.ini
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.ini DatabaseService StorageProvider "\"OpenSim.Data.MySQL.dll\""
-        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.ini DatabaseService ConnectionString "\"Data Source=$Source;Database=$Database;User ID=$User_ID;Password=$Password;Old Guids=true;SslMode=None;\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.ini DatabaseService ConnectionString "\"Data Source=$auswahlsource;Database=$auswahldatabase;User ID=$auswahluserid;Password=$auswahlpassword;Old Guids=true;SslMode=None;\""
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini DatabaseService StorageProvider "\"OpenSim.Data.MySQL.dll\""
-        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini DatabaseService ConnectionString "\"Data Source=$Source;Database=$Database;User ID=$User_ID;Password=$Password;Old Guids=true;SslMode=None;\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini DatabaseService ConnectionString "\"Data Source=$auswahlsource;Database=$auswahldatabase;User ID=$auswahluserid;Password=$auswahlpassword;Old Guids=true;SslMode=None;\""
 
         # Wird mysql/mariaDB ausgewählt dann ändern
         if [ "$auswahlmysql" = "ja" ] || [ "$auswahlmysql" = "j" ]
@@ -1043,8 +1118,12 @@ function Messagingsetup() {
     then
     echo "Bitte warten..."
     # [Messaging]OpenSim.ini
-    sed -i s/\;\ OfflineMessageModule/OfflineMessageModule/g /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini
-    sed -i s/\;\ OfflineMessageURL/OfflineMessageURL/g /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini
+    OfflineMessageModule="; OfflineMessageModule = OfflineMessageModule"
+    newOfflineMessageModule="OfflineMessageModule = OfflineMessageModule"
+    sed -i s/"$OfflineMessageModule"/"$newOfflineMessageModule"/g /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini
+    OfflineMessageURL="; OfflineMessageURL = \${Const|PrivURL}:\${Const|PrivatePort}"
+    newOfflineMessageURL="OfflineMessageURL = \${Const|PrivURL}:\${Const|PrivatePort}"
+    sed -i s/"$OfflineMessageURL"/"$newOfflineMessageURL"/g /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini
     sed -i s/\;\ StorageProvider/StorageProvider/g /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini
     sed -i s/\;\ MuteListModule/MuteListModule/g /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini
     sed -i s/\;\ ForwardOfflineGroupMessages/ForwardOfflineGroupMessages/g /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini
@@ -1125,4 +1204,21 @@ echo "loginURI http://$auswahlipdnssetup:9000/"
 echo "URL $auswahlipdnssetup"
 
 # TODO
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # Zum schluss müssen alle Konfigurationen, an ihren richtigen Platz kopiert werden.
