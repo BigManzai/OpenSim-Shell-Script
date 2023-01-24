@@ -16,11 +16,12 @@
 
 #? Der nachteil dieser art von konfiguration ist, das die Zeilen keine leerzeichen und Tabs am anfang haben dürfen.
 # Variables
-STARTVERZEICHNIS="opt";
+STARTVERZEICHNIS="opt"; # Hauptverzeichnis
+CONFIGVERZEICHNIS="AutoConfig" # Arbeitsverzeichnis
 linefontcolor=2	linebaggroundcolor=0;
 lline="$(tput setaf $linefontcolor)$(tput setab $linebaggroundcolor)#####################################################################################$(tput sgr 0)"
 SCRIPTNAME="configure" # Versionsausgabe
-VERSION="0.1.23 ALPHA" # Versionsausgabe
+VERSION="0.1.25 ALPHA" # Versionsausgabe
 ### Aktuelle IP ueber Suchadresse ermitteln und Ausfuehrungszeichen anhaengen.
 SEARCHADRES="icanhazip.com"
 AKTUELLEIP='"'$(wget -O - -q $SEARCHADRES)'"'
@@ -140,38 +141,38 @@ function configsetup() {
     echo "Bitte warten..."
         # INI Datei von Leerzeichen und Tabs am anfang des Textes befreien.
         # sed TAB = \t
-        sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/AutoConfig/Estates.ini.example
-        sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/AutoConfig/FlotsamCache.ini.example
-        sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/AutoConfig/Grid.ini
-        sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/AutoConfig/GridCommon.ini.example
-        sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/AutoConfig/GridHypergrid.ini
-        sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/AutoConfig/LaunchSLClient.ini
-        sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/AutoConfig/MoneyServer.ini.example
-        sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/AutoConfig/OpenSim.ConsoleClient.ini.example
-        sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini.example
-        sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/AutoConfig/OpenSimDefaults.ini
-        sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/AutoConfig/osslDefaultEnable.ini
-        sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/AutoConfig/osslEnable.ini.example
-        sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/AutoConfig/pCampBot.ini.example
-        sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/AutoConfig/Regions.ini.example
-        sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini.example
-        sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/AutoConfig/Robust.ini.example
-        sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/AutoConfig/Robust.Tests.ini
-        sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/AutoConfig/SQLiteStandalone.ini
-        sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/AutoConfig/Standalone.ini
-        sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/AutoConfig/StandaloneCommon.ini.example
-        sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/AutoConfig/StandaloneHypergrid.ini
+        sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Estates.ini.example
+        sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/FlotsamCache.ini.example
+        sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Grid.ini
+        sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/GridCommon.ini.example
+        sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/GridHypergrid.ini
+        sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/LaunchSLClient.ini
+        sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/MoneyServer.ini.example
+        sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ConsoleClient.ini.example
+        sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini.example
+        sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSimDefaults.ini
+        sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/osslDefaultEnable.ini
+        sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/osslEnable.ini.example
+        sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/pCampBot.ini.example
+        sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Regions.ini.example
+        sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini.example
+        sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.ini.example
+        sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.Tests.ini
+        sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/SQLiteStandalone.ini
+        sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Standalone.ini
+        sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/StandaloneCommon.ini.example
+        sed -i.backup -re 's#^ +## ; s#^\t+##' /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/StandaloneHypergrid.ini
 
         # Jetzt werden die wichtigen Dateien umkopiert von *.ini.example in *.ini
-        cp /$STARTVERZEICHNIS/AutoConfig/Estates.ini.example /$STARTVERZEICHNIS/AutoConfig/Estates.ini
-        cp /$STARTVERZEICHNIS/AutoConfig/FlotsamCache.ini.example /$STARTVERZEICHNIS/AutoConfig/FlotsamCache.ini
-        cp /$STARTVERZEICHNIS/AutoConfig/GridCommon.ini.example /$STARTVERZEICHNIS/AutoConfig/GridCommon.ini
-        cp /$STARTVERZEICHNIS/AutoConfig/MoneyServer.ini.example /$STARTVERZEICHNIS/AutoConfig/MoneyServer.ini
-        cp /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini.example /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini
-        cp /$STARTVERZEICHNIS/AutoConfig/osslEnable.ini.example /$STARTVERZEICHNIS/AutoConfig/osslEnable.ini
-        cp /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini.example /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini
-        cp /$STARTVERZEICHNIS/AutoConfig/Robust.ini.example /$STARTVERZEICHNIS/AutoConfig/Robust.ini
-        cp /$STARTVERZEICHNIS/AutoConfig/StandaloneCommon.ini.example /$STARTVERZEICHNIS/AutoConfig/StandaloneCommon.ini
+        cp /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Estates.ini.example /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Estates.ini
+        cp /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/FlotsamCache.ini.example /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/FlotsamCache.ini
+        cp /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/GridCommon.ini.example /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/GridCommon.ini
+        cp /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/MoneyServer.ini.example /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/MoneyServer.ini
+        cp /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini.example /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini
+        cp /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/osslEnable.ini.example /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/osslEnable.ini
+        cp /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini.example /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini
+        cp /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.ini.example /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.ini
+        cp /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/StandaloneCommon.ini.example /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/StandaloneCommon.ini
         fi
     if [ "$auswahlconfigsetup" = "nein" ]; then echo "weiter..."; fi
 }
@@ -201,9 +202,9 @@ function Estatessetup() {
         if [ "$Owner" = "" ]; then Owner="$UUID"; fi
         if [ "$EstateID" = "" ]; then EstateID="0"; fi
 
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/Estates.ini "$Example_Estate"
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/Estates.ini "$Example_Estate" Owner "\"$Owner\""
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/Estates.ini "$Example_Estate" EstateID "\"$EstateID\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Estates.ini "$Example_Estate"
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Estates.ini "$Example_Estate" Owner "\"$Owner\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Estates.ini "$Example_Estate" EstateID "\"$EstateID\""
     fi
 if [ "$auswahlEstatessetup" = "nein" ]; then echo "weiter..."; fi
 }
@@ -227,7 +228,7 @@ function FlotsamCachesetup() {
         echo "Bitte warten..."
 
         #[AssetCache]FlotsamCache.ini
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/FlotsamCache.ini AssetCache FileCleanupTimer "\"$FlotsamTime\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/FlotsamCache.ini AssetCache FileCleanupTimer "\"$FlotsamTime\""
     fi
 if [ "$auswahlFlotsamCachesetup" = "nein" ]; then echo "weiter..."; fi
 }
@@ -290,49 +291,49 @@ function MoneyServersetup() {
         echo "Bitte warten..."
 
         #[MySql]MoneyServer.ini
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/MoneyServer.ini MySql hostname "\"$localhost\""
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/MoneyServer.ini MySql database "\"$Database_name\""
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/MoneyServer.ini MySql username "\"$Database_user\""
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/MoneyServer.ini MySql password "\"$Database_password\""
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/MoneyServer.ini MySql MaxConnection "\"$MaxConnection\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/MoneyServer.ini MySql hostname "\"$localhost\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/MoneyServer.ini MySql database "\"$Database_name\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/MoneyServer.ini MySql username "\"$Database_user\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/MoneyServer.ini MySql password "\"$Database_password\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/MoneyServer.ini MySql MaxConnection "\"$MaxConnection\""
         #[MoneyServer]MoneyServer.ini
-        sed -i s/\;EnableScriptSendMoney/EnableScriptSendMoney/g /$STARTVERZEICHNIS/AutoConfig/MoneyServer.ini
-        sed -i s/\;MoneyScriptAccessKey/MoneyScriptAccessKey/g /$STARTVERZEICHNIS/AutoConfig/MoneyServer.ini
-        sed -i s/\;MoneyScriptIPaddress/MoneyScriptIPaddress/g /$STARTVERZEICHNIS/AutoConfig/MoneyServer.ini
+        sed -i s/\;EnableScriptSendMoney/EnableScriptSendMoney/g /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/MoneyServer.ini
+        sed -i s/\;MoneyScriptAccessKey/MoneyScriptAccessKey/g /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/MoneyServer.ini
+        sed -i s/\;MoneyScriptIPaddress/MoneyScriptIPaddress/g /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/MoneyServer.ini
 
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/MoneyServer.ini MoneyServer ServerPort "\"8008\""
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/MoneyServer.ini MoneyServer DefaultBalance "\"1000\""
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/MoneyServer.ini MoneyServer HGAvatarDefaultBalance "\"1000\""
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/MoneyServer.ini MoneyServer GuestAvatarDefaultBalance "\"1000\""
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/MoneyServer.ini MoneyServer BankerAvatar "\"00000000-0000-0000-0000-000000000000\""
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/MoneyServer.ini MoneyServer EnableScriptSendMoney "\"true\""
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/MoneyServer.ini MoneyServer MoneyScriptAccessKey  "\"$AccessKey\""
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/MoneyServer.ini MoneyServer MoneyScriptIPaddress  "$ScriptIPaddress"
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/MoneyServer.ini MoneyServer ServerPort "\"8008\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/MoneyServer.ini MoneyServer DefaultBalance "\"1000\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/MoneyServer.ini MoneyServer HGAvatarDefaultBalance "\"1000\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/MoneyServer.ini MoneyServer GuestAvatarDefaultBalance "\"1000\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/MoneyServer.ini MoneyServer BankerAvatar "\"00000000-0000-0000-0000-000000000000\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/MoneyServer.ini MoneyServer EnableScriptSendMoney "\"true\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/MoneyServer.ini MoneyServer MoneyScriptAccessKey  "\"$AccessKey\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/MoneyServer.ini MoneyServer MoneyScriptIPaddress  "$ScriptIPaddress"
         #[Economy]OpenSim.ini
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Economy SellEnabled "true"
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Economy EconomyModule "DTLNSLMoneyModule"
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Economy CurrencyServer "\"\${Const|BaseURL}:8008/\""
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Economy UserServer "\"\${Const|BaseURL}:8002/\""
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Economy CheckServerCert "false"
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Economy PriceUpload "0"
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Economy MeshModelUploadCostFactor "1.0"
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Economy MeshModelUploadTextureCostFactor "1.0"
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Economy MeshModelMinCostFactor "1.0"
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Economy PriceGroupCreate "0"
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Economy ObjectCount "0"
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Economy PriceEnergyUnit "0"
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Economy PriceObjectClaim "0"
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Economy PricePublicObjectDecay "0"
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Economy PricePublicObjectDelete "0"
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Economy PriceParcelClaim "0"
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Economy PriceParcelClaimFactor "1"
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Economy PriceRentLight "0"
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Economy TeleportMinPrice "0"
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Economy TeleportPriceExponent "2"
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Economy EnergyEfficiency "1"
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Economy PriceObjectRent "0"
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Economy PriceObjectScaleFactor "10"
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Economy PriceParcelRent "0"
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini Economy SellEnabled "true"
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini Economy EconomyModule "DTLNSLMoneyModule"
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini Economy CurrencyServer "\"\${Const|BaseURL}:8008/\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini Economy UserServer "\"\${Const|BaseURL}:8002/\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini Economy CheckServerCert "false"
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini Economy PriceUpload "0"
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini Economy MeshModelUploadCostFactor "1.0"
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini Economy MeshModelUploadTextureCostFactor "1.0"
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini Economy MeshModelMinCostFactor "1.0"
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini Economy PriceGroupCreate "0"
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini Economy ObjectCount "0"
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini Economy PriceEnergyUnit "0"
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini Economy PriceObjectClaim "0"
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini Economy PricePublicObjectDecay "0"
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini Economy PricePublicObjectDelete "0"
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini Economy PriceParcelClaim "0"
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini Economy PriceParcelClaimFactor "1"
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini Economy PriceRentLight "0"
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini Economy TeleportMinPrice "0"
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini Economy TeleportPriceExponent "2"
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini Economy EnergyEfficiency "1"
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini Economy PriceObjectRent "0"
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini Economy PriceObjectScaleFactor "10"
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini Economy PriceParcelRent "0"
         echo "weiter..."
     fi
 if [ "$auswahlMoneyServersetup" = "nein" ]; then echo "weiter..."; fi
@@ -351,44 +352,44 @@ function OpenSimsetup() {
     then
     echo "Bitte warten..."
         # [DataSnapshot]OpenSim.ini
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini DataSnapshot index_sims "\"true\""
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini DataSnapshot data_exposure "\"minimum\""
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini DataSnapshot default_snapshot_period "\"7200\""
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini DataSnapshot snapshot_cache_directory "\"DataSnapshot\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini DataSnapshot index_sims "\"true\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini DataSnapshot data_exposure "\"minimum\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini DataSnapshot default_snapshot_period "\"7200\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini DataSnapshot snapshot_cache_directory "\"DataSnapshot\""
         # [Startup]OpenSim.ini
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Startup NonPhysicalPrimMax "\"1024\""
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Startup AllowScriptCrossing "\"false\""
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Startup DefaultDrawDistance "\"128.0\""
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Startup MaxDrawDistance "\"128\""
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Startup MaxRegionsViewDistance "\"128\""
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Startup MinRegionsViewDistance "\"48\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini Startup NonPhysicalPrimMax "\"1024\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini Startup AllowScriptCrossing "\"false\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini Startup DefaultDrawDistance "\"128.0\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini Startup MaxDrawDistance "\"128\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini Startup MaxRegionsViewDistance "\"128\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini Startup MinRegionsViewDistance "\"48\""
         # [AccessControl]OpenSim.ini
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini AccessControl DeniedClients "\"Imprudence,CopyBot,Twisted,Crawler,Cryolife,darkstorm,DarkStorm,Darkstorm\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini AccessControl DeniedClients "\"Imprudence,CopyBot,Twisted,Crawler,Cryolife,darkstorm,DarkStorm,Darkstorm\""
         # [Map]OpenSim.ini
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Map DrawPrimOnMapTile "\"true\""
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Map RenderMeshes "\"true\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini Map DrawPrimOnMapTile "\"true\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini Map RenderMeshes "\"true\""
         # [Permissions]OpenSim.ini
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Permissions allow_grid_gods "\"true\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini Permissions allow_grid_gods "\"true\""
         # [Network]OpenSim.ini
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Network user_agent "\"OpenSim LSL (Mozilla Compatible)\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini Network user_agent "\"OpenSim LSL (Mozilla Compatible)\""
         # [ClientStack.LindenUDP]OpenSim.ini
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini ClientStack.LindenUDP DisableFacelights "\"true\""
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini ClientStack.LindenUDP client_throttle_max_bps "\"400000\""
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini ClientStack.LindenUDP scene_throttle_max_bps "\"70000000\""
-        # [SimulatorFeatures]/$STARTVERZEICHNIS/AutoConfig/OpenSim.ini
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini SimulatorFeatures SearchServerURI "\"\$\{Const\|BaseURL\}:\$\{Const\|PublicPort\}\""
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini SimulatorFeatures DestinationGuideURI "\"\$\{Const\|BaseURL\}:\$\{Const\|PublicPort\}\""
-        # [InterestManagement]/$STARTVERZEICHNIS/AutoConfig/OpenSim.ini
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini InterestManagement UpdatePrioritizationScheme "\"BestAvatarResponsiveness\""
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini InterestManagement ObjectsCullingByDistance "\"true\""
-        # [Terrain]/$STARTVERZEICHNIS/AutoConfig/OpenSim.ini
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Terrain InitialTerrain "\"flat\""
-        # [UserProfiles]/$STARTVERZEICHNIS/AutoConfig/OpenSim.ini
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini UserProfiles ProfileServiceURL "\"\$\{Const\|BaseURL\}:\$\{Const\|PublicPort\}\""
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini UserProfiles AllowUserProfileWebURLs "\"true\""
-        # [Materials]/$STARTVERZEICHNIS/AutoConfig/OpenSim.ini
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Materials enable_materials "\"true\""
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Materials MaxMaterialsPerTransaction "\"250\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini ClientStack.LindenUDP DisableFacelights "\"true\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini ClientStack.LindenUDP client_throttle_max_bps "\"400000\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini ClientStack.LindenUDP scene_throttle_max_bps "\"70000000\""
+        # [SimulatorFeatures]/$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini SimulatorFeatures SearchServerURI "\"\$\{Const\|BaseURL\}:\$\{Const\|PublicPort\}\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini SimulatorFeatures DestinationGuideURI "\"\$\{Const\|BaseURL\}:\$\{Const\|PublicPort\}\""
+        # [InterestManagement]/$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini InterestManagement UpdatePrioritizationScheme "\"BestAvatarResponsiveness\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini InterestManagement ObjectsCullingByDistance "\"true\""
+        # [Terrain]/$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini Terrain InitialTerrain "\"flat\""
+        # [UserProfiles]/$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini UserProfiles ProfileServiceURL "\"\$\{Const\|BaseURL\}:\$\{Const\|PublicPort\}\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini UserProfiles AllowUserProfileWebURLs "\"true\""
+        # [Materials]/$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini Materials enable_materials "\"true\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini Materials MaxMaterialsPerTransaction "\"250\""
     fi
 if [ "$auswahlOpenSimsetup" = "nein" ]; then echo "weiter..."; fi
 }
@@ -411,8 +412,8 @@ function osslEnablesetup() {
     read -r SkriptLevel
     if [ "$SkriptLevel" = "" ]; then SkriptLevel="VeryLow"; fi
 
-    #[OSSL]/$STARTVERZEICHNIS/AutoConfig/osslEnable.ini    
-    crudini --set /$STARTVERZEICHNIS/AutoConfig/osslEnable.ini OSSL OSFunctionThreatLevel "\"$SkriptLevel\""
+    #[OSSL]/$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/osslEnable.ini    
+    crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/osslEnable.ini OSSL OSFunctionThreatLevel "\"$SkriptLevel\""
     echo "PARCEL_GROUP_MEMBER,PARCEL_OWNER,ESTATE_MANAGER und ESTATE_OWNER freigeben [ja]"
     read -r SkriptOwner
     if [ "$SkriptOwner" = "" ]; then SkriptOwner="ja"; fi
@@ -421,8 +422,8 @@ function osslEnablesetup() {
 
     if [ "$SkriptOwner" = "ja" ] || [ "$SkriptOwner" = "j" ]
     then
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/osslEnable.ini OSSL osslParcelO "\"PARCEL_OWNER,ESTATE_MANAGER,ESTATE_OWNER,\""
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/osslEnable.ini OSSL osslParcelOG "\"PARCEL_GROUP_MEMBER,PARCEL_OWNER,ESTATE_MANAGER,ESTATE_OWNER,\"" 
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/osslEnable.ini OSSL osslParcelO "\"PARCEL_OWNER,ESTATE_MANAGER,ESTATE_OWNER,\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/osslEnable.ini OSSL osslParcelOG "\"PARCEL_GROUP_MEMBER,PARCEL_OWNER,ESTATE_MANAGER,ESTATE_OWNER,\"" 
     fi
 
     echo "
@@ -557,7 +558,7 @@ function osslEnablesetup() {
     Allow_osTeleportObject =          \${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER
 
     Allow_osGetAgentIP =              true   ; always restricted to Administrators (true or false to disable)
-    Allow_osSetContentType =          false" >> /$STARTVERZEICHNIS/AutoConfig/osslEnable.ini
+    Allow_osSetContentType =          false" >> /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/osslEnable.ini
 fi
 
 if [ "$auswahlosslEnablesetup" = "nein" ]; then echo "weiter..."; fi
@@ -576,45 +577,45 @@ function RobustHGsetup() {
     if [ "$auswahlRobustHGsetup" = "ja" ] || [ "$auswahlRobustHGsetup" = "j" ]
     then
     echo "Bitte warten..."
-        #[ServiceList]/$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini
-        #sed -i s/Anton/Berta/g /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini
-        sed -i s/\;\ OfflineIMServiceConnector/OfflineIMServiceConnector/g /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini
-        sed -i s/\;\ GroupsServiceConnector/GroupsServiceConnector/g /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini
-        sed -i s/\;\ BakedTextureService/BakedTextureService/g /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini
-        sed -i s/\;\ UserProfilesServiceConnector/UserProfilesServiceConnector/g /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini
-        sed -i s/\;\ HGGroupsServiceConnector/HGGroupsServiceConnector/g /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini
+        #[ServiceList]/$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini
+        #sed -i s/Anton/Berta/g /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini
+        sed -i s/\;\ OfflineIMServiceConnector/OfflineIMServiceConnector/g /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini
+        sed -i s/\;\ GroupsServiceConnector/GroupsServiceConnector/g /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini
+        sed -i s/\;\ BakedTextureService/BakedTextureService/g /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini
+        sed -i s/\;\ UserProfilesServiceConnector/UserProfilesServiceConnector/g /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini
+        sed -i s/\;\ HGGroupsServiceConnector/HGGroupsServiceConnector/g /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini
 
-        #[Hypergrid]/$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini
-        sed -i s/\;\ HomeURI/HomeURI/g /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini
-        sed -i s/\;\ GatekeeperURI/GatekeeperURI/g /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini
-        #crudini --set /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini Hypergrid HomeURI "\"\${Const|BaseURL}:\${Const|PublicPort}\""
-        #crudini --set /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini Hypergrid GatekeeperURI "\"\${Const|BaseURL}:\${Const|PublicPort}\""
-        #[AccessControl]/$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini AccessControl DeniedClients "\"Imprudence|CopyBot|Twisted|Crawler|Cryolife|darkstorm|DarkStorm|Darkstorm|hydrastorm viewer|kinggoon copybot|goon squad copybot|copybot pro|darkstorm viewer|copybot club|darkstorm second life|copybot download|HydraStorm Copybot Viewer|Copybot|Firestorm Pro|DarkStorm v3|DarkStorm v2|ShoopedStorm|HydraStorm|hydrastorm|kinggoon|goon squad|goon|copybot|Shooped|ShoopedStorm|Triforce|Triforce Viewer|Firestorm Professional|ShoopedLife|Sombrero|Sombrero Firestorm|GoonSquad|Solar|SolarStorm\""
-        #[GridService]/$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini GridService MapTileDirectory "\"./maptiles\""
-        #[LoginService]/$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini LoginService Currency "\"T$\""
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini LoginService ClassifiedFee 0
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini LoginService DeniedMacs "\"44ed33b396b10a5c95d04967aff8bd9c|5574234b1336a4523b6acb803737b608\""
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini LoginService DeniedID0s "\"d1fdb346d01a3bda2dcb82322bd88456\""
-        #[MapImageService]/$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini MapImageService TilesStoragePath "\"maptiles\""
-        #[GridInfoService]/$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini GridInfoService gridname "\"the lost continent of hippo\""
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini GridInfoService gridnick "\"hippogrid"
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini GridInfoService economy "\"\${Const|BaseURL}/opensim/helper/\""
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini GridInfoService about "\"\${Const|BaseURL}/opensim/helper/\""
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini GridInfoService register "\"\${Const|BaseURL}/opensim/helper/\""
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini GridInfoService help "\"\${Const|BaseURL}/opensim/helper/\""
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini GridInfoService password "\${Const|BaseURL}/opensim/helper/\""
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini GridInfoService gatekeeper "\"\${Const|BaseURL}:\${Const|PublicPort}/\""
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini GridInfoService uas "\"\${Const|BaseURL}:\${Const|PublicPort}/\""
-        #[GatekeeperService]/$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini GatekeeperService DeniedMacs "\"44ed33b396b10a5c95d04967aff8bd9c|5574234b1336a4523b6acb803737b608\""
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini GatekeeperService DeniedID0s "\"d1fdb346d01a3bda2dcb82322bd88456\""
-        #[UserAgentService]/$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini UserAgentService ShowUserDetailsInHGProfile "\"True\""  
+        #[Hypergrid]/$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini
+        sed -i s/\;\ HomeURI/HomeURI/g /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini
+        sed -i s/\;\ GatekeeperURI/GatekeeperURI/g /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini
+        #crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini Hypergrid HomeURI "\"\${Const|BaseURL}:\${Const|PublicPort}\""
+        #crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini Hypergrid GatekeeperURI "\"\${Const|BaseURL}:\${Const|PublicPort}\""
+        #[AccessControl]/$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini AccessControl DeniedClients "\"Imprudence|CopyBot|Twisted|Crawler|Cryolife|darkstorm|DarkStorm|Darkstorm|hydrastorm viewer|kinggoon copybot|goon squad copybot|copybot pro|darkstorm viewer|copybot club|darkstorm second life|copybot download|HydraStorm Copybot Viewer|Copybot|Firestorm Pro|DarkStorm v3|DarkStorm v2|ShoopedStorm|HydraStorm|hydrastorm|kinggoon|goon squad|goon|copybot|Shooped|ShoopedStorm|Triforce|Triforce Viewer|Firestorm Professional|ShoopedLife|Sombrero|Sombrero Firestorm|GoonSquad|Solar|SolarStorm\""
+        #[GridService]/$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini GridService MapTileDirectory "\"./maptiles\""
+        #[LoginService]/$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini LoginService Currency "\"T$\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini LoginService ClassifiedFee 0
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini LoginService DeniedMacs "\"44ed33b396b10a5c95d04967aff8bd9c|5574234b1336a4523b6acb803737b608\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini LoginService DeniedID0s "\"d1fdb346d01a3bda2dcb82322bd88456\""
+        #[MapImageService]/$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini MapImageService TilesStoragePath "\"maptiles\""
+        #[GridInfoService]/$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini GridInfoService gridname "\"the lost continent of hippo\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini GridInfoService gridnick "\"hippogrid"
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini GridInfoService economy "\"\${Const|BaseURL}/opensim/helper/\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini GridInfoService about "\"\${Const|BaseURL}/opensim/helper/\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini GridInfoService register "\"\${Const|BaseURL}/opensim/helper/\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini GridInfoService help "\"\${Const|BaseURL}/opensim/helper/\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini GridInfoService password "\${Const|BaseURL}/opensim/helper/\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini GridInfoService gatekeeper "\"\${Const|BaseURL}:\${Const|PublicPort}/\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini GridInfoService uas "\"\${Const|BaseURL}:\${Const|PublicPort}/\""
+        #[GatekeeperService]/$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini GatekeeperService DeniedMacs "\"44ed33b396b10a5c95d04967aff8bd9c|5574234b1336a4523b6acb803737b608\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini GatekeeperService DeniedID0s "\"d1fdb346d01a3bda2dcb82322bd88456\""
+        #[UserAgentService]/$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini UserAgentService ShowUserDetailsInHGProfile "\"True\""  
     fi
 if [ "$auswahlRobustHGsetup" = "nein" ]; then echo "weiter..."; fi
 }
@@ -630,12 +631,12 @@ function Robustsetup() {
     if [ "$auswahlRobustsetup" = "ja" ] || [ "$auswahlRobustsetup" = "j" ]
     then
     echo "Bitte warten..."
-        #[ServiceList]/$STARTVERZEICHNIS/AutoConfig/Robust.ini
-        #sed -i s/Anton/Berta/g /$STARTVERZEICHNIS/AutoConfig/Robust.ini
-        sed -i s/\;\ OfflineIMServiceConnector/OfflineIMServiceConnector/g /$STARTVERZEICHNIS/AutoConfig/Robust.ini
-        sed -i s/\;\ GroupsServiceConnector/GroupsServiceConnector/g /$STARTVERZEICHNIS/AutoConfig/Robust.ini
-        sed -i s/\;\ BakedTextureService/BakedTextureService/g /$STARTVERZEICHNIS/AutoConfig/Robust.ini
-        sed -i s/\;\ UserProfilesServiceConnector/UserProfilesServiceConnector/g /$STARTVERZEICHNIS/AutoConfig/Robust.ini
+        #[ServiceList]/$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.ini
+        #sed -i s/Anton/Berta/g /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.ini
+        sed -i s/\;\ OfflineIMServiceConnector/OfflineIMServiceConnector/g /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.ini
+        sed -i s/\;\ GroupsServiceConnector/GroupsServiceConnector/g /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.ini
+        sed -i s/\;\ BakedTextureService/BakedTextureService/g /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.ini
+        sed -i s/\;\ UserProfilesServiceConnector/UserProfilesServiceConnector/g /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.ini
     fi
 if [ "$auswahlRobustsetup" = "nein" ]; then echo "weiter..."; fi
 }
@@ -660,17 +661,17 @@ function ipdnssetup() {
 
         echo "Robust.ini"
         #[Const]Robust.ini
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/Robust.ini Const BaseURL "\"$auswahlipdnssetup\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.ini Const BaseURL "\"$auswahlipdnssetup\""
 
         echo "Robust.HG.ini"
         #[Const]Robust.HG.ini
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini Const BaseURL "\"$auswahlipdnssetup\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini Const BaseURL "\"$auswahlipdnssetup\""
 
         echo "OpenSim.ini"
         # [Const]OpenSim.ini
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Const BaseHostname "\"$auswahlipdnssetup\""
-        # [DataSnapshot]/$STARTVERZEICHNIS/AutoConfig/OpenSim.ini
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini DataSnapshot gridname "\"$auswahlipdnssetup\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini Const BaseHostname "\"$auswahlipdnssetup\""
+        # [DataSnapshot]/$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini DataSnapshot gridname "\"$auswahlipdnssetup\""
     fi
 if [ "$auswahlipdnssetup" = "nein" ]; then echo "weiter..."; fi
 }
@@ -689,50 +690,50 @@ function constsetup() {
     echo "GridCommon.ini Const anlegen"
 
     # Prüfen ob Const vorhanden ist:
-    CONSTOK=$(crudini --get /$STARTVERZEICHNIS/AutoConfig/GridCommon.ini Const)
+    CONSTOK=$(crudini --get /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/GridCommon.ini Const)
 
     # Const ist vorhanden
     if [ "$CONSTOK" = "Const" ]
     then
         echo "Nur die neue IP/DNS eintragen"
         echo "Bitte warten..."
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/GridCommon.ini Const BaseURL "\"$auswahlipdnssetup\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/GridCommon.ini Const BaseURL "\"$auswahlipdnssetup\""
     fi
     # Const ist nicht vorhanden
     if [ "$CONSTOK" = "" ]
     then
     echo "Bitte warten..."
         echo "Const neu anlegen am anfang der GridCommon.ini"
-        sed -i '1s/.*$/\[Const\]\n&/g' /$STARTVERZEICHNIS/AutoConfig/GridCommon.ini
-        sed -i '2s/.*$/BaseURL = "http:\/\/'"\"$auswahlipdnssetup\""'"\n&/g' /$STARTVERZEICHNIS/AutoConfig/GridCommon.ini
-        sed -i '3s/.*$/PublicPort = "8002"\n&/g' /$STARTVERZEICHNIS/AutoConfig/GridCommon.ini
-        sed -i '4s/.*$/PrivatePort = "8003"\n&/g' /$STARTVERZEICHNIS/AutoConfig/GridCommon.ini
-        sed -i '5s/.*$/PrivURL = "$\{Const|BaseURL}"\n&/g' /$STARTVERZEICHNIS/AutoConfig/GridCommon.ini
-        sed -i '6s/.*$/\n&/g' /$STARTVERZEICHNIS/AutoConfig/GridCommon.ini
+        sed -i '1s/.*$/\[Const\]\n&/g' /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/GridCommon.ini
+        sed -i '2s/.*$/BaseURL = "http:\/\/'"\"$auswahlipdnssetup\""'"\n&/g' /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/GridCommon.ini
+        sed -i '3s/.*$/PublicPort = "8002"\n&/g' /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/GridCommon.ini
+        sed -i '4s/.*$/PrivatePort = "8003"\n&/g' /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/GridCommon.ini
+        sed -i '5s/.*$/PrivURL = "$\{Const|BaseURL}"\n&/g' /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/GridCommon.ini
+        sed -i '6s/.*$/\n&/g' /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/GridCommon.ini
     fi
 
     echo "StandaloneCommon.ini Const anlegen"
     
     # Prüfen ob Const vorhanden ist:
-    CONSTOK=$(crudini --get /$STARTVERZEICHNIS/AutoConfig/StandaloneCommon.ini Const)
+    CONSTOK=$(crudini --get /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/StandaloneCommon.ini Const)
 
     # Const ist vorhanden
     if [ "$CONSTOK" = "Const" ]
     then
         echo "Nur die neue IP/DNS eintragen"
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/StandaloneCommon.ini Const BaseURL "\"$auswahlipdnssetup\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/StandaloneCommon.ini Const BaseURL "\"$auswahlipdnssetup\""
     fi
     # Const ist nicht vorhanden
     if [ "$CONSTOK" = "" ]
     then
     echo "Bitte warten..."
         echo "Const neu anlegen am anfang der StandaloneCommon.ini"
-        sed -i '1s/.*$/\[Const\]\n&/g' /$STARTVERZEICHNIS/AutoConfig/StandaloneCommon.ini
-        sed -i '2s/.*$/BaseURL = "http:\/\/'"\"$auswahlipdnssetup\""'"\n&/g' /$STARTVERZEICHNIS/AutoConfig/StandaloneCommon.ini
-        sed -i '3s/.*$/PublicPort = "8002"\n&/g' /$STARTVERZEICHNIS/AutoConfig/StandaloneCommon.ini
-        sed -i '4s/.*$/PrivatePort = "8003"\n&/g' /$STARTVERZEICHNIS/AutoConfig/StandaloneCommon.ini
-        sed -i '5s/.*$/PrivURL = "$\{Const|BaseURL}"\n&/g' /$STARTVERZEICHNIS/AutoConfig/StandaloneCommon.ini
-        sed -i '6s/.*$/\n&/g' /$STARTVERZEICHNIS/AutoConfig/StandaloneCommon.ini
+        sed -i '1s/.*$/\[Const\]\n&/g' /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/StandaloneCommon.ini
+        sed -i '2s/.*$/BaseURL = "http:\/\/'"\"$auswahlipdnssetup\""'"\n&/g' /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/StandaloneCommon.ini
+        sed -i '3s/.*$/PublicPort = "8002"\n&/g' /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/StandaloneCommon.ini
+        sed -i '4s/.*$/PrivatePort = "8003"\n&/g' /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/StandaloneCommon.ini
+        sed -i '5s/.*$/PrivURL = "$\{Const|BaseURL}"\n&/g' /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/StandaloneCommon.ini
+        sed -i '6s/.*$/\n&/g' /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/StandaloneCommon.ini
     fi
     fi
 if [ "$auswahlconstsetup" = "nein" ]; then echo "weiter..."; fi
@@ -749,19 +750,19 @@ function StandaloneCommonsetup() {
     if [ "$auswahlStandaloneCommon" = "ja" ] || [ "$auswahlStandaloneCommon" = "j" ]
     then
     echo "Bitte warten..."
-        # [Hypergrid]/$STARTVERZEICHNIS/AutoConfig/StandaloneCommon.ini
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/StandaloneCommon.ini Hypergrid GatekeeperURI "\"\$\{Const\|BaseURL\}:\$\{Const\|PublicPort\}\""
-        # [Modules]/$STARTVERZEICHNIS/AutoConfig/StandaloneCommon.ini
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/StandaloneCommon.ini Modules AuthorizationServices "\"RemoteAuthorizationServicesConnector\""
-        # [GridService]/$STARTVERZEICHNIS/AutoConfig/StandaloneCommon.ini
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/StandaloneCommon.ini GridService AllowHypergridMapSearch "\"true\""
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/StandaloneCommon.ini GridService MapTileDirectory "\"./maptiles\""
-        # [HGInventoryAccessModule]/$STARTVERZEICHNIS/AutoConfig/StandaloneCommon.ini
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/StandaloneCommon.ini HGInventoryAccessModule HomeURI "\"\$\{Const\|BaseURL\}:\$\{Const\|PublicPort\}\""
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/StandaloneCommon.ini HGInventoryAccessModule Gatekeeper "\"\$\{Const\|BaseURL\}:\$\{Const\|PublicPort\}\""
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/StandaloneCommon.ini HGInventoryAccessModule RestrictInventoryAccessAbroad "\"false\""
-        # [HGFriendsModule]/$STARTVERZEICHNIS/AutoConfig/StandaloneCommon.ini
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/StandaloneCommon.ini HGFriendsModule LevelHGFriends "0;"
+        # [Hypergrid]/$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/StandaloneCommon.ini
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/StandaloneCommon.ini Hypergrid GatekeeperURI "\"\$\{Const\|BaseURL\}:\$\{Const\|PublicPort\}\""
+        # [Modules]/$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/StandaloneCommon.ini
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/StandaloneCommon.ini Modules AuthorizationServices "\"RemoteAuthorizationServicesConnector\""
+        # [GridService]/$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/StandaloneCommon.ini
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/StandaloneCommon.ini GridService AllowHypergridMapSearch "\"true\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/StandaloneCommon.ini GridService MapTileDirectory "\"./maptiles\""
+        # [HGInventoryAccessModule]/$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/StandaloneCommon.ini
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/StandaloneCommon.ini HGInventoryAccessModule HomeURI "\"\$\{Const\|BaseURL\}:\$\{Const\|PublicPort\}\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/StandaloneCommon.ini HGInventoryAccessModule Gatekeeper "\"\$\{Const\|BaseURL\}:\$\{Const\|PublicPort\}\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/StandaloneCommon.ini HGInventoryAccessModule RestrictInventoryAccessAbroad "\"false\""
+        # [HGFriendsModule]/$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/StandaloneCommon.ini
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/StandaloneCommon.ini HGFriendsModule LevelHGFriends "0;"
     fi
 if [ "$auswahlStandaloneCommon" = "nein" ]; then echo "weiter..."; fi
 }
@@ -779,18 +780,18 @@ function GridCommonsetup() {
     then
     echo "Bitte warten..."
         # [Hypergrid]GridCommon.ini
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/GridCommon.ini Hypergrid GatekeeperURI "\"\$\{Const\|BaseURL\}:\$\{Const\|PublicPort\}\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/GridCommon.ini Hypergrid GatekeeperURI "\"\$\{Const\|BaseURL\}:\$\{Const\|PublicPort\}\""
         # [Modules]GridCommon.ini
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/GridCommon.ini Modules AuthorizationServices "\"RemoteAuthorizationServicesConnector\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/GridCommon.ini Modules AuthorizationServices "\"RemoteAuthorizationServicesConnector\""
         # [GridService]GridCommon.ini
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/GridCommon.ini GridService AllowHypergridMapSearch "\"true\""
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/GridCommon.ini GridService MapTileDirectory "\"./maptiles\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/GridCommon.ini GridService AllowHypergridMapSearch "\"true\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/GridCommon.ini GridService MapTileDirectory "\"./maptiles\""
         # [HGInventoryAccessModule]GridCommon.ini
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/GridCommon.ini HGInventoryAccessModule HomeURI "\"\$\{Const\|BaseURL\}:\$\{Const\|PublicPort\}\""
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/GridCommon.ini HGInventoryAccessModule Gatekeeper "\"\$\{Const\|BaseURL\}:\$\{Const\|PublicPort\}\""
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/GridCommon.ini HGInventoryAccessModule RestrictInventoryAccessAbroad "\"false\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/GridCommon.ini HGInventoryAccessModule HomeURI "\"\$\{Const\|BaseURL\}:\$\{Const\|PublicPort\}\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/GridCommon.ini HGInventoryAccessModule Gatekeeper "\"\$\{Const\|BaseURL\}:\$\{Const\|PublicPort\}\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/GridCommon.ini HGInventoryAccessModule RestrictInventoryAccessAbroad "\"false\""
         # [HGFriendsModule]GridCommon.ini
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/GridCommon.ini HGFriendsModule LevelHGFriends "0;"
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/GridCommon.ini HGFriendsModule LevelHGFriends "0;"
     fi
 if [ "$auswahlGridCommon" = "nein" ]; then echo "weiter..."; fi
 }
@@ -808,9 +809,9 @@ function LaunchSLClientsetup() {
     then
     echo "Bitte warten..."
         # [OSGrid]LaunchSLClient.ini
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/LaunchSLClient.ini "$auswahlipdnssetup"
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/LaunchSLClient.ini "$auswahlipdnssetup" loginURI "http://$auswahlipdnssetup:8002/"
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/LaunchSLClient.ini "$auswahlipdnssetup" URL "$auswahlipdnssetup"
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/LaunchSLClient.ini "$auswahlipdnssetup"
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/LaunchSLClient.ini "$auswahlipdnssetup" loginURI "http://$auswahlipdnssetup:8002/"
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/LaunchSLClient.ini "$auswahlipdnssetup" URL "$auswahlipdnssetup"
     fi
 if [ "$auswahlLaunchSLClient" = "nein" ]; then echo "weiter..."; fi
 }
@@ -850,19 +851,19 @@ function databasesetup() {
         if [ "$auswahlpassword" = "" ]; then Password="opensim"; fi
 
         # GridCommon.ini Robust.HG.ini Robust.ini
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/Robust.ini DatabaseService StorageProvider "\"OpenSim.Data.MySQL.dll\""
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/Robust.ini DatabaseService ConnectionString "\"Data Source=$Source;Database=$Database;User ID=$User_ID;Password=$Password;Old Guids=true;SslMode=None;\""
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini DatabaseService StorageProvider "\"OpenSim.Data.MySQL.dll\""
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini DatabaseService ConnectionString "\"Data Source=$Source;Database=$Database;User ID=$User_ID;Password=$Password;Old Guids=true;SslMode=None;\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.ini DatabaseService StorageProvider "\"OpenSim.Data.MySQL.dll\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.ini DatabaseService ConnectionString "\"Data Source=$Source;Database=$Database;User ID=$User_ID;Password=$Password;Old Guids=true;SslMode=None;\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini DatabaseService StorageProvider "\"OpenSim.Data.MySQL.dll\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini DatabaseService ConnectionString "\"Data Source=$Source;Database=$Database;User ID=$User_ID;Password=$Password;Old Guids=true;SslMode=None;\""
 
         # Wird mysql/mariaDB ausgewählt dann ändern
         if [ "$auswahlmysql" = "ja" ] || [ "$auswahlmysql" = "j" ]
         then
         # SQlite kommentieren
-        sed -i s/Include-Storage = \"config-include/storage/SQLiteStandalone.ini\"\;/\;Include-Storage = \"config-include/storage/SQLiteStandalone.ini\"\;/g /$STARTVERZEICHNIS/AutoConfig/GridCommon.ini
+        sed -i s/Include-Storage = \"config-include/storage/SQLiteStandalone.ini\"\;/\;Include-Storage = \"config-include/storage/SQLiteStandalone.ini\"\;/g /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/GridCommon.ini
         # mysql/mariaDB eintragen
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/GridCommon.ini DatabaseService StorageProvider "\"OpenSim.Data.MySQL.dll\""
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/GridCommon.ini DatabaseService ConnectionString = "\"Data Source=$Source;Database=$Database;User ID=$User_ID;Password=$Password;Old Guids=true;SslMode=None;\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/GridCommon.ini DatabaseService StorageProvider "\"OpenSim.Data.MySQL.dll\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/GridCommon.ini DatabaseService ConnectionString = "\"Data Source=$Source;Database=$Database;User ID=$User_ID;Password=$Password;Old Guids=true;SslMode=None;\""
         else
         echo "SQlite wird beibehalten"
         fi
@@ -896,33 +897,33 @@ function regionconfig() {
         if [ "$location" = "" ]; then location="1000,1000"; fi
 
         UUID=$(uuidgen)
-        #[Regionsname]/$STARTVERZEICHNIS/AutoConfig/Regions.ini
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/Regions.ini "$regionsname"
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/Regions.ini "$regionsname" RegionUUID "\"$UUID\""
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/Regions.ini "$regionsname" Location "\"$location\""
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/Regions.ini "$regionsname" SizeX "\"$size\""
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/Regions.ini "$regionsname" SizeY "\"$size\""
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/Regions.ini "$regionsname" SizeZ "\"$size\""
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/Regions.ini "$regionsname" InternalAddress "\"0.0.0.0\""
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/Regions.ini "$regionsname" InternalPort "\"9100\""
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/Regions.ini "$regionsname" ResolveAddress "\"False\""
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/Regions.ini "$regionsname" ExternalHostName "\"$auswahlipdnssetup\""
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/Regions.ini "$regionsname" MaptileStaticUUID "\"$UUID\""
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/Regions.ini "$regionsname" DefaultLanding "\"<128,128,25>\""
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/Regions.ini "$regionsname" \;MaxPrimsPerUser "\"-1\""
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/Regions.ini "$regionsname" \;ScopeID "\"$UUID\""
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/Regions.ini "$regionsname" \;RegionType "\"Mainland\""
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/Regions.ini "$regionsname" \;MapImageModule "\"Warp3DImageModule\""
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/Regions.ini "$regionsname" \;TextureOnMapTile "\"true\""
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/Regions.ini "$regionsname" \;DrawPrimOnMapTile "\"true\""
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/Regions.ini "$regionsname" \;GenerateMaptiles "\"true\""
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/Regions.ini "$regionsname" \;MaptileRefresh "\"0\""
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/Regions.ini "$regionsname" \;MaptileStaticFile "\"water-logo-info.png"\"
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/Regions.ini "$regionsname" \;MasterAvatarFirstName "\"John\""
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/Regions.ini "$regionsname" \;MasterAvatarLastName "\"Doe\""
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/Regions.ini "$regionsname" \;MasterAvatarSandboxPassword "\"passwd\""
-        #[GridService]/$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini Region als Default eintragen.
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/Robust.HG.ini GridService Region_"$regionsname" "\"DefaultRegion, DefaultHGRegion\""
+        #[Regionsname]/$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Regions.ini
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Regions.ini "$regionsname"
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Regions.ini "$regionsname" RegionUUID "\"$UUID\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Regions.ini "$regionsname" Location "\"$location\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Regions.ini "$regionsname" SizeX "\"$size\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Regions.ini "$regionsname" SizeY "\"$size\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Regions.ini "$regionsname" SizeZ "\"$size\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Regions.ini "$regionsname" InternalAddress "\"0.0.0.0\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Regions.ini "$regionsname" InternalPort "\"9100\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Regions.ini "$regionsname" ResolveAddress "\"False\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Regions.ini "$regionsname" ExternalHostName "\"$auswahlipdnssetup\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Regions.ini "$regionsname" MaptileStaticUUID "\"$UUID\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Regions.ini "$regionsname" DefaultLanding "\"<128,128,25>\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Regions.ini "$regionsname" \;MaxPrimsPerUser "\"-1\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Regions.ini "$regionsname" \;ScopeID "\"$UUID\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Regions.ini "$regionsname" \;RegionType "\"Mainland\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Regions.ini "$regionsname" \;MapImageModule "\"Warp3DImageModule\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Regions.ini "$regionsname" \;TextureOnMapTile "\"true\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Regions.ini "$regionsname" \;DrawPrimOnMapTile "\"true\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Regions.ini "$regionsname" \;GenerateMaptiles "\"true\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Regions.ini "$regionsname" \;MaptileRefresh "\"0\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Regions.ini "$regionsname" \;MaptileStaticFile "\"water-logo-info.png"\"
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Regions.ini "$regionsname" \;MasterAvatarFirstName "\"John\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Regions.ini "$regionsname" \;MasterAvatarLastName "\"Doe\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Regions.ini "$regionsname" \;MasterAvatarSandboxPassword "\"passwd\""
+        #[GridService]/$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini Region als Default eintragen.
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini GridService Region_"$regionsname" "\"DefaultRegion, DefaultHGRegion\""
     fi
 if [ "$auswahlregioncon" = "nein" ]; then echo "weiter..."; fi
 }
@@ -952,44 +953,44 @@ function hypergridsetup() {
         then
         echo "Bitte warten..."
         # PublicPort = "8002"
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Const PublicPort "\"8002\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini Const PublicPort "\"8002\""
         # Network http_listener_port = "9000"
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Network http_listener_port "\"9010\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini Network http_listener_port "\"9010\""
         # Include-Architecture "config-include/GridHypergrid.ini"
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Architecture Include-Architecture "\"config-include/GridHypergrid.ini\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini Architecture Include-Architecture "\"config-include/GridHypergrid.ini\""
         # [XBakes]
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini XBakes URL "\"\$\{Const\|BaseURL\}:\$\{Const\|PrivatePort\}\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini XBakes URL "\"\$\{Const\|BaseURL\}:\$\{Const\|PrivatePort\}\""
         fi
 
         if [ "$auswahlhg" = "hgos" ]
         then
         echo "Bitte warten..."
         # PublicPort = "9000" besser 9010 weil 9000 und 9001 belegt sein könnten
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Const PublicPort "\"9010\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini Const PublicPort "\"9010\""
         # Include-Architecture "config-include/StandaloneHypergrid.ini"
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Architecture Include-Architecture "\"config-include/StandaloneHypergrid.ini\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini Architecture Include-Architecture "\"config-include/StandaloneHypergrid.ini\""
         fi
 
         if [ "$auswahlhg" = "grid" ]
         then
         echo "Bitte warten..."
         # PublicPort = "8002"
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Const PublicPort "\"8002\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini Const PublicPort "\"8002\""
         # Network http_listener_port = "9000"
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Network http_listener_port "\"9010\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini Network http_listener_port "\"9010\""
         # Include-Architecture "config-include/Grid.ini"
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Architecture Include-Architecture "\"config-include/Grid.ini\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini Architecture Include-Architecture "\"config-include/Grid.ini\""
         # [XBakes]
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini XBakes URL "\"\$\{Const\|BaseURL\}:\$\{Const\|PrivatePort\}\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini XBakes URL "\"\$\{Const\|BaseURL\}:\$\{Const\|PrivatePort\}\""
         fi
 
         if [ "$auswahlhg" = "os" ]
         then
         echo "Bitte warten..."
         # PublicPort = "9000" besser 9010 weil 9000 und 9001 belegt sein könnten
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Const PublicPort "\"9010\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini Const PublicPort "\"9010\""
         # Include-Architecture "config-include/Standalone.ini"
-        crudini --set /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini Architecture Include-Architecture "\"config-include/Standalone.ini\"" 
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini Architecture Include-Architecture "\"config-include/Standalone.ini\"" 
         fi
 
     fi
@@ -1008,14 +1009,37 @@ function Messagingsetup() {
     then
     echo "Bitte warten..."
     # [Messaging]OpenSim.ini
-    sed -i s/\;\ OfflineMessageModule/OfflineMessageModule/g /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini
-    sed -i s/\;\ OfflineMessageURL/OfflineMessageURL/g /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini
-    sed -i s/\;\ StorageProvider/StorageProvider/g /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini
-    sed -i s/\;\ MuteListModule/MuteListModule/g /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini
-    sed -i s/\;\ ForwardOfflineGroupMessages/ForwardOfflineGroupMessages/g /$STARTVERZEICHNIS/AutoConfig/OpenSim.ini
+    sed -i s/\;\ OfflineMessageModule/OfflineMessageModule/g /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini
+    sed -i s/\;\ OfflineMessageURL/OfflineMessageURL/g /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini
+    sed -i s/\;\ StorageProvider/StorageProvider/g /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini
+    sed -i s/\;\ MuteListModule/MuteListModule/g /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini
+    sed -i s/\;\ ForwardOfflineGroupMessages/ForwardOfflineGroupMessages/g /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini
     fi
 
     if [ "$auswahlMessagingsetup" = "nein" ]; then echo "weiter..."; fi
+}
+
+### ! Kommentare aus den Hauptkonfigurationen löschen.
+function deletecomments() {
+    echo "$lline"
+    echo "Möchten Sie alle Kommentare in ihren Hauptkonfigurationen löschen?"
+    echo "ja oder [nein]"
+    read -r auswahldelcomments
+    if [ "$auswahldelcomments" = "" ]; then auswahldelcomments="nein"; fi
+
+    if [ "$auswahldelcomments" = "ja" ] || [ "$auswahldelcomments" = "j" ]
+    then
+        echo "Löschen aller kommentare in einer ini Konfiguration."
+        sed -i -e '/^;/d;/^\s*$/d' /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Estates.ini
+        sed -i -e '/^;/d;/^\s*$/d' /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/FlotsamCache.ini
+        sed -i -e '/^;/d;/^\s*$/d' /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/GridCommon.ini
+        sed -i -e '/^;/d;/^\s*$/d' /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/MoneyServer.ini
+        sed -i -e '/^;/d;/^\s*$/d' /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini
+        sed -i -e '/^;/d;/^\s*$/d' /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/osslEnable.ini
+        sed -i -e '/^;/d;/^\s*$/d' /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini
+        sed -i -e '/^;/d;/^\s*$/d' /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.ini
+        sed -i -e '/^;/d;/^\s*$/d' /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/StandaloneCommon.ini
+    fi
 }
 
 # Programmablauf: Funktionen aufrufen
@@ -1037,6 +1061,7 @@ StandaloneCommonsetup
 LaunchSLClientsetup
 regionconfig
 Messagingsetup
+deletecomments
 
 echo "$lline"
 echo "Das konfigurieren mit configure, können sie so oft wiederholen wie sie möchten."
@@ -1046,31 +1071,20 @@ echo "Bitte Notieren sie diese Informationen und ihre UUID."
 echo "Optional könnten sie direkt einen Banker Avatar erstellen."
 echo "$lline"
 
-# Sollte keine IP oder DNS eingetragen sein dann 127.0.0.1 damit das nicht leer bleibt und doert nein steht.
+# Sollte keine IP oder DNS eingetragen sein, dann 127.0.0.1, damit das nicht leer bleibt und dort nicht "nein" steht.
 if [ "$auswahlipdnssetup" = "" ] || [ "$auswahlipdnssetup" = "nein" ]; then auswahlipdnssetup="127.0.0.1"; fi
-
-# TODO
-# Konfigurationen prüfen und Informationen zur einwahl mit dem Viewer anzeigen.
-# if [ "$auswahlLaunchSLClient" = "" ]
-# then
-# LaunchSLClientsetup ist für den eintrag im Viewer zuständig.
-echo "So melden Sie sich in ihrem Grid an"
+echo "So melden Sie sich in ihrem Grid oder OpenSimulator an"
 echo "Falls ihr Viewer ihre Grid-Manager-Einstellungen nicht eingetragen hat:"
-# echo "LoginURI: http://$auswahlipdnssetup/"
-# echo "Login Page: https://$auswahlipdnssetup/"
-# echo "Helper URI: http://$auswahlipdnssetup/"
-# echo "Website: https://$auswahlipdnssetup"
-# echo "Support: https://$auswahlipdnssetup"
-# echo "Account: https://$auswahlipdnssetup/"
-# echo "Password: https://$auswahlipdnssetup/"
 echo " "
 echo "Grid"
 echo "loginURI http://$auswahlipdnssetup:8002/"
 echo "URL $auswahlipdnssetup"
 echo " "
+echo "oder"
+echo " "
 echo "OpenSimulator"
 echo "loginURI http://$auswahlipdnssetup:9000/"
 echo "URL $auswahlipdnssetup"
-#fi
 
+# TODO
 # Zum schluss müssen alle Konfigurationen, an ihren richtigen Platz kopiert werden.
