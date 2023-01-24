@@ -18,10 +18,11 @@
 # Variables
 STARTVERZEICHNIS="opt"; # Hauptverzeichnis
 CONFIGVERZEICHNIS="AutoConfig" # Arbeitsverzeichnis
+OPENSIMVERZEICHNIS="opensim"
 linefontcolor=2	linebaggroundcolor=0;
 lline="$(tput setaf $linefontcolor)$(tput setab $linebaggroundcolor)#####################################################################################$(tput sgr 0)"
 SCRIPTNAME="configure" # Versionsausgabe
-VERSION="0.1.25 ALPHA" # Versionsausgabe
+VERSION="0.1.27 ALPHA" # Versionsausgabe
 ### Aktuelle IP ueber Suchadresse ermitteln und Ausfuehrungszeichen anhaengen.
 SEARCHADRES="icanhazip.com"
 AKTUELLEIP='"'$(wget -O - -q $SEARCHADRES)'"'
@@ -125,6 +126,36 @@ function linstall() {
             /$STARTVERZEICHNIS/opensim.sh AutoInstall
         fi
 if [ "$auswahllinstall" = "nein" ]; then echo "weiter..."; fi
+}
+
+# Sind die Konfigurationen vorhanden?
+function configcopy() {
+        # Sind Dateien vorhanden?
+        if [ -e /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/OpenSim.ini.example ] || [ -e /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini.example ] || [ -e /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.ini.example ]
+        then echo "Konfigurationsdateien vorhanden weiter..."
+        else
+         # Ist das OpenSim Verzeichnis vorhanden?
+            if [ -d "/$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS" ] 
+            then
+            echo "Ich kopiere jetzt die Konfigurationsdateien in das /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS Verzeichnis."
+            # /opt/opensim/bin/config-include
+            # /opt/opensim/bin
+            # /opt/opensim/bin/Estates
+            # /opt/opensim/bin/Regions
+            # /opt/opensim/bin/config-include/storage
+            cp /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin/*.ini.example /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS;
+            cp /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin/config-include/*.ini.example /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS;
+            cp /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin/*.ini /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS;
+            cp /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin/config-include/*.ini /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS;
+            cp /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin/Estates/*.ini.example /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS;  
+            cp /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin/config-include/storage/*.ini /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS;
+            cp /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin/Regions/*.ini.example /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS;
+            else
+            echo "Verzeichnis /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS nicht vorhanden,"
+            echo "die Konfigurationsdateien konnten nicht kopiert werden."
+            echo "Ist ihr OpenSimulator noch nicht entpackt, oder haben sie ihn nicht in opensim umbenannt?"
+            fi
+        fi
 }
 
 ### ! Konfigurationen vorbereiten für weitere verarbeitungen  Test 21.01.2023 geprüft OK
@@ -1044,6 +1075,7 @@ function deletecomments() {
 
 # Programmablauf: Funktionen aufrufen
 linstall
+configcopy
 configsetup
 ipdnssetup
 constsetup
@@ -1063,11 +1095,14 @@ regionconfig
 Messagingsetup
 deletecomments
 
+
+
 echo "$lline"
-echo "Das konfigurieren mit configure, können sie so oft wiederholen wie sie möchten."
+echo "Das konfigurieren mit configure, können sie so oft wiederholen, wie sie möchten."
 echo "Als nächstes müssen sie die Robust.exe starten und \"create avatar\" eingeben."
-echo "Anschließend werden sie abgefragt, wichtig sind nur Vorname, Nachname, Passwort und ihre E-Mail Adresse."
-echo "Bitte Notieren sie diese Informationen und ihre UUID."
+echo "Anschließend werden sie abgefragt, wichtig sind nur Vorname, Nachname, Passwort und ihre E-Mail Adresse,"
+echo "bei einem upgrade benötigen sie noch die Original UUID ihres alten Avatars."
+echo "Bitte Notieren sie alle Informationen sorgfältig und bewahren sie diese sicher auf."
 echo "Optional könnten sie direkt einen Banker Avatar erstellen."
 echo "$lline"
 
