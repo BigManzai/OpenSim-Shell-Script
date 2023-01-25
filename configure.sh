@@ -24,7 +24,7 @@ OPENSIMVERZEICHNIS="opensim" # OpenSimulator Verzeichnis im Hauptverzeichnis
 linefontcolor=2	linebaggroundcolor=0;
 lline="$(tput setaf $linefontcolor)$(tput setab $linebaggroundcolor)#####################################################################################$(tput sgr 0)"
 SCRIPTNAME="configure" # Versionsausgabe
-VERSION="0.1.34 ALPHA" # Versionsausgabe
+VERSION="0.1.39 ALPHA" # Versionsausgabe
 ### Aktuelle IP ueber Suchadresse ermitteln und Ausfuehrungszeichen anhaengen.
 SEARCHADRES="icanhazip.com"
 AKTUELLEIP='"'$(wget -O - -q $SEARCHADRES)'"'
@@ -210,7 +210,7 @@ function configsetup() {
     if [ "$auswahlconfigsetup" = "nein" ]; then echo "weiter..."; fi
 }
 
-### ! Estates.ini  Test 21.01.2023 geprüft OK
+### ! Estates.ini  Test 25.01.2023 fertig
 function Estatessetup() {
     echo "$lline"
     echo "Möchten Sie ihre Estates vorgeben?"
@@ -234,7 +234,9 @@ function Estatessetup() {
         if [ "$Example_Estate" = "" ]; then Example_Estate="Example Estate"; fi
         if [ "$Owner" = "" ]; then Owner="$UUID"; fi
         if [ "$EstateID" = "" ]; then EstateID="0"; fi
-
+        # Example Estate löschen.
+        crudini --del /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Estates.ini "Example Estate"
+        # Neues Estate einfügen.
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Estates.ini "$Example_Estate"
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Estates.ini "$Example_Estate" Owner "\"$Owner\""
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Estates.ini "$Example_Estate" EstateID "\"$EstateID\""
@@ -703,6 +705,7 @@ function RobustHGsetup() {
         #[GridInfoService]/$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini GridInfoService gridname "\"$osgridname\""
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini GridInfoService gridnick "\"$osgridnick"
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini GridInfoService welcome "\"\${Const|BaseURL}/\""
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini GridInfoService economy "\"\${Const|BaseURL}/opensim/helper/\""
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini GridInfoService about "\"\${Const|BaseURL}/opensim/helper/\""
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini GridInfoService register "\"\${Const|BaseURL}/opensim/helper/\""
@@ -718,12 +721,22 @@ function RobustHGsetup() {
         
         #[UserAgentService]/$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini
         #;LevelOutsideContacts = 0
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini UserAgentService LevelOutsideContacts "0"
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini UserAgentService ShowUserDetailsInHGProfile "\"true\""
 
+        #[AuthenticationService]/$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini AuthenticationService AllowGetAuthInfo "\"true\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini AuthenticationService AllowSetAuthInfo "\"true\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini AuthenticationService AllowSetPassword "\"true\""
       
         #[UserProfilesService]/$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini UserProfilesService Enabled "\"true\""
 
+        #[HGInventoryService]
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini HGInventoryService LocalServiceModule "\"OpenSim.Services.InventoryService.dll:XInventoryService\""
+
+        #[Groups]
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini Groups MaxAgentGroups "50"
     fi
 if [ "$auswahlRobustHGsetup" = "nein" ]; then echo "weiter..."; fi
 }
@@ -998,12 +1011,20 @@ function regionconfig() {
         read -r size
         echo "Bitte geben sie den Ort ihrer Region an [1000,1000]:"
         read -r location
+        echo "Soll diese Region als Default Startregion genutzt werden:"
+        read -r Defaultregion
 
         echo "Bitte warten..."
 
         if [ "$regionsname" = "" ]; then regionsname="WelcomeCenter"; fi
         if [ "$size" = "" ]; then size="256"; fi
         if [ "$location" = "" ]; then location="1000,1000"; fi
+
+        if [ "$Defaultregion" = "ja" ] || [ "$Defaultregion" = "j" ]
+        then
+        # [GridService] Robust.HG.ini   # ; Region_Welcome_Area = "DefaultRegion, DefaultHGRegion"
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini GridService Region_"$regionsname" "\"DefaultRegion, DefaultHGRegion\""
+        fi
 
         UUID=$(uuidgen)
         #[Regionsname]/$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Regions.ini
@@ -1032,7 +1053,7 @@ function regionconfig() {
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Regions.ini "$regionsname" \;MasterAvatarLastName "\"Doe\""
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Regions.ini "$regionsname" \;MasterAvatarSandboxPassword "\"passwd\""
         #[GridService]/$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini Region als Default eintragen.
-        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini GridService Region_"$regionsname" "\"DefaultRegion, DefaultHGRegion\""
+        #crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini GridService Region_"$regionsname" "\"DefaultRegion, DefaultHGRegion\""
     fi
 if [ "$auswahlregioncon" = "nein" ]; then echo "weiter..."; fi
 }
