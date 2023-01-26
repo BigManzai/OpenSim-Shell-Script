@@ -54,14 +54,14 @@
 # ! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 # ! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-# * Status 05.01.2023 316 Funktionen.
+# * Status 05.01.2023 317 Funktionen.
 
 # # Visual Studio Code # ShellCheck # shellman # Better Comments # outline map #
 
 #### ? Einstellungen ####
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe
-VERSION="V0.80.711" # opensimMULTITOOL Versionsausgabe
+VERSION="V0.80.717" # opensimMULTITOOL Versionsausgabe
 #clear # Bildschirmausgabe loeschen.
 #reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
@@ -436,8 +436,7 @@ function menufinstall() {
 }
 
 ### ! uncompress ermittelt welcher Kompressor eingesetzt wurde und gibt den entpack Befehl zurueck.
-function uncompress()
-{
+function uncompress(){
     datei=$1
 
     for file in $datei; do
@@ -524,8 +523,7 @@ function downloados() {
 }
 
 ### Radioliste erstellen aus Webseitenlinks.
-function radiolist()
-{
+function radiolist(){
     rm /tmp/radio.tmp
     mkdir -p /"$STARTVERZEICHNIS"/radiolist
     for genre in $listVar; do        
@@ -4116,6 +4114,24 @@ function db_region() {
 	return 0
 }
 
+### !Gridliste der Benutzer die schon einmal im eigenen Grid waren
+# Aufruf: /opt/opensim.sh db_gridlist databaseusername databasepassword databasename
+function db_gridlist() {
+	username=$1
+	password=$2
+	databasename=$3
+
+	echo "Listet die Grids in Ihrer Datenbank auf:"
+	# SELECT * FROM 'GridUser' ORDER BY 'GridUser'.'UserID' ASC 
+	#mysqlrest "$username" "$password" "$databasename" "SELECT regionName as 'Regions' FROM regions"
+	mysqlrest "$username" "$password" "$databasename" "SELECT * FROM GridUser ORDER BY GridUser.UserID"
+
+	mygridliste=$( echo "$result_mysqlrest" | sed 's/.*;http:\/\/ *//;T;s/ *\/;.*//' )
+	echo "$mygridliste" >/opt/GridList.txt
+	echo "$mygridliste"
+	return 0
+}
+
 ### !db_inv_search OK
 function db_inv_search() {
 	username=$1
@@ -4749,6 +4765,33 @@ function db_backuptabellen() {
 		log info "Datenbank Tabelle: $databasename - $tabellenname wurde gesichert."
 	done </$STARTVERZEICHNIS/backup/"$databasename"/liste.txt
 
+	return 0
+}
+
+### ! Backup, Asset Datenbank Tabelle geteilt in Typen speichern.
+function db_backuptabellentypen() {
+	username=$1
+	password=$2
+	databasename=$3
+	echo "Backup, Asset Datenbank Tabelle geteilt in Typen speichern."
+	# Verzeichnis erstellen:
+	mkdir -p /$STARTVERZEICHNIS/backup/"$databasename" || exit
+	# Schreibrechte
+	chmod -R 777 /$STARTVERZEICHNIS/backup/"$databasename"
+	# Asset Typen aus Datenbank holen.
+	mysqlrest "$username" "$password" "$databasename" "SELECT assetType FROM assets WHERE assetType"
+	# Nächste Zeile löscht doppelte einträge und speichert dies unter assetType.txt
+	echo "$result_mysqlrest" | sort | uniq >/$STARTVERZEICHNIS/backup/"$databasename"/assetType.txt
+
+	tabellenname=()
+	while IFS= read -r tabellenname; do
+		sleep 10
+		echo "Alle Daten vom assetType=$tabellenname"
+		mysqlrest "$username" "$password" "$databasename" "SELECT * FROM assets WHERE (assetType='$tabellenname') INTO OUTFILE '/$STARTVERZEICHNIS/backup/$databasename/$tabellenname.sql'"
+		#log info "Datenbank Tabelle: $databasename - $tabellenname wurde gesichert."
+	done </$STARTVERZEICHNIS/backup/"$databasename"/assetType.txt
+	# Schreibrechte zurücksetzen
+	chmod -R 755 /$STARTVERZEICHNIS/backup/"$databasename"
 	return 0
 }
 
@@ -8969,8 +9012,7 @@ function menukonsolenhilfe() {
 }
 
 ### ! dotnetinfo .NET und CSharp Informationen.
-function dotnetinfo()
-{
+function dotnetinfo(){
 	echo "dotNET-7.x = C# 11"
 	echo "dotNET-6.x = C# 10"
 	echo "dotNET-5.x = C# 9.0"
@@ -10184,6 +10226,8 @@ case $KOMMANDO in
 	db_inventar_no_assets) db_inventar_no_assets "$2" "$3" "$4" ;;
 	iptablesset) iptablesset "$2" ;;
 	fail2banset) fail2banset ;;
+	db_gridlist) db_gridlist "$2" "$3" "$4" ;;
+	db_backuptabellentypen) db_backuptabellentypen "$2" "$3" "$4" ;;
 	*) hauptmenu ;;
 esac
 vardel
