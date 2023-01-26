@@ -24,7 +24,7 @@ OPENSIMVERZEICHNIS="opensim" # OpenSimulator Verzeichnis im Hauptverzeichnis
 linefontcolor=2	linebaggroundcolor=0;
 lline="$(tput setaf $linefontcolor)$(tput setab $linebaggroundcolor)#####################################################################################$(tput sgr 0)"
 SCRIPTNAME="configure" # Versionsausgabe
-VERSION="0.1.39 ALPHA" # Versionsausgabe
+VERSION="0.1.44 ALPHA" # Versionsausgabe
 ### Aktuelle IP ueber Suchadresse ermitteln und Ausfuehrungszeichen anhaengen.
 SEARCHADRES="icanhazip.com"
 AKTUELLEIP='"'$(wget -O - -q $SEARCHADRES)'"'
@@ -311,14 +311,14 @@ function MoneyServersetup() {
         read -r ServerPort
         if [ "$ServerPort" = "" ]; then ServerPort="8008"; fi
         echo "Höhe des Standardsaldo Startkapital eines Avatars [1000]"
-        read -r DefaultBalance
-        if [ "$DefaultBalance" = "" ]; then DefaultBalance="1000"; fi
+        read -r DefaultBalanceAvatar
+        if [ "$DefaultBalanceAvatar" = "" ]; then DefaultBalanceAvatar="1000"; fi
         echo "Höhe des Standardsaldo Startkapital eines HG Avatars [1000]"
-        read -r DefaultBalance
-        if [ "$DefaultBalance" = "" ]; then DefaultBalance="1000"; fi
+        read -r DefaultBalanceHG
+        if [ "$DefaultBalanceHG" = "" ]; then DefaultBalanceHG="1000"; fi
         echo "Höhe des Standardsaldo Startkapital eines Gast Avatars [1000]"
-        read -r DefaultBalance
-        if [ "$DefaultBalance" = "" ]; then DefaultBalance="1000"; fi
+        read -r DefaultBalanceGast
+        if [ "$DefaultBalanceGast" = "" ]; then DefaultBalanceGast="1000"; fi
         echo "UUID des Bankier-Avatar [00000000-0000-0000-0000-000000000000]"
         read -r BankerAvatar
         if [ "$BankerAvatar" = "" ]; then BankerAvatar="00000000-0000-0000-0000-000000000000"; fi
@@ -331,15 +331,17 @@ function MoneyServersetup() {
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/MoneyServer.ini MySql username "\"$Database_user\""
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/MoneyServer.ini MySql password "\"$Database_password\""
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/MoneyServer.ini MySql MaxConnection "\"$MaxConnection\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/MoneyServer.ini MySql pooling "true"
         #[MoneyServer]MoneyServer.ini
         sed -i s/\;EnableScriptSendMoney/EnableScriptSendMoney/g /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/MoneyServer.ini
         sed -i s/\;MoneyScriptAccessKey/MoneyScriptAccessKey/g /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/MoneyServer.ini
         sed -i s/\;MoneyScriptIPaddress/MoneyScriptIPaddress/g /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/MoneyServer.ini
+        
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/MoneyServer.ini MoneyServer ServerPort "\"8008\""
-        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/MoneyServer.ini MoneyServer DefaultBalance "\"1000\""
-        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/MoneyServer.ini MoneyServer HGAvatarDefaultBalance "\"1000\""
-        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/MoneyServer.ini MoneyServer GuestAvatarDefaultBalance "\"1000\""
-        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/MoneyServer.ini MoneyServer BankerAvatar "\"00000000-0000-0000-0000-000000000000\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/MoneyServer.ini MoneyServer DefaultBalance "\"$DefaultBalanceAvatar\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/MoneyServer.ini MoneyServer HGAvatarDefaultBalance "\"$DefaultBalanceHG\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/MoneyServer.ini MoneyServer GuestAvatarDefaultBalance "\"$DefaultBalanceGast\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/MoneyServer.ini MoneyServer BankerAvatar "\"$BankerAvatar\""
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/MoneyServer.ini MoneyServer EnableScriptSendMoney "\"true\""
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/MoneyServer.ini MoneyServer MoneyScriptAccessKey  "\"$AccessKey\""
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/MoneyServer.ini MoneyServer MoneyScriptIPaddress  "$ScriptIPaddress"
@@ -655,7 +657,7 @@ function RobustHGsetup() {
     then
         echo "Der Name des Grids?"
         read -r osgridname
-        echo "Abkürzung des Namens Des Grids?"
+        echo "Abkürzung des Namens ihres Grids?"
         read -r osgridnick
 
         echo "Bitte warten..."
@@ -704,7 +706,7 @@ function RobustHGsetup() {
         
         #[GridInfoService]/$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini GridInfoService gridname "\"$osgridname\""
-        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini GridInfoService gridnick "\"$osgridnick"
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini GridInfoService gridnick "\"$osgridnick\""
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini GridInfoService welcome "\"\${Const|BaseURL}/\""
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini GridInfoService economy "\"\${Const|BaseURL}/opensim/helper/\""
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.HG.ini GridInfoService about "\"\${Const|BaseURL}/opensim/helper/\""
@@ -964,13 +966,17 @@ function databasesetup() {
         echo "Bitte geben sie das Passwort ihrer Datenbank an [opensim]:"
         read -r auswahlpassword
 
+        echo "Bitte geben sie den Datenbanknamen für die Regionen an [opensim]:"
+        read -r auswahldatabaseregion
+        if [ "$auswahldatabaseregion" = "" ]; then auswahldatabaseregion="opensim"; fi
+
         echo "Bitte warten..."
 
         if [ "$auswahlmysql" = "" ]; then auswahlmysql="nein"; fi
-        if [ "$auswahlsource" = "" ]; then Source="localhost"; fi
-        if [ "$auswahldatabase" = "" ]; then Database="opensim"; fi
-        if [ "$auswahluserid" = "" ]; then User_ID="opensim"; fi
-        if [ "$auswahlpassword" = "" ]; then Password="opensim"; fi
+        if [ "$auswahlsource" = "" ]; then auswahlsource="localhost"; fi
+        if [ "$auswahldatabase" = "" ]; then auswahldatabase="opensim"; fi
+        if [ "$auswahluserid" = "" ]; then auswahluserid="opensim"; fi
+        if [ "$auswahlpassword" = "" ]; then auswahlpassword="opensim"; fi
 
         # GridCommon.ini Robust.HG.ini Robust.ini
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Robust.ini DatabaseService StorageProvider "\"OpenSim.Data.MySQL.dll\""
@@ -985,7 +991,7 @@ function databasesetup() {
         sed -i s/Include-Storage = \"config-include/storage/SQLiteStandalone.ini\"\;/\;Include-Storage = \"config-include/storage/SQLiteStandalone.ini\"\;/g /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/GridCommon.ini
         # mysql/mariaDB eintragen
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/GridCommon.ini DatabaseService StorageProvider "\"OpenSim.Data.MySQL.dll\""
-        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/GridCommon.ini DatabaseService ConnectionString = "\"Data Source=$Source;Database=$Database;User ID=$User_ID;Password=$Password;Old Guids=true;SslMode=None;\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/GridCommon.ini DatabaseService ConnectionString = "\"Data Source=$auswahlsource;Database=$auswahldatabaseregion;User ID=$auswahluserid;Password=$auswahlpassword;Old Guids=true;SslMode=None;\""
         else
         echo "SQlite wird beibehalten"
         fi
@@ -997,6 +1003,7 @@ if [ "$auswahldatabasesetup" = "nein" ]; then echo "weiter..."; fi
 ### ! Region Konfigurationen schreiben  Test 22.01.2023 geprüft OK
 function regionconfig() {
     echo "$lline"
+    echo "Regions.ini"
     echo "Möchten Sie ihre Region Konfigurationen erstellen?"
     echo "ja oder [nein]"
     read -r auswahlregioncon
@@ -1005,20 +1012,31 @@ function regionconfig() {
     if [ "$auswahlregioncon" = "ja" ] || [ "$auswahlregioncon" = "j" ]
     then
         
+
         echo "Bitte geben sie einen Regionsnamen ein für ihre Start-Welcome-Center Region [WelcomeCenter]"
         read -r regionsname
+        if [ "$regionsname" = "" ]; then regionsname="WelcomeCenter"; fi
+
+        newRegionID=$(uuidgen)
+        echo "Region UUID [$newRegionID]"
+        read -r NewRegionUUID
+        if [ "$NewRegionUUID" = "" ]; then NewRegionUUID="$newRegionID"; fi
+
         echo "Bitte geben sie die Größe ihrer Region an [256]:"
         read -r size
+        if [ "$size" = "" ]; then size="256"; fi
+
         echo "Bitte geben sie den Ort ihrer Region an [1000,1000]:"
         read -r location
+        if [ "$location" = "" ]; then location="1000,1000"; fi
+
+        if [ "$auswahlipdnssetup" = "" ] || [ "$auswahlipdnssetup" = "nein" ]; then auswahlipdnssetup="$AKTUELLEIP"; fi
+
         echo "Soll diese Region als Default Startregion genutzt werden:"
+        echo "ja oder [nein]"
         read -r Defaultregion
 
         echo "Bitte warten..."
-
-        if [ "$regionsname" = "" ]; then regionsname="WelcomeCenter"; fi
-        if [ "$size" = "" ]; then size="256"; fi
-        if [ "$location" = "" ]; then location="1000,1000"; fi
 
         if [ "$Defaultregion" = "ja" ] || [ "$Defaultregion" = "j" ]
         then
@@ -1029,7 +1047,7 @@ function regionconfig() {
         UUID=$(uuidgen)
         #[Regionsname]/$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Regions.ini
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Regions.ini "$regionsname"
-        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Regions.ini "$regionsname" RegionUUID "\"$UUID\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Regions.ini "$regionsname" RegionUUID "\"$NewRegionUUID\""
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Regions.ini "$regionsname" Location "\"$location\""
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Regions.ini "$regionsname" SizeX "\"$size\""
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Regions.ini "$regionsname" SizeY "\"$size\""
@@ -1037,11 +1055,11 @@ function regionconfig() {
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Regions.ini "$regionsname" InternalAddress "\"0.0.0.0\""
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Regions.ini "$regionsname" InternalPort "\"9100\""
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Regions.ini "$regionsname" ResolveAddress "\"False\""
-        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Regions.ini "$regionsname" ExternalHostName "\"$auswahlipdnssetup\""
-        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Regions.ini "$regionsname" MaptileStaticUUID "\"$UUID\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Regions.ini "$regionsname" ExternalHostName "$auswahlipdnssetup"
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Regions.ini "$regionsname" MaptileStaticUUID "\"$NewRegionUUID\""
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Regions.ini "$regionsname" DefaultLanding "\"<128,128,25>\""
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Regions.ini "$regionsname" \;MaxPrimsPerUser "\"-1\""
-        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Regions.ini "$regionsname" \;ScopeID "\"$UUID\""
+        crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Regions.ini "$regionsname" \;ScopeID "\"$NewRegionUUID\""
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Regions.ini "$regionsname" \;RegionType "\"Mainland\""
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Regions.ini "$regionsname" \;MapImageModule "\"Warp3DImageModule\""
         crudini --set /$STARTVERZEICHNIS/$CONFIGVERZEICHNIS/Regions.ini "$regionsname" \;TextureOnMapTile "\"true\""
