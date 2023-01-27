@@ -61,7 +61,7 @@
 #### ? Einstellungen ####
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe
-VERSION="V0.80.717" # opensimMULTITOOL Versionsausgabe
+VERSION="V0.80.719" # opensimMULTITOOL Versionsausgabe
 #clear # Bildschirmausgabe loeschen.
 #reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
@@ -4768,28 +4768,170 @@ function db_backuptabellen() {
 	return 0
 }
 
-### ! Backup, Asset Datenbank Tabelle geteilt in Typen speichern.
+### ! Backup, Datenbank Tabelle geteilt in Typen speichern.
 function db_backuptabellentypen() {
 	username=$1
 	password=$2
 	databasename=$3
+	fromtable="assets"
+	fromtypes="assetType"
+	csvcompress="nein"
+
+	#? assetTypes die ich gefunden habe
+	### Ich habe von den 26 assetTypes 13 assetTypes in meiner Robust Assets Datenbank.
+	# NoneUnknown="-1";
+	# LLmaterialIAR="-2";
+	# Texture="0";
+	# Sound="1";
+	# CallingCard="2";
+	# Landmark="3";
+	# Clothing="5";
+	# Object="6";
+	# Notecard="7";
+	# Folder="8";
+	# LSLText="10";
+	# LSLBytecode="11";
+	# TextureTGA="12";
+	# Bodypart="13";
+	# SoundWAV="17";
+	# ImageJPEG="19";
+	# Animation="20";
+	# Gesture="21";
+	# Simstate="22";
+	# Link="24";
+	# LinkFolder="25";
+	# MarketplaceFolder="26";
+	# Mesh="49";
+	# Settings="56";
+	# Material="57";
+
+	# -1="NoneUnknown";
+	# -2="LLmaterialIAR";
+	# 0="Texture";
+	# 1="Sound";
+	# 2="CallingCard";
+	# 3="Landmark";
+	# 5="Clothing";
+	# 6="Object";
+	# 7="Notecard";
+	# 8="Folder";
+	# 10="LSLText";
+	# 11="LSLBytecode";
+	# 12="TextureTGA";
+	# 13="Bodypart";
+	# 17="SoundWAV";
+	# 18="ImageTGA";
+	# 19="ImageJPEG";
+	# 20="Animation";
+	# 21="Gesture";
+	# 22="Simstate";
+	# 24="Link";
+	# 25="LinkFolder";
+	# 26="MarketplaceFolder";
+	# 49="Mesh";
+	# 56="Settings";
+	# 57="Material";
+
+	# Syntax:
+
+	#! OUTFILE
+	# SELECT ... INTO OUTFILE 'file_name.csv'
+	# 		[CHARACTER SET charset_name]
+	# 		[export_options]
+
+	# export_options:
+	# 	[{FIELDS | COLUMNS}
+	# 		[TERMINATED BY 'string']
+	# 		[[OPTIONALLY] ENCLOSED BY 'char']
+	# 		[ESCAPED BY 'char']
+	# 	]
+	# 	[LINES
+	# 		[STARTING BY 'string']
+	# 		[TERMINATED BY 'string']
+	# 	]
+
+	#! LOAD DATA
+	# LOAD DATA [LOW_PRIORITY | CONCURRENT] [LOCAL] INFILE 'file_name.csv'
+    # [REPLACE | IGNORE]
+    # INTO TABLE tbl_name
+    # [CHARACTER SET charset_name]
+    # [{FIELDS | COLUMNS}
+    #     [TERMINATED BY 'string']
+    #     [[OPTIONALLY] ENCLOSED BY 'char']
+    #     [ESCAPED BY 'char']
+    # ]
+    # [LINES
+    #     [STARTING BY 'string']
+    #     [TERMINATED BY 'string']
+    # ]
+    # [IGNORE number LINES]
+    # [(col_name_or_user_var,...)]
+    # [SET col_name = expr,...]
+
 	echo "Backup, Asset Datenbank Tabelle geteilt in Typen speichern."
 	# Verzeichnis erstellen:
 	mkdir -p /$STARTVERZEICHNIS/backup/"$databasename" || exit
 	# Schreibrechte
 	chmod -R 777 /$STARTVERZEICHNIS/backup/"$databasename"
+	cd /$STARTVERZEICHNIS/backup/"$databasename" || exit
 	# Asset Typen aus Datenbank holen.
-	mysqlrest "$username" "$password" "$databasename" "SELECT assetType FROM assets WHERE assetType"
-	# Nächste Zeile löscht doppelte einträge und speichert dies unter assetType.txt
-	echo "$result_mysqlrest" | sort | uniq >/$STARTVERZEICHNIS/backup/"$databasename"/assetType.txt
+	mysqlrest "$username" "$password" "$databasename" "SELECT $fromtypes FROM $fromtable WHERE $fromtypes"
+	# Nächste Zeile löscht doppelte einträge und speichert dies unter $fromtypes.txt
+	echo "$result_mysqlrest" | sort | uniq >/$STARTVERZEICHNIS/backup/"$databasename"/$fromtypes.txt
 
 	tabellenname=()
 	while IFS= read -r tabellenname; do
-		sleep 10
-		echo "Alle Daten vom assetType=$tabellenname"
-		mysqlrest "$username" "$password" "$databasename" "SELECT * FROM assets WHERE (assetType='$tabellenname') INTO OUTFILE '/$STARTVERZEICHNIS/backup/$databasename/$tabellenname.sql'"
-		#log info "Datenbank Tabelle: $databasename - $tabellenname wurde gesichert."
-	done </$STARTVERZEICHNIS/backup/"$databasename"/assetType.txt
+		sleep 2
+		# Die LOAD DATA INFILE Aussage ergänzt SELECT INTO OUTFILE.
+
+			if [ "$tabellenname" = "-1" ]; then dateiname="NoneUnknown"; fi
+			if [ "$tabellenname" = "-2" ]; then dateiname="LLmaterialIAR"; fi
+			if [ "$tabellenname" = "0" ]; then dateiname="Texture"; fi
+			if [ "$tabellenname" = "1" ]; then dateiname="Sound"; fi
+			if [ "$tabellenname" = "2" ]; then dateiname="CallingCard"; fi
+			if [ "$tabellenname" = "3" ]; then dateiname="Landmark"; fi
+			if [ "$tabellenname" = "4" ]; then dateiname="Unknown4"; fi
+			if [ "$tabellenname" = "5" ]; then dateiname="Clothing"; fi
+			if [ "$tabellenname" = "6" ]; then dateiname="Object"; fi
+			if [ "$tabellenname" = "7" ]; then dateiname="Notecard"; fi
+			if [ "$tabellenname" = "8" ]; then dateiname="Folder"; fi
+			if [ "$tabellenname" = "9" ]; then dateiname="Unknown9"; fi
+			if [ "$tabellenname" = "10" ]; then dateiname="LSLText"; fi
+			if [ "$tabellenname" = "11" ]; then dateiname="LSLBytecode"; fi
+			if [ "$tabellenname" = "12" ]; then dateiname="TextureTGA"; fi
+			if [ "$tabellenname" = "13" ]; then dateiname="Bodypart"; fi
+			if [ "$tabellenname" = "14" ]; then dateiname="Unknown14"; fi
+			if [ "$tabellenname" = "15" ]; then dateiname="Unknown15"; fi
+			if [ "$tabellenname" = "16" ]; then dateiname="Unknown16"; fi
+			if [ "$tabellenname" = "17" ]; then dateiname="SoundWAV"; fi
+			if [ "$tabellenname" = "18" ]; then dateiname="ImageTGA"; fi
+			if [ "$tabellenname" = "19" ]; then dateiname="ImageJPEG"; fi
+			if [ "$tabellenname" = "20" ]; then dateiname="Animation"; fi
+			if [ "$tabellenname" = "21" ]; then dateiname="Gesture"; fi
+			if [ "$tabellenname" = "22" ]; then dateiname="Simstate"; fi
+			if [ "$tabellenname" = "23" ]; then dateiname="Unknown23"; fi
+			if [ "$tabellenname" = "24" ]; then dateiname="Link"; fi
+			if [ "$tabellenname" = "25" ]; then dateiname="LinkFolder"; fi
+			if [ "$tabellenname" = "26" ]; then dateiname="MarketplaceFolder"; fi
+
+			if [ "$tabellenname" = "49" ]; then dateiname="Mesh"; fi
+
+			if [ "$tabellenname" = "56" ]; then dateiname="Settings"; fi
+			if [ "$tabellenname" = "57" ]; then dateiname="Material"; fi
+
+			log info "Asset Backup aller Daten von $fromtypes=$tabellenname das sind die $dateiname assets"
+
+			
+
+		mysqlrest "$username" "$password" "$databasename" "SELECT * FROM $fromtable WHERE ($fromtypes='$tabellenname') INTO OUTFILE '/$STARTVERZEICHNIS/backup/$databasename/$dateiname$tabellenname.csv'"
+		###? mysqlrest "$username" "$password" "$databasename" "LOAD DATA * FROM $fromtable WHERE ($fromtypes='$tabellenname')  INFILE '/$STARTVERZEICHNIS/backup/$databasename/$tabellenname.csv'"
+		if [ "$csvcompress" = "ja" ]
+    	then
+			# Ich schaffe es noch nicht, es direkt zu komprimieren.
+			zip $dateiname$tabellenname.csv.zip $dateiname$tabellenname.csv
+			rm /$STARTVERZEICHNIS/backup/$databasename/$dateiname$tabellenname.csv
+		fi
+	done </$STARTVERZEICHNIS/backup/"$databasename"/$fromtypes.txt
 	# Schreibrechte zurücksetzen
 	chmod -R 755 /$STARTVERZEICHNIS/backup/"$databasename"
 	return 0
