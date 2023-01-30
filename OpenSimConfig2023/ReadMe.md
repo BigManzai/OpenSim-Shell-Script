@@ -90,4 +90,5 @@ muss nur ganz wenig Konfigurationsarbeit gemacht werden.
 Halt nur noch den Port und die Datenbanknamen ändern für jeden Simulator.
 
 Wenn ich das ausgiebig durchgetestet habe, stelle ich diese zur Verfügung.
-So ist es ersteinmal experimental.
+
+So ist es erst einmal experimentell.
