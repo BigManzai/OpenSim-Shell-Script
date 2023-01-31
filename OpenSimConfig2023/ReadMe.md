@@ -14,3 +14,8 @@ Diese Punkte sind
 ``` SimulatorPort = "9010" ``` und ``` MysqlDatabase = "MysqlDatabase" ``` 
 
 in der Datei Const.ini im Verzeichnis config-include.
+
+
+``` Jeder OpenSimulator benötigt einen freien SimulatorPort. ```
+
+``` Jeder OpenSimulator sollte eine eigene Datenbank bekommen, diese bitte vor dem starten anlegen. ```
