@@ -61,7 +61,7 @@
 #### ? Einstellungen ####
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe
-VERSION="V0.80.719" # opensimMULTITOOL Versionsausgabe
+VERSION="V0.80.720" # opensimMULTITOOL Versionsausgabe
 #clear # Bildschirmausgabe loeschen.
 #reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
@@ -110,6 +110,9 @@ myCodename=$(lsb_release -sc)   # jammy
 ubuntuDescription=$(cut -f2 <<<"$myDescription") # Ubuntu 22.04 LTS
 ubuntuRelease=$(cut -f2 <<<"$myRelease")         # 22.04
 ubuntuCodename=$(cut -f2 <<<"$myCodename")       # jammy
+# SQL Version
+SQLVERSIONVOLL=$(mysqld --version)
+SQLVERSION=$(echo "${SQLVERSIONVOLL:0:45}")
 
 ### Einstellungen aus opensim.cnf laden, bei einem Script upgrade gehen so die einstellungen nicht mehr verloren.
 # Pfad des opensim.sh Skriptes herausfinden
@@ -306,6 +309,7 @@ function schreibeinfo() {
 		log rohtext " $DATUM $(date +%H:%M:%S) INFO: Spracheinstellung: ${LANG}"
 		log rohtext " $DATUM $(date +%H:%M:%S) INFO: $(screen --version)"
 		log rohtext " $DATUM $(date +%H:%M:%S) INFO: $(who -b)"
+		log rohtext " $DATUM $(date +%H:%M:%S) INFO: $SQLVERSION"
 		log line
 		log rohtext " "
 	# fi
@@ -9036,6 +9040,34 @@ function backupdatum() {
 	return 0
 }
 
+### !  senddata Daten zu einem neuen Server senden ### Ungetestet ###
+# senddata USERNAMEN SENDEVERZEICHNIS SERVERADRESS 
+function senddata() {
+	USERNAMEN=$1
+	SENDEVERZEICHNIS=$2	
+	SERVERADRESS=$3
+	
+	# Beispiel:
+	# SENDEVERZEICHNIS="/opt/backup"
+	# USERNAMEN="root"
+	# SERVERADRESS="192.168.2.100"
+
+	echo " Ganzes Verzeichnis komprimiert an neuen Server im gleichen Verzeichnis senden."
+
+	# Ganzes Verzeichnis(-r) komprimiert(-C) an neuen Server senden.
+	#scp -r -C "$SENDEVERZEICHNIS" "$USERNAMEN"@"$SERVERADRESS":"$SENDEVERZEICHNIS"
+
+	# --ignore-existing Ignoriert schon vorhandene Daten.
+	# -r Rekursiv das heist alle Unterverzeichnisse werden samt Daten mitkopiert.
+	# -v Anzeigen was gerade passiert.
+	# -z Komprimierung bei der übertragung aktivieren.
+	#rsync --ignore-existing -rvz "$SENDEVERZEICHNIS" "$USERNAMEN"@"$SERVERADRESS":"$SENDEVERZEICHNIS"
+	# Trockenübung
+	rsync --ignore-existing -rvzn "$SENDEVERZEICHNIS" "$USERNAMEN"@"$SERVERADRESS":"$SENDEVERZEICHNIS"
+
+	return 0
+}
+
 ### !  fortschritsanzeige(), test fuer eine Fortschrittsanzeige.
 function fortschritsanzeige() {
 	# zuerst schauen ob dialog installiert ist
@@ -9108,7 +9140,7 @@ function dotnetinfo(){
 function hilfe() {
 	echo "$(tput setab 5)Funktion:$(tput sgr 0)		$(tput setab 2)Parameter:$(tput sgr 0)		$(tput setab 4)Informationen:$(tput sgr 0)"
 	echo "hilfe 			- $(tput setaf 3)hat keine Parameter$(tput sgr 0)	- Diese Hilfe."
-	echo "konsolenhilfe 		- $(tput setaf 3)hat keine Parameter$(tput sgr 0)	- konsolenhilfe ist eine Hilfe fuer Putty oder Xterm."
+	echo "konsolenhilfe 		- $(tput setaf 3)hat keine Parameter$(tput sgr 0)	- konsolenhilfe ist eine Hilfe fuer Putty oder Xterm"
 	echo "commandhelp 		- $(tput setaf 3)hat keine Parameter$(tput sgr 0)	- Die OpenSim Commands."
 	echo "restart 		- $(tput setaf 3)hat keine Parameter$(tput sgr 0)	- Startet das gesamte Grid neu."
 	echo "autostop 		- $(tput setaf 3)hat keine Parameter$(tput sgr 0)	- Stoppt das gesamte Grid."
@@ -10308,8 +10340,22 @@ case $KOMMANDO in
 	fail2banset) fail2banset ;;
 	db_gridlist) db_gridlist "$2" "$3" "$4" ;;
 	db_backuptabellentypen) db_backuptabellentypen "$2" "$3" "$4" ;;
+	senddata) senddata "$2" "$3" "$4" ;;
 	*) hauptmenu ;;
 esac
 vardel
 #log info "###########ENDE################"
 exit 0
+
+# TODO:
+# Einfacher Linux Server Umzug:
+# Kopieren von einem entfernten Server auf einen neuen Server
+# scp benutzername@beispiel_oder_IP.de:/opt/backup/dateiname.sql /opt/backup
+# oder andersherum
+# scp /opt/backup benutzername@beispiel_oder_IP.de:/opt/backup/dateiname.sql
+
+# Backup Funktion die es erlaubt die Regionen als OAR zu sichern
+# und direkt auf einen neuen Server zu uebertragen.
+# Scritte hierzu:
+# Wenn die Regions.ini nicht vereinzelt ist diese vereinzeln mit:
+
