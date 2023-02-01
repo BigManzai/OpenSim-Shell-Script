@@ -39,74 +39,74 @@ function silent(){ STARTVERZEICHNIS="opt"; }
 
 # Ausgabe Kopfzeilen
 echo "$SCRIPTNAME Version $VERSION"
-echo " "
 echo "Ihre aktuelle externe IP ist $AKTUELLEIP"
 echo " "
-echo "#################################"
-echo "ABBRUCH MIT DER TASTENKOMBINATION"
-echo "########  STRG + C  #############"
-echo " "
-echo "Die Werte in den [Klammern] sind vorschläge und können mit Enter übernommen werden."
+echo "##################################################################"
+echo "########### ABBRUCH MIT DER TASTENKOMBINATION ####################"
+echo "####################  STRG + C  ##################################"
+echo "##################################################################"
+echo "##     Die Werte in den [Klammern] sind vorschläge              ##"
+echo "##     und können mit Enter übernommen werden.                  ##"
+echo "##################################################################"
 echo " "
 echo "Wieviele Konfigurationen darf ich ihnen schreiben? [5]"
 read -r CONFIGANZAHL
 if [ "$CONFIGANZAHL" = "" ]; then CONFIGANZAHL="5"; fi
 echo "Ihre Anzahl ist $CONFIGANZAHL"
-echo " "
+echo "##################################################################"
 
 echo "Wohin darf ich diese schreiben? [$STARTVERZEICHNIS]"
 read -r VERZEICHNISABFRAGE
-if [ "$VERZEICHNISABFRAGE" = "" ]; then echo "$STARTVERZEICHNIS"; else STARTVERZEICHNIS="$VERZEICHNISABFRAGE";fi
-echo "Ihr Konfigurationsordner ist $STARTVERZEICHNIS"
-echo " "
+if [ "$VERZEICHNISABFRAGE" = "" ]; then echo "Ihr Konfigurationsordner ist $STARTVERZEICHNIS"; else STARTVERZEICHNIS="$VERZEICHNISABFRAGE";fi
+echo "##################################################################"
 
 echo "Ihre Server Adresse? [$AKTUELLEIP]"
 read -r BASEHOSTNAME
 if [ "$BASEHOSTNAME" = "" ]; then BASEHOSTNAME="$AKTUELLEIP"; fi
 echo "Ihre Server Adresse ist $BASEHOSTNAME"
-echo " "
+echo "##################################################################"
 
 echo "Ihr SimulatorPort startet bei: [9010]"
 read -r SIMULATORPORT
 if [ "$SIMULATORPORT" = "" ]; then SIMULATORPORT="9010"; fi
 echo "Ihr SimulatorPort startet bei: $SIMULATORPORT"
-echo " "
+echo "##################################################################"
 
 echo "Bitte geben sie den Datenbanknamen an [opensim]:"
 read -r MYSQLDATABASE
 if [ "$MYSQLDATABASE" = "" ]; then MYSQLDATABASE="opensim"; fi
 echo "Ihr Datenbanknamen lautet: $MYSQLDATABASE"
-echo " "
+echo "##################################################################"
 
 echo "Bitte geben sie den Benutzernamen ihrer Datenbank an [opensim]:"
 read -r MYSQLUSER
 if [ "$MYSQLUSER" = "" ]; then MYSQLUSER="opensim"; fi
 echo "Ihr Datenbank Benutzername lautet: $MYSQLUSER"
-echo " "
+echo "##################################################################"
 
 echo "Bitte geben sie das Passwort ihrer Datenbank an [opensim]:"
 read -r MYSQLPASSWORD
 if [ "$MYSQLPASSWORD" = "" ]; then MYSQLPASSWORD="opensim"; fi
 echo "Ihr Passwort ihrer Datenbank lautet: ********"
-echo " "
+echo "##################################################################"
 
 echo "Bitte geben sie den Namen ihrer Startregion an [Welcome]:"
 read -r STARTREGION
 if [ "$STARTREGION" = "" ]; then STARTREGION="Welcome"; fi
 echo "Der Namen ihrer Startregion lautet: $STARTREGION"
-echo " "
+echo "##################################################################"
 
 echo "Bitte geben sie den Namen ihres Grids an [MyGrid]:"
 read -r SIMULATORGRIDNAME
 if [ "$SIMULATORGRIDNAME" = "" ]; then SIMULATORGRIDNAME="MyGrid"; fi
 echo "Der Namen ihrers Grids lautet: $SIMULATORGRIDNAME"
-echo " "
+echo "##################################################################"
 
 echo "Bitte geben sie den Grid-Nickname an [MG]:"
 read -r SIMULATORGRIDNICK
 if [ "$SIMULATORGRIDNICK" = "" ]; then SIMULATORGRIDNICK="MG"; fi
 echo "Der Grid-Nickname lautet: $SIMULATORGRIDNICK"
-echo " "
+echo "##################################################################"
 
 # Weitere Auswertungen
 if [ "$PRIVURL" = "" ]; then PRIVURL="\${Const|BaseURL}"; fi
@@ -221,7 +221,9 @@ function osconfigstruktur() {
         # Restliche Dateien kopieren
         
 	done
-	echo "Lege robust an!"
+    echo "##################################################################"
+	echo "Lege robust und Daten an!"
+    echo "##################################################################"
 	return 0
 }
 
