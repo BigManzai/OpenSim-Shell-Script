@@ -29,6 +29,7 @@ VERSION="0.1.0.0" # Versionsausgabe
 ### Aktuelle IP ueber Suchadresse ermitteln und Ausfuehrungszeichen anhaengen.
 SEARCHADRES="icanhazip.com"
 AKTUELLEIP="$(wget -O - -q $SEARCHADRES)"
+AKTUELLEVERZ=$(pwd) # Aktuelles Verzeichnis
 
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 #linefontcolor=2	linebaggroundcolor=0;
@@ -193,6 +194,9 @@ function osconfigstruktur() {
 	if [ ! -f "/$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/" ]; then
 		echo "Lege robust an im Verzeichnis $ROBUSTVERZEICHNIS"
 		mkdir -p /"$STARTVERZEICHNIS"/$ROBUSTVERZEICHNIS/bin/config-include
+        cp "$AKTUELLEVERZ"/config-include/GridCommon.ini /"$STARTVERZEICHNIS"/$ROBUSTVERZEICHNIS/bin/config-include
+        cp "$AKTUELLEVERZ"/Robust.ini /"$STARTVERZEICHNIS"/$ROBUSTVERZEICHNIS/bin
+        
         CONSTINI="/$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/config-include/Const.ini"
         configausgabe "$BASEHOSTNAME" "$PRIVURL" "$MONEYPORT" "$SIMULATORPORT" "$MYSQLDATABASE" "$MYSQLUSER" "$MYSQLPASSWORD" "$STARTREGION" "$SIMULATORGRIDNAME" "$SIMULATORGRIDNICK" "$CONSTINI"
 
@@ -202,6 +206,8 @@ function osconfigstruktur() {
 	for ((i = 1; i <= $2; i++)); do
 		echo "Ich lege gerade sim$i an!"
 		mkdir -p /"$STARTVERZEICHNIS"/sim"$i"/bin/config-include
+        cp "$AKTUELLEVERZ"/config-include/GridCommon.ini /"$STARTVERZEICHNIS"/sim"$i"/bin/config-include
+        cp "$AKTUELLEVERZ"/OpenSim.ini /"$STARTVERZEICHNIS"/sim"$i"/bin
         cd /"$STARTVERZEICHNIS"/sim"$i"/bin/config-include || exit # Beenden wenn Verzeichnis nicht vorhanden ist.
         CONSTINI="/$STARTVERZEICHNIS/sim$i/bin/config-include/Const.ini"
         ZWISCHENSPEICHERMSDB=$MYSQLDATABASE
@@ -212,6 +218,8 @@ function osconfigstruktur() {
 		printf 'sim'"$i"'\t%s\n' | xargs >>/"$STARTVERZEICHNIS"/$SIMDATEI
         MYSQLDATABASE=$ZWISCHENSPEICHERMSDB
         SIMULATORPORT=$ZWISCHENSPEICHERSP
+        # Restliche Dateien kopieren
+        
 	done
 	echo "Lege robust an!"
 	return 0
