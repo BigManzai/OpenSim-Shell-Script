@@ -1,5 +1,10 @@
 # OpenSimulator Konfigurationen
 
+## Jetzt mit automatischen Konfigurator
+Der Konfigurator erstellt mehrfach Verzeichnisse und die SimulatorList.ini, für die automatische installation mit dem ```opensimMULTITOOL```.
+
+Anschließend kann das gesammte Grid mit der Funktion ```/opt/opensim.sh osupgrade``` installiert/vorbereitet werden.
+
 OpenSimulator 0.9.2.2+ Konfigurationsdateien für ein Hypergrid angepasst.
 
 Diese ersetzen die gleichnamigen Konfigurationen für Robust und OpenSim.
