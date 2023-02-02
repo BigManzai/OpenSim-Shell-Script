@@ -1,4 +1,5 @@
 # OpenSimulator Konfigurationen
+Basierden auf einer Konfiguration Datei: Include-const = "config-include/Const.ini"
 
 ## Jetzt mit automatischen Konfigurator
 Der Konfigurator erstellt mehrfach Verzeichnisse und die SimulatorList.ini, für die automatische installation mit dem ```opensimMULTITOOL```.
