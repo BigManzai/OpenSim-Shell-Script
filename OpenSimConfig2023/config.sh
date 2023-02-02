@@ -25,7 +25,7 @@ ROBUSTVERZEICHNIS="robust"; # Robustverzeichnis
 SIMDATEI="SimulatorList.ini";
 OPENSIMVERZEICHNIS="opensim";
 SCRIPTNAME="constconfig" # Versionsausgabe
-VERSION="0.1.0.0" # Versionsausgabe
+VERSION="1.0.0" # Versionsausgabe
 ### Aktuelle IP ueber Suchadresse ermitteln und Ausfuehrungszeichen anhaengen.
 SEARCHADRES="icanhazip.com"
 AKTUELLEIP="$(wget -O - -q $SEARCHADRES)"
@@ -93,13 +93,13 @@ echo "##################################################################"
 echo "Bitte geben sie den Namen ihrer Startregion an [Welcome]:"
 read -r STARTREGION
 if [ "$STARTREGION" = "" ]; then STARTREGION="Welcome"; fi
-echo "Der Namen ihrer Startregion lautet: $STARTREGION"
+echo "Der Name ihrer Startregion lautet: $STARTREGION"
 echo "##################################################################"
 
 echo "Bitte geben sie den Namen ihres Grids an [MyGrid]:"
 read -r SIMULATORGRIDNAME
 if [ "$SIMULATORGRIDNAME" = "" ]; then SIMULATORGRIDNAME="MyGrid"; fi
-echo "Der Namen ihrers Grids lautet: $SIMULATORGRIDNAME"
+echo "Der Name ihrers Grids lautet: $SIMULATORGRIDNAME"
 echo "##################################################################"
 
 echo "Bitte geben sie den Grid-Nickname an [MG]:"
@@ -179,6 +179,45 @@ function configausgabe() {
     } > "$CONSTINI"
 }
 
+### ! Region Konfigurationen schreiben
+# regionconfig REGIONSNAME STARTLOCATION SIZE INTERNALPORT REGIONSINI
+function regionconfig {
+    REGIONSNAME=$1
+    STARTLOCATION=$2
+    SIZE=$3
+    INTERNALPORT=$4
+    REGIONSINI=$5
+    
+    UUID=$(uuidgen)
+
+{
+echo "[$REGIONSNAME]"
+echo "RegionUUID = $UUID"
+echo "Location = $STARTLOCATION"
+echo "SizeX = $SIZE"
+echo "SizeY = $SIZE"
+echo "SizeZ = $SIZE"
+echo "InternalAddress = 0.0.0.0"
+echo "InternalPort = $INTERNALPORT"
+echo "ResolveAddress = False"
+echo "ExternalHostName = $UUID"
+echo "MaptileStaticUUID = $UUID"
+echo "DefaultLanding = <128,128,25>"
+echo ";MaxPrimsPerUser = -1"
+echo ";ScopeID = $UUID"
+echo ";RegionType = Mainland"
+echo ";MapImageModule = Warp3DImageModule"
+echo ";TextureOnMapTile = true"
+echo ";DrawPrimOnMapTile = true"
+echo ";GenerateMaptiles = true"
+echo ";MaptileRefresh = 0"
+echo ";MaptileStaticFile = water-logo-info.png"
+echo ";MasterAvatarFirstName = John"
+echo ";MasterAvatarLastName = Doe"
+echo ";MasterAvatarSandboxPassword = passwd" 
+} > "$REGIONSINI"
+}
+
 ### !  osstruktur, legt die Verzeichnisstruktur fuer OpenSim an. # Aufruf: opensim.sh osstruktur ersteSIM letzteSIM
 # Beispiel: ./opensim.sh osstruktur 1 10 - erstellt ein Grid Verzeichnis fuer 10 Simulatoren inklusive der $SIMDATEI.
 function osconfigstruktur() {
@@ -192,7 +231,7 @@ function osconfigstruktur() {
     fi
     # Ist die Datei 
 	if [ ! -f "/$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/" ]; then
-		echo "Lege robust an im Verzeichnis $ROBUSTVERZEICHNIS"
+		echo "Lege robust an im Verzeichnis $ROBUSTVERZEICHNIS an"
 		mkdir -p /"$STARTVERZEICHNIS"/$ROBUSTVERZEICHNIS/bin/config-include
         cp "$AKTUELLEVERZ"/config-include/GridCommon.ini /"$STARTVERZEICHNIS"/$ROBUSTVERZEICHNIS/bin/config-include
         cp "$AKTUELLEVERZ"/Robust.ini /"$STARTVERZEICHNIS"/$ROBUSTVERZEICHNIS/bin
@@ -206,23 +245,25 @@ function osconfigstruktur() {
 	for ((i = 1; i <= $2; i++)); do
 		echo "Ich lege gerade sim$i an!"
 		mkdir -p /"$STARTVERZEICHNIS"/sim"$i"/bin/config-include
+        mkdir -p /"$STARTVERZEICHNIS"/sim"$i"/bin/Regions
         cp "$AKTUELLEVERZ"/config-include/GridCommon.ini /"$STARTVERZEICHNIS"/sim"$i"/bin/config-include
         cp "$AKTUELLEVERZ"/OpenSim.ini /"$STARTVERZEICHNIS"/sim"$i"/bin
         cd /"$STARTVERZEICHNIS"/sim"$i"/bin/config-include || exit # Beenden wenn Verzeichnis nicht vorhanden ist.
         CONSTINI="/$STARTVERZEICHNIS/sim$i/bin/config-include/Const.ini"
         ZWISCHENSPEICHERMSDB=$MYSQLDATABASE
         ZWISCHENSPEICHERSP=$SIMULATORPORT
+        LOCALX=5000; LOCALY=5000; LANDGOESSE=256;
         configausgabe "$BASEHOSTNAME" "$PRIVURL" "$MONEYPORT" "$((SIMULATORPORT + "$i"))" "$MYSQLDATABASE$i" "$MYSQLUSER" "$MYSQLPASSWORD" "$STARTREGION" "$SIMULATORGRIDNAME" "$SIMULATORGRIDNICK" "$CONSTINI"
+        regionconfig "sim$i" "$((LOCALX + "$i")),$((LOCALY + "$i"))" "$LANDGOESSE" "$((9100 + "$i"))" "/$STARTVERZEICHNIS/sim$i/bin/Regions/Regions.ini.Beispiel"
         echo "Schreibe sim$i in $SIMDATEI, legen sie bitte Datenbank $MYSQLDATABASE an."
 		# xargs sollte leerzeichen entfernen.
 		printf 'sim'"$i"'\t%s\n' | xargs >>/"$STARTVERZEICHNIS"/$SIMDATEI
-        MYSQLDATABASE=$ZWISCHENSPEICHERMSDB
-        SIMULATORPORT=$ZWISCHENSPEICHERSP
+        MYSQLDATABASE=$ZWISCHENSPEICHERMSDB # Zuruecksetzen sonst wird falsch addiert.
+        SIMULATORPORT=$ZWISCHENSPEICHERSP # Zuruecksetzen sonst wird falsch addiert.
+        LOCALX=5000; LOCALY=5000; # Zuruecksetzen sonst wird falsch addiert.
         # Restliche Dateien kopieren
         
 	done
-    echo "##################################################################"
-	echo "Lege robust und Daten an!"
     echo "##################################################################"
 	return 0
 }
