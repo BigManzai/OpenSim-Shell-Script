@@ -108,6 +108,18 @@ if [ "$SIMULATORGRIDNICK" = "" ]; then SIMULATORGRIDNICK="MG"; fi
 echo "Der Grid-Nickname lautet: $SIMULATORGRIDNICK"
 echo "##################################################################"
 
+echo "Möchten sie die Regionskonfigurationen direkt Aktivieren ja/nein [nein]:"
+read -r REGIONAKTIV
+if [ "$REGIONAKTIV" = "" ]; then REGIONAKTIV="nein"; fi
+echo "Sie haben ausgewählt: $REGIONAKTIV"
+echo "##################################################################"
+
+echo "Möchten sie die Skriptkonfigurationen Aktivieren ja/nein [nein]:"
+read -r SKRIPTAKTIV
+if [ "$SKRIPTAKTIV" = "" ]; then SKRIPTAKTIV="nein"; fi
+echo "Sie haben ausgewählt: $SKRIPTAKTIV"
+echo "##################################################################"
+
 # Weitere Auswertungen
 if [ "$PRIVURL" = "" ]; then PRIVURL="\${Const|BaseURL}"; fi
 if [ "$MONEYPORT" = "" ]; then MONEYPORT="8008"; fi
@@ -200,7 +212,7 @@ function regionconfig {
     echo "InternalAddress = 0.0.0.0"
     echo "InternalPort = $INTERNALPORT"
     echo "ResolveAddress = False"
-    echo "ExternalHostName = $UUID"
+    echo "ExternalHostName = $BASEHOSTNAME"
     echo "MaptileStaticUUID = $UUID"
     echo "DefaultLanding = <128,128,25>"
     echo ";MaxPrimsPerUser = -1"
@@ -389,9 +401,23 @@ function osconfigstruktur() {
         LOCALX=5000; LOCALY=5000; LANDGOESSE=256;
 
         configausgabe "$BASEHOSTNAME" "$PRIVURL" "$MONEYPORT" "$((SIMULATORPORT + "$i"))" "$MYSQLDATABASE$i" "$MYSQLUSER" "$MYSQLPASSWORD" "$STARTREGION" "$SIMULATORGRIDNAME" "$SIMULATORGRIDNICK" "$CONSTINI"
+
+        if [ "$SKRIPTAKTIV" = "nein" ]; then
+        osslEnableconfig "/$STARTVERZEICHNIS/sim$i/bin/config-include/osslEnable.ini.Beispiel"
+        fi
+
+        if [ "$SKRIPTAKTIV" = "ja" ]; then
         osslEnableconfig "/$STARTVERZEICHNIS/sim$i/bin/config-include/osslEnable.ini"
+        fi
+
+        if [ "$REGIONAKTIV" = "nein" ]; then
         regionconfig "sim$i" "$((LOCALX + "$i")),$((LOCALY + "$i"))" "$LANDGOESSE" "$((9100 + "$i"))" "/$STARTVERZEICHNIS/sim$i/bin/Regions/Regions.ini.Beispiel"
-        
+        fi
+
+        if  [ "$REGIONAKTIV" = "ja" ]; then
+        regionconfig "sim$i" "$((LOCALX + "$i")),$((LOCALY + "$i"))" "$LANDGOESSE" "$((9100 + "$i"))" "/$STARTVERZEICHNIS/sim$i/bin/Regions/Regions.ini"
+        fi
+
         echo "Schreibe sim$i in $SIMDATEI, legen sie bitte Datenbank $MYSQLDATABASE an."
 		# xargs sollte leerzeichen entfernen.
 		printf 'sim'"$i"'\t%s\n' | xargs >>/"$STARTVERZEICHNIS"/$SIMDATEI
