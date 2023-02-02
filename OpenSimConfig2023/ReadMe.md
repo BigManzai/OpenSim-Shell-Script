@@ -1,7 +1,7 @@
 # OpenSimulator Konfigurationen
 Basierden auf einer Konfiguration Datei: Include-const = "config-include/Const.ini"
 
-## Jetzt mit automatischen Konfigurator
+## Jetzt mit automatischen Linux Bash Konfigurator
 Der Konfigurator erstellt mehrfach Verzeichnisse und die SimulatorList.ini, für die automatische installation mit dem ```opensimMULTITOOL```.
 
 Anschließend kann das gesammte Grid mit der Funktion ```/opt/opensim.sh osupgrade``` installiert/vorbereitet werden.
