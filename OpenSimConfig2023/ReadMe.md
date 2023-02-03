@@ -14,20 +14,20 @@ da sich nur noch 2 Punkte für jeden weiteren OpenSimulator ändern.
 Der Konfigurator erstellt Multi Verzeichnisse inklusive den Konfigurationen.
 Dieses Skript legt folgende Verzeichnisse und Dateien an:
 
-Verzeichnis /robust/bin
+## Verzeichnis /robust/bin
 * Robust.ini
 * MoneyServer.ini
-Verzeichnis robust/bin/config-include
+## Verzeichnis robust/bin/config-include
 * const.ini
 * GridCommon.ini
-Verzeichnis /simX/bin
+## Verzeichnis /simX/bin
 * OpenSim.ini
-Verzeichnis /simX/bin/config-include
+## erzeichnis /simX/bin/config-include
 * Const.ini
 * FlotsamCache.ini
 * GridCommon.ini
 * osslEnable.ini
-Verzeichnis /simX/bin/Regions
+## Verzeichnis /simX/bin/Regions
 * Regions.ini
 
 Mit den Optionen osslEnable.ini und Regions.ini zu aktivieren oder zu deaktivieren(Standard).
