@@ -1,12 +1,5 @@
 # OpenSimulator Konfigurationen
-Basierden auf einer Konfiguration Datei: Include-const = "config-include/Const.ini"
-
-## Jetzt mit automatischen Linux Bash Konfigurator
-Der Konfigurator erstellt mehrfach Verzeichnisse und die SimulatorList.ini, für die automatische installation mit dem ```opensimMULTITOOL```.
-
-Anschließend kann das gesammte Grid mit der Funktion ```/opt/opensim.sh osupgrade``` installiert/vorbereitet werden.
-
-OpenSimulator 0.9.2.2+ Konfigurationsdateien für ein Hypergrid angepasst.
+OpenSimulator 0.9.2.2+ Konfigurationsdateien sind für ein Hypergrid angepasst.
 
 Diese ersetzen die gleichnamigen Konfigurationen für Robust und OpenSim.
 
@@ -16,17 +9,27 @@ Hiermit wird das Erstellen eines Grid´s einfacher und schneller,
 
 da sich nur noch 2 Punkte für jeden weiteren OpenSimulator ändern.
 
-Diese Punkte sind 
-``` SimulatorPort = "9010" ``` und ``` MysqlDatabase = "MysqlDatabase" ``` 
+## Jetzt mit automatischen Linux Bash Konfigurator
 
-in der Datei Const.ini im Verzeichnis config-include.
+Der Konfigurator erstellt mehrfach Verzeichnisse und die Konfigurationen.
 
+## Dieses Skript legt folgende Verzeichnisse und Dateien an:
 
-``` Jeder OpenSimulator benötigt einen freien SimulatorPort. ```
+### Verzeichnis /robust/bin
+#### Robust.ini
+#### MoneyServer.ini
+### Verzeichnis robust/bin/config-include
+#### const.ini
+#### GridCommon.ini
 
-``` Jeder OpenSimulator sollte eine eigene Datenbank bekommen, diese bitte vor dem starten anlegen. ```
+### Verzeichnis /simX/bin
+#### OpenSim.ini
+### Verzeichnis /simX/bin/config-include
+#### Const.ini
+#### FlotsamCache.ini
+#### GridCommon.ini
+#### osslEnable.ini
+### Verzeichnis /simX/bin/Regions
+#### Regions.ini
 
-## NEU
-Erstellt jetzt auch eine Regions.ini.Beispiel Datei vorausgefüllt mit unterschiedlichen Ports, Localisation,
-
-einzigartiger UUID etc. die direkt weiterverwendet werden könnte.
+Mit den Optionen osslEnable.ini und Regions.ini zu aktivieren oder zu deaktivieren(Standard).
