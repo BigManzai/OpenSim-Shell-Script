@@ -4,6 +4,31 @@
 #* Dies schreibt per abfrage die Konfigurationen für den OpenSimulator.
 #* Author Manfred Aabye 2023 MIT Lizens, Ubuntu 22.04 Linux Server.
 
+
+# Dieses Skript legt folgende Verzeichnisse und Dateien an:
+
+# Verzeichnis /robust/bin
+## Robust.ini
+## MoneyServer.ini
+# Verzeichnis robust/bin/config-include
+## const.ini
+## GridCommon.ini
+#######################################
+# Verzeichnis /simX/bin
+## OpenSim.ini
+# Verzeichnis /simX/bin/config-include
+## Const.ini
+## FlotsamCache.ini
+## GridCommon.ini
+## osslEnable.ini
+# Verzeichnis /simX/bin/Regions
+## Regions.ini
+
+# Mit den Optionen osslEnable.ini und Regions.ini zu aktivieren oder zu deaktivieren(Standard).
+
+
+
+
 ### Eintragungen uebersicht!
 # BaseHostname = "MyGrid.com"
 # BaseURL = http://${Const|BaseHostname}
