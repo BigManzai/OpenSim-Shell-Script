@@ -1,4 +1,4 @@
-### Einstellungen VERSION="V0.80.721"
+### Einstellungen VERSION="V0.81.723"
 
 ## Das Startverzeichnis home oder opt zum Beispiel.
 	STARTVERZEICHNIS="opt"
@@ -6,6 +6,7 @@
 	MONEYVERZEICHNIS="robust"
 	ROBUSTVERZEICHNIS="robust"
 	OPENSIMVERZEICHNIS="opensim"
+	CONFIGPFAD="OpenSimConfig"
 	
 	SCRIPTSOURCE="opensim-ossl-example-scripts-main"
 	SCRIPTZIP="opensim-ossl-example-scripts-main.zip"

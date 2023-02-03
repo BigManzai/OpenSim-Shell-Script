@@ -54,14 +54,14 @@
 # ! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 # ! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-# * Status 05.01.2023 318 Funktionen.
+# * Status 03.02.2023 318 Funktionen.
 
 # # Visual Studio Code # ShellCheck # shellman # Better Comments # outline map #
 
 #### ? Einstellungen ####
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe
-VERSION="V0.80.721" # opensimMULTITOOL Versionsausgabe
+VERSION="V0.81.723" # opensimMULTITOOL Versionsausgabe
 #clear # Bildschirmausgabe loeschen.
 #reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
@@ -95,8 +95,10 @@ function dummyvar() {
 	authlog="/var/log/auth.log"	ufwlog="/var/log/ufw.log"	mysqlmariadberor="/var/log/mysql/mariadb.err"; mysqlerrorlog="/var/log/mysql/error.log"; listVar=""; ScreenLogLevel=0
 	# DIALOG_OK=0; DIALOG_HELP=2; DIALOG_EXTRA=3; DIALOG_ITEM_HELP=4; SIG_NONE=0; SIG_HUP=1; SIG_INT=2; SIG_QUIT=3; SIG_KILL=9; SIG_TERM=15
 	DIALOG_CANCEL=1; DIALOG_ESC=255; DIALOG=dialog; VISITORLIST="yes"; REGIONSANZEIGE="yes"; #DELREGIONS="no";
-	netversion="1946";
+	netversion="1946"; CONFIGPFAD="OpenSimConfig";
 }
+
+AKTUELLEVERZ=$(pwd) # Aktuelles Verzeichnis
 
 ### Datumsvariablen Datum, Dateidatum und Uhrzeit
 DATUM=$(date +%d.%m.%Y)
@@ -1170,12 +1172,14 @@ function menuoscommand() {
 	# Zum schluss alle Variablen loeschen.
 	unset OSCOMMANDSCREEN REGION COMMAND
 }
+
 ### ! oswriteconfig
 function oswriteconfig() {
 	SETSIMULATOR=$1
 	CONFIGWRITE="config save /opt/$SETSIMULATOR.ini"
 	screen -S "$SETSIMULATOR" -p 0 -X eval "stuff '$CONFIGWRITE'^M"
 }
+
 ### ! menuoswriteconfig
 function menuoswriteconfig() {
 	SETSIMULATOR=$1 # OpenSimulator, Verzeichnis und Screen Name
@@ -6796,6 +6800,8 @@ function ramspeicher() {
 	return 0
 }
 
+###############################    Konfigurationen ########################
+
 ### !  mysqleinstellen, ermitteln wieviel RAM Speicher vorhanden ist und anschliessend mySQL Einstellen.
 # Einstellungen sind in der my.cnf nicht moeglich es muss in die /etc/mysql/mysql.conf.d/mysqld.cnf
 # Hier wird nicht geprueft ob die Einstellungen schon vorhanden sind sondern nur angehaengt.
@@ -6857,891 +6863,6 @@ function mysqleinstellen() {
 
 	# MySQL neu starten
 	#mysql_neustart
-	return 0
-}
-
-### !  In Arbeit
-function neuegridconfig() {
-	echo "$(tput setaf 2)NEUEGRIDCONFIG: Konfigurationsdateien holen und in das ExampleConfig Verzeichnis kopieren. $(tput sgr0)"
-	echo "$DATUM $(date +%H:%M:%S) NEUEGRIDCONFIG: Konfigurationsdateien holen und in das ExampleConfig Verzeichnis kopieren" >>"/$STARTVERZEICHNIS/$DATEIDATUM$logfilename.log"
-
-	cd /"$STARTVERZEICHNIS" || exit
-	git clone https://github.com/BigManzai/OpenSim-Shell-Script
-	mv /"$STARTVERZEICHNIS"/OpenSim-Shell-Script/ExampleConfig /"$STARTVERZEICHNIS"/ExampleConfig
-	rm -r /"$STARTVERZEICHNIS"/OpenSim-Shell-Script
-
-	echo "IP eintragen"
-	ipsetzen
-
-	cp /"$STARTVERZEICHNIS"/ExampleConfig/robust/ /"$STARTVERZEICHNIS"/opensim/bin
-	cp /"$STARTVERZEICHNIS"/ExampleConfig/sim/ /"$STARTVERZEICHNIS"/opensim/bin
-	return 0
-}
-
-### !  ipsetzen, setzt nach Abfrage die IP in die Konfigurationen. OK
-function ipsetzen() {
-	cd /"$STARTVERZEICHNIS/ExampleConfig" || return 1 # gibt es das ExampleConfig Verzeichnis wenn nicht abbruch.
-
-	EINGABEIP=""
-	echo "$(tput setaf 2)IPSETZEN: Bitte geben Sie ihre externe IP ein oder druecken sie Enter fuer $(tput sgr0) $AKTUELLEIP"
-
-	# Eingabe einlesen in Variable EINGABEIP
-	read -r EINGABEIP
-
-	# Pruefen ob Variableninhalt Enter oder eine IP ist
-	if test "$EINGABEIP" = ""; then
-		# ENTER wurde gewaehlt
-		# Robust aendern
-		sed -i 's/BaseURL =.*$/BaseURL = '"$AKTUELLEIP"'/' /"$STARTVERZEICHNIS"/ExampleConfig/robust/Robust.ini
-		# OpenSim aendern
-		sed -i 's/BaseHostname =.*$/BaseHostname = '"$AKTUELLEIP"'/' /"$STARTVERZEICHNIS"/ExampleConfig/sim/OpenSim.ini
-		# MoneyServer aendern
-		sed -i 's/MoneyScriptIPaddress  =.*$/MoneyScriptIPaddress  = '"$AKTUELLEIP"'/' /"$STARTVERZEICHNIS"/ExampleConfig/robust/MoneyServer.ini
-		# GridCommon aendern
-		sed -i 's/BaseHostname =.*$/BaseHostname = '"$AKTUELLEIP"'/' /"$STARTVERZEICHNIS"/ExampleConfig/sim/config-include/GridCommon.ini
-	else
-		# IP wurde gewaehlt
-		# Ausfuehrungszeichen anhaengen
-		EINGABEIP='"'$EINGABEIP'"'
-		# Robust aendern
-		sed -i 's/BaseURL =.*$/BaseURL = '"$EINGABEIP"'/' /"$STARTVERZEICHNIS"/ExampleConfig/robust/Robust.ini
-		# OpenSim aendern
-		sed -i 's/BaseHostname =.*$/BaseHostname = '"$EINGABEIP"'/' /"$STARTVERZEICHNIS"/ExampleConfig/sim/OpenSim.ini
-		# MoneyServer aendern
-		sed -i 's/MoneyScriptIPaddress  =.*$/MoneyScriptIPaddress  = '"$EINGABEIP"'/' /"$STARTVERZEICHNIS"/ExampleConfig/robust/MoneyServer.ini
-		# GridCommon aendern
-		sed -i 's/BaseHostname =.*$/BaseHostname = '"$EINGABEIP"'/' /"$STARTVERZEICHNIS"/ExampleConfig/sim/config-include/GridCommon.ini
-	fi
-
-	log info "IPSETZEN: IP oder DNS Einstellungen geaendert"
-	return 0
-}
-
-### !Aktuelle IP in die Robust.ini schreiben. UNGETESTET
-function robustini() {
-	# Aktuelle IP ueber Suchadresse ermitteln und Ausfuehrungszeichen anhaengen.
-	DNAAKTUELLEIP="$(wget -O - -q $SEARCHADRES)"
-
-	echo "Gebe deine Server Adresse ein: (Beispiel meinserver.de oder 192.168.2.106)"
-	echo "Enter fuer $AKTUELLEIP"
-	read -r DNANAME
-	if [ -z "$DNANAME" ]; then DNANAME=$DNAAKTUELLEIP; fi
-	IP8002='"''http://'"$DNANAME"":8002"'"'
-	IP8003='"''http://'"$DNANAME"":8003"'"'
-
-	echo "Datenbankname:"
-	read -r DBNAME
-	echo "Datenbank Benutzername:"
-	read -r DBUSER
-	echo "Datenbank Passwort:"
-	read -r DBPASSWD
-
-	echo "Gridname:"
-	read -r GRIDNAME
-	echo "Gridnick:"
-	read -r GRIDNICK
-	# shellcheck disable=SC2016
-	{
-		echo '[Const]'
-		echo 'BaseURL = '"$DNANAME"
-		echo 'PublicPort = "8002"'
-		echo 'PrivatePort = "8003"'
-		echo 'MysqlDatabase = '"$DBNAME"
-		echo 'MysqlUser = '"$DBUSER"
-		echo 'MysqlPassword = '"$DBPASSWD"
-		echo 'StartRegion = "Welcome"'
-		echo 'Simulatorgridname = '"$GRIDNAME"
-		echo 'Simulatorgridnick = '"$GRIDNICK"
-		echo '[Startup]'
-		echo 'PIDFile = "/tmp/Robust.pid"'
-		echo 'RegistryLocation = "."'
-		echo 'ConfigDirectory = "robust-include"'
-		echo 'ConsoleHistoryFileEnabled = true'
-		echo 'ConsoleHistoryFile = "RobustConsoleHistory.txt"'
-		echo 'ConsoleHistoryFileLines = 100'
-		echo 'NoVerifyCertChain = true'
-		echo 'NoVerifyCertHostname = true'
-		echo '[ServiceList]'
-		echo 'AssetServiceConnector = "${Const|PrivatePort}/OpenSim.Server.Handlers.dll:AssetServiceConnector"'
-		echo 'InventoryInConnector = "${Const|PrivatePort}/OpenSim.Server.Handlers.dll:XInventoryInConnector"'
-		echo 'GridServiceConnector = "${Const|PrivatePort}/OpenSim.Server.Handlers.dll:GridServiceConnector"'
-		echo 'GridInfoServerInConnector = "${Const|PublicPort}/OpenSim.Server.Handlers.dll:GridInfoServerInConnector"'
-		echo 'AuthenticationServiceConnector = "${Const|PrivatePort}/OpenSim.Server.Handlers.dll:AuthenticationServiceConnector"'
-		echo 'OpenIdServerConnector = "${Const|PublicPort}/OpenSim.Server.Handlers.dll:OpenIdServerConnector"'
-		echo 'AvatarServiceConnector = "${Const|PrivatePort}/OpenSim.Server.Handlers.dll:AvatarServiceConnector"'
-		echo 'LLLoginServiceInConnector = "${Const|PublicPort}/OpenSim.Server.Handlers.dll:LLLoginServiceInConnector"'
-		echo 'PresenceServiceConnector = "${Const|PrivatePort}/OpenSim.Server.Handlers.dll:PresenceServiceConnector"'
-		echo 'UserAccountServiceConnector = "${Const|PrivatePort}/OpenSim.Server.Handlers.dll:UserAccountServiceConnector"'
-		echo 'GridUserServiceConnector = "${Const|PrivatePort}/OpenSim.Server.Handlers.dll:GridUserServiceConnector"'
-		echo 'AgentPreferencesServiceConnector = "${Const|PrivatePort}/OpenSim.Server.Handlers.dll:AgentPreferencesServiceConnector"'
-		echo 'FriendsServiceConnector = "${Const|PrivatePort}/OpenSim.Server.Handlers.dll:FriendsServiceConnector"'
-		echo 'MapAddServiceConnector = "${Const|PrivatePort}/OpenSim.Server.Handlers.dll:MapAddServiceConnector"'
-		echo 'MapGetServiceConnector = "${Const|PublicPort}/OpenSim.Server.Handlers.dll:MapGetServiceConnector"'
-		echo 'OfflineIMServiceConnector = "${Const|PrivatePort}/OpenSim.Addons.OfflineIM.dll:OfflineIMServiceRobustConnector"'
-		echo 'GroupsServiceConnector = "${Const|PrivatePort}/OpenSim.Addons.Groups.dll:GroupsServiceRobustConnector"'
-		echo 'BakedTextureService = "${Const|PrivatePort}/OpenSim.Server.Handlers.dll:XBakesConnector"'
-		echo 'UserProfilesServiceConnector = "${Const|PublicPort}/OpenSim.Server.Handlers.dll:UserProfilesConnector"'
-		echo 'MuteListConnector = "${Const|PrivatePort}/OpenSim.Server.Handlers.dll:MuteListServiceConnector"'
-		echo 'GatekeeperServiceInConnector = "${Const|PublicPort}/OpenSim.Server.Handlers.dll:GatekeeperServiceInConnector"'
-		echo 'UserAgentServerConnector = "${Const|PublicPort}/OpenSim.Server.Handlers.dll:UserAgentServerConnector"'
-		echo 'HeloServiceInConnector = "${Const|PublicPort}/OpenSim.Server.Handlers.dll:HeloServiceInConnector"'
-		echo 'HGFriendsServerConnector = "${Const|PublicPort}/OpenSim.Server.Handlers.dll:HGFriendsServerConnector"'
-		echo 'InstantMessageServerConnector = "${Const|PublicPort}/OpenSim.Server.Handlers.dll:InstantMessageServerConnector"'
-		echo 'HGInventoryServiceConnector = "HGInventoryService@${Const|PublicPort}/OpenSim.Server.Handlers.dll:XInventoryInConnector"'
-		echo 'HGAssetServiceConnector = "HGAssetService@${Const|PublicPort}/OpenSim.Server.Handlers.dll:AssetServiceConnector"'
-		echo 'HGGroupsServiceConnector = "${Const|PublicPort}/OpenSim.Addons.Groups.dll:HGGroupsServiceRobustConnector"'
-		echo '[Network]'
-		echo 'port = ${Const|PrivatePort}'
-		echo 'AllowllHTTPRequestIn = false'
-		echo '[Hypergrid]'
-		echo 'HomeURI = "${Const|BaseURL}:${Const|PublicPort}"'
-		echo 'GatekeeperURI = "${Const|BaseURL}:${Const|PublicPort}"'
-		echo '[AccessControl]'
-		echo 'DeniedClients = "Imprudence|CopyBot|Twisted|Crawler|Cryolife|darkstorm|DarkStorm|Darkstorm"'
-		echo '[DatabaseService]'
-		echo 'StorageProvider = "OpenSim.Data.MySQL.dll"'
-		echo 'ConnectionString = "Data Source=localhost;Database='"$DBNAME"';User ID='"$DBUSER"';Password='"$DBPASSWD"';Old Guids=true;"'
-		echo '[AssetService]'
-		echo 'LocalServiceModule = "OpenSim.Services.AssetService.dll:AssetService"'
-		echo 'DefaultAssetLoader = "OpenSim.Framework.AssetLoader.Filesystem.dll"'
-		echo 'AssetLoaderArgs = "./assets/AssetSets.xml"'
-		echo 'AllowRemoteDelete = true'
-		echo 'AllowRemoteDeleteAllTypes = false'
-		echo '[InventoryService]'
-		echo 'LocalServiceModule = "OpenSim.Services.InventoryService.dll:XInventoryService"'
-		echo 'AllowDelete = true'
-		echo '[GridService]'
-		echo 'LocalServiceModule = "OpenSim.Services.GridService.dll:GridService"'
-		echo 'AssetService = "OpenSim.Services.AssetService.dll:AssetService"'
-		echo 'MapTileDirectory = "./maptiles"'
-		echo 'Region_${Const|StartRegion} = "DefaultRegion, DefaultHGRegion, FallbackRegion"'
-		echo 'HypergridLinker = true'
-		echo 'ExportSupported = true'
-		echo 'GatekeeperURI = "${Const|BaseURL}:${Const|PublicPort}"'
-		echo '[FreeswitchService]'
-		echo 'LocalServiceModule = "OpenSim.Services.FreeswitchService.dll:FreeswitchService"'
-		echo '[AuthenticationService]'
-		echo 'LocalServiceModule = "OpenSim.Services.AuthenticationService.dll:PasswordAuthenticationService"'
-		echo 'AllowGetAuthInfo = true'
-		echo 'AllowSetAuthInfo = true'
-		echo 'AllowSetPassword = true'
-		echo '[OpenIdService]'
-		echo 'AuthenticationServiceModule = "OpenSim.Services.AuthenticationService.dll:PasswordAuthenticationService"'
-		echo 'UserAccountServiceModule = "OpenSim.Services.UserAccountService.dll:UserAccountService"'
-		echo '[UserAccountService]'
-		echo 'LocalServiceModule = "OpenSim.Services.UserAccountService.dll:UserAccountService"'
-		echo 'AuthenticationService = "OpenSim.Services.AuthenticationService.dll:PasswordAuthenticationService"'
-		echo 'PresenceService = "OpenSim.Services.PresenceService.dll:PresenceService"'
-		echo 'GridService = "OpenSim.Services.GridService.dll:GridService"'
-		echo 'InventoryService = "OpenSim.Services.InventoryService.dll:XInventoryService"'
-		echo 'AvatarService = "OpenSim.Services.AvatarService.dll:AvatarService"'
-		echo 'GridUserService = "OpenSim.Services.UserAccountService.dll:GridUserService"'
-		echo 'CreateDefaultAvatarEntries = true'
-		echo 'AllowCreateUser = true'
-		echo 'AllowSetAccount = true'
-		echo '[GridUserService]'
-		echo 'LocalServiceModule = "OpenSim.Services.UserAccountService.dll:GridUserService"'
-		echo '[AgentPreferencesService]'
-		echo 'LocalServiceModule = "OpenSim.Services.UserAccountService.dll:AgentPreferencesService"'
-		echo '[PresenceService]'
-		echo 'LocalServiceModule = "OpenSim.Services.PresenceService.dll:PresenceService"'
-		echo '[AvatarService]'
-		echo 'LocalServiceModule = "OpenSim.Services.AvatarService.dll:AvatarService"'
-		echo '[FriendsService]'
-		echo 'LocalServiceModule = "OpenSim.Services.FriendsService.dll:FriendsService"'
-		echo '[EstateService]'
-		echo 'LocalServiceModule = "OpenSim.Services.EstateService.dll:EstateDataService"'
-		echo '[LibraryService]'
-		echo 'LibraryName = "OpenSim Library"'
-		echo 'DefaultLibrary = "./inventory/Libraries.xml"'
-		echo '[LoginService]'
-		echo 'LocalServiceModule = "OpenSim.Services.LLLoginService.dll:LLLoginService"'
-		echo 'UserAccountService = "OpenSim.Services.UserAccountService.dll:UserAccountService"'
-		echo 'GridUserService = "OpenSim.Services.UserAccountService.dll:GridUserService"'
-		echo 'AuthenticationService = "OpenSim.Services.AuthenticationService.dll:PasswordAuthenticationService"'
-		echo 'InventoryService = "OpenSim.Services.InventoryService.dll:XInventoryService"'
-		echo 'AvatarService = "OpenSim.Services.AvatarService.dll:AvatarService"'
-		echo 'PresenceService = "OpenSim.Services.PresenceService.dll:PresenceService"'
-		echo 'GridService = "OpenSim.Services.GridService.dll:GridService"'
-		echo 'SimulationService ="OpenSim.Services.Connectors.dll:SimulationServiceConnector"'
-		echo 'LibraryService = "OpenSim.Services.InventoryService.dll:LibraryService"'
-		echo 'FriendsService = "OpenSim.Services.FriendsService.dll:FriendsService"'
-		echo 'MinLoginLevel = 0'
-		echo 'UserAgentService = "OpenSim.Services.HypergridService.dll:UserAgentService"'
-		echo 'HGInventoryServicePlugin = "HGInventoryService@OpenSim.Services.HypergridService.dll:HGSuitcaseInventoryService"'
-		echo 'Currency = "T$"'
-		echo 'ClassifiedFee = 0'
-		echo 'WelcomeMessage = "Welcome, Avatar!"'
-		echo 'AllowRemoteSetLoginLevel = "false"'
-		echo 'MapTileURL = "${Const|BaseURL}:${Const|PublicPort}/";'
-		echo 'SearchURL = "${Const|BaseURL}:${Const|PublicPort}/";'
-		echo 'GatekeeperURI = "${Const|BaseURL}:${Const|PublicPort}"'
-		echo 'SRV_HomeURI = "${Const|BaseURL}:${Const|PublicPort}"'
-		echo 'SRV_InventoryServerURI = "${Const|BaseURL}:${Const|PublicPort}"'
-		echo 'SRV_AssetServerURI = "${Const|BaseURL}:${Const|PublicPort}"'
-		echo 'SRV_ProfileServerURI = "${Const|BaseURL}:${Const|PublicPort}"'
-		echo 'SRV_FriendsServerURI = "${Const|BaseURL}:${Const|PublicPort}"'
-		echo 'SRV_IMServerURI = "${Const|BaseURL}:${Const|PublicPort}"'
-		echo 'SRV_GroupsServerURI = "${Const|BaseURL}:${Const|PublicPort}"'
-		echo 'DSTZone = "America/Los_Angeles;Pacific Standard Time"'
-		echo '[MapImageService]'
-		echo 'LocalServiceModule = "OpenSim.Services.MapImageService.dll:MapImageService"'
-		echo 'TilesStoragePath = "maptiles"'
-		echo '[GridInfoService]'
-		echo 'login = ${Const|BaseURL}:${Const|PublicPort}/'
-		echo 'gridname = "${Const|Simulatorgridname}"'
-		echo 'gridnick = ${Const|Simulatorgridnick}'
-		echo 'welcome = ${Const|BaseURL}/'
-		echo 'economy = ${Const|BaseURL}/helper/'
-		echo 'about = ${Const|BaseURL}/'
-		echo 'register = ${Const|BaseURL}/'
-		echo 'help = ${Const|BaseURL}/'
-		echo 'password = ${Const|BaseURL}/'
-		echo 'gatekeeper = ${Const|BaseURL}:${Const|PublicPort}/'
-		echo 'uas = ${Const|BaseURL}:${Const|PublicPort}/'
-		echo '[GatekeeperService]'
-		echo 'LocalServiceModule = "OpenSim.Services.HypergridService.dll:GatekeeperService"'
-		echo 'UserAccountService = "OpenSim.Services.UserAccountService.dll:UserAccountService"'
-		echo 'UserAgentService = "OpenSim.Services.HypergridService.dll:UserAgentService"'
-		echo 'PresenceService = "OpenSim.Services.PresenceService.dll:PresenceService"'
-		echo 'GridUserService = "OpenSim.Services.UserAccountService.dll:GridUserService"'
-		echo 'GridService = "OpenSim.Services.GridService.dll:GridService"'
-		echo 'AuthenticationService = "OpenSim.Services.Connectors.dll:AuthenticationServicesConnector"'
-		echo 'SimulationService ="OpenSim.Services.Connectors.dll:SimulationServiceConnector"'
-		echo 'AllowTeleportsToAnyRegion = true'
-		echo 'ForeignAgentsAllowed = true'
-		echo 'AllowExcept = "http://grid.sacrarium.su:8888"'
-		echo '[UserAgentService]'
-		echo 'LocalServiceModule = "OpenSim.Services.HypergridService.dll:UserAgentService"'
-		echo 'GridUserService     = "OpenSim.Services.UserAccountService.dll:GridUserService"'
-		echo 'GridService         = "OpenSim.Services.GridService.dll:GridService"'
-		echo 'GatekeeperService   = "OpenSim.Services.HypergridService.dll:GatekeeperService"'
-		echo 'PresenceService     = "OpenSim.Services.PresenceService.dll:PresenceService"'
-		echo 'FriendsService      = "OpenSim.Services.FriendsService.dll:FriendsService"'
-		echo 'UserAccountService  = "OpenSim.Services.UserAccountService.dll:UserAccountService"'
-		echo 'LevelOutsideContacts = 0'
-		echo 'ShowUserDetailsInHGProfile = True'
-		echo '[HGInventoryService]'
-		echo 'LocalServiceModule = "OpenSim.Services.InventoryService.dll:XInventoryService"'
-		echo 'UserAccountsService = "OpenSim.Services.UserAccountService.dll:UserAccountService"'
-		echo 'AvatarService = "OpenSim.Services.AvatarService.dll:AvatarService"'
-		echo 'AuthType = None'
-		echo 'HomeURI = "${Const|BaseURL}:${Const|PublicPort}"'
-		echo '[HGAssetService]'
-		echo 'LocalServiceModule = "OpenSim.Services.HypergridService.dll:HGAssetService"'
-		echo 'UserAccountsService = "OpenSim.Services.UserAccountService.dll:UserAccountService"'
-		echo 'AuthType = None'
-		echo 'HomeURI = "${Const|BaseURL}:${Const|PublicPort}"'
-		echo '[HGFriendsService]'
-		echo 'LocalServiceModule = "OpenSim.Services.HypergridService.dll:HGFriendsService"'
-		echo 'UserAgentService = "OpenSim.Services.HypergridService.dll:UserAgentService"'
-		echo 'FriendsService = "OpenSim.Services.FriendsService.dll:FriendsService"'
-		echo 'UserAccountService = "OpenSim.Services.UserAccountService.dll:UserAccountService"'
-		echo 'GridService = "OpenSim.Services.GridService.dll:GridService"'
-		echo 'PresenceService = "OpenSim.Services.PresenceService.dll:PresenceService"'
-		echo '[HGInstantMessageService]'
-		echo 'LocalServiceModule  = "OpenSim.Services.HypergridService.dll:HGInstantMessageService"'
-		echo 'GridService         = "OpenSim.Services.GridService.dll:GridService"'
-		echo 'PresenceService     = "OpenSim.Services.PresenceService.dll:PresenceService"'
-		echo 'UserAgentService    = "OpenSim.Services.HypergridService.dll:UserAgentService"'
-		echo 'InGatekeeper = True'
-		echo '[Messaging]'
-		echo 'OfflineIMService = "OpenSim.Addons.OfflineIM.dll:OfflineIMService"'
-		echo '[Groups]'
-		echo 'OfflineIMService = "OpenSim.Addons.OfflineIM.dll:OfflineIMService"'
-		echo 'UserAccountService = "OpenSim.Services.UserAccountService.dll:UserAccountService"'
-		echo 'HomeURI = "${Const|BaseURL}:${Const|PublicPort}"'
-		echo 'MaxAgentGroups = 42'
-		echo '[UserProfilesService]'
-		echo 'LocalServiceModule = "OpenSim.Services.UserProfilesService.dll:UserProfilesService"'
-		echo 'Enabled = true'
-		echo 'UserAccountService = OpenSim.Services.UserAccountService.dll:UserAccountService'
-		echo 'AuthenticationServiceModule = "OpenSim.Services.AuthenticationService.dll:PasswordAuthenticationService"'
-		echo '[BakedTextureService]'
-		echo 'LocalServiceModule = "OpenSim.Server.Handlers.dll:XBakes"'
-		echo 'BaseDirectory = "./bakes"'
-		echo '[MuteListService]'
-		echo 'LocalServiceModule = "OpenSim.Services.MuteListService.dll:MuteListService"'
-	} >"/$STARTVERZEICHNIS/$DATEIDATUM-Robust.ini"
-	return 0
-}
-
-### !Aktuelle IP in die MoneyServer.ini schreiben. UNGETESTET
-function moneyserverini() {
-	# Aktuelle IP ueber Suchadresse ermitteln und Ausfuehrungszeichen anhaengen.
-	DNAAKTUELLEIP="$(wget -O - -q $SEARCHADRES)"
-
-	echo "Datenbankname:"
-	read -r DBNAME
-	echo "Datenbank Benutzername:"
-	read -r DBUSER
-	echo "Datenbank Passwort:"
-	read -r DBPASSWD
-	# shellcheck disable=SC2016
-	{
-		echo '[Startup]'
-		echo 'PIDFile = "/tmp/money.pid"'
-		echo '[MySql]'
-		echo 'hostname = localhost'
-		echo 'database = '"$DBNAME"
-		echo 'username = '"$DBUSER"
-		echo 'password = '"$DBPASSWD"
-		echo 'pooling  = true'
-		echo 'port = 3306'
-		echo 'MaxConnection = 20'
-		echo '[MoneyServer]'
-		echo 'ServerPort = 8008'
-		echo 'DefaultBalance = 1000'
-		echo 'EnableAmountZero = true'
-		echo 'BankerAvatar = "00000000-0000-0000-0000-000000000000"'
-		echo 'EnableForceTransfer = true'
-		echo 'EnableScriptSendMoney = true'
-		echo 'MoneyScriptAccessKey  = "123456789"'
-		echo 'MoneyScriptIPaddress  = '"$DNAAKTUELLEIP"
-		echo 'EnableHGAvatar = true'
-		echo 'EnableGuestAvatar = true'
-		echo 'HGAvatarDefaultBalance = 1000'
-		echo 'GuestAvatarDefaultBalance = 1000'
-		echo 'BalanceMessageSendGift     = "Sent Gift L${0} to {1}."'
-		echo 'BalanceMessageReceiveGift  = "Received Gift L${0} from {1}."'
-		echo 'BalanceMessagePayCharge    = "Paid the Money L${0} for creation."'
-		echo 'BalanceMessageBuyObject    = "Bought the Object {2} from {1} by L${0}."'
-		echo 'BalanceMessageSellObject   = "{1} bought the Object {2} by L${0}."'
-		echo 'BalanceMessageLandSale     = "Paid the Money L${0} for Land."'
-		echo 'BalanceMessageScvLandSale  = "Paid the Money L${0} for Land."'
-		echo 'BalanceMessageGetMoney     = "Got the Money L${0} from {1}."'
-		echo 'BalanceMessageBuyMoney     = "Bought the Money L${0}."'
-		echo 'BalanceMessageRollBack     = "RollBack the Transaction: L${0} from/to {1}."'
-		echo 'BalanceMessageSendMoney    = "Paid the Money L${0} to {1}."'
-		echo 'BalanceMessageReceiveMoney = "Received L${0} from {1}."'
-		echo '[Certificate]'
-		echo 'CheckServerCert = false'
-	} >"/$STARTVERZEICHNIS/$DATEIDATUM-MoneyServer.ini"
-	return 0
-}
-
-### !Aktuelle IP in die OpenSim.ini schreiben.
-function opensimini() {
-	# Aktuelle IP ueber Suchadresse ermitteln und Ausfuehrungszeichen anhaengen.
-	DNAAKTUELLEIP="$(wget -O - -q $SEARCHADRES)"
-
-	echo "Gebe deine Server Adresse ein: (Beispiel meinserver.de oder 192.168.2.106)"
-	echo "Enter fuer $AKTUELLEIP"
-	read -r DNANAME
-	if [ -z "$DNANAME" ]; then DNANAME=$DNAAKTUELLEIP; fi
-	IP8002='"''http://'"$DNANAME"":8002"'"'
-	IP8003='"''http://'"$DNANAME"":8003"'"'
-	BASEURL='"''http://'"$DNANAME"'"'
-	echo "Gridname:"
-	read -r GRIDNAME
-	echo "SimulatorPort (9010):"
-	read -r SIMULATORPORT
-	if [ -z "$SIMULATORPORT" ]; then SIMULATORPORT=9010; fi
-	echo "SimulatorXmlRpcPort (20801):"
-	read -r SIMULATORXMLRPCPORT
-	if [ -z "$SIMULATORXMLRPCPORT" ]; then SIMULATORXMLRPCPORT=20801; fi
-
-	# shellcheck disable=SC2016
-	{
-		echo '[Const]'
-		echo 'BaseHostname = '"$DNANAME"
-		echo 'BaseURL = '"$BASEURL"
-		echo 'PublicPort = "8002"'
-		echo 'PrivURL = ${Const|BaseURL}'
-		echo 'PrivatePort = "8003"'
-		echo 'MoneyPort = "8008"'
-		echo 'SimulatorPort = '"$SIMULATORPORT"
-		echo 'SimulatorXmlRpcPort = '"$SIMULATORXMLRPCPORT"
-		echo 'Simulatorgridname = '"$GRIDNAME"
-		echo '[Startup]'
-		echo 'ConsolePrompt = "Region (\R) "'
-		echo 'ConsoleHistoryFileEnabled = true'
-		echo 'ConsoleHistoryFile = "OpenSimConsoleHistory.txt"'
-		echo 'ConsoleHistoryFileLines = 100'
-		echo 'ConsoleHistoryTimeStamp = true'
-		echo 'region_info_source = "filesystem"'
-		echo 'NonPhysicalPrimMin = 0.001'
-		echo 'NonPhysicalPrimMax = 1024'
-		echo 'PhysicalPrimMin = 0.01'
-		echo 'PhysicalPrimMax = 64'
-		echo 'ClampPrimSize = false'
-		echo 'AllowScriptCrossing = true'
-		echo 'DefaultDrawDistance = 128.0'
-		echo 'MaxDrawDistance = 128'
-		echo 'MaxRegionsViewDistance = 128'
-		echo 'MinRegionsViewDistance = 48'
-		echo 'MinimumTimeBeforePersistenceConsidered = 60'
-		echo 'MaximumTimeBeforePersistenceConsidered = 600'
-		echo 'physical_prim = true'
-		echo 'meshing = Meshmerizer'
-		echo 'physics = BulletSim'
-		echo 'DefaultScriptEngine = "YEngine"'
-		echo 'SpawnPointRouting = closest'
-		echo 'TelehubAllowLandmark = true'
-		echo '[AccessControl]'
-		echo 'DeniedClients = "Imprudence|CopyBot|Twisted|Crawler|Cryolife|darkstorm|DarkStorm|Darkstorm"'
-		echo '[Map]'
-		echo 'GenerateMaptiles = true'
-		echo 'MapImageModule = "MapImageModule"'
-		echo 'MaptileRefresh = 0'
-		echo 'MaptileStaticUUID = "00000000-0000-0000-0000-000000000000"'
-		echo 'TextureOnMapTile = true'
-		echo 'DrawPrimOnMapTile = true'
-		echo 'TexturePrims = true'
-		echo 'TexturePrimSize = 48'
-		echo 'RenderMeshes = true'
-		echo '[Permissions]'
-		echo 'permissionmodules = DefaultPermissionsModule'
-		echo 'serverside_object_permissions = true'
-		echo 'automatic_gods = false'
-		echo 'implicit_gods = false'
-		echo 'allow_grid_gods = true'
-		echo 'region_owner_is_god = true'
-		echo 'region_manager_is_god = true'
-		echo '[Estates]'
-		echo '[SMTP]'
-		echo '[Network]'
-		echo 'http_listener_port = "${Const|SimulatorPort}"'
-		echo 'ExternalHostNameForLSL = ${Const|BaseHostname}'
-		echo 'shard = "OpenSim"'
-		echo 'user_agent = "OpenSim LSL (Mozilla Compatible)"'
-		echo '[XMLRPC]'
-		echo 'XmlRpcRouterModule = "XmlRpcRouterModule"'
-		echo 'XmlRpcPort = "${Const|SimulatorXmlRpcPort}"'
-		echo 'XmlRpcHubURI = ${Const|BaseHostname}'
-		echo '[ClientStack.LindenUDP]'
-		echo 'DisableFacelights = "true"'
-		echo 'scene_throttle_max_bps = 625000000'
-		echo 'client_throttle_max_bps = 500000'
-		echo 'enable_adaptive_throttles = true'
-		echo '[ClientStack.LindenCaps]'
-		echo 'Cap_GetTexture = "localhost"'
-		echo 'Cap_GetMesh = "localhost"'
-		echo 'Cap_AvatarPickerSearch = "localhost"'
-		echo 'Cap_GetDisplayNames = "localhost"'
-		echo '[SimulatorFeatures]'
-		echo 'SearchServerURI = "${Const|BaseURL}:${Const|PublicPort}"'
-		echo 'DestinationGuideURI = "${Const|BaseURL}:${Const|PublicPort}"'
-		echo '[Chat]'
-		echo 'whisper_distance = 25'
-		echo 'say_distance = 70'
-		echo 'shout_distance = 250'
-		echo '[EntityTransfer]'
-		echo '[Messaging]'
-		echo 'OfflineMessageModule = "Offline Message Module V2"'
-		echo 'OfflineMessageURL = ${Const|BaseURL}:${Const|PrivatePort}'
-		echo 'StorageProvider = OpenSim.Data.MySQL.dll'
-		echo 'MuteListModule = MuteListModule'
-		echo 'MuteListURL = ${Const|BaseHostname}/helper/mute.php'
-		echo 'ForwardOfflineGroupMessages = true'
-		echo '[BulletSim]'
-		echo 'AvatarToAvatarCollisionsByDefault = true'
-		echo 'UseSeparatePhysicsThread = false'
-		echo 'TerrainImplementation = 0'
-		echo 'TerrainMeshMagnification = 2'
-		echo '[ODEPhysicsSettings]'
-		echo '[RemoteAdmin]'
-		echo 'enabled = false'
-		echo 'create_region_enable_voice = true'
-		echo 'create_region_public = true'
-		echo 'enabled_methods = all'
-		echo 'default_female = Default Female'
-		echo 'default_appearance = default_appearance.xml'
-		echo '[Wind]'
-		echo 'enabled = true'
-		echo 'wind_update_rate = 150'
-		echo 'wind_plugin = SimpleRandomWind'
-		echo 'strength = 2.0'
-		echo '[LightShare]'
-		echo 'enable_windlight = true'
-		echo '[Materials]'
-		echo 'enable_materials = true'
-		echo 'MaxMaterialsPerTransaction = 500'
-		echo '[DataSnapshot]'
-		echo 'index_sims = true'
-		echo 'data_exposure = minimum'
-		echo 'gridname = "${Const|Simulatorgridname}"'
-		echo 'default_snapshot_period = 7200'
-		echo 'snapshot_cache_directory = "DataSnapshot"'
-		echo '[Economy]'
-		echo 'SellEnabled = true'
-		echo 'EconomyModule = DTLNSLMoneyModule'
-		echo 'CurrencyServer = "${Const|BaseURL}:8008/"'
-		echo 'UserServer = "${Const|BaseURL}:8002/"'
-		echo 'CheckServerCert = false'
-		echo 'PriceUpload = 0'
-		echo 'MeshModelUploadCostFactor = 1.0'
-		echo 'MeshModelUploadTextureCostFactor = 1.0'
-		echo 'MeshModelMinCostFactor = 1.0'
-		echo 'PriceGroupCreate = 0'
-		echo 'ObjectCount = 0'
-		echo 'PriceEnergyUnit = 0'
-		echo 'PriceObjectClaim = 0'
-		echo 'PricePublicObjectDecay = 0'
-		echo 'PricePublicObjectDelete = 0'
-		echo 'PriceParcelClaim = 0'
-		echo 'PriceParcelClaimFactor = 1'
-		echo 'PriceRentLight = 0'
-		echo 'TeleportMinPrice = 0'
-		echo 'TeleportPriceExponent = 2'
-		echo 'EnergyEfficiency = 1'
-		echo 'PriceObjectRent = 0'
-		echo 'PriceObjectScaleFactor = 10'
-		echo 'PriceParcelRent = 0'
-		echo '[YEngine]'
-		echo 'Enabled = true'
-		echo '[XEngine]'
-		echo 'Enabled = false'
-		echo 'AppDomainLoading = false'
-		echo 'DeleteScriptsOnStartup = true'
-		echo '[OSSL]'
-		echo 'Include-osslDefaultEnable = "config-include/osslDefaultEnable.ini"'
-		echo '[FreeSwitchVoice]'
-		echo '[VivoxVoice]'
-		echo 'Enabled = false'
-		echo '[Groups]'
-		echo 'Enabled = true'
-		echo 'LevelGroupCreate = 0'
-		echo 'Module = "Groups Module V2"'
-		echo 'StorageProvider = OpenSim.Data.MySQL.dll'
-		echo 'ServicesConnectorModule = "Groups HG Service Connector"'
-		echo 'LocalService = remote'
-		echo 'GroupsServerURI = ${Const|BaseURL}:${Const|PrivatePort}'
-		echo 'HomeURI = "${Const|BaseURL}:${Const|PublicPort}"'
-		echo 'MessagingEnabled = true'
-		echo 'MessagingModule = "Groups Messaging Module V2"'
-		echo 'NoticesEnabled = true'
-		echo 'MessageOnlineUsersOnly = true'
-		echo 'DebugEnabled = false'
-		echo 'DebugMessagingEnabled = false'
-		echo 'XmlRpcServiceReadKey    = 1234'
-		echo 'XmlRpcServiceWriteKey   = 1234'
-		echo '[InterestManagement]'
-		echo 'UpdatePrioritizationScheme = BestAvatarResponsiveness'
-		echo 'ObjectsCullingByDistance = true'
-		echo '[MediaOnAPrim]'
-		echo 'Enabled = true'
-		echo '[NPC]'
-		echo 'Enabled = true'
-		echo 'MaxNumberNPCsPerScene = 40'
-		echo 'AllowNotOwned = true'
-		echo 'AllowSenseAsAvatar = true'
-		echo 'AllowCloneOtherAvatars = true'
-		echo 'NoNPCGroup = true'
-		echo '[Terrain]'
-		echo 'InitialTerrain = "flat"'
-		echo '[LandManagement]'
-		echo 'ShowParcelBansLines = true'
-		echo '[UserProfiles]'
-		echo 'ProfileServiceURL = ${Const|BaseURL}:${Const|PublicPort}'
-		echo 'AllowUserProfileWebURLs = true'
-		echo '[Profile]'
-		echo 'Module = "OpenSimProfile"'
-		echo 'ProfileURL = ${Const|BaseURL}/helper/profile.php'
-		echo '[XBakes]'
-		echo 'URL = ${Const|BaseURL}:${Const|PrivatePort}'
-		echo '[AutoBackupModule]'
-		echo ' AutoBackupModuleEnabled = false'
-		echo '[Architecture]'
-		echo 'Include-Architecture = "config-include/GridHypergrid.ini"'
-	} >"/$STARTVERZEICHNIS/$DATEIDATUM-OpenSim.ini"
-	return 0
-}
-
-### !Aktuelle IP in die GridCommon.ini schreiben. UNGETESTET
-function gridcommonini() {
-	# Aktuelle IP ueber Suchadresse ermitteln und Ausfuehrungszeichen anhaengen.
-	DNAAKTUELLEIP="$(wget -O - -q $SEARCHADRES)"
-
-	echo "Gebe deine Server Adresse ein: (Beispiel meinserver.de oder 192.168.2.106)"
-	echo "Enter fuer $AKTUELLEIP"
-	read -r DNANAME
-	if [ -z "$DNANAME" ]; then DNANAME=$DNAAKTUELLEIP; fi
-	IP8002='"''http://'"$DNANAME"":8002"'"'
-	IP8003='"''http://'"$DNANAME"":8003"'"'
-
-	echo "Datenbankname:"
-	read -r DBNAME
-	echo "Datenbank Benutzername:"
-	read -r DBUSER
-	echo "Datenbank Passwort:"
-	read -r DBPASSWD
-
-	{
-		echo '[DatabaseService]'
-		echo 'StorageProvider = "OpenSim.Data.MySQL.dll"'
-		echo 'ConnectionString = "Data Source=localhost;Database='"$DBNAME"';User ID='"$DBUSER"';Password='"$DBPASSWD"';Old Guids=true;"'
-		echo '[Hypergrid]'
-		echo 'HomeURI = '"$IP8002"
-		echo 'GatekeeperURI = '"$IP8002"
-		echo '[Modules]'
-		echo 'AssetCaching = "FlotsamAssetCache"'
-		echo 'Include-FlotsamCache = "config-include/FlotsamCache.ini"'
-		echo '[AssetService]'
-		echo 'DefaultAssetLoader = "OpenSim.Framework.AssetLoader.Filesystem.dll"'
-		echo 'AssetLoaderArgs = "assets/AssetSets.xml"'
-		echo 'AssetServerURI = '"$IP8003"
-		echo '[InventoryService]'
-		echo 'InventoryServerURI = '"$IP8003"
-		echo '[GridInfo]'
-		echo 'GridInfoURI = '"$IP8002"
-		echo '[GridService]'
-		echo 'GridServerURI = '"$IP8003"
-		echo 'AllowHypergridMapSearch = true'
-		echo 'MapTileDirectory = "./maptiles"'
-		echo 'Gatekeeper='"$IP8002"
-		echo '[EstateDataStore]'
-		echo '[EstateService]'
-		echo 'EstateServerURI = '"$IP8003"
-		echo '[Messaging]'
-		echo 'Gatekeeper = '"$IP8002"
-		echo '[AvatarService]'
-		echo 'AvatarServerURI = '"$IP8003"
-		echo '[AgentPreferencesService]'
-		echo 'AgentPreferencesServerURI = '"$IP8003"
-		echo '[PresenceService]'
-		echo 'PresenceServerURI = '"$IP8003"
-		echo '[UserAccountService]'
-		echo 'UserAccountServerURI = '"$IP8003"
-		echo '[GridUserService]'
-		echo 'GridUserServerURI = '"$IP8003"
-		echo '[AuthenticationService]'
-		echo 'AuthenticationServerURI = '"$IP8003"
-		echo '[FriendsService]'
-		echo 'FriendsServerURI = '"$IP8003"
-		echo '[HGInventoryAccessModule]'
-		echo 'HomeURI = '"$IP8002"
-		echo 'Gatekeeper = '"$IP8002"
-		echo 'RestrictInventoryAccessAbroad = false'
-		echo '[HGAssetService]'
-		echo 'HomeURI = '"$IP8002"
-		echo '[HGFriendsModule]'
-		echo 'LevelHGFriends = 0;'
-		echo '[UserAgentService]'
-		echo 'UserAgentServerURI = '"$IP8002"
-		echo '[MapImageService]'
-		echo 'MapImageServerURI = '"$IP8003"
-		echo '[AuthorizationService]'
-		echo '[MuteListService]'
-		echo 'MuteListServerURI = '"$IP8003"
-	} >"/$STARTVERZEICHNIS/$DATEIDATUM-GridCommon.ini"
-	#/$STARTVERZEICHNIS/"$VERZEICHNIS"/bin/config-include/GridCommon.ini
-	return 0
-}
-
-### ! Regionini Simulator Dateiname
-### Aktuelle IP in die Regions.ini schreiben. UNGETESTET
-function regionini() {
-	# Aktuelle IP ueber Suchadresse ermitteln und Ausfuehrungszeichen anhaengen.
-	DNAAKTUELLEIP="$(wget -O - -q $SEARCHADRES)"
-
-	echo "Gebe deine Server Adresse ein: (Beispiel meinserver.de oder 192.168.2.106)"
-	echo "Enter fuer $AKTUELLEIP"
-	read -r DNANAME
-	if [ -z "$DNANAME" ]; then DNANAME=$DNAAKTUELLEIP; fi
-
-	echo "Startpunkt des Grid Beispiel: 4500,4500"
-	read -r STARTPUNKT
-	if [ -z "$STARTPUNKT" ]; then STARTPUNKT="4500,4500"; fi
-	echo "InternalPort Beispiel: 9050"
-	read -r INTERNALPORT
-	if [ -z "$INTERNALPORT" ]; then INTERNALPORT=9050; fi
-
-	UUID=$(uuidgen)
-
-	{
-		echo '[Welcome]'
-		echo 'RegionUUID = '"$UUID"
-		echo 'Location = '"$STARTPUNKT"
-		echo 'SizeX = 256'
-		echo 'SizeY = 256'
-		echo 'SizeZ = 256'
-		echo 'InternalAddress = 0.0.0.0'
-		echo 'InternalPort = '"$INTERNALPORT"
-		echo 'ResolveAddress = False'
-		echo 'ExternalHostName = '"$DNANAME"
-		echo 'MaptileStaticUUID = '"$UUID"
-	} >"/$STARTVERZEICHNIS/$DATEIDATUM-welcome.ini"
-	return 0
-}
-
-
-### !  osslenableini() erstellt eine osslenable.ini Datei und Konfiguriert diese.
-function osslenableini() {
-	#osslEnable.ini
-	echo "OSFunctionThreatLevel Moeglichkeiten: None, VeryLow, Low, Moderate, High, VeryHigh, Severe"
-	echo "Enter = Severe"
-	read -r OSFUNCTION
-	if [ -z "$OSFUNCTION" ]; then OSFUNCTION="Severe"; fi
-
-	# shellcheck disable=SC2016
-	{
-		echo '[OSSL]'
-		echo 'OSFunctionThreatLevel = '$OSFUNCTION
-		echo 'osslParcelO = "PARCEL_OWNER,"'
-		echo 'osslParcelOG = "PARCEL_GROUP_MEMBER,PARCEL_OWNER,"'
-		echo 'osslNPC = ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER'
-		echo ' '
-		echo 'Allow_osGetAgents = true'
-		echo 'Allow_osGetAvatarList = true'
-		echo 'Allow_osGetGender = true'
-		echo 'Allow_osGetHealth = true'
-		echo 'Allow_osGetHealRate = true'
-		echo 'Allow_osGetNPCList =true'
-		echo 'Allow_osGetRezzingObject =true'
-		echo 'Allow_osGetSunParam = true'
-		echo 'Allow_osNpcGetOwner = true'
-		echo 'Allow_osSetSunParam = ESTATE_MANAGER,ESTATE_OWNER'
-		echo 'Allow_osTeleportOwner = ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER'
-		echo 'Allow_osWindActiveModelPluginName = true'
-		echo 'Allow_osSetEstateSunSettings =ESTATE_MANAGER,ESTATE_OWNER'
-		echo 'Allow_osSetRegionSunSettings =ESTATE_MANAGER,ESTATE_OWNER'
-		echo 'Allow_osEjectFromGroup =${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER'
-		echo 'Allow_osForceBreakAllLinks =${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER'
-		echo 'Allow_osForceBreakLink =${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER'
-		echo 'Allow_osGetWindParam =true'
-		echo 'Allow_osInviteToGroup = ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER'
-		echo 'Allow_osReplaceString = true'
-		echo 'Allow_osSetDynamicTextureData = true'
-		echo 'Allow_osSetDynamicTextureDataFace = true'
-		echo 'Allow_osSetDynamicTextureDataBlend =true'
-		echo 'Allow_osSetDynamicTextureDataBlendFace = true'
-		echo 'Allow_osSetParcelMediaURL = true'
-		echo 'Allow_osSetParcelMusicURL = true'
-		echo 'Allow_osSetParcelSIPAddress = ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER'
-		echo 'Allow_osSetPrimFloatOnWater = true'
-		echo 'Allow_osSetWindParam =${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER'
-		echo 'Allow_osTerrainFlush =ESTATE_MANAGER,ESTATE_OWNER'
-		echo 'Allow_osUnixTimeToTimestamp = true'
-		echo 'Allow_osAvatarName2Key =true'
-		echo 'Allow_osFormatString =true'
-		echo 'Allow_osKey2Name =true'
-		echo 'Allow_osListenRegex = true'
-		echo 'Allow_osLoadedCreationDate =true'
-		echo 'Allow_osLoadedCreationID =true'
-		echo 'Allow_osLoadedCreationTime =true'
-		echo 'Allow_osMessageObject = true'
-		echo 'Allow_osRegexIsMatch =true'
-		echo 'Allow_osGetAvatarHomeURI =true'
-		echo 'Allow_osNpcSetProfileAbout =true'
-		echo 'Allow_osNpcSetProfileImage =true'
-		echo 'Allow_osDie = true'
-		echo 'Allow_osDetectedCountry = true'
-		echo 'Allow_osDropAttachment =true'
-		echo 'Allow_osDropAttachmentAt =true'
-		echo 'Allow_osGetAgentCountry = true'
-		echo 'Allow_osGetGridCustom = true'
-		echo 'Allow_osGetGridGatekeeperURI =true'
-		echo 'Allow_osGetGridHomeURI =true'
-		echo 'Allow_osGetGridLoginURI = true'
-		echo 'Allow_osGetGridName = true'
-		echo 'Allow_osGetGridNick = true'
-		echo 'Allow_osGetNumberOfAttachments =true'
-		echo 'Allow_osGetRegionStats =true'
-		echo 'Allow_osGetSimulatorMemory =true'
-		echo 'Allow_osGetSimulatorMemoryKB =true'
-		echo 'Allow_osMessageAttachments =true'
-		echo 'Allow_osReplaceAgentEnvironment = true'
-		echo 'Allow_osSetSpeed =true'
-		echo 'Allow_osSetOwnerSpeed = true'
-		echo 'Allow_osRequestURL =true'
-		echo 'Allow_osRequestSecureURL =true'
-		echo 'Allow_osCauseDamage = ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER'
-		echo 'Allow_osCauseHealing =${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER'
-		echo 'Allow_osSetHealth = ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER'
-		echo 'Allow_osSetHealRate = ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER'
-		echo 'Allow_osForceAttachToAvatar = ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER'
-		echo 'Allow_osForceAttachToAvatarFromInventory = ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER'
-		echo 'Allow_osForceCreateLink = ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER'
-		echo 'Allow_osForceDropAttachment = ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER'
-		echo 'Allow_osForceDropAttachmentAt = ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER'
-		echo 'Allow_osGetLinkPrimitiveParams =${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER'
-		echo 'Allow_osGetPhysicsEngineType =true'
-		echo 'Allow_osGetRegionMapTexture = true'
-		echo 'Allow_osGetScriptEngineName = true'
-		echo 'Allow_osGetSimulatorVersion = true'
-		echo 'Allow_osMakeNotecard =true'
-		echo 'Allow_osMatchString = true'
-		echo 'Allow_osNpcCreate = true'
-		echo 'Allow_osNpcGetPos = true'
-		echo 'Allow_osNpcGetRot = true'
-		echo 'Allow_osNpcLoadAppearance = true'
-		echo 'Allow_osNpcMoveTo = true'
-		echo 'Allow_osNpcMoveToTarget = true'
-		echo 'Allow_osNpcPlayAnimation =true'
-		echo 'Allow_osNpcRemove = true'
-		echo 'Allow_osNpcSaveAppearance = true'
-		echo 'Allow_osNpcSay =true'
-		echo 'Allow_osNpcSayTo =true'
-		echo 'Allow_osNpcSetRot = true'
-		echo 'Allow_osNpcShout =true'
-		echo 'Allow_osNpcSit =true'
-		echo 'Allow_osNpcStand =true'
-		echo 'Allow_osNpcStopAnimation =true'
-		echo 'Allow_osNpcStopMoveToTarget = true'
-		echo 'Allow_osNpcTouch =true'
-		echo 'Allow_osNpcWhisper =true'
-		echo 'Allow_osOwnerSaveAppearance = ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER'
-		echo 'Allow_osParcelJoin =ESTATE_MANAGER,ESTATE_OWNER'
-		echo 'Allow_osParcelSubdivide = ESTATE_MANAGER,ESTATE_OWNER'
-		echo 'Allow_osRegionRestart = ESTATE_MANAGER,ESTATE_OWNER'
-		echo 'Allow_osRegionNotice =ESTATE_MANAGER,ESTATE_OWNER'
-		echo 'Allow_osSetProjectionParams = ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER'
-		echo 'Allow_osSetRegionWaterHeight =ESTATE_MANAGER,ESTATE_OWNER'
-		echo 'Allow_osSetTerrainHeight =ESTATE_MANAGER,ESTATE_OWNER'
-		echo 'Allow_osSetTerrainTexture = ESTATE_MANAGER,ESTATE_OWNER'
-		echo 'Allow_osSetTerrainTextureHeight = ESTATE_MANAGER,ESTATE_OWNER'
-		echo 'Allow_osAgentSaveAppearance = true'
-		echo 'Allow_osAvatarPlayAnimation = true'
-		echo 'Allow_osAvatarStopAnimation = true'
-		echo 'Allow_osForceAttachToOtherAvatarFromInventory = ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER'
-		echo 'Allow_osForceDetachFromAvatar = ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER'
-		echo 'Allow_osForceOtherSit = true'
-		echo 'Allow_osGetNotecard = true'
-		echo 'Allow_osGetNotecardLine = true'
-		echo 'Allow_osGetNumberOfNotecardLines = true'
-		echo 'Allow_osSetDynamicTextureURL =true'
-		echo 'Allow_osSetDynamicTextureURLBlend = true'
-		echo 'Allow_osSetDynamicTextureURLBlendFace = true'
-		echo 'Allow_osSetRot= ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER'
-		echo 'Allow_osSetParcelDetails =${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER'
-		echo 'Allow_osConsoleCommand =false'
-		echo 'Allow_osKickAvatar =${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER'
-		echo 'Allow_osTeleportAgent = ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER'
-		echo 'Allow_osTeleportObject =${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER'
-		echo 'Allow_osGetAgentIP =true'
-		echo 'Allow_osSetContentType =${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER'
-	} >"/$STARTVERZEICHNIS/$DATEIDATUM-osslEnable.ini"
-	return 0
-}
-
-### ! Umbenennen der example Dateien in Konfigurationsdateien vor dem kopieren.
-function unlockexample() {
-	log info "RENAME: Alle example Dateien umbenennen"
-	UEVERZEICHNIS1="/$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin"
-	UEVERZEICHNIS2="/$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin/config-include"
-
-	for file1 in /"$STARTVERZEICHNIS"/"$OPENSIMVERZEICHNIS"/bin/*.example; do
-		if [ -e "$file1" ]; then
-			cd "$UEVERZEICHNIS1" || exit
-			for file in *.ini.example; do mv -i "${file}" "${file%%.ini.example}.ini"; done
-			for file in *.html.example; do mv -i "${file}" "${file%%.html.example}.html"; done
-			for file in *.txt.example; do mv -i "${file}" "${file%%.txt.example}.txt"; done
-			break
-		else
-			log error "RENAME: keine example Datei im Verzeichnis $UEVERZEICHNIS1 vorhanden"
-		fi
-	done
-
-	for file2 in /"$STARTVERZEICHNIS"/"$OPENSIMVERZEICHNIS"/bin/config-include/*.example; do
-		if [ -e "$file2" ]; then
-			cd "$UEVERZEICHNIS2" || exit
-			for file in *.ini.example; do mv -i "${file}" "${file%%.ini.example}.ini"; done
-			break
-		else
-			log error "ENAME: keine example Datei im Verzeichnis $UEVERZEICHNIS2 vorhanden"
-		fi
-	done
 	return 0
 }
 
@@ -7816,6 +6937,513 @@ function newregionini() {
 	} > "$pfad"
 	return 0
 }
+
+
+### ! constconfig
+function constconfig() {
+
+    BASEHOSTNAME=$1
+    PRIVURL=$2
+    MONEYPORT=$3
+    SIMULATORPORT=$4
+    MYSQLDATABASE=$5
+    MYSQLUSER=$6
+    MYSQLPASSWORD=$7
+    STARTREGION=$8
+    SIMULATORGRIDNAME=$9
+    SIMULATORGRIDNICK=${10}
+    CONSTINI=${11}
+
+    {
+    echo '[Const]'
+    echo ";# {BaseHostname} {} {BaseHostname} {example.com 127.0.0.1} 127.0.0.1"
+    echo 'BaseHostname = "'"$BASEHOSTNAME"'"'
+    echo " "
+    echo ";# http://\${Const|BaseHostname}"
+    echo "BaseURL = http://\${Const|BaseHostname}"
+    echo " "
+    echo ";# {PublicPort} {} {PublicPort} {8002 9000} 8002"
+    echo 'PublicPort = "8002"'
+    echo " "
+    echo "; you can also have them on a diferent url / IP"
+    echo ";# \${Const|BaseURL}"
+    echo "PrivURL = \${Const|BaseURL}"
+    echo " "
+    echo ";grid default private port 8003, not used in standalone"
+    echo ";# {PrivatePort} {} {PrivatePort} {8003} 8003"
+    echo "; port to access private grid services."
+    echo "; grids that run all their regions should deny access to this port"
+    echo "; from outside their networks, using firewalls"
+    echo 'PrivatePort = "8003"'
+    echo " "
+    echo ";# {MoneyPort} {} \${Const|BaseURL}:\${Const|MoneyPort}"
+    echo 'MoneyPort = "8008"'
+    echo " "
+    echo ";# {SimulatorPort} {} {SimulatorPort} {\${Const|SimulatorPort}} \${Const|SimulatorPort}"
+    echo 'SimulatorPort = "'"$SIMULATORPORT"'"'
+    echo " "	
+    echo "; If this is the robust configuration, the robust database is entered here."
+    echo "; If this is the OpenSim configuration, the OpenSim database is entered here."
+    echo " "
+    echo "; The Database \${Const|MysqlDatabase}"
+    echo 'MysqlDatabase = "'"$MYSQLDATABASE"'"'
+    echo " "
+    echo "; The User \${Const|MysqlUser}"
+    echo 'MysqlUser = "'"$MYSQLUSER"'"'
+    echo " "
+    echo "; The Password \${Const|MysqlPassword}"
+    echo 'MysqlPassword = "'"$MYSQLPASSWORD"'"'
+    echo " "
+    echo "; The Region Welcome \${Const|StartRegion}"
+    echo 'StartRegion = "'"$STARTREGION"'"'
+    echo " "
+    echo ";# Grid name \${Const|Simulatorgridname}"
+    echo 'Simulatorgridname = "'"$SIMULATORGRIDNAME"'"'
+    echo " "
+    echo "; The Simulator grid nick \${Const|Simulatorgridnick}"
+    echo 'Simulatorgridnick = "'"$SIMULATORGRIDNICK"'"'
+    echo " "
+    echo " "
+    } > "$CONSTINI"
+}
+
+### ! Region Konfigurationen schreiben
+# regionconfig REGIONSNAME STARTLOCATION SIZE INTERNALPORT REGIONSINI
+function regionconfig() {
+
+    REGIONSNAME=$1
+    STARTLOCATION=$2
+    SIZE=$3
+    INTERNALPORT=$4
+    REGIONSINI=$5
+    
+    UUID=$(uuidgen)
+
+    {
+    echo "[$REGIONSNAME]"
+    echo "RegionUUID = $UUID"
+    echo "Location = $STARTLOCATION"
+    echo "SizeX = $SIZE"
+    echo "SizeY = $SIZE"
+    echo "SizeZ = $SIZE"
+    echo "InternalAddress = 0.0.0.0"
+    echo "InternalPort = $INTERNALPORT"
+    echo "ResolveAddress = False"
+    echo "ExternalHostName = $BASEHOSTNAME"
+    echo "MaptileStaticUUID = $UUID"
+    echo "DefaultLanding = <128,128,25>"
+    echo ";MaxPrimsPerUser = -1"
+    echo ";ScopeID = $UUID"
+    echo ";RegionType = Mainland"
+    echo ";MapImageModule = Warp3DImageModule"
+    echo ";TextureOnMapTile = true"
+    echo ";DrawPrimOnMapTile = true"
+    echo ";GenerateMaptiles = true"
+    echo ";MaptileRefresh = 0"
+    echo ";MaptileStaticFile = water-logo-info.png"
+    echo ";MasterAvatarFirstName = John"
+    echo ";MasterAvatarLastName = Doe"
+    echo ";MasterAvatarSandboxPassword = passwd" 
+    } > "$REGIONSINI"
+}
+
+### ! FlotsamCache Konfigurationen schreiben
+# FlotsamCache.ini - flotsamconfig FLOTSAMCACHEINI
+function flotsamconfig() {
+
+    FLOTSAMCACHEINI=$1
+
+    {
+    echo "[AssetCache]"
+    echo "CacheDirectory = ./assetcache"
+    echo "LogLevel = 0"
+    echo "HitRateDisplay = 100"
+    echo "MemoryCacheEnabled = false"
+    echo "UpdateFileTimeOnCacheHit = false"
+    echo "NegativeCacheEnabled = true"
+    echo "NegativeCacheTimeout = 120"
+    echo "NegativeCacheSliding = false"
+    echo "FileCacheEnabled = true"
+    echo "MemoryCacheTimeout = .016 ; one minute"
+    echo "FileCacheTimeout = 48"
+    echo "FileCleanupTimer = \"24.0\""
+    } > "$FLOTSAMCACHEINI"
+}
+
+### ! osslEnableconfig Konfigurationen schreiben
+# osslEnable.ini.example
+function osslEnableconfig() {
+
+    OSSLENABLEINI=$1
+
+    {
+    echo "[OSSL]"
+    echo "  AllowOSFunctions = true"
+    echo "  AllowMODFunctions = true"
+    echo "  AllowLightShareFunctions = true"
+    echo "  PermissionErrorToOwner = true"
+    echo "  OSFunctionThreatLevel = Moderate"
+    echo '  osslParcelO = "PARCEL_OWNER,"'
+    echo '  osslParcelOG = "PARCEL_GROUP_MEMBER,PARCEL_OWNER,"'
+    echo "  osslNPC = \${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    echo "     "
+    echo "  Allow_osGetAgents =               \${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    echo "  Allow_osGetAvatarList =           \${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    echo "  Allow_osGetNPCList =              \${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    echo "  Allow_osNpcGetOwner =             \${OSSL|osslNPC}"
+    echo "  Allow_osSetSunParam =             ESTATE_MANAGER,ESTATE_OWNER"
+    echo "  Allow_osTeleportOwner =           \${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    echo "  Allow_osSetEstateSunSettings =    ESTATE_MANAGER,ESTATE_OWNER"
+    echo "  Allow_osSetRegionSunSettings =    ESTATE_MANAGER,ESTATE_OWNER"
+    echo "  Allow_osEjectFromGroup =          \${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    echo "  Allow_osForceBreakAllLinks =      \${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    echo "  Allow_osForceBreakLink =          \${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    echo "  Allow_osGetWindParam =            true"
+    echo "  Allow_osInviteToGroup =           \${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    echo "  Allow_osReplaceString =           true"
+    echo "  Allow_osSetDynamicTextureData =       \${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    echo "  Allow_osSetDynamicTextureDataFace =   \${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    echo "  Allow_osSetDynamicTextureDataBlend =  \${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    echo "  Allow_osSetDynamicTextureDataBlendFace = \${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    echo "  Allow_osSetParcelMediaURL =       \${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    echo "  Allow_osSetParcelMusicURL =       \${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    echo "  Allow_osSetParcelSIPAddress =     \${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    echo "  Allow_osSetPrimFloatOnWater =     true"
+    echo "  Allow_osSetWindParam =            \${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    echo "  Allow_osTerrainFlush =            ESTATE_MANAGER,ESTATE_OWNER"
+    echo "  Allow_osUnixTimeToTimestamp =     true"
+    echo "  Allow_osAvatarName2Key =          \${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    echo "  Allow_osFormatString =            true"
+    echo "  Allow_osKey2Name =                \${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    echo "  Allow_osListenRegex =             true"
+    echo "  Allow_osLoadedCreationDate =      \${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    echo "  Allow_osLoadedCreationID =        \${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    echo "  Allow_osLoadedCreationTime =      \${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    echo "  Allow_osMessageObject =           \${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    echo "  Allow_osRegexIsMatch =            true"
+    echo "  Allow_osGetAvatarHomeURI =        \${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    echo "  Allow_osNpcSetProfileAbout =      \${OSSL|osslNPC}"
+    echo "  Allow_osNpcSetProfileImage =      \${OSSL|osslNPC}"
+    echo "  Allow_osDie =                     \${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    echo "  Allow_osDetectedCountry =         \${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    echo "  Allow_osDropAttachment =          \${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    echo "  Allow_osDropAttachmentAt =        \${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    echo "  Allow_osGetAgentCountry =         \${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    echo "  Allow_osGetGridCustom =           \${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    echo "  Allow_osGetGridGatekeeperURI =    \${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    echo "  Allow_osGetGridHomeURI =          \${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    echo "  Allow_osGetGridLoginURI =         \${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    echo "  Allow_osGetGridName =             true"
+    echo "  Allow_osGetGridNick =             true"
+    echo "  Allow_osGetNumberOfAttachments =  \${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    echo "  Allow_osGetRegionStats =          \${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    echo "  Allow_osGetSimulatorMemory =      \${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    echo "  Allow_osGetSimulatorMemoryKB =    \${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    echo "  Allow_osMessageAttachments =      \${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    echo "  Allow_osReplaceAgentEnvironment = \${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    echo "  Allow_osSetSpeed =                \${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    echo "  Allow_osSetOwnerSpeed =           \${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    echo "  Allow_osRequestURL =              \${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    echo "  Allow_osRequestSecureURL =        \${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    echo "  Allow_osCauseDamage =             \${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    echo "  Allow_osCauseHealing =            \${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    echo "  Allow_osSetHealth =               \${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    echo "  Allow_osSetHealRate =             \${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    echo "  Allow_osForceAttachToAvatar =     \${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    echo "  Allow_osForceAttachToAvatarFromInventory = \${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    echo "  Allow_osForceCreateLink =         \${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    echo "  Allow_osForceDropAttachment =     \${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    echo "  Allow_osForceDropAttachmentAt =   \${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    echo "  Allow_osGetLinkPrimitiveParams =  \${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    echo "  Allow_osGetPhysicsEngineType =    true"
+    echo "  Allow_osGetRegionMapTexture =     \${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    echo "  Allow_osGetScriptEngineName =     true"
+    echo "  Allow_osGetSimulatorVersion =     true"
+    echo "  Allow_osMakeNotecard =            \${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    echo "  Allow_osMatchString =             true"
+    echo "  Allow_osNpcCreate =               \${OSSL|osslNPC}"
+    echo "  Allow_osNpcGetPos =               \${OSSL|osslNPC}"
+    echo "  Allow_osNpcGetRot =               \${OSSL|osslNPC}"
+    echo "  Allow_osNpcLoadAppearance =       \${OSSL|osslNPC}"
+    echo "  Allow_osNpcMoveTo =               \${OSSL|osslNPC}"
+    echo "  Allow_osNpcMoveToTarget =         \${OSSL|osslNPC}"
+    echo "  Allow_osNpcPlayAnimation =        \${OSSL|osslNPC}"
+    echo "  Allow_osNpcRemove =               \${OSSL|osslNPC}"
+    echo "  Allow_osNpcSaveAppearance =       \${OSSL|osslNPC}"
+    echo "  Allow_osNpcSay =                  \${OSSL|osslNPC}"
+    echo "  Allow_osNpcSayTo =                \${OSSL|osslNPC}"
+    echo "  Allow_osNpcSetRot =               \${OSSL|osslNPC}"
+    echo "  Allow_osNpcShout =                \${OSSL|osslNPC}"
+    echo "  Allow_osNpcSit =                  \${OSSL|osslNPC}"
+    echo "  Allow_osNpcStand =                \${OSSL|osslNPC}"
+    echo "  Allow_osNpcStopAnimation =        \${OSSL|osslNPC}"
+    echo "  Allow_osNpcStopMoveToTarget =     \${OSSL|osslNPC}"
+    echo "  Allow_osNpcTouch =                \${OSSL|osslNPC}"
+    echo "  Allow_osNpcWhisper =              \${OSSL|osslNPC}"
+    echo "  Allow_osOwnerSaveAppearance =     \${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    echo "  Allow_osParcelJoin =              ESTATE_MANAGER,ESTATE_OWNER"
+    echo "  Allow_osParcelSubdivide =         ESTATE_MANAGER,ESTATE_OWNER"
+    echo "  Allow_osRegionRestart =           ESTATE_MANAGER,ESTATE_OWNER"
+    echo "  Allow_osRegionNotice =            ESTATE_MANAGER,ESTATE_OWNER"
+    echo "  Allow_osSetProjectionParams =     \${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    echo "  Allow_osSetRegionWaterHeight =    ESTATE_MANAGER,ESTATE_OWNER"
+    echo "  Allow_osSetTerrainHeight =        ESTATE_MANAGER,ESTATE_OWNER"
+    echo "  Allow_osSetTerrainTexture =       ESTATE_MANAGER,ESTATE_OWNER"
+    echo "  Allow_osSetTerrainTextureHeight = ESTATE_MANAGER,ESTATE_OWNER"
+    echo "  Allow_osAgentSaveAppearance =     ESTATE_MANAGER,ESTATE_OWNER"
+    echo "  Allow_osAvatarPlayAnimation =     \${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    echo "  Allow_osAvatarStopAnimation =     \${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    echo "  Allow_osForceAttachToOtherAvatarFromInventory = \${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    echo "  Allow_osForceDetachFromAvatar =   \${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    echo "  Allow_osForceOtherSit =           \${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    echo "  Allow_osGetNotecard =             \${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    echo "  Allow_osGetNotecardLine =         \${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    echo "  Allow_osGetNumberOfNotecardLines = \${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    echo "  Allow_osSetDynamicTextureURL =    ESTATE_MANAGER,ESTATE_OWNER"
+    echo "  Allow_osSetDynamicTextureURLBlend = ESTATE_MANAGER,ESTATE_OWNER"
+    echo "  Allow_osSetDynamicTextureURLBlendFace = ESTATE_MANAGER,ESTATE_OWNER"
+    echo "  Allow_osSetRot  =                 \${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    } > "$OSSLENABLEINI"
+}
+
+# MoneyServer.ini
+### ! moneyconfig DATABASE USERNAME PASSWORD MONEYINI
+function moneyconfig() {
+
+    MONEYINI=$1
+
+    {
+    echo "[Startup]"
+    echo "[MySql]"
+    echo 'hostname = "localhost"'
+    echo 'database = "'"$MYSQLDATABASE"'"'
+    echo 'username = "'"$MYSQLUSER"'"'
+    echo 'password = "'"$MYSQLPASSWORD"'"'
+    echo 'pooling  = "true"'
+    echo 'port = "3306"'
+    echo 'MaxConnection = "40"'
+    echo "[MoneyServer]"
+    echo 'ServerPort = "8008"'
+    echo 'DefaultBalance = "1000"'
+    echo 'EnableAmountZero = "true"'
+    echo 'BankerAvatar = "00000000-0000-0000-0000-000000000000"'
+    echo 'EnableForceTransfer = "true"'
+    echo 'EnableScriptSendMoney = "true"'
+    echo 'MoneyScriptAccessKey  = "123456789"'
+    echo 'MoneyScriptIPaddress  = "'"$BASEHOSTNAME"'"'
+    echo 'EnableHGAvatar = "true"'
+    echo 'EnableGuestAvatar = "true"'
+    echo 'HGAvatarDefaultBalance = "1000"'
+    echo 'GuestAvatarDefaultBalance = "1000"'
+    #shellcheck disable=SC2016
+    echo 'BalanceMessageSendGift     = "Sent Gift L${0} to {1}."'
+    #shellcheck disable=SC2016
+    echo 'BalanceMessageReceiveGift  = "Received Gift L${0} from {1}."'
+    #shellcheck disable=SC2016
+    echo 'BalanceMessagePayCharge    = "Paid the Money L${0} for creation."'
+    #shellcheck disable=SC2016
+    echo 'BalanceMessageBuyObject    = "Bought the Object {2} from {1} by L${0}."'
+    #shellcheck disable=SC2016
+    echo 'BalanceMessageSellObject   = "{1} bought the Object {2} by L${0}."'
+    #shellcheck disable=SC2016
+    echo 'BalanceMessageLandSale     = "Paid the Money L${0} for Land."'
+    #shellcheck disable=SC2016
+    echo 'BalanceMessageScvLandSale  = "Paid the Money L${0} for Land."'
+    #shellcheck disable=SC2016
+    echo 'BalanceMessageGetMoney     = "Got the Money L${0} from {1}."'
+    #shellcheck disable=SC2016
+    echo 'BalanceMessageBuyMoney     = "Bought the Money L${0}."'
+    #shellcheck disable=SC2016
+    echo 'BalanceMessageRollBack     = "RollBack the Transaction: L${0} from/to {1}."'
+    #shellcheck disable=SC2016
+    echo 'BalanceMessageSendMoney    = "Paid the Money L${0} to {1}."'
+    #shellcheck disable=SC2016
+    echo 'BalanceMessageReceiveMoney = "Received L${0} from {1}."'
+    echo "[Certificate]"
+    echo 'CheckServerCert = "false"'
+    } > "$MONEYINI"
+}
+
+### !  osstruktur, legt die Verzeichnisstruktur fuer OpenSim an. # Aufruf: opensim.sh osstruktur ersteSIM letzteSIM
+# Beispiel: ./opensim.sh osstruktur 1 10 - erstellt ein Grid Verzeichnis fuer 10 Simulatoren inklusive der $SIMDATEI.
+function osconfigstruktur() {
+    # Ist die /"$STARTVERZEICHNIS"/$SIMDATEI vorhanden dann zuerst löschen
+    if [ ! -f "/$STARTVERZEICHNIS/$SIMDATEI" ]; then
+        #rm /"$STARTVERZEICHNIS"/$SIMDATEI
+        echo "$SIMDATEI Datei ist noch nicht vorhanden"
+    else
+        echo "Lösche vorhandene $SIMDATEI"
+        rm /"$STARTVERZEICHNIS"/$SIMDATEI
+    fi
+
+    # Ist die Datei CONFIGPFAD="OpenSimConfig"
+	if [ ! -f "/$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/" ]; then
+		echo "Lege robust an im Verzeichnis $ROBUSTVERZEICHNIS an"
+		mkdir -p /"$STARTVERZEICHNIS"/$ROBUSTVERZEICHNIS/bin/config-include
+        cp "$AKTUELLEVERZ"/$CONFIGPFAD/config-include/GridCommon.ini /"$STARTVERZEICHNIS"/$ROBUSTVERZEICHNIS/bin/config-include
+        cp "$AKTUELLEVERZ"/$CONFIGPFAD/Robust.ini /"$STARTVERZEICHNIS"/$ROBUSTVERZEICHNIS/bin
+        
+        CONSTINI="/$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/config-include/Const.ini"
+        constconfig "$BASEHOSTNAME" "$PRIVURL" "$MONEYPORT" "$SIMULATORPORT" "$MYSQLDATABASE" "$MYSQLUSER" "$MYSQLPASSWORD" "$STARTREGION" "$SIMULATORGRIDNAME" "$SIMULATORGRIDNICK" "$CONSTINI"
+
+        moneyconfig "/$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/MoneyServer.ini"
+
+	else
+		log error "Verzeichnis $ROBUSTVERZEICHNIS existiert bereits"
+	fi
+
+
+	for ((i = 1; i <= $2; i++)); do
+		echo "Ich lege gerade sim$i an!"
+		mkdir -p /"$STARTVERZEICHNIS"/sim"$i"/bin/config-include
+        mkdir -p /"$STARTVERZEICHNIS"/sim"$i"/bin/Regions
+        cp "$AKTUELLEVERZ"/$CONFIGPFAD/config-include/GridCommon.ini /"$STARTVERZEICHNIS"/sim"$i"/bin/config-include
+        cp "$AKTUELLEVERZ"/$CONFIGPFAD/OpenSim.ini /"$STARTVERZEICHNIS"/sim"$i"/bin
+        cd /"$STARTVERZEICHNIS"/sim"$i"/bin/config-include || exit # Beenden wenn Verzeichnis nicht vorhanden ist.
+        CONSTINI="/$STARTVERZEICHNIS/sim$i/bin/config-include/Const.ini"
+        ZWISCHENSPEICHERMSDB=$MYSQLDATABASE
+        ZWISCHENSPEICHERSP=$SIMULATORPORT
+        LOCALX=5000; LOCALY=5000; LANDGOESSE=256;
+
+        constconfig "$BASEHOSTNAME" "$PRIVURL" "$MONEYPORT" "$((SIMULATORPORT + "$i"))" "$MYSQLDATABASE$i" "$MYSQLUSER" "$MYSQLPASSWORD" "$STARTREGION" "$SIMULATORGRIDNAME" "$SIMULATORGRIDNICK" "$CONSTINI"
+
+        if [ "$SKRIPTAKTIV" = "nein" ]; then
+        osslEnableconfig "/$STARTVERZEICHNIS/sim$i/bin/config-include/osslEnable.ini.Beispiel"
+        fi
+
+        if [ "$SKRIPTAKTIV" = "ja" ]; then
+        osslEnableconfig "/$STARTVERZEICHNIS/sim$i/bin/config-include/osslEnable.ini"
+        fi
+
+        if [ "$REGIONAKTIV" = "nein" ]; then
+        regionconfig "sim$i" "$((LOCALX + "$i")),$((LOCALY + "$i"))" "$LANDGOESSE" "$((9100 + "$i"))" "/$STARTVERZEICHNIS/sim$i/bin/Regions/Regions.ini.Beispiel"
+        fi
+
+        if  [ "$REGIONAKTIV" = "ja" ]; then
+        regionconfig "sim$i" "$((LOCALX + "$i")),$((LOCALY + "$i"))" "$LANDGOESSE" "$((9100 + "$i"))" "/$STARTVERZEICHNIS/sim$i/bin/Regions/Regions.ini"
+        fi        
+
+        flotsamconfig "/$STARTVERZEICHNIS/sim$i/bin/config-include/FlotsamCache.ini"
+
+        echo "Schreibe sim$i in $SIMDATEI, legen sie bitte Datenbank $MYSQLDATABASE an."
+		# xargs sollte leerzeichen entfernen.
+		printf 'sim'"$i"'\t%s\n' | xargs >>/"$STARTVERZEICHNIS"/$SIMDATEI
+        MYSQLDATABASE=$ZWISCHENSPEICHERMSDB # Zuruecksetzen sonst wird falsch addiert.
+        SIMULATORPORT=$ZWISCHENSPEICHERSP # Zuruecksetzen sonst wird falsch addiert.
+        LOCALX=5000; LOCALY=5000; # Zuruecksetzen sonst wird falsch addiert.
+        # Restliche Dateien kopieren
+        
+	done
+    echo "##################################################################"
+	return 0
+}
+
+function configabfrage(){
+	### Eintragungen uebersicht!
+	# BaseHostname = "MyGrid.com"
+	# BaseURL = http://${Const|BaseHostname}
+	# PublicPort = "8002"
+	# PrivURL = ${Const|BaseURL}
+	# PrivatePort = "8003"
+	# MoneyPort = "8008"
+	# SimulatorPort = "9010"
+	# MysqlDatabase = "MysqlDatabase"
+	# MysqlUser = "MysqlUser"
+	# MysqlPassword = "MysqlPassword"
+	# StartRegion = "Welcome"
+	# Simulatorgridname = "MyGrid"
+	# Simulatorgridnick = "MG"
+
+	# Ausgabe Kopfzeilen
+	echo "$SCRIPTNAME Version $VERSION"
+	echo "Ihre aktuelle externe IP ist $AKTUELLEIP"
+	echo " "
+	echo "##################################################################"
+	echo "########### ABBRUCH MIT DER TASTENKOMBINATION ####################"
+	echo "####################  STRG + C  ##################################"
+	echo "##################################################################"
+	echo "##     Die Werte in den [Klammern] sind vorschläge              ##"
+	echo "##     und können mit Enter übernommen werden.                  ##"
+	echo "##################################################################"
+	echo " "
+	echo "Wieviele Konfigurationen darf ich ihnen schreiben? [5]"
+	read -r CONFIGANZAHL
+	if [ "$CONFIGANZAHL" = "" ]; then CONFIGANZAHL="5"; fi
+	echo "Ihre Anzahl ist $CONFIGANZAHL"
+	echo "##################################################################"
+
+	echo "Wohin darf ich diese schreiben? [$STARTVERZEICHNIS]"
+	read -r VERZEICHNISABFRAGE
+	if [ "$VERZEICHNISABFRAGE" = "" ]; then echo "Ihr Konfigurationsordner ist $STARTVERZEICHNIS"; else STARTVERZEICHNIS="$VERZEICHNISABFRAGE";fi
+	echo "##################################################################"
+
+	echo "Ihre Server Adresse? [$AKTUELLEIP]"
+	read -r BASEHOSTNAME
+	if [ "$BASEHOSTNAME" = "" ]; then BASEHOSTNAME="$AKTUELLEIP"; fi
+	echo "Ihre Server Adresse ist $BASEHOSTNAME"
+	echo "##################################################################"
+
+	echo "Ihr SimulatorPort startet bei: [9010]"
+	read -r SIMULATORPORT
+	if [ "$SIMULATORPORT" = "" ]; then SIMULATORPORT="9010"; fi
+	echo "Ihr SimulatorPort startet bei: $SIMULATORPORT"
+	echo "##################################################################"
+
+	echo "Bitte geben sie den Datenbanknamen an [opensim]:"
+	read -r MYSQLDATABASE
+	if [ "$MYSQLDATABASE" = "" ]; then MYSQLDATABASE="opensim"; fi
+	echo "Ihr Datenbanknamen lautet: $MYSQLDATABASE"
+	echo "##################################################################"
+
+	echo "Bitte geben sie den Benutzernamen ihrer Datenbank an [opensim]:"
+	read -r MYSQLUSER
+	if [ "$MYSQLUSER" = "" ]; then MYSQLUSER="opensim"; fi
+	echo "Ihr Datenbank Benutzername lautet: $MYSQLUSER"
+	echo "##################################################################"
+
+	echo "Bitte geben sie das Passwort ihrer Datenbank an [opensim]:"
+	read -r MYSQLPASSWORD
+	if [ "$MYSQLPASSWORD" = "" ]; then MYSQLPASSWORD="opensim"; fi
+	echo "Ihr Passwort ihrer Datenbank lautet: ********"
+	echo "##################################################################"
+
+	echo "Bitte geben sie den Namen ihrer Startregion an [Welcome]:"
+	read -r STARTREGION
+	if [ "$STARTREGION" = "" ]; then STARTREGION="Welcome"; fi
+	echo "Der Name ihrer Startregion lautet: $STARTREGION"
+	echo "##################################################################"
+
+	echo "Bitte geben sie den Namen ihres Grids an [MyGrid]:"
+	read -r SIMULATORGRIDNAME
+	if [ "$SIMULATORGRIDNAME" = "" ]; then SIMULATORGRIDNAME="MyGrid"; fi
+	echo "Der Name ihrers Grids lautet: $SIMULATORGRIDNAME"
+	echo "##################################################################"
+
+	echo "Bitte geben sie den Grid-Nickname an [MG]:"
+	read -r SIMULATORGRIDNICK
+	if [ "$SIMULATORGRIDNICK" = "" ]; then SIMULATORGRIDNICK="MG"; fi
+	echo "Der Grid-Nickname lautet: $SIMULATORGRIDNICK"
+	echo "##################################################################"
+
+	echo "Möchten sie die Regionskonfigurationen direkt Aktivieren ja/nein [nein]:"
+	read -r REGIONAKTIV
+	if [ "$REGIONAKTIV" = "" ]; then REGIONAKTIV="nein"; fi
+	echo "Sie haben ausgewählt: $REGIONAKTIV"
+	echo "##################################################################"
+
+	echo "Möchten sie die Skriptkonfigurationen Aktivieren ja/nein [nein]:"
+	read -r SKRIPTAKTIV
+	if [ "$SKRIPTAKTIV" = "" ]; then SKRIPTAKTIV="nein"; fi
+	echo "Sie haben ausgewählt: $SKRIPTAKTIV"
+	echo "##################################################################"
+
+	# Weitere Auswertungen
+	if [ "$PRIVURL" = "" ]; then PRIVURL="\${Const|BaseURL}"; fi
+	if [ "$MONEYPORT" = "" ]; then MONEYPORT="8008"; fi
+
+	osconfigstruktur 1 "$CONFIGANZAHL"
+}
+
 
 ###########################################################################
 # Samples
@@ -9675,6 +9303,8 @@ function dateimenu() {
 			"Map Karten loeschen" ""
 			"Asset Cache loeschen" ""
 			"Asset loeschen" ""
+			"--------------------------" ""
+			"Grid Konfigurationen erstellen" ""
 			"----------Menu------------" ""
 			"Hauptmenu" ""
 			"Avatarmennu" ""
@@ -9706,6 +9336,8 @@ function dateimenu() {
 		if [[ $dauswahl = "Map Karten loeschen" ]]; then automapdel; fi		
 		if [[ $dauswahl = "Asset loeschen" ]]; then menuassetdel; fi
 		if [[ $dauswahl = "Asset Cache loeschen" ]]; then autoassetcachedel; fi
+		# -----
+		if [[ $dauswahl = "Grid Konfigurationen erstellen" ]]; then configabfrage; fi		
 		# -----
 		if [[ $dauswahl = "Hauptmenu" ]]; then hauptmenu; fi
 		if [[ $dauswahl = "mySQLmenu" ]]; then mySQLmenu; fi
@@ -10362,6 +9994,7 @@ case $KOMMANDO in
 	db_backuptabellentypen) db_backuptabellentypen "$2" "$3" "$4" ;;
 	senddata) senddata "$2" "$3" "$4" ;;
 	gridcachedelete) gridcachedelete ;;
+	configabfrage) configabfrage ;;
 	*) hauptmenu ;;
 esac
 vardel
