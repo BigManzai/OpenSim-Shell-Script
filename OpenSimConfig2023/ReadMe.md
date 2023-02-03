@@ -9,27 +9,25 @@ Hiermit wird das Erstellen eines Grid´s einfacher und schneller,
 
 da sich nur noch 2 Punkte für jeden weiteren OpenSimulator ändern.
 
-## Jetzt mit automatischen Linux Bash Konfigurator
+# Automatischer Linux Bash Konfigurator
 
-Der Konfigurator erstellt mehrfach Verzeichnisse und die Konfigurationen.
+Der Konfigurator erstellt Multi Verzeichnisse inklusive den Konfigurationen.
+Dieses Skript legt folgende Verzeichnisse und Dateien an:
 
-## Dieses Skript legt folgende Verzeichnisse und Dateien an:
-
-### Verzeichnis /robust/bin
-#### Robust.ini
-#### MoneyServer.ini
-### Verzeichnis robust/bin/config-include
-#### const.ini
-#### GridCommon.ini
-
-### Verzeichnis /simX/bin
-#### OpenSim.ini
-### Verzeichnis /simX/bin/config-include
-#### Const.ini
-#### FlotsamCache.ini
-#### GridCommon.ini
-#### osslEnable.ini
-### Verzeichnis /simX/bin/Regions
-#### Regions.ini
+Verzeichnis /robust/bin
+* Robust.ini
+* MoneyServer.ini
+Verzeichnis robust/bin/config-include
+* const.ini
+* GridCommon.ini
+Verzeichnis /simX/bin
+* OpenSim.ini
+Verzeichnis /simX/bin/config-include
+* Const.ini
+* FlotsamCache.ini
+* GridCommon.ini
+* osslEnable.ini
+Verzeichnis /simX/bin/Regions
+* Regions.ini
 
 Mit den Optionen osslEnable.ini und Regions.ini zu aktivieren oder zu deaktivieren(Standard).
