@@ -123,9 +123,10 @@ Bisher sind nur Funktionen im Menü die maximal 1 Übergabewert voraussetzen.
      oder
      sudo apt-get install dialog
 
-
 ## TODO und Informationen
-     configure.sh eine teilautomatisierte konfiguration aller im OpenSimulator enthaltenden Konfigurationsdateien.
-     Ich habe mich von Diva Configure.exe inspirieren lassen, nur werden hier alle Konfigurationen bearbeitet.
-     OpenSim Standalone, OpenSim Standalone Hypergrid, OpenSim Robust (Grid), OpenSim Robust Hypergrid (Grid Hypergrid).
-     Configure befindet sich im Entwurfs- und frühen Teststadium.
+gridcachedelete
+Aufruf: ./opensim.sh gridcachedelete
+Cache Dateien löschen aus einem Grid, so werden alte ungenutzte Dateien bereinigt.
+Löscht die Verzeichnisse: assetcache, maptiles, ScriptEngines aus den Simulatoren.
+Und Aus Robust: bakes, maptiles
+Es werden hierdurch neue leere Verzeichnisse angelegt und befüllt.
