@@ -1,19 +1,4 @@
-### Einstellungen VERSION="V0.79.664"
-
-: "${DIALOG=dialog}"
-: "${DIALOG_CANCEL=1}"
-: "${DIALOG_ESC=255}"
-
-# : "${DIALOG_OK=0}"
-# : "${DIALOG_HELP=2}"
-# : "${DIALOG_EXTRA=3}"
-# : "${DIALOG_ITEM_HELP=4}"
-# : "${SIG_NONE=0}"
-# : "${SIG_HUP=1}"
-# : "${SIG_INT=2}"
-# : "${SIG_QUIT=3}"
-# : "${SIG_KILL=9}"
-# : "${SIG_TERM=15}"
+### Einstellungen VERSION="V0.80.721"
 
 ## Das Startverzeichnis home oder opt zum Beispiel.
 	STARTVERZEICHNIS="opt"
@@ -52,7 +37,7 @@
 	linefontcolor=7;    linebaggroundcolor=0;
 
 	ScreenLogLevel=0; # ScreenLogLevel=0 nichts machen, bis ScreenLogLevel=5 Funktionsnamen ausgeben.
-	LOGWRITE="yes" # yes/no
+	LOGWRITE="no" # yes/no
 	logfilename="_multitool"
 	line="############################################################";
 	
@@ -114,6 +99,7 @@
 	# opensim-0.9.2.2Dev-4-g5e9b3b4.zip
 	OSVERSION="opensim-0.9.2.2Dev-"
 	AUTOCLEANALL="yes"
+	GRIDCACHECLEAR="yes"
 
 ## OpenSim Downloads
 	LINK01="http://opensimulator.org/dist/OpenSim-LastAutoBuild.zip"

@@ -54,14 +54,14 @@
 # ! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 # ! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-# * Status 05.01.2023 317 Funktionen.
+# * Status 05.01.2023 318 Funktionen.
 
 # # Visual Studio Code # ShellCheck # shellman # Better Comments # outline map #
 
 #### ? Einstellungen ####
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe
-VERSION="V0.80.720" # opensimMULTITOOL Versionsausgabe
+VERSION="V0.80.721" # opensimMULTITOOL Versionsausgabe
 #clear # Bildschirmausgabe loeschen.
 #reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
@@ -3223,6 +3223,24 @@ function allclean() {
 		log error "Dateien in $ALLCLEANVERZEICHNIS nicht gefunden"
 	fi
 	return 0
+}
+
+### ! gridcachedelete, loescht alle Cache Dateien die sich im laufe der Zeit angesammelt haben.
+# GRIDCACHECLEAR="yes"
+function gridcachedelete() {
+	log line
+	log warn "Lösche Cache Dateien aus dem gesamten Grid!"
+	makeverzeichnisliste
+	sleep 2
+	# Simualtoren
+	for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do	
+	rm -r /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/assetcache
+	rm -r /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/maptiles
+	rm -r /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/ScriptEngines
+	done
+	# Robust
+	rm -r /$STARTVERZEICHNIS/robust/bin/maptiles
+	rm -r /$STARTVERZEICHNIS/robust/bin/bakes
 }
 
 ### !  autoallclean, loescht Log, dll, so, exe, aot Dateien fuer einen saubere neue installation, mit Robust.
@@ -7932,6 +7950,8 @@ function osupgrade() {
 
 	log info "Das Grid wird jetzt upgegradet"
 	autostop
+	# Cache loeschen
+	if [ "$GRIDCACHECLEAR" = "yes" ]; then gridcachedelete; fi
 	# Kopieren.
 	log line
 	log info "Neue Version Installieren"
@@ -10341,6 +10361,7 @@ case $KOMMANDO in
 	db_gridlist) db_gridlist "$2" "$3" "$4" ;;
 	db_backuptabellentypen) db_backuptabellentypen "$2" "$3" "$4" ;;
 	senddata) senddata "$2" "$3" "$4" ;;
+	gridcachedelete) gridcachedelete ;;
 	*) hauptmenu ;;
 esac
 vardel
