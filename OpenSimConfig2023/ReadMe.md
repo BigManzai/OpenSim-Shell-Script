@@ -22,7 +22,7 @@ Dieses Skript legt folgende Verzeichnisse und Dateien an:
 * GridCommon.ini
 ## Verzeichnis /simX/bin
 * OpenSim.ini
-## erzeichnis /simX/bin/config-include
+## Verzeichnis /simX/bin/config-include
 * Const.ini
 * FlotsamCache.ini
 * GridCommon.ini
