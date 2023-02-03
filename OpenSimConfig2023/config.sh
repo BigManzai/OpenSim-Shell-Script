@@ -124,9 +124,9 @@ echo "##################################################################"
 if [ "$PRIVURL" = "" ]; then PRIVURL="\${Const|BaseURL}"; fi
 if [ "$MONEYPORT" = "" ]; then MONEYPORT="8008"; fi
 
-### ! configausgabe
-function configausgabe() {
-{
+### ! constconfig
+function constconfig() {
+
     BASEHOSTNAME=$1
     PRIVURL=$2
     MONEYPORT=$3
@@ -139,6 +139,7 @@ function configausgabe() {
     SIMULATORGRIDNICK=${10}
     CONSTINI=${11}
 
+    {
     echo '[Const]'
     echo ";# {BaseHostname} {} {BaseHostname} {example.com 127.0.0.1} 127.0.0.1"
     echo 'BaseHostname = "'"$BASEHOSTNAME"'"'
@@ -193,7 +194,8 @@ function configausgabe() {
 
 ### ! Region Konfigurationen schreiben
 # regionconfig REGIONSNAME STARTLOCATION SIZE INTERNALPORT REGIONSINI
-function regionconfig {
+function regionconfig() {
+
     REGIONSNAME=$1
     STARTLOCATION=$2
     SIZE=$3
@@ -230,10 +232,35 @@ function regionconfig {
     } > "$REGIONSINI"
 }
 
+### ! FlotsamCache Konfigurationen schreiben
+# FlotsamCache.ini - flotsamconfig FLOTSAMCACHEINI
+function flotsamconfig() {
+
+    FLOTSAMCACHEINI=$1
+
+    {
+    echo "[AssetCache]"
+    echo "CacheDirectory = ./assetcache"
+    echo "LogLevel = 0"
+    echo "HitRateDisplay = 100"
+    echo "MemoryCacheEnabled = false"
+    echo "UpdateFileTimeOnCacheHit = false"
+    echo "NegativeCacheEnabled = true"
+    echo "NegativeCacheTimeout = 120"
+    echo "NegativeCacheSliding = false"
+    echo "FileCacheEnabled = true"
+    echo "MemoryCacheTimeout = .016 ; one minute"
+    echo "FileCacheTimeout = 48"
+    echo "FileCleanupTimer = \"24.0\""
+    } > "$FLOTSAMCACHEINI"
+}
+
 ### ! osslEnableconfig Konfigurationen schreiben
 # osslEnable.ini.example
-function osslEnableconfig {
+function osslEnableconfig() {
+
     OSSLENABLEINI=$1
+
     {
     echo "[OSSL]"
     echo "  AllowOSFunctions = true"
@@ -364,6 +391,64 @@ function osslEnableconfig {
     } > "$OSSLENABLEINI"
 }
 
+# MoneyServer.ini
+### ! moneyconfig DATABASE USERNAME PASSWORD MONEYINI
+function moneyconfig() {
+
+    MONEYINI=$1
+
+    {
+    echo "[Startup]"
+    echo "[MySql]"
+    echo 'hostname = "localhost"'
+    echo 'database = "'"$MYSQLDATABASE"'"'
+    echo 'username = "'"$MYSQLUSER"'"'
+    echo 'password = "'"$MYSQLPASSWORD"'"'
+    echo 'pooling  = "true"'
+    echo 'port = "3306"'
+    echo 'MaxConnection = "40"'
+    echo "[MoneyServer]"
+    echo 'ServerPort = "8008"'
+    echo 'DefaultBalance = "1000"'
+    echo 'EnableAmountZero = "true"'
+    echo 'BankerAvatar = "00000000-0000-0000-0000-000000000000"'
+    echo 'EnableForceTransfer = "true"'
+    echo 'EnableScriptSendMoney = "true"'
+    echo 'MoneyScriptAccessKey  = "123456789"'
+    echo 'MoneyScriptIPaddress  = "'"$BASEHOSTNAME"'"'
+    echo 'EnableHGAvatar = "true"'
+    echo 'EnableGuestAvatar = "true"'
+    echo 'HGAvatarDefaultBalance = "1000"'
+    echo 'GuestAvatarDefaultBalance = "1000"'
+    #shellcheck disable=SC2016
+    echo 'BalanceMessageSendGift     = "Sent Gift L${0} to {1}."'
+    #shellcheck disable=SC2016
+    echo 'BalanceMessageReceiveGift  = "Received Gift L${0} from {1}."'
+    #shellcheck disable=SC2016
+    echo 'BalanceMessagePayCharge    = "Paid the Money L${0} for creation."'
+    #shellcheck disable=SC2016
+    echo 'BalanceMessageBuyObject    = "Bought the Object {2} from {1} by L${0}."'
+    #shellcheck disable=SC2016
+    echo 'BalanceMessageSellObject   = "{1} bought the Object {2} by L${0}."'
+    #shellcheck disable=SC2016
+    echo 'BalanceMessageLandSale     = "Paid the Money L${0} for Land."'
+    #shellcheck disable=SC2016
+    echo 'BalanceMessageScvLandSale  = "Paid the Money L${0} for Land."'
+    #shellcheck disable=SC2016
+    echo 'BalanceMessageGetMoney     = "Got the Money L${0} from {1}."'
+    #shellcheck disable=SC2016
+    echo 'BalanceMessageBuyMoney     = "Bought the Money L${0}."'
+    #shellcheck disable=SC2016
+    echo 'BalanceMessageRollBack     = "RollBack the Transaction: L${0} from/to {1}."'
+    #shellcheck disable=SC2016
+    echo 'BalanceMessageSendMoney    = "Paid the Money L${0} to {1}."'
+    #shellcheck disable=SC2016
+    echo 'BalanceMessageReceiveMoney = "Received L${0} from {1}."'
+    echo "[Certificate]"
+    echo 'CheckServerCert = "false"'
+    } > "$MONEYINI"
+}
+
 ### !  osstruktur, legt die Verzeichnisstruktur fuer OpenSim an. # Aufruf: opensim.sh osstruktur ersteSIM letzteSIM
 # Beispiel: ./opensim.sh osstruktur 1 10 - erstellt ein Grid Verzeichnis fuer 10 Simulatoren inklusive der $SIMDATEI.
 function osconfigstruktur() {
@@ -383,7 +468,9 @@ function osconfigstruktur() {
         cp "$AKTUELLEVERZ"/Robust.ini /"$STARTVERZEICHNIS"/$ROBUSTVERZEICHNIS/bin
         
         CONSTINI="/$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/config-include/Const.ini"
-        configausgabe "$BASEHOSTNAME" "$PRIVURL" "$MONEYPORT" "$SIMULATORPORT" "$MYSQLDATABASE" "$MYSQLUSER" "$MYSQLPASSWORD" "$STARTREGION" "$SIMULATORGRIDNAME" "$SIMULATORGRIDNICK" "$CONSTINI"
+        constconfig "$BASEHOSTNAME" "$PRIVURL" "$MONEYPORT" "$SIMULATORPORT" "$MYSQLDATABASE" "$MYSQLUSER" "$MYSQLPASSWORD" "$STARTREGION" "$SIMULATORGRIDNAME" "$SIMULATORGRIDNICK" "$CONSTINI"
+
+        moneyconfig "/$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/MoneyServer.ini"
 
 	else
 		log error "Verzeichnis $ROBUSTVERZEICHNIS existiert bereits"
@@ -400,7 +487,7 @@ function osconfigstruktur() {
         ZWISCHENSPEICHERSP=$SIMULATORPORT
         LOCALX=5000; LOCALY=5000; LANDGOESSE=256;
 
-        configausgabe "$BASEHOSTNAME" "$PRIVURL" "$MONEYPORT" "$((SIMULATORPORT + "$i"))" "$MYSQLDATABASE$i" "$MYSQLUSER" "$MYSQLPASSWORD" "$STARTREGION" "$SIMULATORGRIDNAME" "$SIMULATORGRIDNICK" "$CONSTINI"
+        constconfig "$BASEHOSTNAME" "$PRIVURL" "$MONEYPORT" "$((SIMULATORPORT + "$i"))" "$MYSQLDATABASE$i" "$MYSQLUSER" "$MYSQLPASSWORD" "$STARTREGION" "$SIMULATORGRIDNAME" "$SIMULATORGRIDNICK" "$CONSTINI"
 
         if [ "$SKRIPTAKTIV" = "nein" ]; then
         osslEnableconfig "/$STARTVERZEICHNIS/sim$i/bin/config-include/osslEnable.ini.Beispiel"
@@ -416,7 +503,9 @@ function osconfigstruktur() {
 
         if  [ "$REGIONAKTIV" = "ja" ]; then
         regionconfig "sim$i" "$((LOCALX + "$i")),$((LOCALY + "$i"))" "$LANDGOESSE" "$((9100 + "$i"))" "/$STARTVERZEICHNIS/sim$i/bin/Regions/Regions.ini"
-        fi
+        fi        
+
+        flotsamconfig "/$STARTVERZEICHNIS/sim$i/bin/config-include/FlotsamCache.ini"
 
         echo "Schreibe sim$i in $SIMDATEI, legen sie bitte Datenbank $MYSQLDATABASE an."
 		# xargs sollte leerzeichen entfernen.
