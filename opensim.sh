@@ -61,7 +61,7 @@
 #### ? Einstellungen ####
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe
-VERSION="V0.81.723" # opensimMULTITOOL Versionsausgabe
+VERSION="V0.81.724" # opensimMULTITOOL Versionsausgabe
 #clear # Bildschirmausgabe loeschen.
 #reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
@@ -3240,7 +3240,7 @@ function gridcachedelete() {
 	for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do	
 	rm -r /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/assetcache
 	rm -r /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/maptiles
-	rm -r /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/ScriptEngines
+	if [ "$SCRIPTCLEAR" = "yes" ]; then  rm -r /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/ScriptEngines; fi
 	done
 	# Robust
 	rm -r /$STARTVERZEICHNIS/robust/bin/maptiles

@@ -1,4 +1,4 @@
-### Einstellungen VERSION="V0.81.723"
+### Einstellungen VERSION="V0.81.724"
 
 ## Das Startverzeichnis home oder opt zum Beispiel.
 	STARTVERZEICHNIS="opt"
@@ -101,6 +101,7 @@
 	OSVERSION="opensim-0.9.2.2Dev-"
 	AUTOCLEANALL="yes"
 	GRIDCACHECLEAR="yes"
+	SCRIPTCLEAR="no"
 
 ## OpenSim Downloads
 	LINK01="http://opensimulator.org/dist/OpenSim-LastAutoBuild.zip"
