@@ -97,6 +97,28 @@ if [ "$SIMULATORPORT" = "" ]; then SIMULATORPORT="9010"; fi
 echo "Ihr SimulatorPort startet bei: $SIMULATORPORT"
 echo "##################################################################"
 
+echo "Möchten sie Vivox Voice Aktivieren [nein]:"
+read -r VIVOX_ENABLED
+if [ "$VIVOX_ENABLED" = "" ]; then VIVOX_ENABLED="false"; fi
+if [ "$VIVOX_ENABLED" = "nein" ]; then VIVOX_ENABLED="false"; fi
+if [ "$VIVOX_ENABLED" = "ja" ]; then VIVOX_ENABLED="true"; fi
+echo "Ihre Auswahl ist: $VIVOX_ENABLED"
+echo "##################################################################"
+
+if [ "$VIVOX_ENABLED" = "true" ]; then
+echo "Bitte geben sie ihr Vivox Admin Benutzername:"
+read -r VIVOX_ADMIN_USER
+if [ "$VIVOX_ADMIN_USER" = "" ]; then VIVOX_ENABLED="false"; fi
+echo "Ihre Auswahl ist: $VIVOX_ADMIN_USER"
+echo "##################################################################"
+
+echo "Bitte geben sie ihr Vivox Admin Passwort an:"
+read -r VIVOX_ADMIN_PASSWORD
+if [ "$VIVOX_ADMIN_PASSWORD" = "" ]; then VIVOX_ENABLED="false"; fi
+echo "Ihre Auswahl ist: $VIVOX_ADMIN_PASSWORD"
+echo "##################################################################"
+fi
+
 echo "Bitte geben sie den Datenbanknamen an [opensim]:"
 read -r MYSQLDATABASE
 if [ "$MYSQLDATABASE" = "" ]; then MYSQLDATABASE="opensim"; fi
@@ -255,6 +277,28 @@ function regionconfig() {
     echo ";MasterAvatarLastName = Doe"
     echo ";MasterAvatarSandboxPassword = passwd" 
     } > "$REGIONSINI"
+}
+
+function vivoxconfig() {
+    VIVOXPFAD=$1
+    #VIVOX_ENABLED=""
+    #VIVOX_ADMIN_USER=""
+    #VIVOX_ADMIN_PASSWORD=""
+
+    {
+    echo "[VivoxVoice]"
+	echo "enabled = $VIVOX_ENABLED"
+	echo "vivox_server = www.osp.vivox.com"
+	echo "vivox_sip_uri = osp.vivox.com"
+	echo "vivox_admin_user = $VIVOX_ADMIN_USER"
+	echo "vivox_admin_password = $VIVOX_ADMIN_PASSWORD"
+	echo "vivox_channel_type = positional"
+	echo "vivox_channel_distance_model = 2"
+	echo "vivox_channel_mode = \"open\""
+	echo "vivox_channel_roll_off = 2.0"
+	echo "vivox_channel_max_range = 80"
+	echo "vivox_channel_clamping_distance = 10"
+    } > "$VIVOXPFAD"
 }
 
 ### ! FlotsamCache Konfigurationen schreiben
@@ -531,6 +575,8 @@ function osconfigstruktur() {
         fi        
 
         flotsamconfig "/$STARTVERZEICHNIS/sim$i/bin/config-include/FlotsamCache.ini"
+
+        vivoxconfig "/$STARTVERZEICHNIS/sim$i/bin/config-include/vivox.ini"
 
         echo "Schreibe sim$i in $SIMDATEI, legen sie bitte Datenbank $MYSQLDATABASE an."
 		# xargs sollte leerzeichen entfernen.
