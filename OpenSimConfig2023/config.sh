@@ -50,7 +50,7 @@ ROBUSTVERZEICHNIS="robust"; # Robustverzeichnis
 SIMDATEI="SimulatorList.ini";
 OPENSIMVERZEICHNIS="opensim";
 SCRIPTNAME="constconfig" # Versionsausgabe
-VERSION="1.2.0" # Versionsausgabe
+VERSION="1.2.2" # Versionsausgabe
 ### Aktuelle IP ueber Suchadresse ermitteln und Ausfuehrungszeichen anhaengen.
 SEARCHADRES="icanhazip.com"
 AKTUELLEIP="$(wget -O - -q $SEARCHADRES)"
@@ -118,6 +118,18 @@ if [ "$VIVOX_ADMIN_PASSWORD" = "" ]; then VIVOX_ENABLED="false"; fi
 echo "Ihre Auswahl ist: $VIVOX_ADMIN_PASSWORD"
 echo "##################################################################"
 fi
+
+echo "Möchten sie DTL NSL Money Aktivieren [nein]:"
+read -r DTLNSLMONEYMODULE
+if [ "$DTLNSLMONEYMODULE" = "" ] || [ "$DTLNSLMONEYMODULE" = "nein" ]; then DTLNSLMONEYMODULE="false"; fi
+if [ "$DTLNSLMONEYMODULE" = "ja" ]; then 
+    sed -i "s/SellEnabled = false/SellEnabled = true/g" "$AKTUELLEVERZ"/OpenSim.ini
+fi
+if [ "$DTLNSLMONEYMODULE" = "false" ]; then 
+    sed -i "s/SellEnabled = true/SellEnabled = false/g" "$AKTUELLEVERZ"/OpenSim.ini
+fi
+echo "Ihre Auswahl ist: $DTLNSLMONEYMODULE"
+echo "##################################################################"
 
 echo "Bitte geben sie den Datenbanknamen an [opensim]:"
 read -r MYSQLDATABASE
