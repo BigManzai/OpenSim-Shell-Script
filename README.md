@@ -152,4 +152,4 @@ Es werden hierdurch neue leere Verzeichnisse angelegt und befüllt.
 
 ------
 
-Dowmgrade das zurücksetzen auf die vorherige Version des OpenSimulators ist jetzt möglich.
+Downgrade das zurücksetzen auf die vorherige Version des OpenSimulators ist jetzt möglich.
