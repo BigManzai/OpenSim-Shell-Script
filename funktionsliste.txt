@@ -1,325 +1,350 @@
-function AutoInstall
-function ConfigSet
-function DO_DOMAIN_IDS
-function DO_DOMAIN_IDS2
-function GridCommonConfig
-function GridCommonConfigSet
-function IGNORE_DOMAIN_IDS
-function IGNORE_DOMAIN_IDS2
-function IGNORE_SERVER_IDS
-function MASTER_CONNECT_RETRY
-function MASTER_DELAY
-function MASTER_HOST
-function MASTER_LOG_FILE
-function MASTER_LOG_POS
-function MASTER_PASSWORD
-function MASTER_PASSWORD
-function MASTER_PORT
-function MASTER_SSL
-function MASTER_SSL_CA
-function MASTER_SSL_CAPATH
-function MASTER_SSL_CERT
-function MASTER_SSL_CIPHER
-function MASTER_SSL_CRL
-function MASTER_SSL_CRLPATH
-function MASTER_SSL_KEY
-function MASTER_SSL_VERIFY_SERVER_CERT
-function MASTER_USER
-function MASTER_USE_GTID
-function MASTER_USE_GTID2
-function OpenSimConfig
-function OpenSimConfigSet
-function RELAY_LOG_FILE
-function RELAY_LOG_POS
-function RegionsConfig
-function RegionsConfigSet
-function Replica_Backup
-function Replica_Backup2
-function ReplikatKoordinaten
-function RobustConfig    
-function RobustConfigSet
-function ScreenLog
-function accesslog
-function allclean
-function allrepair_db
-function apacheerror
-function assetcachedel
-function assetdel
-function authlog
-function autoallclean
-function autoassetcachedel
-function autologdel
-function automapdel
-function autoregionbackup
-function autoregionsiniteilen
-function autorestart
-function autorobustmapdel
-function autoscreenstop
-function autosimstart
-function autosimstop
-function autostart
-function autostop
-function backupdatum
-function checkfile
-function chrisoscopy
-function cleanaot
-function cleaninstall
-function commandhelp
-function compilieren
-function conf_delete
-function conf_read
-function conf_write
-function configlesen
-function configurecopy
-function configuregitcopy
-function connection_name
-function create_db
-function create_db_user
-function createuser
-function dateimenu
-function db_all_name
-function db_all_name_dialog
-function db_all_user
-function db_all_user_dialog
-function db_all_userfailed
-function db_all_uuid
-function db_all_uuid_dialog
-function db_anzeigen
-function db_anzeigen_dialog
-function db_backup
-function db_backuptabellen
-function db_benutzer_anzeigen
-function db_compress_backup
-function db_create
-function db_create_new_dbuser
-function db_dbuser
-function db_dbuserrechte
-function db_deldbuser
-function db_delete
-function db_deletepartner
-function db_email_setincorrectuseroff
-function db_email_setincorrectuseroff_dialog
-function db_empty
-function db_false_email
-function db_foldertyp_user
-function db_regions
-function db_regionsport
-function db_regionsuri
-function db_restorebackuptabellen
-function db_restorebackuptabellen2test
-function db_setpartner
-function db_setuserofline
-function db_setuserofline_dialog
-function db_setuseronline
-function db_setuseronline_dialog
-function db_tables
-function db_tables_dialog
-function db_tablesplitt
-function db_tablextract
-function db_tablextract_regex
-function db_user_data
-function db_user_data_dialog
-function db_user_infos
-function db_user_infos_dialog
-function db_user_uuid
-function db_user_uuid_dialog
-function db_userdate
-function default_master_connection
-function delete_db
-function dialogclear
-function dotnetinfo
-function downloados
-function dummyvar
-function edittextbox
-function ende
-function expertenmenu
-function fehler
-function finstall
-function fortschritsanzeige
-function fpspeicher
-function functionslist
-function funktionenmenu
-function get_regionsarray
-function get_value_from_Region_key
-function gridcommonini
-function gridstart
-function gridstop
-function hauptmenu
-function hilfe
-function hilfemenu
-function historylogclear
-function iinstall
-function iinstall2
-function info
-function infodialog
-function install_mysqltuner
-function installationen
-function installationhttps22
-function installbegin apt update && apt upgrade; }
-function installfinish
-function installmariadb18
-function installmariadb22
-function installobensimulator
-function installphpmyadmin
-function installubuntu22
-function installwordpress
-function ipsetzen
-function kalender
-function konsolenhilfe
-function landclear
-function linuxupgrade apt update && apt upgrade -y; }
-function loadinventar
-function log
-function logdel
-function makeaot
-function makeregionsliste
-function makeverzeichnisliste
-function makewebmaps
-function mapdel
-function mariadberror
-function meineregionen
-function menuassetdel
-function menuautologdel
-function menuautorestart
-function menuautoscreenstop
-function menuautosimstart
-function menuautosimstop
-function menuautostart
-function menuautostop
-function menucreateuser
-function menufinstall
-function menugridstart
-function menugridstop
-function menuinfo
-function menukonsolenhilfe
-function menulandclear
-function menuloadinventar
-function menulogdel
-function menumapdel
-function menumostart
-function menumostop
-function menuoscommand
-function menuosdauerstart
-function menuosdauerstop
-function menuosstart
-function menuosstarteintrag
-function menuosstarteintragdel
-function menuosstop
-function menuosstruktur
-function menuoswriteconfig
-function menuregionbackup
-function menuregionrestore
-function menurostart
-function menurostop
-function menusaveinventar
-function menuwaslauft
-function menuworks
-function moneycopy
-function moneydelete
-function moneygitcopy
-function moneyserverini
-function monoinstall
-function monoinstall18
-function monoinstall20
-function monoinstall22
-function mostart
-function mostop
-function mutelistcopy
-function mySQLmenu
-function mysql_neustart
-function mysqlbackup
-function mysqldberror
-function mysqleinstellen
-function mysqlrest
-function mysqlrestnodb
-function nachrichtbox
-function neuegridconfig
-function newregionini
-function opensimholen
-function opensimini
-function osbuilding
-function oscommand
-function oscompi
-function oscopy
-function oscopyrobust
-function oscopysim
-function osdauerstart
-function osdauerstop
-function osdelete
-function osgitholen
-function osgridcopy
-function osprebuild
-function osscreenstop
-function ossettings
-function osslEnableConfig
-function osslEnableConfigSet
-function osslenableini
-function osstart
-function osstarteintrag
-function osstarteintragdel
-function osstop
-function osstruktur
-function osupgrade
-function oswriteconfig
-function oszipupgrade
-function passgen
-function passwdgenerator
-function pythoncopy
-function radiolist
-function ramspeicher
-function rebootdatum
-function regionbackup
-function regionini
-function regionliste
-function regionrestore
-function regionsabfrage
-function regionsconfigdateiliste
-function regionsinisuchen
-function regionsiniteilen
-function regionsport
-function regionsuri
-function robustbackup
-function robustini
-function rologdel
-function rostart
-function rostop
-function saveinventar
-function schreibeinfo
-function screenlist
-function screenlistrestart
-function scriptcopy
-function scriptgitcopy
-function searchcopy
-function searchgitcopy
-function serverinstall
-function serverinstall22
-function serverupgrade
-function set_empty_user
-function setpartner
-function show_info
-function simstats
-function sourcelist18
-function sourcelist22
-function systeminformation
-function tabellenabfrage
-function terminator
-function textbox
-function trimm
-function ufwlog
-function ufwset
-function uncompress
-function unlockexample
-function vardel
-function vartest 
-function warnbox
-function waslauft
-function wiparameter0
-function wiparameter1
-function wiparameter2
-function wiparameter3
-function wiparameter4
-function wiparameter5
-function wiparameter6
-function wiparameter7
-function wiparameter8
-function works
+# Funktionsliste von opensimMULTITOOL
+
+ostoolconfig
+dummyvar
+ostoolconfigabfrage
+vardel
+ScreenLog
+dialogclear
+ende
+fehler
+historylogclear
+log
+functionslist
+schreibeinfo
+trimm
+vartest 
+iinstall
+iinstall2
+finstall
+menufinstall
+uncompress
+downloados
+radiolist
+rebootdatum
+lastrebootdatum
+warnbox
+edittextbox
+textbox
+nachrichtbox
+apacheerror
+mysqldberror
+mariadberror
+ufwlog
+authlog
+accesslog
+fpspeicher
+screenlist
+screenlistrestart
+makeverzeichnisliste
+makeregionsliste
+mysqlrest
+mysqlrestnodb
+mysqlbackup
+passgen
+passwdgenerator
+assetdel
+menuassetdel
+landclear
+menulandclear
+loadinventar
+menuloadinventar
+saveinventar
+menusaveinventar
+oscommand
+menuoscommand
+oswriteconfig
+menuoswriteconfig
+menuworks
+works
+waslauft
+menuwaslauft
+checkfile
+mapdel
+logdel
+rologdel
+menumapdel
+menulogdel
+assetcachedel
+autoassetcachedel
+ossettings
+osstart
+osstop
+menuosstart
+menuosstop
+rostart
+menurostart
+osstarteintrag
+menuosstarteintrag
+osstarteintragdel
+menuosstarteintragdel
+osdauerstop
+menuosdauerstop
+osdauerstart
+menuosdauerstart
+rostop
+menurostop
+mostart
+menumostart
+mostop
+menumostop
+osscreenstop
+gridstart
+menugridstart
+simstats
+terminator
+oscompi
+moneygitcopy
+scriptgitcopy
+configuregitcopy
+searchgitcopy
+scriptcopy
+moneycopy
+configurecopy
+pythoncopy
+searchcopy
+mutelistcopy
+chrisoscopy
+makeaot
+cleanaot
+osprebuild
+osstruktur
+menuosstruktur
+osdelete
+oscopyrobust
+oscopysim
+oscopy
+configlesen
+regionsconfigdateiliste
+meineregionen
+regionsinisuchen
+get_regionsarray
+get_value_from_Region_key
+regionsiniteilen
+autoregionsiniteilen
+regionliste
+makewebmaps
+moneydelete
+osgitholen
+opensimholen
+install_mysqltuner
+regionbackup
+menuregionbackup
+regionrestore
+menuregionrestore
+autosimstart
+autosimstop
+menuautosimstart
+menuautosimstop
+autologdel
+menuautologdel
+automapdel
+autorobustmapdel
+cleaninstall
+allclean
+gridcachedelete
+autoallclean
+autoregionbackup
+autoscreenstop
+menuautoscreenstop
+autostart
+autostop
+menuautostart
+menuautostop
+autorestart
+menuautorestart
+serverupgrade
+installmariadb18
+installmariadb22
+monoinstall
+monoinstall18
+monoinstall20
+monoinstall22
+sourcelist18
+sourcelist22
+installwordpress
+installobensimulator
+installbegin
+linuxupgrade
+installubuntu22
+iptablesset
+fail2banset
+ufwset
+installphpmyadmin
+installfinish
+installationhttps22
+serverinstall22
+serverinstall
+installationen
+osbuilding
+createuser
+menucreateuser
+db_friends
+db_online
+db_region
+db_gridlist
+db_inv_search
+db_user_anzahl
+db_user_online
+db_region_parzelle
+db_region_parzelle_pakete
+db_region_anzahl_regionsnamen
+db_region_anzahl_regionsid
+db_inventar_no_assets
+db_anzeigen
+db_anzeigen_dialog
+db_tables
+db_tables_dialog
+db_benutzer_anzeigen
+db_regions
+db_regionsuri
+db_regionsport
+create_db
+create_db_user
+delete_db
+db_empty
+allrepair_db
+mysql_neustart
+db_backup
+db_compress_backup
+db_backuptabellen
+db_backuptabellentypen2
+db_backuptabellentypen
+db_restoretabellentypen
+db_restorebackuptabellen
+db_restorebackuptabellen2test
+db_create
+db_dbuser
+db_dbuserrechte
+db_deldbuser
+db_create_new_dbuser
+db_delete
+tabellenabfrage
+regionsabfrage
+regionsuri
+regionsport
+setpartner
+db_setpartner
+db_deletepartner
+db_all_user
+db_all_user_dialog
+db_all_uuid
+db_all_uuid_dialog
+db_all_name
+db_all_name_dialog
+db_user_data
+db_user_data_dialog
+db_user_infos
+db_user_infos_dialog
+db_user_uuid
+db_user_uuid_dialog
+db_foldertyp_user
+db_all_userfailed
+db_userdate
+db_false_email
+set_empty_user
+db_email_setincorrectuseroff
+db_email_setincorrectuseroff_dialog
+db_setuserofline
+db_setuserofline_dialog
+db_setuseronline
+db_setuseronline_dialog
+default_master_connection
+connection_name
+MASTER_USER
+MASTER_PASSWORD
+MASTER_HOST
+MASTER_PORT
+MASTER_CONNECT_RETRY
+MASTER_SSL
+MASTER_SSL_CA
+MASTER_SSL_CAPATH
+MASTER_SSL_CERT
+MASTER_SSL_CRL
+MASTER_SSL_CRLPATH
+MASTER_SSL_KEY
+MASTER_SSL_CIPHER
+MASTER_SSL_VERIFY_SERVER_CERT
+MASTER_LOG_FILE
+MASTER_LOG_POS
+RELAY_LOG_FILE
+RELAY_LOG_POS
+MASTER_USE_GTID
+MASTER_USE_GTID2
+IGNORE_SERVER_IDS
+DO_DOMAIN_IDS
+DO_DOMAIN_IDS2
+IGNORE_DOMAIN_IDS
+IGNORE_DOMAIN_IDS2
+MASTER_DELAY
+MASTER_PASSWORD
+Replica_Backup
+Replica_Backup2
+ReplikatKoordinaten
+db_tablesplitt
+db_tablextract
+db_tablextract_regex
+conf_write
+conf_read
+conf_delete
+ramspeicher
+mysqleinstellen
+newregionini
+constconfig
+regionconfig
+flotsamconfig
+osslEnableconfig
+moneyconfig
+osconfigstruktur
+configabfrage
+gridstop
+menugridstop
+compilieren
+osgridcopy
+osupgrade
+osdowngrade
+oszipupgrade
+ConfigSet
+AutoInstall
+OpenSimConfig
+OpenSimConfigSet
+GridCommonConfig
+GridCommonConfigSet
+osslEnableConfig
+osslEnableConfigSet
+RegionsConfig
+RegionsConfigSet
+RobustConfig    
+RobustConfigSet
+show_info
+systeminformation
+info
+infodialog
+kalender
+robustbackup
+backupdatum
+senddata
+fortschritsanzeige
+menuinfo
+menukonsolenhilfe
+dotnetinfo
+hilfe
+konsolenhilfe
+commandhelp
+hauptmenu
+hilfemenu
+funktionenmenu
+dateimenu
+mySQLmenu
+avatarmenu
+expertenmenu
+buildmenu
+wiparameter0
+wiparameter1
+wiparameter2
+wiparameter3
+wiparameter4
+wiparameter5
+wiparameter6
+wiparameter7
+wiparameter8
