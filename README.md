@@ -128,7 +128,10 @@ Bisher sind nur Funktionen im Menü die maximal 1 Übergabewert voraussetzen.
 ## TODO und Informationen
 gridcachedelete
 Aufruf: ./ostools.sh gridcachedelete
+
 Cache Dateien löschen aus einem Grid, so werden alte ungenutzte Dateien bereinigt.
 Löscht die Verzeichnisse: assetcache, maptiles, ScriptEngines aus den Simulatoren.
-Und Aus Robust: bakes, maptiles
+
+Und aus Robust: bakes, maptiles
+
 Es werden hierdurch neue leere Verzeichnisse angelegt und befüllt.
