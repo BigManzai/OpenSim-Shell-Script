@@ -13,7 +13,7 @@ Für diese VR Brillen, müssen sie im Viewer, die Joypad/Joystick Einstellung ak
 
 und dieser kann dann mit den Virtual Reality Headset Controlern gesteuert werden, 
 
-scrollen sie die die nah Ansicht heran, bis sie sich nicht mehr selber sehen können.
+scrollen sie mit der Maus die nah Ansicht heran, bis sie sich nicht mehr selber sehen können.
 
 ## Aus opensim.sh wird nun ostools.sh 
 
