@@ -152,4 +152,13 @@ Es werden hierdurch neue leere Verzeichnisse angelegt und befüllt.
 
 ------
 
+opensimMULTITOOL erstellt jetzt seine eigene Konfigurationsdatei.
+
+------
+
 Downgrade das zurücksetzen auf die vorherige Version des OpenSimulators ist jetzt möglich.
+
+------
+
+Status 09.02.2023 348 Funktionen.
+
