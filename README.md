@@ -149,3 +149,7 @@ Löscht die Verzeichnisse: assetcache, maptiles, ScriptEngines aus den Simulator
 Und aus Robust: bakes, maptiles
 
 Es werden hierdurch neue leere Verzeichnisse angelegt und befüllt.
+
+------
+
+Dowmgrade das zurücksetzen auf die vorherige Version des OpenSimulators ist jetzt möglich.
