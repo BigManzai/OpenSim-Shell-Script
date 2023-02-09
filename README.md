@@ -15,7 +15,9 @@ und dieser kann dann mit den Virtual Reality Headset Controlern gesteuert werden
 
 scrollen sie die die nah Ansicht heran, bis sie sich nicht mehr selber sehen können.
 
-Aus opensim.sh wird nun ostools.sh mit einer Automatisch erstellende Konfigurationsdatei nach ein paar abfragen.
+## Aus opensim.sh wird nun ostools.sh 
+
+mit einer Automatisch erstellende Konfigurationsdatei nach ein paar abfragen.
 
 ostools.sh Basiert auf meinen Einzelscripten, an denen ich bereits 7 Jahre Arbeite und verbessere.
 
