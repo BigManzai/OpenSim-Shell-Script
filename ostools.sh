@@ -1,43 +1,5 @@
 #!/bin/bash
 
-### * #!/Pfad/aufrufbares_Programm
-### #!/bin/bash
-### #!/bin/dash
-### #!/bin/sh
-### #!/bin/csh
-### #!/usr/bin/perl
-### #!/usr/bin/php
-### #!/usr/bin/python -O
-### #!/usr/bin/ruby
-### #!/bin/ksh
-### #!/bin/awk
-### #!/bin/expect
-### #!/usr/bin/env instantfpc
-### #!/usr/bin/env bash
-### #!expect 
-### #!/usr/bin/expect -f
-### #!perl
-### #!/usr/bin/env perl
-### #!lua
-### #!/usr/bin/env lua
-### #!python
-### #!/usr/bin/env python
-### #!python+encoding
-### #!php
-### #!/usr/bin/env php
-### #!node
-### #!/usr/bin/env node
-### #!fsharp
-### #!/usr/bin/env fsharpi --exec
-### #!ruby
-### #!/usr/bin/env ruby
-### #!ruby+encoding
-### #!groovy
-### #!/usr/bin/env groovy
-### #!pwsh
-### #!powershell
-### #!/usr/bin/env pwsh
-
 # ? opensimMULTITOOL Copyright (c) 2021 2023 BigManzai Manfred Aabye
 # ostools.sh Basiert auf meinen Einzelscripten, an denen ich bereits 7 Jahre Arbeite und verbessere.
 # Da Server unterschiedlich sind, kann eine einwandfreie fuunktion nicht gewaehrleistet werden, also bitte mit bedacht verwenden.
@@ -54,14 +16,14 @@
 # ! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 # ! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-# * Status 03.02.2023 320 Funktionen.
+# * Status 09.02.2023 348 Funktionen.
 
 # # Visual Studio Code # ShellCheck # shellman # Better Comments # outline map #
 
 #### ? Einstellungen ####
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe
-VERSION="V0.90.728" # opensimMULTITOOL Versionsausgabe
+VERSION="V0.90.730" # opensimMULTITOOL Versionsausgabe
 #clear # Bildschirmausgabe loeschen.
 #reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
@@ -91,7 +53,7 @@ function ostoolconfig() {
 	OPENSIMVERZEICHNIS=$4
 	CONFIGPFAD=$5
 	OSTOOLINI=$6
-
+# GRIDCACHECLEAR="yes"; ASSETCACHECLEAR="yes"; MAPTILESCLEAR="yes"; SCRIPTCLEAR="yes"; RMAPTILESCLEAR="yes"; RBAKESCLEAR="yes";
     {
 		echo "### Einstellungen $SCRIPTNAME $VERSION"
 		echo "     "
@@ -177,9 +139,15 @@ function ostoolconfig() {
 		echo '    SETAOTON="no"'
 		echo "    # opensim-0.9.2.2Dev-4-g5e9b3b4.zip"
 		echo '    OSVERSION="opensim-0.9.2.2Dev-"'
+		echo "     "
+		echo "## Bereinigungen"
 		echo '    AUTOCLEANALL="yes"'
 		echo '    GRIDCACHECLEAR="yes"'
 		echo '    SCRIPTCLEAR="no"'
+		echo '    ASSETCACHECLEAR="yes"'
+		echo '    MAPTILESCLEAR="yes"'
+		echo '    RMAPTILESCLEAR="yes"'
+		echo '    RBAKESCLEAR="yes"'
 		echo "     "
 		echo "## OpenSim Downloads"
 		echo '    LINK01="http://opensimulator.org/dist/OpenSim-LastAutoBuild.zip"'
@@ -220,6 +188,9 @@ function ostoolconfig() {
 		echo "## Liste der zu verwendende Musiklisten."
 		echo '    listVar="50s 60s 70s 80s 90s Alternative Blues Classic Club Country Dance Disco EDM Easy Electronic Folk Funk Gothic Heavy Hits House Indie Jazz Metal Misc Oldies Party Pop Reggae Rock Schlager Soul Techno Top Trance industrial pop"'
     } > "$OSTOOLINI"
+
+	echo "### Ihre neuen Konfigurationsdateien wurden geschrieben! ###"
+	echo "#####################  FERTIG  #############################"
 }
 
 ### ! dummyvar, Shell-Check ueberlisten wegen der Konfigurationsdatei, hat sonst keinerlei Funktion und wird auch nicht aufgerufen.
@@ -3428,7 +3399,7 @@ function allclean() {
 }
 
 ### ! gridcachedelete, loescht alle Cache Dateien die sich im laufe der Zeit angesammelt haben.
-# GRIDCACHECLEAR="yes"
+# GRIDCACHECLEAR="yes"; ASSETCACHECLEAR="yes"; MAPTILESCLEAR="yes"; SCRIPTCLEAR="yes"; RMAPTILESCLEAR="yes"; RBAKESCLEAR="yes";
 function gridcachedelete() {
 	log line
 	log warn "Lösche Cache Dateien aus dem gesamten Grid!"
@@ -3436,13 +3407,13 @@ function gridcachedelete() {
 	sleep 2
 	# Simualtoren
 	for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do	
-	rm -r /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/assetcache
-	rm -r /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/maptiles
-	if [ "$SCRIPTCLEAR" = "yes" ]; then  rm -r /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/ScriptEngines; fi
+	if [ "$ASSETCACHECLEAR" = "yes" ]; then  rm -r /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/assetcache || echo " "; fi
+	if [ "$MAPTILESCLEAR" = "yes" ]; then  rm -r /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/maptiles || echo " "; fi
+	if [ "$SCRIPTCLEAR" = "yes" ]; then  rm -r /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/ScriptEngines || echo " "; fi
 	done
 	# Robust
-	rm -r /$STARTVERZEICHNIS/robust/bin/maptiles
-	rm -r /$STARTVERZEICHNIS/robust/bin/bakes
+	if [ "$RMAPTILESCLEAR" = "yes" ]; then  rm -r /$STARTVERZEICHNIS/robust/bin/maptiles || echo " "; fi
+	if [ "$RBAKESCLEAR" = "yes" ]; then  rm -r /$STARTVERZEICHNIS/robust/bin/bakes || echo " "; fi
 }
 
 ### !  autoallclean, loescht Log, dll, so, exe, aot Dateien fuer einen saubere neue installation, mit Robust.
@@ -7792,7 +7763,36 @@ function osupgrade() {
 	return 0
 }
 
-### !  osupgrade, automatisches upgrade des opensimulator aus dem verzeichnis opensim.
+### !  osdowngrade, automatisches downgrade des opensimulator aus dem verzeichnis opensim.
+function osdowngrade() {
+	log text " #############################"
+	log text " !!!      BEI FEHLER      !!! "
+	log text " !!! ABBRUCH MIT STRG + C !!! "
+	log text " #############################"
+
+	log info "Das Grid wird jetzt zurückgesetzt, auf die vorherige Version."
+	autostop
+	# Cache loeschen
+	if [ "$GRIDCACHECLEAR" = "yes" ]; then gridcachedelete; fi
+	# Kopieren.
+	log line
+	log info "Alte Version Installieren"
+    cd /"$STARTVERZEICHNIS" || return 1
+    mv opensim opensim2
+    mv opensim1 opensim
+    mv opensim2 opensim1
+	oscopyrobust
+	oscopysim
+	autologdel
+	# MoneyServer eventuell loeschen.
+	if [ "$MONEYVERZEICHNIS" = "keins" ] || [ "$MONEYVERZEICHNIS" = "no" ] || [ "$MONEYVERZEICHNIS" = "nein" ]; then moneydelete; fi
+	# Grid Starten.
+	# log info "Das Grid wird jetzt gestartet"
+	autostart
+	return 0
+}
+
+### !  oszipupgrade, automatisches upgrade des opensimulator aus einer opensim zip Datei.
 function oszipupgrade() {
 	### dialog Aktionen
 	# zuerst schauen ob dialog installiert ist
@@ -9803,6 +9803,7 @@ function buildmenu() {
 			"Configure vom git kopieren" ""
 			"Opensim vom Github holen" ""
 			"--------------------------" ""
+			"Downgrade zur letzten Version" ""
 			"Kompilieren" ""
 			"oscompi" ""
 			"Opensimulator upgraden" ""
@@ -9836,6 +9837,7 @@ function buildmenu() {
 		if [[ $buildauswahl = "Configure vom git kopieren" ]]; then configuregitcopy; fi
 		if [[ $buildauswahl = "Opensim vom Github holen" ]]; then osgitholen; fi
 		# -----
+		if [[ $buildauswahl = "Downgrade zur letzten Version" ]]; then osdowngrade; fi
 		if [[ $buildauswahl = "Kompilieren" ]]; then compilieren; fi
 		if [[ $buildauswahl = "oscompi" ]]; then oscompi; fi
 		if [[ $buildauswahl = "Opensimulator upgraden" ]]; then osupgrade; fi
@@ -10194,6 +10196,7 @@ case $KOMMANDO in
 	gridcachedelete) gridcachedelete ;;
 	configabfrage) configabfrage ;;
 	ostoolconfigabfrage) ostoolconfigabfrage ;;
+	osdowngrade) osdowngrade ;;
 	*) hauptmenu ;;
 esac
 vardel
