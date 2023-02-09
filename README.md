@@ -1,11 +1,25 @@
 # OpenSim-Shell-Script
 ![GitHub Logo](https://github.com/BigManzai/OpenSim-Shell-Script/blob/main/opensimMultitool.jpg)
 
-Aus opensim.sh wird ostools.sh mit einer Automatisch erstellende Konfigurationsdatei nach ein paar abfragen.
+Dieses opensimMULTITOOL Skript, ist in der Lage ein Komplettes Virtuelles Metaversum, auf einem Ubuntu Server zu erstellen. 
+
+Es ist aufgebaut auf meinem 16 Jährigen wissen, über das Metaversum und dessen Betrieb. 
+
+Bitte fallen sie nicht auf Virtuelle Brillen herein, es ist die Software die ein Virtuelles Metaversum erschafft, 
+
+nicht ein Kopfmonitor (HMD head mounted device = Kopfmonitor).
+
+Für diese VR Brillen, müssen sie im Viewer, die Joypad/Joystick Einstellung aktivieren 
+
+und dieser kann dann mit den Virtual Reality Headset Controlern gesteuert werden, 
+
+scrollen sie die die nah Ansicht heran, bis sie sich nicht mehr selber sehen können.
+
+Aus opensim.sh wird nun ostools.sh mit einer Automatisch erstellende Konfigurationsdatei nach ein paar abfragen.
 
 ostools.sh Basiert auf meinen Einzelscripten, an denen ich bereits 7 Jahre Arbeite und verbessere.
 
-Da Server unterschiedlich sind, kann eine einwandfreie Funktion nicht gewährleistet werden, also bitte mit bedacht verwenden.
+Da Linux Server unterschiedlich sind, kann eine einwandfreie Funktion nicht gewährleistet werden, also bitte mit bedacht verwenden.
 
 Die Benutzung dieses Scripts, oder deren Bestandteile, erfolgt auf eigene Gefahr!!!
 
@@ -13,9 +27,7 @@ Erstellt und getestet ist ostools.sh, auf verschiedenen Ubuntu 18.04 (jetzt auch
 
 Dieses Script läuft auf einem Grid mit 40 Simulatoren genauso, wie mit zum Beispiel OsGrid angebundenen Simulatoren.
 
-Es wird automatisch eine DATUM-multitool.log angelegt um nachzuverfolgen ob alles ordnungsgemäß ausgeführt wurde.
-
-Eine Funktionsliste gibt es hier in der Wiki. 
+Es kann automatisch eine DATUM-multitool.log angelegt um nachzuverfolgen ob alles ordnungsgemäß ausgeführt wurde.
 
 ### Download OpenSimulator Testversion für Ubuntu 18.04 und Ubuntu 22.04
 
