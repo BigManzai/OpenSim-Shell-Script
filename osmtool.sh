@@ -16,14 +16,14 @@
 # ! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 # ! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-# * Status 09.02.2023 348 Funktionen.
+# * Status 09.02.2024 348 Funktionen.
 
 # # Visual Studio Code # ShellCheck # shellman # Better Comments # outline map #
 
 #### ? Einstellungen ####
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe
-VERSION="V0.90.730" # opensimMULTITOOL Versionsausgabe
+VERSION="V0.90.734" # opensimMULTITOOL Versionsausgabe
 #clear # Bildschirmausgabe loeschen.
 #reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
@@ -92,8 +92,8 @@ function osmtoolconfig() {
 		echo '    line="############################################################";'
 		echo "     "
 		echo "## Dateien"
-		echo '    REGIONSDATEI="RegionList.ini"'
-		echo '    SIMDATEI="SimulatorList.ini"'
+		echo '    REGIONSDATEI="osmregionlist.ini"'
+		echo '    SIMDATEI="osmsimlist.ini"'
 		echo '    OPENSIMDOWNLOAD="http://opensimulator.org/dist/"'
 		echo '    OPENSIMVERSION="opensim-0.9.2.2Dev"'
 		echo '    SEARCHADRES="icanhazip.com" # Suchadresse'
@@ -197,7 +197,7 @@ function osmtoolconfig() {
 function dummyvar() {
 	# shellcheck disable=SC2034
 	STARTVERZEICHNIS="opt"; MONEYVERZEICHNIS="robust"; ROBUSTVERZEICHNIS="robust"; OPENSIMVERZEICHNIS="opensim"; SCRIPTSOURCE="ScriptNeu"; SCRIPTZIP="opensim-ossl-example-scripts-main.zip"; MONEYSOURCE="money48"
-	MONEYZIP="OpenSimCurrencyServer-2021-master.zip"; OSVERSION="opensim-0.9.2.2Dev"; REGIONSDATEI="RegionList.ini"; SIMDATEI="SimulatorList.ini"; WARTEZEIT=30; STARTWARTEZEIT=10; STOPWARTEZEIT=30; MONEYWARTEZEIT=60; ROBUSTWARTEZEIT=60
+	MONEYZIP="OpenSimCurrencyServer-2021-master.zip"; OSVERSION="opensim-0.9.2.2Dev"; REGIONSDATEI="osmregionlist.ini"; SIMDATEI="osmsimlist.ini"; WARTEZEIT=30; STARTWARTEZEIT=10; STOPWARTEZEIT=30; MONEYWARTEZEIT=60; ROBUSTWARTEZEIT=60
 	BACKUPWARTEZEIT=120; AUTOSTOPZEIT=60; SETMONOTHREADS=800; SETMONOTHREADSON="yes"; OPENSIMDOWNLOAD="http://opensimulator.org/dist/"; OPENSIMVERSION="opensim-0.9.2.2.zip"; SEARCHADRES="icanhazip.com"; # AUTOCONFIG="no"
 	CONFIGURESOURCE="opensim-configuration-addon-modul-main"; CONFIGUREZIP="opensim-configuration-addon-modul-main.zip"
 	textfontcolor=7; textbaggroundcolor=0; debugfontcolor=4; debugbaggroundcolor=0	infofontcolor=2	infobaggroundcolor=0; warnfontcolor=3; warnbaggroundcolor=0
@@ -429,21 +429,51 @@ function log() {
 
 ### ! .Funktionen eines Bash Skript auslesen und in eine Text Datei schreiben.
 function functionslist() {
-	file="/opt/osmtool.sh"
-	ergebnisfunktionslist=$(grep -i -r "function " $file | grep -v ^# | grep -v ^$)
-	echo "$ergebnisfunktionslist" >/opt/funktionsliste.txt
+	file="/$STARTVERZEICHNIS/osmtool.sh"
+	ergebnisfunktionslist=$(grep -i -r "function " $file)
+	echo "$ergebnisfunktionslist" >/$STARTVERZEICHNIS/osmfunktion"$DATEIDATUM".txt
+}
+
+### ! lastrebootdatum letzter reboot des Servers.
+function lastrebootdatum() {
+	HEUTEDATUM=$(date +%Y-%m-%d) # Heute
+
+	# Parsen: system boot  2021-11-30 14:26
+	# Trim = | xargs
+	LETZTERREBOOT=$(who -b | awk -F' ' '{print $3}' | xargs) # Letzter Reboot
+
+	# Tolles Datum Script
+	first_date=$(date -d "$HEUTEDATUM" "+%s")
+	second_date=$(date -d "$LETZTERREBOOT" "+%s")
+	EINST="-d" # Manuelle auswahl umgehen.
+	case "$EINST" in
+	"--seconds" | "-s") period=1 ;;
+	"--minutes" | "-m") period=60 ;;
+	"--hours" | "-h") period=$((60 * 60)) ;;
+	"--days" | "-d" | "") period=$((60 * 60 * 24)) ;;
+	esac
+	datediff=$(( ("$first_date" - "$second_date") / ("$period") ))
+	lastrebootdatuminfo="Sie haben vor $datediff Tag(en) ihren Server neu gestartet"
+	if (( $(echo "${datediff} >= 30") )); then
+		log warn "$lastrebootdatuminfo"
+	else
+		log info "$lastrebootdatuminfo"
+	fi	
+}
+
+### ! Leerzeichen korrigieren,
+# trimm "   Beispiel   Text    "
+# oder trimm $variable, rueckgabe in Variable: $trimmvar.
+function trimm() {
+	set -f
+	# shellcheck disable=SC2086,SC2048
+	set -- $*
+	trimmvar=$(printf '%s\n' "$*")
+	set +f
 }
 
 ### ! Kopfzeile
 function schreibeinfo() {
-	
-
-	# Wenn das schreiben abgeschaltet ist dann braucht man nicht zu schauen ob was in der Datei steht.
-	# if [ "$LOGWRITE" = "yes" ]; then
-	# 	FILENAME="/$STARTVERZEICHNIS/$DATEIDATUM$logfilename.log" # Name der Datei
-	# 	FILESIZE=$(stat -c%s "$FILENAME")                         # Wie Gross ist die Datei.
-	# fi
-
 	# *Wenn die Log Datei nicht existiert muss sie erstellt werden sonst gibt es eine Fehlermeldung.
 	if [ "$LOGWRITE" = "yes" ]; then
 		if [ -f /$STARTVERZEICHNIS/"$DATEIDATUM""$logfilename".log ]; then
@@ -469,18 +499,21 @@ function schreibeinfo() {
 		log rohtext "            $SCRIPTNAME $VERSION"
 		log rohtext " "
 		log line
-		log rohtext " $DATUM $(date +%H:%M:%S) MULTITOOL: wurde gestartet am $(date +%d.%m.%Y) um $(date +%H:%M:%S) Uhr"
-		log rohtext " $DATUM $(date +%H:%M:%S) INFO: Server Name: ${HOSTNAME}"
-		log rohtext " $DATUM $(date +%H:%M:%S) INFO: Server IP: ${AKTUELLEIP}"
-		log rohtext " $DATUM $(date +%H:%M:%S) INFO: Linux Version: $ubuntuDescription"
-		log rohtext " $DATUM $(date +%H:%M:%S) INFO: Release Nummer: $ubuntuRelease"
-		log rohtext " $DATUM $(date +%H:%M:%S) INFO: Linux Name: $ubuntuCodename"
-		log rohtext " $DATUM $(date +%H:%M:%S) INFO: Bash Version: ${BASH_VERSION}"
-		log rohtext " $DATUM $(date +%H:%M:%S) INFO: MONO THREAD Einstellung: ${MONO_THREADS_PER_CPU}"
-		log rohtext " $DATUM $(date +%H:%M:%S) INFO: Spracheinstellung: ${LANG}"
-		log rohtext " $DATUM $(date +%H:%M:%S) INFO: $(screen --version)"
-		log rohtext " $DATUM $(date +%H:%M:%S) INFO: $(who -b)"
-		log rohtext " $DATUM $(date +%H:%M:%S) INFO: $SQLVERSION"
+		log rohtext "  $DATUM $(date +%H:%M:%S) MULTITOOL: wurde gestartet am $(date +%d.%m.%Y) um $(date +%H:%M:%S) Uhr"
+		log rohtext "  $DATUM $(date +%H:%M:%S) INFO: Server Name: ${HOSTNAME}"
+		log rohtext "  $DATUM $(date +%H:%M:%S) INFO: Server IP: ${AKTUELLEIP}"
+		log rohtext "  $DATUM $(date +%H:%M:%S) INFO: Linux Version: $ubuntuDescription"
+		log rohtext "  $DATUM $(date +%H:%M:%S) INFO: Release Nummer: $ubuntuRelease"
+		log rohtext "  $DATUM $(date +%H:%M:%S) INFO: Linux Name: $ubuntuCodename"
+		log rohtext "  $DATUM $(date +%H:%M:%S) INFO: Bash Version: ${BASH_VERSION}"
+		log rohtext "  $DATUM $(date +%H:%M:%S) INFO: MONO THREAD Einstellung: ${MONO_THREADS_PER_CPU}"
+		log rohtext "  $DATUM $(date +%H:%M:%S) INFO: Spracheinstellung: ${LANG}"
+		log rohtext "  $DATUM $(date +%H:%M:%S) INFO: $(screen --version)"
+		SYSTEMBOOT=$(who -b); 
+		trimm $SYSTEMBOOT;
+		log rohtext "  $DATUM $(date +%H:%M:%S) INFO: $trimmvar"
+		log rohtext "  $DATUM $(date +%H:%M:%S) INFO: $SQLVERSION"
+		lastrebootdatum
 		log line
 		log rohtext " "
 	# fi
@@ -492,16 +525,7 @@ schreibeinfo
 
 
 
-### ! Leerzeichen korrigieren,
-# trimm "   Beispiel   Text    "
-# oder trimm $variable, rueckgabe in Variable: $trimmvar.
-function trimm() {
-	set -f
-	# shellcheck disable=SC2086,SC2048
-	set -- $*
-	trimmvar=$(printf '%s\n' "$*")
-	set +f
-}
+
 
 ### ! Zeichen entfernen
 # letterdel $variable "[aAbBcCdD]" - letterdel $variable "[[:space:]]"
@@ -784,28 +808,6 @@ function rebootdatum() {
 		hauptmenu
 	fi
 	return 0
-}
-### ! lastrebootdatum letzter reboot des Servers.
-function lastrebootdatum() {
-	HEUTEDATUM=$(date +%Y-%m-%d) # Heute
-
-	# Parsen: system boot  2021-11-30 14:26
-	# Trim = | xargs
-	LETZTERREBOOT=$(who -b | awk -F' ' '{print $3}' | xargs) # Letzter Reboot
-
-	# Tolles Datum Script
-	first_date=$(date -d "$HEUTEDATUM" "+%s")
-	second_date=$(date -d "$LETZTERREBOOT" "+%s")
-	EINST="-d" # Manuelle auswahl umgehen.
-	case "$EINST" in
-	"--seconds" | "-s") period=1 ;;
-	"--minutes" | "-m") period=60 ;;
-	"--hours" | "-h") period=$((60 * 60)) ;;
-	"--days" | "-d" | "") period=$((60 * 60 * 24)) ;;
-	esac
-	datediff=$((("$first_date" - "$second_date") / ("$period")))
-	lastrebootdatuminfo="Sie haben vor $datediff Tag(en) ihren Server neu gestartet"
-	log text "$lastrebootdatuminfo"
 }
 
 ## * --no-collapse   verhindert dialog die Neuformatierung des Nachrichtentextes.
@@ -1180,7 +1182,7 @@ function menuloadinventar() {
 		lable3="PASSWORD:"
 		lablename3="PASSWORD"
 		lable4="DATEI:"
-		lablename4="/opt/texture.iar"
+		lablename4="/$STARTVERZEICHNIS/texture.iar"
 
 		# Abfrage
 		loadinventarBOXERGEBNIS=$(dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 "$lable4" 4 1 "$lablename4" 4 25 25 30 3>&1 1>&2 2>&3 3>&-)
@@ -1246,7 +1248,7 @@ function menusaveinventar() {
 		lable3="PASSWORD:"
 		lablename3="PASSWORD"
 		lable4="DATEI:"
-		lablename4="/opt/texture.iar"
+		lablename4="/$STARTVERZEICHNIS/texture.iar"
 
 		# Abfrage
 		saveinventarBOXERGEBNIS=$(dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 "$lable4" 4 1 "$lablename4" 4 25 25 30 3>&1 1>&2 2>&3 3>&-)
@@ -1345,7 +1347,7 @@ function menuoscommand() {
 ### ! oswriteconfig
 function oswriteconfig() {
 	SETSIMULATOR=$1
-	CONFIGWRITE="config save /opt/$SETSIMULATOR.ini"
+	CONFIGWRITE="config save /$STARTVERZEICHNIS/$SETSIMULATOR.ini"
 	screen -S "$SETSIMULATOR" -p 0 -X eval "stuff '$CONFIGWRITE'^M"
 }
 
@@ -1371,7 +1373,7 @@ function menuoswriteconfig() {
 		else
 			# es laeuft - work
 			# Konfig schreiben
-			CONFIGWRITE="config save /opt/$SETSIMULATOR.ini"
+			CONFIGWRITE="config save /$STARTVERZEICHNIS/$SETSIMULATOR.ini"
 			CONFIGREAD=$(sed '' "$SETSIMULATOR.ini")
 			screen -S "$SETSIMULATOR" -p 0 -X eval "stuff '$CONFIGWRITE'^M"
 			# # Konfig lesen
@@ -1390,7 +1392,7 @@ function menuoswriteconfig() {
 		else
 			# es laeuft - work
 			# Konfig schreiben
-			CONFIGWRITE="config save /opt/$SETSIMULATOR.ini"
+			CONFIGWRITE="config save /$STARTVERZEICHNIS/$SETSIMULATOR.ini"
 			screen -S "$SETSIMULATOR" -p 0 -X eval "stuff '$CONFIGWRITE'^M"
 			return 0
 		fi
@@ -1519,15 +1521,15 @@ function rologdel() {
 	if [ -d /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS ]; then	
 		if [ "$VISITORLIST" = "yes" ]; then 
 			# Schreibe alle Besucher in eine Datei namens DATUM_visitorlist.log.
-			sed -n -e '/'"INFO  (Thread Pool Worker)"'/p' /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/Robust.log >> /$STARTVERZEICHNIS/"$DATEIDATUM"_visitorlist.log;
+			sed -n -e '/'"INFO  (Thread Pool Worker)"'/p' /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/Robust.log >> /$STARTVERZEICHNIS/"$DATEIDATUM"_osmvisitorlist.log;
 			# Zeilenumgruch nach jeder Zeile.
-			sed -i 's/$/\n/g' /$STARTVERZEICHNIS/"$DATEIDATUM"_visitorlist.log
+			sed -i 's/$/\n/g' /$STARTVERZEICHNIS/"$DATEIDATUM"_osmvisitorlist.log
 
 			# Hiermit wird das ganze etwas lesbarer.
 			# Etwas umstaendlich aber was besseres faellt mir auf die schnelle nicht ein.
 			text1="INFO  (Thread Pool Worker) - OpenSim.Services.LLLoginService.LLLoginService \[LLOGIN SERVICE\]: "
 			text2="INFO  (Thread Pool Worker) - OpenSim.Services.HypergridService.GatekeeperService \[GATEKEEPER SERVICE\]: "
-			cat /$STARTVERZEICHNIS/"$DATEIDATUM"_visitorlist.log | sed -e 's/, /\n/g' -e 's/'"$text1"'/\n/g' -e 's/'"$text2"'/\n/g' -e 's/ using/\nusing/g' > /$STARTVERZEICHNIS/"$DATEIDATUM"_visitorlist.txt
+			cat /$STARTVERZEICHNIS/"$DATEIDATUM"_osmvisitorlist.log | sed -e 's/, /\n/g' -e 's/'"$text1"'/\n/g' -e 's/'"$text2"'/\n/g' -e 's/ using/\nusing/g' > /$STARTVERZEICHNIS/"$DATEIDATUM"_osmvisitorlist.txt
 			log info "Besucherlisten wurden geschrieben!"; 
 		fi
 
@@ -1860,7 +1862,7 @@ function menurostart() {
 
 ##################################################################################################
 
-### !  osstarteintrag fuegt der SimulatorList.ini einen Region Simulator hinzu und sortiert diese.
+### !  osstarteintrag fuegt der osmsimlist.ini einen Region Simulator hinzu und sortiert diese.
 function osstarteintrag() {
 	OSEINTRAG=$1 # OpenSimulator, Verzeichnis und Screen Name
 	log info "OpenSimulator $OSEINTRAG wird der Datei $SIMDATEI hinzugefuegt!"
@@ -1884,7 +1886,7 @@ function menuosstarteintrag() {
 	dateimenu
 }
 
-### !  osstarteintragdel entfernt einen Region Simulator aus  der SimulatorList.ini und sortiert diese.
+### !  osstarteintragdel entfernt einen Region Simulator aus  der osmsimlist.ini und sortiert diese.
 function osstarteintragdel() {
 	OSEINTRAGDEL=$1 # OpenSimulator, Verzeichnis und Screen Name
 	log info "OpenSimulator $OSEINTRAGDEL wird aus der Datei $SIMDATEI entfernt!"
@@ -2453,10 +2455,10 @@ function moneycopy() {
 function configurecopy() {
 	if [[ $CONFIGURECOPY = "yes" ]]; then
 		##/opt/opensim-configuration-addon-modul/Configuration
-		if [ -d /opt/opensim-configuration-addon-modul ]; then
+		if [ -d /$STARTVERZEICHNIS/opensim-configuration-addon-modul ]; then
 			log info "CONFIGURECOPY: Configure Kopiervorgang gestartet"
-			cp -r /opt/opensim-configuration-addon-modul/Configuration /opt/opensim/addon-modules
-			//mv /opt/opensim/addon-modules/opensim-configuration-addon-modul /opt/opensim/addon-modules/Configuration
+			cp -r /$STARTVERZEICHNIS/opensim-configuration-addon-modul/Configuration /$STARTVERZEICHNIS/opensim/addon-modules
+			#mv /$STARTVERZEICHNIS/opensim/addon-modules/opensim-configuration-addon-modul /$STARTVERZEICHNIS/opensim/addon-modules/Configuration
 
 			log line
 		else
@@ -2464,8 +2466,8 @@ function configurecopy() {
 			log info "CONFIGURECOPY: Configure entpacken"
 			unzip "$CONFIGUREZIP"
 			log info "CONFIGURECOPY: Configure Kopiervorgang gestartet"
-			cp -r /opt/opensim-configuration-addon-modul/Configuration /$STARTVERZEICHNIS/opensim/addon-modules
-			//mv /opt/opensim/addon-modules/opensim-configuration-addon-modul /opt/opensim/addon-modules/Configuration
+			cp -r /$STARTVERZEICHNIS/opensim-configuration-addon-modul/Configuration /$STARTVERZEICHNIS/opensim/addon-modules
+			#mv /$STARTVERZEICHNIS/opensim/addon-modules/opensim-configuration-addon-modul /$STARTVERZEICHNIS/opensim/addon-modules/Configuration
 			log line
 		fi
 	# else
@@ -2892,16 +2894,16 @@ function autoregionsiniteilen() {
 	return 0
 }
 
-### !  regionliste, Die RegionListe ermitteln und mit dem Verzeichnisnamen in die RegionList.ini schreiben.
+### !  regionliste, Die RegionListe ermitteln und mit dem Verzeichnisnamen in die osmregionlist.ini schreiben.
 function regionliste() {
-	# Alte RegionList.ini sichern und in RegionList.ini.old umbenennen.
-	if [ -f "/$STARTVERZEICHNIS/RegionList.ini" ]; then
-		if [ -f "/$STARTVERZEICHNIS/RegionList.ini.old" ]; then
-			rm -r /$STARTVERZEICHNIS/RegionList.ini.old
+	# Alte osmregionlist.ini sichern und in osmregionlist.ini.old umbenennen.
+	if [ -f "/$STARTVERZEICHNIS/osmregionlist.ini" ]; then
+		if [ -f "/$STARTVERZEICHNIS/osmregionlist.ini.old" ]; then
+			rm -r /$STARTVERZEICHNIS/osmregionlist.ini.old
 		fi
-		mv /$STARTVERZEICHNIS/RegionList.ini /$STARTVERZEICHNIS/RegionList.ini.old
+		mv /$STARTVERZEICHNIS/osmregionlist.ini /$STARTVERZEICHNIS/osmregionlist.ini.old
 	fi
-	# Die mit regionsconfigdateiliste erstellte Datei RegionList.ini nach sim Verzeichnis und Regionsnamen in die RegionList.ini speichern.
+	# Die mit regionsconfigdateiliste erstellte Datei osmregionlist.ini nach sim Verzeichnis und Regionsnamen in die osmregionlist.ini speichern.
 	declare -A Dateien # Array erstellen
 	makeverzeichnisliste
 	sleep 2
@@ -2911,19 +2913,19 @@ function regionliste() {
 		# shellcheck disable=SC2178
 		Dateien=$(find /$STARTVERZEICHNIS/"$VERZEICHNIS"/bin/Regions/ -name "*.ini")
 		for i2 in "${Dateien[@]}"; do # Array abarbeiten
-			echo "$i2" >>RegionList.ini
+			echo "$i2" >>osmregionlist.ini
 		done
 	done
 	# Ueberfluessige Zeichen entfernen
-	LOESCHEN=$(sed s/'\/opt\/'//g /$STARTVERZEICHNIS/RegionList.ini)              # /opt/ entfernen.
-	echo "$LOESCHEN" >/$STARTVERZEICHNIS/RegionList.ini                           # Aenderung /opt/ speichern.
-	LOESCHEN=$(sed s/'\/bin\/Regions\/'/' "'/g /$STARTVERZEICHNIS/RegionList.ini) # /bin/Regions/ entfernen.
-	echo "$LOESCHEN" >/$STARTVERZEICHNIS/RegionList.ini                           # Aenderung /bin/Regions/ speichern.
-	LOESCHEN=$(sed s/'.ini'/'"'/g /$STARTVERZEICHNIS/RegionList.ini)              # Endung .ini entfernen.
-	echo "$LOESCHEN" >/$STARTVERZEICHNIS/RegionList.ini                           # Aenderung .ini entfernen speichern.
+	LOESCHEN=$(sed s/'\/'$STARTVERZEICHNIS'\/'//g /$STARTVERZEICHNIS/osmregionlist.ini)              # /opt/ entfernen.
+	echo "$LOESCHEN" >/$STARTVERZEICHNIS/osmregionlist.ini                           # Aenderung /opt/ speichern.
+	LOESCHEN=$(sed s/'\/bin\/Regions\/'/' "'/g /$STARTVERZEICHNIS/osmregionlist.ini) # /bin/Regions/ entfernen.
+	echo "$LOESCHEN" >/$STARTVERZEICHNIS/osmregionlist.ini                           # Aenderung /bin/Regions/ speichern.
+	LOESCHEN=$(sed s/'.ini'/'"'/g /$STARTVERZEICHNIS/osmregionlist.ini)              # Endung .ini entfernen.
+	echo "$LOESCHEN" >/$STARTVERZEICHNIS/osmregionlist.ini                           # Aenderung .ini entfernen speichern.
 	# Schauen ob da noch Regions.ini bei sind also Regionen mit dem Namen Regions, diese Zeilen loeschen.
-	LOESCHEN=$(sed '/Regions/d' /$STARTVERZEICHNIS/RegionList.ini) # Alle Zeilen mit dem Eintrag Regions entfernen	.
-	echo "$LOESCHEN" >/$STARTVERZEICHNIS/RegionList.ini            # Aenderung .ini entfernen speichern.
+	LOESCHEN=$(sed '/Regions/d' /$STARTVERZEICHNIS/osmregionlist.ini) # Alle Zeilen mit dem Eintrag Regions entfernen	.
+	echo "$LOESCHEN" >/$STARTVERZEICHNIS/osmregionlist.ini            # Aenderung .ini entfernen speichern.
 	return 0
 }
 
@@ -3309,8 +3311,8 @@ function autologdel() {
 	makeverzeichnisliste
 	sleep 1
 	for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
-		rm /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/*.log 2>/dev/null || log warn "Die Log Datei ${VERZEICHNISSLISTE[$i]} ist nicht vorhanden!"
 		log info "OpenSimulator log Datei ${VERZEICHNISSLISTE[$i]} geloescht"
+		rm /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/*.log 2>/dev/null || log warn "Die Log Datei ${VERZEICHNISSLISTE[$i]} ist nicht vorhanden!"		
 		sleep 1
 	done
 
@@ -4322,7 +4324,7 @@ function db_gridlist() {
 	mysqlrest "$username" "$password" "$databasename" "SELECT * FROM GridUser ORDER BY GridUser.UserID"
 
 	mygridliste=$( echo "$result_mysqlrest" | sed 's/.*;http:\/\/ *//;T;s/ *\/;.*//' )
-	echo "$mygridliste" >/opt/GridList.txt
+	echo "$mygridliste" >/$STARTVERZEICHNIS/osmgridlist.txt
 	echo "$mygridliste"
 	return 0
 }
@@ -9030,7 +9032,7 @@ function hilfe() {
 	echo "osdelete 		- $(tput setaf 3)hat keine Parameter$(tput sgr 0) - Loescht alte OpenSim Version."
 	echo "regionsiniteilen 	- $(tput setab 5)Verzeichnisname$(tput sgr 0) $(tput setab 3)Region$(tput sgr 0) - kopiert aus der Regions.ini eine Region heraus."
 	echo "autoregionsiniteilen 	- $(tput setaf 3)hat keine Parameter$(tput sgr 0) - aus allen Regions.ini alle Regionen vereinzeln."
-	echo "RegionListe 		- $(tput setaf 3)hat keine Parameter$(tput sgr 0) - Die RegionList.ini erstellen."
+	echo "regionliste 		- $(tput setaf 3)hat keine Parameter$(tput sgr 0) - Die osmregionlist.ini erstellen."
 	echo "Regionsdateiliste 	- $(tput setab 4)-b Bildschirm oder -d Datei$(tput sgr 0) $(tput setab 5)Verzeichnisname$(tput sgr 0) - Regionsdateiliste erstellen."
 	echo "osgitholen 		- $(tput setaf 3)hat keine Parameter$(tput sgr 0) - kopiert eine OpenSimulator Git Entwicklerversion."
 	echo "terminator 		- $(tput setaf 3)hat keine Parameter$(tput sgr 0) - Killt alle laufenden Screens."
@@ -9757,7 +9759,7 @@ function expertenmenu() {
 		if [[ $feauswahl = "Kommando an OpenSim senden" ]]; then menuoscommand; fi
 
 		if [[ $feauswahl = "autoregionsiniteilen" ]]; then autoregionsiniteilen; fi
-		if [[ $feauswahl = "RegionListe" ]]; then RegionListe; fi
+		if [[ $feauswahl = "RegionListe" ]]; then regionliste; fi
 
 		if [[ $feauswahl = "terminator" ]]; then terminator; fi
 		if [[ $feauswahl = "makeaot" ]]; then makeaot; fi
