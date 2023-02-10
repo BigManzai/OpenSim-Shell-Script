@@ -35,7 +35,7 @@ Es kann automatisch eine DATUM-multitool.log angelegt um nachzuverfolgen ob alle
 
 (Bitte die beiliegende osmtool.sh und opensim.cfg verwenden):
 
-https://www.mediafire.com/file/i7a4vtdxzz160z1/opensim-0.9.2.2.386.zip/file
+https://www.mediafire.com/file/w17lt5mxj22ymob/opensim-0.9.2.2.387.zip/file
 
 ## Hilfe 
 
