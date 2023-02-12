@@ -23,7 +23,7 @@
 #### ? Einstellungen ####
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe
-VERSION="V0.90.734" # opensimMULTITOOL Versionsausgabe
+VERSION="V0.90.737" # opensimMULTITOOL Versionsausgabe
 #clear # Bildschirmausgabe loeschen.
 #reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
@@ -3036,7 +3036,8 @@ function regionbackup() {
 	DATEINAME=${REGIONSNAME//\"/}
 	NSDATEINAME=${DATEINAME// /}
 
-	log info "OSBACKUP: Region $NSDATEINAME speichern"
+	log line
+	log info "Backup der Region $NSDATEINAME"
 	cd /$STARTVERZEICHNIS/"$BACKUPVERZEICHNISSCREENNAME"/bin || return 1
 	log info "Ich kann nicht pruefen ob die Region im OpenSimulator vorhanden ist."
 	log info "Sollte sie nicht vorhanden sein wird root also alle Regionen gespeichert"
@@ -3044,20 +3045,20 @@ function regionbackup() {
 	screen -S "$BACKUPVERZEICHNISSCREENNAME" -p 0 -X eval "stuff 'save oar /$STARTVERZEICHNIS/backup/'$DATUM'-$NSDATEINAME.oar'^M"
 	screen -S "$BACKUPVERZEICHNISSCREENNAME" -p 0 -X eval "stuff 'terrain save /$STARTVERZEICHNIS/backup/'$DATUM'-$NSDATEINAME.png'^M"
 	screen -S "$BACKUPVERZEICHNISSCREENNAME" -p 0 -X eval "stuff 'terrain save /$STARTVERZEICHNIS/backup/'$DATUM'-$NSDATEINAME.raw'^M"
-	log info "Region $DATUM-$NSDATEINAME RAW und PNG Terrain wird gespeichert"
-	log line
+	log info "Region $DATUM-$NSDATEINAME RAW und PNG Terrain werden gespeichert"
+	
 	sleep 10
 	if [ ! -f /$STARTVERZEICHNIS/"$BACKUPVERZEICHNISSCREENNAME"/bin/Regions/"$NSDATEINAME".ini ]; then
 		cp -r /$STARTVERZEICHNIS/"$BACKUPVERZEICHNISSCREENNAME"/bin/Regions/Regions.ini /$STARTVERZEICHNIS/backup/"$DATUM"-"$NSDATEINAME".ini
-		log info "OSBACKUP: Region $DATUM-$NSDATEINAME.ini wird gespeichert"
+		log info "Die Regions $DATUM-$NSDATEINAME.ini wird gespeichert"
 	fi
 	if [ ! -f /$STARTVERZEICHNIS/"$BACKUPVERZEICHNISSCREENNAME"/bin/Regions/"${REGIONSNAME//\"/}".ini ]; then
 		cp -r /$STARTVERZEICHNIS/"$BACKUPVERZEICHNISSCREENNAME"/bin/Regions/Regions.ini /$STARTVERZEICHNIS/backup/"$DATUM"-"$NSDATEINAME".ini
-		log info "OSBACKUP: Region $DATUM-$NSDATEINAME.ini wird gespeichert"
+		log info "Die Regions $DATUM-$NSDATEINAME.ini wird gespeichert"
 	fi
 	if [ ! -f /$STARTVERZEICHNIS/"$BACKUPVERZEICHNISSCREENNAME"/bin/Regions/Regions.ini ]; then
 		cp -r /$STARTVERZEICHNIS/"$BACKUPVERZEICHNISSCREENNAME"/bin/Regions/"$NSDATEINAME".ini /$STARTVERZEICHNIS/backup/"$DATUM"-"$NSDATEINAME".ini
-		log info "OSBACKUP: Region $NSDATEINAME.ini wird gespeichert"
+		log info "Die Regions $NSDATEINAME.ini wird gespeichert"
 	fi
 	return 0
 }
@@ -3093,11 +3094,12 @@ function menuregionbackup() {
 
 	# Backup Verzeichnis anlegen.
 	mkdir -p /$STARTVERZEICHNIS/backup/
-	sleep 2
+	sleep 2$
 	DATEINAME=${REGIONSNAME//\"/}
 	NSDATEINAME=${DATEINAME// /}
 
-	log info "OSBACKUP: Region $NSDATEINAME speichern"
+	log line
+	log info "Backup der Region $NSDATEINAME"
 	cd /$STARTVERZEICHNIS/"$MBACKUPVERZEICHNISSCREENNAME"/bin || return 1
 	log info "Ich kann nicht pruefen ob die Region im OpenSimulator vorhanden ist."
 	log info "Sollte sie nicht vorhanden sein wird root also alle Regionen gespeichert."
@@ -3105,20 +3107,20 @@ function menuregionbackup() {
 	screen -S "$MBACKUPVERZEICHNISSCREENNAME" -p 0 -X eval "stuff 'save oar /$STARTVERZEICHNIS/backup/'$DATUM'-$NSDATEINAME.oar'^M"
 	screen -S "$MBACKUPVERZEICHNISSCREENNAME" -p 0 -X eval "stuff 'terrain save /$STARTVERZEICHNIS/backup/'$DATUM'-$NSDATEINAME.png'^M"
 	screen -S "$MBACKUPVERZEICHNISSCREENNAME" -p 0 -X eval "stuff 'terrain save /$STARTVERZEICHNIS/backup/'$DATUM'-$NSDATEINAME.raw'^M"
-	log info "Region $DATUM-$NSDATEINAME RAW und PNG Terrain wird gespeichert"
-	log line
+	log info "Region $DATUM-$NSDATEINAME RAW und PNG Terrain werden gespeichert"
+	
 	sleep 10
 	if [ ! -f /$STARTVERZEICHNIS/"$VERZEICHNISSCREENNAME"/bin/Regions/"$NSDATEINAME".ini ]; then
 		cp -r /$STARTVERZEICHNIS/"$VERZEICHNISSCREENNAME"/bin/Regions/Regions.ini /$STARTVERZEICHNIS/backup/"$DATUM"-"$NSDATEINAME".ini
-		log info "OSBACKUP: Region $DATUM-$NSDATEINAME.ini wird gespeichert"
+		log info "Die Regions $DATUM-$NSDATEINAME.ini wird gespeichert"
 	fi
 	if [ ! -f /$STARTVERZEICHNIS/"$VERZEICHNISSCREENNAME"/bin/Regions/"${REGIONSNAME//\"/}".ini ]; then
 		cp -r /$STARTVERZEICHNIS/"$VERZEICHNISSCREENNAME"/bin/Regions/Regions.ini /$STARTVERZEICHNIS/backup/"$DATUM"-"$NSDATEINAME".ini
-		log info "OSBACKUP: Region $DATUM-$NSDATEINAME.ini wird gespeichert"
+		log info "Die Regions $DATUM-$NSDATEINAME.ini wird gespeichert"
 	fi
 	if [ ! -f /$STARTVERZEICHNIS/"$VERZEICHNISSCREENNAME"/bin/Regions/Regions.ini ]; then
 		cp -r /$STARTVERZEICHNIS/"$VERZEICHNISSCREENNAME"/bin/Regions/"$NSDATEINAME".ini /$STARTVERZEICHNIS/backup/"$DATUM"-"$NSDATEINAME".ini
-		log info "OSBACKUP: Region $NSDATEINAME.ini wird gespeichert"
+		log info "Die Regions $NSDATEINAME.ini wird gespeichert"
 	fi
 	return 0
 }
@@ -9530,7 +9532,7 @@ function dateimenu() {
 		if [[ $dauswahl = "Inventar speichern" ]]; then menusaveinventar; fi
 		if [[ $dauswahl = "Inventar laden" ]]; then menuloadinventar; fi
 		if [[ $dauswahl = "Region OAR sichern" ]]; then menuregionbackup; fi
-		if [[ $feauswahl = "Automatischer Regionsbackup" ]]; then autoregionbackup; fi
+		if [[ $dauswahl = "Automatischer Regionsbackup" ]]; then autoregionbackup; fi
 		# -----	
 		if [[ $dauswahl = "Log Dateien loeschen" ]]; then autologdel; fi
 		if [[ $dauswahl = "Map Karten loeschen" ]]; then automapdel; fi		
