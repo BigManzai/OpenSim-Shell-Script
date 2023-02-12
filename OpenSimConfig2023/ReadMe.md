@@ -31,3 +31,6 @@ Dieses Skript legt folgende Verzeichnisse und Dateien an:
 * Regions.ini
 
 Mit den Optionen osslEnable.ini und Regions.ini zu aktivieren oder zu deaktivieren(Standard).
+
+## TODO
+13.02.2023 Ich habe einige Fehler korrigiert und das ganze absturzsicherer gemacht.
