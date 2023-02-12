@@ -23,7 +23,7 @@
 #### ? Einstellungen ####
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe
-VERSION="V0.90.737" # opensimMULTITOOL Versionsausgabe
+VERSION="V0.90.738" # opensimMULTITOOL Versionsausgabe
 #clear # Bildschirmausgabe loeschen.
 #reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
@@ -514,6 +514,12 @@ function schreibeinfo() {
 		log rohtext "  $DATUM $(date +%H:%M:%S) INFO: $trimmvar"
 		log rohtext "  $DATUM $(date +%H:%M:%S) INFO: $SQLVERSION"
 		lastrebootdatum
+		osdate=$(date --utc --date "$1" +%F)
+		if curl -s "http://opensimulator.org/viewgit/?a=shortlog&p=opensim"  |  grep -q "$osdate"; then
+			echo "  $DATUM $(date +%H:%M:%S) INFO:$(tput setaf 2) Eine neue OpenSimulator Master Version ist da.$(tput sgr 0)"
+		else
+			echo "  $DATUM $(date +%H:%M:%S) INFO:$(tput setaf 1) Es ist keine neue OpenSimulator Master Version da.$(tput sgr 0)"
+		fi
 		log line
 		log rohtext " "
 	# fi
@@ -522,10 +528,6 @@ function schreibeinfo() {
 
 # *Kopfzeile in die Log Datei schreiben.
 schreibeinfo
-
-
-
-
 
 ### ! Zeichen entfernen
 # letterdel $variable "[aAbBcCdD]" - letterdel $variable "[[:space:]]"
