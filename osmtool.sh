@@ -23,7 +23,7 @@
 #### ? Einstellungen ####
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe
-VERSION="V0.90.740" # opensimMULTITOOL Versionsausgabe
+VERSION="V0.90.738" # opensimMULTITOOL Versionsausgabe
 #clear # Bildschirmausgabe loeschen.
 #reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
@@ -7439,35 +7439,8 @@ function moneyconfig() {
     } > "$MONEYINI"
 }
 
-### ! vivoxconfig
-function vivoxconfig() {
-    VIVOXENABLE=$1
-    VIVOXADMINUSER=$2
-    ADMINPASSWORD=$3
-    VIVOXINI=$4
-    if [ "$VIVOXENABLE" = "" ]; then VIVOXENABLE="false"; fi
-    if [ "$VIVOXADMINUSER" = "" ]; then VIVOXADMINUSER="VIVOXADMINUSER"; fi
-    if [ "$ADMINPASSWORD" = "" ]; then ADMINPASSWORD="VIVOXADMINPASSWORD"; fi
-    if [ "$VIVOXINI" = "" ]; then VIVOXINI="Vivox.ini"; fi
-
-    {
-    echo '[VivoxVoice]'
-    echo "enabled = $VIVOXENABLE"
-    echo "vivox_server = www.osp.vivox.com"
-    echo "vivox_sip_uri = osp.vivox.com"
-    echo "vivox_admin_user = $VIVOXADMINUSER"
-    echo "vivox_admin_password = $ADMINPASSWORD"
-    echo "vivox_channel_type = positional"
-    echo "vivox_channel_distance_model = 2"
-    echo 'vivox_channel_mode = "'"open"'"'
-    echo "vivox_channel_roll_off = 2.0"
-    echo "vivox_channel_max_range = 80"
-    echo "vivox_channel_clamping_distance = 10"
-    } > "$VIVOXINI"
-}
-
-### !  osstruktur, legt die Verzeichnisstruktur fuer OpenSim an. # Aufruf: opensim.sh osstruktur ersteSIM letzteSIM
-# Beispiel: ./opensim.sh osstruktur 1 10 - erstellt ein Grid Verzeichnis fuer 10 Simulatoren inklusive der $SIMDATEI.
+### !  osstruktur, legt die Verzeichnisstruktur fuer OpenSim an. # Aufruf: osmtool.sh osstruktur ersteSIM letzteSIM
+# Beispiel: ./osmtool.sh osstruktur 1 10 - erstellt ein Grid Verzeichnis fuer 10 Simulatoren inklusive der $SIMDATEI.
 function osconfigstruktur() {
     # Ist die /"$STARTVERZEICHNIS"/$SIMDATEI vorhanden dann zuerst löschen
     if [ ! -f "/$STARTVERZEICHNIS/$SIMDATEI" ]; then
@@ -7477,12 +7450,13 @@ function osconfigstruktur() {
         echo "Lösche vorhandene $SIMDATEI"
         rm /"$STARTVERZEICHNIS"/$SIMDATEI
     fi
-    # Ist die Datei 
+
+    # Ist die Datei CONFIGPFAD="OpenSimConfig"
 	if [ ! -f "/$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/" ]; then
 		echo "Lege robust an im Verzeichnis $ROBUSTVERZEICHNIS an"
 		mkdir -p /"$STARTVERZEICHNIS"/$ROBUSTVERZEICHNIS/bin/config-include
-        cp "$AKTUELLEVERZ"/config-include/GridCommon.ini /"$STARTVERZEICHNIS"/$ROBUSTVERZEICHNIS/bin/config-include
-        cp "$AKTUELLEVERZ"/Robust.ini /"$STARTVERZEICHNIS"/$ROBUSTVERZEICHNIS/bin
+        cp "$AKTUELLEVERZ"/$CONFIGPFAD/config-include/GridCommon.ini /"$STARTVERZEICHNIS"/$ROBUSTVERZEICHNIS/bin/config-include
+        cp "$AKTUELLEVERZ"/$CONFIGPFAD/Robust.ini /"$STARTVERZEICHNIS"/$ROBUSTVERZEICHNIS/bin
         
         CONSTINI="/$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/config-include/Const.ini"
         constconfig "$BASEHOSTNAME" "$PRIVURL" "$MONEYPORT" "$SIMULATORPORT" "$MYSQLDATABASE" "$MYSQLUSER" "$MYSQLPASSWORD" "$STARTREGION" "$SIMULATORGRIDNAME" "$SIMULATORGRIDNICK" "$CONSTINI"
@@ -7492,12 +7466,14 @@ function osconfigstruktur() {
 	else
 		log error "Verzeichnis $ROBUSTVERZEICHNIS existiert bereits"
 	fi
+
+
 	for ((i = 1; i <= $2; i++)); do
 		echo "Ich lege gerade sim$i an!"
 		mkdir -p /"$STARTVERZEICHNIS"/sim"$i"/bin/config-include
         mkdir -p /"$STARTVERZEICHNIS"/sim"$i"/bin/Regions
-        cp "$AKTUELLEVERZ"/config-include/GridCommon.ini /"$STARTVERZEICHNIS"/sim"$i"/bin/config-include
-        cp "$AKTUELLEVERZ"/OpenSim.ini /"$STARTVERZEICHNIS"/sim"$i"/bin
+        cp "$AKTUELLEVERZ"/$CONFIGPFAD/config-include/GridCommon.ini /"$STARTVERZEICHNIS"/sim"$i"/bin/config-include
+        cp "$AKTUELLEVERZ"/$CONFIGPFAD/OpenSim.ini /"$STARTVERZEICHNIS"/sim"$i"/bin
         cd /"$STARTVERZEICHNIS"/sim"$i"/bin/config-include || exit # Beenden wenn Verzeichnis nicht vorhanden ist.
         CONSTINI="/$STARTVERZEICHNIS/sim$i/bin/config-include/Const.ini"
         ZWISCHENSPEICHERMSDB=$MYSQLDATABASE
@@ -7524,9 +7500,7 @@ function osconfigstruktur() {
 
         flotsamconfig "/$STARTVERZEICHNIS/sim$i/bin/config-include/FlotsamCache.ini"
 
-        vivoxconfig "$VIVOXENABLE" "$VIVOXADMINUSER" "$ADMINPASSWORD" "/$STARTVERZEICHNIS/sim$i/bin/config-include/Vivox.ini"
-
-        echo "Schreibe sim$i in $SIMDATEI, legen sie bitte Datenbank $MYSQLDATABASE an."    
+        echo "Schreibe sim$i in $SIMDATEI, legen sie bitte Datenbank $MYSQLDATABASE an."
 		# xargs sollte leerzeichen entfernen.
 		printf 'sim'"$i"'\t%s\n' | xargs >>/"$STARTVERZEICHNIS"/$SIMDATEI
         MYSQLDATABASE=$ZWISCHENSPEICHERMSDB # Zuruecksetzen sonst wird falsch addiert.
@@ -7637,30 +7611,6 @@ function configabfrage(){
 	if [ "$SKRIPTAKTIV" = "" ]; then SKRIPTAKTIV="nein"; fi
 	echo "Sie haben ausgewählt: $SKRIPTAKTIV"
 	echo "##################################################################"
-
-	echo "Möchten sie Vivox Voice Chat Aktivieren ja/nein [nein]:"
-	read -r VIVOXENABLEA
-	if [ "$VIVOXENABLEA" = "" ] || [ "$VIVOXENABLEA" = "nein" ]; then 
-		VIVOXENABLE="false"; VIVOXADMINUSER="Benutzername"; ADMINPASSWORD="Passwort"; 
-	fi
-	echo "Sie haben ausgewählt: $VIVOXENABLEA"
-	echo "##################################################################"
-
-	if [ "$VIVOXENABLEA" = "ja" ]; then
-	VIVOXENABLE="true";
-
-	echo "Vivox Voice Chat Admin Benutzername [VIVOXADMINUSER]:"
-	read -r VIVOXADMINUSER
-	if [ "$VIVOXADMINUSER" = "" ]; then VIVOXADMINUSER="VIVOXADMINUSER"; fi
-	echo "Sie haben ausgewählt: $VIVOXADMINUSER"
-	echo "##################################################################"
-
-	echo "Vivox Voice Chat Admin Passwort [ADMINPASSWORD]:"
-	read -r ADMINPASSWORD
-	if [ "$ADMINPASSWORD" = "" ]; then ADMINPASSWORD="ADMINPASSWORD"; fi
-	echo "Sie haben ausgewählt: $ADMINPASSWORD"
-	echo "##################################################################"
-	fi
 
 	# Weitere Auswertungen
 	if [ "$PRIVURL" = "" ]; then PRIVURL="\${Const|BaseURL}"; fi
@@ -7972,6 +7922,769 @@ function AutoInstall() {
             echo "Ich erkenne das Betriebssystem nicht"
         fi
     fi
+}
+
+### OpenSim Config
+function OpenSimConfig() {
+    # Abfrage des Benutzers.
+    echo "Bitte geben sie die IP oder DNS Adresse ihres Server oder PC ein [127.0.0.1]: "; read -r BaseHostname
+    echo "Bitte geben sie den Simulator Port ein [9010]: "; read -r SimulatorPort
+    echo "Bitte geben sie den Gridnamen ein [myGrid]: "; read -r gridname
+    echo "Moechten sie den Automatischen Backup ihrer Regionen einschalten true/false [false]: "; read -r AutoBackup
+    # Auswertung der Eingaben.
+    if test -z "$BaseHostname"; then BaseHostname="127.0.0.1"; fi
+    if test -z "$SimulatorPort"; then SimulatorPort="9010"; fi
+    if test -z "$gridname"; then gridname="myGrid"; fi
+    if test -z "$AutoBackup"; then AutoBackup="false"; fi
+
+    PublicPort="8002"
+    PrivatePort="8003"
+    PrivURL=$BaseHostname
+    BaseURL="http://$BaseHostname"
+    MoneyPort="8008"
+
+    OpenSimConfigSet $BaseHostname $SimulatorPort $gridname $AutoBackup $PublicPort $PrivatePort $BaseURL $MoneyPort
+    # OpenSimConfigSet
+}
+function OpenSimConfigSet() {
+    #  $BaseHostname,$SimulatorPort,$gridname,$AutoBackup,$PublicPort,$PrivatePort,$BaseURL,$MoneyPort
+    OpenSimdatei="OpenSim.ini"
+    OpenSimConfigList=(
+    "[Const]"
+    "BaseHostname = '$BaseHostname'"
+    "BaseURL = '$BaseURL'"
+    "PublicPort = '$PublicPort'"
+    "PrivURL = '$BaseURL'"
+    "PrivatePort = '$PrivatePort'"
+    "MoneyPort = '$MoneyPort'"
+    "SimulatorPort = '$SimulatorPort'"
+    "[Startup]"
+    "NonPhysicalPrimMax = 1024"
+    "DefaultDrawDistance = 128.0"
+    "MaxDrawDistance = 128"
+    "MaxRegionsViewDistance = 128"
+    "MinRegionsViewDistance = 48"
+    "meshing = Meshmerizer"
+    "physics = BulletSim"
+    "DefaultScriptEngine = 'YEngine'"
+    "[AccessControl]"
+    "DeniedClients = 'Imprudence|CopyBot|Twisted|Crawler|Cryolife|darkstorm|DarkStorm|Darkstorm|hydrastorm viewer|kinggoon copybot|goon squad copybot|copybot pro|darkstorm viewer|copybot club|darkstorm second life|copybot download|HydraStorm Copybot Viewer|Copybot|Firestorm Pro|DarkStorm v3|DarkStorm v2|ShoopedStorm|HydraStorm|hydrastorm|kinggoon|goon squad|goon|copybot|Shooped|ShoopedStorm|Triforce|Triforce Viewer|Firestorm Professional|ShoopedLife|Sombrero|Sombrero Firestorm|GoonSquad|Solar|SolarStorm'"
+    "[Map]"
+    "DrawPrimOnMapTile = true"
+    "RenderMeshes = true"
+    "[Permissions]"
+    "automatic_gods = false"
+    "implicit_gods = false"
+    "allow_grid_gods = true"
+    "[Estates]"
+    "[SMTP]"
+    "[Network]"
+    "http_listener_port = '$SimulatorPort'"
+    "ExternalHostNameForLSL = '$BaseURL'"
+    "shard = 'OpenSim'"
+    "user_agent = 'OpenSim LSL (Mozilla Compatible)'"
+    "[XMLRPC]"
+    "[ClientStack.LindenUDP]"
+    "DisableFacelights = 'true'"
+    "client_throttle_max_bps = 400000"
+    "scene_throttle_max_bps = 75000000"
+    "[ClientStack.LindenCaps]"
+    "Cap_GetTexture = 'localhost'"
+    "Cap_GetMesh = 'localhost'"
+    "Cap_AvatarPickerSearch = 'localhost'"
+    "Cap_GetDisplayNames = 'localhost'"
+    "[SimulatorFeatures]"
+    "SearchServerURI = $BaseURL:$PublicPort"
+    "DestinationGuideURI = $BaseURL:$PublicPort"
+    "[Chat]"
+    "whisper_distance = 25"
+    "say_distance = 70"
+    "shout_distance = 250"
+    "[EntityTransfer]"
+    "[Messaging]"
+    "OfflineMessageModule = 'Offline Message Module V2'"
+    "OfflineMessageURL = $PrivURL:$PrivatePort"
+    "StorageProvider = OpenSim.Data.MySQL.dll"
+    "MuteListModule = MuteListModule"
+    "ForwardOfflineGroupMessages = true"
+    "[BulletSim]"
+    "AvatarToAvatarCollisionsByDefault = true"
+    "[ODEPhysicsSettings]"
+    "[RemoteAdmin]"
+    "[Wind]"
+    "[Materials]"
+    "enable_materials = true"
+    "MaxMaterialsPerTransaction = 250"
+    "[DataSnapshot]"
+    "index_sims = true"
+    "data_exposure = minimum"
+    "gridname = '$gridname'"
+    "default_snapshot_period = 7200"
+    "snapshot_cache_directory = 'DataSnapshot'"
+    "[Economy]"
+    "SellEnabled = true"
+    "EconomyModule = DTLNSLMoneyModule"
+    "CurrencyServer = '$BaseURL:8008/'"
+    "UserServer = '$BaseURL:$PublicPort/'"
+    "CheckServerCert = false"
+    "PriceUpload = 0"
+    "MeshModelUploadCostFactor = 1.0"
+    "MeshModelUploadTextureCostFactor = 1.0"
+    "MeshModelMinCostFactor = 1.0"
+    "PriceGroupCreate = 0"
+    "ObjectCount = 0"
+    "PriceEnergyUnit = 0"
+    "PriceObjectClaim = 0"
+    "PricePublicObjectDecay = 0"
+    "PricePublicObjectDelete = 0"
+    "PriceParcelClaim = 0"
+    "PriceParcelClaimFactor = 1"
+    "PriceRentLight = 0"
+    "TeleportMinPrice = 0"
+    "TeleportPriceExponent = 2"
+    "EnergyEfficiency = 1"
+    "PriceObjectRent = 0"
+    "PriceObjectScaleFactor = 10"
+    "PriceParcelRent = 0"
+    "[YEngine]"
+    "Enabled = true"
+    "[XEngine]"
+    "Enabled = false"
+    "AppDomainLoading = false"
+    "DeleteScriptsOnStartup = true"
+    "[OSSL]"
+    "Include-osslDefaultEnable = 'config-include/osslDefaultEnable.ini'"
+    "[FreeSwitchVoice]"
+    "[VivoxVoice]"
+    "enabled = false"
+    "vivox_server = www.osp.vivox.com"
+    "vivox_sip_uri = osp.vivox.com"
+    "vivox_admin_user = myName"
+    "vivox_admin_password = myPassword"
+    "vivox_channel_type = positional"
+    "vivox_channel_distance_model = 2"
+    "vivox_channel_mode = 'open'"
+    "vivox_channel_roll_off = 2.0"
+    "vivox_channel_max_range = 80"
+    "vivox_channel_clamping_distance = 10"
+    "[Groups]"
+    "Enabled = true"
+    "LevelGroupCreate = 0"
+    "Module = 'Groups Module V2'"
+    "StorageProvider = OpenSim.Data.MySQL.dll"
+    "ServicesConnectorModule = Groups HG Service Connector"
+    "LocalService = remote"
+    "GroupsServerURI = '$BaseURL:$PrivatePort'"
+    "HomeURI = '$BaseURL:$PublicPort'"
+    "MessagingEnabled = true"
+    "MessagingModule = 'Groups Messaging Module V2'"
+    "NoticesEnabled = true"
+    "MessageOnlineUsersOnly = true"
+    "XmlRpcServiceReadKey    = 1234"
+    "XmlRpcServiceWriteKey   = 1234"
+    "[InterestManagement]"
+    "UpdatePrioritizationScheme = BestAvatarResponsiveness"
+    "ObjectsCullingByDistance = true"
+    "[MediaOnAPrim]"
+    "[NPC]"
+    "Enabled = true"
+    "MaxNumberNPCsPerScene = 40"
+    "AllowNotOwned = true"
+    "AllowSenseAsAvatar = true"
+    "AllowCloneOtherAvatars = true"
+    "NoNPCGroup = true"
+    "[Terrain]"
+    "InitialTerrain = 'flat'"
+    "[LandManagement]"
+    "ShowParcelBansLines = true"
+    "[UserProfiles]"
+    "ProfileServiceURL = '$BaseURL:$PublicPort'"
+    "AllowUserProfileWebURLs = true"
+    "[XBakes]"
+    "URL = '$PrivURL:$PrivatePort'"
+    "[Attachments]"
+    "[Textures]"
+    "ReuseDynamicTextures = true"
+    "ReuseDynamicLowDataTextures = true"
+    "[AutoBackupModule]"
+    "AutoBackup = '$AutoBackup'"
+    "AutoBackupModuleEnabled = '$AutoBackup'"
+    "AutoBackupInterval = 1260"
+    "AutoBackupBusyCheck = false"
+    "AutoBackupThreshold = 1"
+    "AutoBackupSkipAssets = false"
+    "AutoBackupNaming = Time"
+    "AutoBackupKeepFilesForDays = 7"
+    "AutoBackupDir = '/tmp/backup'"
+    "[Architecture]"
+    "Include-Architecture = 'config-include/GridHypergrid.ini'"
+    )
+
+    #echo "Alte $OpenSimdatei Datei loeschen falls vorhanden."
+    rm -f $OpenSimdatei # || echo "Keine $OpenSimdatei Datei vorhanden."
+
+    #echo "$OpenSimdatei schreiben"
+    printf '%s\n' "${OpenSimConfigList[@]}" > $OpenSimdatei
+
+    #echo "Tausche Hochstriche aus."
+    sed -i -e s/\'/\"/g "$OpenSimdatei"
+}
+
+### GridCommon Config
+function GridCommonConfig() {
+    # Abfrage des Benutzers.
+    echo "IP oder Adresse des Servers [127.0.0.1]: "; read -r HomeURI
+    echo "Datenbankname [sim1]: "; read -r MysqlDatabase
+    echo "Benutzername der Datenbank [myName]: "; read -r UserID
+    echo "Passwort des des Benutzers der Datenbank [myPassword]: "; read -r MysqlPassword
+    # Auswertung der Eingaben.
+    if test -z "$HomeURI"; then HomeURI="127.0.0.1"; fi
+    if test -z "$MysqlDatabase"; then MysqlDatabase="sim1"; fi
+    if test -z "$UserID"; then UserID="myName"; fi
+    if test -z "$MysqlPassword"; then MysqlPassword="myPassword"; fi
+
+    PublicPort="8002"
+    PrivatePort="8003"
+
+    GridCommonConfigSet $HomeURI $MysqlDatabase $UserID $MysqlPassword $PublicPort $PrivatePort
+}
+function GridCommonConfigSet() {
+    GridCommondatei="GridCommon.ini"
+
+    GridCommonConfigList=(
+    "[DatabaseService]"
+    "StorageProvider = 'OpenSim.Data.MySQL.dll'"
+    "ConnectionString = 'Data Source=localhost;Database='$MysqlDatabase';User ID='$UserID';Password='$MysqlPassword';Old Guids=true;SslMode=None;'"
+    "[Hypergrid]"
+    "HomeURI = '$HomeURI'"
+    "GatekeeperURI = 'http://'$HomeURI:$PublicPort'"
+    "[Modules]"
+    "AssetCaching = 'FlotsamAssetCache'"
+    "Include-FlotsamCache = 'config-include/FlotsamCache.ini'"
+    "[AssetService]"
+    "DefaultAssetLoader = 'OpenSim.Framework.AssetLoader.Filesystem.dll'"
+    "AssetLoaderArgs = 'assets/AssetSets.xml'"
+    "AssetServerURI = 'http://'$HomeURI:$PrivatePort'"
+    "[InventoryService]"
+    "InventoryServerURI = 'http://'$HomeURI:$PrivatePort'"
+    "[GridInfo]"
+    "GridInfoURI = 'http://'$HomeURI:$PublicPort'"
+    "[GridService]"
+    "GridServerURI = 'http://'$HomeURI:$PrivatePort'"
+    "AllowHypergridMapSearch = true"
+    "MapTileDirectory = './maptiles'"
+    "Gatekeeper='http://'$HomeURI:$PublicPort'"
+    "[EstateDataStore]"
+    "[EstateService]"
+    "EstateServerURI = 'http://$HomeURI:$PrivatePort'"
+    "[Messaging]"
+    "Gatekeeper = 'http://'$HomeURI:$PublicPort'"
+    "[AvatarService]"
+    "AvatarServerURI = 'http://'$HomeURI:$PrivatePort'"
+    "[AgentPreferencesService]"
+    "AgentPreferencesServerURI = 'http://'$HomeURI:$PrivatePort'"
+    "[PresenceService]"
+    "PresenceServerURI = 'http://'$HomeURI:$PrivatePort'"
+    "[UserAccountService]"
+    "UserAccountServerURI = 'http://'$HomeURI:$PrivatePort'"
+    "[GridUserService]"
+    "GridUserServerURI = 'http://'$HomeURI:$PrivatePort'"
+    "[AuthenticationService]"
+    "AuthenticationServerURI = 'http://'$HomeURI:$PrivatePort'"
+    "[FriendsService]"
+    "FriendsServerURI = 'http://'$HomeURI:$PrivatePort'"
+    "[HGInventoryAccessModule]"
+    "HomeURI = 'http://'$HomeURI:$PublicPort'"
+    "Gatekeeper = 'http://'$HomeURI:$PublicPort'"
+    "RestrictInventoryAccessAbroad = false"
+    "[HGAssetService]"
+    "HomeURI = 'http://'$HomeURI:$PublicPort'"
+    "[HGFriendsModule]"
+    "[UserAgentService]"
+    "UserAgentServerURI = 'http://'$HomeURI:$PublicPort'"
+    "[MapImageService]"
+    "MapImageServerURI = 'http://'$HomeURI:$PrivatePort'"
+    "[AuthorizationService]"
+    "[MuteListService]"
+    "MuteListServerURI = 'http://'$HomeURI:$PrivatePort'"
+    )
+    echo "Alte $GridCommondatei Datei loeschen falls vorhanden."
+    rm -f $GridCommondatei # || echo "Keine $GridCommondatei Datei vorhanden."
+
+    echo "$GridCommondatei schreiben"
+    printf '%s\n' "${GridCommonConfigList[@]}" > $GridCommondatei
+
+    echo "Tausche Hochstriche aus."
+    sed -i -e s/\'/\"/g "$GridCommondatei"
+}
+
+### osslEnable Config
+function osslEnableConfig() {
+    # Abfrage des Benutzers.
+    echo "Alle Skript Rechte an Grid Betreiber [$BenutzerUUID]: "; read -r Rechte
+    # Auswertung der Eingaben.
+    if test -z "$Rechte"; then Rechte="$BenutzerUUID"; fi
+
+    osslEnableConfigSet "$Rechte"
+}
+function osslEnableConfigSet() {
+    osslEnabledatei="osslEnable.ini"
+
+    OsslEnableConfigList=(
+    "[OSSL]"
+    "AllowOSFunctions = true"
+    "AllowMODFunctions = true"
+    "AllowLightShareFunctions = true"
+    "PermissionErrorToOwner = true"
+    "OSFunctionThreatLevel = Moderate"
+    "osslParcelO = 'PARCEL_OWNER,$Rechte,'"
+    "osslParcelOG = 'PARCEL_GROUP_MEMBER,PARCEL_OWNER,$Rechte,'"
+    "osslNPC = ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER,$Rechte"
+    "Allow_osDrawText = 				true"
+    "Allow_osGetAgents = 				true"
+    "Allow_osGetAvatarList =  			true"
+    "Allow_osGetGender =               true"
+    "Allow_osGetHealth =               true"
+    "Allow_osGetHealRate =             true"
+    "Allow_osGetNPCList =              true"
+    "Allow_osGetRezzingObject =        true"
+    "Allow_osNpcGetOwner =             ${OSSL|osslNPC}"
+    "Allow_osSetSunParam =             ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osTeleportOwner =           ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osWindActiveModelPluginName = true"
+    "Allow_osSetEstateSunSettings =    ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osSetRegionSunSettings =    ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osEjectFromGroup =          ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osForceBreakAllLinks =      ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osForceBreakLink =          ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osGetWindParam =            true"
+    "Allow_osInviteToGroup =           ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osReplaceString =           true"
+    "Allow_osSetDynamicTextureData =  true"
+    "Allow_osSetDynamicTextureDataFace =   ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osSetDynamicTextureDataBlend =  ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osSetDynamicTextureDataBlendFace = ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osSetDynamicTextureURL =        ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osSetDynamicTextureURLBlend =   ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osSetDynamicTextureURLBlendFace = ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osSetParcelMediaURL =       ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osSetParcelSIPAddress =     ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osSetPrimFloatOnWater =     true"
+    "Allow_osSetWindParam =            ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osTerrainFlush =            ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osUnixTimeToTimestamp =     true"
+    "Allow_osAvatarName2Key =          true"
+    "Allow_osFormatString =            true"
+    "Allow_osKey2Name =                ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osListenRegex =             true"
+    "Allow_osLoadedCreationDate =      ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osLoadedCreationID =        ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osLoadedCreationTime =      ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osMessageObject =           true"
+    "Allow_osRegexIsMatch =            true"
+    "Allow_osGetAvatarHomeURI =        true"
+    "Allow_osNpcSetProfileAbout =      ${OSSL|osslNPC}"
+    "Allow_osNpcSetProfileImage =      ${OSSL|osslNPC}"
+    "Allow_osDie =                     ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osDetectedCountry =         ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osDropAttachment =          ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osDropAttachmentAt =        ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osGetAgentCountry =         true"
+    "Allow_osGetGridCustom =           true"
+    "Allow_osGetGridGatekeeperURI =    true"
+    "Allow_osGetGridHomeURI =          true"
+    "Allow_osGetGridLoginURI =         true"
+    "Allow_osGetGridName =             true"
+    "Allow_osGetGridNick =             true"
+    "Allow_osGetNumberOfAttachments =  true"
+    "Allow_osGetRegionStats =          true"
+    "Allow_osGetSimulatorMemory =      true"
+    "Allow_osGetSimulatorMemoryKB =    true"
+    "Allow_osMessageAttachments =      ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osSetSpeed =                ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osSetOwnerSpeed =           ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osCauseDamage =             ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osCauseHealing =            ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osSetHealth =               ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osSetHealRate =             ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osForceAttachToAvatar =     ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osForceAttachToAvatarFromInventory = ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osForceCreateLink =         ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osForceDropAttachment =     ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osForceDropAttachmentAt =   ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osGetLinkPrimitiveParams =  ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osGetPhysicsEngineType =    ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osGetRegionMapTexture =     ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osGetScriptEngineName =     ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osGetSimulatorVersion =     ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osMakeNotecard =            ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osMatchString =             ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osNpcCreate =               ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osNpcGetPos =               ${OSSL|osslNPC}"
+    "Allow_osNpcGetRot =               ${OSSL|osslNPC}"
+    "Allow_osNpcLoadAppearance =       ${OSSL|osslNPC}"
+    "Allow_osNpcMoveTo =               ${OSSL|osslNPC}"
+    "Allow_osNpcMoveToTarget =         ${OSSL|osslNPC}"
+    "Allow_osNpcPlayAnimation =        ${OSSL|osslNPC}"
+    "Allow_osNpcRemove =               true"
+    "Allow_osNpcSaveAppearance =       ${OSSL|osslNPC}"
+    "Allow_osNpcSay =                  ${OSSL|osslNPC}"
+    "Allow_osNpcSayTo =                ${OSSL|osslNPC}"
+    "Allow_osNpcSetRot =               ${OSSL|osslNPC}"
+    "Allow_osNpcShout =                ${OSSL|osslNPC}"
+    "Allow_osNpcSit =                  ${OSSL|osslNPC}"
+    "Allow_osNpcStand =                ${OSSL|osslNPC}"
+    "Allow_osNpcStopAnimation =        ${OSSL|osslNPC}"
+    "Allow_osNpcStopMoveToTarget =     ${OSSL|osslNPC}"
+    "Allow_osNpcTouch =                ${OSSL|osslNPC}"
+    "Allow_osNpcWhisper =              ${OSSL|osslNPC}"
+    "Allow_osOwnerSaveAppearance =     ${OSSL|osslNPC}"
+    "Allow_osParcelJoin =              ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osParcelSubdivide =         ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osRegionRestart =           ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osRegionNotice =            ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osSetProjectionParams =     ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osSetRegionWaterHeight =    ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osSetTerrainHeight =        ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osSetTerrainTexture =       ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osSetTerrainTextureHeight = ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osAgentSaveAppearance =     ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osAvatarPlayAnimation =     ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osAvatarStopAnimation =     ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osForceAttachToOtherAvatarFromInventory = ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osForceDetachFromAvatar =   ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osForceOtherSit =           ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osGetNotecard =             ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osGetNotecardLine =         ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osGetNumberOfNotecardLines = ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osSetRot  =                 ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osSetParcelDetails =        ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osGrantScriptPermissions =  ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osKickAvatar =              ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osRevokeScriptPermissions = ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osTeleportAgent =           ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osTeleportObject =          ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
+    "Allow_osSetContentType =          ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
+    )
+    echo "Alte $osslEnabledatei Datei loeschen falls vorhanden."
+    rm -f $osslEnabledatei # || echo "Keine $osslEnabledatei Datei vorhanden."
+
+    echo "$osslEnabledatei schreiben"
+    printf '%s\n' "${OsslEnableConfigList[@]}" > $osslEnabledatei
+
+    echo "Tausche Hochstriche aus."
+    sed -i -e s/\'/\"/g "$GridCommondatei"
+}
+
+### Regions Config
+function RegionsConfig() {
+    UUID=$(uuidgen)
+    # Abfrage des Benutzers.
+    echo "RegionName [Welcome]:"; read -r RegionName
+    echo "RegionUUID [$UUID]: "; read -r RegionUUID
+    echo "Location [1000,1000]: "; read -r Location
+    echo "InternalPort [9050]: "; read -r InternalPort
+    echo "ExternalHostName [127.0.0.1]: "; read -r ExternalHostName
+    echo "Size [512]: "; read -r Size
+    echo "MaxPrims [100000]: "; read -r MaxPrims
+    echo "MaxAgents [50]: "; read -r MaxAgents
+    # Auswertung der Eingaben.
+    if test -z "$RegionName"; then RegionName="Welcome"; fi
+    if test -z "$RegionUUID"; then RegionUUID="$UUID"; fi
+    if test -z "$Location"; then Location="1000,1000"; fi
+    if test -z "$InternalPort"; then InternalPort="9050"; fi
+    if test -z "$ExternalHostName"; then ExternalHostName="127.0.0.1"; fi
+    if test -z "$Size"; then Size="512"; fi
+    if test -z "$MaxPrims"; then MaxPrims="100000"; fi
+    if test -z "$MaxAgents"; then MaxAgents="50"; fi
+
+    RegionsConfigSet $RegionName "$RegionUUID" $Location $InternalPort $ExternalHostName $Size $MaxPrims $MaxAgents "$UUID"
+}
+function RegionsConfigSet() {
+    Regionsdatei="OpenSim.ini"
+
+    RegionsConfigList=(
+    "[Erste-Region]"
+    "RegionUUID = $RegionUUID"
+    "Location = $Location"
+    "InternalAddress = 0.0.0.0"
+    "InternalPort = $InternalPort"
+    "AllowAlternatePorts = False"
+    "ExternalHostName = $ExternalHostName"
+    "SizeX = $Size"
+    "SizeY = $Size"
+    "SizeZ = $Size"
+    "NonPhysicalPrimMax = 256"
+    "PhysicalPrimMax = 64"
+    "MaxPrims = $MaxPrims"
+    "MaxAgents = $MaxAgents"
+    )
+    echo "Alte $Regionsdatei Datei loeschen falls vorhanden."
+    rm -f $Regionsdatei # || echo "Keine $Regionsdatei Datei vorhanden."
+
+    echo "$Regionsdatei schreiben"
+    printf '%s\n' "${RegionsConfigList[@]}" > $Regionsdatei
+
+    echo "Tausche Hochstriche aus."
+    sed -i -e s/\'/\"/g "$GridCommondatei"
+}
+
+### Robust Config
+function RobustConfig() {    
+    # Abfrage des Benutzers.
+    echo "BaseHostname [127.0.0.1]: "; read -r BaseHostname
+    echo "gridname [myGrid]: "; read -r gridname
+    echo "mySQL User Name [myName]: "; read -r UserID
+    echo "mySQL Password [myPassword]: "; read -r MysqlPassword
+    echo "mySQL Database [myDatabase]: "; read -r MysqlDatabase
+    echo "StartRegion [Welcome]: "; read -r StartRegion
+    # Auswertung der Eingaben.
+    if test -z "$BaseHostname"; then BaseHostname="127.0.0.1"; fi
+    if test -z "$gridname"; then gridname="myGrid"; fi
+    if test -z "$UserID"; then UserID="myName"; fi
+    if test -z "$MysqlPassword"; then MysqlPassword="myPassword"; fi
+    if test -z "$MysqlDatabase"; then MysqlDatabase="myDatabase"; fi
+    if test -z "$StartRegion"; then StartRegion="Welcome"; fi
+
+    PublicPort="8002"
+    PrivatePort="8003"
+    PrivURL=$BaseHostname
+    BaseURL="http://$BaseHostname"
+    MoneyPort="8008"
+
+    RobustConfigSet $BaseHostname $gridname $UserID $MysqlPassword $MysqlDatabase $StartRegion $PublicPort $PrivatePort $PrivURL $BaseURL $MoneyPort
+}
+function RobustConfigSet() {
+    Robustdatei="Robust.ini"    
+
+    RobustConfigList=(
+    "[Const]"
+    "BaseURL = '$BaseURL'"
+    "PublicPort = '$PublicPort'"
+    "PrivatePort = '$PrivatePort'"
+    "MysqlDatabase = '$MysqlDatabase'"
+    "MysqlUser = '$MysqlUser'"
+    "MysqlPassword = '$MysqlPassword'"
+    "StartRegion = '$StartRegion'"
+    "Simulatorgridname = '$gridname'"
+    "Simulatorgridnick = '$gridname'"
+    "[Startup]"
+    "PIDFile = '/tmp/Robust.pid'"
+    "RegistryLocation = '.'"
+    "ConfigDirectory = 'robust-include'"
+    "ConsoleHistoryFileEnabled = true"
+    "ConsoleHistoryFile = 'RobustConsoleHistory.txt'"
+    "ConsoleHistoryFileLines = 100"
+    "NoVerifyCertChain = true"
+    "NoVerifyCertHostname = true"
+    "[ServiceList]"
+    "AssetServiceConnector = '${Const|PrivatePort}/OpenSim.Server.Handlers.dll:AssetServiceConnector'"
+    "InventoryInConnector = '${Const|PrivatePort}/OpenSim.Server.Handlers.dll:XInventoryInConnector'"
+    "GridServiceConnector = '${Const|PrivatePort}/OpenSim.Server.Handlers.dll:GridServiceConnector'"
+    "GridInfoServerInConnector = '${Const|PublicPort}/OpenSim.Server.Handlers.dll:GridInfoServerInConnector'"
+    "AuthenticationServiceConnector = '${Const|PrivatePort}/OpenSim.Server.Handlers.dll:AuthenticationServiceConnector'"
+    "OpenIdServerConnector = '${Const|PublicPort}/OpenSim.Server.Handlers.dll:OpenIdServerConnector'"
+    "AvatarServiceConnector = '${Const|PrivatePort}/OpenSim.Server.Handlers.dll:AvatarServiceConnector'"
+    "LLLoginServiceInConnector = '${Const|PublicPort}/OpenSim.Server.Handlers.dll:LLLoginServiceInConnector'"
+    "PresenceServiceConnector = '${Const|PrivatePort}/OpenSim.Server.Handlers.dll:PresenceServiceConnector'"
+    "UserAccountServiceConnector = '${Const|PrivatePort}/OpenSim.Server.Handlers.dll:UserAccountServiceConnector'"
+    "GridUserServiceConnector = '${Const|PrivatePort}/OpenSim.Server.Handlers.dll:GridUserServiceConnector'"
+    "AgentPreferencesServiceConnector = '${Const|PrivatePort}/OpenSim.Server.Handlers.dll:AgentPreferencesServiceConnector'"
+    "FriendsServiceConnector = '${Const|PrivatePort}/OpenSim.Server.Handlers.dll:FriendsServiceConnector'"
+    "MapAddServiceConnector = '${Const|PrivatePort}/OpenSim.Server.Handlers.dll:MapAddServiceConnector'"
+    "MapGetServiceConnector = '${Const|PublicPort}/OpenSim.Server.Handlers.dll:MapGetServiceConnector'"
+    "OfflineIMServiceConnector = '${Const|PrivatePort}/OpenSim.Addons.OfflineIM.dll:OfflineIMServiceRobustConnector'"
+    "GroupsServiceConnector = '${Const|PrivatePort}/OpenSim.Addons.Groups.dll:GroupsServiceRobustConnector'"
+    "BakedTextureService = '${Const|PrivatePort}/OpenSim.Server.Handlers.dll:XBakesConnector'"
+    "UserProfilesServiceConnector = '${Const|PublicPort}/OpenSim.Server.Handlers.dll:UserProfilesConnector'"
+    "MuteListConnector = '${Const|PrivatePort}/OpenSim.Server.Handlers.dll:MuteListServiceConnector'"
+    "GatekeeperServiceInConnector = '${Const|PublicPort}/OpenSim.Server.Handlers.dll:GatekeeperServiceInConnector'"
+    "UserAgentServerConnector = '${Const|PublicPort}/OpenSim.Server.Handlers.dll:UserAgentServerConnector'"
+    "HeloServiceInConnector = '${Const|PublicPort}/OpenSim.Server.Handlers.dll:HeloServiceInConnector'"
+    "HGFriendsServerConnector = '${Const|PublicPort}/OpenSim.Server.Handlers.dll:HGFriendsServerConnector'"
+    "InstantMessageServerConnector = '${Const|PublicPort}/OpenSim.Server.Handlers.dll:InstantMessageServerConnector'"
+    "HGInventoryServiceConnector = 'HGInventoryService@${Const|PublicPort}/OpenSim.Server.Handlers.dll:XInventoryInConnector'"
+    "HGAssetServiceConnector = 'HGAssetService@${Const|PublicPort}/OpenSim.Server.Handlers.dll:AssetServiceConnector'"
+    "HGGroupsServiceConnector = '${Const|PublicPort}/OpenSim.Addons.Groups.dll:HGGroupsServiceRobustConnector'"
+    "[Network]"
+    "port = ${Const|PrivatePort}"
+    "AllowllHTTPRequestIn = false"
+    "[Hypergrid]"
+    "HomeURI = '${Const|BaseURL}:${Const|PublicPort}'"
+    "GatekeeperURI = '${Const|BaseURL}:${Const|PublicPort}'"
+    "[AccessControl]"
+    "DeniedClients = 'Imprudence|CopyBot|Twisted|Crawler|Cryolife|darkstorm|DarkStorm|Darkstorm|hydrastorm viewer|kinggoon copybot|goon squad copybot|copybot pro|darkstorm viewer|copybot club|darkstorm second life|copybot download|HydraStorm Copybot Viewer|Copybot|Firestorm Pro|DarkStorm v3|DarkStorm v2|ShoopedStorm|HydraStorm|hydrastorm|kinggoon|goon squad|goon|copybot|Shooped|ShoopedStorm|Triforce|Triforce Viewer|Firestorm Professional|ShoopedLife|Sombrero|Sombrero Firestorm|GoonSquad|Solar|SolarStorm'"
+    "[DatabaseService]"
+    "StorageProvider = 'OpenSim.Data.MySQL.dll'"
+    "ConnectionString = 'Data Source=localhost;Database='$MysqlDatabase';User ID='$UserID';Password='$MysqlPassword';Old Guids=true;SslMode=None;'"
+    "[AssetService]"
+    "LocalServiceModule = 'OpenSim.Services.AssetService.dll:AssetService'"
+    "DefaultAssetLoader = 'OpenSim.Framework.AssetLoader.Filesystem.dll'"
+    "AssetLoaderArgs = './assets/AssetSets.xml'"
+    "AllowRemoteDelete = true"
+    "AllowRemoteDeleteAllTypes = false"
+    "[InventoryService]"
+    "LocalServiceModule = 'OpenSim.Services.InventoryService.dll:XInventoryService'"
+    "AllowDelete = true"
+    "[GridService]"
+    "LocalServiceModule = 'OpenSim.Services.GridService.dll:GridService'"
+    "AssetService = 'OpenSim.Services.AssetService.dll:AssetService'"
+    "MapTileDirectory = './maptiles'"
+    "Region_$StartRegion = 'DefaultRegion, DefaultHGRegion'"
+    "HypergridLinker = true"
+    "ExportSupported = true"
+    "GatekeeperURI = '${Const|BaseURL}:${Const|PublicPort}'"
+    "[FreeswitchService]"
+    "LocalServiceModule = 'OpenSim.Services.FreeswitchService.dll:FreeswitchService'"
+    "[AuthenticationService]"
+    "LocalServiceModule = 'OpenSim.Services.AuthenticationService.dll:PasswordAuthenticationService'"
+    "AllowGetAuthInfo = true"
+    "AllowSetAuthInfo = true"
+    "AllowSetPassword = true"
+    "[OpenIdService]"
+    "AuthenticationServiceModule = 'OpenSim.Services.AuthenticationService.dll:PasswordAuthenticationService'"
+    "UserAccountServiceModule = 'OpenSim.Services.UserAccountService.dll:UserAccountService'"
+    "[UserAccountService]"
+    "LocalServiceModule = 'OpenSim.Services.UserAccountService.dll:UserAccountService'"
+    "AuthenticationService = 'OpenSim.Services.AuthenticationService.dll:PasswordAuthenticationService'"
+    "PresenceService = 'OpenSim.Services.PresenceService.dll:PresenceService'"
+    "GridService = 'OpenSim.Services.GridService.dll:GridService'"
+    "InventoryService = 'OpenSim.Services.InventoryService.dll:XInventoryService'"
+    "AvatarService = 'OpenSim.Services.AvatarService.dll:AvatarService'"
+    "GridUserService = 'OpenSim.Services.UserAccountService.dll:GridUserService'"
+    "CreateDefaultAvatarEntries = true"
+    "AllowCreateUser = true"
+    "AllowSetAccount = true"
+    "[GridUserService]"
+    "LocalServiceModule = 'OpenSim.Services.UserAccountService.dll:GridUserService'"
+    "[AgentPreferencesService]"
+    "LocalServiceModule = 'OpenSim.Services.UserAccountService.dll:AgentPreferencesService'"
+    "[PresenceService]"
+    "LocalServiceModule = 'OpenSim.Services.PresenceService.dll:PresenceService'"
+    "[AvatarService]"
+    "LocalServiceModule = 'OpenSim.Services.AvatarService.dll:AvatarService'"
+    "[FriendsService]"
+    "LocalServiceModule = 'OpenSim.Services.FriendsService.dll:FriendsService'"
+    "[EstateService]"
+    "LocalServiceModule = 'OpenSim.Services.EstateService.dll:EstateDataService'"
+    "[LibraryService]"
+    "LibraryName = 'OpenSim Library'"
+    "DefaultLibrary = './inventory/Libraries.xml'"
+    "[LoginService]"
+    "LocalServiceModule = 'OpenSim.Services.LLLoginService.dll:LLLoginService'"
+    "UserAccountService = 'OpenSim.Services.UserAccountService.dll:UserAccountService'"
+    "GridUserService = 'OpenSim.Services.UserAccountService.dll:GridUserService'"
+    "AuthenticationService = 'OpenSim.Services.AuthenticationService.dll:PasswordAuthenticationService'"
+    "InventoryService = 'OpenSim.Services.InventoryService.dll:XInventoryService'"
+    "AvatarService = 'OpenSim.Services.AvatarService.dll:AvatarService'"
+    "PresenceService = 'OpenSim.Services.PresenceService.dll:PresenceService'"
+    "GridService = 'OpenSim.Services.GridService.dll:GridService'"
+    "SimulationService ='OpenSim.Services.Connectors.dll:SimulationServiceConnector'"
+    "LibraryService = 'OpenSim.Services.InventoryService.dll:LibraryService'"
+    "FriendsService = 'OpenSim.Services.FriendsService.dll:FriendsService'"
+    "MinLoginLevel = 0"
+    "UserAgentService = 'OpenSim.Services.HypergridService.dll:UserAgentService'"
+    "HGInventoryServicePlugin = 'HGInventoryService@OpenSim.Services.HypergridService.dll:HGSuitcaseInventoryService'"
+    "Currency = 'T$'"
+    "ClassifiedFee = 0"
+    "WelcomeMessage = 'Welcome, Avatar!'"
+    "AllowRemoteSetLoginLevel = 'false'"
+    "GatekeeperURI = '${Const|BaseURL}:${Const|PublicPort}'"
+    "SRV_HomeURI = '${Const|BaseURL}:${Const|PublicPort}'"
+    "SRV_InventoryServerURI = '${Const|BaseURL}:${Const|PublicPort}'"
+    "SRV_AssetServerURI = '${Const|BaseURL}:${Const|PublicPort}'"
+    "SRV_ProfileServerURI = '${Const|BaseURL}:${Const|PublicPort}'"
+    "SRV_FriendsServerURI = '${Const|BaseURL}:${Const|PublicPort}'"
+    "SRV_IMServerURI = '${Const|BaseURL}:${Const|PublicPort}'"
+    "SRV_GroupsServerURI = '${Const|BaseURL}:${Const|PublicPort}'"
+    "AllowLoginFallbackToAnyRegion = false"
+    "DeniedMacs = '44ed33b396b10a5c95d04967aff8bd9c'"
+    "[MapImageService]"
+    "LocalServiceModule = 'OpenSim.Services.MapImageService.dll:MapImageService'"
+    "TilesStoragePath = 'maptiles'"
+    "[GridInfoService]"
+    "login = ${Const|BaseURL}:${Const|PublicPort}/"
+    "gridname = '$gridname'"
+    "gridnick = '$gridname'"
+    "welcome = ${Const|BaseURL}/"
+    "economy = ${Const|BaseURL}/helper/"
+    "about = ${Const|BaseURL}/"
+    "register = ${Const|BaseURL}/"
+    "help = ${Const|BaseURL}/"
+    "password = ${Const|BaseURL}/"
+    "gatekeeper = ${Const|BaseURL}:${Const|PublicPort}/"
+    "uas = ${Const|BaseURL}:${Const|PublicPort}/"
+    "[GatekeeperService]"
+    "LocalServiceModule = 'OpenSim.Services.HypergridService.dll:GatekeeperService'"
+    "UserAccountService = 'OpenSim.Services.UserAccountService.dll:UserAccountService'"
+    "UserAgentService = 'OpenSim.Services.HypergridService.dll:UserAgentService'"
+    "PresenceService = 'OpenSim.Services.PresenceService.dll:PresenceService'"
+    "GridUserService = 'OpenSim.Services.UserAccountService.dll:GridUserService'"
+    "GridService = 'OpenSim.Services.GridService.dll:GridService'"
+    "AuthenticationService = 'OpenSim.Services.Connectors.dll:AuthenticationServicesConnector'"
+    "SimulationService ='OpenSim.Services.Connectors.dll:SimulationServiceConnector'"
+    "AllowTeleportsToAnyRegion = true"
+    "ForeignAgentsAllowed = true"
+    "[UserAgentService]"
+    "LocalServiceModule = 'OpenSim.Services.HypergridService.dll:UserAgentService'"
+    "GridUserService     = 'OpenSim.Services.UserAccountService.dll:GridUserService'"
+    "GridService         = 'OpenSim.Services.GridService.dll:GridService'"
+    "GatekeeperService   = 'OpenSim.Services.HypergridService.dll:GatekeeperService'"
+    "PresenceService     = 'OpenSim.Services.PresenceService.dll:PresenceService'"
+    "FriendsService      = 'OpenSim.Services.FriendsService.dll:FriendsService'"
+    "UserAccountService  = 'OpenSim.Services.UserAccountService.dll:UserAccountService'"
+    "LevelOutsideContacts = 0"
+    "ShowUserDetailsInHGProfile = True"
+    "[HGInventoryService]"
+    "LocalServiceModule    = 'OpenSim.Services.InventoryService.dll:XInventoryService'"
+    "UserAccountsService = 'OpenSim.Services.UserAccountService.dll:UserAccountService'"
+    "AvatarService = 'OpenSim.Services.AvatarService.dll:AvatarService'"
+    "AuthType = None"
+    "HomeURI = '${Const|BaseURL}:${Const|PublicPort}'"
+    "[HGAssetService]"
+    "LocalServiceModule = 'OpenSim.Services.HypergridService.dll:HGAssetService'"
+    "UserAccountsService = 'OpenSim.Services.UserAccountService.dll:UserAccountService'"
+    "AuthType = None"
+    "HomeURI = '${Const|BaseURL}:${Const|PublicPort}'"
+    "[HGFriendsService]"
+    "LocalServiceModule = 'OpenSim.Services.HypergridService.dll:HGFriendsService'"
+    "UserAgentService = 'OpenSim.Services.HypergridService.dll:UserAgentService'"
+    "FriendsService = 'OpenSim.Services.FriendsService.dll:FriendsService'"
+    "UserAccountService = 'OpenSim.Services.UserAccountService.dll:UserAccountService'"
+    "GridService = 'OpenSim.Services.GridService.dll:GridService'"
+    "PresenceService = 'OpenSim.Services.PresenceService.dll:PresenceService'"
+    "[HGInstantMessageService]"
+    "LocalServiceModule  = 'OpenSim.Services.HypergridService.dll:HGInstantMessageService'"
+    "GridService         = 'OpenSim.Services.GridService.dll:GridService'"
+    "PresenceService     = 'OpenSim.Services.PresenceService.dll:PresenceService'"
+    "UserAgentService    = 'OpenSim.Services.HypergridService.dll:UserAgentService'"
+    "InGatekeeper = True"
+    "[Messaging]"
+    "OfflineIMService = 'OpenSim.Addons.OfflineIM.dll:OfflineIMService'"
+    "[Groups]"
+    "OfflineIMService = 'OpenSim.Addons.OfflineIM.dll:OfflineIMService'"
+    "UserAccountService = 'OpenSim.Services.UserAccountService.dll:UserAccountService'"
+    "HomeURI = '${Const|BaseURL}:${Const|PublicPort}'"
+    "MaxAgentGroups = 50"
+    "[UserProfilesService]"
+    "LocalServiceModule = 'OpenSim.Services.UserProfilesService.dll:UserProfilesService'"
+    "Enabled = true"
+    "UserAccountService = OpenSim.Services.UserAccountService.dll:UserAccountService"
+    "AuthenticationServiceModule = 'OpenSim.Services.AuthenticationService.dll:PasswordAuthenticationService'"
+    "[BakedTextureService]"
+    "LocalServiceModule = 'OpenSim.Server.Handlers.dll:XBakes'"
+    "BaseDirectory = './bakes'"
+    "[MuteListService]"
+    "LocalServiceModule = 'OpenSim.Services.MuteListService.dll:MuteListService'"
+    )
+    echo "Alte $Robustdatei Datei loeschen falls vorhanden."
+    rm -f $Robustdatei # || echo "Keine $Robustdatei Datei vorhanden."
+
+    echo "$Robustdatei schreiben"
+    printf '%s\n' "${RobustConfigList[@]}" > $Robustdatei
+
+    echo "Tausche Hochstriche aus."
+    sed -i -e s/\'/\"/g "$GridCommondatei"
 }
 
 ###########################################################################
