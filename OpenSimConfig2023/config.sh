@@ -97,28 +97,6 @@ if [ "$SIMULATORPORT" = "" ]; then SIMULATORPORT="9010"; fi
 echo "Ihr SimulatorPort startet bei: $SIMULATORPORT"
 echo "##################################################################"
 
-echo "Möchten sie Vivox Voice Aktivieren [nein]:"
-read -r VIVOX_ENABLED
-if [ "$VIVOX_ENABLED" = "" ]; then VIVOX_ENABLED="false"; fi
-if [ "$VIVOX_ENABLED" = "nein" ]; then VIVOX_ENABLED="false"; fi
-if [ "$VIVOX_ENABLED" = "ja" ]; then VIVOX_ENABLED="true"; fi
-echo "Ihre Auswahl ist: $VIVOX_ENABLED"
-echo "##################################################################"
-
-if [ "$VIVOX_ENABLED" = "true" ]; then
-echo "Bitte geben sie ihr Vivox Admin Benutzername:"
-read -r VIVOX_ADMIN_USER
-if [ "$VIVOX_ADMIN_USER" = "" ]; then VIVOX_ENABLED="false"; fi
-echo "Ihre Auswahl ist: $VIVOX_ADMIN_USER"
-echo "##################################################################"
-
-echo "Bitte geben sie ihr Vivox Admin Passwort an:"
-read -r VIVOX_ADMIN_PASSWORD
-if [ "$VIVOX_ADMIN_PASSWORD" = "" ]; then VIVOX_ENABLED="false"; fi
-echo "Ihre Auswahl ist: $VIVOX_ADMIN_PASSWORD"
-echo "##################################################################"
-fi
-
 echo "Möchten sie DTL NSL Money Aktivieren [nein]:"
 read -r DTLNSLMONEYMODULE
 if [ "$DTLNSLMONEYMODULE" = "" ] || [ "$DTLNSLMONEYMODULE" = "nein" ]; then DTLNSLMONEYMODULE="false"; fi
@@ -179,9 +157,36 @@ if [ "$SKRIPTAKTIV" = "" ]; then SKRIPTAKTIV="nein"; fi
 echo "Sie haben ausgewählt: $SKRIPTAKTIV"
 echo "##################################################################"
 
+echo "Möchten sie Vivox Voice Chat Aktivieren ja/nein [nein]:"
+read -r VIVOXENABLEA
+if [ "$VIVOXENABLEA" = "" ] || [ "$VIVOXENABLEA" = "nein" ]; then 
+    VIVOXENABLE="false"; VIVOXADMINUSER="Benutzername"; ADMINPASSWORD="Passwort"; 
+fi
+echo "Sie haben ausgewählt: $VIVOXENABLEA"
+echo "##################################################################"
+
+if [ "$VIVOXENABLEA" = "ja" ]; then
+VIVOXENABLE="true";
+
+echo "Vivox Voice Chat Admin Benutzername [VIVOXADMINUSER]:"
+read -r VIVOXADMINUSER
+if [ "$VIVOXADMINUSER" = "" ]; then VIVOXADMINUSER="VIVOXADMINUSER"; fi
+echo "Sie haben ausgewählt: $VIVOXADMINUSER"
+echo "##################################################################"
+
+echo "Vivox Voice Chat Admin Passwort [ADMINPASSWORD]:"
+read -r ADMINPASSWORD
+if [ "$ADMINPASSWORD" = "" ]; then ADMINPASSWORD="ADMINPASSWORD"; fi
+echo "Sie haben ausgewählt: $ADMINPASSWORD"
+echo "##################################################################"
+fi
+
+"$VIVOXENABLE" "$VIVOXADMINUSER" "$ADMINPASSWORD"
+
 # Weitere Auswertungen
 if [ "$PRIVURL" = "" ]; then PRIVURL="\${Const|BaseURL}"; fi
 if [ "$MONEYPORT" = "" ]; then MONEYPORT="8008"; fi
+
 
 ### ! constconfig
 function constconfig() {
@@ -289,28 +294,6 @@ function regionconfig() {
     echo ";MasterAvatarLastName = Doe"
     echo ";MasterAvatarSandboxPassword = passwd" 
     } > "$REGIONSINI"
-}
-
-function vivoxconfig() {
-    VIVOXPFAD=$1
-    #VIVOX_ENABLED=""
-    #VIVOX_ADMIN_USER=""
-    #VIVOX_ADMIN_PASSWORD=""
-
-    {
-    echo "[VivoxVoice]"
-	echo "enabled = $VIVOX_ENABLED"
-	echo "vivox_server = www.osp.vivox.com"
-	echo "vivox_sip_uri = osp.vivox.com"
-	echo "vivox_admin_user = $VIVOX_ADMIN_USER"
-	echo "vivox_admin_password = $VIVOX_ADMIN_PASSWORD"
-	echo "vivox_channel_type = positional"
-	echo "vivox_channel_distance_model = 2"
-	echo "vivox_channel_mode = \"open\""
-	echo "vivox_channel_roll_off = 2.0"
-	echo "vivox_channel_max_range = 80"
-	echo "vivox_channel_clamping_distance = 10"
-    } > "$VIVOXPFAD"
 }
 
 ### ! FlotsamCache Konfigurationen schreiben
@@ -530,6 +513,33 @@ function moneyconfig() {
     } > "$MONEYINI"
 }
 
+### ! vivoxconfig
+function vivoxconfig() {
+    VIVOXENABLE=$1
+    VIVOXADMINUSER=$2
+    ADMINPASSWORD=$3
+    VIVOXINI=$4
+    if [ "$VIVOXENABLE" = "" ]; then VIVOXENABLE="false"; fi
+    if [ "$VIVOXADMINUSER" = "" ]; then VIVOXADMINUSER="VIVOXADMINUSER"; fi
+    if [ "$ADMINPASSWORD" = "" ]; then ADMINPASSWORD="VIVOXADMINPASSWORD"; fi
+    if [ "$VIVOXINI" = "" ]; then VIVOXINI="Vivox.ini"; fi
+
+    {
+    echo '[VivoxVoice]'
+    echo "enabled = $VIVOXENABLE"
+    echo "vivox_server = www.osp.vivox.com"
+    echo "vivox_sip_uri = osp.vivox.com"
+    echo "vivox_admin_user = $VIVOXADMINUSER"
+    echo "vivox_admin_password = $ADMINPASSWORD"
+    echo "vivox_channel_type = positional"
+    echo "vivox_channel_distance_model = 2"
+    echo 'vivox_channel_mode = "'"open"'"'
+    echo "vivox_channel_roll_off = 2.0"
+    echo "vivox_channel_max_range = 80"
+    echo "vivox_channel_clamping_distance = 10"
+    } > "$VIVOXINI"
+}
+
 ### !  osstruktur, legt die Verzeichnisstruktur fuer OpenSim an. # Aufruf: opensim.sh osstruktur ersteSIM letzteSIM
 # Beispiel: ./opensim.sh osstruktur 1 10 - erstellt ein Grid Verzeichnis fuer 10 Simulatoren inklusive der $SIMDATEI.
 function osconfigstruktur() {
@@ -588,9 +598,9 @@ function osconfigstruktur() {
 
         flotsamconfig "/$STARTVERZEICHNIS/sim$i/bin/config-include/FlotsamCache.ini"
 
-        vivoxconfig "/$STARTVERZEICHNIS/sim$i/bin/config-include/vivox.ini"
+        vivoxconfig "$VIVOXENABLE" "$VIVOXADMINUSER" "$ADMINPASSWORD" "/$STARTVERZEICHNIS/sim$i/bin/config-include/Vivox.ini"
 
-        echo "Schreibe sim$i in $SIMDATEI, legen sie bitte Datenbank $MYSQLDATABASE an."
+        echo "Schreibe sim$i in $SIMDATEI, legen sie bitte Datenbank $MYSQLDATABASE an."    
 		# xargs sollte leerzeichen entfernen.
 		printf 'sim'"$i"'\t%s\n' | xargs >>/"$STARTVERZEICHNIS"/$SIMDATEI
         MYSQLDATABASE=$ZWISCHENSPEICHERMSDB # Zuruecksetzen sonst wird falsch addiert.
