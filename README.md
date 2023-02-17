@@ -162,6 +162,7 @@ Status 09.02.2023 348 Funktionen.
 
 ## NEU
 Regionskonfigurationen erstellen per zufall und direkt funktionsfähig.
-     ./osmtool.sh regionconfig
+
+    ./osmtool.sh regionconfig
 
 
