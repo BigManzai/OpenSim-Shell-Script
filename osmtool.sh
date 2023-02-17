@@ -16,14 +16,14 @@
 # ! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 # ! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-# * Status 09.02.2024 348 Funktionen.
+# * Status 09.02.2024 349 Funktionen.
 
 # # Visual Studio Code # ShellCheck # shellman # Better Comments # outline map #
 
 #### ? Einstellungen ####
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe
-VERSION="V0.90.738" # opensimMULTITOOL Versionsausgabe
+VERSION="V0.90.742" # opensimMULTITOOL Versionsausgabe
 #clear # Bildschirmausgabe loeschen.
 #reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
@@ -43,6 +43,55 @@ unset REGIONSNAMEb
 unset REGIONSNAMEc
 unset REGIONSNAMEd
 unset VERZEICHNISSCREEN
+
+NEUERREGIONSNAME="Welcome"
+function namen(){
+	# Array aus Bezeichnungen von Deutschen Orten und Voelker.
+	namensarray=("Terwingen" "Angeron" "Vidivarier" "Usipeten" "Sibiner" "Ranier" "Sabalingier" "Aglier" "Aduatuker" \
+	"Favonen" "Sachsen" "Karpen" "Gautigoten" "Gepiden" "Mugilonen" "Bardongavenses" "Steoringun" "Guiones" "Teutonen" \
+	"Brukterer" "Omanen" "Astfalon" "Langobarden" "Frumtingas" "Eruler" "Moselfranken" "Tylangier" "Gillingas" \
+	"Singulonen" "Pharodiner" "Ahelmil" "Scopingun" "Waledungun" "Rosomonen" "Peukiner" "Elbsueben" "Scharuder" \
+	"Suardonen" "Suetiden" "Finnaithen" "Ambivareten" "Gegingas" "Aringon" "Anglier" "Glomman" "Raumariker" \
+	"Alemannen" "Narvaler" "Sunuker" "Mattiaker" "Kasuarier" "Bastarnen" "Sahslingun" "Frisiavonen" "Skiren" \
+	"Normannen" "Gambrivier" "Salfranken" "Holtsaeten" "Bergio" "Harier" "Holsten" "Lognai" "Vandalen" "Evagre" \
+	"Sigambrer" "Euten" "Kaoulkoi" "Burgunden" "Bajuwaren" "Hundingas" "Ostgoten" "Nervier" "Merscware" "Sturier" \
+	"Hillevionen" "Anglevarier" "Marsaker" "Schasuaren" "Otingis" "Cilternsaetan" "Falen" "Tenkterer" "Suonen" \
+	"Dounoi" "Teutonoaren" "Hugones" "Amoþingas" "Kalukonen" "Ostheruler" "Rus" "Wangionen" "Háleygir" "Triboker" \
+	"Markomannen" "Hordar" "Thiadmariska" "Holsten" "Gauten" "Krimgoten" "Herefinnas" "Fervir" "Hessen" "Sithonen" \
+	"Nuitonen" "Hringar" "Westheruler" "Bucinobanten" "Lakringen" "Eburonen" "Boutones" "Korkonter" "Angelsachsen" \
+	"Clondikus" "Donausweben" "Franken" "Nertereanen" "Barden" "Frugundionen" "Vinoviloth" "Treverer" "Elouaiones" \
+	"Schamaver" "Anarten" "Leuonoi" "Westgoten" "Winiler" "Turonen" "Visburgier" "Wandalen" "Landoudioer" "Harier" \
+	"Narisker" "Kimbern" "Kampen" "Semnonen" "Sugamber" "Haruden" "Colduer" "Geddingas" "Helvekonen" "Sedusier" \
+	"Baetasier" "Heinir" "Endosen" "Curionen" "Urugunden" "Hadubarden" "Taetel" "Tubanten" "Wariner" "Silinger" \
+	"Katten" "Marser" "Gumeningas" "Fundusier" "Levoner" "Helusii" "Sidones" "Varasker" "Manimer" "Angeln" "Daukionen" \
+	"Engern" "Segner" "Visper" "Scherusker" "Tungrer" "Bainaib" "Kannanefaten" "Mimmas" "Breisgauer" "Rheinfranken" \
+	"Condruser" "Batavier" "Neckarsueben" "Belger" "Gotthograikoi" "Engern" "Burgodionen" "Guddingen" "Ulmeraner" \
+	"Kampsianoi" "Viktofalen" "Nemeter" "Turkilinger" "Liothida" "Routiklioi" "Hermionen" "Rygir" "Veneter" "Schaler" \
+	"Zumer" "Firaesen" "Menapier" "Linzgauer" "Diduner" "Kleingoten" "Rugier" "Theusten" "Sidiner" "Amsivarier" \
+	"Greutungen" "Eunixer" "Hedeninge" "Scotelingun" "Agradingun" "Granier" "Schaubi" "Dulgubiner" "Halogit" \
+	"Marvingen" "Eudosen" "Halliner" "Elmetsaetan" "Kantwarier" "Dorsaetan" "Augandxer" "Gifle" "Firihsetan" \
+	"Maiaten" "Goten" "Cobander" "Sulones" "Lugier" "Kugerner" "Peukmer" "Caritner" "Ubier" "Toxandrer" "Graioceler" \
+	"Texuandrer" "Variner" "Elbgermanen" "Arosaetan" "Viruner" "Friesen" "Obronen" "Campsianer" "Derlingun" "Helisier" \
+	"Quaden" "Myrgingas" "Buren" "Permanen" "Doelir" "Schauken" "Foser" "Taifalen" "Avionen" "Nictrenses" "Svear" \
+	"Ermunduren" "Danduten")
+
+	# Zaehlen wie viele es sind.
+	count=${#namensarray[@]}
+	#echo $count
+
+	# Zufallszahl ermmiteln aus der anzahl von eintraegen in dem namensarray.
+	REGIONSNAMENZAHL=$(($RANDOM % $count))
+	#echo $REGIONSNAMENZAHL
+
+	# Regionsname ausgeben	
+	NEUERREGIONSNAME=${namensarray[$REGIONSNAMENZAHL]}
+	echo "Neuer Regionsname: $NEUERREGIONSNAME"
+
+	# ausgeben aller Namen.
+	# for i in ${namensarray[@]}; do
+	# echo $i
+	# done
+}
 
 ### ! osmtoolconfig autoconfigure
 function osmtoolconfig() {
@@ -4986,7 +5035,7 @@ function db_backuptabellentypen2() {
 	echo "test"
 }
 
-### ! Backup, Datenbank Tabelle geteilt in Typen speichern.
+### ! Backup, Asset Datenbank Tabelle geteilt in Typen speichern.
 function db_backuptabellentypen() {
 	username=$1
 	password=$2
@@ -7185,7 +7234,7 @@ function constconfig() {
 ### ! Region Konfigurationen schreiben
 # regionconfig REGIONSNAME STARTLOCATION SIZE INTERNALPORT REGIONSINI
 function regionconfig() {
-
+		
     REGIONSNAME=$1
     STARTLOCATION=$2
     SIZE=$3
@@ -7193,6 +7242,17 @@ function regionconfig() {
     REGIONSINI=$5
     
     UUID=$(uuidgen)
+
+	# ist Regionsname leer dann Zufallsnamen nutzen.
+	namen; ZUFALLSREGIONSNAME=$NEUERREGIONSNAME;
+	if [ "$REGIONSNAME" = "zufall" ] || [ "$REGIONSNAME" = "" ]; then REGIONSNAME=$ZUFALLSREGIONSNAME; REGIONSINI="$REGIONSNAME.ini"; fi
+	# Zufallszahl ermmiteln.
+	RANDOMPOSITION=$((100 + $RANDOM % 200))
+	if [ "$STARTLOCATION" = "" ]; then STARTLOCATION="$((2000 + $RANDOM % 8000)),$((2000 + $RANDOM % 8000))"; fi
+	if [ "$SIZE" = "" ]; then SIZE=256; fi
+	if [ "$INTERNALPORT" = "" ]; then INTERNALPORT="9$RANDOMPOSITION"; fi
+	# AKTUELLEIP
+	if [ "$BASEHOSTNAME" = "" ]; then BASEHOSTNAME="$AKTUELLEIP"; fi
 
     {
     echo "[$REGIONSNAME]"
@@ -7491,6 +7551,7 @@ function osconfigstruktur() {
         fi
 
         if [ "$REGIONAKTIV" = "nein" ]; then
+		# Random Regionsname einbauen.
         regionconfig "sim$i" "$((LOCALX + "$i")),$((LOCALY + "$i"))" "$LANDGOESSE" "$((9100 + "$i"))" "/$STARTVERZEICHNIS/sim$i/bin/Regions/Regions.ini.Beispiel"
         fi
 
@@ -9315,7 +9376,7 @@ function hauptmenu() {
 			"Objekt entfernen" ""
 			"--------------------------" ""
 			"Systeminformationen" ""
-			"Informationen" ""
+			"Sim Informationen" ""
 			"Screen Liste" ""
 			"Server laufzeit und Neustart" ""
 			"----------Menu------------" ""
@@ -9340,7 +9401,7 @@ function hauptmenu() {
 		if [[ $mauswahl = "Einzelner Simulator Start" ]]; then menuosstart; fi
 		#if [[ $mauswahl = "Einzelner Simulator Status" ]]; then menuworks; fi
 		#if [[ $mauswahl = "Alle Simulatoren Status" ]]; then menuwaslauft; fi
-		if [[ $mauswahl = "Informationen" ]]; then menuinfo; fi
+		if [[ $mauswahl = "Sim Informationen" ]]; then menuinfo; fi
 		if [[ $mauswahl = "Systeminformationen" ]]; then systeminformation; fi
 
 		if [[ $mauswahl = "Screen Liste" ]]; then screenlist; fi
@@ -10203,6 +10264,8 @@ case $KOMMANDO in
 	configabfrage) configabfrage ;;
 	osmtoolconfigabfrage) osmtoolconfigabfrage ;;
 	osdowngrade) osdowngrade ;;
+	namen) namen ;;
+	regionconfig) regionconfig "$2" "$3" "$4" "$5" "$6" ;;
 	*) hauptmenu ;;
 esac
 vardel
