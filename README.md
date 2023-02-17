@@ -160,3 +160,8 @@ Downgrade das zurücksetzen auf die vorherige Version des OpenSimulators ist jet
 
 Status 09.02.2023 348 Funktionen.
 
+## NEU
+Regionskonfigurationen erstellen per zufall und direkt funktionsfähig.
+     ./osmtool.sh regionconfig
+
+
