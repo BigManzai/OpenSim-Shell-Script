@@ -1,0 +1,39 @@
+<?php
+
+/* General Domain */
+$CONF_sim_domain = "http://127.0.0.1";  	// Your Grid-Domain
+$CONF_port = "8002";  							// Your Grid-Port
+$CONF_install_path = "/map";		          	// Installation path
+
+/* MySQL Database */
+$CONF_db_server   = "localhost";		     	// Your Database-Server
+$CONF_db_user  = "username";						// login
+$CONF_db_pass    = "password";     	     	// password
+$CONF_db_database   = "robust"; 			// Name of BDD
+
+/* The Coordinates of the Grid-Center */
+$CONF_center_coord_x = "5000";		         	// the Center-X-Coordinate
+$CONF_center_coord_y = "5000";		         	// the Center-Y-Koordinate
+
+$CONF_map_with = "2";		         			// Card size default 1,2,3,4 or 5
+
+/* Example Color
+w3-red,w3-pink,w3-purple,w3-deep-purple,w3-indigo,w3-blue,w3-light-blue,	
+w3-cyan,w3-aqua,w3-teal,w3-green,w3-light-green,w3-lime,w3-sand,w3-khaki,
+w3-yellow,w3-amber,w3-orange,w3-deep-orange,w3-blue-grey,w3-brown,w3-light-grey,
+w3-grey,w3-dark-grey,w3-black,w3-pale-red,w3-pale-yellow,w3-pale-green,w3-pale-blue
+w3-transparent*/
+
+/* Example Hover color
+w3-hover-white,w3-hover-black,w3-hover-red,w3-hover-blue,
+w3-hover-green,w3-hover-aqua,w3-hover-orange,w3-hover-grey,w3-hover-pale-green*/
+
+/* The Color of the Grid please use w3 color Libraries */
+/* ground color, hover color, shadow */
+
+$CONF_color_free_coord = "w3-blue-grey w3-hover-pale-blue w3-hover-shadow";		        // the Center-X-Coordinate
+$CONF_color_occupied_single = "w3-green w3-hover-pale-green w3-hover-shadow";		// the Center-X-Coordinate
+$CONF_color_occupied_var = "w3-light-green w3-hover-pale-light-green w3-hover-shadow";		// the Center-X-Coordinate
+$CONF_color_center = "w3-red w3-hover-pale-red w3-hover-shadow";		        	// the Center-X-Coordinate
+
+?>
