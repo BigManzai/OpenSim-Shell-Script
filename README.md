@@ -43,7 +43,7 @@ Ich empfehle das Verzeichnis /opt für Optionale Software.
 
 Dies muss jetzt ausführbar gemacht werden mit:
 
-     chmod +x /pfad/zu/mein_Skript.sh
+     chmod +x /opt/osmtool.sh
 
 Gestartet werden kann das nun mit:
 
