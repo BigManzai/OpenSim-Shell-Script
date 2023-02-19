@@ -35,6 +35,28 @@ Es kann automatisch eine DATUM-multitool.log angelegt um nachzuverfolgen ob alle
 
 https://www.mediafire.com/file/48rdsenw6x3t5fw/opensim-0.9.2.2.389.zip/file
 
+## Vorbereitung des opensimMULITOOLS
+
+Als erstes wird die Datei osmtool.sh auf den Server hochgeladen.
+
+Ich empfehle das Verzeichnis /opt für Optionale Software.
+
+Dies muss jetzt ausführbar gemacht werden mit:
+
+     chmod +x /pfad/zu/mein_Skript.sh
+
+Gestartet werden kann das nun mit:
+
+     bash osmtool.sh
+
+oder
+
+     ./osmtool.sh
+
+oder
+
+     /opt/osmtool.sh
+
 ## Hilfe 
 
     /opt/osmtool.sh hilfe
