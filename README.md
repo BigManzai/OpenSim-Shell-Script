@@ -59,6 +59,8 @@ oder
 
 Beim erststart wird die Konfigurationsdatei osmtoolconfig.ini erstellt.
 
+## Vorbereitung eines Ubuntu Server
+
 Dazu müssen sie ein paar fragen beantworten. (Durch löschen oder umbenennen der Datei osmtoolconfig.ini kann dies wiederholt werden.)
 
 Eine Server erstinstallation eines Ubuntu 18 oder 22 Servers kann mit dieser Funktion ausgelöst werden:
