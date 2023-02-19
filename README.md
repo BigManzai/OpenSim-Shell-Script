@@ -57,10 +57,18 @@ oder
 
      /opt/osmtool.sh
 
+Beim erststart wird die Konfigurationsdatei osmtoolconfig.ini erstellt.
+
+Dazu müssen sie ein paar fragen beantworten. (Durch löschen oder umbenennen der Datei osmtoolconfig.ini kann dies wiederholt werden.)
+
+Eine Server erstinstallation eines Ubuntu 18 oder 22 Servers kann mit dieser Funktion ausgelöst werden:
+
+      /opt/osmtool.sh serverinstall
+
 ## Hilfe 
 
     /opt/osmtool.sh hilfe
- 
+    
 dazu gibt es noch die Konsolenhilfe für Putty oder Bitvise-Xterm
 
     /opt/osmtool.sh konsolenhilfe
