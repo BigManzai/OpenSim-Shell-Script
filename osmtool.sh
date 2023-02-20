@@ -23,7 +23,7 @@
 #### ? Einstellungen ####
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe
-VERSION="V0.90.742" # opensimMULTITOOL Versionsausgabe
+VERSION="V0.90.743" # opensimMULTITOOL Versionsausgabe
 #clear # Bildschirmausgabe loeschen.
 #reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
@@ -9632,21 +9632,23 @@ function mySQLmenu() {
 		OPTIONS=("Alle Datenbanken anzeigen" ""
 			"Tabellen einer Datenbank" ""
 			"mySQL Datenbankbenutzer anzeigen" ""
-			"Alle Grid Regionen listen" ""
+			"Alle Grid Regionen listen" ""			
 			"Region URI pruefen sortiert nach URI" ""
-			"Ports pruefen sortiert nach Ports" ""
-			"Neue Datenbank erstellen" ""
+			"Ports pruefen sortiert nach Ports" ""			
 			"Benutzer inventoryfolders alles was type -1 ist anzeigen" ""
 			"Zeige Erstellungsdatum eines Users an" ""
 			"Finde falsche E-Mail Adressen" ""
-			"Datenbank komplett loeschen" ""
+			"Listet alle erstellten Benutzerrechte auf" ""
+			"--------------------------" ""
+			"Neue Datenbank erstellen" ""
+			"Neuen Datenbankbenutzer anlegen" ""
 			"--------------------------" ""
 			"Datenbank leeren" ""
-			"Neuen Datenbankbenutzer anlegen" ""
-			"Listet alle erstellten Benutzerrechte auf" ""
+			"Datenbank komplett loeschen" ""
 			"Loescht einen Datenbankbenutzer" ""
-			"Alle Datenbanken Checken, Reparieren und Optimieren" ""
+			"--------------------------" ""
 			"mysqlTuner herunterladen" ""
+			"Alle Datenbanken Checken, Reparieren und Optimieren" ""			
 			"----------Menu------------" ""
 			"Hauptmenu" ""
 			"Avatarmennu" ""
