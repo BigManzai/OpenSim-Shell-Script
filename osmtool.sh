@@ -23,7 +23,7 @@
 #### ? Einstellungen ####
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe
-VERSION="V0.90.743" # opensimMULTITOOL Versionsausgabe
+VERSION="V0.90.747" # opensimMULTITOOL Versionsausgabe
 #clear # Bildschirmausgabe loeschen.
 #reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
@@ -5401,6 +5401,56 @@ function db_create_new_dbuser() {
 	return 0
 }
 
+##! Andere Art Datenbanken und Benutzer anzulegen
+# createdatabase DBNAME DBUSER DBPASSWD
+function createdatabase(){
+    # Übergabeparameter
+    DBNAME=$1
+    DBUSER=$2
+    DBPASSWD=$3
+
+    # Abbruch bei fehlender Parameterangabe.
+    if [ "$DBNAME" = "" ]; then echo "Datenbankname fehlt"; exit 1; fi
+    if [ "$DBUSER" = "" ]; then echo "Benutzername fehlt"; exit 1; fi
+    if [ "$DBPASSWD" = "" ]; then echo "Datenbankpasswort fehlt"; exit 1; fi
+
+    # Ausführung
+    mysql -u "$DBUSER" -pDBPASSWD <<EOF
+CREATE DATABASE ${DBNAME};
+USE ${DBNAME};
+EOF
+    # Dadurch, dass der MySQL-Client im nicht-interaktiven Modus ausgeführt wird, 
+    # kannst du die quit-Anweisung am Ende weglassen.
+    return 0
+}
+
+# createdbuser ROOTUSER ROOTPASSWD NEWDBUSER NEWDBPASSWD
+# ROOTPASSWD ist optional.
+function createdbuser(){
+    # Übergabeparameter
+    ROOTUSER=$1
+    ROOTPASSWD=$2
+    NEWDBUSER=$3
+    NEWDBPASSWD=$4
+
+
+    # Abbruch bei fehlender Parameterangabe.
+    if [ "$ROOTUSER" = "" ]; then echo "Root Datenbankbenutzername fehlt"; exit 1; fi
+    if [ "$ROOTPASSWD" = "" ]; then echo "Root Datenbankpasswort fehlt"; exit 1; fi
+    if [ "$NEWDBUSER" = "" ]; then echo "Neuer Benutzername fehlt"; exit 1; fi
+    if [ "$NEWDBPASSWD" = "" ]; then echo "Neues Datenbankpasswort fehlt"; exit 1; fi
+    
+
+    # Ausführung
+    mysql -u "$ROOTUSER" -pROOTPASSWD <<EOF
+CREATE USER "${NEWDBUSER}"@"localhost" IDENTIFIED BY "${NEWDBPASSWD}";
+GRANT ALL ON *.* to "${NEWDBUSER}"@"localhost";
+EOF
+    # Dadurch, dass der MySQL-Client im nicht-interaktiven Modus ausgeführt wird, 
+    # kannst du die quit-Anweisung am Ende weglassen.
+    return 0
+}
+
 ### ! db_delete, loescht eine Datenbank komplett.
 function db_delete() {
 	# zuerst schauen ob dialog installiert ist
@@ -7519,7 +7569,7 @@ function osconfigstruktur() {
         cp "$AKTUELLEVERZ"/$CONFIGPFAD/Robust.ini /"$STARTVERZEICHNIS"/$ROBUSTVERZEICHNIS/bin
         
         CONSTINI="/$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/config-include/Const.ini"
-        constconfig "$BASEHOSTNAME" "$PRIVURL" "$MONEYPORT" "$SIMULATORPORT" "$MYSQLDATABASE" "$MYSQLUSER" "$MYSQLPASSWORD" "$STARTREGION" "$SIMULATORGRIDNAME" "$SIMULATORGRIDNICK" "$CONSTINI"
+        constconfig "$BASEHOSTNAME" "$PRIVURL" "$MONEYPORT" "$SIMULATORPORT" "$CREATEROBUSTDATABASENAME" "$MYSQLUSER" "$MYSQLPASSWORD" "$STARTREGION" "$SIMULATORGRIDNAME" "$SIMULATORGRIDNICK" "$CONSTINI"
 
         moneyconfig "/$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/MoneyServer.ini"
 
@@ -7557,11 +7607,15 @@ function osconfigstruktur() {
 
         if  [ "$REGIONAKTIV" = "ja" ]; then
         regionconfig "sim$i" "$((LOCALX + "$i")),$((LOCALY + "$i"))" "$LANDGOESSE" "$((9100 + "$i"))" "/$STARTVERZEICHNIS/sim$i/bin/Regions/Regions.ini"
-        fi        
+        fi
+
+		if  [ "$CREATEDATABASE" = "ja" ]; then
+		createdatabase "$CREATEDATABASENAME$i" "$DBUSER" "$DBPASSWD"
+		fi
 
         flotsamconfig "/$STARTVERZEICHNIS/sim$i/bin/config-include/FlotsamCache.ini"
-
-        echo "Schreibe sim$i in $SIMDATEI, legen sie bitte Datenbank $MYSQLDATABASE an."
+		echo "Schreibe sim$i in $SIMDATEI"
+        #echo "Schreibe sim$i in $SIMDATEI, legen sie bitte Datenbank $MYSQLDATABASE an."
 		# xargs sollte leerzeichen entfernen.
 		printf 'sim'"$i"'\t%s\n' | xargs >>/"$STARTVERZEICHNIS"/$SIMDATEI
         MYSQLDATABASE=$ZWISCHENSPEICHERMSDB # Zuruecksetzen sonst wird falsch addiert.
@@ -7625,22 +7679,48 @@ function configabfrage(){
 	echo "Ihr SimulatorPort startet bei: $SIMULATORPORT"
 	echo "##################################################################"
 
-	echo "Bitte geben sie den Datenbanknamen an [opensim]:"
-	read -r MYSQLDATABASE
-	if [ "$MYSQLDATABASE" = "" ]; then MYSQLDATABASE="opensim"; fi
-	echo "Ihr Datenbanknamen lautet: $MYSQLDATABASE"
-	echo "##################################################################"
-
-	echo "Bitte geben sie den Benutzernamen ihrer Datenbank an [opensim]:"
+	echo "Bitte geben sie den mySQL/mariaDB Benutzernamen ihrer Datenbank an [opensim]:"
 	read -r MYSQLUSER
 	if [ "$MYSQLUSER" = "" ]; then MYSQLUSER="opensim"; fi
 	echo "Ihr Datenbank Benutzername lautet: $MYSQLUSER"
 	echo "##################################################################"
 
-	echo "Bitte geben sie das Passwort ihrer Datenbank an [opensim]:"
+	echo "Bitte geben sie das Passwort ihrer mySQL/mariaDB Datenbank an [opensim]:"
 	read -r MYSQLPASSWORD
 	if [ "$MYSQLPASSWORD" = "" ]; then MYSQLPASSWORD="opensim"; fi
 	echo "Ihr Passwort ihrer Datenbank lautet: ********"
+	echo "##################################################################"
+
+	echo "Datenbanken jetzt direkt anlegen [nein]:"
+	read -r CREATEDATABASE
+	if [ "$CREATEDATABASE" = "" ]; then CREATEDATABASE="nein"; fi
+
+	if [ "$CREATEDATABASE" = "nein" ]; then
+		echo "Bitte geben sie den Datenbanknamen an [opensim]:"
+		read -r MYSQLDATABASE
+		if [ "$MYSQLDATABASE" = "" ]; then MYSQLDATABASE="opensim"; fi
+		echo "Ihr Datenbanknamen lautet: $MYSQLDATABASE"
+		echo "##################################################################"
+	fi
+
+	if [ "$CREATEDATABASE" = "ja" ]; then
+		### OpenSim Datenbanken
+		echo "Name der Datenbanken [sim]:"
+		read -r CREATEDATABASENAME	
+		if [ "$CREATEDATABASENAME" = "" ]; then CREATEDATABASENAME="sim"; fi
+
+		### Robust Datenbank
+		echo "Robust Datenbank anlegen [nein]:"
+		read -r CREATEROBUSTDATABASE
+		if [ "$CREATEROBUSTDATABASE" = "" ]; then CREATEROBUSTDATABASE="nein"; fi
+		
+		if [ "$CREATEROBUSTDATABASE" = "ja" ]; then
+			echo "Name der Robust Datenbank [robust]:"
+			read -r CREATEROBUSTDATABASENAME
+			if [ "$CREATEROBUSTDATABASENAME" = "" ]; then CREATEROBUSTDATABASENAME="robust"; fi
+			createdatabase $CREATEROBUSTDATABASENAME $MYSQLUSER $MYSQLPASSWORD
+		fi
+	fi
 	echo "##################################################################"
 
 	echo "Bitte geben sie den Namen ihrer Startregion an [Welcome]:"
@@ -9878,7 +9958,8 @@ function buildmenu() {
 			"Opensimulator upgraden" ""
 			"Opensimulator aus zip upgraden" ""
 			"Opensimulator bauen und upgraden" ""
-			"--------------------------" ""
+			"--------------------------" ""			
+			"Konfigurationen und Verzeichnisstrukturen anlegen" ""
 			"Verzeichnisstrukturen anlegen" ""
 			"Regionsliste erstellen (Backup)" ""
 			"--------------------------" ""
@@ -9913,6 +9994,7 @@ function buildmenu() {
 		if [[ $buildauswahl = "Opensimulator aus zip upgraden" ]]; then oszipupgrade; fi
 		if [[ $buildauswahl = "Opensimulator bauen und upgraden" ]]; then osbuilding; fi
 		# -----
+		if [[ $buildauswahl = "Konfigurationen und Verzeichnisstrukturen anlegen" ]]; then configabfrage; fi
 		if [[ $buildauswahl = "Verzeichnisstrukturen anlegen" ]]; then menuosstruktur; fi
 		if [[ $buildauswahl = "Regionsliste erstellen (Backup)" ]]; then regionliste; fi
 		# -----
@@ -10268,6 +10350,8 @@ case $KOMMANDO in
 	osdowngrade) osdowngrade ;;
 	namen) namen ;;
 	regionconfig) regionconfig "$2" "$3" "$4" "$5" "$6" ;;
+	createdatabase) createdatabase "$2" "$3" "$4" ;;
+	createdbuser) createdbuser "$2" "$3" "$4" "$5" ;;
 	*) hauptmenu ;;
 esac
 vardel
