@@ -126,7 +126,9 @@ Nachfolgende Zeilen unten im mit "crontab -e" geöffneten Crontab einfügen.
 
     # Restart um 6 Uhr
     0 6 * * * /opt/osmtool.sh restart
-    
+
+(Format: Minute=0, Stunde=6)
+
 oder
 
     # Stoppen um 22 Uhr
@@ -135,7 +137,9 @@ oder
     # Starten um 9 Uhr
     0 9 * * * /opt/osmtool.shh autostart
     
-(Format: Minute=0, Stunde=6)
+(Format: Minute=0, Stunde=22)
+
+(Format: Minute=0, Stunde=9)
 
 **Crontab speichern:**
 
