@@ -155,13 +155,6 @@ Crontab zum prüfen noch einmal anzeigen:
 
      crontab -l
 
-## Ahead of Time compilation (AOT)
-Muss man das haben?
-
-Weis nicht ich hab das mal getestet aber bemerke da keine Geschwindigkeitszuwächse.
-
-Aber wahrscheinlich ist da mein Grid zu klein für.
-
 ## Menü mit dialog
 Ich habe eine Menüfunktion integriert diese schaut zuerst ob dialog installiert ist oder nicht.
 
