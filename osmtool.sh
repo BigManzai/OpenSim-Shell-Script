@@ -348,6 +348,21 @@ AKTUELLEIP='"'$(wget -O - -q $SEARCHADRES)'"'
 cd /"$STARTVERZEICHNIS" || return 1
 sleep 1
 
+# install dialog
+function instdialog () {
+	echo "Ich installiere jetzt dialog"
+	sudo apt-get -y update
+	sudo apt-get -y upgrade
+	sudo apt-get -y install dialog
+	# Warscheinlich ist die Installation fehlgeschlagen da abhängigkeiten fehlen.
+	sudo apt-get -f install # abhängiketen nachinstallieren
+	sudo apt-get -y install dialog # erneute installation
+	#dialog --title 'Dialog Nachricht' --msgbox '. . . . Dialog wurde Installiert!' 6 50
+	dialog --title 'Die erste Dialog Nachricht' --calendar 'Dialog wurde Installiert am:' 0 0
+	tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
+}
+
+
 ### * Eingabeauswertung fuer Funktionen ohne dialog.
 KOMMANDO=$1
 
@@ -10361,6 +10376,7 @@ case $KOMMANDO in
 	createdatabase) createdatabase "$2" "$3" "$4" ;;
 	createdbuser) createdbuser "$2" "$3" "$4" "$5" ;;
 	clearuserlist) clearuserlist ;;
+	instdialog) instdialog ;;
 	*) hauptmenu ;;
 esac
 vardel
