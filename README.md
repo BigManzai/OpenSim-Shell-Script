@@ -83,6 +83,10 @@ und die OpenSim Commands Hilfe in Deutsch
 
 ## Konfiguration
 
+osmtools erstellt automatisch die erforderlichen Konfigurationen.
+
+Manchmal ist es aber nötig diese von Hand einzustellen.
+
 In der osmtoolconfig.ini werden unter anderem Verzeichnispfade voreingestellt zum Beispiel home oder opt als Hauptverzeichnis. 
 
 Bei dem Neuerstellen über "osmtool.sh configabfrage" wird nicht nur die Struktur für ein Grid erstellt, 
