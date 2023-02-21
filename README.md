@@ -124,6 +124,8 @@ Crontab bearbeiten oder erstellen:
 
 Nachfolgende Zeilen unten im mit "crontab -e" geöffneten Crontab einfügen.
 
+Format: Minute(0 - 59)-Stunde(0 - 23)-Tag(1 - 31)-Monat(1 - 12)-Wochentag(0 - 7) - Aktion/Program -
+
     # Restart um 6 Uhr
     0 6 * * * /opt/osmtool.sh restart
 
