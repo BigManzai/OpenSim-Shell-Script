@@ -16,14 +16,14 @@
 # ! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 # ! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-# * Status 09.02.2024 349 Funktionen.
+# * Status 09.02.2024 350 Funktionen.
 
 # # Visual Studio Code # ShellCheck # shellman # Better Comments # outline map #
 
 #### ? Einstellungen ####
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe
-VERSION="V0.90.747" # opensimMULTITOOL Versionsausgabe
+VERSION="V0.92.750" # opensimMULTITOOL Versionsausgabe
 #clear # Bildschirmausgabe loeschen.
 #reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
@@ -415,6 +415,14 @@ function ende() {
 function fehler() {
 	exit
 	log error "$?" # Den aufrufenden Prozess mit der letzten Meldung beenden.
+}
+
+### Den aufrufenden Prozess mit der letzten Meldung beenden.
+function clearuserlist() {
+	echo "Lösche Besucherlisten log"
+	rm -r /$STARTVERZEICHNIS/*_osmvisitorlist.log
+	echo "Lösche Besucherlisten txt"
+	rm -r /$STARTVERZEICHNIS/*_osmvisitorlist.txt
 }
 
 ### Log Dateien von Ubuntu loeschen Beispiel: historylogclear "history"
@@ -10345,13 +10353,14 @@ case $KOMMANDO in
 	db_backuptabellentypen) db_backuptabellentypen "$2" "$3" "$4" ;;
 	senddata) senddata "$2" "$3" "$4" ;;
 	gridcachedelete) gridcachedelete ;;
-	configabfrage) configabfrage ;;
+	config | gridkonfiguration | configabfrage) configabfrage ;;
 	osmtoolconfigabfrage) osmtoolconfigabfrage ;;
 	osdowngrade) osdowngrade ;;
 	namen) namen ;;
 	regionconfig) regionconfig "$2" "$3" "$4" "$5" "$6" ;;
 	createdatabase) createdatabase "$2" "$3" "$4" ;;
 	createdbuser) createdbuser "$2" "$3" "$4" "$5" ;;
+	clearuserlist) clearuserlist ;;
 	*) hauptmenu ;;
 esac
 vardel
