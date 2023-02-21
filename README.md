@@ -197,7 +197,11 @@ Regionskonfigurationen erstellen per zufall und direkt funktionsfähig.
 
     ./osmtool.sh regionconfig
 
+------
+
 mySQL Menü wurde aufgeräumt.
+
+------
 
 Alle Besucherlisten löschen:
 
