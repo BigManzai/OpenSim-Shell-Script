@@ -83,17 +83,16 @@ und die OpenSim Commands Hilfe in Deutsch
 
 ## Konfiguration
 
-In der opensim.cnf werden unter anderem Verzeichnispfade voreingestellt zum Beispiel home oder opt als Hauptverzeichnis. 
+In der osmtoolconfig.ini werden unter anderem Verzeichnispfade voreingestellt zum Beispiel home oder opt als Hauptverzeichnis. 
 
-Bei dem Neuerstellen über "osmtool.sh osstruktur" wird nicht nur die Struktur für ein Grid erstellt sondern auch die SimulatorList.ini. 
+Bei dem Neuerstellen über "osmtool.sh configabfrage" wird nicht nur die Struktur für ein Grid erstellt, 
+sondern auch die osmsimlist.ini sowie alle benötigten Datenbanken. 
 
-Diese Dateien müssen am Ende eine Leerzeile haben. Die Startreihenfolge ergibt sich aus der Aufstellung.
+Diese osmsimlist.ini Dateie muss am Ende eine Leerzeile haben. Die Startreihenfolge ergibt sich aus der Aufstellung.
 
 Bitte beachtet der Verzeichnisname des OpenSimulator ist gleichzeitig der Screen Name.
 
 Wird kein Robust oder Money Verzeichnis gefunden, werden diese auch nicht gestartet.
-
-Das Skript ausführbar machen mit "chmod +x osmtool.sh" danach kann es mit "./osmtool.sh" oder "/verzeichnis/osmtool.sh" ausgeführt werden.
 
 ## Informationen
 Die Struktur baut sich folgendermaßen auf:
