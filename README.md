@@ -89,10 +89,10 @@ Manchmal ist es aber nötig diese von Hand einzustellen.
 
 In der osmtoolconfig.ini werden unter anderem Verzeichnispfade voreingestellt zum Beispiel home oder opt als Hauptverzeichnis. 
 
-Bei dem Neuerstellen über "osmtool.sh gridkonfiguration" wird nicht nur die Struktur für ein Grid erstellt, 
+Bei dem Neuerstellen über "/opt/osmtool.sh gridkonfiguration" wird nicht nur die Struktur für ein Grid erstellt, 
 sondern auch die osmsimlist.ini sowie alle benötigten Datenbanken. 
 
-Diese osmsimlist.ini Dateie muss am Ende eine Leerzeile haben. Die Startreihenfolge ergibt sich aus der Aufstellung.
+Diese osmsimlist.ini Datei muss am Ende eine Leerzeile haben. Die Startreihenfolge ergibt sich aus der Aufstellung.
 
 Bitte beachtet der Verzeichnisname des OpenSimulator ist gleichzeitig der Screen Name.
 
