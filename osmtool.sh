@@ -23,7 +23,7 @@
 #### ? Einstellungen ####
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe
-VERSION="V0.92.750" # opensimMULTITOOL Versionsausgabe
+VERSION="V0.92.751" # opensimMULTITOOL Versionsausgabe
 #clear # Bildschirmausgabe loeschen.
 #reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
@@ -6908,22 +6908,6 @@ function MASTER_DELAY() {
 	return 0
 }
 
-### ! MASTER_PASSWORD "$2" "$3"
-function MASTER_PASSWORD() {
-	username=$1
-	password=$2
-	if [ -z "$username" ]; then username="root"; fi
-	if [ -z "$password" ]; then password=""; fi
-
-	mysqlrestnodb "$username" "$password" "STOP SLAVE;"
-	mysqlrestnodb "$username" "$password" "CHANGE MASTER TO MASTER_PASSWORD=$password;"
-	mysqlrestnodb "$username" "$password" "START SLAVE;"
-	#shellcheck disable=SC2128
-	log text " $FUNCNAME: $result_mysqlrestnodb"
-
-	return 0
-}
-
 ### ! Creating a Replica from a Backup "$2" "$3" "$4" "$5"
 function Replica_Backup() {
 	username=$1
@@ -9256,6 +9240,10 @@ function hilfe() {
 	# log info "HILFE: Hilfe wurde angefordert."
 }
 
+function hilfeall() {
+	echo "AutoInstall ConfigSet DO_DOMAIN_IDS DO_DOMAIN_IDS2 GridCommonConfig GridCommonConfigSet IGNORE_DOMAIN_IDS IGNORE_DOMAIN_IDS2 IGNORE_SERVER_IDS MASTER_CONNECT_RETRY MASTER_DELAY MASTER_HOST MASTER_LOG_FILE MASTER_LOG_POS MASTER_PASSWORD MASTER_PORT MASTER_SSL MASTER_SSL_CA MASTER_SSL_CAPATH MASTER_SSL_CERT MASTER_SSL_CIPHER MASTER_SSL_CRL MASTER_SSL_CRLPATH MASTER_SSL_KEY MASTER_SSL_VERIFY_SERVER_CERT MASTER_USER MASTER_USE_GTID MASTER_USE_GTID2 OpenSimConfig OpenSimConfigSet RELAY_LOG_FILE RELAY_LOG_POS RegionsConfig RegionsConfigSet Replica_Backup Replica_Backup2 ReplikatKoordinaten RobustConfig    RobustConfigSet ScreenLog accesslog allclean allrepair_db apacheerror assetcachedel assetdel authlog autoallclean autoassetcachedel autologdel automapdel autoregionbackup autoregionsiniteilen autorestart autorobustmapdel autoscreenstop autosimstart autosimstop autostart autostop avatarmenu backupdatum buildmenu checkfile chrisoscopy cleanaot cleaninstall clearuserlist commandhelp compilieren conf_delete conf_read conf_write configabfrage configlesen configurecopy configuregitcopy connection_name constconfig create_db create_db_user createdatabase createdbuser createuser dateimenu db_all_name db_all_name_dialog db_all_user db_all_user_dialog db_all_userfailed db_all_uuid db_all_uuid_dialog db_anzeigen db_anzeigen_dialog db_backup db_backuptabellen db_backuptabellentypen db_backuptabellentypen2 db_benutzer_anzeigen db_compress_backup db_create db_create_new_dbuser db_dbuser db_dbuserrechte db_deldbuser db_delete db_deletepartner db_email_setincorrectuseroff db_email_setincorrectuseroff_dialog db_empty db_false_email db_foldertyp_user db_friends db_gridlist db_inv_search db_inventar_no_assets db_online db_region db_region_anzahl_regionsid db_region_anzahl_regionsnamen db_region_parzelle db_region_parzelle_pakete db_regions db_regionsport db_regionsuri db_restorebackuptabellen db_restoretabellentypen db_setpartner db_setuserofline db_setuserofline_dialog db_setuseronline db_setuseronline_dialog db_tables db_tables_dialog db_tablesplitt db_tablextract db_tablextract_regex db_user_anzahl db_user_data db_user_data_dialog db_user_infos db_user_infos_dialog db_user_online db_user_uuid db_user_uuid_dialog db_userdate default_master_connection delete_db dialogclear dotnetinfo downloados dummyvar edittextbox ende expertenmenu fail2banset fehler finstall flotsamconfig fortschritsanzeige fpspeicher functionslist funktionenmenu get_regionsarray get_value_from_Region_key gridcachedelete gridstart gridstop hauptmenu hilfe hilfemenu historylogclear iinstall iinstall2 info infodialog install_mysqltuner installationen installationhttps22 installbegin installfinish installmariadb18 installmariadb22 installobensimulator installphpmyadmin installubuntu22 installwordpress instdialog iptablesset kalender konsolenhilfe landclear lastrebootdatum linuxupgrade loadinventar log logdel makeaot makeregionsliste makeverzeichnisliste makewebmaps mapdel mariadberror meineregionen menuassetdel menuautologdel menuautorestart menuautoscreenstop menuautosimstart menuautosimstop menuautostart menuautostop menucreateuser menufinstall menugridstart menugridstop menuinfo menukonsolenhilfe menulandclear menuloadinventar menulogdel menumapdel menumostart menumostop menuoscommand menuosdauerstart menuosdauerstop menuosstart menuosstarteintrag menuosstarteintragdel menuosstop menuosstruktur menuoswriteconfig menuregionbackup menuregionrestore menurostart menurostop menusaveinventar menuwaslauft menuworks moneyconfig moneycopy moneydelete moneygitcopy monoinstall monoinstall18 monoinstall20 monoinstall22 mostart mostop mutelistcopy mySQLmenu mysql_neustart mysqlbackup mysqldberror mysqleinstellen mysqlrest mysqlrestnodb nachrichtbox namen newregionini opensimholen osbuilding oscommand oscompi osconfigstruktur oscopy oscopyrobust oscopysim osdauerstart osdauerstop osdelete osdowngrade osgitholen osgridcopy osmtoolconfig osmtoolconfigabfrage osprebuild osscreenstop ossettings osslEnableConfig osslEnableConfigSet osslEnableconfig osstart osstarteintrag osstarteintragdel osstop osstruktur osupgrade oswriteconfig oszipupgrade passgen passwdgenerator pythoncopy radiolist ramspeicher rebootdatum regionbackup regionconfig regionliste regionrestore regionsabfrage regionsconfigdateiliste regionsinisuchen regionsiniteilen regionsport regionsuri robustbackup rologdel rostart rostop saveinventar schreibeinfo screenlist screenlistrestart scriptcopy scriptgitcopy searchcopy searchgitcopy senddata serverinstall serverinstall22 serverupgrade set_empty_user setpartner show_info simstats sourcelist18 sourcelist22 systeminformation tabellenabfrage terminator textbox trimm ufwlog ufwset uncompress vardel vartest warnbox waslauft wiparameter0 wiparameter1 wiparameter2 wiparameter3 wiparameter4 wiparameter5 wiparameter6 wiparameter7 wiparameter8 works"
+}
+
 ### !  konsolenhilfe, konsolenhilfe auf dem Bildschirm anzeigen.
 function konsolenhilfe() {
 	echo "$(tput setab 5)Funktion:$(tput sgr 0) $(tput setab 4)Informationen:$(tput sgr 0)"
@@ -10377,6 +10365,7 @@ case $KOMMANDO in
 	createdbuser) createdbuser "$2" "$3" "$4" "$5" ;;
 	clearuserlist) clearuserlist ;;
 	instdialog) instdialog ;;
+	hilfeall) hilfeall ;;
 	*) hauptmenu ;;
 esac
 vardel
