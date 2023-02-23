@@ -23,7 +23,7 @@
 #### ? Einstellungen ####
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe
-VERSION="V0.92.751" # opensimMULTITOOL Versionsausgabe
+VERSION="V0.92.756" # opensimMULTITOOL Versionsausgabe
 #clear # Bildschirmausgabe loeschen.
 #reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
@@ -103,7 +103,7 @@ function osmtoolconfig() {
 	CONFIGPFAD=$5
 	OSTOOLINI=$6
 # GRIDCACHECLEAR="yes"; ASSETCACHECLEAR="yes"; MAPTILESCLEAR="yes"; SCRIPTCLEAR="yes"; RMAPTILESCLEAR="yes"; RBAKESCLEAR="yes";
-    {
+    {		
 		echo "### Einstellungen $SCRIPTNAME $VERSION"
 		echo "     "
 		echo "## Das Startverzeichnis home oder opt zum Beispiel."
@@ -136,7 +136,7 @@ function osmtoolconfig() {
 		echo "    linefontcolor=7;    linebaggroundcolor=0;"
 		echo "     "
 		echo "    ScreenLogLevel=0; # ScreenLogLevel=0 nichts machen, bis ScreenLogLevel=5 Funktionsnamen ausgeben."
-		echo '    LOGWRITE="no" # yes/no'
+		echo '    LOGWRITE="yes" # yes/no'
 		echo '    logfilename="_multitool"'
 		echo '    line="############################################################";'
 		echo "     "
@@ -245,7 +245,7 @@ function osmtoolconfig() {
 ### ! dummyvar, Shell-Check ueberlisten wegen der Konfigurationsdatei, hat sonst keinerlei Funktion und wird auch nicht aufgerufen.
 function dummyvar() {
 	# shellcheck disable=SC2034
-	STARTVERZEICHNIS="opt"; MONEYVERZEICHNIS="robust"; ROBUSTVERZEICHNIS="robust"; OPENSIMVERZEICHNIS="opensim"; SCRIPTSOURCE="ScriptNeu"; SCRIPTZIP="opensim-ossl-example-scripts-main.zip"; MONEYSOURCE="money48"
+	MONEYVERZEICHNIS="robust"; ROBUSTVERZEICHNIS="robust"; OPENSIMVERZEICHNIS="opensim"; SCRIPTSOURCE="ScriptNeu"; SCRIPTZIP="opensim-ossl-example-scripts-main.zip"; MONEYSOURCE="money48"
 	MONEYZIP="OpenSimCurrencyServer-2021-master.zip"; OSVERSION="opensim-0.9.2.2Dev"; REGIONSDATEI="osmregionlist.ini"; SIMDATEI="osmsimlist.ini"; WARTEZEIT=30; STARTWARTEZEIT=10; STOPWARTEZEIT=30; MONEYWARTEZEIT=60; ROBUSTWARTEZEIT=60
 	BACKUPWARTEZEIT=120; AUTOSTOPZEIT=60; SETMONOTHREADS=800; SETMONOTHREADSON="yes"; OPENSIMDOWNLOAD="http://opensimulator.org/dist/"; OPENSIMVERSION="opensim-0.9.2.2.zip"; SEARCHADRES="icanhazip.com"; # AUTOCONFIG="no"
 	CONFIGURESOURCE="opensim-configuration-addon-modul-main"; CONFIGUREZIP="opensim-configuration-addon-modul-main.zip"
@@ -260,6 +260,7 @@ function dummyvar() {
 
 function osmtoolconfigabfrage() {
 	# Ausgabe Kopfzeilen
+	VSTARTVERZEICHNIS=$(pwd); # Vorläufiges Startverzeichnis
 	echo "$SCRIPTNAME Version $VERSION"
 	echo " "
 	echo "##################################################################"
@@ -272,9 +273,9 @@ function osmtoolconfigabfrage() {
 	echo "##   Daten stehen gegeben falls auch in der alten opensim.cnf   ##"
 	echo "##################################################################"
 	echo " "
-	echo "Das Verzeichnis wo sich ihr Grid befindet oder befinden soll [opt]"
+	echo "Das Verzeichnis wo sich ihr Grid befindet oder befinden soll ["${VSTARTVERZEICHNIS//\//}"]"
 	read -r STARTVERZEICHNIS
-	if [ "$STARTVERZEICHNIS" = "" ]; then STARTVERZEICHNIS="opt"; fi
+	if [ "$STARTVERZEICHNIS" = "" ]; then STARTVERZEICHNIS=""${VSTARTVERZEICHNIS//\//}""; fi
 	echo "Ihr Gridverzeichnis ist $STARTVERZEICHNIS"
 	echo "##################################################################"
 
@@ -303,7 +304,7 @@ function osmtoolconfigabfrage() {
 	echo "##################################################################"
 
     # Fertig und abfragen
-    #osmtoolconfig "/opt/osmtoolconfig.ini"
+    #osmtoolconfig "/$STARTVERZEICHNIS/osmtoolconfig.ini"
 	osmtoolconfig $STARTVERZEICHNIS $ROBUSTVERZEICHNIS $MONEYVERZEICHNIS $OPENSIMVERZEICHNIS $CONFIGPFAD "/$SCRIPTPATH/osmtoolconfig.ini"
 }
 
@@ -1356,8 +1357,8 @@ function menusaveinventar() {
 }
 
 ### !  oscommand, OpenSim Command direkt in den screen senden. # Aufruf: oscommand Screen Region Befehl Parameter
-# Beispiel: /opt/osmtool.sh oscommand sim1 Welcome "alert Hallo liebe Leute dies ist eine Nachricht"
-# Beispiel: /opt/osmtool.sh oscommand sim1 Welcome "alert-user John Doe Hallo John Doe"
+# Beispiel: bash osmtool.sh oscommand sim1 Welcome "alert Hallo liebe Leute dies ist eine Nachricht"
+# Beispiel: bash osmtool.sh oscommand sim1 Welcome "alert-user John Doe Hallo John Doe"
 function oscommand() {
 	OSCOMMANDSCREEN=$1
 	REGION=$2
@@ -1749,7 +1750,7 @@ function ossettings() {
 	return 0
 }
 
-### !  osstart, startet Region Server. # Beispiel-Example: /opt/osmtool.sh osstart sim1
+### !  osstart, startet Region Server. # Beispiel-Example: bash osmtool.sh osstart sim1
 function osstart() {
 	OSSTARTSCREEN=$1 # OpenSimulator, Verzeichnis und Screen Name
 
@@ -1782,7 +1783,7 @@ function osstart() {
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then hauptmenu; fi
 }
 
-### !  osstop, stoppt Region Server. # Beispiel-Example: /opt/osmtool.sh osstop sim1
+### !  osstop, stoppt Region Server. # Beispiel-Example: bash osmtool.sh osstop sim1
 function osstop() {
 	OSSTOPSCREEN=$1 # OpenSimulator, Verzeichnis und Screen Name
 	if screen -list | grep -q "$OSSTOPSCREEN"; then
@@ -1986,7 +1987,7 @@ function menuosstarteintragdel() {
 
 
 
-### !  osdauerstop, stoppt Region Server. # Beispiel-Example: /opt/osmtool.sh osdauerstop sim1
+### !  osdauerstop, stoppt Region Server. # Beispiel-Example: bash osmtool.sh osdauerstop sim1
 function osdauerstop() {
 	OSDAUERSTOPSCREEN=$1 # OpenSimulator, Verzeichnis und Screen Name
 	if screen -list | grep -q "$OSDAUERSTOPSCREEN"; then
@@ -2039,7 +2040,7 @@ function menuosdauerstop() {
 	fi
 }
 
-### !  osdauerstart, startet Region Server. # Beispiel-Example: /opt/osmtool.sh osdauerstart sim1
+### !  osdauerstart, startet Region Server. # Beispiel-Example: bash osmtool.sh osdauerstart sim1
 function osdauerstart() {
 	OSDAUERSTARTSCREEN=$1 # OpenSimulator, Verzeichnis und Screen Name
 	osstarteintrag "$OSDAUERSTARTSCREEN"
@@ -2528,7 +2529,7 @@ function moneycopy() {
 ### ! configurecopy
 function configurecopy() {
 	if [[ $CONFIGURECOPY = "yes" ]]; then
-		##/opt/opensim-configuration-addon-modul/Configuration
+		##/$STARTVERZEICHNIS/opensim-configuration-addon-modul/Configuration
 		if [ -d /$STARTVERZEICHNIS/opensim-configuration-addon-modul ]; then
 			log info "CONFIGURECOPY: Configure Kopiervorgang gestartet"
 			cp -r /$STARTVERZEICHNIS/opensim-configuration-addon-modul/Configuration /$STARTVERZEICHNIS/opensim/addon-modules
@@ -2600,7 +2601,7 @@ function mutelistcopy() {
 ### !  chrisoscopy, Plugin Dateien kopieren.
 function chrisoscopy() {
 	if [[ $CHRISOSCOPY = "yes" ]]; then
-		# /opt/Chris.OS.Additions
+		# /$STARTVERZEICHNIS/Chris.OS.Additions
 		if [ -d /$STARTVERZEICHNIS/Chris.OS.Additions/ ]; then
 			log info "CHRISOSCOPY: Chris.OS.Additions Kopiervorgang gestartet"
 			cp -r /$STARTVERZEICHNIS/Chris.OS.Additions /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/addon-modules
@@ -2991,8 +2992,8 @@ function regionliste() {
 		done
 	done
 	# Ueberfluessige Zeichen entfernen
-	LOESCHEN=$(sed s/'\/'$STARTVERZEICHNIS'\/'//g /$STARTVERZEICHNIS/osmregionlist.ini)              # /opt/ entfernen.
-	echo "$LOESCHEN" >/$STARTVERZEICHNIS/osmregionlist.ini                           # Aenderung /opt/ speichern.
+	LOESCHEN=$(sed s/'\/'$STARTVERZEICHNIS'\/'//g /$STARTVERZEICHNIS/osmregionlist.ini)
+	echo "$LOESCHEN" >/$STARTVERZEICHNIS/osmregionlist.ini                           # Aenderung /$STARTVERZEICHNIS/ speichern.
 	LOESCHEN=$(sed s/'\/bin\/Regions\/'/' "'/g /$STARTVERZEICHNIS/osmregionlist.ini) # /bin/Regions/ entfernen.
 	echo "$LOESCHEN" >/$STARTVERZEICHNIS/osmregionlist.ini                           # Aenderung /bin/Regions/ speichern.
 	LOESCHEN=$(sed s/'.ini'/'"'/g /$STARTVERZEICHNIS/osmregionlist.ini)              # Endung .ini entfernen.
@@ -4164,7 +4165,7 @@ function installationen() {
 
 ### !  osbuilding, test automation.
 # Beispiel: opensim-0.9.2.2Dev-1187-gcf0b1b1.zip
-# /opt/osmtool.sh osbuilding 1187
+# bash osmtool.sh osbuilding 1187
 function osbuilding() {
 	## dialog Aktionen
 	# zuerst schauen ob dialog installiert ist
@@ -4388,7 +4389,7 @@ function db_region() {
 }
 
 ### !Gridliste der Benutzer die schon einmal im eigenen Grid waren
-# Aufruf: /opt/osmtool.sh db_gridlist databaseusername databasepassword databasename
+# Aufruf: bash osmtool.sh db_gridlist databaseusername databasepassword databasename
 function db_gridlist() {
 	username=$1
 	password=$2
@@ -5016,7 +5017,7 @@ function db_compress_backup() {
 ### ! Backup, eine Datenbanken Tabellenweise speichern. Test OK
 ## function db_backuptabellen DB_Benutzername DB_Passwort Datenbankname
 ## Datenbank Tabellenweise sichern im Verzeichnis Datenbankname
-# /opt/osmtool.sh db_backuptabellen username password databasename
+# bash osmtool.sh db_backuptabellen username password databasename
 function db_backuptabellen() {
 	# Hier fehlt noch das die Asset Datenbank gesplittet wird.
 	username=$1
@@ -5151,7 +5152,7 @@ function db_restoretabellentypen() {
 ### ! Backup Test, eine Datenbanken Tabellenweise wiederherstellen.
 ## function db_restorebackuptabellen DB_Benutzername DB_Passwort AlterDatenbankname NeuerDatenbankname
 ## Die Tabellenweise gesicherte Datenbank in einer neuen Datenbank zusammensetzen.
-# /opt/osmtool.sh db_restorebackuptabellen username password databasename newdatabasename
+# bash osmtool.sh db_restorebackuptabellen username password databasename newdatabasename
 function db_restorebackuptabellen() {
 	username=$1
 	password=$2
@@ -6213,7 +6214,7 @@ function set_empty_user() {
 
 ### ! Finde alle offensichtlich falschen E-Mail Adressen der Grid User und
 ## deaktiviere dauerhaft dessen Account:
-## /opt/osmtool.sh db_email_setincorrectuseroff "GRIDdatabaseusername" "GRIDdatabasepassword" "GRIDdatabasename"
+## bash osmtool.sh db_email_setincorrectuseroff "GRIDdatabaseusername" "GRIDdatabasepassword" "GRIDdatabasename"
 function db_email_setincorrectuseroff() {
 	username=$1
 	password=$2
@@ -6229,7 +6230,7 @@ function db_email_setincorrectuseroff() {
 }
 ### ! Finde alle offensichtlich falschen E-Mail Adressen der Grid User und
 ## deaktiviere dauerhaft dessen Account:
-## /opt/osmtool.sh db_email_setincorrectuseroff "GRIDdatabaseusername" "GRIDdatabasepassword" "GRIDdatabasename"
+## bash osmtool.sh db_email_setincorrectuseroff "GRIDdatabaseusername" "GRIDdatabasepassword" "GRIDdatabasename"
 function db_email_setincorrectuseroff_dialog() {
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
@@ -6272,7 +6273,7 @@ function db_email_setincorrectuseroff_dialog() {
 }
 
 ### ! Grid User dauerhaft abschalten:
-## /opt/osmtool.sh db_setuserofline "GRIDdatabaseusername" "GRIDdatabasepassword" "GRIDdatabasename" "firstname" "lastname"
+## bash osmtool.sh db_setuserofline "GRIDdatabaseusername" "GRIDdatabasepassword" "GRIDdatabasename" "firstname" "lastname"
 function db_setuserofline() {
 	username=$1
 	password=$2
@@ -6288,7 +6289,7 @@ function db_setuserofline() {
 	return 0
 }
 ### ! Grid User dauerhaft abschalten:
-## /opt/osmtool.sh db_setuserofline_dialog "GRIDdatabaseusername" "GRIDdatabasepassword" "GRIDdatabasename" "firstname" "lastname"
+## bash osmtool.sh db_setuserofline_dialog "GRIDdatabaseusername" "GRIDdatabasepassword" "GRIDdatabasename" "firstname" "lastname"
 function db_setuserofline_dialog() {
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
@@ -6334,7 +6335,7 @@ function db_setuserofline_dialog() {
 }
 
 ### ! Grid User dauerhaft aktivieren:
-## /opt/osmtool.sh db_setuseronline "GRIDdatabaseusername" "GRIDdatabasepassword" "GRIDdatabasename" "firstname" "lastname"
+## bash osmtool.sh db_setuseronline "GRIDdatabaseusername" "GRIDdatabasepassword" "GRIDdatabasename" "firstname" "lastname"
 function db_setuseronline() {
 	username=$1
 	password=$2
@@ -6350,7 +6351,7 @@ function db_setuseronline() {
 	return 0
 }
 ### ! Grid User dauerhaft aktivieren:
-## /opt/osmtool.sh db_setuseronline "GRIDdatabaseusername" "GRIDdatabasepassword" "GRIDdatabasename" "firstname" "lastname"
+## bash osmtool.sh db_setuseronline "GRIDdatabaseusername" "GRIDdatabasepassword" "GRIDdatabasename" "firstname" "lastname"
 function db_setuseronline_dialog() {
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
@@ -7180,10 +7181,10 @@ function newregionini() {
     # Wohin soll die Datei geschrieben werden 2.
     if [ -z "$simname" ] 
     then
-        # /opt/
+        # /$STARTVERZEICHNIS/
         pfad="/$STARTVERZEICHNIS/$regionsname.ini"
     else
-        # /opt/sim1/bin/Regions
+        # /$STARTVERZEICHNIS/sim1/bin/Regions
         pfad="/$STARTVERZEICHNIS/$simname/bin/Regions/$regionsname.ini"
     fi
 
@@ -7707,6 +7708,7 @@ function configabfrage(){
 		read -r MYSQLDATABASE
 		if [ "$MYSQLDATABASE" = "" ]; then MYSQLDATABASE="opensim"; fi
 		echo "Ihr Datenbanknamen lautet: $MYSQLDATABASE"
+		CREATEROBUSTDATABASENAME="$MYSQLDATABASE"
 		echo "##################################################################"
 	fi
 
@@ -9048,7 +9050,7 @@ function senddata() {
 	SERVERADRESS=$3
 	
 	# Beispiel:
-	# SENDEVERZEICHNIS="/opt/backup"
+	# SENDEVERZEICHNIS="/$STARTVERZEICHNIS/backup"
 	# USERNAMEN="root"
 	# SERVERADRESS="192.168.2.100"
 
@@ -9273,7 +9275,7 @@ function commandhelp() {
 $(tput setab 1)
 Help OpenSim Commands:
 Aufruf: oscommand Screen Region "Befehl mit Parameter in Hochstrichen"
-Beispiel: /opt/osmtool.sh oscommand sim1 Welcome "alert Hallo liebe Leute dies ist eine Nachricht"
+Beispiel: bash osmtool.sh oscommand sim1 Welcome "alert Hallo liebe Leute dies ist eine Nachricht"
 $(tput sgr 0)
 
 $(tput setab 1)A$(tput sgr 0)
@@ -10375,9 +10377,9 @@ exit 0
 # TODO:
 # Einfacher Linux Server Umzug:
 # Kopieren von einem entfernten Server auf einen neuen Server
-# scp benutzername@beispiel_oder_IP.de:/opt/backup/dateiname.sql /opt/backup
+# scp benutzername@beispiel_oder_IP.de:/$STARTVERZEICHNIS/backup/dateiname.sql /$STARTVERZEICHNIS/backup
 # oder andersherum
-# scp /opt/backup benutzername@beispiel_oder_IP.de:/opt/backup/dateiname.sql
+# scp /$STARTVERZEICHNIS/backup benutzername@beispiel_oder_IP.de:/$STARTVERZEICHNIS/backup/dateiname.sql
 
 # Backup Funktion die es erlaubt die Regionen als OAR zu sichern
 # und direkt auf einen neuen Server zu uebertragen.
