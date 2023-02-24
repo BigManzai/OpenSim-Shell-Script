@@ -17,17 +17,13 @@
 # ! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 # * Status 24.02.2023 353 Funktionen.
-
 # # Visual Studio Code # ShellCheck # shellman # Better Comments # outline map #
 
 #### ? Einstellungen ####
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe
-VERSION="V0.9.2.2.771" # opensimMULTITOOL Versionsausgabe
-#clear # Bildschirmausgabe loeschen.
-#reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
+VERSION="V0.9.2.2.772" # opensimMULTITOOL Versionsausgabe
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
-# printf '\e[3J' # Bildschirmausgabe sauber loeschen inklusive dem Scrollbereich.
 
 # ? Alte Variablen loeschen aus eventuellen voherigen sessions
 unset STARTVERZEICHNIS
@@ -86,23 +82,12 @@ function namen() {
 	# Regionsname ausgeben	
 	NEUERREGIONSNAME=${namensarray[$REGIONSNAMENZAHL]}
 	echo "Neuer Regionsname: $NEUERREGIONSNAME"
-
-	# ausgeben aller Namen.
-	# for i in ${namensarray[@]}; do
-	# echo $i
-	# done
 }
 
 ### ! osmtoolconfig autoconfigure
 function osmtoolconfig() {
 
-	STARTVERZEICHNIS=$1
-	ROBUSTVERZEICHNIS=$2
-	MONEYVERZEICHNIS=$3
-	OPENSIMVERZEICHNIS=$4
-	CONFIGPFAD=$5
-	OSTOOLINI=$6
-# GRIDCACHECLEAR="yes"; ASSETCACHECLEAR="yes"; MAPTILESCLEAR="yes"; SCRIPTCLEAR="yes"; RMAPTILESCLEAR="yes"; RBAKESCLEAR="yes";
+	STARTVERZEICHNIS=$1; ROBUSTVERZEICHNIS=$2; MONEYVERZEICHNIS=$3; OPENSIMVERZEICHNIS=$4; CONFIGPFAD=$5; OSTOOLINI=$6
     {		
 		echo "### Einstellungen $SCRIPTNAME $VERSION"
 		echo "     "
@@ -363,7 +348,6 @@ function instdialog () {
 	tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 }
 
-
 ### * Eingabeauswertung fuer Funktionen ohne dialog.
 KOMMANDO=$1
 
@@ -513,7 +497,6 @@ function lastrebootdatum() {
 	HEUTEDATUM=$(date +%Y-%m-%d) # Heute
 
 	# Parsen: system boot  2021-11-30 14:26
-	# Trim = | xargs
 	LETZTERREBOOT=$(who -b | awk -F' ' '{print $3}' | xargs) # Letzter Reboot
 
 	# Tolles Datum Script
@@ -559,9 +542,6 @@ function schreibeinfo() {
 		fi
 	fi
 
-	# NULL=0
-	# Ist die Datei Groesser als null, dann Kopfzeile nicht erneut schreiben.
-	# if [ "$FILESIZE" \< "$NULL" ]; then
 		log rohtext "   ____                        _____  _                    _         _               "
 		log rohtext "  / __ \                      / ____|(_)                  | |       | |              "
 		log rohtext " | |  | | _ __    ___  _ __  | (___   _  _ __ ___   _   _ | |  __ _ | |_  ___   _ __ "
@@ -596,7 +576,6 @@ function schreibeinfo() {
 		fi
 		log line
 		log rohtext " "
-	# fi
 	return 0
 }
 
@@ -830,9 +809,6 @@ function radiolist() {
             # shellcheck disable=SC2001
             url=$(echo "$url" | sed -e s,"$proto",,g)
 
-            # den Benutzer extrahieren (falls vorhanden).
-            #user="$(echo "$url" | grep @ | cut -d@ -f1)"
-
             # Host extrahieren.
             # shellcheck disable=SC2154
             host=$(echo "$url" | sed -e s,"$user"@,,g | cut -d/ -f1 | sed -e 's,:.*,,g')
@@ -885,9 +861,6 @@ function rebootdatum() {
 	fi
 	return 0
 }
-
-## * --no-collapse   verhindert dialog die Neuformatierung des Nachrichtentextes.
-## * Verwenden Sie dies, wenn die exakte Darstellung des Textes erforderlich ist.
 
 ### ! warnbox Medung anzeigen.
 function warnbox() {
@@ -1059,7 +1032,6 @@ function mysqlbackup() {
 	password=$2
 	databasename=$3
 	result_mysqlrest=$("MYSQL_PWD=$password" "mysqldump -u$username $databasename" -N)
-	# mysqldump -u root -p omlgrid assets > AssetService.sql
 }
 ### !  passgen, Passwortgenerator
 function passgen() {
@@ -1431,7 +1403,6 @@ function oswriteconfig() {
 function menuoswriteconfig() {
 	SETSIMULATOR=$1 # OpenSimulator, Verzeichnis und Screen Name
 
-	### dialog Aktionen
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
 		# Alle Aktionen mit dialog
@@ -1480,7 +1451,6 @@ function menuoswriteconfig() {
 function menuworks() {
 	WORKSSCREEN=$1 # OpenSimulator, Verzeichnis und Screen Name
 
-	### dialog Aktionen
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
 		# Alle Aktionen mit dialog
@@ -9309,16 +9279,17 @@ function hilfe() {
 	log info "Der Rest ist in Arbeit"
 	log line
 	echo " "
-	echo "AutoInstall	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "ConfigSet	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "DO_DOMAIN_IDS	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "DO_DOMAIN_IDS2	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "GridCommonConfig	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "GridCommonConfigSet	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "IGNORE_DOMAIN_IDS	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "IGNORE_DOMAIN_IDS2	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "IGNORE_SERVER_IDS	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "MASTER_CONNECT_RETRY	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "AutoInstall	- $(tput setab 5)hat keine Parameter$(tput sgr 0) – Grundinstallation ihreres Servers."
+	echo "ConfigSet	- $(tput setab 5)Datei$(tput sgr 0) – Reduziert die Konfigurationsdateien auf ein uebersichtliches Mass."
+	echo "DO_DOMAIN_IDS	- $(tput setab 5)username password ids$(tput sgr 0) – CHANGE MASTER TO DO DOMAIN IDS."
+	echo "DO_DOMAIN_IDS2	- $(tput setab 5)username password$(tput sgr 0) – CHANGE MASTER TO DO DOMAIN IDS = ()."
+	echo "GridCommonConfig	- $(tput setab 5)Parameter$(tput sgr 0) – Wird entfernt."
+	echo "GridCommonConfigSet	- $(tput setab 5)Parameter$(tput sgr 0) – Wird entfernt."
+	echo "IGNORE_DOMAIN_IDS	- $(tput setab 5)username password ids$(tput sgr 0) – CHANGE MASTER TO IGNORE DOMAIN IDS."
+	echo "IGNORE_DOMAIN_IDS2	- $(tput setab 5)username password$(tput sgr 0) – CHANGE MASTER TO IGNORE DOMAIN IDS = ()."
+
+	echo "IGNORE_SERVER_IDS	- $(tput setab 5)username password ids$(tput sgr 0) – CHANGE MASTER TO IGNORE SERVER IDS."
+	echo "MASTER_CONNECT_RETRY	- $(tput setab 5)username password MASTERCONNECTRETRY$(tput sgr 0) – CHANGE MASTER TO MASTER CONNECT RETRY=MASTERCONNECTRETRY."
 	echo "MASTER_DELAY	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
 	echo "MASTER_HOST	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
 	echo "MASTER_LOG_FILE	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
@@ -9337,12 +9308,15 @@ function hilfe() {
 	echo "MASTER_USER	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
 	echo "MASTER_USE_GTID	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
 	echo "MASTER_USE_GTID2	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "OpenSimConfig	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "OpenSimConfigSet	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+
+
+	echo "OpenSimConfig	- $(tput setab 5)Parameter$(tput sgr 0) – Wird entfernt."
+	echo "OpenSimConfigSet	- $(tput setab 5)Parameter$(tput sgr 0) – Wird entfernt."
 	echo "RELAY_LOG_FILE	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
 	echo "RELAY_LOG_POS	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "RegionsConfig	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "RegionsConfigSet	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "RegionsConfig	- $(tput setab 5)Parameter$(tput sgr 0) – Wird entfernt."
+	echo "RegionsConfigSet	- $(tput setab 5)Parameter$(tput sgr 0) – Wird entfernt."
+
 	echo "Replica_Backup	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
 	echo "Replica_Backup2	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
 	echo "ReplikatKoordinaten	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
