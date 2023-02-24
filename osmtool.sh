@@ -23,7 +23,7 @@
 #### ? Einstellungen ####
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe
-VERSION="V0.9.2.2.759" # opensimMULTITOOL Versionsausgabe
+VERSION="V0.9.2.2.771" # opensimMULTITOOL Versionsausgabe
 #clear # Bildschirmausgabe loeschen.
 #reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
@@ -45,7 +45,7 @@ unset REGIONSNAMEd
 unset VERZEICHNISSCREEN
 
 NEUERREGIONSNAME="Welcome"
-function namen(){
+function namen() {
 	# Array aus Bezeichnungen von Deutschen Orten und Voelker.
 	namensarray=("Terwingen" "Angeron" "Vidivarier" "Usipeten" "Sibiner" "Ranier" "Sabalingier" "Aglier" "Aduatuker" \
 	"Favonen" "Sachsen" "Karpen" "Gautigoten" "Gepiden" "Mugilonen" "Bardongavenses" "Steoringun" "Guiones" "Teutonen" \
@@ -503,8 +503,9 @@ function log() {
 ### ! .Funktionen eines Bash Skript auslesen und in eine Text Datei schreiben.
 function functionslist() {
 	file="/$STARTVERZEICHNIS/osmtool.sh"
-	ergebnisfunktionslist=$(grep -i -r "function " $file)
-	echo "$ergebnisfunktionslist" >/$STARTVERZEICHNIS/osmfunktion"$DATEIDATUM".txt
+	suche="function"
+	ergebnisflist=$(grep -i -r "$suche " $file)
+	echo "$ergebnisflist" >/$STARTVERZEICHNIS/osmfunktion"$DATEIDATUM".txt
 }
 
 ### ! lastrebootdatum letzter reboot des Servers.
@@ -710,7 +711,7 @@ function menufinstall() {
 }
 
 ### ! uncompress ermittelt welcher Kompressor eingesetzt wurde und gibt den entpack Befehl zurueck.
-function uncompress(){
+function uncompress() {
     datei=$1
 
     for file in $datei; do
@@ -797,7 +798,7 @@ function downloados() {
 }
 
 ### Radioliste erstellen aus Webseitenlinks.
-function radiolist(){
+function radiolist() {
     rm /tmp/radio.tmp
     mkdir -p /"$STARTVERZEICHNIS"/radiolist
     for genre in $listVar; do        
@@ -3714,31 +3715,6 @@ function menuautostart() {
 }
 
 ### !  autostop, stoppt das komplette Grid mit allen sims.
-# function menuautostop() {
-# 	# schauen ob screens laufen wenn ja beenden.
-# 	# shellcheck disable=SC2022
-# 	if ! screen -list | grep -q 'sim'; then
-# 		echo ""
-# 	else
-# 		menuautosimstop
-# 	fi
-
-# 	if ! screen -list | grep -q "RO"; then
-# 		echo ""
-# 	else
-# 		menugridstop
-# 	fi
-# 	# schauen ob screens laufen wenn ja warten.
-# 	# shellcheck disable=SC2022
-# 	if ! screen -list | grep -q 'sim'; then
-# 		echo ""
-# 	else
-# 		sleep $AUTOSTOPZEIT
-# 		killall screen
-# 	fi
-# 	menuautoscreenstop
-# }
-### !  autostop, stoppt das komplette Grid mit allen sims.
 function menuautostop() {
 	# schauen ob screens laufen wenn ja beenden.
 	if screen -list | grep -q 'sim'; then log info "Bitte warten..."; menuautosimstop; fi
@@ -3763,12 +3739,6 @@ function autorestart() {
 }
 ### ! menuautorestart
 function menuautorestart() {
-	# menuautostop
-	# if [ "$LOGDELETE" = "yes" ]; then autologdel; fi
-	# menugridstart
-	# menuautosimstart
-	# menuinfo
-
 	autostop
 	if [ "$LOGDELETE" = "yes" ]; then autologdel; fi
 	#if [ "$DELREGIONS" = "yes" ]; then deleteregionfromdatabase; fi
@@ -3971,10 +3941,14 @@ function installobensimulator() {
 }
 
 ### !  installbegin
-function installbegin() { apt update && apt upgrade; }
+function installbegin() { 
+	apt update && apt upgrade; 
+}
 
 ### !  linuxupgrade
-function linuxupgrade() { apt update && apt upgrade -y; }
+function linuxupgrade() { 
+	apt update && apt upgrade -y; 
+}
 
 ### !  installubuntu22
 function installubuntu22() {
@@ -4332,7 +4306,7 @@ function menucreateuser() {
 # Datenbank Befehle Achtung alles noch nicht ausgereift!!!
 
 ### !  deleteregionfromdatabase.
-# function deleteregionfromdatabase() {
+# deleteregionfromdatabase() {
 # 	username=$1
 # 	password=$2
 # 	databasename=$3
@@ -5018,7 +4992,7 @@ function db_compress_backup() {
 }
 
 ### ! Backup, eine Datenbanken Tabellenweise speichern. Test OK
-## function db_backuptabellen DB_Benutzername DB_Passwort Datenbankname
+## db_backuptabellen DB_Benutzername DB_Passwort Datenbankname
 ## Datenbank Tabellenweise sichern im Verzeichnis Datenbankname
 # bash osmtool.sh db_backuptabellen username password databasename
 function db_backuptabellen() {
@@ -5153,7 +5127,7 @@ function db_restoretabellentypen() {
 }
 
 ### ! Backup Test, eine Datenbanken Tabellenweise wiederherstellen.
-## function db_restorebackuptabellen DB_Benutzername DB_Passwort AlterDatenbankname NeuerDatenbankname
+## db_restorebackuptabellen DB_Benutzername DB_Passwort AlterDatenbankname NeuerDatenbankname
 ## Die Tabellenweise gesicherte Datenbank in einer neuen Datenbank zusammensetzen.
 # bash osmtool.sh db_restorebackuptabellen username password databasename newdatabasename
 function db_restorebackuptabellen() {
@@ -5174,7 +5148,7 @@ function db_restorebackuptabellen() {
 	return 0
 }
 ### ! Backup Test, eine Datenbanken Tabellenweise wiederherstellen.
-## function db_restorebackuptabellen DB_Benutzername DB_Passwort AlterDatenbankname NeuerDatenbankname
+## db_restorebackuptabellen DB_Benutzername DB_Passwort AlterDatenbankname NeuerDatenbankname
 ## Die Tabellenweise gesicherte Datenbank in einer neuen Datenbank zusammensetzen.
 
 function db_restorebackuptabellen2test() {
@@ -5430,7 +5404,7 @@ function db_create_new_dbuser() {
 
 ##! Andere Art Datenbanken und Benutzer anzulegen
 # createdatabase DBNAME DBUSER DBPASSWD
-function createdatabase(){
+function createdatabase() {
     # Übergabeparameter
     DBNAME=$1
     DBUSER=$2
@@ -5453,7 +5427,7 @@ EOF
 
 # createdbuser ROOTUSER ROOTPASSWD NEWDBUSER NEWDBPASSWD
 # ROOTPASSWD ist optional.
-function createdbuser(){
+function createdbuser() {
     # Übergabeparameter
     ROOTUSER=$1
     ROOTPASSWD=$2
@@ -7639,7 +7613,7 @@ function osconfigstruktur() {
 	return 0
 }
 
-function configabfrage(){
+function configabfrage() {
 	### Eintragungen uebersicht!
 	# BaseHostname = "MyGrid.com"
 	# BaseURL = http://${Const|BaseHostname}
@@ -7827,7 +7801,7 @@ function configabfrage(){
 }
 
 #! Nachfolgende 3 Funktionen müssen noch getestet werden.
-function firstinstallation(){
+function firstinstallation() {
 	log line
 	log info "Erstinstallation"
 	log info "Das Grid wird jetzt vorbereitet"
@@ -7843,12 +7817,12 @@ function firstinstallation(){
 	createmasteravatar
 	createregionavatar
 }
-function createmasteravatar(){
+function createmasteravatar() {
 	# Master Avatar erstellen.
 	bash osmtool.sh rostart
 	bash osmtool.sh oscommand robust Welcome "create user $FIRSTNAMEMASTER $LASTNAMEMASTER $PASSWDNAMEMASTER $EMAILNAMEMASTER $UUIDNAMEMASTER $MODELNAMEMASTER"
 }
-function createregionavatar(){
+function createregionavatar() {
 	# Besitzerrechte und estate eintragen.
 	makeverzeichnisliste
 	for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
@@ -9220,7 +9194,7 @@ function menukonsolenhilfe() {
 }
 
 ### ! dotnetinfo .NET und CSharp Informationen.
-function dotnetinfo(){
+function dotnetinfo() {
 	echo "dotNET-7.x = C# 11"
 	echo "dotNET-6.x = C# 10"
 	echo "dotNET-5.x = C# 9.0"
@@ -9299,9 +9273,9 @@ function hilfe() {
 	echo "create_db	- $(tput setab 5) DBBENUTZER $(tput sgr 0) $(tput setab 4) DBPASSWORT $(tput sgr 0) $(tput setab 2) DATENBANKNAME $(tput sgr 0) - Datenbank anlegen."
 	#echo "create_db_user	- $(tput setab 5) DBBENUTZER $(tput sgr 0) $(tput setab 4) DBDATENBANKNAME $(tput sgr 0) $(tput setab 2) NEUERNAME $(tput sgr 0) $(tput setab 3) NEUESPASSWORT $(tput sgr 0) - DB Benutzer anlegen."
 	echo "delete_db	- $(tput setab 5) DBBENUTZER $(tput sgr 0) $(tput setab 4) DBPASSWORT $(tput sgr 0) $(tput setab 2) DATENBANKNAME $(tput sgr 0) - Datenbank loeschen."
-	echo "leere_db	- $(tput setab 5) DBBENUTZER $(tput sgr 0) $(tput setab 4) DBPASSWORT $(tput sgr 0) $(tput setab 2) DATENBANKNAME $(tput sgr 0) - Datenbank leeren."
+	# ? echo "leere_db	- $(tput setab 5) DBBENUTZER $(tput sgr 0) $(tput setab 4) DBPASSWORT $(tput sgr 0) $(tput setab 2) DATENBANKNAME $(tput sgr 0) - Datenbank leeren."
 	echo "allrepair_db	- $(tput setab 5) DBBENUTZER $(tput sgr 0) $(tput setab 4) DBPASSWORT $(tput sgr 0) - Alle Datenbanken Reparieren und Optimieren."
-	echo "db_sichern	- $(tput setab 5) DBBENUTZER $(tput sgr 0) $(tput setab 4) DBPASSWORT $(tput sgr 0) $(tput setab 2) DATENBANKNAME $(tput sgr 0) - Datenbank sichern."
+	# ? echo "db_sichern	- $(tput setab 5) DBBENUTZER $(tput sgr 0) $(tput setab 4) DBPASSWORT $(tput sgr 0) $(tput setab 2) DATENBANKNAME $(tput sgr 0) - Datenbank sichern."
 	echo "mysql_neustart	- $(tput setaf 3)hat keine Parameter$(tput sgr 0) - MySQL neu starten."
 
 	echo "regionsabfrage	- $(tput setab 5) DBBENUTZER $(tput sgr 0) $(tput setab 4) DBPASSWORT $(tput sgr 0) $(tput setab 2) DATENBANKNAME $(tput sgr 0) - Regionsliste."
@@ -9326,9 +9300,298 @@ function hilfe() {
 	echo "loadinventar - $(tput setab 5)NAME VERZEICHNIS PASSWORD DATEINAMEmitPFAD $(tput sgr 0) - laedt Inventar aus einer iar"
 	echo "saveinventar - $(tput setab 5)NAME VERZEICHNIS PASSWORD DATEINAMEmitPFAD $(tput sgr 0) - speichert Inventar in einer iar"
 
-	echo "unlockexample	- $(tput setaf 3)hat keine Parameter$(tput sgr 0) - Benennt alle example Dateien um."
+	# ? echo "unlockexample	- $(tput setaf 3)hat keine Parameter$(tput sgr 0) - Benennt alle example Dateien um."
 
 	echo "passwdgenerator - $(tput setab 5)Passwortstaerke$(tput sgr 0) - Generiert ein Passwort zur weiteren verwendung."
+
+	echo " "
+	log line
+	log info "Der Rest ist in Arbeit"
+	log line
+	echo " "
+	echo "AutoInstall	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "ConfigSet	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "DO_DOMAIN_IDS	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "DO_DOMAIN_IDS2	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "GridCommonConfig	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "GridCommonConfigSet	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "IGNORE_DOMAIN_IDS	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "IGNORE_DOMAIN_IDS2	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "IGNORE_SERVER_IDS	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "MASTER_CONNECT_RETRY	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "MASTER_DELAY	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "MASTER_HOST	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "MASTER_LOG_FILE	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "MASTER_LOG_POS	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "MASTER_PASSWORD	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "MASTER_PORT	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "MASTER_SSL	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "MASTER_SSL_CA	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "MASTER_SSL_CAPATH	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "MASTER_SSL_CERT	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "MASTER_SSL_CIPHER	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "MASTER_SSL_CRL	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "MASTER_SSL_CRLPATH	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "MASTER_SSL_KEY	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "MASTER_SSL_VERIFY_SERVER_CERT	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "MASTER_USER	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "MASTER_USE_GTID	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "MASTER_USE_GTID2	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "OpenSimConfig	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "OpenSimConfigSet	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "RELAY_LOG_FILE	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "RELAY_LOG_POS	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "RegionsConfig	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "RegionsConfigSet	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "Replica_Backup	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "Replica_Backup2	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "ReplikatKoordinaten	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "RobustConfig	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "RobustConfigSet	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "ScreenLog	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "accesslog	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "allclean	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "apacheerror	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "assetcachedel	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "authlog	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "autoallclean	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "autoassetcachedel	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "autorestart	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "autorobustmapdel	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "avatarmenu	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "backupdatum	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "buildmenu	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "checkfile	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "chrisoscopy	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "cleaninstall	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "clearuserlist	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "compilieren	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "configabfrage	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "configurecopy	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "configuregitcopy	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "connection_name	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "constconfig	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "createdatabase	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "createdbuser	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "createmasteravatar	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "createregionavatar	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "dateimenu	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_all_name	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_all_name_dialog	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_all_user	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_all_user_dialog	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_all_userfailed	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_all_uuid	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_all_uuid_dialog	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_anzeigen_dialog	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_backup	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_backuptabellentypen	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_backuptabellentypen2	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_benutzer_anzeigen	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_compress_backup	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_create	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_create_new_dbuser	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_dbuser	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_dbuserrechte	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_deldbuser	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_delete	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_deletepartner	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_email_setincorrectuseroff	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_email_setincorrectuseroff_dialog	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_empty	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_false_email	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_foldertyp_user	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_friends	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_gridlist	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_inv_search	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_inventar_no_assets	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_online	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_region	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_region_anzahl_regionsid	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_region_anzahl_regionsnamen	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_region_parzelle	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_region_parzelle_pakete	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_regions	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_regionsport	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_regionsuri	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_restorebackuptabellen2test	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_restoretabellentypen	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_setpartner	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_setuserofline	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_setuserofline_dialog	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_setuseronline	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_setuseronline_dialog	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_tables	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_tables_dialog	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_tablextract_regex	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_user_anzahl	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_user_data	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_user_data_dialog	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_user_infos	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_user_infos_dialog	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_user_online	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_user_uuid	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_user_uuid_dialog	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_userdate	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "default_master_connection	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "dialogclear	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "dotnetinfo	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "downloados	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "dummyvar	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "edittextbox	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "ende	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "expertenmenu	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "fail2banset	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "fehler	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "finstall	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "firstinstallation	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "flotsamconfig	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "fortschritsanzeige	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "fpspeicher	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "functionslist	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "funktionenmenu	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "get_regionsarray	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "get_value_from_Region_key	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "gridcachedelete	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "hauptmenu	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "hilfeall	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "hilfemenu	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "historylogclear	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "iinstall	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "iinstall2	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "info	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "infodialog	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "install_mysqltuner	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "installationhttps22	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "installbegin	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "installfinish	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "installmariadb18	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "installmariadb22	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "installobensimulator	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "installphpmyadmin	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "installubuntu22	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "installwordpress	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "instdialog	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "iptablesset	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "kalender	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "lastrebootdatum	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "linuxupgrade	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "log	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "makeregionsliste	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "makeverzeichnisliste	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "makewebmaps	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "mariadberror	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "menuassetdel	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "menuautologdel	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "menuautorestart	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "menuautoscreenstop	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "menuautosimstart	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "menuautosimstop	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "menuautostart	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "menuautostop	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "menucreateuser	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "menufinstall	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "menugridstart	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "menugridstop	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "menuinfo	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "menukonsolenhilfe	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "menulandclear	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "menuloadinventar	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "menulogdel	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "menumapdel	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "menumostart	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "menumostop	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "menuoscommand	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "menuosdauerstart	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "menuosdauerstop	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "menuosstart	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "menuosstarteintrag	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "menuosstarteintragdel	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "menuosstop	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "menuosstruktur	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "menuoswriteconfig	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "menuregionbackup	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "menuregionrestore	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "menurostart	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "menurostop	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "menusaveinventar	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "menuwaslauft	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "menuworks	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "moneyconfig	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "moneycopy	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "moneydelete	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "moneygitcopy	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "monoinstall18	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "monoinstall20	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "monoinstall22	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "mutelistcopy	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "mySQLmenu	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "mysqlbackup	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "mysqldberror	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "mysqlrest	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "mysqlrestnodb	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "nachrichtbox	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "namen	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "oscompi	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "osconfigstruktur	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "oscopy	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "oscopyrobust	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "oscopysim	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "osdauerstart	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "osdauerstop	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "osdelete	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "osdowngrade	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "osmtoolconfig	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "osmtoolconfigabfrage	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "osprebuild	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "osscreenstop	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "ossettings	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "osslEnableConfig	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "osslEnableConfigSet	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "osslEnableconfig	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "osstarteintrag	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "osstarteintragdel	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "osstruktur	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "oswriteconfig	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "oszipupgrade	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "passgen	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "pythoncopy	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "radiolist	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "ramspeicher	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "rebootdatum	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "regionconfig	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "regionrestore	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "regionsinisuchen	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "robustbackup	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "rologdel	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "schreibeinfo	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "screenlist	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "screenlistrestart	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "scriptcopy	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "scriptgitcopy	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "searchcopy	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "searchgitcopy	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "senddata	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "serverinstall22	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "serverupgrade	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "set_empty_user	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "setpartner	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "show_info	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "simstats	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "sourcelist18	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "sourcelist22	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "systeminformation	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "tabellenabfrage	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "textbox	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "trimm	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "ufwlog	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "ufwset	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "uncompress	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "vardel	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "vartest	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "warnbox	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "waslauft	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+
 
 	log line
 	echo "$(tput setaf 3)  Der Verzeichnisname ist gleichzeitig auch der Screen Name!$(tput sgr 0)"
@@ -10309,7 +10572,7 @@ case $KOMMANDO in
 	gridcommonini) gridcommonini ;;
 	gsta | gridstart) gridstart ;;
 	gsto | gridstop) gridstop ;;
-	h | hilfe | help) hilfe ;;
+	h | hilfe | help | aider | ayuda) hilfe ;;
 	historylogclear) historylogclear "$2" ;;
 	info) info ;;
 	infodialog) infodialog ;;
@@ -10400,7 +10663,7 @@ case $KOMMANDO in
 	rologdel) rologdel ;;
 	rs | robuststart | rostart) rostart ;;
 	rsto | robuststop | rostop) rostop ;;
-	s | settings) ossettings ;;
+	s | settings | ossettings) ossettings ;;
 	saveinventar) saveinventar "$2" "$3" "$4" "$5" ;;
 	sc | scriptcopy) scriptcopy ;;
 	schreibeinfo) schreibeinfo ;;
