@@ -210,3 +210,13 @@ mySQL Menü wurde aufgeräumt.
 Alle Besucherlisten löschen:
 
      ./osmtool.sh clearuserlist
+    
+Vorbereitungen zum kompletten Installationsprozess
+
+     createmasteravatar
+     
+     createregionavatar
+     
+     firstinstallation
+
+Verionsangabe angeglichen an den OpenSimulator VERSION="V0.9.2.2.759".
