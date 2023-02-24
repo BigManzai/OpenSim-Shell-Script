@@ -194,7 +194,18 @@ Downgrade das zurücksetzen auf die vorherige Version des OpenSimulators ist jet
 
 ------
 
-Status 09.02.2023 348 Funktionen.
+Vorbereitungen zum kompletten Installationsprozess (In Entwicklung)
+
+     createmasteravatar
+     
+     createregionavatar
+     
+     firstinstallation
+     
+------
+
+Status 24.02.2023 353 Funktionen.
+
 
 ## NEU
 Regionskonfigurationen erstellen per zufall und direkt funktionsfähig.
@@ -211,12 +222,4 @@ Alle Besucherlisten löschen:
 
      ./osmtool.sh clearuserlist
     
-Vorbereitungen zum kompletten Installationsprozess (In Entwicklung)
-
-     createmasteravatar
-     
-     createregionavatar
-     
-     firstinstallation
-
 Verionsangabe angeglichen an den OpenSimulator VERSION="V0.9.2.2.759".
