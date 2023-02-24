@@ -211,7 +211,7 @@ Alle Besucherlisten löschen:
 
      ./osmtool.sh clearuserlist
     
-Vorbereitungen zum kompletten Installationsprozess
+Vorbereitungen zum kompletten Installationsprozess (In Entwicklung)
 
      createmasteravatar
      
