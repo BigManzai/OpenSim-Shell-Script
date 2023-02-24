@@ -16,14 +16,14 @@
 # ! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 # ! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-# * Status 09.02.2024 350 Funktionen.
+# * Status 09.02.2024 353 Funktionen.
 
 # # Visual Studio Code # ShellCheck # shellman # Better Comments # outline map #
 
 #### ? Einstellungen ####
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe
-VERSION="V0.92.756" # opensimMULTITOOL Versionsausgabe
+VERSION="V0.9.2.2.759" # opensimMULTITOOL Versionsausgabe
 #clear # Bildschirmausgabe loeschen.
 #reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
@@ -2768,6 +2768,7 @@ function osdelete() {
 }
 
 ### !  oscopyrobust, Robust Daten kopieren.
+# bash osmtools.sh oscopyrobust
 function oscopyrobust() {
 	cd /$STARTVERZEICHNIS || return 1
 	if [ -d /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/ ]; then
@@ -2785,27 +2786,29 @@ function oscopyrobust() {
 }
 
 ### !  oscopysim, Simulatoren kopieren aus dem Verzeichnis opensim.
+# bash osmtools.sh oscopysim
 function oscopysim() {
-	cd /$STARTVERZEICHNIS || return 1
+	cd /$STARTVERZEICHNIS || return 1 # Prüfen ob Verzeichnis vorhanden ist.
 	makeverzeichnisliste
 	#log info "Kopiere Simulatoren!"
 	#log line
 	sleep 2
 	for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
 		log info "OpenSimulator ${VERZEICHNISSLISTE[$i]} kopiert"
-		cd /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin || return 1
+		cd /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin || return 1 # Prüfen ob Verzeichnis vorhanden ist.
 		cp -r /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"
 		sleep 2
 	done
 	return 0
 }
 
-### !  oscopysim, Simulatoren kopieren aus dem Verzeichnis opensim.
+### !  oscopysim, Simulator kopieren aus dem Verzeichnis opensim.
+# bash osmtools.sh oscopy sim1
 function oscopy() {
 	cd /$STARTVERZEICHNIS || return 1
 	VERZEICHNIS=$1
 	log info "Kopiere Simulator $VERZEICHNIS "
-	cd /$STARTVERZEICHNIS/"$VERZEICHNIS"/bin || return 1
+	cd /$STARTVERZEICHNIS/"$VERZEICHNIS"/bin || return 1 # Prüfen ob Verzeichnis vorhanden ist.
 	cp -r /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin /$STARTVERZEICHNIS/"$VERZEICHNIS"
 	return 0
 }
@@ -7696,7 +7699,7 @@ function configabfrage(){
 	echo "Bitte geben sie das Passwort ihrer mySQL/mariaDB Datenbank an [opensim]:"
 	read -r MYSQLPASSWORD
 	if [ "$MYSQLPASSWORD" = "" ]; then MYSQLPASSWORD="opensim"; fi
-	echo "Ihr Passwort ihrer Datenbank lautet: ********"
+	echo "Ihr Passwort ihrer Datenbank lautet: $MYSQLPASSWORD"
 	echo "##################################################################"
 
 	echo "Datenbanken jetzt direkt anlegen [nein]:"
@@ -7731,6 +7734,60 @@ function configabfrage(){
 		fi
 	fi
 	echo "##################################################################"
+
+	# Der Grid Master Avatar
+
+	echo "Bitte geben sie den Vornamen ihres Grid Besitzer/Master Avatar an [John]:"
+	read -r FIRSTNAMEMASTER
+	if [ "$FIRSTNAMEMASTER" = "" ]; then FIRSTNAMEMASTER="John"; fi
+	echo "Der Vornamen ihres Grid Besitzer/Master Avatar lautet: $FIRSTNAMEMASTER"
+	echo "##################################################################"
+
+	echo "Bitte geben sie den Nachnamen ihres Grid Besitzer/Master Avatar an [Doe]:"
+	read -r LASTNAMEMASTER
+	if [ "$LASTNAMEMASTER" = "" ]; then LASTNAMEMASTER="Doe"; fi
+	echo "Der Nachnamen ihres Grid Besitzer/Master Avatar lautet: $LASTNAMEMASTER"
+	echo "##################################################################"
+
+	echo "Bitte geben sie das Passwort ihres Grid Besitzer/Master Avatar an [opensim]:"
+	read -r PASSWDNAMEMASTER
+	if [ "$PASSWDNAMEMASTER" = "" ]; then PASSWDNAMEMASTER="opensim"; fi
+	echo "Das Passwort ihres Grid Besitzer/Master Avatar lautet: $PASSWDNAMEMASTER"
+	echo "##################################################################"
+
+	echo "Bitte geben sie die E-Mail ihres Grid Besitzer/Master Avatar an [john@doe.com]:"
+	read -r EMAILNAMEMASTER
+	if [ "$EMAILNAMEMASTER" = "" ]; then EMAILNAMEMASTER="john@doe.com"; fi
+	echo "Die E-Mail ihres Grid Besitzer/Master Avatar lautet: $EMAILNAMEMASTER"
+	echo "##################################################################"
+
+	UUIDNAMEMASTER=$(uuidgen)
+	echo "Bitte geben sie die UUID ihres Grid Besitzer/Master Avatar an [$UUIDNAMEMASTER]:"
+	read -r UUIDNAMEMASTER
+	if [ "$UUIDNAMEMASTER" = "" ]; then UUIDNAMEMASTER="$UUIDNAMEMASTER"; fi
+	echo "Die UUID ihres Grid Besitzer/Master Avatar lautet: $UUIDNAMEMASTER"
+	echo "##################################################################"
+
+	echo "Bitte geben sie das Estate ihres Grid Besitzer/Master Avatar an [MyGrid Estate]:"
+	read -r ESTATENAMEMASTER
+	if [ "$ESTATENAMEMASTER" = "" ]; then ESTATENAMEMASTER="MyGrid Estate"; fi
+	echo "Das Estate ihres Grid Besitzer/Master Avatar lautet: $ESTATENAMEMASTER"
+	echo "##################################################################"
+
+	MODELNAMEMASTER=""
+
+	# Master Avatar erstellen.
+	#bash osmtool.sh rostart
+	#bash osmtool.sh oscommand robust Welcome "create user $FIRSTNAMEMASTER $LASTNAMEMASTER $PASSWDNAMEMASTER $EMAILNAMEMASTER $UUIDNAMEMASTER $MODELNAMEMASTER"
+
+	# Besitzerrechte und estate eintragen.
+	# OpenSim starten:
+	#bash osmtool.sh osstart sim1
+	#bash osmtool.sh oscommand sim1 Welcome "$FIRSTNAMEMASTER"
+	#bash osmtool.sh oscommand sim1 Welcome "$LASTNAMEMASTER"
+	#bash osmtool.sh oscommand sim1 Welcome "$ESTATENAMEMASTER"
+
+	#echo "##################################################################"
 
 	echo "Bitte geben sie den Namen ihrer Startregion an [Welcome]:"
 	read -r STARTREGION
@@ -7769,6 +7826,43 @@ function configabfrage(){
 	osconfigstruktur 1 "$CONFIGANZAHL"
 }
 
+#! Nachfolgende 3 Funktionen müssen noch getestet werden.
+function firstinstallation(){
+	log line
+	log info "Erstinstallation"
+	log info "Das Grid wird jetzt vorbereitet"
+	log line
+	# Grid Stoppen.
+	log info "Alles Beenden falls da etwas laeuft"
+	autostop
+	# Kopieren.
+	log info "Neue Version kopieren"
+	oscopyrobust
+	oscopysim
+	log line
+	createmasteravatar
+	createregionavatar
+}
+function createmasteravatar(){
+	# Master Avatar erstellen.
+	bash osmtool.sh rostart
+	bash osmtool.sh oscommand robust Welcome "create user $FIRSTNAMEMASTER $LASTNAMEMASTER $PASSWDNAMEMASTER $EMAILNAMEMASTER $UUIDNAMEMASTER $MODELNAMEMASTER"
+}
+function createregionavatar(){
+	# Besitzerrechte und estate eintragen.
+	makeverzeichnisliste
+	for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
+		cd /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin || return 1
+
+		screen -S "$OSCOMMANDSCREEN" -p 0 -X eval "stuff '$FIRSTNAMEMASTER'^M"
+		screen -S "$OSCOMMANDSCREEN" -p 0 -X eval "stuff '$LASTNAMEMASTER'^M"
+		screen -S "$OSCOMMANDSCREEN" -p 0 -X eval "stuff '$ESTATENAMEMASTER'^M"
+
+		sleep 2
+	done
+
+	return 0
+}
 
 ###########################################################################
 # Samples
@@ -10368,6 +10462,9 @@ case $KOMMANDO in
 	clearuserlist) clearuserlist ;;
 	instdialog) instdialog ;;
 	hilfeall) hilfeall ;;
+	createmasteravatar) createmasteravatar ;;
+	createregionavatar) createregionavatar ;;
+	firstinstallation) firstinstallation ;;
 	*) hauptmenu ;;
 esac
 vardel
