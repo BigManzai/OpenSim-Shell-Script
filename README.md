@@ -223,3 +223,5 @@ Alle Besucherlisten löschen:
      ./osmtool.sh clearuserlist
     
 Verionsangabe angeglichen an den OpenSimulator VERSION="V0.9.2.2.759".
+
+Aufgeräumt, Fehler entfernt und Hilfe erweitert.
