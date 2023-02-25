@@ -22,7 +22,7 @@
 #### ? Einstellungen ####
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe
-VERSION="V0.9.2.2.772" # opensimMULTITOOL Versionsausgabe
+VERSION="V0.9.2.2.778" # opensimMULTITOOL Versionsausgabe
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 # ? Alte Variablen loeschen aus eventuellen voherigen sessions
@@ -140,7 +140,6 @@ function osmtoolconfig() {
 		echo "## Inklusive"
 		echo '    SCRIPTCOPY="yes"'
 		echo '    MONEYCOPY="yes"'
-		echo '    CONFIGURECOPY="no"'
 		echo '    PYTHONCOPY="no"'
 		echo '    MUTELISTCOPY="no"'
 		echo '    SEARCHCOPY="no"'
@@ -377,7 +376,7 @@ function vardel() {
 	return 0
 }
 
-### ScreenLog Bildschirmausgabe reduzieren. TEST
+### ScreenLog Bildschirmausgabe reduzieren.
 function ScreenLog() {
 	if (( ScreenLogLevel == 1 )); then
 		clear # Bildschirmausgabe loeschen Scrollbereich bleibt zum ueberpruefen.
@@ -399,7 +398,7 @@ function ScreenLog() {
 	return 0
 }
 
-### ScreenLog Bildschirmausgabe reduzieren. TEST
+### dialogclear Dialog loeschen.
 function dialogclear() {
 	dialog --clear
 	return 0
@@ -417,7 +416,7 @@ function fehler() {
 	log error "$?" # Den aufrufenden Prozess mit der letzten Meldung beenden.
 }
 
-### Den aufrufenden Prozess mit der letzten Meldung beenden.
+#! Alle Besucherlisten loeschen.
 function clearuserlist() {
 	echo "Lösche Besucherlisten log"
 	rm -r /$STARTVERZEICHNIS/*_osmvisitorlist.log
@@ -568,12 +567,13 @@ function schreibeinfo() {
 		log rohtext "  $DATUM $(date +%H:%M:%S) INFO: $trimmvar"
 		log rohtext "  $DATUM $(date +%H:%M:%S) INFO: $SQLVERSION"
 		lastrebootdatum
-		osdate=$(date --utc --date "$1" +%F)
-		if curl -s "http://opensimulator.org/viewgit/?a=shortlog&p=opensim"  |  grep -q "$osdate"; then
-			echo "  $DATUM $(date +%H:%M:%S) INFO:$(tput setaf 2) Eine neue OpenSimulator Master Version ist da.$(tput sgr 0)"
-		else
-			echo "  $DATUM $(date +%H:%M:%S) INFO:$(tput setaf 1) Es ist keine neue OpenSimulator Master Version da.$(tput sgr 0)"
-		fi
+		# Nachfolgendes hab ich rausgenommen weil die opensimulator.org so laggt.
+		# osdate=$(date --utc --date "$1" +%F)
+		# if curl -s "http://opensimulator.org/viewgit/?a=shortlog&p=opensim"  |  grep -q "$osdate"; then
+		# 	echo "  $DATUM $(date +%H:%M:%S) INFO:$(tput setaf 2) Eine neue OpenSimulator Master Version ist da.$(tput sgr 0)"
+		# else
+		# 	echo "  $DATUM $(date +%H:%M:%S) INFO:$(tput setaf 1) Es ist keine neue OpenSimulator Master Version da.$(tput sgr 0)"
+		# fi
 		log line
 		log rohtext " "
 	return 0
@@ -2429,18 +2429,6 @@ function scriptgitcopy() {
 }
 
 ### !  gitcopy, Dateien vom Github kopieren.
-function configuregitcopy() {
-	#Money und Scripte vom Git holen
-	if [[ $CONFIGURECOPY = "yes" ]]; then
-		log info "CONFIGURECOPY: Configure wird vom GIT geholt"
-		git clone https://github.com/BigManzai/opensim-configuration-addon-modul
-	else
-		log error "CONFIGURECOPY: Configure ist nicht vorhanden"
-	fi
-	return 0
-}
-
-### !  gitcopy, Dateien vom Github kopieren.
 function searchgitcopy() {
 	#OpenSimSearch vom Git holen
 	if [[ $OSSEARCHCOPY = "yes" ]]; then
@@ -2493,31 +2481,6 @@ function moneycopy() {
 		fi
 	else
 		log warn "Money Server wird nicht kopiert."
-	fi
-	return 0
-}
-
-### ! configurecopy
-function configurecopy() {
-	if [[ $CONFIGURECOPY = "yes" ]]; then
-		##/$STARTVERZEICHNIS/opensim-configuration-addon-modul/Configuration
-		if [ -d /$STARTVERZEICHNIS/opensim-configuration-addon-modul ]; then
-			log info "CONFIGURECOPY: Configure Kopiervorgang gestartet"
-			cp -r /$STARTVERZEICHNIS/opensim-configuration-addon-modul/Configuration /$STARTVERZEICHNIS/opensim/addon-modules
-			#mv /$STARTVERZEICHNIS/opensim/addon-modules/opensim-configuration-addon-modul /$STARTVERZEICHNIS/opensim/addon-modules/Configuration
-
-			log line
-		else
-			# Entpacken und kopieren
-			log info "CONFIGURECOPY: Configure entpacken"
-			unzip "$CONFIGUREZIP"
-			log info "CONFIGURECOPY: Configure Kopiervorgang gestartet"
-			cp -r /$STARTVERZEICHNIS/opensim-configuration-addon-modul/Configuration /$STARTVERZEICHNIS/opensim/addon-modules
-			#mv /$STARTVERZEICHNIS/opensim/addon-modules/opensim-configuration-addon-modul /$STARTVERZEICHNIS/opensim/addon-modules/Configuration
-			log line
-		fi
-	# else
-	# 	log info "CONFIGURE: Configure wird nicht kopiert."
 	fi
 	return 0
 }
@@ -6774,6 +6737,38 @@ function IGNORE_SERVER_IDS() {
 	return 0
 }
 
+# Die Begriffe „Master “ und „Slave“ wurden in der Vergangenheit bei der Replikation verwendet, 
+# aber die Begriffe „ primary “ und „replica“ werden jetzt bevorzugt. 
+# Die alten Begriffe werden immer noch in Teilen der Dokumentation und in MariaDB-Befehlen verwendet, 
+# obwohl MariaDB 10.5 mit dem Umbenennungsprozess begonnen hat. Das Dokumentationsverfahren läuft.
+
+# MASTER_BIND = 'Schnittstellenname'
+#   | MASTER_HOST = 'host_name'
+#   | MASTER_USER = 'Benutzername'
+#   | MASTER_PASSWORD = 'Passwort'
+#   | MASTER_PORT = port_num
+#   | MASTER_CONNECT_RETRY = Intervall
+#   | MASTER_HEARTBEAT_PERIOD = Intervall
+#   | MASTER_LOG_FILE = 'master_log_name'
+#   | MASTER_LOG_POS = master_log_pos
+#   | RELAY_LOG_FILE = 'relay_log_name'
+#   | RELAY_LOG_POS = relay_log_pos
+#   | MASTER_DELAY = Intervall
+#   | MASTER_SSL = {0|1}
+#   | MASTER_SSL_CA = 'ca_file_name'
+#   | MASTER_SSL_CAPATH = 'ca_directory_name'
+#   | MASTER_SSL_CERT = 'cert_file_name'
+#   | MASTER_SSL_CRL = 'crl_file_name'
+#   | MASTER_SSL_CRLPATH = 'crl_directory_name'
+#   | MASTER_SSL_KEY = 'key_file_name'
+#   | MASTER_SSL_CIPHER = 'cipher_list'
+#   | MASTER_SSL_VERIFY_SERVER_CERT = {0|1}
+#   | MASTER_USE_GTID = {aktuelle_pos|slave_pos|nein}
+#   | MASTER_DEMOTE_TO_SLAVE = bool
+#   | IGNORE_SERVER_IDS = (server_id_list)
+#   | DO_DOMAIN_IDS = ([N,..])
+#   | IGNORE_DOMAIN_IDS = ([N,..])
+
 ### ! DO_DOMAIN_IDS "$2" "$3" "$4"
 function DO_DOMAIN_IDS() {
 	username=$1
@@ -7168,7 +7163,7 @@ function newregionini() {
 }
 
 
-### ! constconfig
+### ! constconfig, const schreiben.
 function constconfig() {
 
     BASEHOSTNAME=$1
@@ -7851,12 +7846,6 @@ function compilieren() {
 		log error "MoneyServer Verzeichnis existiert nicht"
 	fi
 
-	if [ ! -f "/$STARTVERZEICHNIS/$CONFIGURESOURCE/" ]; then
-		configurecopy
-	else
-		log error "Configure Verzeichnis existiert nicht"
-	fi
-
 	if [ ! -f "/$STARTVERZEICHNIS/$OSSEARCHCOPY/" ]; then
 		searchgitcopy
 	else
@@ -8112,300 +8101,6 @@ function AutoInstall() {
     fi
 }
 
-### OpenSim Config
-function OpenSimConfig() {
-    # Abfrage des Benutzers.
-    echo "Bitte geben sie die IP oder DNS Adresse ihres Server oder PC ein [127.0.0.1]: "; read -r BaseHostname
-    echo "Bitte geben sie den Simulator Port ein [9010]: "; read -r SimulatorPort
-    echo "Bitte geben sie den Gridnamen ein [myGrid]: "; read -r gridname
-    echo "Moechten sie den Automatischen Backup ihrer Regionen einschalten true/false [false]: "; read -r AutoBackup
-    # Auswertung der Eingaben.
-    if test -z "$BaseHostname"; then BaseHostname="127.0.0.1"; fi
-    if test -z "$SimulatorPort"; then SimulatorPort="9010"; fi
-    if test -z "$gridname"; then gridname="myGrid"; fi
-    if test -z "$AutoBackup"; then AutoBackup="false"; fi
-
-    PublicPort="8002"
-    PrivatePort="8003"
-    PrivURL=$BaseHostname
-    BaseURL="http://$BaseHostname"
-    MoneyPort="8008"
-
-    OpenSimConfigSet $BaseHostname $SimulatorPort $gridname $AutoBackup $PublicPort $PrivatePort $BaseURL $MoneyPort
-    # OpenSimConfigSet
-}
-function OpenSimConfigSet() {
-    #  $BaseHostname,$SimulatorPort,$gridname,$AutoBackup,$PublicPort,$PrivatePort,$BaseURL,$MoneyPort
-    OpenSimdatei="OpenSim.ini"
-    OpenSimConfigList=(
-    "[Const]"
-    "BaseHostname = '$BaseHostname'"
-    "BaseURL = '$BaseURL'"
-    "PublicPort = '$PublicPort'"
-    "PrivURL = '$BaseURL'"
-    "PrivatePort = '$PrivatePort'"
-    "MoneyPort = '$MoneyPort'"
-    "SimulatorPort = '$SimulatorPort'"
-    "[Startup]"
-    "NonPhysicalPrimMax = 1024"
-    "DefaultDrawDistance = 128.0"
-    "MaxDrawDistance = 128"
-    "MaxRegionsViewDistance = 128"
-    "MinRegionsViewDistance = 48"
-    "meshing = Meshmerizer"
-    "physics = BulletSim"
-    "DefaultScriptEngine = 'YEngine'"
-    "[AccessControl]"
-    "DeniedClients = 'Imprudence|CopyBot|Twisted|Crawler|Cryolife|darkstorm|DarkStorm|Darkstorm|hydrastorm viewer|kinggoon copybot|goon squad copybot|copybot pro|darkstorm viewer|copybot club|darkstorm second life|copybot download|HydraStorm Copybot Viewer|Copybot|Firestorm Pro|DarkStorm v3|DarkStorm v2|ShoopedStorm|HydraStorm|hydrastorm|kinggoon|goon squad|goon|copybot|Shooped|ShoopedStorm|Triforce|Triforce Viewer|Firestorm Professional|ShoopedLife|Sombrero|Sombrero Firestorm|GoonSquad|Solar|SolarStorm'"
-    "[Map]"
-    "DrawPrimOnMapTile = true"
-    "RenderMeshes = true"
-    "[Permissions]"
-    "automatic_gods = false"
-    "implicit_gods = false"
-    "allow_grid_gods = true"
-    "[Estates]"
-    "[SMTP]"
-    "[Network]"
-    "http_listener_port = '$SimulatorPort'"
-    "ExternalHostNameForLSL = '$BaseURL'"
-    "shard = 'OpenSim'"
-    "user_agent = 'OpenSim LSL (Mozilla Compatible)'"
-    "[XMLRPC]"
-    "[ClientStack.LindenUDP]"
-    "DisableFacelights = 'true'"
-    "client_throttle_max_bps = 400000"
-    "scene_throttle_max_bps = 75000000"
-    "[ClientStack.LindenCaps]"
-    "Cap_GetTexture = 'localhost'"
-    "Cap_GetMesh = 'localhost'"
-    "Cap_AvatarPickerSearch = 'localhost'"
-    "Cap_GetDisplayNames = 'localhost'"
-    "[SimulatorFeatures]"
-    "SearchServerURI = $BaseURL:$PublicPort"
-    "DestinationGuideURI = $BaseURL:$PublicPort"
-    "[Chat]"
-    "whisper_distance = 25"
-    "say_distance = 70"
-    "shout_distance = 250"
-    "[EntityTransfer]"
-    "[Messaging]"
-    "OfflineMessageModule = 'Offline Message Module V2'"
-    "OfflineMessageURL = $PrivURL:$PrivatePort"
-    "StorageProvider = OpenSim.Data.MySQL.dll"
-    "MuteListModule = MuteListModule"
-    "ForwardOfflineGroupMessages = true"
-    "[BulletSim]"
-    "AvatarToAvatarCollisionsByDefault = true"
-    "[ODEPhysicsSettings]"
-    "[RemoteAdmin]"
-    "[Wind]"
-    "[Materials]"
-    "enable_materials = true"
-    "MaxMaterialsPerTransaction = 250"
-    "[DataSnapshot]"
-    "index_sims = true"
-    "data_exposure = minimum"
-    "gridname = '$gridname'"
-    "default_snapshot_period = 7200"
-    "snapshot_cache_directory = 'DataSnapshot'"
-    "[Economy]"
-    "SellEnabled = true"
-    "EconomyModule = DTLNSLMoneyModule"
-    "CurrencyServer = '$BaseURL:8008/'"
-    "UserServer = '$BaseURL:$PublicPort/'"
-    "CheckServerCert = false"
-    "PriceUpload = 0"
-    "MeshModelUploadCostFactor = 1.0"
-    "MeshModelUploadTextureCostFactor = 1.0"
-    "MeshModelMinCostFactor = 1.0"
-    "PriceGroupCreate = 0"
-    "ObjectCount = 0"
-    "PriceEnergyUnit = 0"
-    "PriceObjectClaim = 0"
-    "PricePublicObjectDecay = 0"
-    "PricePublicObjectDelete = 0"
-    "PriceParcelClaim = 0"
-    "PriceParcelClaimFactor = 1"
-    "PriceRentLight = 0"
-    "TeleportMinPrice = 0"
-    "TeleportPriceExponent = 2"
-    "EnergyEfficiency = 1"
-    "PriceObjectRent = 0"
-    "PriceObjectScaleFactor = 10"
-    "PriceParcelRent = 0"
-    "[YEngine]"
-    "Enabled = true"
-    "[XEngine]"
-    "Enabled = false"
-    "AppDomainLoading = false"
-    "DeleteScriptsOnStartup = true"
-    "[OSSL]"
-    "Include-osslDefaultEnable = 'config-include/osslDefaultEnable.ini'"
-    "[FreeSwitchVoice]"
-    "[VivoxVoice]"
-    "enabled = false"
-    "vivox_server = www.osp.vivox.com"
-    "vivox_sip_uri = osp.vivox.com"
-    "vivox_admin_user = myName"
-    "vivox_admin_password = myPassword"
-    "vivox_channel_type = positional"
-    "vivox_channel_distance_model = 2"
-    "vivox_channel_mode = 'open'"
-    "vivox_channel_roll_off = 2.0"
-    "vivox_channel_max_range = 80"
-    "vivox_channel_clamping_distance = 10"
-    "[Groups]"
-    "Enabled = true"
-    "LevelGroupCreate = 0"
-    "Module = 'Groups Module V2'"
-    "StorageProvider = OpenSim.Data.MySQL.dll"
-    "ServicesConnectorModule = Groups HG Service Connector"
-    "LocalService = remote"
-    "GroupsServerURI = '$BaseURL:$PrivatePort'"
-    "HomeURI = '$BaseURL:$PublicPort'"
-    "MessagingEnabled = true"
-    "MessagingModule = 'Groups Messaging Module V2'"
-    "NoticesEnabled = true"
-    "MessageOnlineUsersOnly = true"
-    "XmlRpcServiceReadKey    = 1234"
-    "XmlRpcServiceWriteKey   = 1234"
-    "[InterestManagement]"
-    "UpdatePrioritizationScheme = BestAvatarResponsiveness"
-    "ObjectsCullingByDistance = true"
-    "[MediaOnAPrim]"
-    "[NPC]"
-    "Enabled = true"
-    "MaxNumberNPCsPerScene = 40"
-    "AllowNotOwned = true"
-    "AllowSenseAsAvatar = true"
-    "AllowCloneOtherAvatars = true"
-    "NoNPCGroup = true"
-    "[Terrain]"
-    "InitialTerrain = 'flat'"
-    "[LandManagement]"
-    "ShowParcelBansLines = true"
-    "[UserProfiles]"
-    "ProfileServiceURL = '$BaseURL:$PublicPort'"
-    "AllowUserProfileWebURLs = true"
-    "[XBakes]"
-    "URL = '$PrivURL:$PrivatePort'"
-    "[Attachments]"
-    "[Textures]"
-    "ReuseDynamicTextures = true"
-    "ReuseDynamicLowDataTextures = true"
-    "[AutoBackupModule]"
-    "AutoBackup = '$AutoBackup'"
-    "AutoBackupModuleEnabled = '$AutoBackup'"
-    "AutoBackupInterval = 1260"
-    "AutoBackupBusyCheck = false"
-    "AutoBackupThreshold = 1"
-    "AutoBackupSkipAssets = false"
-    "AutoBackupNaming = Time"
-    "AutoBackupKeepFilesForDays = 7"
-    "AutoBackupDir = '/tmp/backup'"
-    "[Architecture]"
-    "Include-Architecture = 'config-include/GridHypergrid.ini'"
-    )
-
-    #echo "Alte $OpenSimdatei Datei loeschen falls vorhanden."
-    rm -f $OpenSimdatei # || echo "Keine $OpenSimdatei Datei vorhanden."
-
-    #echo "$OpenSimdatei schreiben"
-    printf '%s\n' "${OpenSimConfigList[@]}" > $OpenSimdatei
-
-    #echo "Tausche Hochstriche aus."
-    sed -i -e s/\'/\"/g "$OpenSimdatei"
-}
-
-### GridCommon Config
-function GridCommonConfig() {
-    # Abfrage des Benutzers.
-    echo "IP oder Adresse des Servers [127.0.0.1]: "; read -r HomeURI
-    echo "Datenbankname [sim1]: "; read -r MysqlDatabase
-    echo "Benutzername der Datenbank [myName]: "; read -r UserID
-    echo "Passwort des des Benutzers der Datenbank [myPassword]: "; read -r MysqlPassword
-    # Auswertung der Eingaben.
-    if test -z "$HomeURI"; then HomeURI="127.0.0.1"; fi
-    if test -z "$MysqlDatabase"; then MysqlDatabase="sim1"; fi
-    if test -z "$UserID"; then UserID="myName"; fi
-    if test -z "$MysqlPassword"; then MysqlPassword="myPassword"; fi
-
-    PublicPort="8002"
-    PrivatePort="8003"
-
-    GridCommonConfigSet $HomeURI $MysqlDatabase $UserID $MysqlPassword $PublicPort $PrivatePort
-}
-function GridCommonConfigSet() {
-    GridCommondatei="GridCommon.ini"
-
-    GridCommonConfigList=(
-    "[DatabaseService]"
-    "StorageProvider = 'OpenSim.Data.MySQL.dll'"
-    "ConnectionString = 'Data Source=localhost;Database='$MysqlDatabase';User ID='$UserID';Password='$MysqlPassword';Old Guids=true;SslMode=None;'"
-    "[Hypergrid]"
-    "HomeURI = '$HomeURI'"
-    "GatekeeperURI = 'http://'$HomeURI:$PublicPort'"
-    "[Modules]"
-    "AssetCaching = 'FlotsamAssetCache'"
-    "Include-FlotsamCache = 'config-include/FlotsamCache.ini'"
-    "[AssetService]"
-    "DefaultAssetLoader = 'OpenSim.Framework.AssetLoader.Filesystem.dll'"
-    "AssetLoaderArgs = 'assets/AssetSets.xml'"
-    "AssetServerURI = 'http://'$HomeURI:$PrivatePort'"
-    "[InventoryService]"
-    "InventoryServerURI = 'http://'$HomeURI:$PrivatePort'"
-    "[GridInfo]"
-    "GridInfoURI = 'http://'$HomeURI:$PublicPort'"
-    "[GridService]"
-    "GridServerURI = 'http://'$HomeURI:$PrivatePort'"
-    "AllowHypergridMapSearch = true"
-    "MapTileDirectory = './maptiles'"
-    "Gatekeeper='http://'$HomeURI:$PublicPort'"
-    "[EstateDataStore]"
-    "[EstateService]"
-    "EstateServerURI = 'http://$HomeURI:$PrivatePort'"
-    "[Messaging]"
-    "Gatekeeper = 'http://'$HomeURI:$PublicPort'"
-    "[AvatarService]"
-    "AvatarServerURI = 'http://'$HomeURI:$PrivatePort'"
-    "[AgentPreferencesService]"
-    "AgentPreferencesServerURI = 'http://'$HomeURI:$PrivatePort'"
-    "[PresenceService]"
-    "PresenceServerURI = 'http://'$HomeURI:$PrivatePort'"
-    "[UserAccountService]"
-    "UserAccountServerURI = 'http://'$HomeURI:$PrivatePort'"
-    "[GridUserService]"
-    "GridUserServerURI = 'http://'$HomeURI:$PrivatePort'"
-    "[AuthenticationService]"
-    "AuthenticationServerURI = 'http://'$HomeURI:$PrivatePort'"
-    "[FriendsService]"
-    "FriendsServerURI = 'http://'$HomeURI:$PrivatePort'"
-    "[HGInventoryAccessModule]"
-    "HomeURI = 'http://'$HomeURI:$PublicPort'"
-    "Gatekeeper = 'http://'$HomeURI:$PublicPort'"
-    "RestrictInventoryAccessAbroad = false"
-    "[HGAssetService]"
-    "HomeURI = 'http://'$HomeURI:$PublicPort'"
-    "[HGFriendsModule]"
-    "[UserAgentService]"
-    "UserAgentServerURI = 'http://'$HomeURI:$PublicPort'"
-    "[MapImageService]"
-    "MapImageServerURI = 'http://'$HomeURI:$PrivatePort'"
-    "[AuthorizationService]"
-    "[MuteListService]"
-    "MuteListServerURI = 'http://'$HomeURI:$PrivatePort'"
-    )
-    echo "Alte $GridCommondatei Datei loeschen falls vorhanden."
-    rm -f $GridCommondatei # || echo "Keine $GridCommondatei Datei vorhanden."
-
-    echo "$GridCommondatei schreiben"
-    printf '%s\n' "${GridCommonConfigList[@]}" > $GridCommondatei
-
-    echo "Tausche Hochstriche aus."
-    sed -i -e s/\'/\"/g "$GridCommondatei"
-}
-
 ### osslEnable Config
 function osslEnableConfig() {
     # Abfrage des Benutzers.
@@ -8559,317 +8254,6 @@ function osslEnableConfigSet() {
 
     echo "$osslEnabledatei schreiben"
     printf '%s\n' "${OsslEnableConfigList[@]}" > $osslEnabledatei
-
-    echo "Tausche Hochstriche aus."
-    sed -i -e s/\'/\"/g "$GridCommondatei"
-}
-
-### Regions Config
-function RegionsConfig() {
-    UUID=$(uuidgen)
-    # Abfrage des Benutzers.
-    echo "RegionName [Welcome]:"; read -r RegionName
-    echo "RegionUUID [$UUID]: "; read -r RegionUUID
-    echo "Location [1000,1000]: "; read -r Location
-    echo "InternalPort [9050]: "; read -r InternalPort
-    echo "ExternalHostName [127.0.0.1]: "; read -r ExternalHostName
-    echo "Size [512]: "; read -r Size
-    echo "MaxPrims [100000]: "; read -r MaxPrims
-    echo "MaxAgents [50]: "; read -r MaxAgents
-    # Auswertung der Eingaben.
-    if test -z "$RegionName"; then RegionName="Welcome"; fi
-    if test -z "$RegionUUID"; then RegionUUID="$UUID"; fi
-    if test -z "$Location"; then Location="1000,1000"; fi
-    if test -z "$InternalPort"; then InternalPort="9050"; fi
-    if test -z "$ExternalHostName"; then ExternalHostName="127.0.0.1"; fi
-    if test -z "$Size"; then Size="512"; fi
-    if test -z "$MaxPrims"; then MaxPrims="100000"; fi
-    if test -z "$MaxAgents"; then MaxAgents="50"; fi
-
-    RegionsConfigSet $RegionName "$RegionUUID" $Location $InternalPort $ExternalHostName $Size $MaxPrims $MaxAgents "$UUID"
-}
-function RegionsConfigSet() {
-    Regionsdatei="OpenSim.ini"
-
-    RegionsConfigList=(
-    "[Erste-Region]"
-    "RegionUUID = $RegionUUID"
-    "Location = $Location"
-    "InternalAddress = 0.0.0.0"
-    "InternalPort = $InternalPort"
-    "AllowAlternatePorts = False"
-    "ExternalHostName = $ExternalHostName"
-    "SizeX = $Size"
-    "SizeY = $Size"
-    "SizeZ = $Size"
-    "NonPhysicalPrimMax = 256"
-    "PhysicalPrimMax = 64"
-    "MaxPrims = $MaxPrims"
-    "MaxAgents = $MaxAgents"
-    )
-    echo "Alte $Regionsdatei Datei loeschen falls vorhanden."
-    rm -f $Regionsdatei # || echo "Keine $Regionsdatei Datei vorhanden."
-
-    echo "$Regionsdatei schreiben"
-    printf '%s\n' "${RegionsConfigList[@]}" > $Regionsdatei
-
-    echo "Tausche Hochstriche aus."
-    sed -i -e s/\'/\"/g "$GridCommondatei"
-}
-
-### Robust Config
-function RobustConfig() {    
-    # Abfrage des Benutzers.
-    echo "BaseHostname [127.0.0.1]: "; read -r BaseHostname
-    echo "gridname [myGrid]: "; read -r gridname
-    echo "mySQL User Name [myName]: "; read -r UserID
-    echo "mySQL Password [myPassword]: "; read -r MysqlPassword
-    echo "mySQL Database [myDatabase]: "; read -r MysqlDatabase
-    echo "StartRegion [Welcome]: "; read -r StartRegion
-    # Auswertung der Eingaben.
-    if test -z "$BaseHostname"; then BaseHostname="127.0.0.1"; fi
-    if test -z "$gridname"; then gridname="myGrid"; fi
-    if test -z "$UserID"; then UserID="myName"; fi
-    if test -z "$MysqlPassword"; then MysqlPassword="myPassword"; fi
-    if test -z "$MysqlDatabase"; then MysqlDatabase="myDatabase"; fi
-    if test -z "$StartRegion"; then StartRegion="Welcome"; fi
-
-    PublicPort="8002"
-    PrivatePort="8003"
-    PrivURL=$BaseHostname
-    BaseURL="http://$BaseHostname"
-    MoneyPort="8008"
-
-    RobustConfigSet $BaseHostname $gridname $UserID $MysqlPassword $MysqlDatabase $StartRegion $PublicPort $PrivatePort $PrivURL $BaseURL $MoneyPort
-}
-function RobustConfigSet() {
-    Robustdatei="Robust.ini"    
-
-    RobustConfigList=(
-    "[Const]"
-    "BaseURL = '$BaseURL'"
-    "PublicPort = '$PublicPort'"
-    "PrivatePort = '$PrivatePort'"
-    "MysqlDatabase = '$MysqlDatabase'"
-    "MysqlUser = '$MysqlUser'"
-    "MysqlPassword = '$MysqlPassword'"
-    "StartRegion = '$StartRegion'"
-    "Simulatorgridname = '$gridname'"
-    "Simulatorgridnick = '$gridname'"
-    "[Startup]"
-    "PIDFile = '/tmp/Robust.pid'"
-    "RegistryLocation = '.'"
-    "ConfigDirectory = 'robust-include'"
-    "ConsoleHistoryFileEnabled = true"
-    "ConsoleHistoryFile = 'RobustConsoleHistory.txt'"
-    "ConsoleHistoryFileLines = 100"
-    "NoVerifyCertChain = true"
-    "NoVerifyCertHostname = true"
-    "[ServiceList]"
-    "AssetServiceConnector = '${Const|PrivatePort}/OpenSim.Server.Handlers.dll:AssetServiceConnector'"
-    "InventoryInConnector = '${Const|PrivatePort}/OpenSim.Server.Handlers.dll:XInventoryInConnector'"
-    "GridServiceConnector = '${Const|PrivatePort}/OpenSim.Server.Handlers.dll:GridServiceConnector'"
-    "GridInfoServerInConnector = '${Const|PublicPort}/OpenSim.Server.Handlers.dll:GridInfoServerInConnector'"
-    "AuthenticationServiceConnector = '${Const|PrivatePort}/OpenSim.Server.Handlers.dll:AuthenticationServiceConnector'"
-    "OpenIdServerConnector = '${Const|PublicPort}/OpenSim.Server.Handlers.dll:OpenIdServerConnector'"
-    "AvatarServiceConnector = '${Const|PrivatePort}/OpenSim.Server.Handlers.dll:AvatarServiceConnector'"
-    "LLLoginServiceInConnector = '${Const|PublicPort}/OpenSim.Server.Handlers.dll:LLLoginServiceInConnector'"
-    "PresenceServiceConnector = '${Const|PrivatePort}/OpenSim.Server.Handlers.dll:PresenceServiceConnector'"
-    "UserAccountServiceConnector = '${Const|PrivatePort}/OpenSim.Server.Handlers.dll:UserAccountServiceConnector'"
-    "GridUserServiceConnector = '${Const|PrivatePort}/OpenSim.Server.Handlers.dll:GridUserServiceConnector'"
-    "AgentPreferencesServiceConnector = '${Const|PrivatePort}/OpenSim.Server.Handlers.dll:AgentPreferencesServiceConnector'"
-    "FriendsServiceConnector = '${Const|PrivatePort}/OpenSim.Server.Handlers.dll:FriendsServiceConnector'"
-    "MapAddServiceConnector = '${Const|PrivatePort}/OpenSim.Server.Handlers.dll:MapAddServiceConnector'"
-    "MapGetServiceConnector = '${Const|PublicPort}/OpenSim.Server.Handlers.dll:MapGetServiceConnector'"
-    "OfflineIMServiceConnector = '${Const|PrivatePort}/OpenSim.Addons.OfflineIM.dll:OfflineIMServiceRobustConnector'"
-    "GroupsServiceConnector = '${Const|PrivatePort}/OpenSim.Addons.Groups.dll:GroupsServiceRobustConnector'"
-    "BakedTextureService = '${Const|PrivatePort}/OpenSim.Server.Handlers.dll:XBakesConnector'"
-    "UserProfilesServiceConnector = '${Const|PublicPort}/OpenSim.Server.Handlers.dll:UserProfilesConnector'"
-    "MuteListConnector = '${Const|PrivatePort}/OpenSim.Server.Handlers.dll:MuteListServiceConnector'"
-    "GatekeeperServiceInConnector = '${Const|PublicPort}/OpenSim.Server.Handlers.dll:GatekeeperServiceInConnector'"
-    "UserAgentServerConnector = '${Const|PublicPort}/OpenSim.Server.Handlers.dll:UserAgentServerConnector'"
-    "HeloServiceInConnector = '${Const|PublicPort}/OpenSim.Server.Handlers.dll:HeloServiceInConnector'"
-    "HGFriendsServerConnector = '${Const|PublicPort}/OpenSim.Server.Handlers.dll:HGFriendsServerConnector'"
-    "InstantMessageServerConnector = '${Const|PublicPort}/OpenSim.Server.Handlers.dll:InstantMessageServerConnector'"
-    "HGInventoryServiceConnector = 'HGInventoryService@${Const|PublicPort}/OpenSim.Server.Handlers.dll:XInventoryInConnector'"
-    "HGAssetServiceConnector = 'HGAssetService@${Const|PublicPort}/OpenSim.Server.Handlers.dll:AssetServiceConnector'"
-    "HGGroupsServiceConnector = '${Const|PublicPort}/OpenSim.Addons.Groups.dll:HGGroupsServiceRobustConnector'"
-    "[Network]"
-    "port = ${Const|PrivatePort}"
-    "AllowllHTTPRequestIn = false"
-    "[Hypergrid]"
-    "HomeURI = '${Const|BaseURL}:${Const|PublicPort}'"
-    "GatekeeperURI = '${Const|BaseURL}:${Const|PublicPort}'"
-    "[AccessControl]"
-    "DeniedClients = 'Imprudence|CopyBot|Twisted|Crawler|Cryolife|darkstorm|DarkStorm|Darkstorm|hydrastorm viewer|kinggoon copybot|goon squad copybot|copybot pro|darkstorm viewer|copybot club|darkstorm second life|copybot download|HydraStorm Copybot Viewer|Copybot|Firestorm Pro|DarkStorm v3|DarkStorm v2|ShoopedStorm|HydraStorm|hydrastorm|kinggoon|goon squad|goon|copybot|Shooped|ShoopedStorm|Triforce|Triforce Viewer|Firestorm Professional|ShoopedLife|Sombrero|Sombrero Firestorm|GoonSquad|Solar|SolarStorm'"
-    "[DatabaseService]"
-    "StorageProvider = 'OpenSim.Data.MySQL.dll'"
-    "ConnectionString = 'Data Source=localhost;Database='$MysqlDatabase';User ID='$UserID';Password='$MysqlPassword';Old Guids=true;SslMode=None;'"
-    "[AssetService]"
-    "LocalServiceModule = 'OpenSim.Services.AssetService.dll:AssetService'"
-    "DefaultAssetLoader = 'OpenSim.Framework.AssetLoader.Filesystem.dll'"
-    "AssetLoaderArgs = './assets/AssetSets.xml'"
-    "AllowRemoteDelete = true"
-    "AllowRemoteDeleteAllTypes = false"
-    "[InventoryService]"
-    "LocalServiceModule = 'OpenSim.Services.InventoryService.dll:XInventoryService'"
-    "AllowDelete = true"
-    "[GridService]"
-    "LocalServiceModule = 'OpenSim.Services.GridService.dll:GridService'"
-    "AssetService = 'OpenSim.Services.AssetService.dll:AssetService'"
-    "MapTileDirectory = './maptiles'"
-    "Region_$StartRegion = 'DefaultRegion, DefaultHGRegion'"
-    "HypergridLinker = true"
-    "ExportSupported = true"
-    "GatekeeperURI = '${Const|BaseURL}:${Const|PublicPort}'"
-    "[FreeswitchService]"
-    "LocalServiceModule = 'OpenSim.Services.FreeswitchService.dll:FreeswitchService'"
-    "[AuthenticationService]"
-    "LocalServiceModule = 'OpenSim.Services.AuthenticationService.dll:PasswordAuthenticationService'"
-    "AllowGetAuthInfo = true"
-    "AllowSetAuthInfo = true"
-    "AllowSetPassword = true"
-    "[OpenIdService]"
-    "AuthenticationServiceModule = 'OpenSim.Services.AuthenticationService.dll:PasswordAuthenticationService'"
-    "UserAccountServiceModule = 'OpenSim.Services.UserAccountService.dll:UserAccountService'"
-    "[UserAccountService]"
-    "LocalServiceModule = 'OpenSim.Services.UserAccountService.dll:UserAccountService'"
-    "AuthenticationService = 'OpenSim.Services.AuthenticationService.dll:PasswordAuthenticationService'"
-    "PresenceService = 'OpenSim.Services.PresenceService.dll:PresenceService'"
-    "GridService = 'OpenSim.Services.GridService.dll:GridService'"
-    "InventoryService = 'OpenSim.Services.InventoryService.dll:XInventoryService'"
-    "AvatarService = 'OpenSim.Services.AvatarService.dll:AvatarService'"
-    "GridUserService = 'OpenSim.Services.UserAccountService.dll:GridUserService'"
-    "CreateDefaultAvatarEntries = true"
-    "AllowCreateUser = true"
-    "AllowSetAccount = true"
-    "[GridUserService]"
-    "LocalServiceModule = 'OpenSim.Services.UserAccountService.dll:GridUserService'"
-    "[AgentPreferencesService]"
-    "LocalServiceModule = 'OpenSim.Services.UserAccountService.dll:AgentPreferencesService'"
-    "[PresenceService]"
-    "LocalServiceModule = 'OpenSim.Services.PresenceService.dll:PresenceService'"
-    "[AvatarService]"
-    "LocalServiceModule = 'OpenSim.Services.AvatarService.dll:AvatarService'"
-    "[FriendsService]"
-    "LocalServiceModule = 'OpenSim.Services.FriendsService.dll:FriendsService'"
-    "[EstateService]"
-    "LocalServiceModule = 'OpenSim.Services.EstateService.dll:EstateDataService'"
-    "[LibraryService]"
-    "LibraryName = 'OpenSim Library'"
-    "DefaultLibrary = './inventory/Libraries.xml'"
-    "[LoginService]"
-    "LocalServiceModule = 'OpenSim.Services.LLLoginService.dll:LLLoginService'"
-    "UserAccountService = 'OpenSim.Services.UserAccountService.dll:UserAccountService'"
-    "GridUserService = 'OpenSim.Services.UserAccountService.dll:GridUserService'"
-    "AuthenticationService = 'OpenSim.Services.AuthenticationService.dll:PasswordAuthenticationService'"
-    "InventoryService = 'OpenSim.Services.InventoryService.dll:XInventoryService'"
-    "AvatarService = 'OpenSim.Services.AvatarService.dll:AvatarService'"
-    "PresenceService = 'OpenSim.Services.PresenceService.dll:PresenceService'"
-    "GridService = 'OpenSim.Services.GridService.dll:GridService'"
-    "SimulationService ='OpenSim.Services.Connectors.dll:SimulationServiceConnector'"
-    "LibraryService = 'OpenSim.Services.InventoryService.dll:LibraryService'"
-    "FriendsService = 'OpenSim.Services.FriendsService.dll:FriendsService'"
-    "MinLoginLevel = 0"
-    "UserAgentService = 'OpenSim.Services.HypergridService.dll:UserAgentService'"
-    "HGInventoryServicePlugin = 'HGInventoryService@OpenSim.Services.HypergridService.dll:HGSuitcaseInventoryService'"
-    "Currency = 'T$'"
-    "ClassifiedFee = 0"
-    "WelcomeMessage = 'Welcome, Avatar!'"
-    "AllowRemoteSetLoginLevel = 'false'"
-    "GatekeeperURI = '${Const|BaseURL}:${Const|PublicPort}'"
-    "SRV_HomeURI = '${Const|BaseURL}:${Const|PublicPort}'"
-    "SRV_InventoryServerURI = '${Const|BaseURL}:${Const|PublicPort}'"
-    "SRV_AssetServerURI = '${Const|BaseURL}:${Const|PublicPort}'"
-    "SRV_ProfileServerURI = '${Const|BaseURL}:${Const|PublicPort}'"
-    "SRV_FriendsServerURI = '${Const|BaseURL}:${Const|PublicPort}'"
-    "SRV_IMServerURI = '${Const|BaseURL}:${Const|PublicPort}'"
-    "SRV_GroupsServerURI = '${Const|BaseURL}:${Const|PublicPort}'"
-    "AllowLoginFallbackToAnyRegion = false"
-    "DeniedMacs = '44ed33b396b10a5c95d04967aff8bd9c'"
-    "[MapImageService]"
-    "LocalServiceModule = 'OpenSim.Services.MapImageService.dll:MapImageService'"
-    "TilesStoragePath = 'maptiles'"
-    "[GridInfoService]"
-    "login = ${Const|BaseURL}:${Const|PublicPort}/"
-    "gridname = '$gridname'"
-    "gridnick = '$gridname'"
-    "welcome = ${Const|BaseURL}/"
-    "economy = ${Const|BaseURL}/helper/"
-    "about = ${Const|BaseURL}/"
-    "register = ${Const|BaseURL}/"
-    "help = ${Const|BaseURL}/"
-    "password = ${Const|BaseURL}/"
-    "gatekeeper = ${Const|BaseURL}:${Const|PublicPort}/"
-    "uas = ${Const|BaseURL}:${Const|PublicPort}/"
-    "[GatekeeperService]"
-    "LocalServiceModule = 'OpenSim.Services.HypergridService.dll:GatekeeperService'"
-    "UserAccountService = 'OpenSim.Services.UserAccountService.dll:UserAccountService'"
-    "UserAgentService = 'OpenSim.Services.HypergridService.dll:UserAgentService'"
-    "PresenceService = 'OpenSim.Services.PresenceService.dll:PresenceService'"
-    "GridUserService = 'OpenSim.Services.UserAccountService.dll:GridUserService'"
-    "GridService = 'OpenSim.Services.GridService.dll:GridService'"
-    "AuthenticationService = 'OpenSim.Services.Connectors.dll:AuthenticationServicesConnector'"
-    "SimulationService ='OpenSim.Services.Connectors.dll:SimulationServiceConnector'"
-    "AllowTeleportsToAnyRegion = true"
-    "ForeignAgentsAllowed = true"
-    "[UserAgentService]"
-    "LocalServiceModule = 'OpenSim.Services.HypergridService.dll:UserAgentService'"
-    "GridUserService     = 'OpenSim.Services.UserAccountService.dll:GridUserService'"
-    "GridService         = 'OpenSim.Services.GridService.dll:GridService'"
-    "GatekeeperService   = 'OpenSim.Services.HypergridService.dll:GatekeeperService'"
-    "PresenceService     = 'OpenSim.Services.PresenceService.dll:PresenceService'"
-    "FriendsService      = 'OpenSim.Services.FriendsService.dll:FriendsService'"
-    "UserAccountService  = 'OpenSim.Services.UserAccountService.dll:UserAccountService'"
-    "LevelOutsideContacts = 0"
-    "ShowUserDetailsInHGProfile = True"
-    "[HGInventoryService]"
-    "LocalServiceModule    = 'OpenSim.Services.InventoryService.dll:XInventoryService'"
-    "UserAccountsService = 'OpenSim.Services.UserAccountService.dll:UserAccountService'"
-    "AvatarService = 'OpenSim.Services.AvatarService.dll:AvatarService'"
-    "AuthType = None"
-    "HomeURI = '${Const|BaseURL}:${Const|PublicPort}'"
-    "[HGAssetService]"
-    "LocalServiceModule = 'OpenSim.Services.HypergridService.dll:HGAssetService'"
-    "UserAccountsService = 'OpenSim.Services.UserAccountService.dll:UserAccountService'"
-    "AuthType = None"
-    "HomeURI = '${Const|BaseURL}:${Const|PublicPort}'"
-    "[HGFriendsService]"
-    "LocalServiceModule = 'OpenSim.Services.HypergridService.dll:HGFriendsService'"
-    "UserAgentService = 'OpenSim.Services.HypergridService.dll:UserAgentService'"
-    "FriendsService = 'OpenSim.Services.FriendsService.dll:FriendsService'"
-    "UserAccountService = 'OpenSim.Services.UserAccountService.dll:UserAccountService'"
-    "GridService = 'OpenSim.Services.GridService.dll:GridService'"
-    "PresenceService = 'OpenSim.Services.PresenceService.dll:PresenceService'"
-    "[HGInstantMessageService]"
-    "LocalServiceModule  = 'OpenSim.Services.HypergridService.dll:HGInstantMessageService'"
-    "GridService         = 'OpenSim.Services.GridService.dll:GridService'"
-    "PresenceService     = 'OpenSim.Services.PresenceService.dll:PresenceService'"
-    "UserAgentService    = 'OpenSim.Services.HypergridService.dll:UserAgentService'"
-    "InGatekeeper = True"
-    "[Messaging]"
-    "OfflineIMService = 'OpenSim.Addons.OfflineIM.dll:OfflineIMService'"
-    "[Groups]"
-    "OfflineIMService = 'OpenSim.Addons.OfflineIM.dll:OfflineIMService'"
-    "UserAccountService = 'OpenSim.Services.UserAccountService.dll:UserAccountService'"
-    "HomeURI = '${Const|BaseURL}:${Const|PublicPort}'"
-    "MaxAgentGroups = 50"
-    "[UserProfilesService]"
-    "LocalServiceModule = 'OpenSim.Services.UserProfilesService.dll:UserProfilesService'"
-    "Enabled = true"
-    "UserAccountService = OpenSim.Services.UserAccountService.dll:UserAccountService"
-    "AuthenticationServiceModule = 'OpenSim.Services.AuthenticationService.dll:PasswordAuthenticationService'"
-    "[BakedTextureService]"
-    "LocalServiceModule = 'OpenSim.Server.Handlers.dll:XBakes'"
-    "BaseDirectory = './bakes'"
-    "[MuteListService]"
-    "LocalServiceModule = 'OpenSim.Services.MuteListService.dll:MuteListService'"
-    )
-    echo "Alte $Robustdatei Datei loeschen falls vorhanden."
-    rm -f $Robustdatei # || echo "Keine $Robustdatei Datei vorhanden."
-
-    echo "$Robustdatei schreiben"
-    printf '%s\n' "${RobustConfigList[@]}" > $Robustdatei
 
     echo "Tausche Hochstriche aus."
     sed -i -e s/\'/\"/g "$GridCommondatei"
@@ -9176,12 +8560,105 @@ function dotnetinfo() {
 	echo "dotNET Framework-alle = C# 7.3"
 }
 
+### !  dbhilfe, Datenbankhilfe auf dem Bildschirm anzeigen.
+function dbhilfe() {
+	echo "$(tput setab 1)mySQL - mariaDB Befehle ACHTUNG! Sie muessen hier fuer die Grundlagen von SQL beherschen. $(tput sgr 0)"
+	echo "DO_DOMAIN_IDS	- $(tput setab 5)username password ids$(tput sgr 0) – CHANGE MASTER TO DO DOMAIN IDS."
+	echo "DO_DOMAIN_IDS2	- $(tput setab 5)username password$(tput sgr 0) – CHANGE MASTER TO DO DOMAIN IDS = ()."
+	echo "IGNORE_DOMAIN_IDS	- $(tput setab 5)username password ids$(tput sgr 0) – CHANGE MASTER TO IGNORE DOMAIN IDS."
+	echo "IGNORE_DOMAIN_IDS2	- $(tput setab 5)username password$(tput sgr 0) – CHANGE MASTER TO IGNORE DOMAIN IDS = ()."
+	echo "IGNORE_SERVER_IDS	- $(tput setab 5)username password ids$(tput sgr 0) – CHANGE MASTER TO IGNORE SERVER IDS."
+	echo "MASTER_CONNECT_RETRY	- $(tput setab 5)username password MASTERCONNECTRETRY$(tput sgr 0) – CHANGE MASTER TO MASTER CONNECT RETRY=MASTERCONNECTRETRY."	
+	echo "MASTER_DELAY	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "MASTER_HOST	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "MASTER_LOG_FILE	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "MASTER_LOG_POS	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "MASTER_PASSWORD	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "MASTER_PORT	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "MASTER_SSL	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "MASTER_SSL_CA	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "MASTER_SSL_CAPATH	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "MASTER_SSL_CERT	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "MASTER_SSL_CIPHER	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "MASTER_SSL_CRL	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "MASTER_SSL_CRLPATH	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "MASTER_SSL_KEY	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "MASTER_SSL_VERIFY_SERVER_CERT	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "MASTER_USER	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "MASTER_USE_GTID	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "MASTER_USE_GTID2	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "RELAY_LOG_FILE	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "RELAY_LOG_POS	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "Replica_Backup	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "Replica_Backup2	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."	
+	echo "ReplikatKoordinaten	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_all_name	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_all_name_dialog	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_all_user	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_all_user_dialog	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_all_userfailed	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_all_uuid	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_all_uuid_dialog	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_anzeigen_dialog	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_backup	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_backuptabellentypen	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_backuptabellentypen2	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_benutzer_anzeigen	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_compress_backup	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_create	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_create_new_dbuser	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_dbuser	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_dbuserrechte	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_deldbuser	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_delete	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_deletepartner	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_email_setincorrectuseroff	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_email_setincorrectuseroff_dialog	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_empty	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_false_email	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_foldertyp_user	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_friends	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_gridlist	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_inv_search	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_inventar_no_assets	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_online	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_region	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_region_anzahl_regionsid	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_region_anzahl_regionsnamen	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_region_parzelle	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_region_parzelle_pakete	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_regions	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_regionsport	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_regionsuri	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_restorebackuptabellen2test	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_restoretabellentypen	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_setpartner	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_setuserofline	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_setuserofline_dialog	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_setuseronline	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_setuseronline_dialog	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_tables	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_tables_dialog	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_tablextract_regex	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_user_anzahl	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_user_data	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_user_data_dialog	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_user_infos	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_user_infos_dialog	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_user_online	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_user_uuid	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_user_uuid_dialog	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_userdate	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "connection_name	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+}
+
 ### !  hilfe, Hilfe auf dem Bildschirm anzeigen.
 function hilfe() {
 	echo "$(tput setab 5)Funktion:$(tput sgr 0)		$(tput setab 2)Parameter:$(tput sgr 0)		$(tput setab 4)Informationen:$(tput sgr 0)"
 	echo "hilfe 			- $(tput setaf 3)hat keine Parameter$(tput sgr 0)	- Diese Hilfe."
 	echo "konsolenhilfe 		- $(tput setaf 3)hat keine Parameter$(tput sgr 0)	- konsolenhilfe ist eine Hilfe fuer Putty oder Xterm"
 	echo "commandhelp 		- $(tput setaf 3)hat keine Parameter$(tput sgr 0)	- Die OpenSim Commands."
+	echo "dbhilfe 			- $(tput setaf 3)hat keine Parameter$(tput sgr 0)	- Datenbankhilfe auf dem Bildschirm anzeigen."
 	echo "restart 		- $(tput setaf 3)hat keine Parameter$(tput sgr 0)	- Startet das gesamte Grid neu."
 	echo "autostop 		- $(tput setaf 3)hat keine Parameter$(tput sgr 0)	- Stoppt das gesamte Grid."
 	echo "autostart 		- $(tput setaf 3)hat keine Parameter$(tput sgr 0)	- Startet das gesamte Grid."
@@ -9273,143 +8750,41 @@ function hilfe() {
 	# ? echo "unlockexample	- $(tput setaf 3)hat keine Parameter$(tput sgr 0) - Benennt alle example Dateien um."
 
 	echo "passwdgenerator - $(tput setab 5)Passwortstaerke$(tput sgr 0) - Generiert ein Passwort zur weiteren verwendung."
-
-	echo " "
-	log line
-	log info "Der Rest ist in Arbeit"
-	log line
-	echo " "
-	echo "AutoInstall	- $(tput setab 5)hat keine Parameter$(tput sgr 0) – Grundinstallation ihreres Servers."
+	echo "AutoInstall	- $(tput setab 5)hat keine Parameter$(tput sgr 0) – Grundinstallation ihreres Servers."	
 	echo "ConfigSet	- $(tput setab 5)Datei$(tput sgr 0) – Reduziert die Konfigurationsdateien auf ein uebersichtliches Mass."
-	echo "DO_DOMAIN_IDS	- $(tput setab 5)username password ids$(tput sgr 0) – CHANGE MASTER TO DO DOMAIN IDS."
-	echo "DO_DOMAIN_IDS2	- $(tput setab 5)username password$(tput sgr 0) – CHANGE MASTER TO DO DOMAIN IDS = ()."
-	echo "GridCommonConfig	- $(tput setab 5)Parameter$(tput sgr 0) – Wird entfernt."
-	echo "GridCommonConfigSet	- $(tput setab 5)Parameter$(tput sgr 0) – Wird entfernt."
-	echo "IGNORE_DOMAIN_IDS	- $(tput setab 5)username password ids$(tput sgr 0) – CHANGE MASTER TO IGNORE DOMAIN IDS."
-	echo "IGNORE_DOMAIN_IDS2	- $(tput setab 5)username password$(tput sgr 0) – CHANGE MASTER TO IGNORE DOMAIN IDS = ()."
+	
+	echo "ScreenLog	- $(tput setab 5)ScreenLogLevel 1 bis 5$(tput sgr 0) – ScreenLog Bildschirmausgabe reduzieren."	
+	echo "accesslog	- $(tput setaf 3)hat keine Parameter$(tput sgr 0) – access log anzeigen."	
+	echo "allclean	- $(tput setab 5)Verzeichnis$(tput sgr 0) – loescht Log, dll, so, exe, aot Dateien fuer einen saubere neue installation, ohne Robust."	
+	echo "apacheerror	- $(tput setaf 3)hat keine Parameter$(tput sgr 0) – php log anzeigen."	
+	echo "assetcachedel	- $(tput setab 5)Verzeichnis$(tput sgr 0) – loescht die asset cache Dateien."	
+	echo "authlog	- $(tput setaf 3)hat keine Parameter$(tput sgr 0) – auth log anzeigen."	
+	echo "autoallclean	- $(tput setaf 3)hat keine Parameter$(tput sgr 0) – loescht Log, dll, so, exe, aot Dateien fuer einen saubere neue installation, mit Robust."	
+	echo "autoassetcachedel	- $(tput setaf 3)hat keine Parameter$(tput sgr 0) – automatisches loeschen aller asset cache Dateien."	
+	echo "autorestart	- $(tput setab 5)LOGDELETE yes no$(tput sgr 0) – startet das gesamte Grid neu und loescht die log Dateien."
 
-	echo "IGNORE_SERVER_IDS	- $(tput setab 5)username password ids$(tput sgr 0) – CHANGE MASTER TO IGNORE SERVER IDS."
-	echo "MASTER_CONNECT_RETRY	- $(tput setab 5)username password MASTERCONNECTRETRY$(tput sgr 0) – CHANGE MASTER TO MASTER CONNECT RETRY=MASTERCONNECTRETRY."
-	echo "MASTER_DELAY	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "MASTER_HOST	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "MASTER_LOG_FILE	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "MASTER_LOG_POS	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "MASTER_PASSWORD	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "MASTER_PORT	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "MASTER_SSL	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "MASTER_SSL_CA	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "MASTER_SSL_CAPATH	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "MASTER_SSL_CERT	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "MASTER_SSL_CIPHER	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "MASTER_SSL_CRL	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "MASTER_SSL_CRLPATH	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "MASTER_SSL_KEY	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "MASTER_SSL_VERIFY_SERVER_CERT	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "MASTER_USER	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "MASTER_USE_GTID	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "MASTER_USE_GTID2	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	log line
+	echo "autorobustmapdel - $(tput setab 5)keine Parameter$(tput sgr 0) – automatisches loeschen aller Map/Karten Dateien in Robust."	
+	echo "avatarmenu	- $(tput setab 5)keine Parameter$(tput sgr 0) – aufruf Avatar Menue."	
+	echo "backupdatum	- $(tput setab 5)Parameter$(tput sgr 0) – robustbackup Grid Datenbank sichern. Datum auswerten."	
+	echo "buildmenu	- $(tput setab 5)Parameter$(tput sgr 0) – aufruf Build Menue."	
+	echo "checkfile	- $(tput setab 5)pfad name$(tput sgr 0) – pruefen ob Datei vorhanden ist."	
+	#echo "chrisoscopy	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."	
+	echo "cleaninstall	- $(tput setab 5)keine Parameter$(tput sgr 0) – loeschen aller externen addon Module."	
+	echo "clearuserlist	- $(tput setab 5)keine Parameter$(tput sgr 0) – Alle Besucherlisten loeschen."	
+	echo "compilieren	- $(tput setab 5)keine Parameter$(tput sgr 0) – kompilieren des OpenSimulator."	
+	echo "configabfrage	- $(tput setab 5)Abfragen$(tput sgr 0) – Konfigurationen und Verzeichnisstrukturen anlegen."
+	echo "constconfig	- $(tput setab 5)11Parameter$(tput sgr 0) – const.ini schreiben."	
+	echo "createdatabase	- $(tput setab 5)DBNAME DBUSER DBPASSWD$(tput sgr 0) – Andere Art Datenbanken und Benutzer anzulegen."	
+	echo "createdbuser	- $(tput setab 5)ROOTUSER ROOTPASSWD NEWDBUSER NEWDBPASSWD$(tput sgr 0) – Datenbankbenutzer erstellen."	
+	echo "createmasteravatar	- $(tput setab 5)FIRSTNAMEMASTER LASTNAMEMASTER PASSWDNAMEMASTER EMAILNAMEMASTER UUIDNAMEMASTER MODELNAMEMASTER$(tput sgr 0) – Master Avatar erstellen."
+	echo "createregionavatar	- $(tput setab 5)FIRSTNAMEMASTER LASTNAMEMASTER ESTATENAMEMASTE$(tput sgr 0) – Besitzerrechte und estate eintragen."	
+	echo "dateimenu	- $(tput setab 5)keine Parameter$(tput sgr 0) – Dateimenue oeffnen."	
+	echo "dialogclear	- $(tput setab 5)keine Parameter$(tput sgr 0) – Dialog loeschen."
 
+	log line	
+	echo "dotnetinfo	- $(tput setab 5)keine Parameter$(tput sgr 0) – .NET und CSharp Informationen."
 
-	echo "OpenSimConfig	- $(tput setab 5)Parameter$(tput sgr 0) – Wird entfernt."
-	echo "OpenSimConfigSet	- $(tput setab 5)Parameter$(tput sgr 0) – Wird entfernt."
-	echo "RELAY_LOG_FILE	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "RELAY_LOG_POS	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "RegionsConfig	- $(tput setab 5)Parameter$(tput sgr 0) – Wird entfernt."
-	echo "RegionsConfigSet	- $(tput setab 5)Parameter$(tput sgr 0) – Wird entfernt."
-
-	echo "Replica_Backup	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "Replica_Backup2	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "ReplikatKoordinaten	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "RobustConfig	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "RobustConfigSet	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "ScreenLog	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "accesslog	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "allclean	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "apacheerror	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "assetcachedel	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "authlog	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "autoallclean	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "autoassetcachedel	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "autorestart	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "autorobustmapdel	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "avatarmenu	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "backupdatum	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "buildmenu	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "checkfile	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "chrisoscopy	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "cleaninstall	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "clearuserlist	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "compilieren	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "configabfrage	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "configurecopy	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "configuregitcopy	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "connection_name	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "constconfig	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "createdatabase	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "createdbuser	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "createmasteravatar	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "createregionavatar	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "dateimenu	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "db_all_name	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "db_all_name_dialog	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "db_all_user	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "db_all_user_dialog	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "db_all_userfailed	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "db_all_uuid	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "db_all_uuid_dialog	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "db_anzeigen_dialog	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "db_backup	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "db_backuptabellentypen	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "db_backuptabellentypen2	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "db_benutzer_anzeigen	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "db_compress_backup	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "db_create	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "db_create_new_dbuser	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "db_dbuser	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "db_dbuserrechte	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "db_deldbuser	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "db_delete	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "db_deletepartner	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "db_email_setincorrectuseroff	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "db_email_setincorrectuseroff_dialog	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "db_empty	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "db_false_email	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "db_foldertyp_user	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "db_friends	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "db_gridlist	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "db_inv_search	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "db_inventar_no_assets	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "db_online	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "db_region	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "db_region_anzahl_regionsid	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "db_region_anzahl_regionsnamen	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "db_region_parzelle	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "db_region_parzelle_pakete	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "db_regions	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "db_regionsport	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "db_regionsuri	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "db_restorebackuptabellen2test	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "db_restoretabellentypen	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "db_setpartner	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "db_setuserofline	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "db_setuserofline_dialog	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "db_setuseronline	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "db_setuseronline_dialog	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "db_tables	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "db_tables_dialog	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "db_tablextract_regex	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "db_user_anzahl	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "db_user_data	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "db_user_data_dialog	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "db_user_infos	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "db_user_infos_dialog	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "db_user_online	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "db_user_uuid	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "db_user_uuid_dialog	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "db_userdate	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "default_master_connection	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "dialogclear	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "dotnetinfo	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
 	echo "downloados	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
 	echo "dummyvar	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
 	echo "edittextbox	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
@@ -9455,42 +8830,47 @@ function hilfe() {
 	echo "makeverzeichnisliste	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
 	echo "makewebmaps	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
 	echo "mariadberror	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "menuassetdel	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "menuautologdel	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "menuautorestart	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "menuautoscreenstop	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "menuautosimstart	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "menuautosimstop	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "menuautostart	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "menuautostop	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "menucreateuser	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "menufinstall	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "menugridstart	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "menugridstop	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "menuinfo	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "menukonsolenhilfe	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "menulandclear	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "menuloadinventar	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "menulogdel	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "menumapdel	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "menumostart	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "menumostop	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "menuoscommand	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "menuosdauerstart	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "menuosdauerstop	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "menuosstart	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "menuosstarteintrag	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "menuosstarteintragdel	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "menuosstop	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "menuosstruktur	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "menuoswriteconfig	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "menuregionbackup	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "menuregionrestore	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "menurostart	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "menurostop	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "menusaveinventar	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "menuwaslauft	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "menuworks	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+
+	# Menu direktaufrufe
+	# echo "menuassetdel	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	# echo "menuautologdel	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	# echo "menuautorestart	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	# echo "menuautoscreenstop	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	# echo "menuautosimstart	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	# echo "menuautosimstop	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	# echo "menuautostart	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	# echo "menuautostop	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	# echo "menucreateuser	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	# echo "menufinstall	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	# echo "menugridstart	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	# echo "menugridstop	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	# echo "menuinfo	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	# echo "menukonsolenhilfe	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	# echo "menulandclear	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	# echo "menuloadinventar	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	# echo "menulogdel	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	# echo "menumapdel	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	# echo "menumostart	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	# echo "menumostop	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	# echo "menuoscommand	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	# echo "menuosdauerstart	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	# echo "menuosdauerstop	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	# echo "menuosstart	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	# echo "menuosstarteintrag	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	# echo "menuosstarteintragdel	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	# echo "menuosstop	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	# echo "menuosstruktur	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	# echo "menuoswriteconfig	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	# echo "menuregionbackup	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	# echo "menuregionrestore	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	# echo "menurostart	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	# echo "menurostop	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	# echo "menusaveinventar	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	# echo "menuwaslauft	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	# echo "menuworks	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+
+
+
 	echo "moneyconfig	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
 	echo "moneycopy	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
 	echo "moneydelete	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
@@ -9571,10 +8951,6 @@ function hilfe() {
 	echo "$(tput setaf 3)  Der Verzeichnisname ist gleichzeitig auch der Screen Name!$(tput sgr 0)"
 
 	# log info "HILFE: Hilfe wurde angefordert."
-}
-
-function hilfeall() {
-	echo "AutoInstall ConfigSet DO_DOMAIN_IDS DO_DOMAIN_IDS2 GridCommonConfig GridCommonConfigSet IGNORE_DOMAIN_IDS IGNORE_DOMAIN_IDS2 IGNORE_SERVER_IDS MASTER_CONNECT_RETRY MASTER_DELAY MASTER_HOST MASTER_LOG_FILE MASTER_LOG_POS MASTER_PASSWORD MASTER_PORT MASTER_SSL MASTER_SSL_CA MASTER_SSL_CAPATH MASTER_SSL_CERT MASTER_SSL_CIPHER MASTER_SSL_CRL MASTER_SSL_CRLPATH MASTER_SSL_KEY MASTER_SSL_VERIFY_SERVER_CERT MASTER_USER MASTER_USE_GTID MASTER_USE_GTID2 OpenSimConfig OpenSimConfigSet RELAY_LOG_FILE RELAY_LOG_POS RegionsConfig RegionsConfigSet Replica_Backup Replica_Backup2 ReplikatKoordinaten RobustConfig    RobustConfigSet ScreenLog accesslog allclean allrepair_db apacheerror assetcachedel assetdel authlog autoallclean autoassetcachedel autologdel automapdel autoregionbackup autoregionsiniteilen autorestart autorobustmapdel autoscreenstop autosimstart autosimstop autostart autostop avatarmenu backupdatum buildmenu checkfile chrisoscopy cleanaot cleaninstall clearuserlist commandhelp compilieren conf_delete conf_read conf_write configabfrage configlesen configurecopy configuregitcopy connection_name constconfig create_db create_db_user createdatabase createdbuser createuser dateimenu db_all_name db_all_name_dialog db_all_user db_all_user_dialog db_all_userfailed db_all_uuid db_all_uuid_dialog db_anzeigen db_anzeigen_dialog db_backup db_backuptabellen db_backuptabellentypen db_backuptabellentypen2 db_benutzer_anzeigen db_compress_backup db_create db_create_new_dbuser db_dbuser db_dbuserrechte db_deldbuser db_delete db_deletepartner db_email_setincorrectuseroff db_email_setincorrectuseroff_dialog db_empty db_false_email db_foldertyp_user db_friends db_gridlist db_inv_search db_inventar_no_assets db_online db_region db_region_anzahl_regionsid db_region_anzahl_regionsnamen db_region_parzelle db_region_parzelle_pakete db_regions db_regionsport db_regionsuri db_restorebackuptabellen db_restoretabellentypen db_setpartner db_setuserofline db_setuserofline_dialog db_setuseronline db_setuseronline_dialog db_tables db_tables_dialog db_tablesplitt db_tablextract db_tablextract_regex db_user_anzahl db_user_data db_user_data_dialog db_user_infos db_user_infos_dialog db_user_online db_user_uuid db_user_uuid_dialog db_userdate default_master_connection delete_db dialogclear dotnetinfo downloados dummyvar edittextbox ende expertenmenu fail2banset fehler finstall flotsamconfig fortschritsanzeige fpspeicher functionslist funktionenmenu get_regionsarray get_value_from_Region_key gridcachedelete gridstart gridstop hauptmenu hilfe hilfemenu historylogclear iinstall iinstall2 info infodialog install_mysqltuner installationen installationhttps22 installbegin installfinish installmariadb18 installmariadb22 installobensimulator installphpmyadmin installubuntu22 installwordpress instdialog iptablesset kalender konsolenhilfe landclear lastrebootdatum linuxupgrade loadinventar log logdel makeaot makeregionsliste makeverzeichnisliste makewebmaps mapdel mariadberror meineregionen menuassetdel menuautologdel menuautorestart menuautoscreenstop menuautosimstart menuautosimstop menuautostart menuautostop menucreateuser menufinstall menugridstart menugridstop menuinfo menukonsolenhilfe menulandclear menuloadinventar menulogdel menumapdel menumostart menumostop menuoscommand menuosdauerstart menuosdauerstop menuosstart menuosstarteintrag menuosstarteintragdel menuosstop menuosstruktur menuoswriteconfig menuregionbackup menuregionrestore menurostart menurostop menusaveinventar menuwaslauft menuworks moneyconfig moneycopy moneydelete moneygitcopy monoinstall monoinstall18 monoinstall20 monoinstall22 mostart mostop mutelistcopy mySQLmenu mysql_neustart mysqlbackup mysqldberror mysqleinstellen mysqlrest mysqlrestnodb nachrichtbox namen newregionini opensimholen osbuilding oscommand oscompi osconfigstruktur oscopy oscopyrobust oscopysim osdauerstart osdauerstop osdelete osdowngrade osgitholen osgridcopy osmtoolconfig osmtoolconfigabfrage osprebuild osscreenstop ossettings osslEnableConfig osslEnableConfigSet osslEnableconfig osstart osstarteintrag osstarteintragdel osstop osstruktur osupgrade oswriteconfig oszipupgrade passgen passwdgenerator pythoncopy radiolist ramspeicher rebootdatum regionbackup regionconfig regionliste regionrestore regionsabfrage regionsconfigdateiliste regionsinisuchen regionsiniteilen regionsport regionsuri robustbackup rologdel rostart rostop saveinventar schreibeinfo screenlist screenlistrestart scriptcopy scriptgitcopy searchcopy searchgitcopy senddata serverinstall serverinstall22 serverupgrade set_empty_user setpartner show_info simstats sourcelist18 sourcelist22 systeminformation tabellenabfrage terminator textbox trimm ufwlog ufwset uncompress vardel vartest warnbox waslauft wiparameter0 wiparameter1 wiparameter2 wiparameter3 wiparameter4 wiparameter5 wiparameter6 wiparameter7 wiparameter8 works"
 }
 
 ### !  konsolenhilfe, konsolenhilfe auf dem Bildschirm anzeigen.
@@ -10293,7 +9669,6 @@ function buildmenu() {
 		OPTIONS=("OpenSim herunterladen" ""
 			"MoneyServer vom git kopieren" ""
 			"OSSL Skripte vom git kopieren" ""
-			"Configure vom git kopieren" ""
 			"Opensim vom Github holen" ""
 			"--------------------------" ""
 			"Downgrade zur letzten Version" ""
@@ -10328,7 +9703,6 @@ function buildmenu() {
 		if [[ $buildauswahl = "OpenSim herunterladen" ]]; then downloados; fi
 		if [[ $buildauswahl = "MoneyServer vom git kopieren" ]]; then moneygitcopy; fi
 		if [[ $buildauswahl = "OSSL Skripte vom git kopieren" ]]; then scriptgitcopy; fi
-		if [[ $buildauswahl = "Configure vom git kopieren" ]]; then configuregitcopy; fi
 		if [[ $buildauswahl = "Opensim vom Github holen" ]]; then osgitholen; fi
 		# -----
 		if [[ $buildauswahl = "Downgrade zur letzten Version" ]]; then osdowngrade; fi
@@ -10430,7 +9804,6 @@ case $KOMMANDO in
 	ConfigSet) ConfigSet "$2" ;;
 	DO_DOMAIN_IDS) DO_DOMAIN_IDS "$2" "$3" "$4" ;;
 	DO_DOMAIN_IDS2) DO_DOMAIN_IDS2 "$2" "$3" ;;
-	GridCommonConfig) GridCommonConfig ;;
 	IGNORE_DOMAIN_IDS) IGNORE_DOMAIN_IDS "$2" "$3" "$4" ;;
 	IGNORE_SERVER_IDS) IGNORE_SERVER_IDS "$2" "$3" "$4" ;;
 	MASTER_CONNECT_RETRY) MASTER_CONNECT_RETRY "$2" "$3" "$4" ;;
@@ -10455,11 +9828,9 @@ case $KOMMANDO in
 	OpenSimConfig) OpenSimConfig ;;
 	RELAY_LOG_FILE) RELAY_LOG_FILE "$2" "$3" "$4" "$5" ;;
 	RELAY_LOG_POS) RELAY_LOG_POS "$2" "$3" "$4" "$5" ;;
-	RegionsConfig) RegionsConfig ;;
 	Replica_Backup) Replica_Backup "$2" "$3" "$4" "$5" ;;
 	Replica_Backup2) Replica_Backup2 "$2" "$3" "$4" ;;
 	ReplikatKoordinaten) ReplikatKoordinaten "$2" "$3" "$4" "$5" "$6" "$7" "$8" ;;
-	RobustConfig) RobustConfig ;;
 	ScreenLog) ScreenLog ;;
 	accesslog) accesslog ;;
 	ald | autologdel) autologdel ;;
@@ -10488,7 +9859,6 @@ case $KOMMANDO in
 	conf_delete) conf_delete "$2" "$3" "$4" ;;
 	conf_read) conf_read "$2" "$3" "$4" ;;
 	conf_write) conf_write "$2" "$3" "$4" "$5" ;;
-	configurecopy) configurecopy ;;
 	connection_name) connection_name "$2" "$3" ;;
 	create_db) create_db "$2" "$3" "$4" ;;
 	create_db_user) create_db_user "$2" "$3" "$4" "$5" ;;
@@ -10698,10 +10068,18 @@ case $KOMMANDO in
 	createdbuser) createdbuser "$2" "$3" "$4" "$5" ;;
 	clearuserlist) clearuserlist ;;
 	instdialog) instdialog ;;
-	hilfeall) hilfeall ;;
 	createmasteravatar) createmasteravatar ;;
 	createregionavatar) createregionavatar ;;
 	firstinstallation) firstinstallation ;;
+	dateimenu) dateimenu ;;
+	hauptmenu) hauptmenu ;;
+	hilfemenu) hilfemenu ;;
+	mySQLmenu) mySQLmenu ;;
+	avatarmenu) avatarmenu ;;
+	buildmenu) buildmenu ;;
+	expertenmenu) expertenmenu ;;
+	funktionenmenu) funktionenmenu ;;
+	dbhilfe) dbhilfe ;;
 	*) hauptmenu ;;
 esac
 vardel
