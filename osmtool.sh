@@ -16,13 +16,20 @@
 # ! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 # ! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-# * Status 26.02.2023 354 Funktionen.
-# # Visual Studio Code # ShellCheck # shellman # Better Comments # outline map #
+# * Status 26.02.2023 348 Funktionen.
+
+# # Installieren sie bitte: #* Visual Studio Code - Mac, Linux, Windows
+#* dazu die Plugins:
+# todo:
+# ShellCheck #! ist eine geniale Hilfe gegen Fehler.
+# shellman #? Shell Skript Schnipsel.
+# Better Comments #* Bessere Farbliche Darstellung. Standards: #! #* #? #// #todo
+# outline map #? Navigationsleiste zwischen den Funktionen.
 
 #### ? Einstellungen ####
 
-SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe
-VERSION="V0.9.2.2.779" # opensimMULTITOOL Versionsausgabe
+SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
+VERSION="V0.9.2.2.780" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 # ? Alte Variablen loeschen aus eventuellen voherigen sessions
@@ -42,7 +49,7 @@ unset VERZEICHNISSCREEN
 
 NEUERREGIONSNAME="Welcome"
 function namen() {
-	# Array aus Bezeichnungen von Deutschen Orten und Voelker.
+	# Array aus Bezeichnungen von Deutschen Orten und Voelker (Unvollstaendig).
 	namensarray=("Terwingen" "Angeron" "Vidivarier" "Usipeten" "Sibiner" "Ranier" "Sabalingier" "Aglier" "Aduatuker" \
 	"Favonen" "Sachsen" "Karpen" "Gautigoten" "Gepiden" "Mugilonen" "Bardongavenses" "Steoringun" "Guiones" "Teutonen" \
 	"Brukterer" "Omanen" "Astfalon" "Langobarden" "Frumtingas" "Eruler" "Moselfranken" "Tylangier" "Gillingas" \
@@ -9921,7 +9928,7 @@ case $KOMMANDO in
 	finstall) finstall "$2" ;;
 	fortschritsanzeige) fortschritsanzeige ;;
 	fpspeicher) fpspeicher ;;
-	functionslist) functionslist ;;
+	funktionsliste | functionslist) functionslist ;;
 	funktionenmenu) funktionenmenu ;;
 	get_value_from_Region_key) get_value_from_Region_key ;;
 	gridcommonini) gridcommonini ;;
@@ -10073,7 +10080,7 @@ case $KOMMANDO in
 	config | gridkonfiguration | configabfrage) configabfrage ;;
 	osmtoolconfigabfrage) osmtoolconfigabfrage ;;
 	osdowngrade) osdowngrade ;;
-	namen) namen ;;
+	name | namen) namen ;;
 	regionconfig) regionconfig "$2" "$3" "$4" "$5" "$6" ;;
 	createdatabase) createdatabase "$2" "$3" "$4" ;;
 	createdbuser) createdbuser "$2" "$3" "$4" "$5" ;;
@@ -10098,5 +10105,25 @@ case $KOMMANDO in
 	*) hauptmenu ;;
 esac
 vardel
-#log info "###########ENDE################"
 exit 0
+
+# todo:
+# Alles neu kommentieren:
+
+###!
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+###!
+function xremarkx() {
+    # Den parameter param annehmen.
+    param=$1
+    # Den parameter param ausgeben.
+    echo "$param"
+    # Den parameter param zurueckgeben.
+    return "$param";
+} # Ende der Funktion xremarkx.
+
+# Jetzt muss ich mich nur noch selber daran halten lach.
