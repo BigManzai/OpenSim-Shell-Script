@@ -29,7 +29,7 @@
 #### ? Einstellungen ####
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.2.2.785" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.2.2.786" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 # ? Alte Variablen loeschen aus eventuellen voherigen sessions
@@ -254,7 +254,13 @@ function osmtoolconfig() {
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
 ##
-### ! dummyvar, 
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+## dummyvar, 
 function dummyvar() {
 	# shellcheck disable=SC2034
 	MONEYVERZEICHNIS="robust"; ROBUSTVERZEICHNIS="robust"; OPENSIMVERZEICHNIS="opensim"; SCRIPTSOURCE="ScriptNeu"; SCRIPTZIP="opensim-ossl-example-scripts-main.zip"; MONEYSOURCE="money48"
@@ -1921,7 +1927,13 @@ function waslauft() {
  #? @param dialog.
  #? @return dialog.
 ##
-### ! menuwaslauft - Zeigt alle Laufenden Screens an im dialog.
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+## menuwaslauft - Zeigt alle Laufenden Screens an im dialog.
 function menuwaslauft() {
 	# Die screen -ls ausgabe zu einer Liste aendern.
 	# sed '1d' = erste Zeile loeschen - sed '$d' letzte Zeile loeschen.
@@ -2259,7 +2271,13 @@ function osstop() {
  #? @param dialog.
  #? @return dialog.
 ##
-### !  menuosstart() ist die dialog Version von osstart()
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##  menuosstart() ist die dialog Version von osstart()
 function menuosstart() {
 	IOSSTARTSCREEN=$(
 		dialog --backtitle "opensimMULTITOOL $VERSION" --title "opensimMULTITOOL Eingabe" \
@@ -2329,7 +2347,13 @@ function menuosstart() {
  #? @param dialog.
  #? @return dialog.
 ##
-### !  menuosstop() ist die dialog Version von osstop()
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##  menuosstop() ist die dialog Version von osstop()
 function menuosstop() {
 	IOSSTOPSCREEN=$(
 		dialog --backtitle "opensimMULTITOOL $VERSION" --title "opensimMULTITOOL Eingabe" \
@@ -2786,7 +2810,13 @@ function mostop() {
  #? @param dialog.
  #? @return dialog.
 ##
-### !  menumostop, Money herunterfahren.
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##  menumostop, Money herunterfahren.
 function menumostop() {
 	if screen -list | grep -q "MO"; then
 		screen -S MO -p 0 -X eval "stuff 'shutdown'^M"
@@ -3590,7 +3620,13 @@ function autoregionsiniteilen() {
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
 ##
-### !  regionliste, Die RegionListe ermitteln und mit dem Verzeichnisnamen in die osmregionlist.ini schreiben.
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##  regionliste, Die RegionListe ermitteln und mit dem Verzeichnisnamen in die osmregionlist.ini schreiben.
 function regionliste() {
 	# Alte osmregionlist.ini sichern und in osmregionlist.ini.old umbenennen.
 	if [ -f "/$STARTVERZEICHNIS/osmregionlist.ini" ]; then
@@ -3902,7 +3938,13 @@ function regionrestore() {
  #? @param dialog.
  #? @return dialog.
 ##
-### !  menuregionrestore() ist die dialog Version von regionrestore()
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##  menuregionrestore() ist die dialog Version von regionrestore()
 function menuregionrestore() {
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
@@ -4929,7 +4971,13 @@ findtime = 600" >/etc/fail2ban/jail.local
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
 ##
-### !  ufwset
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##  ufwset
 function ufwset() {
 	### Uncomplicated Firewall
 	#sudo ufw app list
@@ -5355,7 +5403,13 @@ function db_gridlist() {
  #? @param username password databasename invname.
  #? @return $result_mysqlrest.
 ##
-### !db_inv_search OK
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##db_inv_search OK
 function db_inv_search() {
 	username=$1
 	password=$2
@@ -5388,7 +5442,15 @@ function db_user_anzahl() {
 	return 0
 }
 
-### !db_user_online
+### !
+
+##
+ #* db_user_online.
+ # Users Online?
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##
 function db_user_online() {
 	username=$1
 	password=$2
@@ -5401,7 +5463,13 @@ function db_user_online() {
 	return 0
 }
 
-### !db_region_parzelle
+##
+ #* db_region_parzelle.
+ # Zaehlt die Regionen mit Parzellen.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##
 function db_region_parzelle() {
 	username=$1
 	password=$2
@@ -5414,7 +5482,13 @@ function db_region_parzelle() {
 	return 0
 }
 
-### !db_region_parzelle_pakete
+##
+ #* db_region_parzelle_pakete.
+ # Zaehlt die Gesamtzahl der Pakete.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##
 function db_region_parzelle_pakete() {
 	username=$1
 	password=$2
@@ -5427,7 +5501,13 @@ function db_region_parzelle_pakete() {
 	return 0
 }
 
-### !db_region_anzahl_regionsnamen OK
+##
+ #* db_region_anzahl_regionsnamen.
+ # Zaehlt eindeutige Regionsnamen.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##
 function db_region_anzahl_regionsnamen() {
 	username=$1
 	password=$2
@@ -5440,7 +5520,13 @@ function db_region_anzahl_regionsnamen() {
 	return 0
 }
 
-### !db_region_anzahl_regionsid
+##
+ #* db_region_anzahl_regionsid.
+ # Zaehlt RegionIDs.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##
 function db_region_anzahl_regionsid() {
 	username=$1
 	password=$2
@@ -5453,7 +5539,13 @@ function db_region_anzahl_regionsid() {
 	return 0
 }
 
-### !db_inventar_no_assets stichprobe alle assets sind vorhanden
+##
+ #* db_inventar_no_assets.
+ # Listet alle Inventareintraege auf, die auf nicht vorhandene Assets verweisen.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+## 
 function db_inventar_no_assets() {
 	username=$1
 	password=$2
@@ -5468,7 +5560,13 @@ function db_inventar_no_assets() {
 
 # Neu 19.11.2022 Ende
 
-### !  db_anzeigen, listet alle erstellten Datenbanken auf.
+##
+ #* db_anzeigen.
+ # Alle Datenbanken anzeigen, listet alle erstellten Datenbanken auf.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##
 function db_anzeigen() {
 	username=$1
 	password=$2
@@ -5480,7 +5578,13 @@ function db_anzeigen() {
 
 	return 0
 }
-### !  db_anzeigen_dialog, listet alle erstellten Datenbanken auf.
+##
+ #* db_anzeigen_dialog.
+ # Alle Datenbanken anzeigen, listet alle erstellten Datenbanken auf.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##
 function db_anzeigen_dialog() {
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
@@ -5517,7 +5621,13 @@ function db_anzeigen_dialog() {
 	return 0
 }
 
-### !db_tables tabellenabfrage, listet alle Tabellen in einer Datenbank auf.
+##
+ #* db_tables.
+ # Tabellenabfrage, listet alle Tabellen in einer Datenbank auf.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##
 function db_tables() {
 	username=$1
 	password=$2
@@ -5529,7 +5639,14 @@ function db_tables() {
 
 	return 0
 }
-### !db_tables_dialog tabellenabfrage, listet alle Tabellen in einer Datenbank auf.
+
+##
+ #* db_tables_dialog.
+ # Tabellenabfrage, listet alle Tabellen in einer Datenbank auf.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ ##
 function db_tables_dialog() {
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
@@ -5568,7 +5685,13 @@ function db_tables_dialog() {
 	return 0
 }
 
-### !  db_benutzer_anzeigen, alle angelegten Benutzer von mySQL anzeigen.
+##
+ #* db_benutzer_anzeigen.
+ # Alle angelegten Benutzer von mySQL anzeigen.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ ##
 function db_benutzer_anzeigen() {
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
@@ -5611,7 +5734,13 @@ function db_benutzer_anzeigen() {
 	return 0
 }
 
-### ! Regionsabfrage, Alle Regionen listen (Dies geht nur im Grid (Grid Datenbank) oder Standalone Modus).
+##
+ #* db_regions.
+ # Alle Regionen listen (Dies geht nur im Grid (Grid Datenbank) oder Standalone Modus).
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+## 
 function db_regions() {
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
@@ -5658,7 +5787,13 @@ function db_regions() {
 	return 0
 }
 
-### ! Regionsuri, Region URI pruefen sortiert nach URI (Dies geht nur im Grid (Grid Datenbank) oder Standalone Modus).
+##
+ #* db_regionsuri.
+ #  Region URI pruefen sortiert nach URI (Dies geht nur im Grid (Grid Datenbank) oder Standalone Modus).
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##
 function db_regionsuri() {
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
@@ -5705,7 +5840,13 @@ function db_regionsuri() {
 	return 0
 }
 
-### ! Regionsport, Ports pruefen sortiert nach Ports (Dies geht nur im Grid (Grid Datenbank) oder Standalone Modus).
+##
+ #* db_regionsport.
+ # Ports pruefen sortiert nach Ports (Dies geht nur im Grid (Grid Datenbank) oder Standalone Modus).
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##
 function db_regionsport() {
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
@@ -5752,7 +5893,13 @@ function db_regionsport() {
 	return 0
 }
 
-### !  create_db, erstellt eine neue Datenbank.
+##
+ #* create_db.
+ # erstellt eine neue Datenbank.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##
 function create_db() {
 	DBBENUTZER=$1
 	DBPASSWORT=$2
@@ -5777,7 +5924,13 @@ function create_db() {
 	return 0
 }
 
-### !  create_db_user - Operation CREATE USER failed - Fehler.
+##
+ #* create_db_user.
+ # Operation CREATE USER failed - Fehler.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##
 function create_db_user() {
 	DBBENUTZER=$1
 	DBPASSWORT=$2
@@ -5801,7 +5954,13 @@ function create_db_user() {
 	return 0
 }
 
-### !  delete_db, loescht eine Datenbank.
+##
+ #* delete_db.
+ # loescht eine Datenbank.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##
 function delete_db() {
 	DBBENUTZER=$1
 	DBPASSWORT=$2
@@ -5822,7 +5981,13 @@ function delete_db() {
 	return 0
 }
 
-### !db_empty, loescht eine Datenbank und erstellt diese anschliessend neu. Das ist Datenbank leeren auf die schnelle Art.
+##
+ #* db_empty.
+ # loescht eine Datenbank und erstellt diese anschliessend neu. Das ist Datenbank leeren auf die schnelle Art.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##
 function db_empty() {
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
@@ -5878,7 +6043,13 @@ function db_empty() {
 	return 0
 }
 
-### !  allrepair_db, CHECK – REPAIR – ANALYZE – OPTIMIZE, alle Datenbanken.
+##
+ #*allrepair_db.
+ # CHECK – REPAIR – ANALYZE – OPTIMIZE, alle Datenbanken.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##
 function allrepair_db() {
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
@@ -5928,7 +6099,13 @@ function allrepair_db() {
 	return 0
 }
 
-### !  mysql_neustart, startet mySQL neu.
+##
+ #* mysql_neustart.
+ # startet mySQL neu.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##
 function mysql_neustart() {
 	log text "MYSQL RESTART: MySQL Neu starten."
 
@@ -5940,7 +6117,13 @@ function mysql_neustart() {
 	return 0
 }
 
-### !db_backup, sichert eine einzelne Datenbank. Neu
+##
+ #* db_backup.
+ # sichert eine einzelne Datenbank.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##
 function db_backup() {
 	username=$1
 	password=$2
@@ -5954,7 +6137,13 @@ function db_backup() {
 
 	return 0
 }
-### ! db_compress_backup, sichert eine einzelne Datenbank mit gz komprimierung. Neu
+##
+ #* db_compress_backup.
+ # sichert eine einzelne Datenbank mit gz komprimierung.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##
 function db_compress_backup() {
 	username=$1
 	password=$2
@@ -5969,10 +6158,14 @@ function db_compress_backup() {
 	return 0
 }
 
-### ! Backup, eine Datenbanken Tabellenweise speichern. Test OK
-## db_backuptabellen DB_Benutzername DB_Passwort Datenbankname
-## Datenbank Tabellenweise sichern im Verzeichnis Datenbankname
-# bash osmtool.sh db_backuptabellen username password databasename
+##
+ #* db_backuptabellen.
+ # Eine Datenbanken Tabellenweise speichern.
+ # bash osmtool.sh db_backuptabellen username password databasename
+ # 
+ #? @param db_backuptabellen DB_Benutzername DB_Passwort Datenbankname.
+ #? @return name was wird zurueckgegeben.
+##
 function db_backuptabellen() {
 	# Hier fehlt noch das die Asset Datenbank gesplittet wird.
 	username=$1
@@ -5997,24 +6190,13 @@ function db_backuptabellen() {
 	return 0
 }
 
-# alles speichern ausser assets
-# mysqldump -u"$username" -p"$password" "$databasename" –-ignore-table="assets" | zip >/$STARTVERZEICHNIS/backup/"$databasename".sql.zip
-# nur assets speichern
-# mysqldump -u"$username" -p"$password" "$databasename" assets | zip >/$STARTVERZEICHNIS/backup/"$databasename"/"$databasename"assets.sql.zip
-
-# mit hexblob alles speichern ausser assets
-# mysqldump -u"$username" -p"$password" "$databasename" --hex-blob –-ignore-table="assets" | zip >/$STARTVERZEICHNIS/backup/"$databasename"/"$tabellenname".sql.zip
-# mit hexblob nur assets speichern
-# mysqldump -u"$username" -p"$password" "$databasename" --hex-blob assets | zip >/$STARTVERZEICHNIS/backup/"$databasename"/"$databasename"assets.sql.zip
-
-# CallingCard="2";
-# mysqldump -u"$username" -p"$password" "$databasename" --tables assets --where="assetType = '2'" > CallingCard.sql
-
-function db_backuptabellentypen2() {
-	echo "test"
-}
-
-### ! Backup, Asset Datenbank Tabelle geteilt in Typen speichern.
+##
+ #* db_backuptabellentypen.
+ # Asset Datenbank Tabelle geteilt in Typen speichern.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##
 function db_backuptabellentypen() {
 	username=$1
 	password=$2
@@ -6089,25 +6271,22 @@ function db_backuptabellentypen() {
 		mysqldump -u"$username" -p"$password" "$databasename" --tables assets --where="$fromtypes = '$tabellenname'" | zip >/$STARTVERZEICHNIS/backup/"$databasename"/"$dateiname".sql.zip;
 		fi
 
-		
-
-
 	done </$STARTVERZEICHNIS/backup/"$databasename"/$fromtypes.txt
 	# Schreibrechte zurücksetzen
 	#chmod -R 755 /$STARTVERZEICHNIS/backup/"$databasename"
 	return 0
 }
 
-function db_restoretabellentypen() {
-	echo "Testing"
-	# Tabellenstruktur "Tabellenname" wiederherstellen
-	# csv Tabellendaten wiederherstellen
-}
-
-### ! Backup Test, eine Datenbanken Tabellenweise wiederherstellen.
-## db_restorebackuptabellen DB_Benutzername DB_Passwort AlterDatenbankname NeuerDatenbankname
-## Die Tabellenweise gesicherte Datenbank in einer neuen Datenbank zusammensetzen.
-# bash osmtool.sh db_restorebackuptabellen username password databasename newdatabasename
+##
+ #* db_restorebackuptabellen.
+ # Backup Test, eine Datenbanken Tabellenweise wiederherstellen.
+ # db_restorebackuptabellen DB_Benutzername DB_Passwort AlterDatenbankname NeuerDatenbankname
+ # Die Tabellenweise gesicherte Datenbank in einer neuen Datenbank zusammensetzen.
+ # bash osmtool.sh db_restorebackuptabellen username password databasename newdatabasename
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ ##
 function db_restorebackuptabellen() {
 	username=$1
 	password=$2
@@ -6125,10 +6304,15 @@ function db_restorebackuptabellen() {
 
 	return 0
 }
-### ! Backup Test, eine Datenbanken Tabellenweise wiederherstellen.
-## db_restorebackuptabellen DB_Benutzername DB_Passwort AlterDatenbankname NeuerDatenbankname
-## Die Tabellenweise gesicherte Datenbank in einer neuen Datenbank zusammensetzen.
-
+##
+ #* db_restorebackuptabellen2test.
+ # Backup Test, eine Datenbanken Tabellenweise wiederherstellen.
+ # db_restorebackuptabellen DB_Benutzername DB_Passwort AlterDatenbankname NeuerDatenbankname
+ # Die Tabellenweise gesicherte Datenbank in einer neuen Datenbank zusammensetzen.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##
 function db_restorebackuptabellen2test() {
 	username=$1
 	password=$2
@@ -6160,7 +6344,13 @@ function db_restorebackuptabellen2test() {
 	return 0
 }
 
-### !create_db, erstellt eine neue Datenbank. db_create "username" "password" "databasename"
+##
+ #* db_create.
+ # erstellt eine neue Datenbank. db_create "username" "password" "databasename"
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##
 function db_create() {
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
@@ -6214,8 +6404,13 @@ function db_create() {
 	return 0
 }
 
-# Test funktioniert
-### !  db_dbuser, listet alle erstellten Datenbankbenutzer auf.
+##
+ #* db_dbuser.
+ # listet alle erstellten Datenbankbenutzer auf.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##
 function db_dbuser() {
 	username=$1
 	password=$2
@@ -6227,7 +6422,13 @@ function db_dbuser() {
 	return 0
 }
 
-### ! db_benutzerrechte, listet alle erstellten Benutzerrechte auf. db_dbuserrechte root 123456 testuser
+##
+ #* db_dbuserrechte.
+ # listet alle erstellten Benutzerrechte auf. db_dbuserrechte root 123456 testuser.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##
 function db_dbuserrechte() {
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
@@ -6273,7 +6474,13 @@ function db_dbuserrechte() {
 	return 0
 }
 
-### !  db_deldbuser, loescht einen Datenbankbenutzer. db_deldbuser root 123456 testuser
+##
+ #* db_deldbuser.
+ # loescht einen Datenbankbenutzer. db_deldbuser root 123456 testuser.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##
 function db_deldbuser() {
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
@@ -6328,7 +6535,13 @@ function db_deldbuser() {
 	return 0
 }
 
-### !db_create_new_dbuser root password NEUERNAME NEUESPASSWORT
+##
+ #* db_create_new_dbuser.
+ # db_create_new_dbuser root password NEUERNAME NEUESPASSWORT.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##
 function db_create_new_dbuser() {
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
@@ -6380,8 +6593,14 @@ function db_create_new_dbuser() {
 	return 0
 }
 
-##! Andere Art Datenbanken und Benutzer anzulegen
-# createdatabase DBNAME DBUSER DBPASSWD
+##
+ #* createdatabase.
+ # Andere Art Datenbanken und Benutzer anzulegen.
+ # createdatabase DBNAME DBUSER DBPASSWD
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##
 function createdatabase() {
     # Übergabeparameter
     DBNAME=$1
@@ -6403,8 +6622,15 @@ EOF
     return 0
 }
 
-# createdbuser ROOTUSER ROOTPASSWD NEWDBUSER NEWDBPASSWD
-# ROOTPASSWD ist optional.
+##
+ #* createdatabase.
+ # Andere Art Datenbanken und Benutzer anzulegen.
+ # createdbuser ROOTUSER ROOTPASSWD NEWDBUSER NEWDBPASSWD
+ # ROOTPASSWD ist optional.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##
 function createdbuser() {
     # Übergabeparameter
     ROOTUSER=$1
@@ -6430,7 +6656,13 @@ EOF
     return 0
 }
 
-### ! db_delete, loescht eine Datenbank komplett.
+##
+ #* db_delete.
+ # loescht eine Datenbank komplett.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##
 function db_delete() {
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
@@ -6477,8 +6709,14 @@ function db_delete() {
 	return 0
 }
 
-### ! tabellenabfrage, listet alle Tabellen in einer Datenbank auf.
-# Es geht hier um die machbarkeit und nicht den Sinn.
+##
+ #* tabellenabfrage.
+ # tabellenabfrage, listet alle Tabellen in einer Datenbank auf.
+ # Es geht hier um die machbarkeit und nicht den Sinn.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+## 
 function tabellenabfrage() {
 	DBBENUTZER=$1
 	DBPASSWORT=$2
@@ -6492,7 +6730,13 @@ MEINE_ABFRAGE_ENDE
 	return 0
 }
 
-### !  regionsabfrage, Alle Regionen listen (Dies geht nur im Grid (Grid Datenbank) oder Standalone Modus).
+##
+ #* regionsabfrage.
+ # Alle Regionen listen (Dies geht nur im Grid (Grid Datenbank) oder Standalone Modus).
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##
 function regionsabfrage() {
 	DBBENUTZER=$1
 	DBPASSWORT=$2
@@ -6505,7 +6749,13 @@ MEIN_ABFRAGE_ENDE
 	return 0
 }
 
-### !  regionsuri, Region URI pruefen sortiert nach URI (Dies geht nur im Grid (Grid Datenbank) oder Standalone Modus).
+##
+ #* regionsuri.
+ # Region URI pruefen sortiert nach URI (Dies geht nur im Grid (Grid Datenbank) oder Standalone Modus).
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##
 function regionsuri() {
 	DBBENUTZER=$1
 	DBPASSWORT=$2
@@ -6518,7 +6768,13 @@ MEIN_ABFRAGE_ENDE
 	return 0
 }
 
-### !  regionsport, Ports pruefen sortiert nach Ports (Dies geht nur im Grid (Grid Datenbank) oder Standalone Modus).
+##
+ #* regionsport.
+ # Ports pruefen sortiert nach Ports (Dies geht nur im Grid (Grid Datenbank) oder Standalone Modus).
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##
 function regionsport() {
 	DBBENUTZER=$1
 	DBPASSWORT=$2
@@ -6531,8 +6787,14 @@ MEIN_ABFRAGE_ENDE
 	return 0
 }
 
-### !  setpartner, Partner setzen bei einer Person. Also bei beiden Partnern muss dies gemacht werden.
-# osmtool.sh setpartner Datenbankbenutzer Datenbankpasswort Robustdatenbank "AvatarUUID" "PartnerUUID"
+##
+ #* setpartner.
+ # Partner setzen bei einer Person. Also bei beiden Partnern muss dies gemacht werden.
+ # osmtool.sh setpartner Datenbankbenutzer Datenbankpasswort Robustdatenbank "AvatarUUID" "PartnerUUID"
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##
 function setpartner() {
 	DBBENUTZER=$1
 	DBPASSWORT=$2
@@ -6553,8 +6815,15 @@ MEIN_ABFRAGE_ENDE
 	echo "$DATUM $(date +%H:%M:%S) SETPARTNER: $NEUERPARTNER ist jetzt Partner von $AVATARUUID" >>"/$STARTVERZEICHNIS/$DATEIDATUM$logfilename.log"
 	return 0
 }
-### !setpartner, Partner setzen bei einer Person. Also bei beiden Partnern muss dies gemacht werden.
-# osmtool.sh setpartner Datenbankbenutzer Datenbankpasswort Robustdatenbank "AvatarUUID" "PartnerUUID"
+
+##
+ #* db_setpartner.
+ #  Partner setzen bei einer Person. Also bei beiden Partnern muss dies gemacht werden.
+ # osmtool.sh setpartner Datenbankbenutzer Datenbankpasswort Robustdatenbank "AvatarUUID" "PartnerUUID"
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##
 function db_setpartner() {
 	username=$1
 	password=$2
@@ -6571,8 +6840,15 @@ function db_setpartner() {
 
 	return 0
 }
-### !db_deletepartner, Partner loeschen bei einer Person. Also bei beiden Partnern muss dies gemacht werden.
-# osmtool.sh setpartner Datenbankbenutzer Datenbankpasswort Robustdatenbank "AvatarUUID" "PartnerUUID"
+
+##
+ #* db_deletepartner.
+ # Partner loeschen bei einer Person. Also bei beiden Partnern muss dies gemacht werden.
+ # osmtool.sh setpartner Datenbankbenutzer Datenbankpasswort Robustdatenbank "AvatarUUID" "PartnerUUID"
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##
 function db_deletepartner() {
 	username=$1
 	password=$2
@@ -6588,11 +6864,13 @@ function db_deletepartner() {
 	return 0
 }
 
-########### Neu am 04.06.2022
-
-# Test: getestet und korrigiert am 05.06.2022
-
-### !Daten von allen Benutzern anzeigen: db_all_user "username" "password" "databasename"
+##
+ #* db_all_user.
+ # #Daten von allen Benutzern anzeigen: db_all_user "username" "password" "databasename".
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##
 function db_all_user() {
 	username=$1
 	password=$2
@@ -6604,7 +6882,14 @@ function db_all_user() {
 
 	return 0
 }
-### !db_all_user_dialog tabellenabfrage, Daten von allen Benutzern anzeigen.
+
+##
+ #*db_all_user_dialog.
+ # Eine tabellenabfrage, Daten von allen Benutzern anzeigen.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##
 function db_all_user_dialog() {
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
@@ -6643,7 +6928,13 @@ function db_all_user_dialog() {
 	return 0
 }
 
-### !UUID von allen Benutzern anzeigen: db_all_uuid "username" "password" "databasename"
+##
+ #* db_all_uuid.
+ # UUID von allen Benutzern anzeigen: db_all_uuid "username" "password" "databasename".
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##
 function db_all_uuid() {
 	username=$1
 	password=$2
@@ -6655,7 +6946,14 @@ function db_all_uuid() {
 
 	return 0
 }
-### !UUID von allen Benutzern anzeigen.
+
+##
+ #* db_all_uuid_dialog.
+ # UUID von allen Benutzern anzeigen.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##
 function db_all_uuid_dialog() {
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
@@ -6694,7 +6992,13 @@ function db_all_uuid_dialog() {
 	return 0
 }
 
-### ! Alle Namen anzeigen: db_all_name "username" "password" "databasename"
+##
+ #* db_all_name.
+ # Alle Namen anzeigen: db_all_name "username" "password" "databasename".
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+## 
 function db_all_name() {
 	username=$1
 	password=$2
@@ -6706,7 +7010,14 @@ function db_all_name() {
 
 	return 0
 }
-### ! Alle Namen anzeigen: db_all_name_dialog "username" "password" "databasename"
+
+##
+ #* db_all_name_dialog.
+ # Alle Namen anzeigen: db_all_name_dialog "username" "password" "databasename".
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##
 function db_all_name_dialog() {
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
@@ -6745,7 +7056,13 @@ function db_all_name_dialog() {
 	return 0
 }
 
-### !Daten von einem Benutzer anzeigen: db_user_data "username" "password" "databasename" "firstname" "lastname"
+##
+ #* db_user_data.
+ # Daten von einem Benutzer anzeigen: db_user_data "username" "password" "databasename" "firstname" "lastname".
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##
 function db_user_data() {
 	username=$1
 	password=$2
@@ -6759,7 +7076,13 @@ function db_user_data() {
 
 	return 0
 }
-### !Daten von einem Benutzer anzeigen: db_user_data_dialog "username" "password" "databasename" "firstname" "lastname"
+##
+ #* db_user_data_dialog.
+ # Daten von einem Benutzer anzeigen: db_user_data_dialog "username" "password" "databasename" "firstname" "lastname".
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##
 function db_user_data_dialog() {
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
@@ -6804,7 +7127,14 @@ function db_user_data_dialog() {
 	return 0
 }
 
-### !UUID Vor- und Nachname sowie E-Mail Adresse von einem Benutzer anzeigen: db_user_infos "username" "password" "databasename" "firstname" "lastname"
+##
+ #* db_user_infos.
+ # UUID Vor- und Nachname sowie E-Mail Adresse von einem Benutzer anzeigen: 
+ # db_user_infos "username" "password" "databasename" "firstname" "lastname".
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##
 function db_user_infos() {
 	username=$1
 	password=$2
@@ -6818,7 +7148,15 @@ function db_user_infos() {
 
 	return 0
 }
-### !UUID Vor- und Nachname sowie E-Mail Adresse von einem Benutzer anzeigen: db_user_infos "username" "password" "databasename" "firstname" "lastname"
+
+##
+ #* db_user_infos_dialog.
+ # UUID Vor- und Nachname sowie E-Mail Adresse von einem Benutzer anzeigen: 
+ # db_user_infos "username" "password" "databasename" "firstname" "lastname".
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##
 function db_user_infos_dialog() {
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
@@ -6863,7 +7201,13 @@ function db_user_infos_dialog() {
 	return 0
 }
 
-### !UUID von einem Benutzer anzeigen: db_user_uuid
+##
+ #* db_user_uuid.
+ # UUID von einem Benutzer anzeigen: db_user_uuid.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##
 function db_user_uuid() {
 	username=$1
 	password=$2
@@ -6877,7 +7221,13 @@ function db_user_uuid() {
 
 	return 0
 }
-### !UUID von einem Benutzer anzeigen: db_user_uuid_dialog
+##
+ #* db_user_uuid_dialog.
+ # UUID von einem Benutzer anzeigen: db_user_uuid_dialog.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##
 function db_user_uuid_dialog() {
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
@@ -6922,7 +7272,13 @@ function db_user_uuid_dialog() {
 	return 0
 }
 
-### !Alles vom inventoryfolders type des User: db_foldertyp_user "username" "password" "databasename" "firstname" "lastname" "foldertyp"
+##
+ #* db_foldertyp_user.
+ # Alles vom inventoryfolders type des User anzeigen: db_foldertyp_user "username" "password" "databasename" "firstname" "lastname" "foldertyp".
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##
 function db_foldertyp_user() {
 	username=$1
 	password=$2
@@ -6966,7 +7322,13 @@ function db_foldertyp_user() {
 	return 0
 }
 
-### ! Alles vom inventoryfolders was type -1 des User: db_all_userfailed "username" "password" "databasename" "firstname" "lastname"
+##
+ #* db_all_userfailed.
+ # Alles vom inventoryfolders was type -1 des User: db_all_userfailed "username" "password" "databasename" "firstname" "lastname".
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+## 
 function db_all_userfailed() {
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
@@ -7023,7 +7385,13 @@ function db_all_userfailed() {
 	return 0
 }
 
-### !Zeige Erstellungsdatum eines Users an: db_userdate "username" "password" "databasename" "firstname" "lastname"
+##
+ #*db_userdate.
+ # Zeige Erstellungsdatum eines Users an: db_userdate "username" "password" "databasename" "firstname" "lastname".
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##
 function db_userdate() {
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
@@ -7080,7 +7448,13 @@ function db_userdate() {
 	return 0
 }
 
-### ! Finde offensichtlich falsche E-Mail Adressen der User: db_false_email "username" "password" "databasename"
+##
+ #* db_false_email.
+ # Finde offensichtlich falsche E-Mail Adressen der User: db_false_email "username" "password" "databasename".
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+## Finde offensichtlich falsche E-Mail Adressen der User: db_false_email "username" "password" "databasename"
 function db_false_email() {
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
@@ -7131,7 +7505,14 @@ function db_false_email() {
 	return 0
 }
 
-### !Einen User in der Datenbank erstellen und das ohne Inventar (Gut fuer Picker): set_empty_user "username" "password" "databasename" "firstname" "lastname" "email"
+##
+ #* set_empty_user.
+ # Einen User in der Datenbank erstellen und das ohne Inventar (Gut fuer Picker): 
+ # set_empty_user "username" "password" "databasename" "firstname" "lastname" "email".
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##
 function set_empty_user() {
 	regex="^(([-a-zA-Z0-9\!#\$%\&\'*+/=?^_\`{\|}~]+|(\"([][,:;<>\&@a-zA-Z0-9\!#\$%\&\'*+/=?^_\`{\|}~-]|(\\\\[\\ \"]))+\"))\.)*([-a-zA-Z0-9\!#\$%\&\'*+/=?^_\`{\|}~]+|(\"([][,:;<>\&@a-zA-Z0-9\!#\$%\&\'*+/=?^_\`{\|}~-]|(\\\\[\\ \"]))+\"))@\w((-|\w)*\w)*\.(\w((-|\w)*\w)*\.)*\w{2,4}$"
 	username=$1
@@ -7163,13 +7544,15 @@ function set_empty_user() {
 	mysqlrest "$username" "$password" "$databasename" "INSERT INTO UserAccounts (PrincipalID, ScopeID, FirstName, LastName, Email, ServiceURLs, Created, UserLevel, UserFlags, UserTitle, active) VALUES ('$newPrincipalID', '$newScopeID', '$newFirstName', '$newLastName', '$newEmail', '$newServiceURLs', '$newCreated', '$newUserLevel', '$newUserFlags', '$newUserTitle', '$newactive')"
 }
 
-########### Neu am 04.06.2022 Ende
-
-########### Neu am 08.06.2022
-
-### ! Finde alle offensichtlich falschen E-Mail Adressen der Grid User und
-## deaktiviere dauerhaft dessen Account:
-## bash osmtool.sh db_email_setincorrectuseroff "GRIDdatabaseusername" "GRIDdatabasepassword" "GRIDdatabasename"
+##
+ #* db_email_setincorrectuseroff.
+ # Finde alle offensichtlich falschen E-Mail Adressen der Grid User und
+ # deaktiviere dauerhaft dessen Account:
+ # bash osmtool.sh db_email_setincorrectuseroff "GRIDdatabaseusername" "GRIDdatabasepassword" "GRIDdatabasename"
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##
 function db_email_setincorrectuseroff() {
 	username=$1
 	password=$2
@@ -7183,9 +7566,16 @@ function db_email_setincorrectuseroff() {
 
 	return 0
 }
-### ! Finde alle offensichtlich falschen E-Mail Adressen der Grid User und
-## deaktiviere dauerhaft dessen Account:
-## bash osmtool.sh db_email_setincorrectuseroff "GRIDdatabaseusername" "GRIDdatabasepassword" "GRIDdatabasename"
+
+##
+ #* db_email_setincorrectuseroff_dialog.
+ # Finde alle offensichtlich falschen E-Mail Adressen der Grid User und
+ # deaktiviere dauerhaft dessen Account:
+ # bash osmtool.sh db_email_setincorrectuseroff "GRIDdatabaseusername" "GRIDdatabasepassword" "GRIDdatabasename"
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##
 function db_email_setincorrectuseroff_dialog() {
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
@@ -7227,8 +7617,14 @@ function db_email_setincorrectuseroff_dialog() {
 	return 0
 }
 
-### ! Grid User dauerhaft abschalten:
-## bash osmtool.sh db_setuserofline "GRIDdatabaseusername" "GRIDdatabasepassword" "GRIDdatabasename" "firstname" "lastname"
+##
+ #* db_setuserofline.
+ # Grid User dauerhaft abschalten:
+ # bash osmtool.sh db_setuserofline "GRIDdatabaseusername" "GRIDdatabasepassword" "GRIDdatabasename" "firstname" "lastname"
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##
 function db_setuserofline() {
 	username=$1
 	password=$2
@@ -7243,8 +7639,15 @@ function db_setuserofline() {
 
 	return 0
 }
-### ! Grid User dauerhaft abschalten:
-## bash osmtool.sh db_setuserofline_dialog "GRIDdatabaseusername" "GRIDdatabasepassword" "GRIDdatabasename" "firstname" "lastname"
+
+##
+ #* db_setuserofline_dialog.
+ # Grid User dauerhaft abschalten:
+ # bash osmtool.sh db_setuserofline_dialog "GRIDdatabaseusername" "GRIDdatabasepassword" "GRIDdatabasename" "firstname" "lastname"
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##
 function db_setuserofline_dialog() {
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
@@ -7289,8 +7692,14 @@ function db_setuserofline_dialog() {
 	return 0
 }
 
-### ! Grid User dauerhaft aktivieren:
-## bash osmtool.sh db_setuseronline "GRIDdatabaseusername" "GRIDdatabasepassword" "GRIDdatabasename" "firstname" "lastname"
+##
+ #* db_setuseronline.
+ # Grid User dauerhaft aktivieren:
+ # bash osmtool.sh db_setuseronline "GRIDdatabaseusername" "GRIDdatabasepassword" "GRIDdatabasename" "firstname" "lastname"
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##
 function db_setuseronline() {
 	username=$1
 	password=$2
@@ -7305,8 +7714,15 @@ function db_setuseronline() {
 
 	return 0
 }
-### ! Grid User dauerhaft aktivieren:
-## bash osmtool.sh db_setuseronline "GRIDdatabaseusername" "GRIDdatabasepassword" "GRIDdatabasename" "firstname" "lastname"
+
+##
+ #* db_setuseronline_dialog.
+ # Grid User dauerhaft aktivieren:
+ # bash osmtool.sh db_setuseronline "GRIDdatabaseusername" "GRIDdatabasepassword" "GRIDdatabasename" "firstname" "lastname"
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##
 function db_setuseronline_dialog() {
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
@@ -7351,10 +7767,13 @@ function db_setuseronline_dialog() {
 	return 0
 }
 
-########### Neu am 08.06.2022 Ende
-
-### NEU mariaDB 30.06.2022 Anfang ########################################################################
-### ! default_master_connection "$2" "$3"
+##
+ #* default_master_connection.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+## default_master_connection "$2" "$3"
 function default_master_connection() {
 	username=$1
 	password=$2
@@ -7370,7 +7789,13 @@ function default_master_connection() {
 	return 0
 }
 
-### ! connection_name "$2" "$3"
+##
+ #* connection_name.
+ # connection_name "$2" "$3".
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+## connection_name "$2" "$3"
 function connection_name() {
 	username=$1
 	password=$2
@@ -7385,7 +7810,13 @@ function connection_name() {
 	return 0
 }
 
-### ! MASTER_USER "$2" "$3"
+##
+ #* MASTER_USER.
+ # MASTER_USER "$2" "$3".
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+## 
 function MASTER_USER() {
 	username=$1
 	password=$2
@@ -7400,7 +7831,13 @@ function MASTER_USER() {
 	return 0
 }
 
-### ! MASTER_PASSWORD "$2" "$3"
+##
+ #*MASTER_PASSWORD.
+ # MASTER_PASSWORD "$2" "$3"
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+## 
 function MASTER_PASSWORD() {
 	username=$1
 	password=$2
@@ -7415,7 +7852,13 @@ function MASTER_PASSWORD() {
 	return 0
 }
 
-### ! MASTER_HOST "$2" "$3" "$4"
+##
+ #* MASTER_HOST.
+ # MASTER_HOST "$2" "$3" "$4"
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+## 
 function MASTER_HOST() {
 	username=$1
 	password=$2
@@ -7432,7 +7875,13 @@ function MASTER_HOST() {
 	return 0
 }
 
-### ! MASTER_PORT "$2" "$3" "$4" "$5"
+##
+ #*MASTER_PORT.
+ # MASTER_PORT "$2" "$3" "$4" "$5"
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##
 function MASTER_PORT() {
 	username=$1
 	password=$2
@@ -7451,7 +7900,13 @@ function MASTER_PORT() {
 	return 0
 }
 
-### ! MASTER_CONNECT_RETRY "$2" "$3" "$4"
+##
+ #* MASTER_CONNECT_RETRY.
+ # MASTER_CONNECT_RETRY "$2" "$3" "$4"
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+## 
 function MASTER_CONNECT_RETRY() {
 	username=$1
 	password=$2
@@ -7468,7 +7923,13 @@ function MASTER_CONNECT_RETRY() {
 	return 0
 }
 
-### ! MASTER_SSL "$2" "$3"
+##
+ #* MASTER_SSL.
+ # MASTER_SSL "$2" "$3"
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+## 
 function MASTER_SSL() {
 	username=$1
 	password=$2
@@ -7485,7 +7946,13 @@ function MASTER_SSL() {
 	return 0
 }
 
-### ! MASTER_SSL_CA "$2" "$3"
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+## MASTER_SSL_CA "$2" "$3"
 function MASTER_SSL_CA() {
 	username=$1
 	password=$2
@@ -7505,7 +7972,13 @@ function MASTER_SSL_CA() {
 	return 0
 }
 
-### ! MASTER_SSL_CAPATH "$2" "$3"
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+## MASTER_SSL_CAPATH "$2" "$3"
 function MASTER_SSL_CAPATH() {
 	username=$1
 	password=$2
@@ -7525,7 +7998,13 @@ function MASTER_SSL_CAPATH() {
 	return 0
 }
 
-### ! MASTER_SSL_CERT "$2" "$3"
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+## MASTER_SSL_CERT "$2" "$3"
 function MASTER_SSL_CERT() {
 	username=$1
 	password=$2
@@ -7546,7 +8025,13 @@ function MASTER_SSL_CERT() {
 	return 0
 }
 
-### ! MASTER_SSL_CRL "$2" "$3"
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+## MASTER_SSL_CRL "$2" "$3"
 function MASTER_SSL_CRL() {
 	username=$1
 	password=$2
@@ -7567,7 +8052,13 @@ function MASTER_SSL_CRL() {
 	return 0
 }
 
-### ! MASTER_SSL_CRLPATH "$2" "$3"
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+## MASTER_SSL_CRLPATH "$2" "$3"
 function MASTER_SSL_CRLPATH() {
 	username=$1
 	password=$2
@@ -7588,7 +8079,13 @@ function MASTER_SSL_CRLPATH() {
 	return 0
 }
 
-### ! MASTER_SSL_KEY "$2" "$3"
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+## MASTER_SSL_KEY "$2" "$3"
 function MASTER_SSL_KEY() {
 	username=$1
 	password=$2
@@ -7609,7 +8106,13 @@ function MASTER_SSL_KEY() {
 	return 0
 }
 
-### ! MASTER_SSL_CIPHER "$2" "$3"
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+## MASTER_SSL_CIPHER "$2" "$3"
 function MASTER_SSL_CIPHER() {
 	username=$1
 	password=$2
@@ -7630,7 +8133,13 @@ function MASTER_SSL_CIPHER() {
 	return 0
 }
 
-### ! MASTER_SSL_VERIFY_SERVER_CERT "$2" "$3"
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+## MASTER_SSL_VERIFY_SERVER_CERT "$2" "$3"
 function MASTER_SSL_VERIFY_SERVER_CERT() {
 	username=$1
 	password=$2
@@ -7651,7 +8160,13 @@ function MASTER_SSL_VERIFY_SERVER_CERT() {
 	return 0
 }
 
-### ! MASTER_LOG_FILE "$2" "$3" "$4" "$5"
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+## MASTER_LOG_FILE "$2" "$3" "$4" "$5"
 function MASTER_LOG_FILE() {
 	username=$1
 	password=$2
@@ -7671,7 +8186,13 @@ function MASTER_LOG_FILE() {
 	return 0
 }
 
-### ! MASTER_LOG_POS "$2" "$3" "$4" "$5"
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+## MASTER_LOG_POS "$2" "$3" "$4" "$5"
 function MASTER_LOG_POS() {
 	username=$1
 	password=$2
@@ -7691,7 +8212,13 @@ function MASTER_LOG_POS() {
 	return 0
 }
 
-### ! RELAY_LOG_FILE "$2" "$3" "$4" "$5"
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+## RELAY_LOG_FILE "$2" "$3" "$4" "$5"
 function RELAY_LOG_FILE() {
 	username=$1
 	password=$2
@@ -7711,7 +8238,13 @@ function RELAY_LOG_FILE() {
 	return 0
 }
 
-### ! RELAY_LOG_POS "$2" "$3" "$4" "$5"
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+## RELAY_LOG_POS "$2" "$3" "$4" "$5"
 function RELAY_LOG_POS() {
 	username=$1
 	password=$2
@@ -7731,7 +8264,13 @@ function RELAY_LOG_POS() {
 	return 0
 }
 
-### ! MASTER_USE_GTID "$2" "$3"
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+## MASTER_USE_GTID "$2" "$3"
 function MASTER_USE_GTID() {
 	username=$1
 	password=$2
@@ -7746,7 +8285,13 @@ function MASTER_USE_GTID() {
 
 	return 0
 }
-### ! MASTER_USE_GTID2 "$2" "$3" "$4"
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+## MASTER_USE_GTID2 "$2" "$3" "$4"
 function MASTER_USE_GTID2() {
 	username=$1
 	password=$2
@@ -7765,7 +8310,13 @@ function MASTER_USE_GTID2() {
 	return 0
 }
 
-### ! IGNORE_SERVER_IDS "$2" "$3" "$4"
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+## IGNORE_SERVER_IDS "$2" "$3" "$4"
 function IGNORE_SERVER_IDS() {
 	username=$1
 	password=$2
@@ -7814,7 +8365,13 @@ function IGNORE_SERVER_IDS() {
 #   | DO_DOMAIN_IDS = ([N,..])
 #   | IGNORE_DOMAIN_IDS = ([N,..])
 
-### ! DO_DOMAIN_IDS "$2" "$3" "$4"
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+## DO_DOMAIN_IDS "$2" "$3" "$4"
 function DO_DOMAIN_IDS() {
 	username=$1
 	password=$2
@@ -7830,7 +8387,13 @@ function DO_DOMAIN_IDS() {
 
 	return 0
 }
-### ! DO_DOMAIN_IDS2 "$2" "$3"
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+## DO_DOMAIN_IDS2 "$2" "$3"
 function DO_DOMAIN_IDS2() {
 	username=$1
 	password=$2
@@ -7846,7 +8409,13 @@ function DO_DOMAIN_IDS2() {
 	return 0
 }
 
-### ! IGNORE_DOMAIN_IDS "$2" "$3" "$4"
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+## IGNORE_DOMAIN_IDS "$2" "$3" "$4"
 function IGNORE_DOMAIN_IDS() {
 	username=$1
 	password=$2
@@ -7862,7 +8431,13 @@ function IGNORE_DOMAIN_IDS() {
 
 	return 0
 }
-### ! IGNORE_DOMAIN_IDS2 "$2" "$3"
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+## IGNORE_DOMAIN_IDS2 "$2" "$3"
 function IGNORE_DOMAIN_IDS2() {
 	username=$1
 	password=$2
@@ -7878,7 +8453,13 @@ function IGNORE_DOMAIN_IDS2() {
 	return 0
 }
 
-### ! MASTER_DELAY "$2" "$3" "$4"
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+## MASTER_DELAY "$2" "$3" "$4"
 function MASTER_DELAY() {
 	username=$1
 	password=$2
@@ -7896,7 +8477,13 @@ function MASTER_DELAY() {
 	return 0
 }
 
-### ! Creating a Replica from a Backup "$2" "$3" "$4" "$5"
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+## Creating a Replica from a Backup "$2" "$3" "$4" "$5"
 function Replica_Backup() {
 	username=$1
 	password=$2
@@ -7914,7 +8501,13 @@ function Replica_Backup() {
 
 	return 0
 }
-### ! Creating a Replica from a Backup2 "$2" "$3" "$4"
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+## Creating a Replica from a Backup2 "$2" "$3" "$4"
 function Replica_Backup2() {
 	username=$1
 	password=$2
@@ -7931,7 +8524,13 @@ function Replica_Backup2() {
 
 	return 0
 }
-### ! ReplikatKoordinaten - Dies aendert die Koordinaten des primaeren und des primaeren Binaerlogs "$2" "$3" "$4" "$5" "$6" "$7" "$8"
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+## ReplikatKoordinaten - Dies aendert die Koordinaten des primaeren und des primaeren Binaerlogs "$2" "$3" "$4" "$5" "$6" "$7" "$8"
 function ReplikatKoordinaten() {
 	username=$1
 	password=$2
@@ -7958,7 +8557,13 @@ function ReplikatKoordinaten() {
 
 ###* NEU Datenbank splitten 03.07.2022 ENDE #############################################################
 
-### ! Alle Tabellen aus einer SQL Datensicherung in ein gleichnahmigen Verzeichniss extrahieren.
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+## Alle Tabellen aus einer SQL Datensicherung in ein gleichnahmigen Verzeichniss extrahieren.
 # db_tablesplitt /Pfad/SQL_Datei.sql
 function db_tablesplitt() {
 	VERZEICHNISNAME=$(basename "$1" .sql)
@@ -7979,7 +8584,13 @@ function db_tablesplitt() {
 	done
 }
 
-### ! Eine einzelne Tabelle aus einem SQL Datenbank Backup extrahieren.
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+## Eine einzelne Tabelle aus einem SQL Datenbank Backup extrahieren.
 # db_tablextract /Pfad/SQL_Datei.sql Tabellenname
 function db_tablextract() {
 	VERZEICHNISNAME=$(basename "$1" .sql)
@@ -7998,7 +8609,13 @@ function db_tablextract() {
 	done
 }
 
-### ! db_tablextract_regex, Extrahiere Tabelle aus SQL Datenbank Backup unter zuhilfenahme von regex.
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+## db_tablextract_regex, Extrahiere Tabelle aus SQL Datenbank Backup unter zuhilfenahme von regex.
 # db_tablextract_regex DUMP-FILE-NAME -S TABLE-NAME-REGEXP Extrahiert
 # Tabellen aus der sql Datei mit dem angegebenen regulaeren Ausdruck.
 function db_tablextract_regex() {
@@ -8020,7 +8637,13 @@ function db_tablextract_regex() {
 }
 ###* NEU Datenbank splitten ENDE 03.07.2022 ENDE ########################################################################
 
-### !  conf_write, Konfiguration schreiben ersatz fuer alle UNGETESTETEN ini Funktionen.
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##  conf_write, Konfiguration schreiben ersatz fuer alle UNGETESTETEN ini Funktionen.
 # ./osmtool.sh conf_write Einstellung NeuerParameter Verzeichnis Dateiname
 function conf_write() {
 	CONF_SEARCH=$1
@@ -8033,7 +8656,13 @@ function conf_write() {
 	return 0
 }
 
-### !  conf_read, ganze Zeile aus der Konfigurationsdatei anzeigen.
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##  conf_read, ganze Zeile aus der Konfigurationsdatei anzeigen.
 # ./osmtool.sh conf_read Einstellungsbereich Verzeichnis Dateiname
 function conf_read() {
 	CONF_SEARCH=$1
@@ -8045,7 +8674,13 @@ function conf_read() {
 	return 0
 }
 
-### !  conf_delete, ganze Zeile aus der Konfigurationsdatei loeschen.
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##  conf_delete, ganze Zeile aus der Konfigurationsdatei loeschen.
 # ./osmtool.sh conf_delete Einstellungsbereich Verzeichnis Dateiname
 function conf_delete() {
 	CONF_SEARCH=$1
@@ -8057,7 +8692,13 @@ function conf_delete() {
 	return 0
 }
 
-### !  ramspeicher, den echten RAM Speicher auslesen.
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##  ramspeicher, den echten RAM Speicher auslesen.
 function ramspeicher() {
 	# RAM groesse auslesen
 	dmidecode --type 17 >/tmp/raminfo.inf
@@ -8071,7 +8712,13 @@ function ramspeicher() {
 
 ###############################    Konfigurationen ########################
 
-### !  mysqleinstellen, ermitteln wieviel RAM Speicher vorhanden ist und anschliessend mySQL Einstellen.
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##  mysqleinstellen, ermitteln wieviel RAM Speicher vorhanden ist und anschliessend mySQL Einstellen.
 # Einstellungen sind in der my.cnf nicht moeglich es muss in die /etc/mysql/mysql.conf.d/mysqld.cnf
 # Hier wird nicht geprueft ob die Einstellungen schon vorhanden sind sondern nur angehaengt.
 function mysqleinstellen() {
@@ -8208,7 +8855,13 @@ function newregionini() {
 }
 
 
-### ! constconfig, const schreiben.
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+## constconfig, const schreiben.
 function constconfig() {
 
     BASEHOSTNAME=$1
@@ -8276,7 +8929,13 @@ function constconfig() {
     } > "$CONSTINI"
 }
 
-### ! Region Konfigurationen schreiben
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+## Region Konfigurationen schreiben
 # regionconfig REGIONSNAME STARTLOCATION SIZE INTERNALPORT REGIONSINI
 function regionconfig() {
 		
@@ -8327,7 +8986,13 @@ function regionconfig() {
     } > "$REGIONSINI"
 }
 
-### ! FlotsamCache Konfigurationen schreiben
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+## FlotsamCache Konfigurationen schreiben
 # FlotsamCache.ini - flotsamconfig FLOTSAMCACHEINI
 function flotsamconfig() {
 
@@ -8350,7 +9015,13 @@ function flotsamconfig() {
     } > "$FLOTSAMCACHEINI"
 }
 
-### ! osslEnableconfig Konfigurationen schreiben
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+## osslEnableconfig Konfigurationen schreiben
 # osslEnable.ini.example
 function osslEnableconfig() {
 
@@ -8487,7 +9158,13 @@ function osslEnableconfig() {
 }
 
 # MoneyServer.ini
-### ! moneyconfig DATABASE USERNAME PASSWORD MONEYINI
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+## moneyconfig DATABASE USERNAME PASSWORD MONEYINI
 function moneyconfig() {
 
     MONEYINI=$1
@@ -8544,7 +9221,13 @@ function moneyconfig() {
     } > "$MONEYINI"
 }
 
-### !  osstruktur, legt die Verzeichnisstruktur fuer OpenSim an. # Aufruf: osmtool.sh osstruktur ersteSIM letzteSIM
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##  osstruktur, legt die Verzeichnisstruktur fuer OpenSim an. # Aufruf: osmtool.sh osstruktur ersteSIM letzteSIM
 # Beispiel: ./osmtool.sh osstruktur 1 10 - erstellt ein Grid Verzeichnis fuer 10 Simulatoren inklusive der $SIMDATEI.
 function osconfigstruktur() {
     # Ist die /"$STARTVERZEICHNIS"/$SIMDATEI vorhanden dann zuerst löschen
@@ -8852,7 +9535,13 @@ function createregionavatar() {
 # Samples
 ###########################################################################
 
-### !  gridstop, stoppt erst Money dann Robust.
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##  gridstop, stoppt erst Money dann Robust.
 function gridstop() {
 	if screen -list | grep -q MO; then
 		mostop
@@ -8863,7 +9552,13 @@ function gridstop() {
 	fi
 	return 0
 }
-### !  gridstop, stoppt erst Money dann Robust.
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##  gridstop, stoppt erst Money dann Robust.
 function menugridstop() {
 	if screen -list | grep -q MO; then
 		menumostop
@@ -8875,7 +9570,13 @@ function menugridstop() {
 	return 0
 }
 
-### !  compilieren, kompilieren des OpenSimulator.
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##  compilieren, kompilieren des OpenSimulator.
 function compilieren() {
 	log info "Bauen eines neuen OpenSimulators  wird gestartet..."
 	# Nachsehen ob Verzeichnis ueberhaupt existiert.
@@ -8936,7 +9637,13 @@ function compilieren() {
 	return 0
 }
 
-### !  OSGRIDCOPY, automatisches kopieren des opensimulator aus dem verzeichnis opensim.
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##  OSGRIDCOPY, automatisches kopieren des opensimulator aus dem verzeichnis opensim.
 function osgridcopy() {
 	log text " #############################"
 	log text "Steht hier:"
@@ -8966,7 +9673,13 @@ function osgridcopy() {
 	return 0
 }
 
-### !  osupgrade, automatisches upgrade des opensimulator aus dem verzeichnis opensim.
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##  osupgrade, automatisches upgrade des opensimulator aus dem verzeichnis opensim.
 function osupgrade() {
 	log text " #############################"
 	log text " !!!      BEI FEHLER      !!! "
@@ -8991,7 +9704,13 @@ function osupgrade() {
 	return 0
 }
 
-### !  osdowngrade, automatisches downgrade des opensimulator aus dem verzeichnis opensim.
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##  osdowngrade, automatisches downgrade des opensimulator aus dem verzeichnis opensim.
 function osdowngrade() {
 	log text " #############################"
 	log text " !!!      BEI FEHLER      !!! "
@@ -9020,7 +9739,13 @@ function osdowngrade() {
 	return 0
 }
 
-### !  oszipupgrade, automatisches upgrade des opensimulator aus einer opensim zip Datei.
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##  oszipupgrade, automatisches upgrade des opensimulator aus einer opensim zip Datei.
 function oszipupgrade() {
 	### dialog Aktionen
 	# zuerst schauen ob dialog installiert ist
@@ -9066,7 +9791,13 @@ function oszipupgrade() {
 # Automatische Konfigurationen Prototype
 ###########################################################################
 
-### !  Hier entsteht die Automatische Konfiguration. UNGETESTET
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##  Hier entsteht die Automatische Konfiguration. UNGETESTET
 # Aufruf: ./osmtool.sh AutoInstall
 
 ### Config Set - Reduziert die Konfigurationsdateien auf ein uebersichtliches Mass.
@@ -9308,14 +10039,26 @@ function osslEnableConfigSet() {
 # Hilfen und Info
 ###########################################################################
 
-### ! Funktion zum Anzeigen von Informationen der Auswahl.
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+## Funktion zum Anzeigen von Informationen der Auswahl.
 function show_info() {
 	dialog --title "$1" \
 		--no-collapse \
 		--msgbox "$info" 0 0
 }
 
-### ! Systeminformationen anzeigen.
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+## Systeminformationen anzeigen.
 function systeminformation() {
 	# Definiert die Ausgangsstatuscodes der Dialogfelder
 	DIALOG_CANCEL=1
@@ -9387,7 +10130,13 @@ function systeminformation() {
 	done
 }
 
-### !  info, Informationen auf den Bildschirm ausgeben.
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##  info, Informationen auf den Bildschirm ausgeben.
 function info() {
 	echo "$(tput setab 4) Server Name: ${HOSTNAME}"
 	echo " Bash Version: ${BASH_VERSION}"
@@ -9399,7 +10148,13 @@ function info() {
 	return 0
 }
 
-### !  infodialog, Informationen auf den Bildschirm ausgeben.
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##  infodialog, Informationen auf den Bildschirm ausgeben.
 function infodialog() {
 	TEXT1=(" Server Name: ${HOSTNAME}")
 	TEXT2=(" Bash Version: ${BASH_VERSION}")
@@ -9417,7 +10172,13 @@ function infodialog() {
 	hauptmenu
 }
 
-### !  kalender(), einfach nur ein Kalender.
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##  kalender(), einfach nur ein Kalender.
 function kalender() {
 	HEIGHT=0
 	WIDTH=0
@@ -9448,7 +10209,13 @@ function kalender() {
 	fi
 }
 
-### !  robustbackup Grid Datenbank sichern.(Kalender) in bearbeitung
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##  robustbackup Grid Datenbank sichern.(Kalender) in bearbeitung
 function robustbackup() {
 	HEIGHT=0
 	WIDTH=0
@@ -9483,7 +10250,13 @@ function robustbackup() {
 	#warnbox "$result_mysqlrest"
 }
 
-### !  robustbackup Grid Datenbank sichern.(Datum auswerten) in bearbeitung
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##  robustbackup Grid Datenbank sichern.(Datum auswerten) in bearbeitung
 function backupdatum() {
 	# Ist die Datei backup.tmp vorhanden?
 	if [ -f /tmp/backup.tmp ]; then echo "Datei ist vorhanden!"; fi
@@ -9509,7 +10282,13 @@ function backupdatum() {
 	return 0
 }
 
-### !  senddata Daten zu einem neuen Server senden ### Ungetestet ###
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##  senddata Daten zu einem neuen Server senden ### Ungetestet ###
 # senddata USERNAMEN SENDEVERZEICHNIS SERVERADRESS 
 function senddata() {
 	USERNAMEN=$1
@@ -9537,7 +10316,13 @@ function senddata() {
 	return 0
 }
 
-### !  fortschritsanzeige(), test fuer eine Fortschrittsanzeige.
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##  fortschritsanzeige(), test fuer eine Fortschrittsanzeige.
 function fortschritsanzeige() {
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
@@ -9556,7 +10341,13 @@ function fortschritsanzeige() {
 	fi
 }
 
-### !  menuinfo, Informationen im dialog ausgeben.
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##  menuinfo, Informationen im dialog ausgeben.
 function menuinfo() {
 	menuinfoergebnis=$(screen -ls | sed '1d' | sed '$d' | awk -F. '{print $2}' | awk -F\( '{print $1}')
 
@@ -9579,7 +10370,13 @@ function menuinfo() {
 
 	return 0
 }
-### !  menukonsolenhilfe, menukonsolenhilfe auf dem Bildschirm anzeigen.
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##  menukonsolenhilfe, menukonsolenhilfe auf dem Bildschirm anzeigen.
 function menukonsolenhilfe() {
 	#helpergebnis=$(help)
 	#dialog --msgbox "Konsolenhilfe:\n $helpergebnis" 50 75; dialogclear
@@ -9592,7 +10389,13 @@ function menukonsolenhilfe() {
 	return 0
 }
 
-### ! dotnetinfo .NET und CSharp Informationen.
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+## dotnetinfo .NET und CSharp Informationen.
 function dotnetinfo() {
 	echo "dotNET-7.x = C# 11"
 	echo "dotNET-6.x = C# 10"
@@ -9605,7 +10408,13 @@ function dotnetinfo() {
 	echo "dotNET Framework-alle = C# 7.3"
 }
 
-### !  dbhilfe, Datenbankhilfe auf dem Bildschirm anzeigen.
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##  dbhilfe, Datenbankhilfe auf dem Bildschirm anzeigen.
 function dbhilfe() {
 	echo "$(tput setab 1)mySQL - mariaDB Befehle ACHTUNG! Sie muessen hier fuer die Grundlagen von SQL beherschen. $(tput sgr 0)"
 	echo "DO_DOMAIN_IDS	- $(tput setab 5)username password ids$(tput sgr 0) – CHANGE MASTER TO DO DOMAIN IDS."
@@ -9697,7 +10506,13 @@ function dbhilfe() {
 	echo "connection_name	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
 }
 
-### !  hilfe, Hilfe auf dem Bildschirm anzeigen.
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##  hilfe, Hilfe auf dem Bildschirm anzeigen.
 function hilfe() {
 	echo "$(tput setab 5)Funktion:$(tput sgr 0)		$(tput setab 2)Parameter:$(tput sgr 0)		$(tput setab 4)Informationen:$(tput sgr 0)"
 	echo "hilfe 			- $(tput setaf 3)hat keine Parameter$(tput sgr 0)	- Diese Hilfe."
@@ -9996,7 +10811,13 @@ function hilfemenudirektaufrufe() {
 	echo "menuworks	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
 }
 
-### !  konsolenhilfe, konsolenhilfe auf dem Bildschirm anzeigen.
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##  konsolenhilfe, konsolenhilfe auf dem Bildschirm anzeigen.
 function konsolenhilfe() {
 	echo "$(tput setab 5)Funktion:$(tput sgr 0) $(tput setab 4)Informationen:$(tput sgr 0)"
 	echo "Tab - Dateien und Ordnernamen automatisch vervollstaendigen."
@@ -10019,7 +10840,13 @@ function konsolenhilfe() {
 	# log info "HILFE: Konsolenhilfe wurde angefordert"
 }
 
-### !  commandhelp
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##  commandhelp
 function commandhelp() {
 	cat <<eof
 $(tput setab 1)
@@ -10197,7 +11024,13 @@ eof
 # Menu Menue
 ###########################################################################
 
-### !  hauptmenu
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##  hauptmenu
 function hauptmenu() {
 	HEIGHT=0
 	WIDTH=0
@@ -10268,7 +11101,13 @@ function hauptmenu() {
 	fi
 }
 
-### !  hilfemenu
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##  hilfemenu
 function hilfemenu() {
 	HEIGHT=0
 	WIDTH=0
@@ -10319,7 +11158,13 @@ function hilfemenu() {
 	fi
 }
 
-### !  funktionenmenu
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##  funktionenmenu
 function funktionenmenu() {
 	HEIGHT=0
 	WIDTH=0
@@ -10391,7 +11236,13 @@ function funktionenmenu() {
 	fi
 }
 
-### !  dateimenu
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##  dateimenu
 function dateimenu() {
 	HEIGHT=0
 	WIDTH=0
@@ -10462,7 +11313,13 @@ function dateimenu() {
 	fi
 }
 
-### !  mySQLmenu
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##  mySQLmenu
 function mySQLmenu() {
 	HEIGHT=0
 	WIDTH=0
@@ -10544,7 +11401,13 @@ function mySQLmenu() {
 	fi
 }
 
-### !  avatarmenu
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##  avatarmenu
 function avatarmenu() {
 	HEIGHT=0
 	WIDTH=0
@@ -10613,7 +11476,13 @@ function avatarmenu() {
 	fi
 }
 
-### !  expertenmenu
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##  expertenmenu
 function expertenmenu() {
 	HEIGHT=0
 	WIDTH=0
@@ -10698,7 +11567,13 @@ function expertenmenu() {
 	fi
 }
 
-### !  buildmenu
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##  buildmenu
 function buildmenu() {
 	HEIGHT=0
 	WIDTH=0
