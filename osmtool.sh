@@ -29,7 +29,7 @@
 #### ? Einstellungen ####
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.2.2.780" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.2.2.785" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 # ? Alte Variablen loeschen aus eventuellen voherigen sessions
@@ -48,8 +48,15 @@ unset REGIONSNAMEd
 unset VERZEICHNISSCREEN
 
 NEUERREGIONSNAME="Welcome"
+
+##
+ #* Zufallsnamen.
+ # Array aus Bezeichnungen von Deutschen Orten und Voelker (Unvollstaendig).
+ # 
+ #? @param keiner.
+ #? @return NEUERREGIONSNAME - Es wird ein Name zurueckgegeben.
+##
 function namen() {
-	# Array aus Bezeichnungen von Deutschen Orten und Voelker (Unvollstaendig).
 	namensarray=("Terwingen" "Angeron" "Vidivarier" "Usipeten" "Sibiner" "Ranier" "Sabalingier" "Aglier" "Aduatuker" \
 	"Favonen" "Sachsen" "Karpen" "Gautigoten" "Gepiden" "Mugilonen" "Bardongavenses" "Steoringun" "Guiones" "Teutonen" \
 	"Brukterer" "Omanen" "Astfalon" "Langobarden" "Frumtingas" "Eruler" "Moselfranken" "Tylangier" "Gillingas" \
@@ -91,7 +98,13 @@ function namen() {
 	echo "Neuer Regionsname: $NEUERREGIONSNAME"
 }
 
-### ! osmtoolconfig autoconfigure
+##
+ #* osmtoolconfig autoconfigure.
+ # Hier wird die Konfigurationsdatei für opensimTOOL erstellt.
+ # 
+ #? @param STARTVERZEICHNIS ROBUSTVERZEICHNIS MONEYVERZEICHNIS OPENSIMVERZEICHNIS CONFIGPFAD OSTOOLINI
+ #? @return Eine Datei wird geschrieben.
+##
 function osmtoolconfig() {
 
 	STARTVERZEICHNIS=$1; ROBUSTVERZEICHNIS=$2; MONEYVERZEICHNIS=$3; OPENSIMVERZEICHNIS=$4; CONFIGPFAD=$5; OSTOOLINI=$6
@@ -233,7 +246,15 @@ function osmtoolconfig() {
 	echo "#####################  FERTIG  #############################"
 }
 
-### ! dummyvar, Shell-Check ueberlisten wegen der Konfigurationsdatei, hat sonst keinerlei Funktion und wird auch nicht aufgerufen.
+##
+ #* dummyvar, shellcheck disable=SC2034 umgehen.
+ # Shell-Check ueberlisten wegen der Konfigurationsdatei, 
+ # hat sonst keinerlei Funktion und wird auch nicht aufgerufen.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
+### ! dummyvar, 
 function dummyvar() {
 	# shellcheck disable=SC2034
 	MONEYVERZEICHNIS="robust"; ROBUSTVERZEICHNIS="robust"; OPENSIMVERZEICHNIS="opensim"; SCRIPTSOURCE="ScriptNeu"; SCRIPTZIP="opensim-ossl-example-scripts-main.zip"; MONEYSOURCE="money48"
@@ -249,6 +270,13 @@ function dummyvar() {
 	netversion="1946"; CONFIGPFAD="OpenSimConfig";
 }
 
+##
+ #* osmtoolconfigabfrage.
+ # Konfigurationsparameter fur die Konfigurationsdatei abfragen.
+ # 
+ #? @param STARTVERZEICHNIS ROBUSTVERZEICHNIS MONEYVERZEICHNIS OPENSIMVERZEICHNIS CONFIGPFAD SCRIPTPATH.
+ #? @return STARTVERZEICHNIS ROBUSTVERZEICHNIS MONEYVERZEICHNIS OPENSIMVERZEICHNIS CONFIGPFAD SCRIPTPATH.
+##
 function osmtoolconfigabfrage() {
 	# Ausgabe Kopfzeilen
 	VSTARTVERZEICHNIS=$(pwd); # Vorläufiges Startverzeichnis
@@ -299,9 +327,10 @@ function osmtoolconfigabfrage() {
 	osmtoolconfig $STARTVERZEICHNIS $ROBUSTVERZEICHNIS $MONEYVERZEICHNIS $OPENSIMVERZEICHNIS $CONFIGPFAD "/$SCRIPTPATH/osmtoolconfig.ini"
 }
 
+### Diverse Voreinstellungen
 AKTUELLEVERZ=$(pwd) # Aktuelles Verzeichnis
 
-### Datumsvariablen Datum, Dateidatum und Uhrzeit
+# Datumsvariablen Datum, Dateidatum und Uhrzeit
 DATUM=$(date +%d.%m.%Y)
 DATEIDATUM=$(date +%d_%m_%Y) # UHRZEIT=$(date +%H:%M:%S)
 
@@ -333,13 +362,24 @@ if ! [ -f "/$SCRIPTPATH/osmtoolconfig.ini" ]; then osmtoolconfigabfrage; fi
 # shellcheck disable=SC1091
 . "$SCRIPTPATH"/osmtoolconfig.ini
 
-### Aktuelle IP ueber Suchadresse ermitteln und Ausfuehrungszeichen anhaengen.
+# Aktuelle IP ueber Suchadresse ermitteln und Ausfuehrungszeichen anhaengen.
 AKTUELLEIP='"'$(wget -O - -q $SEARCHADRES)'"'
 
-### gibt es das Startverzeichnis wenn nicht abbruch.
+# gibt es das Startverzeichnis wenn nicht abbruch.
 cd /"$STARTVERZEICHNIS" || return 1
 sleep 1
 
+# Eingabeauswertung fuer Funktionen ohne dialog.
+KOMMANDO=$1
+### Diverse Voreinstellungen Ende.
+
+##
+ #* instdialog.
+ # installation von dialog.
+ # 
+ #? @param keine.
+ #? @return keine.
+##
 # install dialog
 function instdialog () {
 	echo "Ich installiere jetzt dialog"
@@ -354,10 +394,13 @@ function instdialog () {
 	tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 }
 
-### * Eingabeauswertung fuer Funktionen ohne dialog.
-KOMMANDO=$1
-
-### ! vardel, Variablen loeschen.
+##
+ #* vardel.
+ # vardel, Variablen auf einen schlag loeschen.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function vardel() {
 	unset STARTVERZEICHNIS
 	unset MONEYVERZEICHNIS
@@ -383,6 +426,13 @@ function vardel() {
 	return 0
 }
 
+##
+ #* ScreenLog.
+ # Bildschirmausgabe reduzieren.
+ # 
+ #? @param ScreenLogLevel.
+ #? @return nichts wird zurueckgegeben.
+##
 ### ScreenLog Bildschirmausgabe reduzieren.
 function ScreenLog() {
 	if (( ScreenLogLevel == 1 )); then
@@ -405,25 +455,49 @@ function ScreenLog() {
 	return 0
 }
 
-### dialogclear Dialog loeschen.
+##
+ #* dialogclear.
+ # Dialog loeschen.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function dialogclear() {
 	dialog --clear
 	return 0
 }
 
-### Beenden mit ausgabe der letzten Meldung.
+##
+ #* ende.
+ # Beenden mit ausgabe der letzten Meldung.
+ # 
+ #? @param keine.
+ #? @return letzten Meldung.
+##
 function ende() {
 	return
 	log info "$?" # Beenden mit ausgabe der letzten Meldung.
 }
 
-### Den aufrufenden Prozess mit der letzten Meldung beenden.
+##
+ #* fehler.
+ # Den aufrufenden Prozess mit der letzten Meldung beenden.
+ # 
+ #? @param keine.
+ #? @return letzten Meldung.
+##
 function fehler() {
 	exit
 	log error "$?" # Den aufrufenden Prozess mit der letzten Meldung beenden.
 }
 
-#! Alle Besucherlisten loeschen.
+##
+ #* clearuserlist.
+ # Alle Besucherlisten loeschen.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function clearuserlist() {
 	echo "Lösche Besucherlisten log"
 	rm -r /$STARTVERZEICHNIS/*_osmvisitorlist.log
@@ -431,7 +505,14 @@ function clearuserlist() {
 	rm -r /$STARTVERZEICHNIS/*_osmvisitorlist.txt
 }
 
-### Log Dateien von Ubuntu loeschen Beispiel: historylogclear "history"
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Log Dateien von Ubuntu loeschen Beispiel: historylogclear "history".
+ # das loeschen von history, apache2error, mysqlerror und mysqlmariadb.
+ #
+ #? @param history, apache2error, mysqlerror und mysqlmariadb.
+ #? @return nichts wird zurueckgegeben.
+##
 function historylogclear() {
 	hlclear=$1
 	case $hlclear in
@@ -454,7 +535,13 @@ function historylogclear() {
 	esac
 }
 
-### ! Log Dateien und Funktionen
+##
+ #* log.
+ # Log Dateien und Funktionen.
+ # 
+ #? @param logtype.
+ #? @return Textausgabe.
+##
 function log() {
 	local text
 	local logtype
@@ -490,7 +577,13 @@ function log() {
 	return 0
 }
 
-### ! .Funktionen eines Bash Skript auslesen und in eine Text Datei schreiben.
+##
+ #* functionslist
+ # Funktionen eines Bash Skript auslesen und in eine Text Datei schreiben.
+ # 
+ #? @param keine.
+ #? @return datediff.
+##
 function functionslist() {
 	file="/$STARTVERZEICHNIS/osmtool.sh"
 	suche="function"
@@ -498,7 +591,13 @@ function functionslist() {
 	echo "$ergebnisflist" >/$STARTVERZEICHNIS/osmfunktion"$DATEIDATUM".txt
 }
 
-### ! lastrebootdatum letzter reboot des Servers.
+##
+ #* lastrebootdatum.
+ # Letzter reboot des Servers.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function lastrebootdatum() {
 	HEUTEDATUM=$(date +%Y-%m-%d) # Heute
 
@@ -521,12 +620,18 @@ function lastrebootdatum() {
 		log warn "$lastrebootdatuminfo"
 	else
 		log info "$lastrebootdatuminfo"
-	fi	
+	fi
+	return $datediff
 }
 
-### ! Leerzeichen korrigieren,
-# trimm "   Beispiel   Text    "
-# oder trimm $variable, rueckgabe in Variable: $trimmvar.
+##
+ #* trimm.
+ # Leerzeichen korrigieren, trimm "   Beispiel   Text    "
+ # oder trimm $variable, rueckgabe in Variable: $trimmvar.
+ #
+ #? @param $variable.
+ #? @return $trimmvar.
+##
 function trimm() {
 	set -f
 	# shellcheck disable=SC2086,SC2048
@@ -535,7 +640,13 @@ function trimm() {
 	set +f
 }
 
-### ! Kopfzeile
+##
+ #* schreibeinfo.
+ # Kopfzeile erstellen.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function schreibeinfo() {
 	# *Wenn die Log Datei nicht existiert muss sie erstellt werden sonst gibt es eine Fehlermeldung.
 	if [ "$LOGWRITE" = "yes" ]; then
@@ -547,7 +658,6 @@ function schreibeinfo() {
 			echo " " >/$STARTVERZEICHNIS/"$DATEIDATUM""$logfilename".log
 		fi
 	fi
-
 		log rohtext "   ____                        _____  _                    _         _               "
 		log rohtext "  / __ \                      / ____|(_)                  | |       | |              "
 		log rohtext " | |  | | _ __    ___  _ __  | (___   _  _ __ ___   _   _ | |  __ _ | |_  ___   _ __ "
@@ -589,24 +699,39 @@ function schreibeinfo() {
 # *Kopfzeile in die Log Datei schreiben.
 schreibeinfo
 
-### ! Zeichen entfernen
+##
+ #* letterdel.
+ # Zeichen entfernen.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 # letterdel $variable "[aAbBcCdD]" - letterdel $variable "[[:space:]]"
-letterdel() {
+function letterdel() {
 	printf '%s\n' "${1//$2/}"
 }
 
-### ! Zeichen entfernen
-# Usage: trim_string "   example   string    "
-trim_string() {
+##
+ #* trim_string.
+ # Zeichen entfernen.
+ # Usage: trim_string "   example   string    "
+ #
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
+function trim_string() {
     : "${1#"${1%%[![:space:]]*}"}"
     : "${_%"${_##*[![:space:]]}"}"
     printf '%s\n' "$_"
 }
 
-### ! Variable auf inhalt testen.
-# testvariable="Voll"
-# vartest $testvariable
-# echo "${result}"
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Variable auf inhalt testen.
+ # 
+ #? @param $VARIABLE.
+ #? @return ${result} true false.
+##
 function vartest () {
     VARIABLE="$1"
     if [ -z "$VARIABLE" ]
@@ -617,8 +742,14 @@ function vartest () {
     fi
 }
 
-### ! Alle Zeichen entfernen
-# Usage: trim_all "   example   string    "
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Alle Zeichen entfernen.
+ # Usage: trim_all "   example   string    "
+ #
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 trim_all() {
     set -f
 # shellcheck disable=SC2086,SC2048
@@ -627,7 +758,13 @@ trim_all() {
     set +f
 }
 
-### ! Linux apt-get Installationsroutine
+##
+ #* iinstall.
+ # Linux apt-get Installationsroutine.
+ # 
+ #? @param $installation.
+ #? @return nichts wird zurueckgegeben.
+##
 function iinstall() {
 	installation=$1
 	if dpkg-query -s "$installation" 2>/dev/null | grep -q installed; then
@@ -638,7 +775,13 @@ function iinstall() {
 	fi
 }
 
-### ! Linux apt Installationsroutine
+##
+ #* iinstall2.
+ # Linux apt Installationsroutine.
+ # 
+ #? @param $installation.
+ #? @return nichts wird zurueckgegeben.
+##
 function iinstall2() {
 	installation=$1
 	if dpkg-query -s "$installation" 2>/dev/null | grep -q installed; then
@@ -649,7 +792,13 @@ function iinstall2() {
 	fi
 }
 
-### ! Neue apt-get installationsroutine aus Datei
+##
+ #* finstall.
+ # Neue apt-get installationsroutine aus Datei.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function finstall() {
 	TXTLISTE=$1
 
@@ -663,7 +812,13 @@ function finstall() {
 	done <"$TXTLISTE"
 }
 
-### ! Neue installationsroutine aus Datei
+##
+ #* menufinstall.
+ # Neue Menue installationsroutine aus Datei.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function menufinstall() {
 	TXTLISTE=$1
 	# zuerst schauen ob dialog installiert ist
@@ -696,7 +851,13 @@ function menufinstall() {
 	fi
 }
 
-### ! uncompress ermittelt welcher Kompressor eingesetzt wurde und gibt den entpack Befehl zurueck.
+##
+ #* uncompress.
+ # ermittelt welcher Kompressor eingesetzt wurde und gibt den entpack Befehl zurueck.
+ # 
+ #? @param $datei.
+ #? @return $uncompress.
+##
 function uncompress() {
     datei=$1
 
@@ -715,10 +876,16 @@ function uncompress() {
         esac
     done
 
-    return 0
+    return $uncompress;
 }
 
-### ! downloados Opensim download
+##
+ #* downloados.
+ # Opensim download.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function downloados() {
 	ASSETDELBOXERGEBNIS=$(dialog --menu "Downloads" 30 80 25 \
 		"Download1: " "$LINK01" \
@@ -783,7 +950,13 @@ function downloados() {
 	hauptmenu
 }
 
-### Radioliste erstellen aus Webseitenlinks.
+##
+ #* radiolist.
+ # Radioliste-Linkliste erstellen aus Webseitenlinks.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function radiolist() {
     rm /tmp/radio.tmp
     mkdir -p /"$STARTVERZEICHNIS"/radiolist
@@ -829,7 +1002,13 @@ function radiolist() {
 done
 }
 
-### ! rebootdatum letzter reboot des Servers.
+##
+ #* rebootdatum .
+ # letzter reboot des Servers.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function rebootdatum() {
 	HEUTEDATUM=$(date +%Y-%m-%d) # Heute
 
@@ -869,7 +1048,13 @@ function rebootdatum() {
 	return 0
 }
 
-### ! warnbox Medung anzeigen.
+##
+ #* warnbox.
+ # warnbox Meldung anzeigen.
+ # 
+ #? @param $1.
+ #? @return dialog Textanzeige.
+##
 function warnbox() {
 	dialog --msgbox "$1" 0 0
 	dialogclear
@@ -877,7 +1062,13 @@ function warnbox() {
 	hauptmenu
 }
 
-### ! Text editieren.
+##
+ #* edittextbox.
+ # Text in einer Box editieren.
+ # 
+ #? @param $1.
+ #? @return dialog Textanzeige.
+##
 function edittextbox() {
 	#--editbox 	DATEI HOEHE BREITE
 	dialog --editbox "$1" 0 0
@@ -888,7 +1079,13 @@ function edittextbox() {
 	hauptmenu
 }
 
-### ! Text Meldung anzeigen.
+##
+ #* textbox.
+ # Text Meldung anzeigen.
+ # 
+ #? @param $1.
+ #? @return dialog Textanzeige.
+##
 function textbox() {
 	#--editbox 	DATEI HOEHE BREITE
 	dialog --textbox "$1" 0 0
@@ -897,15 +1094,27 @@ function textbox() {
 	hauptmenu
 }
 
-### ! Nachrichtbox Meldung anzeigen.
+##
+ #* nachrichtbox.
+ # Eine Nachrichtbox Meldung anzeigen.
+ # 
+ #? @param $1 $result.
+ #? @return dialog Textanzeige.
+##
 function nachrichtbox() {
 	dialog --title "$1" --no-collapse --msgbox "$result" 0 0
 	hauptmenu
 }
 
-### ! php log anzeigen.
+##
+ #* apacheerror.
+ # php log Datei anzeigen.
+ # 
+ #? @param $apache2errorlog.
+ #? @return dialog Textanzeige.
+##
 function apacheerror() {
-	###php log Datei
+	# $apache2errorlog steht in der Konfigurationsdatei.
 	if [ -f "$apache2errorlog" ]; then
 		textbox "$apache2errorlog"
 	else
@@ -913,9 +1122,15 @@ function apacheerror() {
 	fi
 }
 
-### ! mysql log anzeigen.
+##
+ #* mysqldberror.
+ # mysql log Datei anzeigen.
+ # 
+ #? @param $mysqlerrorlog.
+ #? @return dialog Textanzeige.
+##
 function mysqldberror() {
-	###mysql log Datei
+	# $mysqlerrorlog steht in der Konfigurationsdatei.
 	if [ -f "$mysqlerrorlog" ]; then
 		textbox "$mysqlerrorlog"
 	else
@@ -923,9 +1138,15 @@ function mysqldberror() {
 	fi
 }
 
-### ! mariadb error anzeigen.
+##
+ #* mariadberror.
+ # mariadb error Datei anzeigen.
+ # 
+ #? @param $mysqlmariadberor.
+ #? @return dialog Textanzeige.
+##
 function mariadberror() {
-	###mariaDB log Datei
+	# $mysqlmariadberor steht in der Konfigurationsdatei.
 	if [ -f "$mysqlmariadberor" ]; then
 		textbox "$mysqlmariadberor"
 	else
@@ -933,9 +1154,15 @@ function mariadberror() {
 	fi
 }
 
-### ! ufw log anzeigen.
+##
+ #* ufwlog.
+ # ufw log Datei anzeigen.
+ # 
+ #? @param $ufwlog.
+ #? @return dialog Textanzeige.
+##
 function ufwlog() {
-	###mariaDB log Datei
+	# $ufwlog steht in der Konfigurationsdatei.
 	if [ -f "$ufwlog" ]; then
 		textbox "$ufwlog"
 	else
@@ -943,9 +1170,15 @@ function ufwlog() {
 	fi
 }
 
-### ! auth log anzeigen.
+##
+ #* authlog.
+ # auth log Datei anzeigen.
+ # 
+ #? @param $authlog.
+ #? @return dialog Textanzeige.
+##
 function authlog() {
-	###auth.log Datei
+	# $authlog steht in der Konfigurationsdatei.
 	if [ -f "$authlog" ]; then
 		textbox "$authlog"
 	else
@@ -953,9 +1186,15 @@ function authlog() {
 	fi
 }
 
-### ! access log anzeigen.
+##
+ #* accesslog.
+ # access log Datei anzeigen.
+ # 
+ #? @param $apache2accesslog.
+ #? @return nichts wird zurueckgegeben.
+##
 function accesslog() {
-	###access.log Datei
+	## $apache2accesslog steht in der Konfigurationsdatei.
 	if [ -f "$apache2accesslog" ]; then
 		textbox "$apache2accesslog"
 	else
@@ -963,13 +1202,25 @@ function accesslog() {
 	fi
 }
 
-### ! Festplattenspeicher anzeigen.
+##
+ #* fpspeicher.
+ # Festplattenspeicher anzeigen.
+ # 
+ #? @param keine.
+ #? @return result.
+##
 function fpspeicher() {
 	result=$(df -h)
-	nachrichtbox "Freier Spericher"
+	nachrichtbox "Freier Speicher"
 }
 
-### !  screenlist, Laufende Screens auflisten.
+##
+ #* screenlist.
+ # Laufende Screens auflisten.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function screenlist() {
 	log line
 	log info "Alle laufende Screens anzeigen!"
@@ -986,7 +1237,14 @@ function screenlist() {
 		return 0
 	fi
 }
-### ! screenlistrestart Alle laufende Screens anzeigen
+
+##
+ #* screenlistrestart.
+ # Alle laufende Screens anzeigen.
+ # 
+ #? @param keine.
+ #? @return $mynewlist.
+##
 function screenlistrestart() {
 	log line
 	log info "Alle laufende Screens anzeigen!"
@@ -995,7 +1253,13 @@ function screenlistrestart() {
 	return 0
 }
 
-### ! makeverzeichnisliste Erstellen eines Arrays aus einer Textdatei - Verzeichnisse
+##
+ #* makeverzeichnisliste.
+ # Erstellen eines Arrays aus einer Textdatei - Verzeichnisse.
+ # 
+ #? @param keine.
+ #? @return $ANZAHLVERZEICHNISSLISTE.
+##
 function makeverzeichnisliste() {
 	VERZEICHNISSLISTE=()
 	while IFS= read -r line; do
@@ -1006,7 +1270,14 @@ function makeverzeichnisliste() {
 	return 0
 }
 
-### ! makeregionsliste Erstellen eines Arrays aus einer Textdatei - Regionen
+##
+ #* makeregionsliste 
+ # Erstellen eines Arrays aus einer Textdatei.
+ # 
+ #? @param keine.
+ #? @return REGIONSLISTE.
+ #? @return ANZAHLREGIONSLISTE.
+##
 function makeregionsliste() {
 	REGIONSLISTE=()
 	while IFS= read -r line; do
@@ -1016,7 +1287,13 @@ function makeregionsliste() {
 	return 0
 }
 
-### ! mysqlrest Funktion zum abfragen von mySQL Datensaetzen: mymysql "username" "password" "databasename" "mysqlcommand"
+##
+ #* mysqlrest Funktion zum abfragen von mySQL Datensaetzen.
+ # mymysql "username" "password" "databasename" "mysqlcommand".
+ # 
+ #? @param "username" "password" "databasename" "mysqlcommand".
+ #? @return result_mysqlrest.
+##
 function mysqlrest() {
 	username=$1
 	password=$2
@@ -1024,7 +1301,14 @@ function mysqlrest() {
 	mysqlcommand=$4
 	result_mysqlrest=$(echo "$mysqlcommand;" | MYSQL_PWD=$password mysql -u"$username" "$databasename" -N) 2>/dev/null
 }
-### ! mysqlrestnodb Funktion mySQL Datensaetzen: mymysql "username" "password" "mysqlcommand"
+
+##
+ #* mysqlrestnodb.
+ # Funktion mySQL Datensaetzen: mymysql "username" "password" "mysqlcommand".
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function mysqlrestnodb() {
 	username=$1
 	password=$2
@@ -1032,7 +1316,14 @@ function mysqlrestnodb() {
 	result_mysqlrestnodb=$(echo "$mysqlcommand" | MYSQL_PWD=$password mysql -u"$username")
 }
 
-### ! mysqlbackup Funktion zum sichern von mySQL Datensaetzen: mysqlbackup "username" "password" "databasename"
+##
+ #* mysqlbackup.
+ # Funktion zum sichern von mySQL Datensaetzen: 
+ # mysqlbackup "username" "password" "databasename"
+ # 
+ #? @param "username" "password" "databasename".
+ #? @return nichts wird zurueckgegeben.
+##
 function mysqlbackup() {
 	# bearbeitung noetig!
 	username=$1
@@ -1040,17 +1331,30 @@ function mysqlbackup() {
 	databasename=$3
 	result_mysqlrest=$("MYSQL_PWD=$password" "mysqldump -u$username $databasename" -N)
 }
-### !  passgen, Passwortgenerator
+
+##
+ #* passgen Passwortlaenge.
+ # Passwortgenerator.
+ # 
+ #? @param $PASSWORTLAENGE.
+ #? @return $NEWPASSWD.
+##
 function passgen() {
 		# Alle Aktionen ohne dialog
-		STARK=$1
-		PASSWD=$(tr -dc 'A-Za-z0-9!"#$%&'\''()*+,-./:;<=>?@[\]^_`{|}~' </dev/urandom | head -c "$STARK")
-		echo "$PASSWD"
-		unset PASSWD
-		return 0
+		PASSWORTLAENGE=$1
+		NEWPASSWD=$(tr -dc 'A-Za-z0-9!"#$%&'\''()*+,-./:;<=>?@[\]^_`{|}~' </dev/urandom | head -c "$PASSWORTLAENGE")
+		echo "$NEWPASSWD"
+		#unset PASSWD
+		return $NEWPASSWD;
 }
 
-### !  passwdgenerator, Passwortgenerator
+##
+ #* passwdgenerator.
+ # Passwortgenerator mit dialog.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function passwdgenerator() {
 	### dialog Aktionen
 	# zuerst schauen ob dialog installiert ist
@@ -1076,7 +1380,13 @@ function passwdgenerator() {
 	return 0
 }
 
-### !  assetdel, Asset von der Region loeschen. Aufruf: assetdel screen_name Regionsname Objektname
+##
+ #* assetdel.
+ # Asset von der Region loeschen. Aufruf: assetdel screen_name Regionsname Objektname.
+ # 
+ #? @param screen_name Regionsname Objektname.
+ #? @return Text.
+##
 function assetdel() {
 	ASSDELSCREEN=$1
 	REGION=$2
@@ -1095,7 +1405,13 @@ function assetdel() {
 	fi
 }
 
-### ! menuassetdel Assets loeschen.
+##
+ #* menuassetdel.
+ # Asset mit dialog von der Region loeschen.
+ # 
+ #? @param dialog.
+ #? @return dialog.
+##
 function menuassetdel() {
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
@@ -1141,7 +1457,13 @@ function menuassetdel() {
 	fi
 }
 
-### !  landclear, Land clear - Loescht alle Parzellen auf dem Land. # Aufruf: landclear screen_name Regionsname
+##
+ #* landclear.
+ # Land clear - Loescht alle Parzellen auf dem Land. # Aufruf: landclear screen_name Regionsname
+ # 
+ #? @param screen_name Regionsname.
+ #? @return Text.
+##
 function landclear() {
 	LANDCLEARSCREEN=$1
 	REGION=$2
@@ -1160,7 +1482,13 @@ function landclear() {
 	fi
 }
 
-### !  menulandclear, Land clear - Loescht alle Parzellen auf dem Land. # Aufruf: landclear screen_name Regionsname
+##
+ #* menulandclear.
+ # Land clear - Loescht alle Parzellen auf dem Land, dialog ein- ausgabe.
+ # 
+ #? @param dialog.
+ #? @return dialog.
+##
 function menulandclear() {
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
@@ -1204,7 +1532,13 @@ function menulandclear() {
 	fi
 }
 
-### !  loadinventar, saveinventar # Aufruf: load oder saveinventar "NAME" "VERZEICHNIS" "PASSWORD" "DATEImitPFAD"
+##
+ #* loadinventar.
+ # load iar inventar "NAME" "VERZEICHNIS" "PASSWORD" "DATEImitPFAD".
+ # 
+ #? @param "NAME" "VERZEICHNIS" "PASSWORD" "DATEImitPFAD".
+ #? @return nichts wird zurueckgegeben.
+##
 function loadinventar() {
 	LOADINVSCREEN="sim1"
 	NAME=$1
@@ -1221,7 +1555,13 @@ function loadinventar() {
 	fi
 }
 
-### !  loadinventar, saveinventar # Aufruf: load oder saveinventar "NAME" "VERZEICHNIS" "PASSWORD" "DATEImitPFAD"
+##
+ #* menuloadinventar.
+ # Lade Inventar mit dialog Menue in den OpenSimulator.
+ # 
+ #? @param dialog.
+ #? @return dialog.
+##
 function menuloadinventar() {
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
@@ -1270,7 +1610,13 @@ function menuloadinventar() {
 	unset LOADINVSCREEN NAME VERZEICHNIS PASSWORD DATEI
 }
 
-### !  saveinventar, saveinventar # Aufruf: load oder saveinventar "NAME" "VERZEICHNIS" "PASSWORD" "DATEImitPFAD"
+##
+ #* saveinventar.
+ # Speichere iar inventar "NAME" "VERZEICHNIS" "PASSWORD" "DATEImitPFAD".
+ # 
+ #? @param "NAME" "VERZEICHNIS" "PASSWORD" "DATEImitPFAD".
+ #? @return nichts wird zurueckgegeben.
+##
 function saveinventar() {
 	SAVEINVSCREEN="sim1"
 	NAME=$1
@@ -1287,7 +1633,13 @@ function saveinventar() {
 	fi
 }
 
-### !  saveinventar, saveinventar # Aufruf: load oder saveinventar "NAME" "VERZEICHNIS" "PASSWORD" "DATEImitPFAD"
+##
+ #* menusaveinventar.
+ # Speichere Inventar mit dialog Menue in den OpenSimulator.
+ # 
+ #? @param dialog.
+ #? @return dialog.
+##
 function menusaveinventar() {
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
@@ -1336,9 +1688,15 @@ function menusaveinventar() {
 	unset SAVEINVSCREEN NAME VERZEICHNIS PASSWORD DATEI
 }
 
-### !  oscommand, OpenSim Command direkt in den screen senden. # Aufruf: oscommand Screen Region Befehl Parameter
-# Beispiel: bash osmtool.sh oscommand sim1 Welcome "alert Hallo liebe Leute dies ist eine Nachricht"
-# Beispiel: bash osmtool.sh oscommand sim1 Welcome "alert-user John Doe Hallo John Doe"
+##
+ #* oscommand.
+ # OpenSim Command direkt in den screen senden. # Aufruf: oscommand Screen Region Befehl Parameter.
+ # Beispiel: bash osmtool.sh oscommand sim1 Welcome "alert Hallo liebe Leute dies ist eine Nachricht"
+ # Beispiel: bash osmtool.sh oscommand sim1 Welcome "alert-user John Doe Hallo John Doe"
+ # 
+ #? @param Screen Region Befehl Parameter.
+ #? @return nichts wird zurueckgegeben.
+##
 function oscommand() {
 	OSCOMMANDSCREEN=$1
 	REGION=$2
@@ -1353,7 +1711,13 @@ function oscommand() {
 	return 0
 }
 
-### !  oscommand, OpenSim Command direkt in den screen senden. # Aufruf: oscommand Screen Region Befehl Parameter
+##
+ #* menuoscommand.
+ # OpenSim Command direkt in den screen senden.
+ # 
+ #? @param dialog.
+ #? @return dialog.
+##
 function menuoscommand() {
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
@@ -1399,14 +1763,26 @@ function menuoscommand() {
 	unset OSCOMMANDSCREEN REGION COMMAND
 }
 
-### ! oswriteconfig
+##
+ #* oswriteconfig.
+ # Konfiguration lesen.
+ # 
+ #? @param $SETSIMULATOR.
+ #? @return $CONFIGWRITE.
+##
 function oswriteconfig() {
 	SETSIMULATOR=$1
 	CONFIGWRITE="config save /$STARTVERZEICHNIS/$SETSIMULATOR.ini"
 	screen -S "$SETSIMULATOR" -p 0 -X eval "stuff '$CONFIGWRITE'^M"
 }
 
-### ! menuoswriteconfig
+##
+ #* menuoswriteconfig.
+ # Konfiguration lesen.
+ # 
+ #? @param dialog.
+ #? @return dialog.
+##
 function menuoswriteconfig() {
 	SETSIMULATOR=$1 # OpenSimulator, Verzeichnis und Screen Name
 
@@ -1454,7 +1830,13 @@ function menuoswriteconfig() {
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then hauptmenu; fi
 }
 
-### !  menuworks, screen pruefen ob er laeuft. dialog auswahl
+##
+ #* menuworks.
+ # screen pruefen ob er laeuft, dialog auswahl.
+ # 
+ #? @param dialog.
+ #? @return dialog.
+##
 function menuworks() {
 	WORKSSCREEN=$1 # OpenSimulator, Verzeichnis und Screen Name
 
@@ -1493,7 +1875,14 @@ function menuworks() {
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then hauptmenu; fi
 }
 
-### !  works, screen pruefen ob er laeuft. # Aufruf: works screen_name
+##
+ #* works.
+ # screen pruefen ob er laeuft.
+ # Aufruf: works screen_name
+ # 
+ #? @param $WORKSSCREEN.
+ #? @return $WORKSSCREEN.
+##
 function works() {
 	WORKSSCREEN=$1 # OpenSimulator, Verzeichnis und Screen Name
 
@@ -1509,7 +1898,13 @@ function works() {
 	fi
 }
 
-### ! waslauft - Zeigt alle Laufenden Screens an.
+##
+ #* waslauft.
+ # Zeigt alle Laufenden Screens an.
+ # 
+ #? @param keine.
+ #? @return $ergebnis.
+##
 function waslauft() {
 	# Die screen -ls ausgabe zu einer Liste aendern.
 	# sed '1d' = erste Zeile loeschen - sed '$d' letzte Zeile loeschen.
@@ -1519,6 +1914,13 @@ function waslauft() {
 	return 0
 }
 
+##
+ #* waslauft.
+ # Zeigt alle Laufenden Screens an.
+ # 
+ #? @param dialog.
+ #? @return dialog.
+##
 ### ! menuwaslauft - Zeigt alle Laufenden Screens an im dialog.
 function menuwaslauft() {
 	# Die screen -ls ausgabe zu einer Liste aendern.
@@ -1533,15 +1935,29 @@ function menuwaslauft() {
 	return 0
 }
 
-### !  checkfile, pruefen ob Datei vorhanden ist. # Aufruf: checkfile "pfad/name"
-# Verwendung als Einzeiler: checkfile /pfad/zur/datei && echo "File exists" || echo "File not found!"
+##
+ #* checkfile.
+ # pruefen ob Datei vorhanden ist.
+ # Aufruf: checkfile "pfad/name"
+ # 
+ #? @param $DATEINAME.
+ #? @return $?.
+##
 function checkfile() {
+	# Verwendung als Einzeiler: checkfile /pfad/zur/datei && echo "File exists" || echo "File not found!"
 	DATEINAME=$1
 	[ -f "$DATEINAME" ]
 	return $?
 }
 
-### !  mapdel, loescht die Map-Karten. # Aufruf: mapdel Verzeichnis
+##
+ #* mapdel.
+ # loescht die Map-Karten.
+ # Aufruf: mapdel Verzeichnis
+ # 
+ #? @param $VERZEICHNIS.
+ #? @return $VERZEICHNIS.
+##
 function mapdel() {
 	VERZEICHNIS=$1
 	if [ -d "$VERZEICHNIS" ]; then
@@ -1555,7 +1971,14 @@ function mapdel() {
 	fi
 }
 
-### !  logdel, loescht die Log Dateien. # Aufruf: logdel Verzeichnis
+##
+ #* logdel.
+ # loescht die Log Dateien. 
+ # Aufruf: logdel Verzeichnis
+ # 
+ #? @param $VERZEICHNIS.
+ #? @return $VERZEICHNIS.
+##
 function logdel() {
 	VERZEICHNIS=$1
 	if [ -d "$VERZEICHNIS" ]; then
@@ -1568,7 +1991,14 @@ function logdel() {
 	return 0
 }
 
-### !  rologdel, loescht die Log Dateien. # Aufruf: rologdel
+##
+ #* rologdel.
+ # loescht die Log Dateien. 
+ # Aufruf: rologdel
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function rologdel() {
 
 	if [ -d /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS ]; then	
@@ -1607,7 +2037,13 @@ function rologdel() {
 	return 0
 }
 
-### !  menumapdel, loescht die Log Dateien. # Aufruf: mapdel Verzeichnis
+##
+ #* menumapdel.
+ # loescht die Log Dateien.
+ # 
+ #? @param dialog.
+ #? @return dialog.
+##
 function menumapdel() {
 	### dialog Aktionen
 	# zuerst schauen ob dialog installiert ist
@@ -1635,7 +2071,13 @@ function menumapdel() {
 	hauptmenu
 }
 
-### !  logdel, loescht die Log Dateien. # Aufruf: logdel Verzeichnis
+##
+ #* menulogdel.
+ # loescht die Log Dateien.
+ # 
+ #? @param dialog.
+ #? @return dialog.
+##
 function menulogdel() {
 	### dialog Aktionen
 	# zuerst schauen ob dialog installiert ist
@@ -1663,7 +2105,14 @@ function menulogdel() {
 	hauptmenu
 }
 
-### !  assetcachedel, loescht die asset cache Dateien. # Aufruf: assetcachedel Verzeichnis
+##
+ #* assetcachedel.
+ # loescht die asset cache Dateien. 
+ # Aufruf: assetcachedel Verzeichnis
+ # 
+ #? @param $VERZEICHNIS.
+ #? @return $VERZEICHNIS.
+##
 # assetdel.sh sim1
 # Das Verzeichnis samt neuer Daten werden beim naechsten start des opensimulator neu geschrieben.
 function assetcachedel() {
@@ -1678,7 +2127,13 @@ function assetcachedel() {
 	return 0
 }
 
-### !  autoassetcachedel, automatisches loeschen aller asset cache Dateien.
+##
+ #* autoassetcachedel.
+ # automatisches loeschen aller asset cache Dateien.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 # Die Verzeichnisse samt neuer Daten werden beim naechsten start des opensimulator neu geschrieben.
 function autoassetcachedel() {
 	#log line
@@ -1692,7 +2147,13 @@ function autoassetcachedel() {
 	return 0
 }
 
-### !  ossettings, stellt den Linux Server fuer OpenSim ein.
+##
+ #* ossettings.
+ # stellt den Linux Server fuer OpenSim ein.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function ossettings() {
 	log line
 	# Hier kommen alle gewuenschten Einstellungen rein.
@@ -1728,7 +2189,14 @@ function ossettings() {
 	return 0
 }
 
-### !  osstart, startet Region Server. # Beispiel-Example: bash osmtool.sh osstart sim1
+##
+ #* osstart.
+ # startet Region Server. 
+ # Beispiel-Example: bash osmtool.sh osstart sim1
+ # 
+ #? @param $OSSTARTSCREEN.
+ #? @return nichts wird zurueckgegeben.
+##
 function osstart() {
 	OSSTARTSCREEN=$1 # OpenSimulator, Verzeichnis und Screen Name
 
@@ -1761,7 +2229,14 @@ function osstart() {
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then hauptmenu; fi
 }
 
-### !  osstop, stoppt Region Server. # Beispiel-Example: bash osmtool.sh osstop sim1
+##
+ #* osstop.
+ # stoppt Region Server. 
+ # Beispiel-Example: bash osmtool.sh osstop sim1
+ # 
+ #? @param $OSSTOPSCREEN.
+ #? @return nichts wird zurueckgegeben.
+##
 function osstop() {
 	OSSTOPSCREEN=$1 # OpenSimulator, Verzeichnis und Screen Name
 	if screen -list | grep -q "$OSSTOPSCREEN"; then
@@ -1777,6 +2252,13 @@ function osstop() {
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then hauptmenu; fi
 }
 
+##
+ #* menuosstart.
+ # startet Region Server.
+ # 
+ #? @param dialog.
+ #? @return dialog.
+##
 ### !  menuosstart() ist die dialog Version von osstart()
 function menuosstart() {
 	IOSSTARTSCREEN=$(
@@ -1840,6 +2322,13 @@ function menuosstart() {
 	# hauptmenu
 }
 
+##
+ #* menuosstop.
+ # stoppt Region Server.
+ # 
+ #? @param dialog.
+ #? @return dialog.
+##
 ### !  menuosstop() ist die dialog Version von osstop()
 function menuosstop() {
 	IOSSTOPSCREEN=$(
@@ -1870,7 +2359,13 @@ function menuosstop() {
 	fi
 }
 
-### !  rostart, Robust starten.
+##
+ #* rostart.
+ # Robust Server starten.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function rostart() {
 	log line
 	if checkfile /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/Robust.exe; then
@@ -1892,7 +2387,14 @@ function rostart() {
 		return 1
 	fi
 }
-### ! menurostart
+
+##
+ #* menurostart.
+ # Robust Server starten.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function menurostart() {
 	# log line
 	if checkfile /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/Robust.exe; then
@@ -1913,16 +2415,27 @@ function menurostart() {
 	fi
 }
 
-##################################################################################################
-
-### !  osstarteintrag fuegt der osmsimlist.ini einen Region Simulator hinzu und sortiert diese.
+##
+ #* osstarteintrag.
+ # Fuegt der osmsimlist.ini einen Region Simulator hinzu und sortiert diese.
+ # 
+ #? @param $OSEINTRAG.
+ #? @return nichts wird zurueckgegeben.
+##
 function osstarteintrag() {
 	OSEINTRAG=$1 # OpenSimulator, Verzeichnis und Screen Name
 	log info "OpenSimulator $OSEINTRAG wird der Datei $SIMDATEI hinzugefuegt!"
 	sed -i '1s/.*$/'"$OSEINTRAG"'\n&/g' /"$STARTVERZEICHNIS"/$SIMDATEI
 	sort /"$STARTVERZEICHNIS"/$SIMDATEI -o /"$STARTVERZEICHNIS"/$SIMDATEI
 }
-### !  menuosstarteintrag ist die dialog Version von osstarteintrag
+
+##
+ #* menuosstarteintrag.
+ # Fuegt der osmsimlist.ini einen Region Simulator hinzu und sortiert diese.
+ # 
+ #? @param dialog.
+ #? @return dialog.
+##
 function menuosstarteintrag() {
 	MENUOSEINTRAG=$(
 		dialog --backtitle "opensimMULTITOOL $VERSION" --title "opensimMULTITOOL Eingabe" \
@@ -1939,14 +2452,27 @@ function menuosstarteintrag() {
 	dateimenu
 }
 
-### !  osstarteintragdel entfernt einen Region Simulator aus  der osmsimlist.ini und sortiert diese.
+##
+ #* osstarteintragdel.
+ # entfernt einen Region Simulator aus  der osmsimlist.ini und sortiert diese.
+ # 
+ #? @param $OSEINTRAGDEL.
+ #? @return nichts wird zurueckgegeben.
+##
 function osstarteintragdel() {
 	OSEINTRAGDEL=$1 # OpenSimulator, Verzeichnis und Screen Name
 	log info "OpenSimulator $OSEINTRAGDEL wird aus der Datei $SIMDATEI entfernt!"
 	sed -i '/'"$OSEINTRAGDEL"'/d' /"$STARTVERZEICHNIS"/$SIMDATEI
 	sort /"$STARTVERZEICHNIS"/$SIMDATEI -o /"$STARTVERZEICHNIS"/$SIMDATEI
 }
-### !  menuosstarteintragdel ist die dialog Version von osstarteintragdel
+
+##
+ #* menuosstarteintragdel.
+ # entfernt einen Region Simulator aus  der osmsimlist.ini und sortiert diese.
+ # 
+ #? @param dialog.
+ #? @return dialog.
+##
 function menuosstarteintragdel() {
 	MENUOSEINTRAGDEL=$(
 		dialog --backtitle "opensimMULTITOOL $VERSION" --title "opensimMULTITOOL Eingabe" \
@@ -1963,9 +2489,14 @@ function menuosstarteintragdel() {
 	dateimenu
 }
 
-
-
-### !  osdauerstop, stoppt Region Server. # Beispiel-Example: bash osmtool.sh osdauerstop sim1
+##
+ #* osdauerstop.
+ # stoppt Region Server und aus der Startliste loeschen. 
+ # Beispiel-Example: bash osmtool.sh osdauerstop sim1
+ # 
+ #? @param $OSDAUERSTOPSCREEN.
+ #? @return nichts wird zurueckgegeben.
+##
 function osdauerstop() {
 	OSDAUERSTOPSCREEN=$1 # OpenSimulator, Verzeichnis und Screen Name
 	if screen -list | grep -q "$OSDAUERSTOPSCREEN"; then
@@ -1984,7 +2515,13 @@ function osdauerstop() {
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then hauptmenu; fi
 }
 
-### !  menuosdauerstop() ist die dialog Version von osdauerstop()
+##
+ #* menuosdauerstop.
+ # stoppt Region Server und aus der Startliste loeschen.
+ # 
+ #? @param dialog.
+ #? @return dialog.
+##
 function menuosdauerstop() {
 	IOSDAUERSTOPSCREEN=$(
 		dialog --backtitle "opensimMULTITOOL $VERSION" --title "opensimMULTITOOL Eingabe" \
@@ -2018,7 +2555,14 @@ function menuosdauerstop() {
 	fi
 }
 
-### !  osdauerstart, startet Region Server. # Beispiel-Example: bash osmtool.sh osdauerstart sim1
+##
+ #* osdauerstart.
+ # startet Region Server und setzt ihn in die Startkonfiguration.
+ # Beispiel-Example: bash osmtool.sh osdauerstart sim1
+ # 
+ #? @param $OSDAUERSTARTSCREEN.
+ #? @return nichts wird zurueckgegeben.
+##
 function osdauerstart() {
 	OSDAUERSTARTSCREEN=$1 # OpenSimulator, Verzeichnis und Screen Name
 	osstarteintrag "$OSDAUERSTARTSCREEN"
@@ -2052,7 +2596,13 @@ function osdauerstart() {
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then hauptmenu; fi
 }
 
-### !  menuosdauerstart() ist die dialog Version von osdauerstart()
+##
+ #* menuosdauerstart.
+ # startet Region Server und setzt ihn in die Startkonfiguration.
+ # 
+ #? @param dialog.
+ #? @return dialog.
+##
 function menuosdauerstart() {
 	IOSDAUERSTARTSCREEN=$(
 		dialog --backtitle "opensimMULTITOOL $VERSION" --title "opensimMULTITOOL Eingabe" \
@@ -2119,9 +2669,13 @@ function menuosdauerstart() {
 
 }
 
-##################################################################################################
-
-### !  rostop, Robust herunterfahren.
+##
+ #* rostop.
+ # Robust herunterfahren.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function rostop() {
 	if screen -list | grep -q "RO"; then
 		screen -S RO -p 0 -X eval "stuff 'shutdown'^M"
@@ -2133,7 +2687,14 @@ function rostop() {
 		return 1
 	fi
 }
-### !  menurostop, Robust herunterfahren.
+
+##
+ #* menurostop.
+ # Robust herunterfahren.
+ # 
+ #? @param dialog.
+ #? @return dialog.
+##
 function menurostop() {
 	if screen -list | grep -q "RO"; then
 		screen -S RO -p 0 -X eval "stuff 'shutdown'^M"
@@ -2144,7 +2705,13 @@ function menurostop() {
 	fi
 }
 
-### !  mostart, Money starten.
+##
+ #* mostart.
+ # Money Server starten.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function mostart() {
 	if checkfile /$STARTVERZEICHNIS/$MONEYVERZEICHNIS/bin/MoneyServer.exe; then
 		cd /$STARTVERZEICHNIS/$MONEYVERZEICHNIS/bin || return 1
@@ -2164,7 +2731,13 @@ function mostart() {
 	fi
 }
 
-### !  menumostart, Money starten.
+##
+ #* menumostart.
+ # Money Server starten.
+ # 
+ #? @param dialog.
+ #? @return dialog.
+##
 function menumostart() {
 	if checkfile /$STARTVERZEICHNIS/$MONEYVERZEICHNIS/bin/MoneyServer.exe; then
 		cd /$STARTVERZEICHNIS/$MONEYVERZEICHNIS/bin || return 1
@@ -2187,7 +2760,13 @@ function menumostart() {
 	fi
 }
 
-### !  mostop, Money herunterfahren.
+##
+ #* mostop.
+ # Money Server herunterfahren.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function mostop() {
 	if screen -list | grep -q "MO"; then
 		screen -S MO -p 0 -X eval "stuff 'shutdown'^M"
@@ -2199,6 +2778,14 @@ function mostop() {
 		return 1
 	fi
 }
+
+##
+ #* menumostop.
+ # Money Server herunterfahren.
+ # 
+ #? @param dialog.
+ #? @return dialog.
+##
 ### !  menumostop, Money herunterfahren.
 function menumostop() {
 	if screen -list | grep -q "MO"; then
@@ -2212,7 +2799,14 @@ function menumostop() {
 	fi
 }
 
-### !  osscreenstop, beendet ein Screeen. # Beispiel-Example: osscreenstop sim1
+##
+ #* osscreenstop.
+ # beendet ein Screeen. 
+ # Beispiel-Example: osscreenstop sim1
+ # 
+ #? @param $SCREENSTOPSCREEN.
+ #? @return nichts wird zurueckgegeben.
+##
 function osscreenstop() {
 	SCREENSTOPSCREEN=$1
 	if screen -list | grep -q "$SCREENSTOPSCREEN"; then
@@ -2226,7 +2820,13 @@ function osscreenstop() {
 	log text "No screen session found. Ist hier kein Fehler, sondern ein Beweis, das alles zuvor sauber heruntergefahren wurde."
 }
 
-### !  gridstart, startet erst Robust und dann Money.
+##
+ #* gridstart.
+ # startet erst Robust und dann Money.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function gridstart() {
 	ossettings
 	if screen -list | grep -q RO; then
@@ -2241,7 +2841,14 @@ function gridstart() {
 	fi
 	return 0
 }
-### ! menugridstart
+
+##
+ #* menugridstart.
+ # startet erst Robust und dann Money.
+ # 
+ #? @param dialog.
+ #? @return dialog.
+##
 function menugridstart() {
 	ossettings
 	log line
@@ -2257,7 +2864,14 @@ function menugridstart() {
 	fi
 }
 
-### !  simstats, zeigt Simstatistik an. # simstats screen_name
+##
+ #* simstats.
+ # zeigt Simstatistik an. 
+ # simstats screen_name
+ # 
+ #? @param $STATSSCREEN.
+ #? @return nichts wird zurueckgegeben.
+##
 # Beispiel-Example: simstats sim1
 # erzeugt im Hauptverzeichnis eine Datei namens sim1.log in dieser Datei ist die Statistik zu finden.
 function simstats() {
@@ -2276,7 +2890,13 @@ function simstats() {
 	return 0
 }
 
-### !  terminator, killt alle noch offene Screens.
+##
+ #* terminator.
+ # killt alle noch offene Screens.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function terminator() {
 	log info "hasta la vista baby"
 	log warn "TERMINATOR: Alle Screens wurden durch Benutzer beendet"
@@ -2285,12 +2905,16 @@ function terminator() {
 	return 0
 }
 
-### !  oscompi, kompilieren des OpenSimulator.
+##
+ #* oscompi.
+ # kompilieren des OpenSimulator.
+ # 
+ #? @param $netversion.
+ #? @return nichts wird zurueckgegeben.
+##
 function oscompi() {
 	# Wenn keine Einstellung vorhanden ist dann VS2019 mit mono 4.6
-	if [[ "$netversion" = "" ]]; then
-		netversion="1946"
-	fi
+	if [[ "$netversion" = "" ]]; then netversion="1946"; fi
 
 	log info " Kompilierungsvorgang startet"
 	# In das opensim Verzeichnis wechseln wenn es das gibt ansonsten beenden.
@@ -2410,7 +3034,13 @@ function oscompi() {
 	return 0
 }
 
-### !  gitcopy, Dateien vom Github kopieren.
+##
+ #* moneygitcopy.
+ # Money Server Source Dateien vom Github kopieren.
+ # 
+ #? @param $MONEYCOPY.
+ #? @return nichts wird zurueckgegeben.
+##
 function moneygitcopy() {
 	#Money und Scripte vom Git holen
 
@@ -2423,7 +3053,13 @@ function moneygitcopy() {
 	return 0
 }
 
-### !  gitcopy, Dateien vom Github kopieren.
+##
+ #* scriptgitcopy.
+ # Script Assets Dateien vom Github kopieren.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function scriptgitcopy() {
 	#Money und Scripte vom Git holen
 	if [[ $SCRIPTCOPY = "yes" ]]; then
@@ -2435,19 +3071,13 @@ function scriptgitcopy() {
 	return 0
 }
 
-### !  gitcopy, Dateien vom Github kopieren.
-function searchgitcopy() {
-	#OpenSimSearch vom Git holen
-	if [[ $OSSEARCHCOPY = "yes" ]]; then
-		log info "COPY: OpenSimSearch wird vom GIT geholt"
-		git clone https://github.com/BigManzai/OpenSimSearch
-	# else
-	# 	log info "COPY: OpenSimSearch ist nicht vorhanden"
-	fi
-	return 0
-}
-
-### !  scriptcopy, lsl ossl scripte kopieren.
+##
+ #* scriptcopy.
+ # lsl ossl scripte kopieren.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function scriptcopy() {
 	if [[ $SCRIPTCOPY = "yes" ]]; then
 		if [ -d /$STARTVERZEICHNIS/$SCRIPTSOURCE/ ]; then
@@ -2470,7 +3100,13 @@ function scriptcopy() {
 	return 0
 }
 
-### !  moneycopy, Money Dateien kopieren.
+##
+ #* moneycopy.
+ # Money Server Dateien kopieren.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function moneycopy() {
 	if [[ $MONEYCOPY = "yes" ]]; then
 		if [ -d /$STARTVERZEICHNIS/$MONEYSOURCE/ ]; then
@@ -2492,71 +3128,13 @@ function moneycopy() {
 	return 0
 }
 
-### !  pythoncopy, Plugin Daten kopieren.
-function pythoncopy() {
-	if [[ $PYTHONCOPY = "yes" ]]; then
-		if [ -d /$STARTVERZEICHNIS/OpensimPython/ ]; then
-			log info "PYTHONCOPY: python wird kopiert"
-			cp -r /$STARTVERZEICHNIS/OpensimPython /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/addon-modules
-		else
-			log warn "PYTHONCOPY: python ist nicht vorhanden"
-		fi
-	# else
-	# 	log warn "PYTHONCOPY: Python wird nicht kopiert."
-	fi
-	return 0
-}
-
-### !  searchcopy, Plugin Daten kopieren.
-function searchcopy() {
-	if [[ $SEARCHCOPY = "yes" ]]; then
-		if [ -d /$STARTVERZEICHNIS/OpenSimSearch/ ]; then
-			log info "OpenSimSearch: python wird kopiert"
-			cp -r /$STARTVERZEICHNIS/OpenSimSearch /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/addon-modules
-			log line
-		else
-			log info "OpenSimSearch: python ist nicht vorhanden"
-		fi
-	# else
-	# 	log info "OpenSimSearch: OpenSimSearch wird nicht kopiert."
-	fi
-	return 0
-}
-
-### !  mutelistcopy, Plugin Daten kopieren.
-function mutelistcopy() {
-	if [[ $MUTELISTCOPY = "yes" ]]; then
-		if [ -d /$STARTVERZEICHNIS/OpenSimMutelist/ ]; then
-			log info "OpenSimMutelist: python wird kopiert"
-			cp -r /$STARTVERZEICHNIS/OpenSimMutelist /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/addon-modules
-			log line
-		else
-			log error "OpenSimMutelist: python ist nicht vorhanden"
-		fi
-	# else
-	# 	log warn "OpenSimMutelist: OpenSimMutelist wird nicht kopiert."
-	fi
-	return 0
-}
-
-### !  chrisoscopy, Plugin Dateien kopieren.
-function chrisoscopy() {
-	if [[ $CHRISOSCOPY = "yes" ]]; then
-		# /$STARTVERZEICHNIS/Chris.OS.Additions
-		if [ -d /$STARTVERZEICHNIS/Chris.OS.Additions/ ]; then
-			log info "CHRISOSCOPY: Chris.OS.Additions Kopiervorgang gestartet"
-			cp -r /$STARTVERZEICHNIS/Chris.OS.Additions /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/addon-modules
-			log line
-		else
-			log error "CHRISOSCOPY: Chris.OS.Additions ist nicht vorhanden"
-		fi
-	# else
-	# 	log warn "CHRISOSCOPY: Chris.OS.Additions werden nicht kopiert."
-	fi
-	return 0
-}
-
-### !  makeaot, aot generieren.
+##
+ #* makeaot.
+ # aot generieren.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function makeaot() {
 	if [ ! -f "/$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/" ]; then
 		cd /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin || exit
@@ -2580,7 +3158,13 @@ function makeaot() {
 	return 0
 }
 
-### !  cleanaot, aot entfernen. Test
+##
+ #* cleanaot.
+ # aot entfernen.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function cleanaot() {
 	if [ ! -f "/$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/" ]; then
 		cd /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin || exit
@@ -2606,27 +3190,35 @@ function cleanaot() {
 	return 0
 }
 
-### !  osprebuild, Prebuild einstellen # Aufruf Beispiel: osmtool.sh prebuild 1330.
-# Ergebnis ist eine Einstellung fuer Release mit dem Namn OpenSim 0.9.2.1330
-# sed -i schreibt sofort - s/Suchwort/Ersatzwort/g - /Verzeichnis/Dateiname.Endung
+##
+ #* osprebuild.
+ # Prebuild erstellen 
+ # Aufruf Beispiel: osmtool.sh prebuild 1330.
+ # 
+ #? @param $NUMMER.
+ #? @return nichts wird zurueckgegeben.
+##
 function osprebuild() {
 	NUMMER=$1
 	log info "OpenSim Version umbenennen und Release auf $NUMMER einstellen"
 
 	echo "V$NUMMER " >/$STARTVERZEICHNIS/opensim/bin/'.version'
 
-	# Nummer einfuegen
-	#sed -i s/0.9.2.1/0.9.2.1."$NUMMER"/g /$STARTVERZEICHNIS/opensim/OpenSim/Framework/VersionInfo.cs
-	# Release setzen
-	#sed -i s/Flavour.Dev/Flavour.Release/g /$STARTVERZEICHNIS/opensim/OpenSim/Framework/VersionInfo.cs
-	# Yeti loeschen
+	# sed -i schreibt sofort - s/Suchwort/Ersatzwort/g - /Verzeichnis/Dateiname.Endung
 	sed -i s/Yeti//g /$STARTVERZEICHNIS/opensim/OpenSim/Framework/VersionInfo.cs
 	# flavour loeschen
 	sed -i s/' + flavour'//g /$STARTVERZEICHNIS/opensim/OpenSim/Framework/VersionInfo.cs
 	return 0
 }
 
-### !  osstruktur, legt die Verzeichnisstruktur fuer OpenSim an. # Aufruf: osmtool.sh osstruktur ersteSIM letzteSIM
+##
+ #* osstruktur.
+ # legt die Verzeichnisstruktur fuer OpenSim an. 
+ # Aufruf: osmtool.sh osstruktur ersteSIM letzteSIM.
+ # 
+ #? @param ersteSIM letzteSIM.
+ #? @return nichts wird zurueckgegeben.
+##
 # Beispiel: ./osmtool.sh osstruktur 1 10 - erstellt ein Grid Verzeichnis fuer 10 Simulatoren inklusive der $SIMDATEI.
 function osstruktur() {
 	if [ ! -f "/$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/" ]; then
@@ -2646,7 +3238,13 @@ function osstruktur() {
 	return 0
 }
 
-### !  menuosstruktur() ist die dialog Version von osstruktur()
+##
+ #* menuosstruktur.
+ # legt die Verzeichnisstruktur fuer OpenSim an.
+ # 
+ #? @param dialog.
+ #? @return dialog.
+##
 function menuosstruktur() {
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
@@ -2692,7 +3290,13 @@ function menuosstruktur() {
 	return 0
 }
 
-### !  osdelete, altes opensim loeschen und letztes opensim als Backup umbenennen.
+##
+ #* osdelete.
+ # altes opensim loeschen und letztes opensim als Backup umbenennen.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function osdelete() {
 	if [ -d /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/ ]; then
 		log info "Loesche altes opensim1 Verzeichnis"
@@ -2708,8 +3312,14 @@ function osdelete() {
 	return 0
 }
 
-### !  oscopyrobust, Robust Daten kopieren.
-# bash osmtools.sh oscopyrobust
+##
+ #* oscopyrobust.
+ # Robust Daten kopieren.
+ # bash osmtools.sh oscopyrobust
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function oscopyrobust() {
 	cd /$STARTVERZEICHNIS || return 1
 	if [ -d /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/ ]; then
@@ -2726,8 +3336,14 @@ function oscopyrobust() {
 	return 0
 }
 
-### !  oscopysim, Simulatoren kopieren aus dem Verzeichnis opensim.
-# bash osmtools.sh oscopysim
+##
+ #* oscopysim.
+ # Simulatoren kopieren aus dem Verzeichnis opensim.
+ # bash osmtools.sh oscopysim
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function oscopysim() {
 	cd /$STARTVERZEICHNIS || return 1 # Prüfen ob Verzeichnis vorhanden ist.
 	makeverzeichnisliste
@@ -2743,8 +3359,14 @@ function oscopysim() {
 	return 0
 }
 
-### !  oscopysim, Simulator kopieren aus dem Verzeichnis opensim.
-# bash osmtools.sh oscopy sim1
+##
+ #* oscopy.
+ # Simulator kopieren aus dem Verzeichnis opensim.
+ # bash osmtools.sh oscopy sim1
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function oscopy() {
 	cd /$STARTVERZEICHNIS || return 1
 	VERZEICHNIS=$1
@@ -2754,7 +3376,14 @@ function oscopy() {
 	return 0
 }
 
-### !  configlesen, Regionskonfigurationen lesen. # Beispiel: configlesen sim1
+##
+ #* configlesen.
+ # Regionskonfigurationen lesen. 
+ # Beispiel: configlesen sim1
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function configlesen() {
 	log info "CONFIGLESEN: Regionskonfigurationen von $CONFIGLESENSCREEN"
 	CONFIGLESENSCREEN=$1
@@ -2763,8 +3392,14 @@ function configlesen() {
 	return 0
 }
 
-### !  regionsconfigdateiliste, schreibt Dateinamen mit Pfad in eine Datei.
-# regionsconfigdateiliste -b(Bildschirm) -d(Datei)  Vereichnis
+##
+ #* regionsconfigdateiliste.
+ # schreibt Dateinamen mit Pfad in eine Datei.
+ # regionsconfigdateiliste -b(Bildschirm) -d(Datei)  Vereichnis
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function regionsconfigdateiliste() {
 	VERZEICHNIS=$1
 	declare -A Dateien # Array erstellen
@@ -2777,7 +3412,13 @@ function regionsconfigdateiliste() {
 	return 0
 }
 
-### !  meineregionen, listet alle Regionen aus den Konfigurationen auf.
+##
+ #* meineregionen.
+ # listet alle Regionen aus den Konfigurationen auf.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function meineregionen() {
 	makeverzeichnisliste
 	log info "MEINEREGIONEN: Regionsliste"
@@ -2792,7 +3433,13 @@ function meineregionen() {
 	return 0
 }
 
-### !  regionsinisuchen, sucht alle Regionen.
+##
+ #* regionsinisuchen.
+ # sucht alle Regionen.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function regionsinisuchen() {
 	makeverzeichnisliste
 	sleep 2
@@ -2810,7 +3457,13 @@ function regionsinisuchen() {
 	return 0
 }
 
-### !  get_regionsarray, gibt ein Array aller Regionsabschnitte zurueck.
+##
+ #* get_regionsarray.
+ # gibt ein Array aller Regionsabschnitte zurueck.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function get_regionsarray() {
 	# Es fehlt eine pruefung ob Datei vorhanden ist.
 	DATEI=$1
@@ -2828,8 +3481,14 @@ function get_regionsarray() {
 	return 0
 }
 
-### !  get_value_from_Region_key, gibt den Wert eines bestimmten Schluessels im angegebenen Abschnitt zurueck.
-# $1 - Datei - $2 - Schluessel - $3 - Sektion
+##
+ #* get_value_from_Region_key.
+ # gibt den Wert eines bestimmten Schluessels im angegebenen Abschnitt zurueck.
+ # $1 - Datei - $2 - Schluessel - $3 - Sektion
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function get_value_from_Region_key() {
 	# RKDATEI=$1; RKSCHLUESSEL=$2; RKSEKTION=$3;
 	# Es fehlt eine pruefung ob Datei vorhanden ist.
@@ -2839,9 +3498,14 @@ function get_value_from_Region_key() {
 	return 0
 }
 
-### ! Regions.ini zerlegen
-## Funktion regionsiniteilen, holt aus der Regions.ini eine Region heraus und speichert sie mit ihrem Regionsnamen.
-# Aufruf: regionsiniteilen Verzeichnis Regionsname
+##
+ #* regionsiniteilen.
+ # holt aus der Regions.ini eine Region heraus und speichert sie mit ihrem Regionsnamen.
+ # Aufruf: regionsiniteilen Verzeichnis Regionsname
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function regionsiniteilen() {
 	INIVERZEICHNIS=$1                                                     # Auszulesendes Verzeichnis
 	RTREGIONSNAME=$2                                                      # Auszulesende Region
@@ -2884,8 +3548,14 @@ function regionsiniteilen() {
 	return 0
 }
 
-### !  autoregionsiniteilen, Die gemeinschaftsdatei Regions.ini in einzelne Regionen teilen.
-# diese dann unter dem Regionsnamen speichern, danach die Alte Regions.ini umbenennen in Regions.ini.old.
+##
+ #* autoregionsiniteilen.
+ # Die gemeinschaftsdatei Regions.ini in einzelne Regionen teilen.
+ # diese dann unter dem Regionsnamen speichern, danach die Alte Regions.ini umbenennen in Regions.ini.old.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function autoregionsiniteilen() {
 	makeverzeichnisliste
 	sleep 2
@@ -2913,6 +3583,13 @@ function autoregionsiniteilen() {
 	return 0
 }
 
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 ### !  regionliste, Die RegionListe ermitteln und mit dem Verzeichnisnamen in die osmregionlist.ini schreiben.
 function regionliste() {
 	# Alte osmregionlist.ini sichern und in osmregionlist.ini.old umbenennen.
@@ -2948,7 +3625,13 @@ function regionliste() {
 	return 0
 }
 
-### !  makewebmaps
+##
+ #* makewebmaps.
+ # Kopiere Maptile nach html fuer Webanzeige.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function makewebmaps() {
 	MAPTILEVERZEICHNIS="maptiles"
 	log info "MAKEWEBMAPS: Kopiere Maptile"
@@ -2959,7 +3642,13 @@ function makewebmaps() {
 	return 0
 }
 
-### !  moneydelete, loescht den MoneyServer ohne die OpenSim Config zu veraendern.
+##
+ #* moneydelete.
+ # loescht den MoneyServer ohne die OpenSim Config zu veraendern.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function moneydelete() {
 	makeverzeichnisliste
 	sleep 2
@@ -2985,7 +3674,13 @@ function moneydelete() {
 	return 0
 }
 
-### !  osgitholen, kopiert eine Entwicklerversion in das opensim Verzeichnis.
+##
+ #* osgitholen.
+ # kopiert eine Entwicklerversion in das opensim Verzeichnis.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function osgitholen() {
 	if [ -d /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/ ]; then
 		echo "$(tput setaf 1) $(tput setaf 7)Kopieren der Entwicklungsversion des OpenSimulator aus dem Git$(tput sgr 0)"
@@ -3004,7 +3699,13 @@ function osgitholen() {
 	return 0
 }
 
-### !  opensimholen, holt den OpenSimulator in das Arbeitsverzeichnis.
+##
+ #* opensimholen.
+ # holt den OpenSimulator in das Arbeitsverzeichnis.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function opensimholen() {
 	if [ -d /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/ ]; then
 		log info "Kopieren des OpenSimulator in das Arbeitsverzeichnis"
@@ -3033,7 +3734,13 @@ function opensimholen() {
 	return 0
 }
 
-### !Installation von mysqltuner
+##
+ #* install_mysqltuner.
+ # Installation von mysqltuner.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function install_mysqltuner() {
 	cd /$STARTVERZEICHNIS || return 1
 	log info "mySQL Tuner Download"
@@ -3044,8 +3751,14 @@ function install_mysqltuner() {
 	return 0
 }
 
-### !  regionbackup, backup einer Region.
-# regionbackup Screenname "Der Regionsname"
+##
+ #* regionbackup.
+ # backup einer Region.
+ # regionbackup Screenname "Der Regionsname"
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function regionbackup() {
 	# Backup Verzeichnis anlegen.
 	mkdir -p /$STARTVERZEICHNIS/backup/
@@ -3082,7 +3795,13 @@ function regionbackup() {
 	return 0
 }
 
-### !  menuregionbackup() ist die dialog Version von regionbackup()
+##
+ #* menuregionbackup.
+ # ist die dialog Version von regionbackup().
+ # 
+ #? @param dialog.
+ #? @return dialog.
+##
 function menuregionbackup() {
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
@@ -3144,10 +3863,17 @@ function menuregionbackup() {
 	return 0
 }
 
-### !  regionrestore, hochladen einer Region.
-# regionrestore Screenname "Der Regionsname"
-# Ich kann nicht pruefen ob die Region im OpenSimulator vorhanden ist.
-# Sollte sie nicht vorhanden sein wird root (Alle) oder die letzte ausgewaehlte Region wiederhergestellt. Dies zerstoert eventuell vorhandene Regionen.
+##
+ #* regionrestore.
+ # hochladen einer Region.
+ # regionrestore Screenname "Der Regionsname"
+ # Ich kann nicht pruefen ob die Region im OpenSimulator vorhanden ist.
+ # Sollte sie nicht vorhanden sein wird root (Alle) oder die letzte ausgewaehlte Region wiederhergestellt. 
+ # Dies zerstoert eventuell vorhandene Regionen.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function regionrestore() {
 	RESTOREVERZEICHNISSCREENNAME=$1
 	REGIONSNAME=$2
@@ -3166,6 +3892,16 @@ function regionrestore() {
 	return 0
 }
 
+##
+ #* menuregionrestore.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # Ich kann nicht pruefen ob die Region im OpenSimulator vorhanden ist.
+ # Sollte sie nicht vorhanden sein wird root (Alle) oder die letzte ausgewaehlte Region wiederhergestellt. 
+ # Dies zerstoert eventuell vorhandene Regionen.
+ # 
+ #? @param dialog.
+ #? @return dialog.
+##
 ### !  menuregionrestore() ist die dialog Version von regionrestore()
 function menuregionrestore() {
 	# zuerst schauen ob dialog installiert ist
@@ -3210,7 +3946,13 @@ function menuregionrestore() {
 	return 0
 }
 
-### !  autosimstart, automatischer sim start ohne Robust und Money.
+##
+ #* autosimstart.
+ # automatischer sim start ohne Robust und Money.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function autosimstart() {
 	if ! screen -list | grep -q 'sim'; then
 		# es laeuft kein Simulator - not work
@@ -3243,7 +3985,13 @@ function autosimstart() {
 	return 0
 }
 
-### !  autosimstop, stoppen aller laufenden Simulatoren.
+##
+ #* autosimstop.
+ # Stoppen aller laufenden Simulatoren.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function autosimstop() {
 	makeverzeichnisliste
 	sleep 2
@@ -3258,7 +4006,14 @@ function autosimstop() {
 	done
 	return 0
 }
-### !  autosimstart, automatischer sim start ohne Robust und Money.
+
+##
+ #* menuautosimstart.
+ # Starten aller Simulatoren.
+ # 
+ #? @param dialog.
+ #? @return dialog.
+##
 function menuautosimstart() {
 	if ! screen -list | grep -q 'sim'; then
 		# es laeuft kein Simulator - not work
@@ -3300,7 +4055,13 @@ function menuautosimstart() {
 	return 0
 }
 
-### !  autosimstop, stoppen aller laufenden Simulatoren.
+##
+ #* menuautosimstop.
+ # Stoppen aller laufenden Simulatoren.
+ # 
+ #? @param dialog.
+ #? @return dialog.
+##
 function menuautosimstop() {
 	makeverzeichnisliste
 	sleep 2
@@ -3325,7 +4086,13 @@ function menuautosimstop() {
 	return 0
 }
 
-### !  autologdel, automatisches loeschen aller log Dateien.
+##
+ #* autologdel.
+ # automatisches loeschen aller log Dateien.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 # Die Dateien samt neuer Daten werden beim naechsten start des opensimulator neu geschrieben.
 function autologdel() {
 	log line
@@ -3342,7 +4109,13 @@ function autologdel() {
 	return 0
 }
 
-### !  menuautologdel
+##
+ #* menuautologdel.
+ # automatisches loeschen aller log Dateien.
+ # 
+ #? @param dialog.
+ #? @return dialog.
+##
 function menuautologdel() {
 	log line
 	makeverzeichnisliste
@@ -3359,7 +4132,13 @@ function menuautologdel() {
 	rologdel
 }
 
-### !  automapdel, automatisches loeschen aller Map/Karten Dateien.
+##
+ #* automapdel.
+ # utomatisches loeschen aller Map/Karten Dateien.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 # Die Dateien samt neuer Daten werden beim naechsten start des opensimulator neu geschrieben.
 function automapdel() {
 	makeverzeichnisliste
@@ -3374,8 +4153,14 @@ function automapdel() {
 	return 0
 }
 
-### !  autorobustmapdel, automatisches loeschen aller Map/Karten Dateien in Robust.
-# Die Dateien samt neuer Daten werden beim naechsten start des opensimulator neu geschrieben.
+##
+ #* autorobustmapdel.
+ # automatisches loeschen aller Map/Karten Dateien in Robust.
+ # Die Dateien samt neuer Daten werden beim naechsten start des opensimulator neu geschrieben.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function autorobustmapdel() {
 	cd /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin || return 1
 	rm -r maptiles/* || log line
@@ -3383,7 +4168,13 @@ function autorobustmapdel() {
 	return 0
 }
 
-### !  cleaninstall, loeschen aller externen addon Module.
+##
+ #* cleaninstall.
+ # loeschen aller externen addon Module.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function cleaninstall() {
 
 	if [ ! -f "/$STARTVERZEICHNIS/opensim/addon-modules/" ]; then
@@ -3394,10 +4185,15 @@ function cleaninstall() {
 	return 0
 }
 
-### !  allclean, loescht Log, dll, so, exe, aot Dateien fuer einen saubere neue installation, ohne Robust.
-# Hierbei werden keine Datenbanken oder Konfigurationen geloescht aber opensim ist anschliessend nicht mehr startbereit.
-# Um opensim wieder Funktionsbereit zu machen muss ein Upgrade oder ein oscopy vorgang ausgefuehrt werden.
-# allclean Verzeichnis
+##
+ #* allclean.
+ # loescht Log, dll, so, exe, aot Dateien fuer einen saubere neue installation, ohne Robust.
+ # Hierbei werden keine Datenbanken oder Konfigurationen geloescht aber opensim ist anschliessend nicht mehr startbereit.
+ # Um opensim wieder Funktionsbereit zu machen muss ein Upgrade oder ein oscopy vorgang ausgefuehrt werden.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function allclean() {
 	ALLCLEANVERZEICHNIS=$1
 
@@ -3421,8 +4217,14 @@ function allclean() {
 	return 0
 }
 
-### ! gridcachedelete, loescht alle Cache Dateien die sich im laufe der Zeit angesammelt haben.
-# GRIDCACHECLEAR="yes"; ASSETCACHECLEAR="yes"; MAPTILESCLEAR="yes"; SCRIPTCLEAR="yes"; RMAPTILESCLEAR="yes"; RBAKESCLEAR="yes";
+##
+ #* gridcachedelete.
+ # loescht alle Cache Dateien die sich im laufe der Zeit angesammelt haben.
+ # GRIDCACHECLEAR="yes"; ASSETCACHECLEAR="yes"; MAPTILESCLEAR="yes"; SCRIPTCLEAR="yes"; RMAPTILESCLEAR="yes"; RBAKESCLEAR="yes";
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function gridcachedelete() {
 	log line
 	log warn "Lösche Cache Dateien aus dem gesamten Grid!"
@@ -3439,9 +4241,15 @@ function gridcachedelete() {
 	if [ "$RBAKESCLEAR" = "yes" ]; then  rm -r /$STARTVERZEICHNIS/robust/bin/bakes || echo " "; fi
 }
 
-### !  autoallclean, loescht Log, dll, so, exe, aot Dateien fuer einen saubere neue installation, mit Robust.
-# Hierbei werden keine Datenbanken oder Konfigurationen geloescht aber opensim ist anschliessend nicht mehr startbereit.
-# Um opensim wieder Funktionsbereit zu machen muss ein Upgrade oder ein oscopy vorgang ausgefuehrt werden.
+##
+ #* autoallclean.
+ # loescht Log, dll, so, exe, aot Dateien fuer einen saubere neue installation, mit Robust.
+ # Hierbei werden keine Datenbanken oder Konfigurationen geloescht aber opensim ist anschliessend nicht mehr startbereit.
+ # Um opensim wieder Funktionsbereit zu machen muss ein Upgrade oder ein oscopy vorgang ausgefuehrt werden.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function autoallclean() {
 	makeverzeichnisliste
 	sleep 2
@@ -3526,7 +4334,13 @@ function autoallclean() {
 	return 0
 }
 
-### !  autoregionbackup, automatischer Backup aller Regionen die in der Regionsliste eingetragen sind.
+##
+ #* autoregionbackup.
+ # automatischer Backup aller Regionen die in der Regionsliste eingetragen sind.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function autoregionbackup() {
 	log info "Automatisches Backup wird gestartet."
 	makeregionsliste
@@ -3540,7 +4354,13 @@ function autoregionbackup() {
 	return 0
 }
 
-### !  autoscreenstop, beendet alle laufenden simX screens.
+##
+ #* autoscreenstop.
+ # beendet alle laufenden simX screens.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function autoscreenstop() {
 	makeverzeichnisliste
 	sleep 2
@@ -3567,7 +4387,14 @@ function autoscreenstop() {
 	fi
 	return 0
 }
-### !  menuautoscreenstop
+
+##
+ #* menuautoscreenstop.
+ # beendet alle laufenden simX screens.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function menuautoscreenstop() {
 	makeverzeichnisliste
 	sleep 2
@@ -3595,7 +4422,13 @@ function menuautoscreenstop() {
 	return 0
 }
 
-### !  autostart, startet das komplette Grid mit allen sims.
+##
+ #* autostart.
+ # startet das komplette Grid mit allen sims.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function autostart() {
 	#log line
 	#log info "Starte das Grid!"
@@ -3610,7 +4443,13 @@ function autostart() {
 	return 0
 }
 
-### !  autostop, stoppt das komplette Grid mit allen sims.
+##
+ #* autostop.
+ # stoppt das komplette Grid mit allen sims.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function autostop() {
 	log warn "### Stoppe das Grid! ###"
 	# schauen ob screens laufen wenn ja beenden.
@@ -3641,7 +4480,13 @@ function autostop() {
 	return 0
 }
 
-### !  autostart, startet das komplette Grid mit allen sims.
+##
+ #* menuautostart.
+ # startet das komplette Grid mit allen sims.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function menuautostart() {
 	echo ""
 	if [[ $ROBUSTVERZEICHNIS == "robust" ]]; then
@@ -3654,7 +4499,13 @@ function menuautostart() {
 	return 0
 }
 
-### !  autostop, stoppt das komplette Grid mit allen sims.
+##
+ #* menuautostop.
+ # stoppt das komplette Grid mit allen sims.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function menuautostop() {
 	# schauen ob screens laufen wenn ja beenden.
 	if screen -list | grep -q 'sim'; then log info "Bitte warten..."; menuautosimstop; fi
@@ -3666,7 +4517,13 @@ function menuautostop() {
 	hauptmenu
 }
 
-### ! autorestart, startet das gesamte Grid neu und loescht die log Dateien.
+##
+ #* autorestart.
+ # startet das gesamte Grid neu und loescht die log Dateien.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function autorestart() {
 	autostop
 	if [ "$LOGDELETE" = "yes" ]; then autologdel; fi
@@ -3677,7 +4534,14 @@ function autorestart() {
 	log info "Auto Restart abgeschlossen."
 	return 0
 }
-### ! menuautorestart
+
+##
+ #* menuautorestart.
+ # startet das gesamte Grid neu und loescht die log Dateien.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function menuautorestart() {
 	autostop
 	if [ "$LOGDELETE" = "yes" ]; then autologdel; fi
@@ -3689,12 +4553,25 @@ function menuautorestart() {
 	menuinfo
 }
 
-### ! serverinstall, Ubuntu Server zum Betrieb von OpenSim vorbereiten.
+##
+ #* serverupgrade.
+ # Linux Server Updaten und Upgraden.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function serverupgrade() {
 	sudo apt-get update
 	sudo apt-get upgrade
 }
-### ! Installation oder Migration von MariaDB 10.8.3 oder hoeher fuer Ubuntu 18
+
+##
+ #* installmariadb18.
+ # Installation oder Migration von MariaDB 10.8.3 oder hoeher fuer Ubuntu 18.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function installmariadb18() {
 
 	log info "Installation oder Migration von MariaDB 10.8.3 oder hoeher fuer Ubuntu 18"
@@ -3713,7 +4590,13 @@ function installmariadb18() {
 	mariadb --version
 }
 
-### ! Installation oder Migration von MariaDB fuer Ubuntu 22
+##
+ #* installmariadb22.
+ # Installation oder Migration von MariaDB fuer Ubuntu 22.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function installmariadb22() {
 	# MySQL stoppen wenn es laeuft:
 	sudo service mysql stop
@@ -3725,8 +4608,13 @@ function installmariadb22() {
 	mariadb --version
 }
 
-### ! monoinstall18 alt
-### Funktion monoinstall, mono 6.x installieren.
+##
+ #* monoinstall.
+ # mono 6.x installieren.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function monoinstall() {
 	if dpkg-query -s mono-complete 2>/dev/null | grep -q installed; then
 		log info "mono-complete ist installiert."
@@ -3746,7 +4634,13 @@ function monoinstall() {
 	return 0
 }
 
-### ! monoinstall18
+##
+ #* monoinstall18.
+ # mono installation auf Ubuntu 18.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function monoinstall18() {
 	if dpkg-query -s mono-complete 2>/dev/null | grep -q installed; then
 		echo "mono-complete ist bereits installiert."
@@ -3764,7 +4658,13 @@ function monoinstall18() {
 	fi
 }
 
-### ! monoinstall20
+##
+ #* monoinstall20.
+ # mono installation auf Ubuntu 20.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function monoinstall20() {
 	if dpkg-query -s mono-complete 2>/dev/null | grep -q installed; then
 		echo "mono-complete ist bereits installiert."
@@ -3782,12 +4682,24 @@ function monoinstall20() {
 	fi
 }
 
-### ! monoinstall22
+##
+ #* monoinstall22.
+ # mono installation auf Ubuntu 22.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function monoinstall22() {
 	sudo apt install mono-roslyn mono-complete mono-dbg mono-xbuild -y
 }
 
-### ! sourcelist18
+##
+ #* sourcelist18.
+ # Sourcelist fuer Ubuntu bionic anzeigen.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function sourcelist18() {
 	echo "deb http://de.archive.ubuntu.com/ubuntu bionic main restricted universe multiverse"
 	echo "#deb-src http://de.archive.ubuntu.com/ubuntu bionic main restricted universe multiverse"
@@ -3805,7 +4717,13 @@ function sourcelist18() {
 	echo "# deb-src http://archive.canonical.com/ubuntu bionic partner"
 }
 
-### !  sourcelist22
+##
+ #* sourcelist22.
+ # Sourcelist fuer Ubuntu jammy anzeigen.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function sourcelist22() {
 	echo "deb http://de.archive.ubuntu.com/ubuntu jammy main restricted universe multiverse"
 	echo "#deb-src http://de.archive.ubuntu.com/ubuntu impish main restricted universe multiverse"
@@ -3823,7 +4741,12 @@ function sourcelist22() {
 	echo "deb-src http://archive.canonical.com/ubuntu/ jammy partner"
 }
 
-### !  installwordpress
+##
+ #* installwordpress.
+ # Installiert oder Upgradet alles was für WordPress benötigt wird.
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function installwordpress() {
 	#Installationen die fuer Wordpress benoetigt werden
 	iinstall apache2
@@ -3842,8 +4765,14 @@ function installwordpress() {
 	iinstall php-zip
 }
 
-### !  installobensimulator
-function installobensimulator() {
+##
+ #* installopensimulator.
+ # Installiert alles fuer den OpenSimulator ausser mono.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
+function installopensimulator() {
 	#Alles fuer den OpenSimulator ausser mono
 	iinstall apache2
 	iinstall libapache2-mod-php
@@ -3880,17 +4809,35 @@ function installobensimulator() {
 	# findtime = 600
 }
 
-### !  installbegin
+##
+ #* installbegin.
+ # Linux Updaten und Upgraden.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function installbegin() { 
 	apt update && apt upgrade; 
 }
 
-### !  linuxupgrade
+##
+ #* linuxupgrade.
+ # Linux Updaten und Upgraden.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function linuxupgrade() { 
 	apt update && apt upgrade -y; 
 }
 
-### !  installubuntu22
+##
+ #* installubuntu22.
+ # Installiert alles fuer den OpenSimulator ausser mono.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function installubuntu22() {
 	#Alles fuer den OpenSimulator ausser mono
 	iinstall2 screen
@@ -3936,7 +4883,13 @@ function installubuntu22() {
 	iinstall2 fail2ban	
 }
 
-### !  iptablesset
+##
+ #* iptablesset.
+ # IP sperren.
+ # 
+ #? @param ipsperradresse.
+ #? @return nichts wird zurueckgegeben.
+##
 function iptablesset() {
 	ipsperradresse=$1
 	# Eine IP-Adresse für eingehende Datenpakete sperren
@@ -3948,7 +4901,14 @@ function iptablesset() {
 	# Alle IP-Adressen in den IPTABLES mitsamt Zeilennummern anzeigen, die momentan gesperrt sind
 	iptables -L INPUT -n --line-numbers
 }
-### !  fail2banset
+
+##
+ #* fail2banset.
+ # Hier stimmt was nicht ist wohl der erste Test.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function fail2banset() {
 	echo ""
 	# /etc/fail2ban/jail.local
@@ -3962,6 +4922,13 @@ bantime = 900
 findtime = 600" >/etc/fail2ban/jail.local
 }
 
+##
+ #* ufwset.
+ # ufw Ports einstellen.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 ### !  ufwset
 function ufwset() {
 	### Uncomplicated Firewall
@@ -3997,13 +4964,25 @@ function ufwset() {
 	sudo ufw allow 20800:20900/udp
 }
 
-### !Installieren von PhpMyAdmin
+##
+ #* installphpmyadmin.
+ # Installieren von PhpMyAdmin.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function installphpmyadmin() {
 	### Installieren von PhpMyAdmin
 	sudo apt install phpmyadmin
 }
 
-### !  installfinis
+##
+ #* installfinish.
+ # Zum abschluss noch einmal alles pruefen und nachinstallieren.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function installfinish() {
 	apt update
 	apt upgrade
@@ -4012,7 +4991,13 @@ function installfinish() {
 	#reboot now
 }
 
-### !HTTPS installieren: installationhttps22 "myemail@server.com" "myworld.com"
+##
+ #* installationhttps22.
+ # HTTPS installieren: installationhttps22 "myemail@server.com" "myworld.com".
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function installationhttps22() {
 	httpsemail=$1
 	httpsdomain=$2
@@ -4024,7 +5009,13 @@ function installationhttps22() {
 	sudo certbot --apache --agree-tos --redirect -m "$httpsemail" -d "$httpsdomain" -d www."$httpsdomain"
 }
 
-### !  serverinstall22
+##
+ #* serverinstall22.
+ # Server Installationen aufrufen.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function serverinstall22() {
 	installbegin
 	installubuntu22
@@ -4035,7 +5026,13 @@ function serverinstall22() {
 	installfinish
 }
 
-### !Auswahl der zu installierenden Pakete (Dies ist meinem Geschmack angepasst)
+##
+ #* serverinstall.
+ # Auswahl der zu installierenden Pakete (Dies ist meinem Geschmack angepasst).
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function serverinstall() {
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
@@ -4047,7 +5044,7 @@ function serverinstall() {
 		# Ausgabe auf die Konsole
 		if [ $siantwort = 0 ]; then
 			serverupgrade
-			installobensimulator
+			installopensimulator
 			monoinstall18
 			installfinish
 		fi
@@ -4062,7 +5059,7 @@ function serverinstall() {
 		read -r -p "Ubuntu Pakete installieren [y]es: " yesno
 		if [ "$yesno" = "y" ]; then
 			serverupgrade
-			installobensimulator
+			installopensimulator
 			monoinstall18
 			installfinish
 		else
@@ -4072,7 +5069,13 @@ function serverinstall() {
 	# dialog Aktionen Ende
 }
 
-### !  installationen, Ubuntu 18 Server, Was habe ich alles auf meinem Server Installiert? sortiert auflisten.
+##
+ #* installationen.
+ # installationen, Was habe ich alles Installiert? sortiert auflisten.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function installationen() {
 	log info "Liste aller Installierten Pakete unter Linux:"
 	dpkg-query -Wf '${Package;-40}${Priority}\n' | sort -b -k2,2 -k1,1
@@ -4080,9 +5083,15 @@ function installationen() {
 	return 0
 }
 
-### !  osbuilding, test automation.
-# Beispiel: opensim-0.9.2.2Dev-1187-gcf0b1b1.zip
-# bash osmtool.sh osbuilding 1187
+##
+ #* osbuilding.
+ # Baut automatisch einen neuen OpenSimulator mit den eingestellten Plugins.
+ # Beispiel Datei: opensim-0.9.2.2Dev-1187-gcf0b1b1.zip
+ # bash osmtool.sh osbuilding 1187
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function osbuilding() {
 	## dialog Aktionen
 	# zuerst schauen ob dialog installiert ist
@@ -4133,7 +5142,14 @@ function osbuilding() {
 	return 0
 }
 
-### !  create user [first] [last] [passw] [RegionX] [RegionY] [Email] - creates a new user and password
+##
+ #* createuser.
+ # Erstellen eines neuen Benutzer in der Robust Konsole.
+ # Mit dem Konsolenkomanndo: create user [first] [last] [passw] [RegionX] [RegionY] [Email] - creates a new user and password.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function createuser() {
 	VORNAME=$1
 	NACHNAME=$2
@@ -4174,7 +5190,14 @@ function createuser() {
 	return 0
 }
 
-### !  menucreateuser() ist die dialog Version von createuser()
+##
+ #* menucreateuser.
+ # Erstellen eines neuen Benutzer in der Robust Konsole.
+ # Mit dem Konsolenkomanndo: create user [first] [last] [passw] [RegionX] [RegionY] [Email] - creates a new user and password.
+ # 
+ #? @param dialog.
+ #? @return dialog.
+##
 function menucreateuser() {
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
@@ -4243,43 +5266,33 @@ function menucreateuser() {
 	hauptmenu
 }
 
-# Datenbank Befehle Achtung alles noch nicht ausgereift!!!
-
-### !  deleteregionfromdatabase.
-# deleteregionfromdatabase() {
-# 	username=$1
-# 	password=$2
-# 	databasename=$3
-
-# 	log text "Die - regions - Tabelle aus der Grid Datenbank leeren."
-# 	log text "Dies ist erforderlich wenn eine Region in der Datenbank haengen bleibt."
-# 	log text "Diese Aktion muss nach dem herunterfahren von Robust gestartet werden."
-# 	log text "Anschliessend muss Robust neu gestartet werden."
-	
-# 	mysqlrest "$username" "$password" "$databasename" "TRUNCATE TABLE regions"
-# 	log rohtext "$result_mysqlrest"
-
-# 	return 0
-# }
-
-# Neu 19.11.2022
-
-### !db_friends OK
+##
+ #* db_friends.
+ # Listet alle internen Freunde auf, aber keine hg freunde.
+ # 
+ #? @param username password databasename useruuid.
+ #? @return "$result_mysqlrest".
+##
 function db_friends() {
 	username=$1
 	password=$2
 	databasename=$3
 	useruuid=$4
 
-	echo "Listet alle internen Freunde auf, keine hg freunde:"
+	echo "Listet alle internen Freunde auf, aber keine hg freunde:"
 	mysqlrest "$username" "$password" "$databasename" "SELECT Friends.PrincipalID, CONCAT(UserAccounts.FirstName, ' ', UserAccounts.LastName) AS 'Friend' FROM Friends,UserAccounts WHERE Friends.Friend = '$useruuid' AND UserAccounts.PrincipalID = Friends.PrincipalID UNION SELECT Friends.Friend, CONCAT(UserAccounts.FirstName, ' ', UserAccounts.LastName) AS 'Friend'  FROM Friends, UserAccounts WHERE Friends.PrincipalID ='$useruuid' AND UserAccounts.PrincipalID = Friends.Friend"
 	echo "$result_mysqlrest"
 
 	return 0
 }
 
-
-### !db_online OK
+##
+ #* db_online.
+ # Listet Online User auf.
+ # 
+ #? @param "$username" "$password" "$databasename".
+ #? @return "$result_mysqlrest".
+##
 function db_online() {
 	username=$1
 	password=$2
@@ -4292,7 +5305,13 @@ function db_online() {
 	return 0
 }
 
-### !db_region OK
+##
+ #* db_region.
+ # Listet die Regionen aus Ihrer Datenbank auf.
+ # 
+ #? @param "$username" "$password" "$databasename".
+ #? @return "$result_mysqlrest".
+##
 function db_region() {
 	username=$1
 	password=$2
@@ -4305,14 +5324,20 @@ function db_region() {
 	return 0
 }
 
-### !Gridliste der Benutzer die schon einmal im eigenen Grid waren
-# Aufruf: bash osmtool.sh db_gridlist databaseusername databasepassword databasename
+##
+ #* db_gridlist.
+ # Gridliste der Benutzer die schon einmal im eigenen Grid waren.
+ # Aufruf: bash osmtool.sh db_gridlist databaseusername databasepassword databasename
+ # 
+ #? @param "$username" "$password" "$databasename".
+ #? @return "$mygridliste".
+##
 function db_gridlist() {
 	username=$1
 	password=$2
 	databasename=$3
 
-	echo "Listet die Grids in Ihrer Datenbank auf:"
+	echo "Listet die Grids aus Ihrer Datenbank auf:"
 	# SELECT * FROM 'GridUser' ORDER BY 'GridUser'.'UserID' ASC 
 	#mysqlrest "$username" "$password" "$databasename" "SELECT regionName as 'Regions' FROM regions"
 	mysqlrest "$username" "$password" "$databasename" "SELECT * FROM GridUser ORDER BY GridUser.UserID"
@@ -4323,6 +5348,13 @@ function db_gridlist() {
 	return 0
 }
 
+##
+ #* db_inv_search.
+ # Inventareinträge mit einem bestimmten Namen auflisten.
+ # 
+ #? @param username password databasename invname.
+ #? @return $result_mysqlrest.
+##
 ### !db_inv_search OK
 function db_inv_search() {
 	username=$1
@@ -4337,7 +5369,13 @@ function db_inv_search() {
 	return 0
 }
 
-### !db_user_anzahl OK
+##
+ #* db_user_anzahl.
+ # Zaehlt die Gesamtzahl der Benutzer.
+ # 
+ #? @param username password databasename.
+ #? @return $result_mysqlrest.
+##
 function db_user_anzahl() {
 	username=$1
 	password=$2
@@ -8099,7 +9137,7 @@ function AutoInstall() {
         elif [ "$ubuntuCodename" = "Bionic" ]; then
             #echo "entdeckt Ubuntu 18"
             serverupgrade
-            installobensimulator
+            installopensimulator
             monoinstall18
             installfinish
         else
@@ -8823,7 +9861,7 @@ function hilfe() {
 	echo "installfinish	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
 	echo "installmariadb18	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
 	echo "installmariadb22	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "installobensimulator	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "installopensimulator	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
 	echo "installphpmyadmin	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
 	echo "installubuntu22	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
 	echo "installwordpress	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
@@ -9640,7 +10678,7 @@ function expertenmenu() {
 
 		if [[ $feauswahl = "Server Installation" ]]; then serverinstall; fi
 		if [[ $feauswahl = "Server Installation fuer WordPress" ]]; then installwordpress; fi
-		if [[ $feauswahl = "Server Installation ohne mono" ]]; then installobensimulator; fi
+		if [[ $feauswahl = "Server Installation ohne mono" ]]; then installopensimulator; fi
 		if [[ $feauswahl = "Mono Installation" ]]; then monoinstall; fi
 
 		if [[ $feauswahl = "Hilfe" ]]; then hilfemenu; fi
@@ -10110,13 +11148,13 @@ exit 0
 # todo:
 # Alles neu kommentieren:
 
-###!
+##
  #* Wozu ist diese Funktion gedacht.
  # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
  # 
- #? @param name Erklaerung.
- #? @return name was wird zurueckgegeben.
-###!
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+##
 function xremarkx() {
     # Den parameter param annehmen.
     param=$1
