@@ -29,7 +29,7 @@
 #### ? Einstellungen ####
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.2.2.786" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.2.2.787" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 # ? Alte Variablen loeschen aus eventuellen voherigen sessions
@@ -7947,12 +7947,12 @@ function MASTER_SSL() {
 }
 
 ##
- #* Wozu ist diese Funktion gedacht.
- # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ #* MASTER_SSL_CA.
+ # MASTER_SSL_CA "$2" "$3".
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
-## MASTER_SSL_CA "$2" "$3"
+## 
 function MASTER_SSL_CA() {
 	username=$1
 	password=$2
@@ -7973,12 +7973,12 @@ function MASTER_SSL_CA() {
 }
 
 ##
- #* Wozu ist diese Funktion gedacht.
- # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ #*  MASTER_SSL_CAPATH.
+ # MASTER_SSL_CAPATH "$2" "$3".
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
-## MASTER_SSL_CAPATH "$2" "$3"
+## 
 function MASTER_SSL_CAPATH() {
 	username=$1
 	password=$2
@@ -7999,12 +7999,12 @@ function MASTER_SSL_CAPATH() {
 }
 
 ##
- #* Wozu ist diese Funktion gedacht.
- # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ #* MASTER_SSL_CERT.
+ # MASTER_SSL_CERT "$2" "$3".
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
-## MASTER_SSL_CERT "$2" "$3"
+## 
 function MASTER_SSL_CERT() {
 	username=$1
 	password=$2
@@ -8026,12 +8026,12 @@ function MASTER_SSL_CERT() {
 }
 
 ##
- #* Wozu ist diese Funktion gedacht.
- # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ #* MASTER_SSL_CRL.
+ # MASTER_SSL_CRL "$2" "$3".
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
-## MASTER_SSL_CRL "$2" "$3"
+## 
 function MASTER_SSL_CRL() {
 	username=$1
 	password=$2
@@ -8053,12 +8053,12 @@ function MASTER_SSL_CRL() {
 }
 
 ##
- #* Wozu ist diese Funktion gedacht.
- # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ #* MASTER_SSL_CRLPATH.
+ # MASTER_SSL_CRLPATH "$2" "$3".
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
-## MASTER_SSL_CRLPATH "$2" "$3"
+## 
 function MASTER_SSL_CRLPATH() {
 	username=$1
 	password=$2
@@ -8080,12 +8080,12 @@ function MASTER_SSL_CRLPATH() {
 }
 
 ##
- #* Wozu ist diese Funktion gedacht.
- # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ #* MASTER_SSL_KEY.
+ # MASTER_SSL_KEY "$2" "$3".
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
-## MASTER_SSL_KEY "$2" "$3"
+## 
 function MASTER_SSL_KEY() {
 	username=$1
 	password=$2
@@ -8107,12 +8107,12 @@ function MASTER_SSL_KEY() {
 }
 
 ##
- #* Wozu ist diese Funktion gedacht.
- # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ #* MASTER_SSL_CIPHER.
+ # MASTER_SSL_CIPHER "$2" "$3".
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
-## MASTER_SSL_CIPHER "$2" "$3"
+## 
 function MASTER_SSL_CIPHER() {
 	username=$1
 	password=$2
@@ -8134,12 +8134,12 @@ function MASTER_SSL_CIPHER() {
 }
 
 ##
- #* Wozu ist diese Funktion gedacht.
- # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ #* MASTER_SSL_VERIFY_SERVER_CERT.
+ # MASTER_SSL_VERIFY_SERVER_CERT "$2" "$3".
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
-## MASTER_SSL_VERIFY_SERVER_CERT "$2" "$3"
+## 
 function MASTER_SSL_VERIFY_SERVER_CERT() {
 	username=$1
 	password=$2
@@ -8161,12 +8161,12 @@ function MASTER_SSL_VERIFY_SERVER_CERT() {
 }
 
 ##
- #* Wozu ist diese Funktion gedacht.
- # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ #* MASTER_LOG_FILE.
+ # MASTER_LOG_FILE "$2" "$3" "$4" "$5".
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
-## MASTER_LOG_FILE "$2" "$3" "$4" "$5"
+## 
 function MASTER_LOG_FILE() {
 	username=$1
 	password=$2
@@ -8187,12 +8187,12 @@ function MASTER_LOG_FILE() {
 }
 
 ##
- #* Wozu ist diese Funktion gedacht.
- # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ #* MASTER_LOG_POS.
+ # MASTER_LOG_POS "$2" "$3" "$4" "$5".
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
-## MASTER_LOG_POS "$2" "$3" "$4" "$5"
+## 
 function MASTER_LOG_POS() {
 	username=$1
 	password=$2
@@ -8213,12 +8213,12 @@ function MASTER_LOG_POS() {
 }
 
 ##
- #* Wozu ist diese Funktion gedacht.
- # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ #* RELAY_LOG_FILE.
+ # RELAY_LOG_FILE "$2" "$3" "$4" "$5".
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
-## RELAY_LOG_FILE "$2" "$3" "$4" "$5"
+## 
 function RELAY_LOG_FILE() {
 	username=$1
 	password=$2
@@ -8239,12 +8239,12 @@ function RELAY_LOG_FILE() {
 }
 
 ##
- #* Wozu ist diese Funktion gedacht.
- # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ #* RELAY_LOG_POS.
+ # RELAY_LOG_POS "$2" "$3" "$4" "$5".
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
-## RELAY_LOG_POS "$2" "$3" "$4" "$5"
+## 
 function RELAY_LOG_POS() {
 	username=$1
 	password=$2
@@ -8265,12 +8265,12 @@ function RELAY_LOG_POS() {
 }
 
 ##
- #* Wozu ist diese Funktion gedacht.
- # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ #* MASTER_USE_GTID.
+ # MASTER_USE_GTID "$2" "$3".
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
-## MASTER_USE_GTID "$2" "$3"
+## 
 function MASTER_USE_GTID() {
 	username=$1
 	password=$2
@@ -8286,12 +8286,12 @@ function MASTER_USE_GTID() {
 	return 0
 }
 ##
- #* Wozu ist diese Funktion gedacht.
- # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ #* MASTER_USE_GTID2.
+ # MASTER_USE_GTID2 "$2" "$3" "$4".
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
-## MASTER_USE_GTID2 "$2" "$3" "$4"
+## 
 function MASTER_USE_GTID2() {
 	username=$1
 	password=$2
@@ -8311,12 +8311,12 @@ function MASTER_USE_GTID2() {
 }
 
 ##
- #* Wozu ist diese Funktion gedacht.
- # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ #* IGNORE_SERVER_IDS.
+ # IGNORE_SERVER_IDS "$2" "$3" "$4".
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
-## IGNORE_SERVER_IDS "$2" "$3" "$4"
+## 
 function IGNORE_SERVER_IDS() {
 	username=$1
 	password=$2
@@ -8333,8 +8333,8 @@ function IGNORE_SERVER_IDS() {
 	return 0
 }
 
-# Die Begriffe „Master “ und „Slave“ wurden in der Vergangenheit bei der Replikation verwendet, 
-# aber die Begriffe „ primary “ und „replica“ werden jetzt bevorzugt. 
+# Die Begriffe „Master“ und „Slave“ wurden in der Vergangenheit bei der Replikation verwendet, 
+# aber die Begriffe „ primary“ und „replica“ werden jetzt bevorzugt. 
 # Die alten Begriffe werden immer noch in Teilen der Dokumentation und in MariaDB-Befehlen verwendet, 
 # obwohl MariaDB 10.5 mit dem Umbenennungsprozess begonnen hat. Das Dokumentationsverfahren läuft.
 
@@ -8366,12 +8366,12 @@ function IGNORE_SERVER_IDS() {
 #   | IGNORE_DOMAIN_IDS = ([N,..])
 
 ##
- #* Wozu ist diese Funktion gedacht.
- # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ #* DO_DOMAIN_IDS.
+ # DO_DOMAIN_IDS "$2" "$3" "$4".
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
-## DO_DOMAIN_IDS "$2" "$3" "$4"
+## 
 function DO_DOMAIN_IDS() {
 	username=$1
 	password=$2
@@ -8388,12 +8388,12 @@ function DO_DOMAIN_IDS() {
 	return 0
 }
 ##
- #* Wozu ist diese Funktion gedacht.
- # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ #* DO_DOMAIN_IDS2.
+ # DO_DOMAIN_IDS2 "$2" "$3".
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
-## DO_DOMAIN_IDS2 "$2" "$3"
+## 
 function DO_DOMAIN_IDS2() {
 	username=$1
 	password=$2
@@ -8410,12 +8410,12 @@ function DO_DOMAIN_IDS2() {
 }
 
 ##
- #* Wozu ist diese Funktion gedacht.
- # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ #* IGNORE_DOMAIN_IDS.
+ # IGNORE_DOMAIN_IDS "$2" "$3" "$4".
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
-## IGNORE_DOMAIN_IDS "$2" "$3" "$4"
+## 
 function IGNORE_DOMAIN_IDS() {
 	username=$1
 	password=$2
@@ -8432,12 +8432,12 @@ function IGNORE_DOMAIN_IDS() {
 	return 0
 }
 ##
- #* Wozu ist diese Funktion gedacht.
- # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ #* IGNORE_DOMAIN_IDS2.
+ # IGNORE_DOMAIN_IDS2 "$2" "$3".
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
-## IGNORE_DOMAIN_IDS2 "$2" "$3"
+## 
 function IGNORE_DOMAIN_IDS2() {
 	username=$1
 	password=$2
@@ -8454,12 +8454,12 @@ function IGNORE_DOMAIN_IDS2() {
 }
 
 ##
- #* Wozu ist diese Funktion gedacht.
- # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ #* MASTER_DELAY.
+ # MASTER_DELAY "$2" "$3" "$4".
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
-## MASTER_DELAY "$2" "$3" "$4"
+## 
 function MASTER_DELAY() {
 	username=$1
 	password=$2
@@ -8478,12 +8478,12 @@ function MASTER_DELAY() {
 }
 
 ##
- #* Wozu ist diese Funktion gedacht.
- # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ #* Replica_Backup.
+ # Creating a Replica from a Backup "$2" "$3" "$4" "$5".
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
-## Creating a Replica from a Backup "$2" "$3" "$4" "$5"
+## 
 function Replica_Backup() {
 	username=$1
 	password=$2
@@ -8502,12 +8502,12 @@ function Replica_Backup() {
 	return 0
 }
 ##
- #* Wozu ist diese Funktion gedacht.
- # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ #* Replica_Backup2.
+ # Creating a Replica from a Backup2 "$2" "$3" "$4".
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
-## Creating a Replica from a Backup2 "$2" "$3" "$4"
+## 
 function Replica_Backup2() {
 	username=$1
 	password=$2
@@ -8525,12 +8525,12 @@ function Replica_Backup2() {
 	return 0
 }
 ##
- #* Wozu ist diese Funktion gedacht.
- # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ #* ReplikatKoordinaten.
+ # Dies aendert die Koordinaten des primaeren und des primaeren Binaerlogs "$2" "$3" "$4" "$5" "$6" "$7" "$8".
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
-## ReplikatKoordinaten - Dies aendert die Koordinaten des primaeren und des primaeren Binaerlogs "$2" "$3" "$4" "$5" "$6" "$7" "$8"
+##
 function ReplikatKoordinaten() {
 	username=$1
 	password=$2
@@ -8553,18 +8553,14 @@ function ReplikatKoordinaten() {
 	return 0
 }
 
-### NEU mariaDB 30.06.2022 ENDE ########################################################################
-
-###* NEU Datenbank splitten 03.07.2022 ENDE #############################################################
-
 ##
- #* Wozu ist diese Funktion gedacht.
- # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ #* db_tablesplitt.
+ # Alle Tabellen aus einer SQL Datensicherung in ein gleichnahmigen Verzeichniss extrahieren.
+ # db_tablesplitt /Pfad/SQL_Datei.sql
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
-## Alle Tabellen aus einer SQL Datensicherung in ein gleichnahmigen Verzeichniss extrahieren.
-# db_tablesplitt /Pfad/SQL_Datei.sql
+##
 function db_tablesplitt() {
 	VERZEICHNISNAME=$(basename "$1" .sql)
 	STARTVERZEICHNIS=$(pwd)
@@ -8585,13 +8581,13 @@ function db_tablesplitt() {
 }
 
 ##
- #* Wozu ist diese Funktion gedacht.
- # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ #* db_tablextract.
+ # Eine einzelne Tabelle aus einem SQL Datenbank Backup extrahieren.
+ # db_tablextract /Pfad/SQL_Datei.sql Tabellenname
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
-## Eine einzelne Tabelle aus einem SQL Datenbank Backup extrahieren.
-# db_tablextract /Pfad/SQL_Datei.sql Tabellenname
+##
 function db_tablextract() {
 	VERZEICHNISNAME=$(basename "$1" .sql)
 	STARTVERZEICHNIS=$(pwd)
@@ -8610,14 +8606,14 @@ function db_tablextract() {
 }
 
 ##
- #* Wozu ist diese Funktion gedacht.
- # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ #* db_tablextract_regex.
+ # Extrahiere Tabelle aus SQL Datenbank Backup unter zuhilfenahme von regex.
+ # db_tablextract_regex DUMP-FILE-NAME -S TABLE-NAME-REGEXP Extrahiert
+ # Tabellen aus der sql Datei mit dem angegebenen regulaeren Ausdruck.
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
-## db_tablextract_regex, Extrahiere Tabelle aus SQL Datenbank Backup unter zuhilfenahme von regex.
-# db_tablextract_regex DUMP-FILE-NAME -S TABLE-NAME-REGEXP Extrahiert
-# Tabellen aus der sql Datei mit dem angegebenen regulaeren Ausdruck.
+##
 function db_tablextract_regex() {
 	VERZEICHNISNAME=$(basename "$1" .sql)
 	STARTVERZEICHNIS=$(pwd)
@@ -8635,16 +8631,15 @@ function db_tablextract_regex() {
 		log info "Kopiere $TABELLENNAME structur $1 nach $STARTVERZEICHNIS/$VERZEICHNISNAME/$TABELLENNAME.sql"
 	done
 }
-###* NEU Datenbank splitten ENDE 03.07.2022 ENDE ########################################################################
 
 ##
- #* Wozu ist diese Funktion gedacht.
- # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ #* conf_write.
+ #  Konfiguration schreiben ersatz fuer alle UNGETESTETEN ini Funktionen.
+ # ./osmtool.sh conf_write Einstellung NeuerParameter Verzeichnis Dateiname
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
-##  conf_write, Konfiguration schreiben ersatz fuer alle UNGETESTETEN ini Funktionen.
-# ./osmtool.sh conf_write Einstellung NeuerParameter Verzeichnis Dateiname
+##
 function conf_write() {
 	CONF_SEARCH=$1
 	CONF_ERSATZ=$2
@@ -8657,13 +8652,13 @@ function conf_write() {
 }
 
 ##
- #* Wozu ist diese Funktion gedacht.
- # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ #* conf_read.
+ # Ganze Zeile aus der Konfigurationsdatei anzeigen.
+ # ./osmtool.sh conf_read Einstellungsbereich Verzeichnis Dateiname
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
-##  conf_read, ganze Zeile aus der Konfigurationsdatei anzeigen.
-# ./osmtool.sh conf_read Einstellungsbereich Verzeichnis Dateiname
+##  
 function conf_read() {
 	CONF_SEARCH=$1
 	CONF_PFAD=$2
@@ -8675,13 +8670,13 @@ function conf_read() {
 }
 
 ##
- #* Wozu ist diese Funktion gedacht.
- # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ #* conf_delete.
+ # Ganze Zeile aus der Konfigurationsdatei loeschen.
+ # ./osmtool.sh conf_delete Einstellungsbereich Verzeichnis Dateiname
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
-##  conf_delete, ganze Zeile aus der Konfigurationsdatei loeschen.
-# ./osmtool.sh conf_delete Einstellungsbereich Verzeichnis Dateiname
+##  
 function conf_delete() {
 	CONF_SEARCH=$1
 	CONF_PFAD=$2
@@ -8693,12 +8688,12 @@ function conf_delete() {
 }
 
 ##
- #* Wozu ist diese Funktion gedacht.
- # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ #* ramspeicher.
+ # Den echten RAM Speicher auslesen.
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
-##  ramspeicher, den echten RAM Speicher auslesen.
+##  
 function ramspeicher() {
 	# RAM groesse auslesen
 	dmidecode --type 17 >/tmp/raminfo.inf
@@ -8713,14 +8708,14 @@ function ramspeicher() {
 ###############################    Konfigurationen ########################
 
 ##
- #* Wozu ist diese Funktion gedacht.
- # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ #* mysqleinstellen.
+ # Ermitteln wieviel RAM Speicher vorhanden ist und anschliessend mySQL Einstellen.
+ # Einstellungen sind in der my.cnf nicht moeglich es muss in die /etc/mysql/mysql.conf.d/mysqld.cnf
+ # Hier wird nicht geprueft ob die Einstellungen schon vorhanden sind sondern nur angehaengt.
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
-##  mysqleinstellen, ermitteln wieviel RAM Speicher vorhanden ist und anschliessend mySQL Einstellen.
-# Einstellungen sind in der my.cnf nicht moeglich es muss in die /etc/mysql/mysql.conf.d/mysqld.cnf
-# Hier wird nicht geprueft ob die Einstellungen schon vorhanden sind sondern nur angehaengt.
+##  
 function mysqleinstellen() {
 	# Ermitteln wie viel RAM Speicher der Server hat
 	ramspeicher
@@ -8782,7 +8777,13 @@ function mysqleinstellen() {
 	return 0
 }
 
-### newregionini - eine neue Regionsdatei schreiben.
+##
+ #* newregionini.
+ # newregionini - eine neue Regionsdatei schreiben.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##  
 function newregionini() {
 	# Aktuelle IP ueber Suchadresse ermitteln und Ausfuehrungszeichen anhaengen.
 	DNAAKTUELLEIP="$(wget -O - -q $SEARCHADRES)"
@@ -8856,12 +8857,12 @@ function newregionini() {
 
 
 ##
- #* Wozu ist diese Funktion gedacht.
- # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ #*constconfig.
+ # constconfig, const schreiben.
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
-## constconfig, const schreiben.
+## 
 function constconfig() {
 
     BASEHOSTNAME=$1
@@ -8930,13 +8931,13 @@ function constconfig() {
 }
 
 ##
- #* Wozu ist diese Funktion gedacht.
- # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ #* regionconfig.
+ # Region Konfigurationen schreiben
+ # regionconfig REGIONSNAME STARTLOCATION SIZE INTERNALPORT REGIONSINI
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
-## Region Konfigurationen schreiben
-# regionconfig REGIONSNAME STARTLOCATION SIZE INTERNALPORT REGIONSINI
+## 
 function regionconfig() {
 		
     REGIONSNAME=$1
@@ -8987,13 +8988,13 @@ function regionconfig() {
 }
 
 ##
- #* Wozu ist diese Funktion gedacht.
- # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ #* flotsamconfig.
+ # FlotsamCache Konfigurationen schreiben
+ # FlotsamCache.ini - flotsamconfig FLOTSAMCACHEINI
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
-## FlotsamCache Konfigurationen schreiben
-# FlotsamCache.ini - flotsamconfig FLOTSAMCACHEINI
+## 
 function flotsamconfig() {
 
     FLOTSAMCACHEINI=$1
@@ -9016,13 +9017,13 @@ function flotsamconfig() {
 }
 
 ##
- #* Wozu ist diese Funktion gedacht.
- # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ #* osslEnableconfig.
+ # Konfigurationen schreiben
+ # osslEnable.ini.example
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
-## osslEnableconfig Konfigurationen schreiben
-# osslEnable.ini.example
+## 
 function osslEnableconfig() {
 
     OSSLENABLEINI=$1
@@ -9157,14 +9158,13 @@ function osslEnableconfig() {
     } > "$OSSLENABLEINI"
 }
 
-# MoneyServer.ini
 ##
- #* Wozu ist diese Funktion gedacht.
- # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ #* moneyconfig.
+ # moneyconfig DATABASE USERNAME PASSWORD MONEYINI.
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
-## moneyconfig DATABASE USERNAME PASSWORD MONEYINI
+## 
 function moneyconfig() {
 
     MONEYINI=$1
@@ -9222,13 +9222,13 @@ function moneyconfig() {
 }
 
 ##
- #* Wozu ist diese Funktion gedacht.
- # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ #* osconfigstruktur.
+ # Legt die Verzeichnisstruktur fuer OpenSim an. # Aufruf: osmtool.sh osstruktur ersteSIM letzteSIM
+ # Beispiel: ./osmtool.sh osstruktur 1 10 - erstellt ein Grid Verzeichnis fuer 10 Simulatoren inklusive der $SIMDATEI.
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
-##  osstruktur, legt die Verzeichnisstruktur fuer OpenSim an. # Aufruf: osmtool.sh osstruktur ersteSIM letzteSIM
-# Beispiel: ./osmtool.sh osstruktur 1 10 - erstellt ein Grid Verzeichnis fuer 10 Simulatoren inklusive der $SIMDATEI.
+##  
 function osconfigstruktur() {
     # Ist die /"$STARTVERZEICHNIS"/$SIMDATEI vorhanden dann zuerst löschen
     if [ ! -f "/$STARTVERZEICHNIS/$SIMDATEI" ]; then
@@ -9306,6 +9306,13 @@ function osconfigstruktur() {
 	return 0
 }
 
+##
+ #* configabfrage.
+ # Die Konfigurationsabfrage füt die OpenSim Konfigurationen.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##
 function configabfrage() {
 	### Eintragungen uebersicht!
 	# BaseHostname = "MyGrid.com"
@@ -9493,7 +9500,13 @@ function configabfrage() {
 	osconfigstruktur 1 "$CONFIGANZAHL"
 }
 
-#! Nachfolgende 3 Funktionen müssen noch getestet werden.
+##
+ #* firstinstallation.
+ # Nachfolgende 3 Funktionen müssen noch getestet werden.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##
 function firstinstallation() {
 	log line
 	log info "Erstinstallation"
@@ -9510,13 +9523,28 @@ function firstinstallation() {
 	createmasteravatar
 	createregionavatar
 }
+
+##
+ #* createmasteravatar.
+ # Einen Master Avatar erstellen.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##
 function createmasteravatar() {
 	# Master Avatar erstellen.
 	bash osmtool.sh rostart
 	bash osmtool.sh oscommand robust Welcome "create user $FIRSTNAMEMASTER $LASTNAMEMASTER $PASSWDNAMEMASTER $EMAILNAMEMASTER $UUIDNAMEMASTER $MODELNAMEMASTER"
 }
+
+##
+ #* createregionavatar.
+ # Besitzerrechte und estate eintragen.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##
 function createregionavatar() {
-	# Besitzerrechte und estate eintragen.
 	makeverzeichnisliste
 	for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
 		cd /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin || return 1
@@ -9531,17 +9559,13 @@ function createregionavatar() {
 	return 0
 }
 
-###########################################################################
-# Samples
-###########################################################################
-
 ##
- #* Wozu ist diese Funktion gedacht.
- # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ #*  gridstop.
+ # Stoppt erst Money dann Robust.
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
-##  gridstop, stoppt erst Money dann Robust.
+##  
 function gridstop() {
 	if screen -list | grep -q MO; then
 		mostop
@@ -9552,9 +9576,10 @@ function gridstop() {
 	fi
 	return 0
 }
+
 ##
- #* Wozu ist diese Funktion gedacht.
- # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ #* menugridstop.
+ # Stoppt erst Money dann Robust.
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
@@ -9571,12 +9596,12 @@ function menugridstop() {
 }
 
 ##
- #* Wozu ist diese Funktion gedacht.
- # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ #* compilieren.
+ # Kompilieren des OpenSimulator.
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
-##  compilieren, kompilieren des OpenSimulator.
+##  
 function compilieren() {
 	log info "Bauen eines neuen OpenSimulators  wird gestartet..."
 	# Nachsehen ob Verzeichnis ueberhaupt existiert.
@@ -9638,12 +9663,12 @@ function compilieren() {
 }
 
 ##
- #* Wozu ist diese Funktion gedacht.
- # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ #* osgridcopy.
+ # Automatisches kopieren des opensimulator aus dem verzeichnis opensim.
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
-##  OSGRIDCOPY, automatisches kopieren des opensimulator aus dem verzeichnis opensim.
+##  
 function osgridcopy() {
 	log text " #############################"
 	log text "Steht hier:"
@@ -9674,12 +9699,12 @@ function osgridcopy() {
 }
 
 ##
- #* Wozu ist diese Funktion gedacht.
- # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ #* osupgrade.
+ # Automatisches upgrade des opensimulator aus dem verzeichnis opensim.
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
-##  osupgrade, automatisches upgrade des opensimulator aus dem verzeichnis opensim.
+##  
 function osupgrade() {
 	log text " #############################"
 	log text " !!!      BEI FEHLER      !!! "
@@ -9705,12 +9730,12 @@ function osupgrade() {
 }
 
 ##
- #* Wozu ist diese Funktion gedacht.
- # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ #* osdowngrade.
+ #  Automatisches downgrade des opensimulator aus dem verzeichnis opensim.
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
-##  osdowngrade, automatisches downgrade des opensimulator aus dem verzeichnis opensim.
+## 
 function osdowngrade() {
 	log text " #############################"
 	log text " !!!      BEI FEHLER      !!! "
@@ -9740,12 +9765,12 @@ function osdowngrade() {
 }
 
 ##
- #* Wozu ist diese Funktion gedacht.
- # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ #* oszipupgrade.
+ # Automatisches upgrade des opensimulator aus einer opensim zip Datei.
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
-##  oszipupgrade, automatisches upgrade des opensimulator aus einer opensim zip Datei.
+##  
 function oszipupgrade() {
 	### dialog Aktionen
 	# zuerst schauen ob dialog installiert ist
@@ -9792,15 +9817,13 @@ function oszipupgrade() {
 ###########################################################################
 
 ##
- #* Wozu ist diese Funktion gedacht.
- # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ #* ConfigSet.
+ # Reduziert die Konfigurationsdateien auf ein uebersichtliches Mass.
+ # Aufruf: ./osmtool.sh AutoInstall
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
-##  Hier entsteht die Automatische Konfiguration. UNGETESTET
-# Aufruf: ./osmtool.sh AutoInstall
-
-### Config Set - Reduziert die Konfigurationsdateien auf ein uebersichtliches Mass.
+##
 function ConfigSet() {
     datei=$1
 
@@ -9832,7 +9855,14 @@ function ConfigSet() {
     sed -i -e '$a)' "$datei.ini.cnf"
 }
 
-### AutoInstall
+##
+ #* AutoInstall.
+ # Grundinstallation ihreres Servers.
+ # Aufruf: ./osmtool.sh AutoInstall
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##
 function AutoInstall() {
     #ramspeicher
     #mysqlspeicher=$((RAMSPEICHER / 2))
@@ -9877,7 +9907,13 @@ function AutoInstall() {
     fi
 }
 
-### osslEnable Config
+##
+ #* osslEnableConfig.
+ # Alle Skript Rechte an Grid Betreiber.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##
 function osslEnableConfig() {
     # Abfrage des Benutzers.
     echo "Alle Skript Rechte an Grid Betreiber [$BenutzerUUID]: "; read -r Rechte
@@ -9886,6 +9922,14 @@ function osslEnableConfig() {
 
     osslEnableConfigSet "$Rechte"
 }
+
+##
+ #* osslEnableConfigSet.
+ # Konfiguration der osslEnable.ini.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##
 function osslEnableConfigSet() {
     osslEnabledatei="osslEnable.ini"
 
@@ -10040,12 +10084,12 @@ function osslEnableConfigSet() {
 ###########################################################################
 
 ##
- #* Wozu ist diese Funktion gedacht.
- # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ #* show_info.
+ # Funktion zum Anzeigen von Informationen der Auswahl.
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
-## Funktion zum Anzeigen von Informationen der Auswahl.
+## 
 function show_info() {
 	dialog --title "$1" \
 		--no-collapse \
@@ -10053,12 +10097,12 @@ function show_info() {
 }
 
 ##
- #* Wozu ist diese Funktion gedacht.
- # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ #* systeminformation.
+ # Systeminformationen anzeigen.
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
-## Systeminformationen anzeigen.
+## 
 function systeminformation() {
 	# Definiert die Ausgangsstatuscodes der Dialogfelder
 	DIALOG_CANCEL=1
@@ -10131,12 +10175,12 @@ function systeminformation() {
 }
 
 ##
- #* Wozu ist diese Funktion gedacht.
- # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ #* info.
+ # Informationen auf den Bildschirm ausgeben.
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
-##  info, Informationen auf den Bildschirm ausgeben.
+##
 function info() {
 	echo "$(tput setab 4) Server Name: ${HOSTNAME}"
 	echo " Bash Version: ${BASH_VERSION}"
@@ -10149,12 +10193,12 @@ function info() {
 }
 
 ##
- #* Wozu ist diese Funktion gedacht.
- # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ #* infodialog.
+ # Informationen auf den Bildschirm ausgeben.
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
-##  infodialog, Informationen auf den Bildschirm ausgeben.
+##
 function infodialog() {
 	TEXT1=(" Server Name: ${HOSTNAME}")
 	TEXT2=(" Bash Version: ${BASH_VERSION}")
@@ -10173,12 +10217,12 @@ function infodialog() {
 }
 
 ##
- #* Wozu ist diese Funktion gedacht.
- # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ #* kalender.
+ # Einfach nur ein Kalender.
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
-##  kalender(), einfach nur ein Kalender.
+##
 function kalender() {
 	HEIGHT=0
 	WIDTH=0
@@ -10210,12 +10254,12 @@ function kalender() {
 }
 
 ##
- #* Wozu ist diese Funktion gedacht.
- # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ #* robustbackup.
+ # Grid Datenbank sichern.(Kalender) in bearbeitung.
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
-##  robustbackup Grid Datenbank sichern.(Kalender) in bearbeitung
+##
 function robustbackup() {
 	HEIGHT=0
 	WIDTH=0
@@ -10251,12 +10295,12 @@ function robustbackup() {
 }
 
 ##
- #* Wozu ist diese Funktion gedacht.
- # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ #* backupdatum.
+ # Grid Datenbank sichern.(Datum auswerten) in bearbeitung.
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
-##  robustbackup Grid Datenbank sichern.(Datum auswerten) in bearbeitung
+##  
 function backupdatum() {
 	# Ist die Datei backup.tmp vorhanden?
 	if [ -f /tmp/backup.tmp ]; then echo "Datei ist vorhanden!"; fi
@@ -10283,13 +10327,13 @@ function backupdatum() {
 }
 
 ##
- #* Wozu ist diese Funktion gedacht.
- # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ #* senddata.
+ # Daten zu einem neuen Server senden ### Ungetestet ###
+ # senddata USERNAMEN SENDEVERZEICHNIS SERVERADRESS 
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
-##  senddata Daten zu einem neuen Server senden ### Ungetestet ###
-# senddata USERNAMEN SENDEVERZEICHNIS SERVERADRESS 
+##  
 function senddata() {
 	USERNAMEN=$1
 	SENDEVERZEICHNIS=$2	
@@ -10317,12 +10361,12 @@ function senddata() {
 }
 
 ##
- #* Wozu ist diese Funktion gedacht.
- # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ #* fortschritsanzeige.
+ # test fuer eine Fortschrittsanzeige.
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
-##  fortschritsanzeige(), test fuer eine Fortschrittsanzeige.
+##  
 function fortschritsanzeige() {
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
@@ -10342,12 +10386,12 @@ function fortschritsanzeige() {
 }
 
 ##
- #* Wozu ist diese Funktion gedacht.
- # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ #* menuinfo.
+ #  Informationen im dialog ausgeben.
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
-##  menuinfo, Informationen im dialog ausgeben.
+## 
 function menuinfo() {
 	menuinfoergebnis=$(screen -ls | sed '1d' | sed '$d' | awk -F. '{print $2}' | awk -F\( '{print $1}')
 
@@ -10371,12 +10415,12 @@ function menuinfo() {
 	return 0
 }
 ##
- #* Wozu ist diese Funktion gedacht.
- # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ #* menukonsolenhilfe.
+ # Konsolenhilfe auf dem Bildschirm anzeigen.
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
-##  menukonsolenhilfe, menukonsolenhilfe auf dem Bildschirm anzeigen.
+##  
 function menukonsolenhilfe() {
 	#helpergebnis=$(help)
 	#dialog --msgbox "Konsolenhilfe:\n $helpergebnis" 50 75; dialogclear
@@ -10390,12 +10434,12 @@ function menukonsolenhilfe() {
 }
 
 ##
- #* Wozu ist diese Funktion gedacht.
- # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ #* dotnetinfo.
+ # dotnetinfo .NET und CSharp Informationen.
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
-## dotnetinfo .NET und CSharp Informationen.
+## 
 function dotnetinfo() {
 	echo "dotNET-7.x = C# 11"
 	echo "dotNET-6.x = C# 10"
@@ -10409,12 +10453,12 @@ function dotnetinfo() {
 }
 
 ##
- #* Wozu ist diese Funktion gedacht.
- # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ #* dbhilfe.
+ # Datenbankhilfe auf dem Bildschirm anzeigen.
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
-##  dbhilfe, Datenbankhilfe auf dem Bildschirm anzeigen.
+##  
 function dbhilfe() {
 	echo "$(tput setab 1)mySQL - mariaDB Befehle ACHTUNG! Sie muessen hier fuer die Grundlagen von SQL beherschen. $(tput sgr 0)"
 	echo "DO_DOMAIN_IDS	- $(tput setab 5)username password ids$(tput sgr 0) – CHANGE MASTER TO DO DOMAIN IDS."
@@ -10507,12 +10551,12 @@ function dbhilfe() {
 }
 
 ##
- #* Wozu ist diese Funktion gedacht.
- # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ #* hilfe.
+ # Hilfe auf dem Bildschirm anzeigen.
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
-##  hilfe, Hilfe auf dem Bildschirm anzeigen.
+##  
 function hilfe() {
 	echo "$(tput setab 5)Funktion:$(tput sgr 0)		$(tput setab 2)Parameter:$(tput sgr 0)		$(tput setab 4)Informationen:$(tput sgr 0)"
 	echo "hilfe 			- $(tput setaf 3)hat keine Parameter$(tput sgr 0)	- Diese Hilfe."
@@ -10772,6 +10816,14 @@ function hilfe() {
 
 	# log info "HILFE: Hilfe wurde angefordert."
 }
+
+##
+ #* hilfemenudirektaufrufe.
+ # Hilfe auf dem Bildschirm anzeigen.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+## 
 function hilfemenudirektaufrufe() {
 	echo "menuassetdel	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
 	echo "menuautologdel	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
@@ -10812,12 +10864,12 @@ function hilfemenudirektaufrufe() {
 }
 
 ##
- #* Wozu ist diese Funktion gedacht.
- # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ #* konsolenhilfe.
+ # Konsolenhilfe auf dem Bildschirm anzeigen.
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
-##  konsolenhilfe, konsolenhilfe auf dem Bildschirm anzeigen.
+##
 function konsolenhilfe() {
 	echo "$(tput setab 5)Funktion:$(tput sgr 0) $(tput setab 4)Informationen:$(tput sgr 0)"
 	echo "Tab - Dateien und Ordnernamen automatisch vervollstaendigen."
@@ -10841,12 +10893,12 @@ function konsolenhilfe() {
 }
 
 ##
- #* Wozu ist diese Funktion gedacht.
- # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ #* commandhelp.
+ # Help OpenSim Commands.
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
-##  commandhelp
+##  
 function commandhelp() {
 	cat <<eof
 $(tput setab 1)
@@ -11025,8 +11077,8 @@ eof
 ###########################################################################
 
 ##
- #* Wozu ist diese Funktion gedacht.
- # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ #* hauptmenu.
+ # Startmenue.
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
@@ -11102,12 +11154,12 @@ function hauptmenu() {
 }
 
 ##
- #* Wozu ist diese Funktion gedacht.
- # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ #* hilfemenu.
+ # Menue der Hilfe.
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
-##  hilfemenu
+##
 function hilfemenu() {
 	HEIGHT=0
 	WIDTH=0
@@ -11159,12 +11211,12 @@ function hilfemenu() {
 }
 
 ##
- #* Wozu ist diese Funktion gedacht.
- # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ #* funktionenmenu.
+ # Menue fuer Funktionen.
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
-##  funktionenmenu
+##
 function funktionenmenu() {
 	HEIGHT=0
 	WIDTH=0
@@ -11237,8 +11289,8 @@ function funktionenmenu() {
 }
 
 ##
- #* Wozu ist diese Funktion gedacht.
- # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ #* dateimenu.
+ # Menue fuer Dateifunktionen.
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
@@ -11314,8 +11366,8 @@ function dateimenu() {
 }
 
 ##
- #* Wozu ist diese Funktion gedacht.
- # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ #* mySQLmenu.
+ # Menue fuer SQL Funktionen.
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
@@ -11402,8 +11454,8 @@ function mySQLmenu() {
 }
 
 ##
- #* Wozu ist diese Funktion gedacht.
- # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ #* avatarmenu.
+ # Menue fuer Benutzerfunktionen.
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
@@ -11477,8 +11529,8 @@ function avatarmenu() {
 }
 
 ##
- #* Wozu ist diese Funktion gedacht.
- # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ #* expertenmenu.
+ # Menuepunkte fuer Experten.
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
@@ -11568,8 +11620,8 @@ function expertenmenu() {
 }
 
 ##
- #* Wozu ist diese Funktion gedacht.
- # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ #* buildmenu.
+ # Menue zum erstellen von OpenSim Versionen.
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
@@ -11714,7 +11766,14 @@ function wiparameter8() {
 	echo "Parameter5= $parameter5 Parameter6= $parameter6 Parameter7= $parameter7 Parameter8= $parameter8"
 }
 
-newhelp() {
+##
+ #* newhelp.
+ # newhelp tests.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+##  expertenmenu
+function newhelp() {
 	# $(tput setab 5) $(tput setaf 2) $(tput sgr 0)
 	echo "$(tput setaf 2)Display Hilfe"
 	echo "Syntax:$(tput sgr 0) osmtool.sh [h|hilfe|konsolenhilfe|dbhilfe|commandhelp|hda]"
@@ -12019,24 +12078,3 @@ case $KOMMANDO in
 esac
 vardel
 exit 0
-
-# todo:
-# Alles neu kommentieren:
-
-##
- #* Wozu ist diese Funktion gedacht.
- # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
-##
-function xremarkx() {
-    # Den parameter param annehmen.
-    param=$1
-    # Den parameter param ausgeben.
-    echo "$param"
-    # Den parameter param zurueckgeben.
-    return "$param";
-} # Ende der Funktion xremarkx.
-
-# Jetzt muss ich mich nur noch selber daran halten lach.
