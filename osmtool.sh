@@ -16,11 +16,11 @@
 # ! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 # ! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-# * Status 26.02.2023 348 Funktionen.
+# * Status 04.03.2023 339 Funktionen.
 
 # # Installieren sie bitte: #* Visual Studio Code - Mac, Linux, Windows
 #* dazu die Plugins:
-# todo:
+# todo: nichts.
 # ShellCheck #! ist eine geniale Hilfe gegen Fehler.
 # shellman #? Shell Skript Schnipsel.
 # Better Comments #* Bessere Farbliche Darstellung. Standards: #! #* #? #// #todo
@@ -29,7 +29,7 @@
 #### ? Einstellungen ####
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.2.2.787" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.2.2.791" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 # ? Alte Variablen loeschen aus eventuellen voherigen sessions
@@ -51,10 +51,11 @@ NEUERREGIONSNAME="Welcome"
 
 ##
  #* Zufallsnamen.
- # Array aus Bezeichnungen von Deutschen Orten und Voelker (Unvollstaendig).
+ # Array aus Bezeichnungen von Deutschen Orten und Voelker (Unvollstaendig da keine umlaute funktionieren).
  # 
  #? @param keiner.
  #? @return NEUERREGIONSNAME - Es wird ein Name zurueckgegeben.
+ # todo: nichts.
 ##
 function namen() {
 	namensarray=("Terwingen" "Angeron" "Vidivarier" "Usipeten" "Sibiner" "Ranier" "Sabalingier" "Aglier" "Aduatuker" \
@@ -104,6 +105,7 @@ function namen() {
  # 
  #? @param STARTVERZEICHNIS ROBUSTVERZEICHNIS MONEYVERZEICHNIS OPENSIMVERZEICHNIS CONFIGPFAD OSTOOLINI
  #? @return Eine Datei wird geschrieben.
+ # todo: nichts.
 ##
 function osmtoolconfig() {
 
@@ -253,14 +255,8 @@ function osmtoolconfig() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
-##
- #* Wozu ist diese Funktion gedacht.
- # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
- # 
- #? @param name Erklaerung.
- #? @return name was wird zurueckgegeben.
-## dummyvar, 
 function dummyvar() {
 	# shellcheck disable=SC2034
 	MONEYVERZEICHNIS="robust"; ROBUSTVERZEICHNIS="robust"; OPENSIMVERZEICHNIS="opensim"; SCRIPTSOURCE="ScriptNeu"; SCRIPTZIP="opensim-ossl-example-scripts-main.zip"; MONEYSOURCE="money48"
@@ -278,10 +274,11 @@ function dummyvar() {
 
 ##
  #* osmtoolconfigabfrage.
- # Konfigurationsparameter fur die Konfigurationsdatei abfragen.
+ # Hier wird die Konfigurationsparameter für opensimTOOL abgefragt.
  # 
  #? @param STARTVERZEICHNIS ROBUSTVERZEICHNIS MONEYVERZEICHNIS OPENSIMVERZEICHNIS CONFIGPFAD SCRIPTPATH.
  #? @return STARTVERZEICHNIS ROBUSTVERZEICHNIS MONEYVERZEICHNIS OPENSIMVERZEICHNIS CONFIGPFAD SCRIPTPATH.
+ # todo: nichts.
 ##
 function osmtoolconfigabfrage() {
 	# Ausgabe Kopfzeilen
@@ -385,6 +382,7 @@ KOMMANDO=$1
  # 
  #? @param keine.
  #? @return keine.
+ # todo: nichts.
 ##
 # install dialog
 function instdialog () {
@@ -402,10 +400,11 @@ function instdialog () {
 
 ##
  #* vardel.
- # vardel, Variablen auf einen schlag loeschen.
+ # Variablen auf einen schlag loeschen.
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function vardel() {
 	unset STARTVERZEICHNIS
@@ -438,6 +437,7 @@ function vardel() {
  # 
  #? @param ScreenLogLevel.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 ### ScreenLog Bildschirmausgabe reduzieren.
 function ScreenLog() {
@@ -463,10 +463,11 @@ function ScreenLog() {
 
 ##
  #* dialogclear.
- # Dialog loeschen.
+ # Dialog Intern loeschen.
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function dialogclear() {
 	dialog --clear
@@ -479,6 +480,7 @@ function dialogclear() {
  # 
  #? @param keine.
  #? @return letzten Meldung.
+ # todo: nichts.
 ##
 function ende() {
 	return
@@ -491,6 +493,7 @@ function ende() {
  # 
  #? @param keine.
  #? @return letzten Meldung.
+ # todo: nichts.
 ##
 function fehler() {
 	exit
@@ -503,6 +506,7 @@ function fehler() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function clearuserlist() {
 	echo "Lösche Besucherlisten log"
@@ -512,12 +516,13 @@ function clearuserlist() {
 }
 
 ##
- #* Wozu ist diese Funktion gedacht.
+ #* historylogclear.
  # Log Dateien von Ubuntu loeschen Beispiel: historylogclear "history".
  # das loeschen von history, apache2error, mysqlerror und mysqlmariadb.
  #
  #? @param history, apache2error, mysqlerror und mysqlmariadb.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function historylogclear() {
 	hlclear=$1
@@ -547,6 +552,7 @@ function historylogclear() {
  # 
  #? @param logtype.
  #? @return Textausgabe.
+ # todo: nichts.
 ##
 function log() {
 	local text
@@ -589,6 +595,7 @@ function log() {
  # 
  #? @param keine.
  #? @return datediff.
+ # todo: nichts.
 ##
 function functionslist() {
 	file="/$STARTVERZEICHNIS/osmtool.sh"
@@ -603,6 +610,7 @@ function functionslist() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function lastrebootdatum() {
 	HEUTEDATUM=$(date +%Y-%m-%d) # Heute
@@ -637,6 +645,7 @@ function lastrebootdatum() {
  #
  #? @param $variable.
  #? @return $trimmvar.
+ # todo: nichts.
 ##
 function trimm() {
 	set -f
@@ -652,6 +661,7 @@ function trimm() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function schreibeinfo() {
 	# *Wenn die Log Datei nicht existiert muss sie erstellt werden sonst gibt es eine Fehlermeldung.
@@ -711,6 +721,7 @@ schreibeinfo
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 # letterdel $variable "[aAbBcCdD]" - letterdel $variable "[[:space:]]"
 function letterdel() {
@@ -724,6 +735,7 @@ function letterdel() {
  #
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function trim_string() {
     : "${1#"${1%%[![:space:]]*}"}"
@@ -737,6 +749,7 @@ function trim_string() {
  # 
  #? @param $VARIABLE.
  #? @return ${result} true false.
+ # todo: nichts.
 ##
 function vartest () {
     VARIABLE="$1"
@@ -755,6 +768,7 @@ function vartest () {
  #
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 trim_all() {
     set -f
@@ -770,6 +784,7 @@ trim_all() {
  # 
  #? @param $installation.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function iinstall() {
 	installation=$1
@@ -787,6 +802,7 @@ function iinstall() {
  # 
  #? @param $installation.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function iinstall2() {
 	installation=$1
@@ -804,6 +820,7 @@ function iinstall2() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function finstall() {
 	TXTLISTE=$1
@@ -824,6 +841,7 @@ function finstall() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function menufinstall() {
 	TXTLISTE=$1
@@ -863,6 +881,7 @@ function menufinstall() {
  # 
  #? @param $datei.
  #? @return $uncompress.
+ # todo: nichts.
 ##
 function uncompress() {
     datei=$1
@@ -891,6 +910,7 @@ function uncompress() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function downloados() {
 	ASSETDELBOXERGEBNIS=$(dialog --menu "Downloads" 30 80 25 \
@@ -962,6 +982,7 @@ function downloados() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function radiolist() {
     rm /tmp/radio.tmp
@@ -1014,6 +1035,7 @@ done
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function rebootdatum() {
 	HEUTEDATUM=$(date +%Y-%m-%d) # Heute
@@ -1060,6 +1082,7 @@ function rebootdatum() {
  # 
  #? @param $1.
  #? @return dialog Textanzeige.
+ # todo: nichts.
 ##
 function warnbox() {
 	dialog --msgbox "$1" 0 0
@@ -1074,6 +1097,7 @@ function warnbox() {
  # 
  #? @param $1.
  #? @return dialog Textanzeige.
+ # todo: nichts.
 ##
 function edittextbox() {
 	#--editbox 	DATEI HOEHE BREITE
@@ -1091,6 +1115,7 @@ function edittextbox() {
  # 
  #? @param $1.
  #? @return dialog Textanzeige.
+ # todo: nichts.
 ##
 function textbox() {
 	#--editbox 	DATEI HOEHE BREITE
@@ -1106,6 +1131,7 @@ function textbox() {
  # 
  #? @param $1 $result.
  #? @return dialog Textanzeige.
+ # todo: nichts.
 ##
 function nachrichtbox() {
 	dialog --title "$1" --no-collapse --msgbox "$result" 0 0
@@ -1118,6 +1144,7 @@ function nachrichtbox() {
  # 
  #? @param $apache2errorlog.
  #? @return dialog Textanzeige.
+ # todo: nichts.
 ##
 function apacheerror() {
 	# $apache2errorlog steht in der Konfigurationsdatei.
@@ -1134,6 +1161,7 @@ function apacheerror() {
  # 
  #? @param $mysqlerrorlog.
  #? @return dialog Textanzeige.
+ # todo: nichts.
 ##
 function mysqldberror() {
 	# $mysqlerrorlog steht in der Konfigurationsdatei.
@@ -1150,6 +1178,7 @@ function mysqldberror() {
  # 
  #? @param $mysqlmariadberor.
  #? @return dialog Textanzeige.
+ # todo: nichts.
 ##
 function mariadberror() {
 	# $mysqlmariadberor steht in der Konfigurationsdatei.
@@ -1166,6 +1195,7 @@ function mariadberror() {
  # 
  #? @param $ufwlog.
  #? @return dialog Textanzeige.
+ # todo: nichts.
 ##
 function ufwlog() {
 	# $ufwlog steht in der Konfigurationsdatei.
@@ -1182,6 +1212,7 @@ function ufwlog() {
  # 
  #? @param $authlog.
  #? @return dialog Textanzeige.
+ # todo: nichts.
 ##
 function authlog() {
 	# $authlog steht in der Konfigurationsdatei.
@@ -1198,6 +1229,7 @@ function authlog() {
  # 
  #? @param $apache2accesslog.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function accesslog() {
 	## $apache2accesslog steht in der Konfigurationsdatei.
@@ -1214,6 +1246,7 @@ function accesslog() {
  # 
  #? @param keine.
  #? @return result.
+ # todo: nichts.
 ##
 function fpspeicher() {
 	result=$(df -h)
@@ -1226,6 +1259,7 @@ function fpspeicher() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function screenlist() {
 	log line
@@ -1250,6 +1284,7 @@ function screenlist() {
  # 
  #? @param keine.
  #? @return $mynewlist.
+ # todo: nichts.
 ##
 function screenlistrestart() {
 	log line
@@ -1265,6 +1300,7 @@ function screenlistrestart() {
  # 
  #? @param keine.
  #? @return $ANZAHLVERZEICHNISSLISTE.
+ # todo: nichts.
 ##
 function makeverzeichnisliste() {
 	VERZEICHNISSLISTE=()
@@ -1283,6 +1319,7 @@ function makeverzeichnisliste() {
  #? @param keine.
  #? @return REGIONSLISTE.
  #? @return ANZAHLREGIONSLISTE.
+ # todo: nichts.
 ##
 function makeregionsliste() {
 	REGIONSLISTE=()
@@ -1299,6 +1336,7 @@ function makeregionsliste() {
  # 
  #? @param "username" "password" "databasename" "mysqlcommand".
  #? @return result_mysqlrest.
+ # todo: nichts.
 ##
 function mysqlrest() {
 	username=$1
@@ -1314,6 +1352,7 @@ function mysqlrest() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function mysqlrestnodb() {
 	username=$1
@@ -1329,6 +1368,7 @@ function mysqlrestnodb() {
  # 
  #? @param "username" "password" "databasename".
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function mysqlbackup() {
 	# bearbeitung noetig!
@@ -1344,6 +1384,7 @@ function mysqlbackup() {
  # 
  #? @param $PASSWORTLAENGE.
  #? @return $NEWPASSWD.
+ # todo: nichts.
 ##
 function passgen() {
 		# Alle Aktionen ohne dialog
@@ -1360,6 +1401,7 @@ function passgen() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function passwdgenerator() {
 	### dialog Aktionen
@@ -1392,6 +1434,7 @@ function passwdgenerator() {
  # 
  #? @param screen_name Regionsname Objektname.
  #? @return Text.
+ # todo: nichts.
 ##
 function assetdel() {
 	ASSDELSCREEN=$1
@@ -1417,6 +1460,7 @@ function assetdel() {
  # 
  #? @param dialog.
  #? @return dialog.
+ # todo: nichts.
 ##
 function menuassetdel() {
 	# zuerst schauen ob dialog installiert ist
@@ -1469,6 +1513,7 @@ function menuassetdel() {
  # 
  #? @param screen_name Regionsname.
  #? @return Text.
+ # todo: nichts.
 ##
 function landclear() {
 	LANDCLEARSCREEN=$1
@@ -1494,6 +1539,7 @@ function landclear() {
  # 
  #? @param dialog.
  #? @return dialog.
+ # todo: nichts.
 ##
 function menulandclear() {
 	# zuerst schauen ob dialog installiert ist
@@ -1544,6 +1590,7 @@ function menulandclear() {
  # 
  #? @param "NAME" "VERZEICHNIS" "PASSWORD" "DATEImitPFAD".
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function loadinventar() {
 	LOADINVSCREEN="sim1"
@@ -1567,6 +1614,7 @@ function loadinventar() {
  # 
  #? @param dialog.
  #? @return dialog.
+ # todo: nichts.
 ##
 function menuloadinventar() {
 	# zuerst schauen ob dialog installiert ist
@@ -1622,6 +1670,7 @@ function menuloadinventar() {
  # 
  #? @param "NAME" "VERZEICHNIS" "PASSWORD" "DATEImitPFAD".
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function saveinventar() {
 	SAVEINVSCREEN="sim1"
@@ -1645,6 +1694,7 @@ function saveinventar() {
  # 
  #? @param dialog.
  #? @return dialog.
+ # todo: nichts.
 ##
 function menusaveinventar() {
 	# zuerst schauen ob dialog installiert ist
@@ -1702,6 +1752,7 @@ function menusaveinventar() {
  # 
  #? @param Screen Region Befehl Parameter.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function oscommand() {
 	OSCOMMANDSCREEN=$1
@@ -1723,6 +1774,7 @@ function oscommand() {
  # 
  #? @param dialog.
  #? @return dialog.
+ # todo: nichts.
 ##
 function menuoscommand() {
 	# zuerst schauen ob dialog installiert ist
@@ -1775,6 +1827,7 @@ function menuoscommand() {
  # 
  #? @param $SETSIMULATOR.
  #? @return $CONFIGWRITE.
+ # todo: nichts.
 ##
 function oswriteconfig() {
 	SETSIMULATOR=$1
@@ -1788,6 +1841,7 @@ function oswriteconfig() {
  # 
  #? @param dialog.
  #? @return dialog.
+ # todo: nichts.
 ##
 function menuoswriteconfig() {
 	SETSIMULATOR=$1 # OpenSimulator, Verzeichnis und Screen Name
@@ -1842,6 +1896,7 @@ function menuoswriteconfig() {
  # 
  #? @param dialog.
  #? @return dialog.
+ # todo: nichts.
 ##
 function menuworks() {
 	WORKSSCREEN=$1 # OpenSimulator, Verzeichnis und Screen Name
@@ -1888,6 +1943,7 @@ function menuworks() {
  # 
  #? @param $WORKSSCREEN.
  #? @return $WORKSSCREEN.
+ # todo: nichts.
 ##
 function works() {
 	WORKSSCREEN=$1 # OpenSimulator, Verzeichnis und Screen Name
@@ -1910,6 +1966,7 @@ function works() {
  # 
  #? @param keine.
  #? @return $ergebnis.
+ # todo: nichts.
 ##
 function waslauft() {
 	# Die screen -ls ausgabe zu einer Liste aendern.
@@ -1926,6 +1983,7 @@ function waslauft() {
  # 
  #? @param dialog.
  #? @return dialog.
+ # todo: nichts.
 ##
 ##
  #* Wozu ist diese Funktion gedacht.
@@ -1933,6 +1991,7 @@ function waslauft() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ## menuwaslauft - Zeigt alle Laufenden Screens an im dialog.
 function menuwaslauft() {
 	# Die screen -ls ausgabe zu einer Liste aendern.
@@ -1954,6 +2013,7 @@ function menuwaslauft() {
  # 
  #? @param $DATEINAME.
  #? @return $?.
+ # todo: nichts.
 ##
 function checkfile() {
 	# Verwendung als Einzeiler: checkfile /pfad/zur/datei && echo "File exists" || echo "File not found!"
@@ -1969,6 +2029,7 @@ function checkfile() {
  # 
  #? @param $VERZEICHNIS.
  #? @return $VERZEICHNIS.
+ # todo: nichts.
 ##
 function mapdel() {
 	VERZEICHNIS=$1
@@ -1990,6 +2051,7 @@ function mapdel() {
  # 
  #? @param $VERZEICHNIS.
  #? @return $VERZEICHNIS.
+ # todo: nichts.
 ##
 function logdel() {
 	VERZEICHNIS=$1
@@ -2010,6 +2072,7 @@ function logdel() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function rologdel() {
 
@@ -2055,6 +2118,7 @@ function rologdel() {
  # 
  #? @param dialog.
  #? @return dialog.
+ # todo: nichts.
 ##
 function menumapdel() {
 	### dialog Aktionen
@@ -2089,6 +2153,7 @@ function menumapdel() {
  # 
  #? @param dialog.
  #? @return dialog.
+ # todo: nichts.
 ##
 function menulogdel() {
 	### dialog Aktionen
@@ -2124,6 +2189,7 @@ function menulogdel() {
  # 
  #? @param $VERZEICHNIS.
  #? @return $VERZEICHNIS.
+ # todo: nichts.
 ##
 # assetdel.sh sim1
 # Das Verzeichnis samt neuer Daten werden beim naechsten start des opensimulator neu geschrieben.
@@ -2145,6 +2211,7 @@ function assetcachedel() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 # Die Verzeichnisse samt neuer Daten werden beim naechsten start des opensimulator neu geschrieben.
 function autoassetcachedel() {
@@ -2165,6 +2232,7 @@ function autoassetcachedel() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function ossettings() {
 	log line
@@ -2208,6 +2276,7 @@ function ossettings() {
  # 
  #? @param $OSSTARTSCREEN.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function osstart() {
 	OSSTARTSCREEN=$1 # OpenSimulator, Verzeichnis und Screen Name
@@ -2248,6 +2317,7 @@ function osstart() {
  # 
  #? @param $OSSTOPSCREEN.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function osstop() {
 	OSSTOPSCREEN=$1 # OpenSimulator, Verzeichnis und Screen Name
@@ -2270,6 +2340,7 @@ function osstop() {
  # 
  #? @param dialog.
  #? @return dialog.
+ # todo: nichts.
 ##
 ##
  #* Wozu ist diese Funktion gedacht.
@@ -2277,6 +2348,7 @@ function osstop() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##  menuosstart() ist die dialog Version von osstart()
 function menuosstart() {
 	IOSSTARTSCREEN=$(
@@ -2346,6 +2418,7 @@ function menuosstart() {
  # 
  #? @param dialog.
  #? @return dialog.
+ # todo: nichts.
 ##
 ##
  #* Wozu ist diese Funktion gedacht.
@@ -2353,6 +2426,7 @@ function menuosstart() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##  menuosstop() ist die dialog Version von osstop()
 function menuosstop() {
 	IOSSTOPSCREEN=$(
@@ -2389,6 +2463,7 @@ function menuosstop() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function rostart() {
 	log line
@@ -2418,6 +2493,7 @@ function rostart() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function menurostart() {
 	# log line
@@ -2445,6 +2521,7 @@ function menurostart() {
  # 
  #? @param $OSEINTRAG.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function osstarteintrag() {
 	OSEINTRAG=$1 # OpenSimulator, Verzeichnis und Screen Name
@@ -2459,6 +2536,7 @@ function osstarteintrag() {
  # 
  #? @param dialog.
  #? @return dialog.
+ # todo: nichts.
 ##
 function menuosstarteintrag() {
 	MENUOSEINTRAG=$(
@@ -2482,6 +2560,7 @@ function menuosstarteintrag() {
  # 
  #? @param $OSEINTRAGDEL.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function osstarteintragdel() {
 	OSEINTRAGDEL=$1 # OpenSimulator, Verzeichnis und Screen Name
@@ -2496,6 +2575,7 @@ function osstarteintragdel() {
  # 
  #? @param dialog.
  #? @return dialog.
+ # todo: nichts.
 ##
 function menuosstarteintragdel() {
 	MENUOSEINTRAGDEL=$(
@@ -2520,6 +2600,7 @@ function menuosstarteintragdel() {
  # 
  #? @param $OSDAUERSTOPSCREEN.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function osdauerstop() {
 	OSDAUERSTOPSCREEN=$1 # OpenSimulator, Verzeichnis und Screen Name
@@ -2545,6 +2626,7 @@ function osdauerstop() {
  # 
  #? @param dialog.
  #? @return dialog.
+ # todo: nichts.
 ##
 function menuosdauerstop() {
 	IOSDAUERSTOPSCREEN=$(
@@ -2586,6 +2668,7 @@ function menuosdauerstop() {
  # 
  #? @param $OSDAUERSTARTSCREEN.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function osdauerstart() {
 	OSDAUERSTARTSCREEN=$1 # OpenSimulator, Verzeichnis und Screen Name
@@ -2626,6 +2709,7 @@ function osdauerstart() {
  # 
  #? @param dialog.
  #? @return dialog.
+ # todo: nichts.
 ##
 function menuosdauerstart() {
 	IOSDAUERSTARTSCREEN=$(
@@ -2699,6 +2783,7 @@ function menuosdauerstart() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function rostop() {
 	if screen -list | grep -q "RO"; then
@@ -2718,6 +2803,7 @@ function rostop() {
  # 
  #? @param dialog.
  #? @return dialog.
+ # todo: nichts.
 ##
 function menurostop() {
 	if screen -list | grep -q "RO"; then
@@ -2735,6 +2821,7 @@ function menurostop() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function mostart() {
 	if checkfile /$STARTVERZEICHNIS/$MONEYVERZEICHNIS/bin/MoneyServer.exe; then
@@ -2761,6 +2848,7 @@ function mostart() {
  # 
  #? @param dialog.
  #? @return dialog.
+ # todo: nichts.
 ##
 function menumostart() {
 	if checkfile /$STARTVERZEICHNIS/$MONEYVERZEICHNIS/bin/MoneyServer.exe; then
@@ -2790,6 +2878,7 @@ function menumostart() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function mostop() {
 	if screen -list | grep -q "MO"; then
@@ -2809,6 +2898,7 @@ function mostop() {
  # 
  #? @param dialog.
  #? @return dialog.
+ # todo: nichts.
 ##
 ##
  #* Wozu ist diese Funktion gedacht.
@@ -2816,6 +2906,7 @@ function mostop() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##  menumostop, Money herunterfahren.
 function menumostop() {
 	if screen -list | grep -q "MO"; then
@@ -2836,6 +2927,7 @@ function menumostop() {
  # 
  #? @param $SCREENSTOPSCREEN.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function osscreenstop() {
 	SCREENSTOPSCREEN=$1
@@ -2856,6 +2948,7 @@ function osscreenstop() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function gridstart() {
 	ossettings
@@ -2878,6 +2971,7 @@ function gridstart() {
  # 
  #? @param dialog.
  #? @return dialog.
+ # todo: nichts.
 ##
 function menugridstart() {
 	ossettings
@@ -2901,6 +2995,7 @@ function menugridstart() {
  # 
  #? @param $STATSSCREEN.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 # Beispiel-Example: simstats sim1
 # erzeugt im Hauptverzeichnis eine Datei namens sim1.log in dieser Datei ist die Statistik zu finden.
@@ -2926,6 +3021,7 @@ function simstats() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function terminator() {
 	log info "hasta la vista baby"
@@ -2941,6 +3037,7 @@ function terminator() {
  # 
  #? @param $netversion.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function oscompi() {
 	# Wenn keine Einstellung vorhanden ist dann VS2019 mit mono 4.6
@@ -3070,6 +3167,7 @@ function oscompi() {
  # 
  #? @param $MONEYCOPY.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function moneygitcopy() {
 	#Money und Scripte vom Git holen
@@ -3089,6 +3187,7 @@ function moneygitcopy() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function scriptgitcopy() {
 	#Money und Scripte vom Git holen
@@ -3107,6 +3206,7 @@ function scriptgitcopy() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function scriptcopy() {
 	if [[ $SCRIPTCOPY = "yes" ]]; then
@@ -3136,6 +3236,7 @@ function scriptcopy() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function moneycopy() {
 	if [[ $MONEYCOPY = "yes" ]]; then
@@ -3164,6 +3265,7 @@ function moneycopy() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function makeaot() {
 	if [ ! -f "/$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/" ]; then
@@ -3194,6 +3296,7 @@ function makeaot() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function cleanaot() {
 	if [ ! -f "/$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/" ]; then
@@ -3227,6 +3330,7 @@ function cleanaot() {
  # 
  #? @param $NUMMER.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function osprebuild() {
 	NUMMER=$1
@@ -3248,6 +3352,7 @@ function osprebuild() {
  # 
  #? @param ersteSIM letzteSIM.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 # Beispiel: ./osmtool.sh osstruktur 1 10 - erstellt ein Grid Verzeichnis fuer 10 Simulatoren inklusive der $SIMDATEI.
 function osstruktur() {
@@ -3274,6 +3379,7 @@ function osstruktur() {
  # 
  #? @param dialog.
  #? @return dialog.
+ # todo: nichts.
 ##
 function menuosstruktur() {
 	# zuerst schauen ob dialog installiert ist
@@ -3326,6 +3432,7 @@ function menuosstruktur() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function osdelete() {
 	if [ -d /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/ ]; then
@@ -3349,6 +3456,7 @@ function osdelete() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function oscopyrobust() {
 	cd /$STARTVERZEICHNIS || return 1
@@ -3373,6 +3481,7 @@ function oscopyrobust() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function oscopysim() {
 	cd /$STARTVERZEICHNIS || return 1 # Prüfen ob Verzeichnis vorhanden ist.
@@ -3396,6 +3505,7 @@ function oscopysim() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function oscopy() {
 	cd /$STARTVERZEICHNIS || return 1
@@ -3413,6 +3523,7 @@ function oscopy() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function configlesen() {
 	log info "CONFIGLESEN: Regionskonfigurationen von $CONFIGLESENSCREEN"
@@ -3429,6 +3540,7 @@ function configlesen() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function regionsconfigdateiliste() {
 	VERZEICHNIS=$1
@@ -3448,6 +3560,7 @@ function regionsconfigdateiliste() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function meineregionen() {
 	makeverzeichnisliste
@@ -3469,6 +3582,7 @@ function meineregionen() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function regionsinisuchen() {
 	makeverzeichnisliste
@@ -3493,6 +3607,7 @@ function regionsinisuchen() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function get_regionsarray() {
 	# Es fehlt eine pruefung ob Datei vorhanden ist.
@@ -3518,6 +3633,7 @@ function get_regionsarray() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function get_value_from_Region_key() {
 	# RKDATEI=$1; RKSCHLUESSEL=$2; RKSEKTION=$3;
@@ -3535,6 +3651,7 @@ function get_value_from_Region_key() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function regionsiniteilen() {
 	INIVERZEICHNIS=$1                                                     # Auszulesendes Verzeichnis
@@ -3585,6 +3702,7 @@ function regionsiniteilen() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function autoregionsiniteilen() {
 	makeverzeichnisliste
@@ -3619,6 +3737,7 @@ function autoregionsiniteilen() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 ##
  #* Wozu ist diese Funktion gedacht.
@@ -3626,6 +3745,7 @@ function autoregionsiniteilen() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##  regionliste, Die RegionListe ermitteln und mit dem Verzeichnisnamen in die osmregionlist.ini schreiben.
 function regionliste() {
 	# Alte osmregionlist.ini sichern und in osmregionlist.ini.old umbenennen.
@@ -3667,6 +3787,7 @@ function regionliste() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function makewebmaps() {
 	MAPTILEVERZEICHNIS="maptiles"
@@ -3684,6 +3805,7 @@ function makewebmaps() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function moneydelete() {
 	makeverzeichnisliste
@@ -3716,6 +3838,7 @@ function moneydelete() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function osgitholen() {
 	if [ -d /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/ ]; then
@@ -3741,6 +3864,7 @@ function osgitholen() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function opensimholen() {
 	if [ -d /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/ ]; then
@@ -3776,6 +3900,7 @@ function opensimholen() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function install_mysqltuner() {
 	cd /$STARTVERZEICHNIS || return 1
@@ -3794,6 +3919,7 @@ function install_mysqltuner() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function regionbackup() {
 	# Backup Verzeichnis anlegen.
@@ -3837,6 +3963,7 @@ function regionbackup() {
  # 
  #? @param dialog.
  #? @return dialog.
+ # todo: nichts.
 ##
 function menuregionbackup() {
 	# zuerst schauen ob dialog installiert ist
@@ -3909,6 +4036,7 @@ function menuregionbackup() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function regionrestore() {
 	RESTOREVERZEICHNISSCREENNAME=$1
@@ -3937,6 +4065,7 @@ function regionrestore() {
  # 
  #? @param dialog.
  #? @return dialog.
+ # todo: nichts.
 ##
 ##
  #* Wozu ist diese Funktion gedacht.
@@ -3944,6 +4073,7 @@ function regionrestore() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##  menuregionrestore() ist die dialog Version von regionrestore()
 function menuregionrestore() {
 	# zuerst schauen ob dialog installiert ist
@@ -3994,6 +4124,7 @@ function menuregionrestore() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function autosimstart() {
 	if ! screen -list | grep -q 'sim'; then
@@ -4033,6 +4164,7 @@ function autosimstart() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function autosimstop() {
 	makeverzeichnisliste
@@ -4055,6 +4187,7 @@ function autosimstop() {
  # 
  #? @param dialog.
  #? @return dialog.
+ # todo: nichts.
 ##
 function menuautosimstart() {
 	if ! screen -list | grep -q 'sim'; then
@@ -4103,6 +4236,7 @@ function menuautosimstart() {
  # 
  #? @param dialog.
  #? @return dialog.
+ # todo: nichts.
 ##
 function menuautosimstop() {
 	makeverzeichnisliste
@@ -4134,6 +4268,7 @@ function menuautosimstop() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 # Die Dateien samt neuer Daten werden beim naechsten start des opensimulator neu geschrieben.
 function autologdel() {
@@ -4157,6 +4292,7 @@ function autologdel() {
  # 
  #? @param dialog.
  #? @return dialog.
+ # todo: nichts.
 ##
 function menuautologdel() {
 	log line
@@ -4180,6 +4316,7 @@ function menuautologdel() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 # Die Dateien samt neuer Daten werden beim naechsten start des opensimulator neu geschrieben.
 function automapdel() {
@@ -4202,6 +4339,7 @@ function automapdel() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function autorobustmapdel() {
 	cd /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin || return 1
@@ -4216,6 +4354,7 @@ function autorobustmapdel() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function cleaninstall() {
 
@@ -4235,6 +4374,7 @@ function cleaninstall() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function allclean() {
 	ALLCLEANVERZEICHNIS=$1
@@ -4266,6 +4406,7 @@ function allclean() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function gridcachedelete() {
 	log line
@@ -4291,6 +4432,7 @@ function gridcachedelete() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function autoallclean() {
 	makeverzeichnisliste
@@ -4382,6 +4524,7 @@ function autoallclean() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function autoregionbackup() {
 	log info "Automatisches Backup wird gestartet."
@@ -4402,6 +4545,7 @@ function autoregionbackup() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function autoscreenstop() {
 	makeverzeichnisliste
@@ -4436,6 +4580,7 @@ function autoscreenstop() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function menuautoscreenstop() {
 	makeverzeichnisliste
@@ -4470,6 +4615,7 @@ function menuautoscreenstop() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function autostart() {
 	#log line
@@ -4491,6 +4637,7 @@ function autostart() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function autostop() {
 	log warn "### Stoppe das Grid! ###"
@@ -4528,6 +4675,7 @@ function autostop() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function menuautostart() {
 	echo ""
@@ -4547,6 +4695,7 @@ function menuautostart() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function menuautostop() {
 	# schauen ob screens laufen wenn ja beenden.
@@ -4565,6 +4714,7 @@ function menuautostop() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function autorestart() {
 	autostop
@@ -4583,6 +4733,7 @@ function autorestart() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function menuautorestart() {
 	autostop
@@ -4601,6 +4752,7 @@ function menuautorestart() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function serverupgrade() {
 	sudo apt-get update
@@ -4613,6 +4765,7 @@ function serverupgrade() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function installmariadb18() {
 
@@ -4638,6 +4791,7 @@ function installmariadb18() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function installmariadb22() {
 	# MySQL stoppen wenn es laeuft:
@@ -4656,6 +4810,7 @@ function installmariadb22() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function monoinstall() {
 	if dpkg-query -s mono-complete 2>/dev/null | grep -q installed; then
@@ -4682,6 +4837,7 @@ function monoinstall() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function monoinstall18() {
 	if dpkg-query -s mono-complete 2>/dev/null | grep -q installed; then
@@ -4706,6 +4862,7 @@ function monoinstall18() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function monoinstall20() {
 	if dpkg-query -s mono-complete 2>/dev/null | grep -q installed; then
@@ -4730,6 +4887,7 @@ function monoinstall20() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function monoinstall22() {
 	sudo apt install mono-roslyn mono-complete mono-dbg mono-xbuild -y
@@ -4741,6 +4899,7 @@ function monoinstall22() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function sourcelist18() {
 	echo "deb http://de.archive.ubuntu.com/ubuntu bionic main restricted universe multiverse"
@@ -4765,6 +4924,7 @@ function sourcelist18() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function sourcelist22() {
 	echo "deb http://de.archive.ubuntu.com/ubuntu jammy main restricted universe multiverse"
@@ -4788,6 +4948,7 @@ function sourcelist22() {
  # Installiert oder Upgradet alles was für WordPress benötigt wird.
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function installwordpress() {
 	#Installationen die fuer Wordpress benoetigt werden
@@ -4813,6 +4974,7 @@ function installwordpress() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function installopensimulator() {
 	#Alles fuer den OpenSimulator ausser mono
@@ -4857,6 +5019,7 @@ function installopensimulator() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function installbegin() { 
 	apt update && apt upgrade; 
@@ -4868,6 +5031,7 @@ function installbegin() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function linuxupgrade() { 
 	apt update && apt upgrade -y; 
@@ -4879,6 +5043,7 @@ function linuxupgrade() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function installubuntu22() {
 	#Alles fuer den OpenSimulator ausser mono
@@ -4931,6 +5096,7 @@ function installubuntu22() {
  # 
  #? @param ipsperradresse.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function iptablesset() {
 	ipsperradresse=$1
@@ -4950,6 +5116,7 @@ function iptablesset() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function fail2banset() {
 	echo ""
@@ -4970,6 +5137,7 @@ findtime = 600" >/etc/fail2ban/jail.local
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 ##
  #* Wozu ist diese Funktion gedacht.
@@ -4977,6 +5145,7 @@ findtime = 600" >/etc/fail2ban/jail.local
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##  ufwset
 function ufwset() {
 	### Uncomplicated Firewall
@@ -5018,6 +5187,7 @@ function ufwset() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function installphpmyadmin() {
 	### Installieren von PhpMyAdmin
@@ -5030,6 +5200,7 @@ function installphpmyadmin() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function installfinish() {
 	apt update
@@ -5045,6 +5216,7 @@ function installfinish() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function installationhttps22() {
 	httpsemail=$1
@@ -5063,6 +5235,7 @@ function installationhttps22() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function serverinstall22() {
 	installbegin
@@ -5080,6 +5253,7 @@ function serverinstall22() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function serverinstall() {
 	# zuerst schauen ob dialog installiert ist
@@ -5123,6 +5297,7 @@ function serverinstall() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function installationen() {
 	log info "Liste aller Installierten Pakete unter Linux:"
@@ -5139,6 +5314,7 @@ function installationen() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function osbuilding() {
 	## dialog Aktionen
@@ -5197,6 +5373,7 @@ function osbuilding() {
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
 ##
 function createuser() {
 	VORNAME=$1
@@ -5245,6 +5422,7 @@ function createuser() {
  # 
  #? @param dialog.
  #? @return dialog.
+ # todo: nichts.
 ##
 function menucreateuser() {
 	# zuerst schauen ob dialog installiert ist
@@ -5320,6 +5498,7 @@ function menucreateuser() {
  # 
  #? @param username password databasename useruuid.
  #? @return "$result_mysqlrest".
+ # todo: nichts.
 ##
 function db_friends() {
 	username=$1
@@ -5340,6 +5519,7 @@ function db_friends() {
  # 
  #? @param "$username" "$password" "$databasename".
  #? @return "$result_mysqlrest".
+ # todo: nichts.
 ##
 function db_online() {
 	username=$1
@@ -5359,6 +5539,7 @@ function db_online() {
  # 
  #? @param "$username" "$password" "$databasename".
  #? @return "$result_mysqlrest".
+ # todo: nichts.
 ##
 function db_region() {
 	username=$1
@@ -5379,6 +5560,7 @@ function db_region() {
  # 
  #? @param "$username" "$password" "$databasename".
  #? @return "$mygridliste".
+ # todo: nichts.
 ##
 function db_gridlist() {
 	username=$1
@@ -5402,6 +5584,7 @@ function db_gridlist() {
  # 
  #? @param username password databasename invname.
  #? @return $result_mysqlrest.
+ # todo: nichts.
 ##
 ##
  #* Wozu ist diese Funktion gedacht.
@@ -5409,6 +5592,7 @@ function db_gridlist() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##db_inv_search OK
 function db_inv_search() {
 	username=$1
@@ -5429,6 +5613,7 @@ function db_inv_search() {
  # 
  #? @param username password databasename.
  #? @return $result_mysqlrest.
+ # todo: nichts.
 ##
 function db_user_anzahl() {
 	username=$1
@@ -5450,6 +5635,7 @@ function db_user_anzahl() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##
 function db_user_online() {
 	username=$1
@@ -5469,6 +5655,7 @@ function db_user_online() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##
 function db_region_parzelle() {
 	username=$1
@@ -5488,6 +5675,7 @@ function db_region_parzelle() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##
 function db_region_parzelle_pakete() {
 	username=$1
@@ -5507,6 +5695,7 @@ function db_region_parzelle_pakete() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##
 function db_region_anzahl_regionsnamen() {
 	username=$1
@@ -5526,6 +5715,7 @@ function db_region_anzahl_regionsnamen() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##
 function db_region_anzahl_regionsid() {
 	username=$1
@@ -5545,6 +5735,7 @@ function db_region_anzahl_regionsid() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ## 
 function db_inventar_no_assets() {
 	username=$1
@@ -5566,6 +5757,7 @@ function db_inventar_no_assets() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##
 function db_anzeigen() {
 	username=$1
@@ -5584,6 +5776,7 @@ function db_anzeigen() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##
 function db_anzeigen_dialog() {
 	# zuerst schauen ob dialog installiert ist
@@ -5627,6 +5820,7 @@ function db_anzeigen_dialog() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##
 function db_tables() {
 	username=$1
@@ -5740,6 +5934,7 @@ function db_benutzer_anzeigen() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ## 
 function db_regions() {
 	# zuerst schauen ob dialog installiert ist
@@ -5793,6 +5988,7 @@ function db_regions() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##
 function db_regionsuri() {
 	# zuerst schauen ob dialog installiert ist
@@ -5846,6 +6042,7 @@ function db_regionsuri() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##
 function db_regionsport() {
 	# zuerst schauen ob dialog installiert ist
@@ -5899,6 +6096,7 @@ function db_regionsport() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##
 function create_db() {
 	DBBENUTZER=$1
@@ -5930,6 +6128,7 @@ function create_db() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##
 function create_db_user() {
 	DBBENUTZER=$1
@@ -5960,6 +6159,7 @@ function create_db_user() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##
 function delete_db() {
 	DBBENUTZER=$1
@@ -5987,6 +6187,7 @@ function delete_db() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##
 function db_empty() {
 	# zuerst schauen ob dialog installiert ist
@@ -6049,6 +6250,7 @@ function db_empty() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##
 function allrepair_db() {
 	# zuerst schauen ob dialog installiert ist
@@ -6105,6 +6307,7 @@ function allrepair_db() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##
 function mysql_neustart() {
 	log text "MYSQL RESTART: MySQL Neu starten."
@@ -6123,6 +6326,7 @@ function mysql_neustart() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##
 function db_backup() {
 	username=$1
@@ -6143,6 +6347,7 @@ function db_backup() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##
 function db_compress_backup() {
 	username=$1
@@ -6165,6 +6370,7 @@ function db_compress_backup() {
  # 
  #? @param db_backuptabellen DB_Benutzername DB_Passwort Datenbankname.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##
 function db_backuptabellen() {
 	# Hier fehlt noch das die Asset Datenbank gesplittet wird.
@@ -6196,6 +6402,7 @@ function db_backuptabellen() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##
 function db_backuptabellentypen() {
 	username=$1
@@ -6312,6 +6519,7 @@ function db_restorebackuptabellen() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##
 function db_restorebackuptabellen2test() {
 	username=$1
@@ -6350,6 +6558,7 @@ function db_restorebackuptabellen2test() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##
 function db_create() {
 	# zuerst schauen ob dialog installiert ist
@@ -6410,6 +6619,7 @@ function db_create() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##
 function db_dbuser() {
 	username=$1
@@ -6428,6 +6638,7 @@ function db_dbuser() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##
 function db_dbuserrechte() {
 	# zuerst schauen ob dialog installiert ist
@@ -6480,6 +6691,7 @@ function db_dbuserrechte() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##
 function db_deldbuser() {
 	# zuerst schauen ob dialog installiert ist
@@ -6541,6 +6753,7 @@ function db_deldbuser() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##
 function db_create_new_dbuser() {
 	# zuerst schauen ob dialog installiert ist
@@ -6600,6 +6813,7 @@ function db_create_new_dbuser() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##
 function createdatabase() {
     # Übergabeparameter
@@ -6630,6 +6844,7 @@ EOF
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##
 function createdbuser() {
     # Übergabeparameter
@@ -6662,6 +6877,7 @@ EOF
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##
 function db_delete() {
 	# zuerst schauen ob dialog installiert ist
@@ -6716,6 +6932,7 @@ function db_delete() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ## 
 function tabellenabfrage() {
 	DBBENUTZER=$1
@@ -6736,6 +6953,7 @@ MEINE_ABFRAGE_ENDE
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##
 function regionsabfrage() {
 	DBBENUTZER=$1
@@ -6755,6 +6973,7 @@ MEIN_ABFRAGE_ENDE
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##
 function regionsuri() {
 	DBBENUTZER=$1
@@ -6774,6 +6993,7 @@ MEIN_ABFRAGE_ENDE
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##
 function regionsport() {
 	DBBENUTZER=$1
@@ -6794,6 +7014,7 @@ MEIN_ABFRAGE_ENDE
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##
 function setpartner() {
 	DBBENUTZER=$1
@@ -6823,6 +7044,7 @@ MEIN_ABFRAGE_ENDE
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##
 function db_setpartner() {
 	username=$1
@@ -6848,6 +7070,7 @@ function db_setpartner() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##
 function db_deletepartner() {
 	username=$1
@@ -6870,6 +7093,7 @@ function db_deletepartner() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##
 function db_all_user() {
 	username=$1
@@ -6889,6 +7113,7 @@ function db_all_user() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##
 function db_all_user_dialog() {
 	# zuerst schauen ob dialog installiert ist
@@ -6934,6 +7159,7 @@ function db_all_user_dialog() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##
 function db_all_uuid() {
 	username=$1
@@ -6953,6 +7179,7 @@ function db_all_uuid() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##
 function db_all_uuid_dialog() {
 	# zuerst schauen ob dialog installiert ist
@@ -6998,6 +7225,7 @@ function db_all_uuid_dialog() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ## 
 function db_all_name() {
 	username=$1
@@ -7017,6 +7245,7 @@ function db_all_name() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##
 function db_all_name_dialog() {
 	# zuerst schauen ob dialog installiert ist
@@ -7062,6 +7291,7 @@ function db_all_name_dialog() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##
 function db_user_data() {
 	username=$1
@@ -7082,6 +7312,7 @@ function db_user_data() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##
 function db_user_data_dialog() {
 	# zuerst schauen ob dialog installiert ist
@@ -7134,6 +7365,7 @@ function db_user_data_dialog() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##
 function db_user_infos() {
 	username=$1
@@ -7156,6 +7388,7 @@ function db_user_infos() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##
 function db_user_infos_dialog() {
 	# zuerst schauen ob dialog installiert ist
@@ -7207,6 +7440,7 @@ function db_user_infos_dialog() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##
 function db_user_uuid() {
 	username=$1
@@ -7227,6 +7461,7 @@ function db_user_uuid() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##
 function db_user_uuid_dialog() {
 	# zuerst schauen ob dialog installiert ist
@@ -7278,6 +7513,7 @@ function db_user_uuid_dialog() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##
 function db_foldertyp_user() {
 	username=$1
@@ -7328,6 +7564,7 @@ function db_foldertyp_user() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ## 
 function db_all_userfailed() {
 	# zuerst schauen ob dialog installiert ist
@@ -7391,6 +7628,7 @@ function db_all_userfailed() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##
 function db_userdate() {
 	# zuerst schauen ob dialog installiert ist
@@ -7454,6 +7692,7 @@ function db_userdate() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ## Finde offensichtlich falsche E-Mail Adressen der User: db_false_email "username" "password" "databasename"
 function db_false_email() {
 	# zuerst schauen ob dialog installiert ist
@@ -7512,6 +7751,7 @@ function db_false_email() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##
 function set_empty_user() {
 	regex="^(([-a-zA-Z0-9\!#\$%\&\'*+/=?^_\`{\|}~]+|(\"([][,:;<>\&@a-zA-Z0-9\!#\$%\&\'*+/=?^_\`{\|}~-]|(\\\\[\\ \"]))+\"))\.)*([-a-zA-Z0-9\!#\$%\&\'*+/=?^_\`{\|}~]+|(\"([][,:;<>\&@a-zA-Z0-9\!#\$%\&\'*+/=?^_\`{\|}~-]|(\\\\[\\ \"]))+\"))@\w((-|\w)*\w)*\.(\w((-|\w)*\w)*\.)*\w{2,4}$"
@@ -7552,6 +7792,7 @@ function set_empty_user() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##
 function db_email_setincorrectuseroff() {
 	username=$1
@@ -7575,6 +7816,7 @@ function db_email_setincorrectuseroff() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##
 function db_email_setincorrectuseroff_dialog() {
 	# zuerst schauen ob dialog installiert ist
@@ -7624,6 +7866,7 @@ function db_email_setincorrectuseroff_dialog() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##
 function db_setuserofline() {
 	username=$1
@@ -7647,6 +7890,7 @@ function db_setuserofline() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##
 function db_setuserofline_dialog() {
 	# zuerst schauen ob dialog installiert ist
@@ -7699,6 +7943,7 @@ function db_setuserofline_dialog() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##
 function db_setuseronline() {
 	username=$1
@@ -7722,6 +7967,7 @@ function db_setuseronline() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##
 function db_setuseronline_dialog() {
 	# zuerst schauen ob dialog installiert ist
@@ -7773,6 +8019,7 @@ function db_setuseronline_dialog() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ## default_master_connection "$2" "$3"
 function default_master_connection() {
 	username=$1
@@ -7795,6 +8042,7 @@ function default_master_connection() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ## connection_name "$2" "$3"
 function connection_name() {
 	username=$1
@@ -7816,6 +8064,7 @@ function connection_name() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ## 
 function MASTER_USER() {
 	username=$1
@@ -7837,6 +8086,7 @@ function MASTER_USER() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ## 
 function MASTER_PASSWORD() {
 	username=$1
@@ -7858,6 +8108,7 @@ function MASTER_PASSWORD() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ## 
 function MASTER_HOST() {
 	username=$1
@@ -7881,6 +8132,7 @@ function MASTER_HOST() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##
 function MASTER_PORT() {
 	username=$1
@@ -7906,6 +8158,7 @@ function MASTER_PORT() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ## 
 function MASTER_CONNECT_RETRY() {
 	username=$1
@@ -7929,6 +8182,7 @@ function MASTER_CONNECT_RETRY() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ## 
 function MASTER_SSL() {
 	username=$1
@@ -7952,6 +8206,7 @@ function MASTER_SSL() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ## 
 function MASTER_SSL_CA() {
 	username=$1
@@ -7978,6 +8233,7 @@ function MASTER_SSL_CA() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ## 
 function MASTER_SSL_CAPATH() {
 	username=$1
@@ -8004,6 +8260,7 @@ function MASTER_SSL_CAPATH() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ## 
 function MASTER_SSL_CERT() {
 	username=$1
@@ -8031,6 +8288,7 @@ function MASTER_SSL_CERT() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ## 
 function MASTER_SSL_CRL() {
 	username=$1
@@ -8058,6 +8316,7 @@ function MASTER_SSL_CRL() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ## 
 function MASTER_SSL_CRLPATH() {
 	username=$1
@@ -8085,6 +8344,7 @@ function MASTER_SSL_CRLPATH() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ## 
 function MASTER_SSL_KEY() {
 	username=$1
@@ -8112,6 +8372,7 @@ function MASTER_SSL_KEY() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ## 
 function MASTER_SSL_CIPHER() {
 	username=$1
@@ -8139,6 +8400,7 @@ function MASTER_SSL_CIPHER() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ## 
 function MASTER_SSL_VERIFY_SERVER_CERT() {
 	username=$1
@@ -8166,6 +8428,7 @@ function MASTER_SSL_VERIFY_SERVER_CERT() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ## 
 function MASTER_LOG_FILE() {
 	username=$1
@@ -8192,6 +8455,7 @@ function MASTER_LOG_FILE() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ## 
 function MASTER_LOG_POS() {
 	username=$1
@@ -8218,6 +8482,7 @@ function MASTER_LOG_POS() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ## 
 function RELAY_LOG_FILE() {
 	username=$1
@@ -8244,6 +8509,7 @@ function RELAY_LOG_FILE() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ## 
 function RELAY_LOG_POS() {
 	username=$1
@@ -8270,6 +8536,7 @@ function RELAY_LOG_POS() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ## 
 function MASTER_USE_GTID() {
 	username=$1
@@ -8291,6 +8558,7 @@ function MASTER_USE_GTID() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ## 
 function MASTER_USE_GTID2() {
 	username=$1
@@ -8316,6 +8584,7 @@ function MASTER_USE_GTID2() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ## 
 function IGNORE_SERVER_IDS() {
 	username=$1
@@ -8371,6 +8640,7 @@ function IGNORE_SERVER_IDS() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ## 
 function DO_DOMAIN_IDS() {
 	username=$1
@@ -8393,6 +8663,7 @@ function DO_DOMAIN_IDS() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ## 
 function DO_DOMAIN_IDS2() {
 	username=$1
@@ -8415,6 +8686,7 @@ function DO_DOMAIN_IDS2() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ## 
 function IGNORE_DOMAIN_IDS() {
 	username=$1
@@ -8437,6 +8709,7 @@ function IGNORE_DOMAIN_IDS() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ## 
 function IGNORE_DOMAIN_IDS2() {
 	username=$1
@@ -8459,6 +8732,7 @@ function IGNORE_DOMAIN_IDS2() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ## 
 function MASTER_DELAY() {
 	username=$1
@@ -8483,6 +8757,7 @@ function MASTER_DELAY() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ## 
 function Replica_Backup() {
 	username=$1
@@ -8507,6 +8782,7 @@ function Replica_Backup() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ## 
 function Replica_Backup2() {
 	username=$1
@@ -8530,6 +8806,7 @@ function Replica_Backup2() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##
 function ReplikatKoordinaten() {
 	username=$1
@@ -8560,6 +8837,7 @@ function ReplikatKoordinaten() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##
 function db_tablesplitt() {
 	VERZEICHNISNAME=$(basename "$1" .sql)
@@ -8587,6 +8865,7 @@ function db_tablesplitt() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##
 function db_tablextract() {
 	VERZEICHNISNAME=$(basename "$1" .sql)
@@ -8613,6 +8892,7 @@ function db_tablextract() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##
 function db_tablextract_regex() {
 	VERZEICHNISNAME=$(basename "$1" .sql)
@@ -8639,6 +8919,7 @@ function db_tablextract_regex() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##
 function conf_write() {
 	CONF_SEARCH=$1
@@ -8658,6 +8939,7 @@ function conf_write() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##  
 function conf_read() {
 	CONF_SEARCH=$1
@@ -8676,6 +8958,7 @@ function conf_read() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##  
 function conf_delete() {
 	CONF_SEARCH=$1
@@ -8693,6 +8976,7 @@ function conf_delete() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##  
 function ramspeicher() {
 	# RAM groesse auslesen
@@ -8715,6 +8999,7 @@ function ramspeicher() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##  
 function mysqleinstellen() {
 	# Ermitteln wie viel RAM Speicher der Server hat
@@ -8783,6 +9068,7 @@ function mysqleinstellen() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##  
 function newregionini() {
 	# Aktuelle IP ueber Suchadresse ermitteln und Ausfuehrungszeichen anhaengen.
@@ -8862,6 +9148,7 @@ function newregionini() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ## 
 function constconfig() {
 
@@ -8937,6 +9224,7 @@ function constconfig() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ## 
 function regionconfig() {
 		
@@ -8994,6 +9282,7 @@ function regionconfig() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ## 
 function flotsamconfig() {
 
@@ -9023,6 +9312,7 @@ function flotsamconfig() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ## 
 function osslEnableconfig() {
 
@@ -9164,6 +9454,7 @@ function osslEnableconfig() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ## 
 function moneyconfig() {
 
@@ -9228,6 +9519,7 @@ function moneyconfig() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##  
 function osconfigstruktur() {
     # Ist die /"$STARTVERZEICHNIS"/$SIMDATEI vorhanden dann zuerst löschen
@@ -9312,6 +9604,7 @@ function osconfigstruktur() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##
 function configabfrage() {
 	### Eintragungen uebersicht!
@@ -9506,6 +9799,7 @@ function configabfrage() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##
 function firstinstallation() {
 	log line
@@ -9530,6 +9824,7 @@ function firstinstallation() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##
 function createmasteravatar() {
 	# Master Avatar erstellen.
@@ -9543,6 +9838,7 @@ function createmasteravatar() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##
 function createregionavatar() {
 	makeverzeichnisliste
@@ -9565,6 +9861,7 @@ function createregionavatar() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##  
 function gridstop() {
 	if screen -list | grep -q MO; then
@@ -9583,6 +9880,7 @@ function gridstop() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##  gridstop, stoppt erst Money dann Robust.
 function menugridstop() {
 	if screen -list | grep -q MO; then
@@ -9601,6 +9899,7 @@ function menugridstop() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##  
 function compilieren() {
 	log info "Bauen eines neuen OpenSimulators  wird gestartet..."
@@ -9668,6 +9967,7 @@ function compilieren() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##  
 function osgridcopy() {
 	log text " #############################"
@@ -9704,6 +10004,7 @@ function osgridcopy() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##  
 function osupgrade() {
 	log text " #############################"
@@ -9735,6 +10036,7 @@ function osupgrade() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ## 
 function osdowngrade() {
 	log text " #############################"
@@ -9770,6 +10072,7 @@ function osdowngrade() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##  
 function oszipupgrade() {
 	### dialog Aktionen
@@ -9823,6 +10126,7 @@ function oszipupgrade() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##
 function ConfigSet() {
     datei=$1
@@ -9862,6 +10166,7 @@ function ConfigSet() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##
 function AutoInstall() {
     #ramspeicher
@@ -9913,6 +10218,7 @@ function AutoInstall() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##
 function osslEnableConfig() {
     # Abfrage des Benutzers.
@@ -9929,6 +10235,7 @@ function osslEnableConfig() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##
 function osslEnableConfigSet() {
     osslEnabledatei="osslEnable.ini"
@@ -10089,6 +10396,7 @@ function osslEnableConfigSet() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ## 
 function show_info() {
 	dialog --title "$1" \
@@ -10102,6 +10410,7 @@ function show_info() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ## 
 function systeminformation() {
 	# Definiert die Ausgangsstatuscodes der Dialogfelder
@@ -10180,6 +10489,7 @@ function systeminformation() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##
 function info() {
 	echo "$(tput setab 4) Server Name: ${HOSTNAME}"
@@ -10198,6 +10508,7 @@ function info() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##
 function infodialog() {
 	TEXT1=(" Server Name: ${HOSTNAME}")
@@ -10222,6 +10533,7 @@ function infodialog() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##
 function kalender() {
 	HEIGHT=0
@@ -10259,6 +10571,7 @@ function kalender() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##
 function robustbackup() {
 	HEIGHT=0
@@ -10300,6 +10613,7 @@ function robustbackup() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##  
 function backupdatum() {
 	# Ist die Datei backup.tmp vorhanden?
@@ -10333,6 +10647,7 @@ function backupdatum() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##  
 function senddata() {
 	USERNAMEN=$1
@@ -10366,6 +10681,7 @@ function senddata() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##  
 function fortschritsanzeige() {
 	# zuerst schauen ob dialog installiert ist
@@ -10391,6 +10707,7 @@ function fortschritsanzeige() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ## 
 function menuinfo() {
 	menuinfoergebnis=$(screen -ls | sed '1d' | sed '$d' | awk -F. '{print $2}' | awk -F\( '{print $1}')
@@ -10420,6 +10737,7 @@ function menuinfo() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##  
 function menukonsolenhilfe() {
 	#helpergebnis=$(help)
@@ -10439,6 +10757,7 @@ function menukonsolenhilfe() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ## 
 function dotnetinfo() {
 	echo "dotNET-7.x = C# 11"
@@ -10458,6 +10777,7 @@ function dotnetinfo() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##  
 function dbhilfe() {
 	echo "$(tput setab 1)mySQL - mariaDB Befehle ACHTUNG! Sie muessen hier fuer die Grundlagen von SQL beherschen. $(tput sgr 0)"
@@ -10556,6 +10876,7 @@ function dbhilfe() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##  
 function hilfe() {
 	echo "$(tput setab 5)Funktion:$(tput sgr 0)		$(tput setab 2)Parameter:$(tput sgr 0)		$(tput setab 4)Informationen:$(tput sgr 0)"
@@ -10823,6 +11144,7 @@ function hilfe() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ## 
 function hilfemenudirektaufrufe() {
 	echo "menuassetdel	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
@@ -10869,6 +11191,7 @@ function hilfemenudirektaufrufe() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##
 function konsolenhilfe() {
 	echo "$(tput setab 5)Funktion:$(tput sgr 0) $(tput setab 4)Informationen:$(tput sgr 0)"
@@ -10898,6 +11221,7 @@ function konsolenhilfe() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##  
 function commandhelp() {
 	cat <<eof
@@ -11082,6 +11406,7 @@ eof
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##  hauptmenu
 function hauptmenu() {
 	HEIGHT=0
@@ -11159,6 +11484,7 @@ function hauptmenu() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##
 function hilfemenu() {
 	HEIGHT=0
@@ -11216,6 +11542,7 @@ function hilfemenu() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##
 function funktionenmenu() {
 	HEIGHT=0
@@ -11294,6 +11621,7 @@ function funktionenmenu() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##  dateimenu
 function dateimenu() {
 	HEIGHT=0
@@ -11371,6 +11699,7 @@ function dateimenu() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##  mySQLmenu
 function mySQLmenu() {
 	HEIGHT=0
@@ -11459,6 +11788,7 @@ function mySQLmenu() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##  avatarmenu
 function avatarmenu() {
 	HEIGHT=0
@@ -11534,6 +11864,7 @@ function avatarmenu() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##  expertenmenu
 function expertenmenu() {
 	HEIGHT=0
@@ -11625,6 +11956,7 @@ function expertenmenu() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##  buildmenu
 function buildmenu() {
 	HEIGHT=0
@@ -11709,69 +12041,70 @@ function buildmenu() {
 ###########################################################################
 # Web Interface Test
 
-### wiparameter0 - Webinterface ohne Parameterangabe gestartet.
-function wiparameter0() {
-	echo "Rueckgabe: Webinterface ohne Parameterangabe gestartet."
-}
-### wiparameter1 - Webinterface mit 1 Parameterangabe gestartet.
-function wiparameter1() {
-	parameter1=$1;
-	echo "Rueckgabe: Webinterface mit 1 Parameterangabe gestartet."
-	echo "Parameter1= $parameter1"
-}
-### wiparameter2 - Webinterface mit 2 Parameterangaben gestartet.
-function wiparameter2() {
-	parameter1=$1; parameter2=$2;
-	echo "Rueckgabe: Webinterface mit 1 Parameterangaben gestartet."
-	echo "Parameter1= $parameter1 Parameter2= $parameter2"
-}
-### wiparameter3 - Webinterface mit 3 Parameterangaben gestartet.
-function wiparameter3() {
-	parameter1=$1; parameter2=$2; parameter3=$3;
-	echo "Rueckgabe: Webinterface mit 3 Parameterangaben gestartet."
-	echo "Parameter1= $parameter1 Parameter2= $parameter2 Parameter3= $parameter3"
-}
-### wiparameter4 - Webinterface mit 4 Parameterangaben gestartet.
-function wiparameter4() {
-	parameter1=$1; parameter2=$2; parameter3=$3; parameter4=$4;
-	echo "Rueckgabe: Webinterface mit 4 Parameterangaben gestartet."
-	echo "Parameter1= $parameter1 Parameter2= $parameter2 Parameter3= $parameter3 Parameter4= $parameter4"
-}
-### wiparameter5 - Webinterface mit 5 Parameterangaben gestartet.
-function wiparameter5() {
-	parameter1=$1; parameter2=$2; parameter3=$3; parameter4=$4; parameter5=$5;
-	echo "Rueckgabe: Webinterface mit 5 Parameterangaben gestartet."
-	echo "Parameter1= $parameter1 Parameter2= $parameter2 Parameter3= $parameter3 Parameter4= $parameter4 Parameter5= $parameter5"
-}
-### wiparameter6 - Webinterface mit 6 Parameterangaben gestartet.
-function wiparameter6() {
-	parameter1=$1; parameter2=$2; parameter3=$3; parameter4=$4; parameter5=$5; parameter6=$6;
-	echo "Rueckgabe: Webinterface mit 6 Parameterangaben gestartet."
-	echo "Parameter1= $parameter1 Parameter2= $parameter2 Parameter3= $parameter3 Parameter4= $parameter4"
-	echo "Parameter5= $parameter5 Parameter6= $parameter6"
-}
-### wiparameter7 - Webinterface mit 7 Parameterangaben gestartet.
-function wiparameter7() {
-	parameter1=$1; parameter2=$2; parameter3=$3; parameter4=$4; parameter5=$5; parameter6=$6; parameter7=$7;
-	echo "Rueckgabe: Webinterface mit 7 Parameterangaben gestartet."
-	echo "Parameter1= $parameter1 Parameter2= $parameter2 Parameter3= $parameter3 Parameter4= $parameter4"
-	echo "Parameter5= $parameter5 Parameter6= $parameter6 Parameter7= $parameter7"
-}
-### wiparameter8 - Webinterface mit 8 Parameterangaben gestartet.
-#  test1 test2 test3 test4 test5 test6 test7 test8
-function wiparameter8() {
-	parameter1=$1; parameter2=$2; parameter3=$3; parameter4=$4; parameter5=$5; parameter6=$6; parameter7=$7; parameter8=$8;
-	echo "Rueckgabe: Webinterface mit 8 Parameterangaben gestartet."
-	echo "Parameter1= $parameter1 Parameter2= $parameter2 Parameter3= $parameter3 Parameter4= $parameter4"
-	echo "Parameter5= $parameter5 Parameter6= $parameter6 Parameter7= $parameter7 Parameter8= $parameter8"
-}
+# ### wiparameter0 - Webinterface ohne Parameterangabe gestartet.
+# function wiparameter0() {
+# 	echo "Rueckgabe: Webinterface ohne Parameterangabe gestartet."
+# }
+# ### wiparameter1 - Webinterface mit 1 Parameterangabe gestartet.
+# function wiparameter1() {
+# 	parameter1=$1;
+# 	echo "Rueckgabe: Webinterface mit 1 Parameterangabe gestartet."
+# 	echo "Parameter1= $parameter1"
+# }
+# ### wiparameter2 - Webinterface mit 2 Parameterangaben gestartet.
+# function wiparameter2() {
+# 	parameter1=$1; parameter2=$2;
+# 	echo "Rueckgabe: Webinterface mit 1 Parameterangaben gestartet."
+# 	echo "Parameter1= $parameter1 Parameter2= $parameter2"
+# }
+# ### wiparameter3 - Webinterface mit 3 Parameterangaben gestartet.
+# function wiparameter3() {
+# 	parameter1=$1; parameter2=$2; parameter3=$3;
+# 	echo "Rueckgabe: Webinterface mit 3 Parameterangaben gestartet."
+# 	echo "Parameter1= $parameter1 Parameter2= $parameter2 Parameter3= $parameter3"
+# }
+# ### wiparameter4 - Webinterface mit 4 Parameterangaben gestartet.
+# function wiparameter4() {
+# 	parameter1=$1; parameter2=$2; parameter3=$3; parameter4=$4;
+# 	echo "Rueckgabe: Webinterface mit 4 Parameterangaben gestartet."
+# 	echo "Parameter1= $parameter1 Parameter2= $parameter2 Parameter3= $parameter3 Parameter4= $parameter4"
+# }
+# ### wiparameter5 - Webinterface mit 5 Parameterangaben gestartet.
+# function wiparameter5() {
+# 	parameter1=$1; parameter2=$2; parameter3=$3; parameter4=$4; parameter5=$5;
+# 	echo "Rueckgabe: Webinterface mit 5 Parameterangaben gestartet."
+# 	echo "Parameter1= $parameter1 Parameter2= $parameter2 Parameter3= $parameter3 Parameter4= $parameter4 Parameter5= $parameter5"
+# }
+# ### wiparameter6 - Webinterface mit 6 Parameterangaben gestartet.
+# function wiparameter6() {
+# 	parameter1=$1; parameter2=$2; parameter3=$3; parameter4=$4; parameter5=$5; parameter6=$6;
+# 	echo "Rueckgabe: Webinterface mit 6 Parameterangaben gestartet."
+# 	echo "Parameter1= $parameter1 Parameter2= $parameter2 Parameter3= $parameter3 Parameter4= $parameter4"
+# 	echo "Parameter5= $parameter5 Parameter6= $parameter6"
+# }
+# ### wiparameter7 - Webinterface mit 7 Parameterangaben gestartet.
+# function wiparameter7() {
+# 	parameter1=$1; parameter2=$2; parameter3=$3; parameter4=$4; parameter5=$5; parameter6=$6; parameter7=$7;
+# 	echo "Rueckgabe: Webinterface mit 7 Parameterangaben gestartet."
+# 	echo "Parameter1= $parameter1 Parameter2= $parameter2 Parameter3= $parameter3 Parameter4= $parameter4"
+# 	echo "Parameter5= $parameter5 Parameter6= $parameter6 Parameter7= $parameter7"
+# }
+# ### wiparameter8 - Webinterface mit 8 Parameterangaben gestartet.
+# #  test1 test2 test3 test4 test5 test6 test7 test8
+# function wiparameter8() {
+# 	parameter1=$1; parameter2=$2; parameter3=$3; parameter4=$4; parameter5=$5; parameter6=$6; parameter7=$7; parameter8=$8;
+# 	echo "Rueckgabe: Webinterface mit 8 Parameterangaben gestartet."
+# 	echo "Parameter1= $parameter1 Parameter2= $parameter2 Parameter3= $parameter3 Parameter4= $parameter4"
+# 	echo "Parameter5= $parameter5 Parameter6= $parameter6 Parameter7= $parameter7 Parameter8= $parameter8"
+# }
 
 ##
  #* newhelp.
- # newhelp tests.
+ # newhelp Hilfe.
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
+ # todo: nichts.
 ##  expertenmenu
 function newhelp() {
 	# $(tput setab 5) $(tput setaf 2) $(tput sgr 0)
