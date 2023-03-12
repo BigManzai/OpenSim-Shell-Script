@@ -114,6 +114,7 @@ Regionen die einzeln laufen sollten sind:
      Welcome (Einwahldaten)
      Club (Avatar Daten)
      Shop (Artikel Download)
+     Sandbox (Absturzgefahr)
 
 **Systemvoraussetzungen** für den Betrieb des OpenSimulator: 
 
