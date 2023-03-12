@@ -109,6 +109,12 @@ Die Struktur baut sich folgendermaßen auf:
     
 Es sollten nicht mehr als 15 Regionen pro Sim betrieben werden, Ausnahme ist die Welcome Region, diese sollte einzeln laufen und möglichst klein gehalten werden.
 
+Regionen die einzeln laufen sollten sind:
+
+     Welcome (Einwahldaten)
+     Club (Avatar Daten)
+     Shop (Artikel Download)
+
 **Systemvoraussetzungen** für den Betrieb des OpenSimulator: 
 
 2 Core Prozessor, 2 GB RAM (1GB OpenSim + 1GB Datenbank) pro Sim zuzüglich eventuell robust und Money welches aber von der Anzahl der Regionen und Avatar Accounts abhängig ist.
