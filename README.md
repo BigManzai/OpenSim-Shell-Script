@@ -103,8 +103,8 @@ Die Struktur baut sich folgendermaßen auf:
 
     robust (Robust Server und eventuell Money Server)
     sim1 (Welcome Region)
-    sim2 (Weitere Regionen)
-    sim3 (Weitere Regionen)
+    sim2 (Weitere Regionen 1-15)
+    sim3 (Weitere Regionen 1-15)
     ... (Alle weiteren Regionen)
     
 Es sollten nicht mehr als 15 Regionen pro Sim betrieben werden, Ausnahme ist die Welcome Region, diese sollte einzeln laufen und möglichst klein gehalten werden.
