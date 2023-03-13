@@ -240,3 +240,6 @@ Hilfe Übersicht:
 Remark neu gemacht, nach den Internationalen Programmierrichtlinien angeglichen.
 
 Abgespeckt, alles was nicht mehr benötigt wird, wurde oder wird entfernt.
+
+Backup Verzeichnis anlegen falls nicht vorhanden.
+
