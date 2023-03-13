@@ -33,7 +33,7 @@ Es kann automatisch eine DATUM-multitool.log angelegt um nachzuverfolgen ob alle
 
 ### Download OpenSimulator Testversion für Ubuntu 18.04 und Ubuntu 22.04
 
-https://www.mediafire.com/file/vnr3k7r5jaqj1jt/opensim-0.9.2.2.392.zip/file
+https://www.mediafire.com/file/srom4d181slm1t1/opensim-0.9.2.2.398.zip/file
 
 ## Vorbereitung des opensimMULITOOLS
 
