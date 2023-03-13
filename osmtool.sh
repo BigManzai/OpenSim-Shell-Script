@@ -16,7 +16,7 @@
 # ! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 # ! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-# * Status 04.03.2023 339 Funktionen.
+# * Status 04.03.2023 342 Funktionen.
 
 # # Installieren sie bitte: #* Visual Studio Code - Mac, Linux, Windows
 #* dazu die Plugins:
@@ -29,7 +29,7 @@
 #### ? Einstellungen ####
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.2.2.791" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.2.2.795" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 # ? Alte Variablen loeschen aus eventuellen voherigen sessions
@@ -101,7 +101,7 @@ function namen() {
 
 ##
  #* osmtoolconfig autoconfigure.
- # Hier wird die Konfigurationsdatei für opensimTOOL erstellt.
+ # Hier wird die Konfigurationsdatei fuer das opensimTOOL erstellt.
  # 
  #? @param STARTVERZEICHNIS ROBUSTVERZEICHNIS MONEYVERZEICHNIS OPENSIMVERZEICHNIS CONFIGPFAD OSTOOLINI
  #? @return Eine Datei wird geschrieben.
@@ -125,6 +125,9 @@ function osmtoolconfig() {
 		echo "     "
 		echo '    MONEYSOURCE="OpenSimCurrencyServer-2021-master"'
 		echo '    MONEYZIP="OpenSimCurrencyServer-2021-master.zip"'
+		echo "     "
+		echo '    DIVASOURCE="diva-distribution"'
+    	echo '    DIVAZIP="diva-distribution-master.zip"'
 		echo "     "
 		echo '    CONFIGURESOURCE="opensim-configuration-addon-modul-main"'
 		echo '    CONFIGUREZIP="opensim-configuration-addon-modul-main.zip"'
@@ -162,6 +165,7 @@ function osmtoolconfig() {
 		echo "## Inklusive"
 		echo '    SCRIPTCOPY="yes"'
 		echo '    MONEYCOPY="yes"'
+		echo '    DIVACOPY="no"'
 		echo '    PYTHONCOPY="no"'
 		echo '    MUTELISTCOPY="no"'
 		echo '    SEARCHCOPY="no"'
@@ -3182,6 +3186,54 @@ function moneygitcopy() {
 }
 
 ##
+ #* divagitcopy.
+ # Diva Source Dateien vom Github kopieren.
+ # 
+ #? @param $DIVACOPY.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+function divagitcopy() {
+	#DIVA und Scripte vom Git holen
+
+	if [[ $DIVACOPY = "yes" ]]; then
+		log info "DIVA wird vom GIT geholt"
+		git clone https://github.com/BigManzai/diva-distribution /$STARTVERZEICHNIS/diva-distribution
+	else
+		log error "DIVA nicht vorhanden"
+	fi
+	return 0
+}
+##
+ #* divacopy.
+ # DIVA Server Dateien kopieren.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: testen.
+##
+function divacopy() {
+	if [[ $DIVACOPY = "yes" ]]; then
+		if [ -d /$STARTVERZEICHNIS/$DIVASOURCE/ ]; then
+			log info "DIVA Kopiervorgang gestartet"
+			#cp -r /$STARTVERZEICHNIS/$DIVASOURCE/bin /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS
+			cp -r /$STARTVERZEICHNIS/$DIVASOURCE/addon-modules /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS
+			log line
+		else
+			# Entpacken und kopieren
+			log info "DIVA entpacken"
+			unzip "$DIVAZIP"
+			log info "DIVA Kopiervorgang gestartet"
+			#cp -r /$STARTVERZEICHNIS/$DIVASOURCE/bin /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS
+			cp -r /$STARTVERZEICHNIS/$DIVASOURCE/addon-modules /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS
+		fi
+	else
+		log warn "DIVA wird nicht kopiert."
+	fi
+	return 0
+}
+
+##
  #* scriptgitcopy.
  # Script Assets Dateien vom Github kopieren.
  # 
@@ -3932,7 +3984,8 @@ function regionbackup() {
 
 	log line
 	log info "Backup der Region $NSDATEINAME"
-	cd /$STARTVERZEICHNIS/"$BACKUPVERZEICHNISSCREENNAME"/bin || return 1
+	cd /$STARTVERZEICHNIS/"$BACKUPVERZEICHNISSCREENNAME"/bin || return 1 # Test ob Verzeichnis vorhanden.
+	mkdir -p /$STARTVERZEICHNIS/backup # Backup Verzeichnis anlegen falls nicht vorhanden.
 	log info "Ich kann nicht pruefen ob die Region im OpenSimulator vorhanden ist."
 	log info "Sollte sie nicht vorhanden sein wird root also alle Regionen gespeichert"
 	screen -S "$BACKUPVERZEICHNISSCREENNAME" -p 0 -X eval "stuff 'change region ${REGIONSNAME//\"/}'^M"
@@ -4001,7 +4054,8 @@ function menuregionbackup() {
 
 	log line
 	log info "Backup der Region $NSDATEINAME"
-	cd /$STARTVERZEICHNIS/"$MBACKUPVERZEICHNISSCREENNAME"/bin || return 1
+	cd /$STARTVERZEICHNIS/"$MBACKUPVERZEICHNISSCREENNAME"/bin || return 1 # Test ob Verzeichnis vorhanden.
+	mkdir -p /$STARTVERZEICHNIS/backup # Backup Verzeichnis anlegen falls nicht vorhanden.
 	log info "Ich kann nicht pruefen ob die Region im OpenSimulator vorhanden ist."
 	log info "Sollte sie nicht vorhanden sein wird root also alle Regionen gespeichert."
 	screen -S "$MBACKUPVERZEICHNISSCREENNAME" -p 0 -X eval "stuff 'change region ${REGIONSNAME//\"/}'^M"
@@ -4360,6 +4414,30 @@ function cleaninstall() {
 
 	if [ ! -f "/$STARTVERZEICHNIS/opensim/addon-modules/" ]; then
 		rm -r $STARTVERZEICHNIS/opensim/addon-modules/*
+	else
+		log error "addon-modules Verzeichnis existiert nicht"
+	fi
+	return 0
+}
+
+##
+ #* cleanprebuild.
+ # loeschen aller Prebuild Dateien, da sie von OpenSim Prebuild nicht geloescht werden.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+function cleanprebuild() {
+	# Die if schleife prueft nur ob das Verzeichnis vorhanden ist.
+	if [ ! -f "/$STARTVERZEICHNIS/opensim/addon-modules/" ]; then
+		# Verzeichnis wo geloescht werden soll.
+		DIR="/$STARTVERZEICHNIS/opensim/addon-modules"
+		# Dateien mit Endung csproj und user loeschen.
+		find $DIR -name '*.csproj' -exec rm -rv {} \;
+		find $DIR -name '*.csproj.user' -exec rm -rv {} \;
+		# Verzeichnisse obj loeschen
+		find $DIR -name 'obj' -exec rm -rv {} \;
 	else
 		log error "addon-modules Verzeichnis existiert nicht"
 	fi
@@ -12403,6 +12481,9 @@ case $KOMMANDO in
 	expertenmenu) expertenmenu ;;
 	funktionenmenu) funktionenmenu ;;
 	dbhilfe) dbhilfe ;;
+	divacopy) divacopy ;;
+	cleanprebuild) cleanprebuild ;;
+	divagitcopy) divagitcopy ;;
 	hda | hilfedirektaufruf | hilfemenudirektaufrufe) hilfemenudirektaufrufe ;;
 	h) newhelp
 	exit ;;
