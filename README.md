@@ -243,3 +243,4 @@ Abgespeckt, alles was nicht mehr benötigt wird, wurde oder wird entfernt.
 
 Backup Verzeichnis anlegen falls nicht vorhanden.
 
+Backup Konfig Bug entfernt.
