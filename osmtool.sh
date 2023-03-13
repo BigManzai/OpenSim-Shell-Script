@@ -29,7 +29,7 @@
 #### ? Einstellungen ####
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.2.2.798" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.2.2.800" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 # ? Alte Variablen loeschen aus eventuellen voherigen sessions
@@ -3969,35 +3969,51 @@ function install_mysqltuner() {
  # backup einer Region.
  # regionbackup Screenname "Der Regionsname"
  # 
- #? @param keine.
+ #? @param BACKUPVERZEICHNISSCREENNAME REGIONSNAME.
  #? @return nichts wird zurueckgegeben.
  # todo: nichts.
 ##
 function regionbackup() {
+	# regionbackup "$derscreen" "$dieregion"
+	#echo $derscreen $dieregion
+
 	sleep 2
 	BACKUPVERZEICHNISSCREENNAME=$1
 	REGIONSNAME=$2
 
 	log line
-	log info "Backup der Region $REGIONSNAME"
+	log info "Backup $BACKUPVERZEICHNISSCREENNAME der Region $REGIONSNAME"
 	cd /$STARTVERZEICHNIS/"$BACKUPVERZEICHNISSCREENNAME"/bin || return 1 # Test ob Verzeichnis vorhanden.
 	mkdir -p /$STARTVERZEICHNIS/backup # Backup Verzeichnis anlegen falls nicht vorhanden.
 	log info "Ich kann nicht pruefen ob die Region im OpenSimulator vorhanden ist."
 	log info "Sollte sie nicht vorhanden sein wird root also alle Regionen gespeichert"
+	# Ist die Region Online oder Offline?
+	if [ -f /$STARTVERZEICHNIS/"$BACKUPVERZEICHNISSCREENNAME"/bin/Regions/"$REGIONSNAME".ini.offline ]; then
+	echo "$REGIONSNAME ist heruntergefahren."
+	else
 	screen -S "$BACKUPVERZEICHNISSCREENNAME" -p 0 -X eval "stuff 'change region ${REGIONSNAME//\"/}'^M"
+	log info "$BACKUPVERZEICHNISSCREENNAME $REGIONSNAME"
 	screen -S "$BACKUPVERZEICHNISSCREENNAME" -p 0 -X eval "stuff 'save oar /$STARTVERZEICHNIS/backup/'$DATUM'-$REGIONSNAME.oar'^M"
+	log info "$BACKUPVERZEICHNISSCREENNAME '$DATUM'-$REGIONSNAME.oar"
 	screen -S "$BACKUPVERZEICHNISSCREENNAME" -p 0 -X eval "stuff 'terrain save /$STARTVERZEICHNIS/backup/'$DATUM'-$REGIONSNAME.png'^M"
+	log info "$BACKUPVERZEICHNISSCREENNAME '$DATUM'-$REGIONSNAME.png"
 	screen -S "$BACKUPVERZEICHNISSCREENNAME" -p 0 -X eval "stuff 'terrain save /$STARTVERZEICHNIS/backup/'$DATUM'-$REGIONSNAME.raw'^M"
-	log info "Region $DATUM-$REGIONSNAME RAW und PNG Terrain werden gespeichert"
+	log info "$BACKUPVERZEICHNISSCREENNAME '$DATUM'-$REGIONSNAME.raw"
+	log info "$BACKUPVERZEICHNISSCREENNAME Region $DATUM-$REGIONSNAME RAW und PNG Terrain werden gespeichert"
+	fi
 	
 	sleep 10
+	if [ -f /$STARTVERZEICHNIS/"$BACKUPVERZEICHNISSCREENNAME"/bin/Regions/"$REGIONSNAME".ini.offline ]; then
+		cp /$STARTVERZEICHNIS/"$BACKUPVERZEICHNISSCREENNAME"/bin/Regions/"$REGIONSNAME".ini.offline /$STARTVERZEICHNIS/backup/"$DATUM"-"$REGIONSNAME".ini.offline
+		log info "$BACKUPVERZEICHNISSCREENNAME Die Regions "$DATUM"-"$REGIONSNAME".ini.offline wird gespeichert"
+	fi
 	if [ -f /$STARTVERZEICHNIS/"$BACKUPVERZEICHNISSCREENNAME"/bin/Regions/"$REGIONSNAME".ini ]; then
 		cp /$STARTVERZEICHNIS/"$BACKUPVERZEICHNISSCREENNAME"/bin/Regions/"$REGIONSNAME".ini /$STARTVERZEICHNIS/backup/"$DATUM"-"$REGIONSNAME".ini
-		log info "Die Regions $DATUM-$REGIONSNAME wird gespeichert"
+		log info "$BACKUPVERZEICHNISSCREENNAME Die Regions "$DATUM"-"$REGIONSNAME".ini wird gespeichert"
 	fi
 	if [ -f /$STARTVERZEICHNIS/"$BACKUPVERZEICHNISSCREENNAME"/bin/Regions/"${REGIONSNAME//\"/}" ]; then
 		cp /$STARTVERZEICHNIS/"$BACKUPVERZEICHNISSCREENNAME"/bin/Regions/"${REGIONSNAME//\"/}" /$STARTVERZEICHNIS/backup/"$DATUM"-"$REGIONSNAME".ini
-		log info "Die Regions $DATUM-$REGIONSNAME wird gespeichert"
+		log info "$BACKUPVERZEICHNISSCREENNAME Die Regions "$DATUM"-"$REGIONSNAME".ini wird gespeichert"
 	fi
 	# Regions.ini.example loeschen.
 	# if [ ! -f /$STARTVERZEICHNIS/"$MBACKUPVERZEICHNISSCREENNAME"/bin/Regions/Regions.ini.example ]; then
@@ -4603,7 +4619,11 @@ function autoregionbackup() {
 		derscreen=$(echo "${REGIONSLISTE[$i]}" | cut -d ' ' -f 1)
 		dieregion=$(echo "${REGIONSLISTE[$i]}" | cut -d ' ' -f 2)
 		regionbackup "$derscreen" "$dieregion"
+		if [ -f /$STARTVERZEICHNIS/"$derscreen"/bin/Regions/"$dieregion".ini.offline ]; then
+		echo "$dieregion Region ist Offline und wird uebersprungen."
+		else
 		sleep $BACKUPWARTEZEIT
+		fi
 	done
 	return 0
 }
