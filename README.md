@@ -247,8 +247,8 @@ Backup Konfig Bug entfernt.
 
 Schnelle Start, Stop und Kill Funktionen:
 
-'''
-./osmtool.sh scstart sim1
-./osmtool.sh scstop sim2
-./osmtool.sh sckill sim3
-'''
+
+     ./osmtool.sh scstart sim1
+     ./osmtool.sh scstop sim2
+     ./osmtool.sh sckill sim3
+
