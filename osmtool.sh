@@ -16,7 +16,7 @@
 # ! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 # ! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-# * Status 04.03.2023 343 Funktionen.
+# * Status 04.03.2023 346 Funktionen.
 
 # # Installieren sie bitte: #* Visual Studio Code - Mac, Linux, Windows
 #* dazu die Plugins:
@@ -29,7 +29,7 @@
 #### ? Einstellungen ####
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.2.2.804" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.2.2.807" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 # ? Alte Variablen loeschen aus eventuellen voherigen sessions
@@ -2302,6 +2302,47 @@ function ossettings() {
 		export MONO_ENV_OPTIONS="--desktop"
 	fi
 	return 0
+}
+
+##
+ #* scstart.
+ # startet Region Server - Kurzversion.
+ # Beispiel-Example: bash osmtool.sh scstart sim1
+ # 
+ #? @param $SCSTARTSCREEN.
+ #? @return nichts wird zurueckgegeben.
+ # todo: testen.
+##
+function scstart() {
+	SCSTARTSCREEN=$1 # OpenSimulator, Verzeichnis und Screen Name
+	cd /$STARTVERZEICHNIS/"$SCSTARTSCREEN"/bin || return 1
+	screen -fa -S "$SCSTARTSCREEN" -d -U -m mono OpenSim.exe
+}
+##
+ #* scstop.
+ # stoppt Region Server - Kurzversion.
+ # Beispiel-Example: bash osmtool.sh scstop sim1
+ # 
+ #? @param $SCSTOPSCREEN.
+ #? @return nichts wird zurueckgegeben.
+ # todo: testen.
+##
+function scstop() {
+	SCSTOPSCREEN=$1 # OpenSimulator, Verzeichnis und Screen Name
+	screen -S "$SCSTOPSCREEN" -p 0 -X eval "stuff 'shutdown'^M"
+}
+##
+ #* sckill.
+ # Killt Region Server - Kurzversion.
+ # Beispiel-Example: bash osmtool.sh sckill sim1
+ # 
+ #? @param $SCKILLSCREEN.
+ #? @return nichts wird zurueckgegeben.
+ # todo: testen.
+##
+function sckill() {
+	SCKILLSCREEN=$1 # OpenSimulator, Verzeichnis und Screen Name
+	screen -X -S "$SCKILLSCREEN" kill
 }
 
 ##
@@ -12505,6 +12546,9 @@ case $KOMMANDO in
 	createmasteravatar) createmasteravatar ;;
 	createregionavatar) createregionavatar ;;
 	firstinstallation) firstinstallation ;;
+	scstart) scstart "$2" ;;
+	scstop) scstop "$2" ;;
+	sckill) sckill "$2" ;;
 	dateimenu) dateimenu ;;
 	hauptmenu) hauptmenu ;;
 	hilfemenu) hilfemenu ;;
