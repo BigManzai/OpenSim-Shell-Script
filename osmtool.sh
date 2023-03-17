@@ -16,7 +16,7 @@
 # ! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 # ! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-# * Status 04.03.2023 342 Funktionen.
+# * Status 04.03.2023 343 Funktionen.
 
 # # Installieren sie bitte: #* Visual Studio Code - Mac, Linux, Windows
 #* dazu die Plugins:
@@ -29,7 +29,7 @@
 #### ? Einstellungen ####
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.2.2.800" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.2.2.804" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 # ? Alte Variablen loeschen aus eventuellen voherigen sessions
@@ -96,7 +96,38 @@ function namen() {
 
 	# Regionsname ausgeben	
 	NEUERREGIONSNAME=${namensarray[$REGIONSNAMENZAHL]}
-	echo "Neuer Regionsname: $NEUERREGIONSNAME"
+	echo "Neuer Name: $NEUERREGIONSNAME"
+}
+
+##
+ #* Zufallsvornamen.
+ # 
+ #? @param keiner.
+ #? @return NEUERREGIONSNAME - Es wird ein Name zurueckgegeben.
+ # todo: nichts.
+##
+function vornamen() {
+
+	firstnamensarray=("Peter" "Rainer" "Sergej" "Karl" "Daredevil" "Relative" "Into" "Agony" "Carbon" "Wrecking" "Crazy" "Unique" "Daydreamer" "Ed" "Nickname" "Anger" "Justin" \
+					"Lee" "Roman" "Yum" "House" "ObiLAN" "Anakin" "Spaghetti" "Fritzchen" "Connecto" "Lan" "Jutta" "Bertha" "Chilly" "Agata" "Regen" "Siegtraude" "Wilma" "Raging" "King" \
+					"Polaroid" "Candy" "Fast" "Mike" "Savage" "Chop" "Edgar" "Cereal" "The" "KillMe" "Spicy" "Terrifying" "Smufus" "Harry" "Airport" "Chicken" "Donkey" "Bread" "Hairy" "Sillje" \
+					"Weina" "Marlo" "Toffel" "Binder" "Performance" "Abyss" "Qual" "Claw" "Ball" "Turtle" "Aspirin" "Nygma" "Forgiven" "Avenger" "Time" "Eintragen" "Monade" "Ticker" \
+					"Meefood" "LANister" "Kenobi" "Skyrouter" "Bolognese" "Box" "Patronum" "Solo" "Jessica" "Isberga" "Calilia" "Ehrentraud" "Frida" "Gebba" "Randy" "Kano" "Pal" "Butcher" \
+					"Curious" "Tython" "Sam" "Chop" "AllenBro" "Killer" "Muffin" "NowPlease" "Chicken" "Terry" "BroCode" "Dotter" "Hobo" "Dinner" "Bong" "Pitt" "Poppins")
+
+	# Zaehlen wie viele es sind.
+	count=${#firstnamensarray[@]}
+	#echo $count
+
+	# Zufallszahl ermmiteln aus der anzahl von eintraegen in dem firstnamensarray.
+	VORNAMENZAHL=$(($RANDOM % $count))
+	#echo $REGIONSNAMENZAHL
+
+	# Regionsname ausgeben	
+	NEUERAVATARVORNAME=${firstnamensarray[$VORNAMENZAHL]}
+	namen
+	echo "Neuer Vorname: $NEUERAVATARVORNAME"
+	echo "Neuer Avatarname: $NEUERAVATARVORNAME $NEUERREGIONSNAME"
 }
 
 ##
@@ -2285,20 +2316,16 @@ function ossettings() {
 function osstart() {
 	OSSTARTSCREEN=$1 # OpenSimulator, Verzeichnis und Screen Name
 
+	log info "OpenSimulator $OSSTARTSCREEN Starten"
+
 	if ! screen -list | grep -q "$OSSTARTSCREEN"; then
+
 		if [ -d "$OSSTARTSCREEN" ]; then
 
-			cd /$STARTVERZEICHNIS/"$OSSTARTSCREEN"/bin || return 1
-
-			# AOT Aktiveren oder Deaktivieren.
-			if [[ $SETAOTON = "yes" ]]; then
-				log info "OpenSimulator $OSSTARTSCREEN Starten mit aot"
-				screen -fa -S "$OSSTARTSCREEN" -d -U -m mono --desktop -O=all OpenSim.exe
-				return 0
-				log info "OpenSimulator $OSSTARTSCREEN Starten"
-				screen -fa -S "$OSSTARTSCREEN" -d -U -m mono OpenSim.exe
-				return 0
-			fi
+			cd /$STARTVERZEICHNIS/"$OSSTARTSCREEN"/bin || return 1			
+			# Ersteinmal Killen dann starten.
+			screen -X -S "$OSSTARTSCREEN" kill
+			screen -fa -S "$OSSTARTSCREEN" -d -U -m mono OpenSim.exe
 			sleep 10
 		else
 			log error "OpenSimulator $OSSTARTSCREEN nicht vorhanden"
@@ -2311,7 +2338,7 @@ function osstart() {
 		return 1
 	fi
 
-	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then hauptmenu; fi
+	#if dpkg-query -s dialog 2>/dev/null | grep -q installed; then hauptmenu; fi
 }
 
 ##
@@ -2325,10 +2352,13 @@ function osstart() {
 ##
 function osstop() {
 	OSSTOPSCREEN=$1 # OpenSimulator, Verzeichnis und Screen Name
+	
 	if screen -list | grep -q "$OSSTOPSCREEN"; then
 		log warn "OpenSimulator $OSSTOPSCREEN Beenden"
 		screen -S "$OSSTOPSCREEN" -p 0 -X eval "stuff 'shutdown'^M"
-		sleep 10
+		sleep 60
+		# Killen.
+		screen -X -S "$OSSTOPSCREEN" kill
 		return 0
 	else
 		log error "OpenSimulator $OSSTOPSCREEN nicht vorhanden"
@@ -2381,26 +2411,17 @@ function menuosstart() {
 					echo "100"
 					sleep 2
 				) 
-				#|
-				#$DIALOG --title "$IOSSTARTSCREEN" --gauge "Start" 8 30
-				#$dialogclear
-				#$DIALOG --msgbox "$IOSSTARTSCREEN gestartet!" 5 20
-				#$dialogclear
 				ScreenLog
 				return 0
 			else
 				DIALOG=dialog
 				(
-					echo "10"
+					echo "Starte: $IOSSTARTSCREEN"
+					# Ersteinmal Killen dann starten.
+					screen -X -S "$IOSSTARTSCREEN" kill
 					screen -fa -S "$IOSSTARTSCREEN" -d -U -m mono OpenSim.exe
 					sleep 3
-					echo "100"
-					sleep 2
-				) #|
-					#$DIALOG --title "$IOSSTARTSCREEN" --gauge "Start" 8 30
-				#$dialogclear
-				#$DIALOG --msgbox "$IOSSTARTSCREEN gestartet!" 5 20
-				#$dialogclear
+				)
 				ScreenLog
 				hauptmenu
 			fi
@@ -2444,11 +2465,11 @@ function menuosstop() {
 	if screen -list | grep -q "$IOSSTOPSCREEN"; then
 		DIALOG=dialog
 		(
-			echo "10"
+			echo "Stoppe: $IOSSTOPSCREEN"
 			screen -S "$IOSSTOPSCREEN" -p 0 -X eval "stuff 'shutdown'^M"
-			sleep 3
-			echo "100"
-			sleep 2
+			sleep 60
+			# Killen.
+			screen -X -S "$IOSSTOPSCREEN" kill
 		) |
 			$DIALOG --title "$IOSSTOPSCREEN" --gauge "Stop" 8 30
 		dialogclear
@@ -12475,6 +12496,7 @@ case $KOMMANDO in
 	osmtoolconfigabfrage) osmtoolconfigabfrage ;;
 	osdowngrade) osdowngrade ;;
 	name | namen) namen ;;
+	vornamen) vornamen ;;
 	regionconfig) regionconfig "$2" "$3" "$4" "$5" "$6" ;;
 	createdatabase) createdatabase "$2" "$3" "$4" ;;
 	createdbuser) createdbuser "$2" "$3" "$4" "$5" ;;
