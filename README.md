@@ -245,8 +245,8 @@ Backup Verzeichnis anlegen falls nicht vorhanden.
 
 Backup Konfig Bug entfernt.
 
-Schnelle Start, Stop und Kill Funktionen:
-
+Schnelle Screen - Start, Stop und Kill - Funktionen:
+(Keine Ausgaben, einfach nur ausführen.)
 
      ./osmtool.sh scstart sim1
      ./osmtool.sh scstop sim2
