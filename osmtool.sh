@@ -29,7 +29,7 @@
 #### ? Einstellungen ####
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.2.2.807" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.2.2.808" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 # ? Alte Variablen loeschen aus eventuellen voherigen sessions
@@ -420,7 +420,7 @@ KOMMANDO=$1
  # todo: nichts.
 ##
 # install dialog
-function instdialog () {
+function instdialog() {
 	echo "Ich installiere jetzt dialog"
 	sudo apt-get -y update
 	sudo apt-get -y upgrade
@@ -644,7 +644,7 @@ function functionslist() {
  # Letzter reboot des Servers.
  # 
  #? @param keine.
- #? @return nichts wird zurueckgegeben.
+ #? @return $datediff.
  # todo: nichts.
 ##
 function lastrebootdatum() {
@@ -779,14 +779,14 @@ function trim_string() {
 }
 
 ##
- #* Wozu ist diese Funktion gedacht.
+ #* vartest.
  # Variable auf inhalt testen.
  # 
  #? @param $VARIABLE.
  #? @return ${result} true false.
  # todo: nichts.
 ##
-function vartest () {
+function vartest() {
     VARIABLE="$1"
     if [ -z "$VARIABLE" ]
     then
@@ -797,7 +797,7 @@ function vartest () {
 }
 
 ##
- #* Wozu ist diese Funktion gedacht.
+ #* trim_all.
  # Alle Zeichen entfernen.
  # Usage: trim_all "   example   string    "
  #
@@ -4036,8 +4036,8 @@ function install_mysqltuner() {
  # todo: nichts.
 ##
 function regionbackup() {
-	# regionbackup "$derscreen" "$dieregion"
-	#echo $derscreen $dieregion
+	# regionbackup "$BACKUPSCREEN" "$BACKUPREGION"
+	echo "Empfange: $BACKUPSCREEN $BACKUPREGION"
 
 	sleep 2
 	BACKUPVERZEICHNISSCREENNAME=$1
@@ -4085,6 +4085,7 @@ function regionbackup() {
 	# 	cp -r /$STARTVERZEICHNIS/"$BACKUPVERZEICHNISSCREENNAME"/bin/Regions/Regions.ini /$STARTVERZEICHNIS/backup/"$DATUM"-"$REGIONSNAME".ini
 	# 	log info "Die Regions $NSDATEINAME.ini wird gespeichert"
 	# fi
+	echo "Backup der Region $REGIONSNAME wird fertiggestellt."
 	return 0
 }
 
@@ -4670,21 +4671,23 @@ function autoallclean() {
  # automatischer Backup aller Regionen die in der Regionsliste eingetragen sind.
  # 
  #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+ #? @return regionbackup BACKUPSCREEN BACKUPREGION.
+ # todo: Uebergabe Parameter Fehler. Bug Modus mit extra ausgaben.
 ##
 function autoregionbackup() {
 	log info "Automatisches Backup wird gestartet."
 	makeregionsliste
 	sleep 2
 	for ((i = 0; i < "$ANZAHLREGIONSLISTE"; i++)); do
-		derscreen=$(echo "${REGIONSLISTE[$i]}" | cut -d ' ' -f 1)
-		dieregion=$(echo "${REGIONSLISTE[$i]}" | cut -d ' ' -f 2)
-		regionbackup "$derscreen" "$dieregion"
-		if [ -f /$STARTVERZEICHNIS/"$derscreen"/bin/Regions/"$dieregion".ini.offline ]; then
-		echo "$dieregion Region ist Offline und wird uebersprungen."
+		BACKUPSCREEN=$(echo "${REGIONSLISTE[$i]}" | cut -d ' ' -f 1)
+		BACKUPREGION=$(echo "${REGIONSLISTE[$i]}" | cut -d ' ' -f 2)
+		echo "Sende: " "$BACKUPSCREEN" "$BACKUPREGION" # Testausgabe
+		regionbackup "$BACKUPSCREEN" "$BACKUPREGION"
+		if [ -f /$STARTVERZEICHNIS/"$BACKUPSCREEN"/bin/Regions/"$BACKUPREGION".ini.offline ]; then
+			echo "$BACKUPREGION Region ist Offline und wird uebersprungen."
 		else
-		sleep $BACKUPWARTEZEIT
+			sleep $BACKUPWARTEZEIT
+			echo "BACKUPWARTEZEIT $BACKUPWARTEZEIT Sekunden." # Testausgabe
 		fi
 	done
 	return 0
@@ -5777,8 +5780,6 @@ function db_user_anzahl() {
 
 	return 0
 }
-
-### !
 
 ##
  #* db_user_online.
