@@ -316,6 +316,7 @@ echo "$(tput setaf $FARBE1)$(tput setab $FARBE2)Auswahlmöglichkeiten und kürze
 echo "rc | robust | RobustCommands"
 echo "oc | opensim | OpenSimCommands"
 echo "mc | money | MoneyServerCommands"
+echo "all"
 echo " "
 echo "$(tput setaf $FARBE1) $(tput setab $FARBE2)# Beispiel: bash osmtool.sh oscommand sim1 Welcome \"alert Hallo Welt\" $(tput sgr 0)"
 echo "$(tput setaf $FARBE1) $(tput setab $FARBE2)# Beispiel: bash osmtool.sh oscommand sim1 Welcome \"alert-user John Doe Hallo John Doe\" $(tput sgr 0)"
@@ -323,10 +324,10 @@ echo "$(tput setaf $FARBE1) $(tput setab $FARBE2)# Beispiel: bash osmtool.sh osc
 
 KOMMANDO=$1
 case $KOMMANDO in
-rc | robust | RobustCommands) RobustCommands ;;
-oc | opensim | OpenSimCommands) OpenSimCommands ;;
-mc | money | MoneyServerCommands) MoneyServerCommands ;;
-all) all ;;
-h | help | hilfe) h ;;
+    rc | robust | RobustCommands) RobustCommands ;;
+    oc | opensim | OpenSimCommands) OpenSimCommands ;;
+    mc | money | MoneyServerCommands) MoneyServerCommands ;;
+    all) all ;;
+    h | help | hilfe) h ;;
 	*) h ;;
 esac
