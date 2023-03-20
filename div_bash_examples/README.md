@@ -1,12 +1,12 @@
 # Diverse Bash Skripte
 
-Example.ini - INI Testdatei
+Example.ini - INI Testdatei.
 
-attacker.shAdd 
+attacker.sh - Aufruf Beispiel: ./attacker.sh John Doe.
 
-bash_array_snippets.sh bash array snippets deutsch
+bash_array_snippets.sh - bash array snippets deutsch. So deklarieren Sie ein Array von Zeichenfolgen in einem Bash-Skript.
 
-commandshelp.sh Add files via upload
+commandshelp.sh - Aufruf Beispiel: ./commandshelp.s all. Dies sind die Kommandos der Robust, OpenSim und MoeyServer Konsole.
 
 config_test.sh Add files via upload
 
