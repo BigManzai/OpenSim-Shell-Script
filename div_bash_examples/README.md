@@ -1,4 +1,4 @@
-# Diverse Bash Programme
+# Diverse Bash Skripte
 
 Example.ini - INI Testdatei
 
