@@ -326,6 +326,7 @@ case $KOMMANDO in
 rc | robust | RobustCommands) RobustCommands ;;
 oc | opensim | OpenSimCommands) OpenSimCommands ;;
 mc | money | MoneyServerCommands) MoneyServerCommands ;;
+all) all ;;
 h | help | hilfe) h ;;
 	*) h ;;
 esac
