@@ -29,7 +29,7 @@
 #### ? Einstellungen ####
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.2.2.808" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.2.2.810" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 # ? Alte Variablen loeschen aus eventuellen voherigen sessions
@@ -3846,21 +3846,13 @@ function autoregionsiniteilen() {
 }
 
 ##
- #* Wozu ist diese Funktion gedacht.
- # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
-##
-##
- #* Wozu ist diese Funktion gedacht.
- # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ #* regionliste.
+ # Die RegionListe ermitteln und mit dem Verzeichnisnamen in die osmregionlist.ini schreiben.
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
  # todo: nichts.
-##  regionliste, Die RegionListe ermitteln und mit dem Verzeichnisnamen in die osmregionlist.ini schreiben.
+##  
 function regionliste() {
 	# Alte osmregionlist.ini sichern und in osmregionlist.ini.old umbenennen.
 	if [ -f "/$STARTVERZEICHNIS/osmregionlist.ini" ]; then
@@ -4669,13 +4661,23 @@ function autoallclean() {
 ##
  #* autoregionbackup.
  # automatischer Backup aller Regionen die in der Regionsliste eingetragen sind.
+  #* Zuerst muss aber einmalig eine Regionliste erstellt werden mit "osmtool.sh regionliste". Die RegionListe ermitteln und mit dem Verzeichnisnamen in die osmregionlist.ini schreiben.
  # 
  #? @param keine.
  #? @return regionbackup BACKUPSCREEN BACKUPREGION.
- # todo: Uebergabe Parameter Fehler. Bug Modus mit extra ausgaben.
+ # todo: Uebergabe Parameter Fehler. Bug Modus mit extra ausgaben. Ist keine osmregionlist.ini vorhanden muss sie erstellt werden.
 ##
 function autoregionbackup() {
 	log info "Automatisches Backup wird gestartet."
+
+    # Ist die osmregionlist.ini vorhanden?
+    if [ ! -f "/$STARTVERZEICHNIS/osmregionlist.ini" ]; then
+        echo "Die osmregionlist.ini Datei ist noch nicht vorhanden und wird erstellt."
+		regionliste
+    else
+        echo "Die osmregionlist.ini Datei ist bereits vorhanden."
+    fi
+
 	makeregionsliste
 	sleep 2
 	for ((i = 0; i < "$ANZAHLREGIONSLISTE"; i++)); do
