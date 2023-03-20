@@ -252,3 +252,6 @@ Schnelle Screen - Start, Stop und Kill - Funktionen:
      ./osmtool.sh scstop sim2
      ./osmtool.sh sckill sim3
 
+Automatischer Regionsbackup erstellt bei nicht vorhandesein direkt die osmregionlist.ini Datei. (Regions.ini Deteien werden nicht unterstützt.)
+
+./osmtool.sh autoregionbackup
