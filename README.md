@@ -69,17 +69,21 @@ Eine Server erstinstallation eines Ubuntu 18 oder 22 Servers kann mit folgender 
 
       /opt/osmtool.sh serverinstall
 
-## Hilfe 
+## Hilfe
 
-    /opt/osmtool.sh hilfe
+    /opt/osmtool.sh Auswahl
     
-dazu gibt es noch die Konsolenhilfe für Putty oder Bitvise-Xterm
-
-    /opt/osmtool.sh konsolenhilfe
-    
-und die OpenSim Commands Hilfe in Deutsch
-
-    /opt/osmtool.sh commandhelp
+     Auswahl:                Information:
+     h                       Zeigt diese hilfe.
+     hilfe                   Haupthilfefunktionen.
+     konsolenhilfe           Konsolenhilfe dreht sich um Putty.
+     dbhilfe                 Hilfe rund um die Datenbankmanipulation.
+     commandhelp             OpenSimulator Kommandos in Deutsch.
+     RobustCommands          Robust Kommandos.
+     OpenSimCommands         OpenSimulator Kommandos.
+     MoneyServerCommands     MoneyServer Kommandos.
+     all                     Alle OpenSimulator Konsolenkommandos.
+     hda                     Dialog Menue direktaufrufe.
 
 ## Konfiguration
 
