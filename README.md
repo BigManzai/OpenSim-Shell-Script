@@ -85,6 +85,13 @@ Eine Server erstinstallation eines Ubuntu 18 oder 22 Servers kann mit folgender 
      all                     Alle OpenSimulator Konsolenkommandos.
      hda                     Dialog Menue direktaufrufe.
 
+## Der Kommando aufruf:
+ 
+     Beispiel: bash osmtool.sh oscommand sim1 Welcome "alert Hallo Welt"
+     Beispiel: bash osmtool.sh oscommand sim1 Welcome "alert-user John Doe Hallo John Doe"
+ 
+ Dies Sendet ein Kommando direkt in den Screen, ohne diesen öffnen und schließen zu müssen.
+ 
 ## Konfiguration
 
 osmtools erstellt automatisch die erforderlichen Konfigurationen.
