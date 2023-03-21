@@ -1,1 +1,1 @@
-## IP über Web ermitteln ohne auf fremde Seiten angewiesen zu sein.
+## Externe IP über Web ermitteln ohne auf fremde Seiten angewiesen zu sein.
