@@ -88,9 +88,10 @@ Eine Server erstinstallation eines Ubuntu 18 oder 22 Servers kann mit folgender 
 ## Der Kommando aufruf:
  
      Beispiel: bash osmtool.sh oscommand sim1 Welcome "alert Hallo Welt"
-     Beispiel: bash osmtool.sh oscommand sim1 Welcome "alert-user John Doe Hallo John Doe"
+     Beispiel: bash osmtool.sh osc sim1 Welcome "alert-user John Doe Hallo John Doe"
  
  Dies Sendet ein Kommando direkt in den Screen, ohne diesen öffnen und schließen zu müssen.
+ Die abkürzung für oscommand ist osc.
  
 ## Konfiguration
 
