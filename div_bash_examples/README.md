@@ -25,3 +25,5 @@ macme.sh
 sed_examples.sh
 
 xml_grep.sh 
+
+Die Skripte phptest.sh und bashtest.php gehoeren zusammen. Dabei ruft das PHP Skript das Bash Skript auf und gibt den Text aus.
