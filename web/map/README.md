@@ -9,3 +9,5 @@ Card size can now be preset in the configuration file. The viewer can also choos
 Horizontal Scroll now.
 
 Status Works
+
+mapslider.php holt sich über osmtool.sh die maptiles des Grids und zeigt sie Mosaik artig an.
