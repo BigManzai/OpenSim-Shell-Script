@@ -29,7 +29,7 @@
 #### ? Einstellungen ####
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.2.2.816" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.2.2.822" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 # ? Alte Variablen loeschen aus eventuellen voherigen sessions
@@ -156,6 +156,10 @@ function osmtoolconfig() {
 		echo "     "
 		echo '    MONEYSOURCE="OpenSimCurrencyServer-2021-master"'
 		echo '    MONEYZIP="OpenSimCurrencyServer-2021-master.zip"'
+		echo '    MUTELISTSOURCE="opensim-ossl-example-scripts-main"'
+		echo '    MUTELISTZIP="OpenSimCurrencyServer-2021-master.zip"'
+		echo '    OSSEARCHSOURCE="opensim-ossl-example-scripts-main"'
+		echo '    OSSEARCHZIP="OpenSimCurrencyServer-2021-master.zip"'
 		echo "     "
 		echo '    DIVASOURCE="diva-distribution"'
     	echo '    DIVAZIP="diva-distribution-master.zip"'
@@ -196,10 +200,10 @@ function osmtoolconfig() {
 		echo "## Inklusive"
 		echo '    SCRIPTCOPY="yes"'
 		echo '    MONEYCOPY="yes"'
+		echo '    MUTELISTCOPY="yes"'
+		echo '    OSSEARCHCOPY="yes"'
 		echo '    DIVACOPY="no"'
 		echo '    PYTHONCOPY="no"'
-		echo '    MUTELISTCOPY="no"'
-		echo '    SEARCHCOPY="no"'
 		echo '    CHRISOSCOPY="no"'
 		echo '    AUTOCONFIG="no"'
 		echo '    OSSEARCHCOPY="no"'
@@ -1401,7 +1405,7 @@ function mysqlrestnodb() {
  # Funktion zum sichern von mySQL Datensaetzen: 
  # mysqlbackup "username" "password" "databasename"
  # 
- #? @param "username" "password" "databasename".
+ #? @param username password databasename.
  #? @return nichts wird zurueckgegeben.
  # todo: nichts.
 ##
@@ -1410,13 +1414,23 @@ function mysqlbackup() {
 	username=$1
 	password=$2
 	databasename=$3
-	result_mysqlrest=$("MYSQL_PWD=$password" "mysqldump -u$username $databasename" -N)
+	dbcompress=$4
+	mkdir -p /$STARTVERZEICHNIS/backup || echo "Verzeichnis vorhanden"
+	cd /$STARTVERZEICHNIS/backup || return 1
+
+	if [ "$dbcompress" = "" ]; then 
+	mysqldump -u $username -p$password $databasename --single-transaction --quick > $databasename.sql
+	fi
+	if [ "$dbcompress" = "-c" ]; then 
+	mysqldump -u $username -p$password $databasename --single-transaction --quick | zip >/$STARTVERZEICHNIS/backup/"$databasename".sql.zip;
+	fi
 }
 
 ##
- #* passgen Passwortlaenge.
+ #* passgen.
  # Passwortgenerator.
- # 
+ # passgen Passwortlaenge.
+ #
  #? @param $PASSWORTLAENGE.
  #? @return $NEWPASSWD.
  # todo: nichts.
@@ -3375,6 +3389,63 @@ function moneycopy() {
 }
 
 ##
+ #* mutelistcopy.
+ # OpenSimMutelist Dateien kopieren.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: Testen.
+##
+function mutelistcopy() {
+	if [[ $MUTELISTCOPY = "yes" ]]; then
+		if [ -d /$STARTVERZEICHNIS/$MUTELISTSOURCE/ ]; then
+			log info "MUTELIST Server Kopiervorgang gestartet"
+			cp -r /$STARTVERZEICHNIS/$MUTELISTSOURCE/bin /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS
+			cp -r /$STARTVERZEICHNIS/$MUTELISTSOURCE/addon-modules /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS
+			log line
+		else
+			# Entpacken und kopieren
+			log info "Money Server entpacken"
+			unzip "$MONEYZIP"
+			log info "Money Server Kopiervorgang gestartet"
+			cp -r /$STARTVERZEICHNIS/$MONEYSOURCE/bin /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS
+			cp -r /$STARTVERZEICHNIS/$MONEYSOURCE/addon-modules /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS
+		fi
+	else
+		log warn "Money Server wird nicht kopiert."
+	fi
+	return 0
+}
+##
+ #* searchcopy.
+ # OpenSimSearch Dateien kopieren.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: Testen.
+##
+function searchcopy() {
+	if [[ $OSSEARCHCOPY = "yes" ]]; then
+		if [ -d /$STARTVERZEICHNIS/$OSSEARCHSOURCE/ ]; then
+			log info "OpenSimSearch Kopiervorgang gestartet"
+			cp -r /$STARTVERZEICHNIS/$OSSEARCHSOURCE/bin /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS
+			cp -r /$STARTVERZEICHNIS/$OSSEARCHSOURCE/addon-modules /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS
+			log line
+		else
+			# Entpacken und kopieren
+			log info "OpenSimSearch entpacken"
+			unzip "$OSSEARCHZIP"
+			log info "OSSEARCH Server Kopiervorgang gestartet"
+			cp -r /$STARTVERZEICHNIS/$OSSEARCHSOURCE/bin /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS
+			cp -r /$STARTVERZEICHNIS/$OSSEARCHSOURCE/addon-modules /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS
+		fi
+	else
+		log warn "OpenSimSearch wird nicht kopiert."
+	fi
+	return 0
+}
+
+##
  #* makeaot.
  # aot generieren.
  # 
@@ -3894,11 +3965,11 @@ function regionliste() {
 
 ##
  #* makewebmaps.
- # Kopiere Maptile nach html fuer Webanzeige.
+ # Kopiere Maptile aus dem Robust nach html fuer Webanzeige.
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+ # todo: Nur Bilder kopieren, wenn sie nicht vorhanden sind, oder aelter als bla bla sind.
 ##
 function makewebmaps() {
 	MAPTILEVERZEICHNIS="maptiles"
@@ -5747,13 +5818,6 @@ function db_gridlist() {
  #? @return $result_mysqlrest.
  # todo: nichts.
 ##
-##
- #* Wozu ist diese Funktion gedacht.
- # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
- # 
- #? @param name Erklaerung.
- #? @return name was wird zurueckgegeben.
- # todo: nichts.
 ##db_inv_search OK
 function db_inv_search() {
 	username=$1
@@ -6557,11 +6621,12 @@ function db_backuptabellen() {
 
 ##
  #* db_backuptabellentypen.
- # Asset Datenbank Tabelle geteilt in Typen speichern.
+ # Aus dem mit mysqldump generierten Backup die Asset Datenbank Tabelle geteilt in Typen speichern.
  # 
- #? @param name Erklaerung.
+ #? @param "$username" "$password" "$databasename".
  #? @return name was wird zurueckgegeben.
- # todo: nichts.
+ # todo: Das gleiche mit der Asset Tabelle machen. 
+ # todo: Direkt die Asset bereiche vom Server holen.
 ##
 function db_backuptabellentypen() {
 	username=$1
@@ -6580,6 +6645,9 @@ function db_backuptabellentypen() {
 
 	# Tabellen schema aus der Datenbank holen.
 	#mysqldump -u"$username" -p"$password" --no-data "$databasename" "$fromtable" > /$STARTVERZEICHNIS/backup/$databasename/"$databasename".sql
+
+	# Datenbank sichern
+	# mysqldump -u"$username" -p"$password" "$databasename" '$tabellenname'" | zip >/$STARTVERZEICHNIS/backup/"$databasename"/"$tabellenname".sql.zip;
 
 	# Asset Typen aus Datenbank holen.
 	mysqlrest "$username" "$password" "$databasename" "SELECT $fromtypes FROM $fromtable WHERE $fromtypes"
@@ -10978,8 +11046,7 @@ function dbhilfe() {
 	echo "db_all_uuid_dialog	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
 	echo "db_anzeigen_dialog	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
 	echo "db_backup	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "db_backuptabellentypen	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "db_backuptabellentypen2	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_backuptabellentypen	- $(tput setab 5)username password databasename(tput sgr 0) – Asset Datenbank Tabelle geteilt in Typen speichern."
 	echo "db_benutzer_anzeigen	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
 	echo "db_compress_backup	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
 	echo "db_create	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
@@ -11227,7 +11294,7 @@ function hilfe() {
 	echo "monoinstall22	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
 	echo "mutelistcopy	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
 	echo "mySQLmenu	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "mysqlbackup	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "mysqlbackup	- $(tput setab 5)username password databasename$(tput sgr 0) – Funktion zum sichern von mySQL Datensaetzen."
 	echo "mysqldberror	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
 	echo "mysqlrest	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
 	echo "mysqlrestnodb	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
@@ -12627,7 +12694,7 @@ function newhelp() {
 	echo "OpenSimCommands         $(tput setaf 2)OpenSimulator Kommandos.$(tput sgr 0)"
 	echo "MoneyServerCommands     $(tput setaf 2)MoneyServer Kommandos.$(tput sgr 0)"
 	echo "all                     $(tput setaf 2)Alle OpenSimulator Konsolenkommandos.$(tput sgr 0)"
-	echo "hda                     $(tput setaf 2)Menu direktaufrufe.$(tput sgr 0)"
+	echo "hda                     $(tput setaf 2)Dialog Menue direktaufrufe.$(tput sgr 0)"
 	echo " "
 	echo " Der Kommando aufruf:"
 	echo "$(tput setaf $FARBE1) $(tput setab $FARBE2)# Beispiel: bash osmtool.sh oscommand sim1 Welcome \"alert Hallo Welt\" $(tput sgr 0)"
@@ -12804,6 +12871,7 @@ case $KOMMANDO in
 	mysql_neustart) mysql_neustart ;;
 	mysqldberror) mysqldberror ;;
 	mysqleinstellen) mysqleinstellen ;;
+	mysqldump | mysqlbackup) mysqlbackup "$2" "$3" "$4" "$5" ;;
 	neuegridconfig) neuegridconfig ;;
 	newregionini) newregionini ;;
 	od | osdelete) osdelete ;;
