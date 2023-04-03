@@ -4,6 +4,8 @@
 osgitholen93
 
 ## Skripte.
+scriptgitcopy
+
 scriptcopy
 
 ## Bauen
