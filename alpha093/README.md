@@ -10,7 +10,7 @@ scriptcopy
 osbauen93
 
 ## Altes OpenSim löschen
-loescht Log, dll, so, exe, aot Dateien fuer einen saubere neue installation, mit Robust.
+loescht Log, dll, so, exe, aot, pdb Dateien fuer einen saubere neue installation, alle sim und Robust.
 
 autoallclean
 
