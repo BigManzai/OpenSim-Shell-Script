@@ -3,11 +3,7 @@
 ## Vom Git holen
 osgitholen93
 
-## Money und Skripte.
-moneygitcopy93
-
-moneycopy
-
+## Skripte.
 scriptcopy
 
 ## Bauen
