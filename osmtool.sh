@@ -16,7 +16,7 @@
 # ! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 # ! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-# * Status 04.03.2023 346 Funktionen.
+# * Status 06.04.2023 348 Funktionen.
 
 # # Installieren sie bitte: #* Visual Studio Code - Mac, Linux, Windows
 #* dazu die Plugins:
@@ -29,8 +29,21 @@
 #### ? Einstellungen ####
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.2.2.822" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.2.2.844" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
+
+##
+ #* skriptversion.
+ # Skriptversion ausgeben.
+ # 
+ #? @param keiner.
+ #? @return NEUERREGIONSNAME - Es wird ein Name zurueckgegeben.
+ # todo: nichts.
+##
+function skriptversion() {
+	echo "$VERSION";
+	exit 0;
+}
 
 # ? Alte Variablen loeschen aus eventuellen voherigen sessions
 unset STARTVERZEICHNIS
@@ -156,13 +169,15 @@ function osmtoolconfig() {
 		echo "     "
 		echo '    MONEYSOURCE="OpenSimCurrencyServer-2021-master"'
 		echo '    MONEYZIP="OpenSimCurrencyServer-2021-master.zip"'
-		echo '    MUTELISTSOURCE="opensim-ossl-example-scripts-main"'
-		echo '    MUTELISTZIP="OpenSimCurrencyServer-2021-master.zip"'
-		echo '    OSSEARCHSOURCE="opensim-ossl-example-scripts-main"'
-		echo '    OSSEARCHZIP="OpenSimCurrencyServer-2021-master.zip"'
+		echo '    #MONEYSOURCE="OpenSimCurrencyServer-2023-master"'
+		echo '    #MONEYZIP="OpenSimCurrencyServer-2023-master.zip"'
+		echo '    #MUTELISTSOURCE="opensim-ossl-example-scripts-main"'
+		echo '    #MUTELISTZIP="OpenSimCurrencyServer-2021-master.zip"'
+		echo '    #OSSEARCHSOURCE="opensim-ossl-example-scripts-main"'
+		echo '    #OSSEARCHZIP="OpenSimCurrencyServer-2021-master.zip"'
 		echo "     "
-		echo '    DIVASOURCE="diva-distribution"'
-    	echo '    DIVAZIP="diva-distribution-master.zip"'
+		echo '    #DIVASOURCE="diva-distribution"'
+    	echo '    #DIVAZIP="diva-distribution-master.zip"'
 		echo "     "
 		echo '    CONFIGURESOURCE="opensim-configuration-addon-modul-main"'
 		echo '    CONFIGUREZIP="opensim-configuration-addon-modul-main.zip"'
@@ -170,6 +185,7 @@ function osmtoolconfig() {
 		echo '    OSSEARCHSOURCE="OpenSimSearch"'
 		echo '    OSSEARCHSZIP="OpenSimSearch-master.zip"'
 		echo "     "
+		echo '    BUILDOLD="yes"'
 		echo "## Schrift- und Hintergrundfarben"
 		echo "##  0 – Black, 1 – Red, 2 – Green, 3 – Yellow, 4 – Blue, 5 – Magenta, 6 – Cyan, 7 – White"
 		echo "    # font color;       background color;"
@@ -190,6 +206,7 @@ function osmtoolconfig() {
 		echo '    SIMDATEI="osmsimlist.ini"'
 		echo '    OPENSIMDOWNLOAD="http://opensimulator.org/dist/"'
 		echo '    OPENSIMVERSION="opensim-0.9.2.2Dev"'
+		echo '    #OPENSIMVERSION="opensim-0.9.3.0Dev"'
 		echo '    SEARCHADRES="icanhazip.com" # Suchadresse'
 		echo "     "
 		echo '    REGIONSANZEIGE="yes"'
@@ -233,6 +250,8 @@ function osmtoolconfig() {
 		echo '    SETAOTON="no"'
 		echo "    # opensim-0.9.2.2Dev-4-g5e9b3b4.zip"
 		echo '    OSVERSION="opensim-0.9.2.2Dev-"'
+		echo '    # OSVERSION="opensim-0.9.3.0Dev-"'
+		echo '    insterweitert="yes"'
 		echo "     "
 		echo "## Bereinigungen"
 		echo '    AUTOCLEANALL="yes"'
@@ -299,8 +318,8 @@ function osmtoolconfig() {
 function dummyvar() {
 	# shellcheck disable=SC2034
 	MONEYVERZEICHNIS="robust"; ROBUSTVERZEICHNIS="robust"; OPENSIMVERZEICHNIS="opensim"; SCRIPTSOURCE="ScriptNeu"; SCRIPTZIP="opensim-ossl-example-scripts-main.zip"; MONEYSOURCE="money48"
-	MONEYZIP="OpenSimCurrencyServer-2021-master.zip"; OSVERSION="opensim-0.9.2.2Dev"; REGIONSDATEI="osmregionlist.ini"; SIMDATEI="osmsimlist.ini"; WARTEZEIT=30; STARTWARTEZEIT=10; STOPWARTEZEIT=30; MONEYWARTEZEIT=60; ROBUSTWARTEZEIT=60
-	BACKUPWARTEZEIT=120; AUTOSTOPZEIT=60; SETMONOTHREADS=800; SETMONOTHREADSON="yes"; OPENSIMDOWNLOAD="http://opensimulator.org/dist/"; OPENSIMVERSION="opensim-0.9.2.2.zip"; SEARCHADRES="icanhazip.com"; # AUTOCONFIG="no"
+	MONEYZIP="OpenSimCurrencyServer-2021-master.zip"; REGIONSDATEI="osmregionlist.ini"; SIMDATEI="osmsimlist.ini"; WARTEZEIT=30; STARTWARTEZEIT=10; STOPWARTEZEIT=30; MONEYWARTEZEIT=60; ROBUSTWARTEZEIT=60
+	BACKUPWARTEZEIT=120; AUTOSTOPZEIT=60; SETMONOTHREADS=800; SETMONOTHREADSON="yes"; OPENSIMDOWNLOAD="http://opensimulator.org/dist/"; SEARCHADRES="icanhazip.com"; # AUTOCONFIG="no"
 	CONFIGURESOURCE="opensim-configuration-addon-modul-main"; CONFIGUREZIP="opensim-configuration-addon-modul-main.zip"
 	textfontcolor=7; textbaggroundcolor=0; debugfontcolor=4; debugbaggroundcolor=0	infofontcolor=2	infobaggroundcolor=0; warnfontcolor=3; warnbaggroundcolor=0
 	errorfontcolor=1; errorbaggroundcolor=0; SETMONOGCPARAMSON1="no"; SETMONOGCPARAMSON2="yes"	LOGDELETE="no"; LOGWRITE="no"; "$trimmvar"; logfilename="_multitool"
@@ -309,6 +328,8 @@ function dummyvar() {
 	# DIALOG_OK=0; DIALOG_HELP=2; DIALOG_EXTRA=3; DIALOG_ITEM_HELP=4; SIG_NONE=0; SIG_HUP=1; SIG_INT=2; SIG_QUIT=3; SIG_KILL=9; SIG_TERM=15
 	DIALOG_CANCEL=1; DIALOG_ESC=255; DIALOG=dialog; VISITORLIST="yes"; REGIONSANZEIGE="yes"; #DELREGIONS="no";
 	netversion="1946"; CONFIGPFAD="OpenSimConfig";
+	OSVERSION="opensim-0.9.2.2Dev";
+	OPENSIMVERSION="opensim-0.9.2.2.zip";
 }
 
 ##
@@ -695,6 +716,21 @@ function trimm() {
 }
 
 ##
+ #* osgitstatus.
+ # opensim quellcode status und upgraden.
+ #
+ #? @param $variable.
+ #? @return $trimmvar.
+ # todo: nichts.
+##
+function osgitstatus() {
+	log info "OpenSim Sourcecode wird Upgegradet."
+	cd /opt/opensim || return 1
+	echo "  OpenSim ist: $(git pull)" || echo "OpenSim kann nicht upgegradet werden."
+	cd /opt || return 0
+}
+
+##
  #* schreibeinfo.
  # Kopfzeile erstellen.
  # 
@@ -731,10 +767,12 @@ function schreibeinfo() {
 		log rohtext "  $DATUM $(date +%H:%M:%S) INFO: Release Nummer: $ubuntuRelease"
 		log rohtext "  $DATUM $(date +%H:%M:%S) INFO: Linux Name: $ubuntuCodename"
 		log rohtext "  $DATUM $(date +%H:%M:%S) INFO: Bash Version: ${BASH_VERSION}"
+		txtmono=$(mono --version);
+		log rohtext "  $DATUM $(date +%H:%M:%S) INFO: MONO Version: ${txtmono:0:37}"
 		log rohtext "  $DATUM $(date +%H:%M:%S) INFO: MONO THREAD Einstellung: ${MONO_THREADS_PER_CPU}"
 		log rohtext "  $DATUM $(date +%H:%M:%S) INFO: Spracheinstellung: ${LANG}"
 		log rohtext "  $DATUM $(date +%H:%M:%S) INFO: $(screen --version)"
-		SYSTEMBOOT=$(who -b); 
+		SYSTEMBOOT=$(who -b);
 		trimm $SYSTEMBOOT;
 		log rohtext "  $DATUM $(date +%H:%M:%S) INFO: $trimmvar"
 		log rohtext "  $DATUM $(date +%H:%M:%S) INFO: $SQLVERSION"
@@ -846,9 +884,9 @@ function iinstall() {
 function iinstall2() {
 	installation=$1
 	if dpkg-query -s "$installation" 2>/dev/null | grep -q installed; then
-		echo "$installation ist bereits installiert.""
+		echo "$installation ist bereits installiert."
 	else
-		echo ""Ich installiere jetzt $installation"
+		echo "Ich installiere jetzt $installation"
 		sudo apt install "$installation" -y
 	fi
 }
@@ -2539,6 +2577,28 @@ function menuosstop() {
 }
 
 ##
+ #* rostart93.
+ # Robust Server starten.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+function rostart93() {
+	log line
+	if checkfile /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/Robust.dll; then
+		cd /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin || return 1
+		# Start mit oder ohne AOT.
+			log info "Robust wird gestartet..."
+			screen -fa -S RO -d -U -m dotnet Robust.dll
+			sleep $ROBUSTWARTEZEIT
+	else
+		log error " Robust wurde nicht gefunden"
+		return 1
+	fi
+}
+
+##
  #* rostart.
  # Robust Server starten.
  # 
@@ -2897,6 +2957,26 @@ function menurostop() {
 }
 
 ##
+ #* mostart93.
+ # Money Server starten.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+function mostart93() {
+	if checkfile /$STARTVERZEICHNIS/$MONEYVERZEICHNIS/bin/MoneyServer.dll; then
+		cd /$STARTVERZEICHNIS/$MONEYVERZEICHNIS/bin || return 1
+
+
+			log info "Money wird gestartet..."
+			screen -fa -S MO -d -U -m dotnet MoneyServer.dll
+			sleep $MONEYWARTEZEIT
+			return 0
+	fi
+}
+
+##
  #* mostart.
  # Money Server starten.
  # 
@@ -3024,6 +3104,29 @@ function osscreenstop() {
 }
 
 ##
+ #* gridstart93.
+ # startet erst Robust und dann Money.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+function gridstart93() {
+	ossettings
+	if screen -list | grep -q RO; then
+		log error "Robust laeuft bereits"
+	else
+		rostart93
+	fi
+	if screen -list | grep -q MO; then
+		log error "Money laeuft bereits"
+	else
+		mostart93
+	fi
+	return 0
+}
+
+##
  #* gridstart.
  # startet erst Robust und dann Money.
  # 
@@ -3109,6 +3212,27 @@ function terminator() {
 	log warn "TERMINATOR: Alle Screens wurden durch Benutzer beendet"
 	killall screen
 	screen -ls
+	return 0
+}
+
+##
+ #* oscompi93.
+ # kompilieren des OpenSimulator.
+ # 
+ #? @param $netversion.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+function oscompi93() {
+	# ohne log Datei.
+    git clone git://opensimulator.org/git/opensim opensim93
+    cd opensim93 || exit
+    git checkout dotnet6
+    ./runprebuild.sh
+    dotnet build --configuration Release OpenSim.sln
+    log info "ine Besonderheit ist, der Startvorgang hat sich geaendert, es wird nicht mehr mit mono OpenSim.exe gestartet, sondern mit dotnet OpenSim.dll."
+
+	log info "Kompilierung wurde durchgefuehrt"
 	return 0
 }
 
@@ -3228,7 +3352,12 @@ function oscompi() {
 
 	# ohne log Datei.
 	if [[ $SETOSCOMPION = "no" ]]; then
+		if [[ $BUILDOLD = "yes" ]]; then
 		msbuild /p:Configuration=Release || return 1
+		fi
+		if [[ $BUILDOLD = "no" ]]; then
+		dotnet build -c Release OpenSim.sln || return 1
+		fi
 	fi
 	# mit log Datei.
 	if [[ $SETOSCOMPION = "yes" ]]; then
@@ -3239,6 +3368,26 @@ function oscompi() {
 		makeaot
 	fi
 	log info "Kompilierung wurde durchgefuehrt"
+	return 0
+}
+
+##
+ #* moneygitcopy93.
+ # Money Server Source Dateien vom Github kopieren.
+ # 
+ #? @param $MONEYCOPY.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+function moneygitcopy93() {
+	#Money und Scripte vom Git holen
+
+	if [[ $MONEYCOPY = "yes" ]]; then
+		log info "MONEYSERVER: MoneyServer wird vom GIT geholt"
+		git clone https://github.com/BigManzai/OpenSimCurrencyServer-2023 /$STARTVERZEICHNIS/OpenSimCurrencyServer-2023-master
+	else
+		log error "MONEYSERVER: MoneyServer nicht vorhanden"
+	fi
 	return 0
 }
 
@@ -3355,6 +3504,35 @@ function scriptcopy() {
 		fi
 	else
 		log warn "Skripte wurden nicht kopiert."
+	fi
+	return 0
+}
+
+##
+ #* moneycopy93.
+ # Money Server Dateien kopieren.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+function moneycopy93() {
+	if [[ $MONEYCOPY = "yes" ]]; then
+		if [ -d /$STARTVERZEICHNIS/$MONEYSOURCE/ ]; then
+			log info "Money Server Kopiervorgang gestartet"
+			cp -r /$STARTVERZEICHNIS/$MONEYSOURCE/bin /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS
+			cp -r /$STARTVERZEICHNIS/$MONEYSOURCE/addon-modules /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS
+			log line
+		else
+			# Entpacken und kopieren
+			log info "Money Server entpacken"
+			unzip "$MONEYZIP"
+			log info "Money Server Kopiervorgang gestartet"
+			cp -r /$STARTVERZEICHNIS/$MONEYSOURCE/bin /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS
+			cp -r /$STARTVERZEICHNIS/$MONEYSOURCE/addon-modules /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS
+		fi
+	else
+		log warn "Money Server wird nicht kopiert."
 	fi
 	return 0
 }
@@ -4041,6 +4219,39 @@ function osgitholen() {
 }
 
 ##
+ #* osgitholen93.
+ # kopiert eine Entwicklerversion in das opensim Verzeichnis.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+function osgitholen93() {
+	echo "$(tput setaf 1) $(tput setaf 7)Kopieren der Entwicklungsversion des OpenSimulator aus dem Git$(tput sgr 0)"
+	log info "##############################"
+	cd /$STARTVERZEICHNIS || return 1
+	rm -r /$STARTVERZEICHNIS/opensim1
+	mv /$STARTVERZEICHNIS/opensim /$STARTVERZEICHNIS/opensim1
+	git clone git://opensimulator.org/git/opensim opensim
+	log info "OpenSim wurde geklont"
+
+	# Bauen
+    # cd /$STARTVERZEICHNIS/opensim || exit
+    # git checkout dotnet6
+    # ./runprebuild.sh
+    # dotnet build --configuration Release OpenSim.sln
+    echo "Eine Besonderheit ist, der Startvorgang hat sich geaendert, es wird nicht mehr mit mono OpenSim.exe gestartet, sondern mit dotnet OpenSim.dll."
+}
+function osbauen93() {
+	# Bauen
+    cd /$STARTVERZEICHNIS/opensim || exit
+    git checkout dotnet6
+    ./runprebuild.sh
+    dotnet build --configuration Release OpenSim.sln
+    echo "Eine Besonderheit ist, der Startvorgang hat sich geaendert, es wird nicht mehr mit mono OpenSim.exe gestartet, sondern mit dotnet OpenSim.dll."
+}
+
+##
  #* opensimholen.
  # holt den OpenSimulator in das Arbeitsverzeichnis.
  # 
@@ -4311,6 +4522,41 @@ function menuregionrestore() {
 }
 
 ##
+ #* autosimstart93.
+ # automatischer sim start ohne Robust und Money.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+function autosimstart93() {
+	if ! screen -list | grep -q 'sim'; then
+		# es laeuft kein Simulator - not work
+		makeverzeichnisliste
+		sleep 2
+		for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
+			log info "Regionen ${VERZEICHNISSLISTE[$i]} werden gestartet"
+			cd /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin || return 1
+
+			if [ "$REGIONSANZEIGE" = "yes" ]; then
+				# Zeigt die Regionsnamen aus einer Regions.ini an
+				STARTREGIONSAUSGABE=$(awk -F "[" '/\[/ {print $1 $2 $3}' /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/Regions/*.ini | sed s/'\]'//g);
+				log info "${VERZEICHNISSLISTE[$i]} hat folgende Regionen:";
+				for regionen in "${STARTREGIONSAUSGABE[@]}"; do log rohtext "$regionen"; done
+			fi
+
+			screen -fa -S "${VERZEICHNISSLISTE[$i]}" -d -U -m dotnet OpenSim.dll
+
+			sleep $STARTWARTEZEIT
+		done
+	else
+		# es laeuft mindestens ein Simulator - work
+		log text "WORKS:  Regionen laufen bereits!"
+	fi
+	return 0
+}
+
+##
  #* autosimstart.
  # automatischer sim start ohne Robust und Money.
  # 
@@ -4560,7 +4806,7 @@ function cleaninstall() {
 
 ##
  #* cleanprebuild.
- # loeschen aller Prebuild Dateien, da sie von OpenSim Prebuild nicht geloescht werden.
+ # loeschen aller Prebuild Dateien, da sie von OpenSim Prebuild clean nicht geloescht werden.
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
@@ -4667,6 +4913,7 @@ function autoallclean() {
 		rm /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/*.config
 		rm /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/*.py
 		rm /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/*.old
+		rm /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/*.pdb
 
 		# Verzeichnisse leeren
 		rm -r /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/assetcache/*
@@ -4708,6 +4955,7 @@ function autoallclean() {
 	rm /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/*.config
 	rm /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/*.py
 	rm /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/*.old
+	rm /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/*.pdb
 
 	rm -r /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/assetcache/*
 	rm -r /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/maptiles/*
@@ -4842,6 +5090,28 @@ function menuautoscreenstop() {
 }
 
 ##
+ #* autostart93.
+ # startet das komplette Grid mit allen sims.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+function autostart93() {
+	#log line
+	#log info "Starte das Grid!"
+	if [[ $ROBUSTVERZEICHNIS == "robust" ]]; then
+		gridstart93
+	fi
+	autosimstart93
+	log line
+	screenlist
+	log line
+	log info "Auto Start abgeschlossen"
+	return 0
+}
+
+##
  #* autostart.
  # startet das komplette Grid mit allen sims.
  # 
@@ -4860,6 +5130,25 @@ function autostart() {
 	screenlist
 	log line
 	log info "Auto Start abgeschlossen"
+	return 0
+}
+
+##
+ #*  gridstop.
+ # Stoppt erst Money dann Robust.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##  
+function gridstop() {
+	if screen -list | grep -q MO; then
+		mostop
+	fi
+
+	if screen -list | grep -q RO; then
+		rostop
+	fi
 	return 0
 }
 
@@ -4938,6 +5227,25 @@ function menuautostop() {
 
 	menuautoscreenstop
 	hauptmenu
+}
+
+##
+ #* autorestart93.
+ # startet das gesamte Grid neu und loescht die log Dateien.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+function autorestart93() {
+	autostop
+	if [ "$LOGDELETE" = "yes" ]; then autologdel; fi
+	#if [ "$DELREGIONS" = "yes" ]; then deleteregionfromdatabase; fi
+	gridstart93
+	autosimstart93
+	screenlistrestart
+	log info "Auto Restart abgeschlossen."
+	return 0
 }
 
 ##
@@ -5243,6 +5551,9 @@ function installopensimulator() {
 	# maxfailures = 3 
 	# bantime = 900 
 	# findtime = 600
+	iinstall2 apt-utils
+    iinstall2 libgdiplus
+    iinstall2 libc6-dev
 }
 
 ##
@@ -5319,7 +5630,38 @@ function installubuntu22() {
 	iinstall2 libopenjp3d7
 	iinstall2 crudini
 	iinstall2 iptables
-	iinstall2 fail2ban	
+	iinstall2 fail2ban
+	iinstall2 apt-utils
+    iinstall2 libgdiplus
+    iinstall2 libc6-dev
+
+	if [ $insterweitert = "yes" ]; then
+		iinstall2 libldns-dev
+		iinstall2 libldns3
+		iinstall2 libjs-jquery-ui
+		iinstall2 libopenexr25
+		iinstall2 libmagickcore-6.q16-6-extra
+		iinstall2 libswscale-dev
+		iinstall2 php-twig
+		iinstall2 libavcodec58
+		iinstall2 libmagickwand-6.q16-6
+		iinstall2 libavutil56
+		iinstall2 imagemagick-6.q16
+		iinstall2 libswscale5
+		iinstall2 libmagickcore-6.q16-6
+		iinstall2 libavutil-dev
+		iinstall2 libswresample3
+		iinstall2 imagemagick-6-common
+		iinstall2 libavformat58
+		iinstall2 python2.7-minimal
+		iinstall2 python2.7
+		iinstall2 libavformat-dev
+		iinstall2 libavcodec-dev
+		iinstall2 libpython2.7-minimal
+		iinstall2 libpython2.7-stdlib
+		iinstall2 libswresample-dev
+	fi
+
 }
 
 ##
@@ -5472,7 +5814,8 @@ function installationhttps22() {
 function serverinstall22() {
 	installbegin
 	installubuntu22
-	installmono22
+	monoinstall20 # 22 gibt es nicht.
+	monoinstall22 # Upgrade monoistall20
 	installphpmyadmin
 	ufwset
 	#installationhttps22
@@ -5535,6 +5878,81 @@ function installationen() {
 	log info "Liste aller Installierten Pakete unter Linux:"
 	dpkg-query -Wf '${Package;-40}${Priority}\n' | sort -b -k2,2 -k1,1
 	dpkg-query -Wf '${Package;-40}${Priority}\n' | sort -b -k2,2 -k1,1 >>"/$STARTVERZEICHNIS/$DATEIDATUM$logfilename.log"
+	return 0
+}
+
+##
+ #* osbuilding093.
+ # Baut automatisch einen neuen OpenSimulator mit den eingestellten Plugins.
+ # Beispiel Datei: opensim-0.9.3 ???
+ # bash osmtool.sh osbuilding 1
+ # opensim 0.9.3 dotnet 4.8 Status WORKS
+ #? @param
+ #? @return
+ # todo: opensim 0.9.3 dotnet6: building no executable files only dll libraries.
+##
+function osbuilding093() {
+    git clone git://opensimulator.org/git/opensim opensim
+    cd opensim93 || exit
+    git checkout dotnet6
+    ./runprebuild.sh
+    dotnet build --configuration Release OpenSim.sln
+}
+
+##
+ #* osbuilding.
+ # Baut automatisch einen neuen OpenSimulator mit den eingestellten Plugins.
+ # Beispiel Datei: opensim-0.9.2.2Dev-1187-gcf0b1b1.zip
+ # bash osmtool.sh osbuilding 1187
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+function osbuilding93() {
+	## dialog Aktionen
+	# zuerst schauen ob dialog installiert ist
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
+		# Alle Aktionen mit dialog
+		VERSIONSNUMMER=$(dialog --backtitle "opensimMULTITOOL $VERSION" --title "opensimMULTITOOL Eingabe" --help-button --defaultno --inputbox "Versionsnummer:" 8 40 3>&1 1>&2 2>&3 3>&-)
+		antwort=$?
+		dialogclear
+		ScreenLog
+
+		if [[ $antwort = 2 ]]; then hilfemenu; fi
+		if [[ $antwort = 1 ]]; then exit; fi
+	else
+		# Alle Aktionen ohne dialog
+		VERSIONSNUMMER=$1
+	fi
+	# dialog Aktionen Ende
+
+	cd /$STARTVERZEICHNIS || exit
+	log info "Alten OpenSimulator sichern"
+	osdelete
+
+	log line
+
+	# Neue Versionsnummer: opensim-0.9.2.2Dev-4-g5e9b3b4.zip
+	log info "Neuen OpenSimulator aus dem Git holen"
+	git clone git://opensimulator.org/git/opensim opensim
+
+	log line
+	sleep 3
+
+	log info "Prebuild des neuen OpenSimulator starten"
+    cd opensim93 || exit
+    git checkout dotnet6
+    ./runprebuild.sh
+    
+	log line
+
+	log info "Compilieren des neuen OpenSimulator"
+	dotnet build --configuration Release OpenSim.sln
+
+	log line
+	osupgrade93
+
 	return 0
 }
 
@@ -10083,25 +10501,6 @@ function createregionavatar() {
 }
 
 ##
- #*  gridstop.
- # Stoppt erst Money dann Robust.
- # 
- #? @param name Erklaerung.
- #? @return name was wird zurueckgegeben.
- # todo: nichts.
-##  
-function gridstop() {
-	if screen -list | grep -q MO; then
-		mostop
-	fi
-
-	if screen -list | grep -q RO; then
-		rostop
-	fi
-	return 0
-}
-
-##
  #* menugridstop.
  # Stoppt erst Money dann Robust.
  # 
@@ -10222,6 +10621,38 @@ function osgridcopy() {
 	log line
 	# MoneyServer eventuell loeschen.
 	if [ "$MONEYVERZEICHNIS" = "keins" ] || [ "$MONEYVERZEICHNIS" = "no" ] || [ "$MONEYVERZEICHNIS" = "nein" ]; then moneydelete; fi
+	return 0
+}
+
+##
+ #* osupgrade93.
+ # Automatisches upgrade des opensimulator aus dem verzeichnis opensim.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##  
+function osupgrade93() {
+	log text " #############################"
+	log text " !!!      BEI FEHLER      !!! "
+	log text " !!! ABBRUCH MIT STRG + C !!! "
+	log text " #############################"
+
+	log info "Das Grid wird jetzt upgegradet"
+	autostop
+	# Cache loeschen
+	if [ "$GRIDCACHECLEAR" = "yes" ]; then gridcachedelete; fi
+	# Kopieren.
+	log line
+	log info "Neue Version Installieren"
+	oscopyrobust
+	oscopysim
+	autologdel
+	# MoneyServer eventuell loeschen.
+	if [ "$MONEYVERZEICHNIS" = "keins" ] || [ "$MONEYVERZEICHNIS" = "no" ] || [ "$MONEYVERZEICHNIS" = "nein" ]; then moneydelete; fi
+	# Grid Starten.
+	# log info "Das Grid wird jetzt gestartet"
+	autostart93
 	return 0
 }
 
@@ -10422,7 +10853,8 @@ function AutoInstall() {
             #echo "entdeckt Ubuntu 22"
             installbegin
             installubuntu22
-            installmono22
+			monoinstall20 # 22 gibt es nicht.
+			monoinstall22 # Upgrade monoistall20
             installphpmyadmin
             ufwset
             #installationhttps22
@@ -12750,6 +13182,7 @@ case $KOMMANDO in
 	asdel | assetdel) assetdel "$2" "$3" "$4" ;;
 	assetcachedel) assetcachedel "$2" ;; # Test
 	astart | autostart | start) autostart ;;
+	astart93 | autostart93 | start93) autostart93 ;;
 	astop | autostop | stop) autostop ;;
 	authlog) authlog ;;
 	autoallclean) autoallclean ;;
@@ -12837,7 +13270,6 @@ case $KOMMANDO in
 	installfinish) installfinish ;;
 	installmariadb18) installmariadb18 ;;
 	installmariadb22) installmariadb22 ;;
-	installmono22) installmono22 ;;
 	installphpmyadmin) installphpmyadmin ;;
 	installubuntu22) installubuntu22 ;;
 	ipsetzen) ipsetzen ;;
@@ -12862,6 +13294,7 @@ case $KOMMANDO in
 	menuworks) menuworks "$2" ;;
 	moneydelete) moneydelete ;;
 	moneygitcopy) moneygitcopy ;;
+	moneygitcopy93) moneygitcopy93 ;;
 	moneyserverini) moneyserverini ;;
 	monoinstall) monoinstall ;;
 	mr | meineregionen) meineregionen ;;
@@ -12888,6 +13321,8 @@ case $KOMMANDO in
 	osdauerstart) osdauerstart "$2" ;; # Test
 	osdauerstop) osdauerstop "$2" ;; # Test
 	osg | osgitholen) osgitholen ;;
+	osg93 | osgitholen93) osgitholen93 ;;
+	osbauen93) osbauen93 ;;
 	osgridcopy) osgridcopy ;;
 	osprebuild) osprebuild "$2" ;;
 	osslEnableConfig) osslEnableConfig ;;
@@ -12898,10 +13333,12 @@ case $KOMMANDO in
 	osto | osstop) osstop "$2" ;;
 	oswriteconfig) oswriteconfig "$2" ;;
 	ou | osupgrade) osupgrade ;;
+	ou93 | osupgrade93) osupgrade93 ;;
 	passgen) passgen "$2" ;;
 	passwdgenerator) passwdgenerator "$2" ;;
 	pythoncopy) pythoncopy ;;
 	r | restart) autorestart ;;
+	r93 | restart93 | autorestart93) autorestart93 ;;
 	radiolist) radiolist ;;
 	ramspeicher) ramspeicher ;;
 	rb | regionbackup) regionbackup "$2" "$3" ;;
@@ -12934,6 +13371,7 @@ case $KOMMANDO in
 	simstats) simstats "$2" ;;
 	ss | osscreenstop) osscreenstop "$2" ;;
 	sta | autosimstart | simstart) autosimstart ;;
+	sta93 | autosimstart93 | simstart93) autosimstart93 ;;
 	sto | autosimstop | simstop) autosimstop ;;
 	systeminformation) systeminformation ;;
 	tabellenabfrage) tabellenabfrage "$2" "$3" "$4" ;;
@@ -12984,6 +13422,7 @@ case $KOMMANDO in
 	createmasteravatar) createmasteravatar ;;
 	createregionavatar) createregionavatar ;;
 	firstinstallation) firstinstallation ;;
+	osgitstatus) osgitstatus ;;
 	scstart) scstart "$2" ;;
 	scstop) scstop "$2" ;;
 	sckill) sckill "$2" ;;
@@ -12999,6 +13438,7 @@ case $KOMMANDO in
 	divacopy) divacopy ;;
 	cleanprebuild) cleanprebuild ;;
 	divagitcopy) divagitcopy ;;
+	skriptversion) skriptversion ;;
 	hda | hilfedirektaufruf | hilfemenudirektaufrufe) hilfemenudirektaufrufe ;;
 	h) newhelp
 	exit ;;
