@@ -151,6 +151,9 @@ Format: Minute(0 - 59)-Stunde(0 - 23)-Tag(1 - 31)-Monat(1 - 12)-Wochentag(0 - 7)
 
     # Restart um 6 Uhr
     0 6 * * * /opt/osmtool.sh restart
+    
+    # Restart OpenSimulator 0.9.3.0 um 6 Uhr
+    0 6 * * * /opt/osmtool.sh autorestart93
 
 (Format: Minute=0, Stunde=6)
 
