@@ -29,7 +29,7 @@
 #### ? Einstellungen ####
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.2.2.844" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.847" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 ##
@@ -3518,18 +3518,19 @@ function scriptcopy() {
 ##
 function moneycopy93() {
 	if [[ $MONEYCOPY = "yes" ]]; then
-		if [ -d /$STARTVERZEICHNIS/$MONEYSOURCE/ ]; then
+	MONEYSOURCE93="OpenSimCurrencyServer-2023-master"
+		if [ -d /$STARTVERZEICHNIS/$MONEYSOURCE93/ ]; then
 			log info "Money Server Kopiervorgang gestartet"
-			cp -r /$STARTVERZEICHNIS/$MONEYSOURCE/bin /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS
-			cp -r /$STARTVERZEICHNIS/$MONEYSOURCE/addon-modules /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS
+			cp -r /$STARTVERZEICHNIS/$MONEYSOURCE93/bin /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS
+			cp -r /$STARTVERZEICHNIS/$MONEYSOURCE93/addon-modules /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS
 			log line
 		else
 			# Entpacken und kopieren
 			log info "Money Server entpacken"
 			unzip "$MONEYZIP"
 			log info "Money Server Kopiervorgang gestartet"
-			cp -r /$STARTVERZEICHNIS/$MONEYSOURCE/bin /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS
-			cp -r /$STARTVERZEICHNIS/$MONEYSOURCE/addon-modules /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS
+			cp -r /$STARTVERZEICHNIS/$MONEYSOURCE93/bin /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS
+			cp -r /$STARTVERZEICHNIS/$MONEYSOURCE93/addon-modules /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS
 		fi
 	else
 		log warn "Money Server wird nicht kopiert."
@@ -4233,6 +4234,7 @@ function osgitholen93() {
 	rm -r /$STARTVERZEICHNIS/opensim1
 	mv /$STARTVERZEICHNIS/opensim /$STARTVERZEICHNIS/opensim1
 	git clone git://opensimulator.org/git/opensim opensim
+	git pull
 	log info "OpenSim wurde geklont"
 
 	# Bauen
@@ -13286,6 +13288,7 @@ case $KOMMANDO in
 	makewebmaps) makewebmaps ;;
 	mariadberror) mariadberror ;;
 	mc | moneycopy) moneycopy ;;
+	mc93 | moneycopy93) moneycopy93 ;;
 	md | mapdel) mapdel "$2" ;;
 	menuinfo) menuinfo ;;
 	menuosdauerstart) menuosdauerstart "$2" ;; # Test
