@@ -226,10 +226,33 @@ Vorbereitungen zum kompletten Installationsprozess (In Entwicklung)
      
 ------
 
-Status 24.02.2023 353 Funktionen.
+Status 25.05.2023 352 Funktionen.
 
 
 ## NEU
+OpenSim 0.9.3.0 dotnet 6.
+
+     Alle Funktionen für OpenSim 0.9.3.X haben am ende 93 angehängt bekommen.
+     autorestart93 - startet das gesamte Grid neu und loescht die log Dateien.
+     autosimstart93 - automatischer sim start ohne Robust und Money.
+     autostart93 - startet das komplette Grid mit allen sims.
+     checkupgrade93 - Wenn es ein Upgrade gibt, dann baut dies automatisch einen neuen OpenSimulator mit den eingestellten Plugins.
+     gridstart93 - startet erst Robust und dann Money.
+     moneycopy93 - Money Server Dateien kopieren.
+     moneygitcopy93 - Money Server Source Dateien vom Github kopieren.
+     mostart93 - Money Server starten.
+     opensimgitcopy93 - OpenSimulator Source Dateien vom Github kopieren.
+     osbauen93 - Baut einen neuen OpenSimulator mit dotnet 6.
+     osbuilding093 - Baut automatisch einen neuen OpenSimulator mit den eingestellten Plugins.
+     osbuilding93 - Baut automatisch einen neuen OpenSimulator mit den eingestellten Plugins.
+     osbuildingupgrade93 - Upgradet automatisch den OpenSimulator 0.9.3.0 .
+     oscompi93 - kompilieren des OpenSimulator.
+     osgitholen93 - kopiert eine Entwicklerversion in das opensim Verzeichnis.
+     osupgrade93 - Automatisches upgrade des opensimulator aus dem verzeichnis opensim.
+     rostart93 - Robust Server starten.
+     setversion93 - Versionsnummer Setzen.
+     versionsausgabe93 - Version OpenSimulator unter dotnet6.
+ 
 Regionskonfigurationen erstellen per zufall und direkt funktionsfähig.
 
     ./osmtool.sh regionconfig
