@@ -243,7 +243,6 @@ OpenSim 0.9.3.0 dotnet 6.
      mostart93 - Money Server starten.
      opensimgitcopy93 - OpenSimulator Source Dateien vom Github kopieren.
      osbauen93 - Baut einen neuen OpenSimulator mit dotnet 6.
-     osbuilding093 - Baut automatisch einen neuen OpenSimulator mit den eingestellten Plugins.
      osbuilding93 - Baut automatisch einen neuen OpenSimulator mit den eingestellten Plugins.
      osbuildingupgrade93 - Upgradet automatisch den OpenSimulator 0.9.3.0 .
      oscompi93 - kompilieren des OpenSimulator.
