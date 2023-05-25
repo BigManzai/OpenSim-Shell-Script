@@ -29,7 +29,7 @@
 #### ? Einstellungen ####
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.865" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.866" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 ##
@@ -4335,6 +4335,15 @@ function osgitholen93() {
     # dotnet build --configuration Release OpenSim.sln
     echo "Eine Besonderheit ist, der Startvorgang hat sich geaendert, es wird nicht mehr mit mono OpenSim.exe gestartet, sondern mit dotnet OpenSim.dll."
 }
+
+##
+ #* osbauen93
+ # Baut einen neuen OpenSimulator mit dotnet 6.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
 function osbauen93() {
 	# Bauen
     cd /$STARTVERZEICHNIS/opensim || exit
@@ -6016,7 +6025,7 @@ function checkupgrade93() {
 }
 
 ##
- #* osbuilding.
+ #* osbuilding93.
  # Baut automatisch einen neuen OpenSimulator mit den eingestellten Plugins.
  # Beispiel Datei: opensim-0.9.2.2Dev-1187-gcf0b1b1.zip
  # bash osmtool.sh osbuilding 1187
