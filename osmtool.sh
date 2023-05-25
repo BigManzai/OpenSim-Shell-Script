@@ -16,20 +16,20 @@
 # ! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 # ! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-# * Status 06.04.2023 348 Funktionen.
+# * Status 06.04.2023 352 Funktionen.
 
 # # Installieren sie bitte: #* Visual Studio Code - Mac, Linux, Windows
 #* dazu die Plugins:
-# todo: nichts.
 # ShellCheck #! ist eine geniale Hilfe gegen Fehler.
 # shellman #? Shell Skript Schnipsel.
 # Better Comments #* Bessere Farbliche Darstellung. Standards: #! #* #? #// #todo
 # outline map #? Navigationsleiste zwischen den Funktionen.
+# todo: nichts.
 
 #### ? Einstellungen ####
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.847" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.865" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 ##
@@ -37,7 +37,7 @@ tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
  # Skriptversion ausgeben.
  # 
  #? @param keiner.
- #? @return NEUERREGIONSNAME - Es wird ein Name zurueckgegeben.
+ #? @return $VERSION
  # todo: nichts.
 ##
 function skriptversion() {
@@ -59,8 +59,12 @@ unset REGIONSNAMEb
 unset REGIONSNAMEc
 unset REGIONSNAMEd
 unset VERZEICHNISSCREEN
+unset NUMMER
 
 NEUERREGIONSNAME="Welcome"
+
+# manpage auf Deutsch - man Befehl/Kommando
+alias man="LANG=de_DE.UTF-8 man"
 
 ##
  #* Zufallsnamen.
@@ -169,8 +173,8 @@ function osmtoolconfig() {
 		echo "     "
 		echo '    MONEYSOURCE="OpenSimCurrencyServer-2021-master"'
 		echo '    MONEYZIP="OpenSimCurrencyServer-2021-master.zip"'
-		echo '    #MONEYSOURCE="OpenSimCurrencyServer-2023-master"'
-		echo '    #MONEYZIP="OpenSimCurrencyServer-2023-master.zip"'
+		echo '    #MONEYSOURCE="OpenSimCurrencyServer-2023"'
+		echo '    #MONEYZIP="OpenSimCurrencyServer-2023.zip"'
 		echo '    #MUTELISTSOURCE="opensim-ossl-example-scripts-main"'
 		echo '    #MUTELISTZIP="OpenSimCurrencyServer-2021-master.zip"'
 		echo '    #OSSEARCHSOURCE="opensim-ossl-example-scripts-main"'
@@ -260,7 +264,7 @@ function osmtoolconfig() {
 		echo '    ASSETCACHECLEAR="yes"'
 		echo '    MAPTILESCLEAR="yes"'
 		echo '    RMAPTILESCLEAR="yes"'
-		echo '    RBAKESCLEAR="yes"'
+		echo '    RBAKESCLEAR="no"'
 		echo "     "
 		echo "## OpenSim Downloads"
 		echo '    LINK01="http://opensimulator.org/dist/OpenSim-LastAutoBuild.zip"'
@@ -725,9 +729,9 @@ function trimm() {
 ##
 function osgitstatus() {
 	log info "OpenSim Sourcecode wird Upgegradet."
-	cd /opt/opensim || return 1
+	cd /$STARTVERZEICHNIS/opensim || return 1
 	echo "  OpenSim ist: $(git pull)" || echo "OpenSim kann nicht upgegradet werden."
-	cd /opt || return 0
+	cd /$STARTVERZEICHNIS || return 0
 }
 
 ##
@@ -3372,6 +3376,26 @@ function oscompi() {
 }
 
 ##
+ #* opensimgitcopy93.
+ # OpenSimulator Source Dateien vom Github kopieren.
+ # 
+ #? @param nichts.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+function opensimgitcopy93() {
+	#Money und Scripte vom Git holen
+
+	if [[ $MONEYCOPY = "yes" ]]; then
+		log info "OpenSimulator wird vom GIT geholt"
+		git clone git://opensimulator.org/git/opensim /$STARTVERZEICHNIS/opensim
+	else
+		log error "OpenSimulator nicht vorhanden"
+	fi
+	return 0
+}
+
+##
  #* moneygitcopy93.
  # Money Server Source Dateien vom Github kopieren.
  # 
@@ -3384,7 +3408,7 @@ function moneygitcopy93() {
 
 	if [[ $MONEYCOPY = "yes" ]]; then
 		log info "MONEYSERVER: MoneyServer wird vom GIT geholt"
-		git clone https://github.com/BigManzai/OpenSimCurrencyServer-2023 /$STARTVERZEICHNIS/OpenSimCurrencyServer-2023-master
+		git clone https://github.com/BigManzai/OpenSimCurrencyServer-2023 /$STARTVERZEICHNIS/OpenSimCurrencyServer-2023
 	else
 		log error "MONEYSERVER: MoneyServer nicht vorhanden"
 	fi
@@ -3468,7 +3492,7 @@ function divacopy() {
  # todo: nichts.
 ##
 function scriptgitcopy() {
-	#Money und Scripte vom Git holen
+	#Scripte vom Git holen
 	if [[ $SCRIPTCOPY = "yes" ]]; then
 		log info "Script Assets werden vom GIT geholt"
 		git clone https://github.com/BigManzai/opensim-ossl-example-scripts /$STARTVERZEICHNIS/opensim-ossl-example-scripts-main
@@ -3518,7 +3542,7 @@ function scriptcopy() {
 ##
 function moneycopy93() {
 	if [[ $MONEYCOPY = "yes" ]]; then
-	MONEYSOURCE93="OpenSimCurrencyServer-2023-master"
+	MONEYSOURCE93="OpenSimCurrencyServer-2023"
 		if [ -d /$STARTVERZEICHNIS/$MONEYSOURCE93/ ]; then
 			log info "Money Server Kopiervorgang gestartet"
 			cp -r /$STARTVERZEICHNIS/$MONEYSOURCE93/bin /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS
@@ -3689,7 +3713,7 @@ function cleanaot() {
 }
 
 ##
- #* osprebuild.
+ #* setversion.
  # Prebuild erstellen 
  # Aufruf Beispiel: osmtool.sh prebuild 1330.
  # 
@@ -3697,7 +3721,7 @@ function cleanaot() {
  #? @return nichts wird zurueckgegeben.
  # todo: nichts.
 ##
-function osprebuild() {
+function setversion() {
 	NUMMER=$1
 	log info "OpenSim Version umbenennen und Release auf $NUMMER einstellen"
 
@@ -3707,6 +3731,73 @@ function osprebuild() {
 	sed -i s/Yeti//g /$STARTVERZEICHNIS/opensim/OpenSim/Framework/VersionInfo.cs
 	# flavour loeschen
 	sed -i s/' + flavour'//g /$STARTVERZEICHNIS/opensim/OpenSim/Framework/VersionInfo.cs
+	return 0
+}
+
+
+##
+ #* versionsausgabe93
+ # Version OpenSimulator unter dotnet6
+ # Aufruf Beispiel: osmtool.sh versionsausgabe
+ # 
+ #? @param Keine.
+ #? @return Ausgabe Informationen.
+ # todo: nichts.
+##
+function versionsausgabe93() {
+	cd /opt/opensim || exit
+	echo Verionsausgabe:
+    git log -n 1
+    git describe --abbrev=7 --always  --long --match v* master
+}
+
+
+##
+ #* setversion93.
+ # Versionsnummer Setzen
+ # Aufruf Beispiel: osmtool.sh setversion93 1234.
+ # 
+ #? @param $NUMMER.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+function setversion93() {
+	NUMMER=$1
+
+	# Datum als Versionsnummer nutzen.
+	if [[ "${NUMMER}" == "d" ]]; then 
+		NUMMER=$(date +"%d%m%Y") 
+		sed -i s/Nessie/$NUMMER/g /$STARTVERZEICHNIS/opensim/OpenSim/Framework/VersionInfo.cs
+	fi
+
+	# Ganze Zeile austauschen gegen: 0.9.2.2Dev-676-gdd9e365e00
+	if [[ "${NUMMER}" == "z" ]]; then 
+		OSMASTER=$(git describe)
+		sed -i -e 's/versionString =.*/versionString = "'$OSMASTER'";/' /$STARTVERZEICHNIS/opensim/OpenSim/Framework/VersionInfo.cs
+	fi
+
+	# Datum als Versionsnummer nutzen.
+	if [[ "${NUMMER}" == "-d" ]]; then 
+		NUMMER=$(date +"%d%m%Y") 
+		sed -i s/Nessie/$NUMMER/g /$STARTVERZEICHNIS/opensim/OpenSim/Framework/VersionInfo.cs
+	fi
+
+	if [[ "${NUMMER}" == "" ]]; then
+		# ist keine Nummer angegeben Versionnummer vom Git nutzen.
+		cd /$STARTVERZEICHNIS/opensim || exit
+		NUMMER=$(git describe --abbrev=7 --always  --long --match v* master)
+
+		sed -i s/Nessie/$NUMMER/g /$STARTVERZEICHNIS/opensim/OpenSim/Framework/VersionInfo.cs
+		else
+		# ist eine Nummer angegeben dann diese verwenden.
+		sed -i s/Nessie/V$NUMMER/g /$STARTVERZEICHNIS/opensim/OpenSim/Framework/VersionInfo.cs
+	fi
+
+	# Kontrollausgabe was gemacht wurde.
+	log info "OpenSim Version umbenennen und auf $NUMMER einstellen"	
+
+	# flavour umbenennen von Dev auf Extended.
+	#sed -i s/Flavour.Dev/Flavour.Extended/g /$STARTVERZEICHNIS/opensim/OpenSim/Framework/VersionInfo.cs
 	return 0
 }
 
@@ -3831,7 +3922,7 @@ function oscopyrobust() {
 		sleep 2		
 		cd /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin || return 1
 		cp -r /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS
-		log info "Robust und Money wurden kopiert"
+		#log info "Robust und Money wurden kopiert"
 		log line
 	else
 		log line
@@ -4885,7 +4976,10 @@ function gridcachedelete() {
 	done
 	# Robust
 	if [ "$RMAPTILESCLEAR" = "yes" ]; then  rm -r /$STARTVERZEICHNIS/robust/bin/maptiles || echo " "; fi
-	if [ "$RBAKESCLEAR" = "yes" ]; then  rm -r /$STARTVERZEICHNIS/robust/bin/bakes || echo " "; fi
+	# Ist das Verzeichnis vorhanden dann erst löschen.
+	if [ ! -d "/$STARTVERZEICHNIS/robust/bin/bakes" ]; then
+		if [ "$RBAKESCLEAR" = "yes" ]; then  rm -r /$STARTVERZEICHNIS/robust/bin/bakes || echo " "; fi
+	fi
 }
 
 ##
@@ -5902,6 +5996,26 @@ function osbuilding093() {
 }
 
 ##
+ #* checkupgrade93.
+ # Wenn es ein Upgrade gibt, dann baut dies automatisch einen neuen OpenSimulator mit den eingestellten Plugins.
+ # 
+ #? @param keine.
+ #? @return Already up to date.
+ # todo: nichts.
+##
+function checkupgrade93() {
+	cd /$STARTVERZEICHNIS/opensim || exit
+    CHECKERGEBNIS=$(git pull)
+
+	# Already up to date?
+    if [ "$CHECKERGEBNIS" = "Already up to date." ]; then 
+        log info "Der OpenSimulator ist Tagesaktuell.";
+    else
+        osbuildingupgrade93 d
+    fi
+}
+
+##
  #* osbuilding.
  # Baut automatisch einen neuen OpenSimulator mit den eingestellten Plugins.
  # Beispiel Datei: opensim-0.9.2.2Dev-1187-gcf0b1b1.zip
@@ -5943,7 +6057,7 @@ function osbuilding93() {
 	sleep 3
 
 	log info "Prebuild des neuen OpenSimulator starten"
-    cd opensim93 || exit
+    cd opensim || exit
     git checkout dotnet6
     ./runprebuild.sh
     
@@ -5956,6 +6070,70 @@ function osbuilding93() {
 	osupgrade93
 
 	return 0
+}
+
+##
+ #* osbuildingupgrade93.
+ # Upgradet automatisch den OpenSimulator 0.9.3.0 .
+ # bash osmtool.sh osbuildingupgrade93
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: Test.
+##
+function osbuildingupgrade93() {
+	SETOSVERSION=$1
+	# if [ "$SETOSVERSION" = "" ]; then SETOSVERSION=$(date +"%d%m%Y"); fi
+	# Alte Versionsdatei loeschen nicht vergessen.    
+    sleep 2
+	# Ist opensim vorhanden?
+	if [ -d "/$STARTVERZEICHNIS/opensim" ] 
+	then
+		log info "Kopieren des OpenSimulator in das Arbeitsverzeichnis"
+		rm -r /$STARTVERZEICHNIS/opensim1
+		mv /$STARTVERZEICHNIS/opensim /$STARTVERZEICHNIS/opensim1
+		opensimgitcopy93
+	else
+		log info "OpenSim existiert nicht."
+		opensimgitcopy93
+	fi
+	cd /$STARTVERZEICHNIS/opensim || exit
+	#log info "git pull"
+    #git pull
+
+    sleep 3
+	# Money kopieren
+	if [ "$MONEYVERZEICHNIS" = "keins" ] || [ "$MONEYVERZEICHNIS" = "no" ] || [ "$MONEYVERZEICHNIS" = "nein" ]; then log info "MoneyServer wird nicht installiert!"; else moneycopy93; fi
+	#moneycopy93
+	log info "checkout dotnet6"
+	git checkout dotnet6
+
+	# Versionsnummer Datum Beisoiel: 09052023	
+	setversion93 $SETOSVERSION
+
+	sleep 3
+	log info "Prebuild"
+    ./runprebuild.sh
+
+    sleep 3
+	log info "Build"
+    dotnet build --configuration Release OpenSim.sln
+
+    sleep 3
+    cd /$STARTVERZEICHNIS || exit
+
+	log line
+	log info "scriptcopy startet!"
+    scriptcopy
+
+	log line
+	log info "osupgrade93 startet!"
+    osupgrade93
+
+	# log line
+    # log info "Ich warte 300 Sekunden und starte dann Produktiv neu!"
+    # sleep 300
+    # autorestart93
 }
 
 ##
@@ -6005,7 +6183,7 @@ function osbuilding() {
 	sleep 3
 
 	log info "Prebuild des neuen OpenSimulator starten"
-	osprebuild "$VERSIONSNUMMER"
+	setversion "$VERSIONSNUMMER"
 
 	log line
 
@@ -10644,6 +10822,8 @@ function osupgrade93() {
 	autostop
 	# Cache loeschen
 	if [ "$GRIDCACHECLEAR" = "yes" ]; then gridcachedelete; fi
+	# Version
+	echo " $Datum " >/$STARTVERZEICHNIS/opensim/bin/'.version'
 	# Kopieren.
 	log line
 	log info "Neue Version Installieren"
@@ -11581,7 +11761,7 @@ function hilfe() {
 	echo "autoregionbackup	- $(tput setaf 3)hat keine Parameter$(tput sgr 0) - Backup aller Regionen."
 	echo "oscopy			- $(tput setab 5)Verzeichnisname$(tput sgr 0)     - Kopiert den Simulator."
 	echo "osstruktur		- $(tput setab 5)ersteSIM$(tput sgr 0) $(tput setab 4)letzteSIM$(tput sgr 0)  - Legt eine Verzeichnisstruktur an."
-	echo "osprebuild		- $(tput setab 2)Versionsnummer$(tput sgr 0)      - Aendert die Versionseinstellungen 0.9.2.XXXX"
+	echo "setversion		- $(tput setab 2)Versionsnummer$(tput sgr 0)      - Aendert die Versionseinstellungen 0.9.2.XXXX"
 	echo "compilieren 		- $(tput setaf 3)hat keine Parameter$(tput sgr 0) - Kopiert fehlende Dateien und Kompiliert."
 	echo "oscompi 		- $(tput setaf 3)hat keine Parameter$(tput sgr 0) - Kompiliert einen neuen OpenSimulator ohne kopieren."
 	echo "scriptcopy 		- $(tput setaf 3)hat keine Parameter$(tput sgr 0) - Kopiert die Scripte in den Source."
@@ -11745,7 +11925,7 @@ function hilfe() {
 	echo "osdowngrade	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
 	echo "osmtoolconfig	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
 	echo "osmtoolconfigabfrage	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "osprebuild	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "setversion	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
 	echo "osscreenstop	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
 	echo "ossettings	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
 	echo "osslEnableConfig	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
@@ -13327,7 +13507,8 @@ case $KOMMANDO in
 	osg93 | osgitholen93) osgitholen93 ;;
 	osbauen93) osbauen93 ;;
 	osgridcopy) osgridcopy ;;
-	osprebuild) osprebuild "$2" ;;
+	setversion) setversion "$2" ;;
+	setversion93) setversion93 "$2" ;;
 	osslEnableConfig) osslEnableConfig ;;
 	osslenableini) osslenableini ;;
 	osstarteintrag) osstarteintrag "$2" ;; # Test
@@ -13442,6 +13623,9 @@ case $KOMMANDO in
 	cleanprebuild) cleanprebuild ;;
 	divagitcopy) divagitcopy ;;
 	skriptversion) skriptversion ;;
+	version | versionsausgabe93) versionsausgabe93 ;;
+	osbuildingupgrade93) osbuildingupgrade93 "$2" ;;
+	checkupgrade93) checkupgrade93 ;;
 	hda | hilfedirektaufruf | hilfemenudirektaufrufe) hilfemenudirektaufrufe ;;
 	h) newhelp
 	exit ;;
