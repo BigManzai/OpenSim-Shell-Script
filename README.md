@@ -207,7 +207,7 @@ oder
 
 Aufruf: bash osmtool.sh autoregionbackup
 
-Gespeicherte Daten sind in 4 Dateien pro Region oar, xml2, png und raw
+Gespeicherte Daten sind in 5 Dateien pro Region oar, xml2, ini, png und raw
 
 ------
 
