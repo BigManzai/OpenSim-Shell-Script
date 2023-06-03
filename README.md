@@ -196,6 +196,21 @@ Bisher sind nur Funktionen im Menü die maximal 1 Übergabewert voraussetzen.
      sudo apt-get install dialog
 
 ## TODO und Informationen
+
+Regionsbackup des opensimMULTITOOL speichert Backups jetzt auch als xml2
+
+Ein Optischer Fehler wurde beseitigt.
+
+Aufruf: bash osmtool.sh regionbackup sim1 Welcome
+
+oder
+
+Aufruf: bash osmtool.sh autoregionbackup
+
+Gespeicherte Daten sind in 4 Dateien pro Region oar, xml2, png und raw
+
+------
+
 gridcachedelete
 Aufruf: ./osmtool.sh gridcachedelete
 
