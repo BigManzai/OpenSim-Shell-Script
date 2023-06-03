@@ -29,7 +29,7 @@
 #### ? Einstellungen ####
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.866" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.869" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 ##
@@ -3757,7 +3757,7 @@ function versionsausgabe93() {
  # Versionsnummer Setzen
  # Aufruf Beispiel: osmtool.sh setversion93 1234.
  # 
- #? @param $NUMMER.
+ #? @param Nummer, d, p, z.
  #? @return nichts wird zurueckgegeben.
  # todo: nichts.
 ##
@@ -3770,16 +3770,16 @@ function setversion93() {
 		sed -i s/Nessie/$NUMMER/g /$STARTVERZEICHNIS/opensim/OpenSim/Framework/VersionInfo.cs
 	fi
 
+	# Datum mit Punkten als Versionsnummer nutzen.
+	if [[ "${NUMMER}" == "p" ]]; then 
+		NUMMER=$(date +"%d.%m.%Y") 
+		sed -i s/Nessie/$NUMMER/g /$STARTVERZEICHNIS/opensim/OpenSim/Framework/VersionInfo.cs
+	fi
+
 	# Ganze Zeile austauschen gegen: 0.9.2.2Dev-676-gdd9e365e00
 	if [[ "${NUMMER}" == "z" ]]; then 
 		OSMASTER=$(git describe)
 		sed -i -e 's/versionString =.*/versionString = "'$OSMASTER'";/' /$STARTVERZEICHNIS/opensim/OpenSim/Framework/VersionInfo.cs
-	fi
-
-	# Datum als Versionsnummer nutzen.
-	if [[ "${NUMMER}" == "-d" ]]; then 
-		NUMMER=$(date +"%d%m%Y") 
-		sed -i s/Nessie/$NUMMER/g /$STARTVERZEICHNIS/opensim/OpenSim/Framework/VersionInfo.cs
 	fi
 
 	if [[ "${NUMMER}" == "" ]]; then
@@ -4363,7 +4363,7 @@ function osbauen93() {
 ##
 function opensimholen() {
 	if [ -d /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/ ]; then
-		log info "Kopieren des OpenSimulator in das Arbeitsverzeichnis"
+		log info "OpenSimulator im Verzeichnis opensim1 sichern und neuen OpenSimulator herunterladen."
 		cd /$STARTVERZEICHNIS || return 1
 		rm -r /$STARTVERZEICHNIS/opensim1
 		mv /$STARTVERZEICHNIS/opensim /$STARTVERZEICHNIS/opensim1
@@ -4376,7 +4376,7 @@ function opensimholen() {
 
 		log info "OPENSIMHOLEN: Download"
 	else
-		log info "Kopieren des OpenSimulator in das Arbeitsverzeichnis"
+		log info "OpenSimulator im Verzeichnis opensim1 sichern und neuen OpenSimulator herunterladen."
 
 		echo "$OPENSIMDOWNLOAD$OPENSIMVERSION"
 		wget $OPENSIMDOWNLOAD$OPENSIMVERSION.zip
@@ -4437,26 +4437,32 @@ function regionbackup() {
 	screen -S "$BACKUPVERZEICHNISSCREENNAME" -p 0 -X eval "stuff 'change region ${REGIONSNAME//\"/}'^M"
 	log info "$BACKUPVERZEICHNISSCREENNAME $REGIONSNAME"
 	screen -S "$BACKUPVERZEICHNISSCREENNAME" -p 0 -X eval "stuff 'save oar /$STARTVERZEICHNIS/backup/'$DATUM'-$REGIONSNAME.oar'^M"
-	log info "$BACKUPVERZEICHNISSCREENNAME '$DATUM'-$REGIONSNAME.oar"
+	log info "$BACKUPVERZEICHNISSCREENNAME $DATUM-$REGIONSNAME.oar"
+
+	# Neu xml backup
+	screen -S "$BACKUPVERZEICHNISSCREENNAME" -p 0 -X eval "stuff 'save xml2 /$STARTVERZEICHNIS/backup/'$DATUM'-$REGIONSNAME.xml2'^M"
+	log info "$BACKUPVERZEICHNISSCREENNAME $DATUM-$REGIONSNAME.xml2"
+	# Neu xml backup ende
+
 	screen -S "$BACKUPVERZEICHNISSCREENNAME" -p 0 -X eval "stuff 'terrain save /$STARTVERZEICHNIS/backup/'$DATUM'-$REGIONSNAME.png'^M"
-	log info "$BACKUPVERZEICHNISSCREENNAME '$DATUM'-$REGIONSNAME.png"
+	log info "$BACKUPVERZEICHNISSCREENNAME $DATUM-$REGIONSNAME.png"
 	screen -S "$BACKUPVERZEICHNISSCREENNAME" -p 0 -X eval "stuff 'terrain save /$STARTVERZEICHNIS/backup/'$DATUM'-$REGIONSNAME.raw'^M"
-	log info "$BACKUPVERZEICHNISSCREENNAME '$DATUM'-$REGIONSNAME.raw"
+	log info "$BACKUPVERZEICHNISSCREENNAME $DATUM-$REGIONSNAME.raw"
 	log info "$BACKUPVERZEICHNISSCREENNAME Region $DATUM-$REGIONSNAME RAW und PNG Terrain werden gespeichert"
 	fi
 	
 	sleep 10
 	if [ -f /$STARTVERZEICHNIS/"$BACKUPVERZEICHNISSCREENNAME"/bin/Regions/"$REGIONSNAME".ini.offline ]; then
 		cp /$STARTVERZEICHNIS/"$BACKUPVERZEICHNISSCREENNAME"/bin/Regions/"$REGIONSNAME".ini.offline /$STARTVERZEICHNIS/backup/"$DATUM"-"$REGIONSNAME".ini.offline
-		log info "$BACKUPVERZEICHNISSCREENNAME Die Regions "$DATUM"-"$REGIONSNAME".ini.offline wird gespeichert"
+		log info "$BACKUPVERZEICHNISSCREENNAME Die Regions $DATUM-$REGIONSNAME.ini.offline wird gespeichert"
 	fi
 	if [ -f /$STARTVERZEICHNIS/"$BACKUPVERZEICHNISSCREENNAME"/bin/Regions/"$REGIONSNAME".ini ]; then
 		cp /$STARTVERZEICHNIS/"$BACKUPVERZEICHNISSCREENNAME"/bin/Regions/"$REGIONSNAME".ini /$STARTVERZEICHNIS/backup/"$DATUM"-"$REGIONSNAME".ini
-		log info "$BACKUPVERZEICHNISSCREENNAME Die Regions "$DATUM"-"$REGIONSNAME".ini wird gespeichert"
+		log info "$BACKUPVERZEICHNISSCREENNAME Die Regions $DATUM-$REGIONSNAME.ini wird gespeichert"
 	fi
 	if [ -f /$STARTVERZEICHNIS/"$BACKUPVERZEICHNISSCREENNAME"/bin/Regions/"${REGIONSNAME//\"/}" ]; then
 		cp /$STARTVERZEICHNIS/"$BACKUPVERZEICHNISSCREENNAME"/bin/Regions/"${REGIONSNAME//\"/}" /$STARTVERZEICHNIS/backup/"$DATUM"-"$REGIONSNAME".ini
-		log info "$BACKUPVERZEICHNISSCREENNAME Die Regions "$DATUM"-"$REGIONSNAME".ini wird gespeichert"
+		log info "$BACKUPVERZEICHNISSCREENNAME Die Regions $DATUM-$REGIONSNAME.ini wird gespeichert"
 	fi
 	# Regions.ini.example loeschen.
 	# if [ ! -f /$STARTVERZEICHNIS/"$MBACKUPVERZEICHNISSCREENNAME"/bin/Regions/Regions.ini.example ]; then
@@ -4515,6 +4521,11 @@ function menuregionbackup() {
 	log info "Sollte sie nicht vorhanden sein wird root also alle Regionen gespeichert"
 	screen -S "$MBACKUPVERZEICHNISSCREENNAME" -p 0 -X eval "stuff 'change region ${REGIONSNAME//\"/}'^M"
 	screen -S "$MBACKUPVERZEICHNISSCREENNAME" -p 0 -X eval "stuff 'save oar /$STARTVERZEICHNIS/backup/'$DATUM'-$REGIONSNAME.oar'^M"
+
+	# Neu xml backup
+	screen -S "$BACKUPVERZEICHNISSCREENNAME" -p 0 -X eval "stuff 'save xml2 /$STARTVERZEICHNIS/backup/'$DATUM'-$REGIONSNAME.xml2'^M"
+	# Neu xml backup ende
+
 	screen -S "$MBACKUPVERZEICHNISSCREENNAME" -p 0 -X eval "stuff 'terrain save /$STARTVERZEICHNIS/backup/'$DATUM'-$REGIONSNAME.png'^M"
 	screen -S "$MBACKUPVERZEICHNISSCREENNAME" -p 0 -X eval "stuff 'terrain save /$STARTVERZEICHNIS/backup/'$DATUM'-$REGIONSNAME.raw'^M"
 	log info "Region $DATUM-$REGIONSNAME RAW und PNG Terrain werden gespeichert"
@@ -6098,7 +6109,7 @@ function osbuildingupgrade93() {
 	# Ist opensim vorhanden?
 	if [ -d "/$STARTVERZEICHNIS/opensim" ] 
 	then
-		log info "Kopieren des OpenSimulator in das Arbeitsverzeichnis"
+		log info "OpenSimulator im Verzeichnis opensim1 sichern und neuen OpenSimulator vom Github herunterladen."
 		rm -r /$STARTVERZEICHNIS/opensim1
 		mv /$STARTVERZEICHNIS/opensim /$STARTVERZEICHNIS/opensim1
 		opensimgitcopy93
@@ -6394,7 +6405,7 @@ function db_region() {
 
 ##
  #* db_gridlist.
- # Gridliste der Benutzer die schon einmal im eigenen Grid waren.
+ # Gridliste der Benutzer, die schon einmal im eigenen Grid waren.
  # Aufruf: bash osmtool.sh db_gridlist databaseusername databasepassword databasename
  # 
  #? @param "$username" "$password" "$databasename".
