@@ -209,6 +209,25 @@ Aufruf: bash osmtool.sh autoregionbackup
 
 Gespeicherte Daten sind in 5 Dateien pro Region oar, xml2, ini, png und raw
 
+autoregionbackup benötigt eine Konfigurationsdatei namens osmregionlist.ini
+
+Das Format der Datei ist Text:
+
+screenname regionsname
+
+gefolgt von einer Leerzeile am Ende ohne diese funktioniert das nicht.
+
+Beispiel:
+
+     sim1 Welcome
+     sim2 Marvelous
+     sim3 Pearl
+     sim3 Lummerland
+     sim4 Riverdwell
+     sim4 Stetrich
+     sim5 mannivar
+     *leerzeile*
+
 ------
 
 gridcachedelete
