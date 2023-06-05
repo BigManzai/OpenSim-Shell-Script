@@ -16,7 +16,7 @@
 # ! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 # ! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-# * Status 06.04.2023 352 Funktionen.
+# * Status 06.04.2023 354 Funktionen.
 
 # # Installieren sie bitte: #* Visual Studio Code - Mac, Linux, Windows
 #* dazu die Plugins:
@@ -29,8 +29,45 @@
 #### ? Einstellungen ####
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.869" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.871" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
+
+##
+ #* ostimestamp Test
+ # Timestamp Experimente.
+ # 
+ #? @param keiner.
+ #? @return $VERSION
+ # todo: nichts.
+##
+function ostimestamp() {
+# “yyyy-mm-dd”
+# Deutsch dd-mm-yyyy
+EN_DATUM=$(date '+%Y-%m-%d %H:%M:%S')
+echo "$EN_DATUM" Aktuelles Datum Aktuell in Englisch
+
+DE_DATUM=$(date '+%d-%m-%Y %H:%M:%S')
+echo "$DE_DATUM" Aktuelles Datum Aktuell in Deutsch
+
+DATE_TO_UNIX_TIMESTAMP=$(date -d "$EN_DATUM" +%s)
+echo "$DATE_TO_UNIX_TIMESTAMP" datum zu timestamp ausgabe
+
+UNIX_TIMESTAMP_TO_DATE=$(date -d "@$DATE_TO_UNIX_TIMESTAMP" '+%Y-%m-%d %H:%M:%S')
+echo "$UNIX_TIMESTAMP_TO_DATE" timestamp zu date ausgabe
+}
+
+##
+ #* xhelp Test
+ # hilfe ausgeben.
+ # 
+ #? @param keiner.
+ #? @return $VERSION
+ # todo: nichts.
+##
+function xhelp() {
+	if [[ $1 == "help" ]]; then	echo "Zeigt die Hilfe einzelner Funktionen an."; exit 0; fi
+	exit 0;	
+}
 
 ##
  #* skriptversion.
@@ -41,6 +78,8 @@ tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
  # todo: nichts.
 ##
 function skriptversion() {
+	# Test einer neuen Hilfe.
+	if [[ $1 == "help" ]]; then	echo "Zeigt die skriptversion vom opensimMULTITOOL an."; exit 0; fi
 	echo "$VERSION";
 	exit 0;
 }
@@ -75,6 +114,7 @@ alias man="LANG=de_DE.UTF-8 man"
  # todo: nichts.
 ##
 function namen() {
+	if [[ $1 == "help" ]]; then	echo "Ein Zufallsname wird ausgegeben."; exit 0; fi
 	namensarray=("Terwingen" "Angeron" "Vidivarier" "Usipeten" "Sibiner" "Ranier" "Sabalingier" "Aglier" "Aduatuker" \
 	"Favonen" "Sachsen" "Karpen" "Gautigoten" "Gepiden" "Mugilonen" "Bardongavenses" "Steoringun" "Guiones" "Teutonen" \
 	"Brukterer" "Omanen" "Astfalon" "Langobarden" "Frumtingas" "Eruler" "Moselfranken" "Tylangier" "Gillingas" \
@@ -124,6 +164,7 @@ function namen() {
  # todo: nichts.
 ##
 function vornamen() {
+	if [[ $1 == "help" ]]; then	echo "Ein Zufallsname wird ausgegeben."; exit 0; fi
 
 	firstnamensarray=("Peter" "Rainer" "Sergej" "Karl" "Daredevil" "Relative" "Into" "Agony" "Carbon" "Wrecking" "Crazy" "Unique" "Daydreamer" "Ed" "Nickname" "Anger" "Justin" \
 					"Lee" "Roman" "Yum" "House" "ObiLAN" "Anakin" "Spaghetti" "Fritzchen" "Connecto" "Lan" "Jutta" "Bertha" "Chilly" "Agata" "Regen" "Siegtraude" "Wilma" "Raging" "King" \
@@ -156,8 +197,8 @@ function vornamen() {
  # todo: nichts.
 ##
 function osmtoolconfig() {
-
-	STARTVERZEICHNIS=$1; ROBUSTVERZEICHNIS=$2; MONEYVERZEICHNIS=$3; OPENSIMVERZEICHNIS=$4; CONFIGPFAD=$5; OSTOOLINI=$6
+	# if [[ $1 == "help" ]]; then	echo "Hier wird die Konfigurationsdatei fuer das opensimTOOL erstellt."; exit 0; fi
+	STARTVERZEICHNIS=$1; ROBUSTVERZEICHNIS=$2; MONEYVERZEICHNIS=$3; OPENSIMVERZEICHNIS=$4; CONFIGPFAD=$5; OSTOOLINI=$6	
     {		
 		echo "### Einstellungen $SCRIPTNAME $VERSION"
 		echo "     "
@@ -4975,6 +5016,66 @@ function allclean() {
 }
 
 ##
+ #* getcachesinglegroesse.
+ # Zeigt Cache Dateien und die größe aus einem einzelnen Simulator an.
+ # du steht für disk usage.
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+function getcachesinglegroesse() {
+	GROESSENVERZEICHNIS=$1
+
+	log info "Zeigt Cache Dateien und die größe aus dem Simulator $GROESSENVERZEICHNIS an!"
+
+	if [ -d "$GROESSENVERZEICHNIS" ]; then
+	du -sh /$STARTVERZEICHNIS/"$GROESSENVERZEICHNIS"/bin/assetcache 2> /dev/null
+	du -sh /$STARTVERZEICHNIS/"$GROESSENVERZEICHNIS"/bin/maptiles 2> /dev/null
+	du -sh /$STARTVERZEICHNIS/"$GROESSENVERZEICHNIS"/bin/ScriptEngines 2> /dev/null
+	du -sh /$STARTVERZEICHNIS/"$GROESSENVERZEICHNIS"/bin/MeshCache 2> /dev/null
+	du -sh /$STARTVERZEICHNIS/"$GROESSENVERZEICHNIS"/bin/j2kDecodeCache 2> /dev/null
+	else
+		log error "Verzeichnisse in $GROESSENVERZEICHNIS nicht gefunden"
+	fi
+	return 0
+}
+
+##
+ #* getcachegroesse.
+ # Zeigt Cache Dateien und die größe aus dem gesamten Grid an.
+ # du steht für disk usage.
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+function getcachegroesse() {
+	# du -sh /opt/sim1/bin/verzeichnisname
+	# Fehlermeldung ins Nirwana schicken:   2> /dev/null
+	#log line
+	log info "Zeige Cache Dateien und die größe aus dem gesamten Grid an!"
+	makeverzeichnisliste
+	#sleep 2
+
+	# Simualtoren
+	for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
+	log info "${VERZEICHNISSLISTE[$i]}"
+	du -sh /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/assetcache 2> /dev/null
+	du -sh /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/maptiles 2> /dev/null
+	du -sh /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/ScriptEngines 2> /dev/null
+	du -sh /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/MeshCache 2> /dev/null
+	du -sh /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/j2kDecodeCache 2> /dev/null
+	done
+	# Robust
+	log info "Robust"
+	du -sh /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/maptiles 2> /dev/null
+	du -sh /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/bakes 2> /dev/null
+	du -sh /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/assetcache 2> /dev/null
+	du -sh /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/MeshCache 2> /dev/null
+	du -sh /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/j2kDecodeCache 2> /dev/null
+	du -sh /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/ScriptEngines 2> /dev/null
+}
+
+##
  #* gridcachedelete.
  # loescht alle Cache Dateien die sich im laufe der Zeit angesammelt haben.
  # GRIDCACHECLEAR="yes"; ASSETCACHECLEAR="yes"; MAPTILESCLEAR="yes"; SCRIPTCLEAR="yes"; RMAPTILESCLEAR="yes"; RBAKESCLEAR="yes";
@@ -8066,7 +8167,8 @@ function db_all_uuid_dialog() {
 
 ##
  #* db_all_name.
- # Alle Namen anzeigen: db_all_name "username" "password" "databasename".
+ # Alle Benutzernamen des Grids anzeigen.
+ # db_all_name "username" "password" "databasename".
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
@@ -8086,8 +8188,8 @@ function db_all_name() {
 
 ##
  #* db_all_name_dialog.
- # Alle Namen anzeigen: db_all_name_dialog "username" "password" "databasename".
- # 
+ #  db_all_name_dialog "username" "password" "databasename".
+ #  Alle Benutzernamen des Grids anzeigen.
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
  # todo: nichts.
@@ -8950,7 +9052,9 @@ function MASTER_PASSWORD() {
 ##
  #* MASTER_HOST.
  # MASTER_HOST "$2" "$3" "$4"
- # 
+ # CHANGE MASTER TO ist nützlich zum Einrichten eines Replikats, 
+ # wenn Sie über den Snapshot der Quelle verfügen und die Binärprotokollkoordinaten 
+ # der Quelle entsprechend dem Zeitpunkt des Snapshots aufgezeichnet haben.
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
  # todo: nichts.
@@ -9270,7 +9374,8 @@ function MASTER_SSL_VERIFY_SERVER_CERT() {
 ##
  #* MASTER_LOG_FILE.
  # MASTER_LOG_FILE "$2" "$3" "$4" "$5".
- # 
+ # CHANGE MASTER TO bewirkt, dass die vorherigen Werte für MASTER_HOST, MASTER_PORT, MASTER_LOG_FILE und MASTER_LOG_POS zusammen 
+ # mit anderen Informationen über den Status des Replikats vor der Ausführung in das Fehlerprotokoll geschrieben werden.
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
  # todo: nichts.
@@ -9574,7 +9679,7 @@ function IGNORE_DOMAIN_IDS2() {
 ##
  #* MASTER_DELAY.
  # MASTER_DELAY "$2" "$3" "$4".
- # 
+ # Use the MASTER_DELAY option for CHANGE MASTER TO to set the delay to N seconds.
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
  # todo: nichts.
@@ -11648,8 +11753,8 @@ function dbhilfe() {
 	echo "IGNORE_DOMAIN_IDS2	- $(tput setab 5)username password$(tput sgr 0) – CHANGE MASTER TO IGNORE DOMAIN IDS = ()."
 	echo "IGNORE_SERVER_IDS	- $(tput setab 5)username password ids$(tput sgr 0) – CHANGE MASTER TO IGNORE SERVER IDS."
 	echo "MASTER_CONNECT_RETRY	- $(tput setab 5)username password MASTERCONNECTRETRY$(tput sgr 0) – CHANGE MASTER TO MASTER CONNECT RETRY=MASTERCONNECTRETRY."	
-	echo "MASTER_DELAY	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "MASTER_HOST	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "MASTER_DELAY	- $(tput setab 5)Parameter$(tput sgr 0) – Use the MASTER_DELAY option for CHANGE MASTER TO to set the delay to N seconds."
+	echo "MASTER_HOST	- $(tput setab 5)Parameter$(tput sgr 0) – CHANGE MASTER TO ist nützlich zum Einrichten eines Replikats."
 	echo "MASTER_LOG_FILE	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
 	echo "MASTER_LOG_POS	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
 	echo "MASTER_PASSWORD	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
@@ -11671,11 +11776,11 @@ function dbhilfe() {
 	echo "Replica_Backup	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
 	echo "Replica_Backup2	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."	
 	echo "ReplikatKoordinaten	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "db_all_name	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "db_all_name_dialog	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "db_all_user	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "db_all_user_dialog	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "db_all_userfailed	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_all_name	- $(tput setab 5)Parameter$(tput sgr 0) – Alle Benutzernamen des Grids anzeigen."
+	echo "db_all_name_dialog	- $(tput setab 5)Parameter$(tput sgr 0) – Alle Benutzernamen des Grids anzeigen."
+	echo "db_all_user	- $(tput setab 5)Parameter$(tput sgr 0) – Daten von allen Benutzern anzeigen."
+	echo "db_all_user_dialog	- $(tput setab 5)Parameter$(tput sgr 0) – Daten von allen Benutzern anzeigen."
+	echo "db_all_userfailed	- $(tput setab 5)Parameter$(tput sgr 0) – -1 Daten von allen Benutzern anzeigen."
 	echo "db_all_uuid	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
 	echo "db_all_uuid_dialog	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
 	echo "db_anzeigen_dialog	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
@@ -11692,9 +11797,9 @@ function dbhilfe() {
 	echo "db_deletepartner	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
 	echo "db_email_setincorrectuseroff	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
 	echo "db_email_setincorrectuseroff_dialog	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "db_empty	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "db_false_email	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "db_foldertyp_user	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "db_empty	- $(tput setab 5)Parameter$(tput sgr 0) – loescht eine Datenbank und erstellt diese anschliessend neu."
+	echo "db_false_email	- $(tput setab 5)Parameter$(tput sgr 0) – Finde offensichtlich falsche E-Mail Adressen der User."
+	echo "db_foldertyp_user	- $(tput setab 5)username password databasename firstname lastname foldertyp$(tput sgr 0) – Alles vom inventoryfolders type des User anzeigen."
 	echo "db_friends	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
 	echo "db_gridlist	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
 	echo "db_inv_search	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
@@ -13616,8 +13721,8 @@ case $KOMMANDO in
 	config | gridkonfiguration | configabfrage) configabfrage ;;
 	osmtoolconfigabfrage) osmtoolconfigabfrage ;;
 	osdowngrade) osdowngrade ;;
-	name | namen) namen ;;
-	vornamen) vornamen ;;
+	name | namen) namen "$2" ;;
+	vornamen) vornamen "$2" ;;
 	regionconfig) regionconfig "$2" "$3" "$4" "$5" "$6" ;;
 	createdatabase) createdatabase "$2" "$3" "$4" ;;
 	createdbuser) createdbuser "$2" "$3" "$4" "$5" ;;
@@ -13642,10 +13747,13 @@ case $KOMMANDO in
 	divacopy) divacopy ;;
 	cleanprebuild) cleanprebuild ;;
 	divagitcopy) divagitcopy ;;
-	skriptversion) skriptversion ;;
+	skriptversion) skriptversion "$2" ;;
 	version | versionsausgabe93) versionsausgabe93 ;;
 	osbuildingupgrade93) osbuildingupgrade93 "$2" ;;
+	xhelp) xhelp "$2" ;;
 	checkupgrade93) checkupgrade93 ;;
+	getcachegroesse) getcachegroesse ;;
+	getcachesinglegroesse) getcachesinglegroesse "$2" ;;
 	hda | hilfedirektaufruf | hilfemenudirektaufrufe) hilfemenudirektaufrufe ;;
 	h) newhelp
 	exit ;;
