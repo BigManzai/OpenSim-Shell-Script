@@ -197,6 +197,31 @@ Bisher sind nur Funktionen im Menü die maximal 1 Übergabewert voraussetzen.
 
 ## TODO und Informationen
 
+Zwei neue Funktionen sind hinzugekommen
+
+     getcachesinglegroesse     
+und
+
+     getcachegroesse
+
+Diese Funktionen zeigen euch an wie groß der Cache Speicher in den einzelnen Simulatoren oder im gesamten Grid ist. 
+
+Es wird nichts geändert nur angezeigt.
+
+Es ist wichtig gelegentlich seine Cacheverzeichnisse zu leeren damit das Grid schnell und fehlerfrei läuft.
+
+Funktionsweise:
+
+Einzelner Simulator:
+
+     Bash osmtool.sh getcachesinglegroesse sim1
+
+Alle Simulatoren samt Robust:
+
+     Bash osmtool.sh getcachegroesse
+     
+--------------------------------------------------------------------------
+
 Regionsbackup des opensimMULTITOOL speichert Backups jetzt auch als xml2
 
 Ein Optischer Fehler wurde beseitigt.
