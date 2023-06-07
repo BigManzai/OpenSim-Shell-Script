@@ -16,7 +16,7 @@
 # ! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 # ! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-# * Status 06.04.2023 354 Funktionen.
+# * Status 06.04.2023 355 Funktionen.
 
 # # Installieren sie bitte: #* Visual Studio Code - Mac, Linux, Windows
 #* dazu die Plugins:
@@ -29,7 +29,7 @@
 #### ? Einstellungen ####
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.871" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.872" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 ##
@@ -8961,6 +8961,40 @@ function db_setuseronline_dialog() {
 }
 
 ##
+ #* db_tabellencopy.
+ # Datenbank Tabelle aus einer anderen Datenbank kopieren.
+ # bash osmtool.sh db_tabellencopy von_Datenbankname nach_Datenbankname Tabellenname Benutzername Passwort
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+function db_tabellencopy() {
+	# Datenbank Tabelle aus einer anderen Datenbank kopieren.
+	# db_tabellencopy von_Datenbankname nach_Datenbankname Tabellenname Benutzername Passwort
+
+	vondatenbank=$1
+	nachdatenbank=$2
+	kopieretabelle=$3
+
+	username=$4
+	password=$5
+
+	#CREATE TABLE new_table LIKE old_table
+	#INSERT INTO new_table SELECT * FROM old_table
+
+	# Mit CREATE TABLE erzeugt ihr eine neue Tabelle, mit der selbsten Struktur wie die „Alte“.
+	mysqlrest "$username" "$password" "$nachdatenbank" "CREATE TABLE $nachdatenbank.$kopieretabelle LIKE $vondatenbank.$kopieretabelle" # Tabellenstruktur kopieren Funktioniert
+
+	echo "$result_mysqlrest"
+
+	# Mit INSERT INTO kopiert ihr dann den Inhalt von der alten Tabelle in die neue Tabelle hinein.
+	mysqlrest "$username" "$password" "$nachdatenbank" "INSERT INTO $kopieretabelle SELECT * FROM $vondatenbank.$kopieretabelle" # Tabelle kopieren Test
+
+	echo "$result_mysqlrest"
+}
+
+##
  #* default_master_connection.
  # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
  # 
@@ -13754,6 +13788,7 @@ case $KOMMANDO in
 	checkupgrade93) checkupgrade93 ;;
 	getcachegroesse) getcachegroesse ;;
 	getcachesinglegroesse) getcachesinglegroesse "$2" ;;
+	db_tabellencopy) db_tabellencopy "$2" "$3" "$4" "$5" "$6" ;;
 	hda | hilfedirektaufruf | hilfemenudirektaufrufe) hilfemenudirektaufrufe ;;
 	h) newhelp
 	exit ;;
