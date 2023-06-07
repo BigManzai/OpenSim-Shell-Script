@@ -197,6 +197,13 @@ Bisher sind nur Funktionen im Menü die maximal 1 Übergabewert voraussetzen.
 
 ## TODO und Informationen
 
+db_tabellencopy
+
+Datenbank Tabelle aus einer anderen Datenbank kopieren.
+
+     bash osmtool.sh db_tabellencopy von_Datenbankname nach_Datenbankname Tabellenname Benutzername Passwort
+ 
+
 Zwei neue Funktionen sind hinzugekommen
 
      getcachesinglegroesse     
