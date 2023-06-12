@@ -6537,7 +6537,6 @@ function db_gridlist() {
  #? @return $result_mysqlrest.
  # todo: nichts.
 ##
-##db_inv_search OK
 function db_inv_search() {
 	username=$1
 	password=$2
@@ -6549,6 +6548,41 @@ function db_inv_search() {
 	echo "$result_mysqlrest"
 
 	return 0
+}
+
+##
+ #* db_ungenutzteobjekte.
+ # # Asset Objekte, alles anzeigen was zuletzt zwischen zwei Daten aufgerufen wurde.
+ # 
+ #? @param username password databasename invname.
+ #? @return $result_mysqlrest.
+ # todo: nichts.
+##
+function db_ungenutzteobjekte() {
+	username=$1
+	password=$2
+	databasename=$3
+
+	from_date=$4
+	to_date=$5
+
+	
+	if [[ -z "${from_date}" ]]; then
+		from_date="2000-1-01";
+	fi
+	if [[ -z "${to_date}" ]]; then
+		to_date="2021-1-01";
+	fi
+	
+	
+	to_date="2021-1-01 0:00";
+	mysqlrest "$username" "$password" "$databasename" "SELECT name, id, create_time, access_time, CreatorID FROM assets WHERE access_time BETWEEN UNIX_TIMESTAMP('$from_date 0:00') AND UNIX_TIMESTAMP('$to_date 0:00')"
+
+	echo Objektname----------UUID---------Erstellungsdatum----------Zuletzt Aufgerufen-----------Ersteller
+	echo "$result_mysqlrest"
+	echo "Objektname----------UUID---------Erstellungsdatum----------Zuletzt Aufgerufen-----------Ersteller" >UngenutzteObjekte.txt
+	echo "$result_mysqlrest" >>UngenutzteObjekte.txt
+return 0
 }
 
 ##
@@ -7262,6 +7296,51 @@ function mysql_neustart() {
 	return 0
 }
 
+############################################################################################################################################
+############################################################################################################################################
+# Externe Zugriffe auf MySQL-Server erlauben
+
+# Um den Netzwerkzugriff auf eine MySQL-Datenbank zu ermöglichen, 
+# passen Sie die Konfiguration des MySQL-Servers an und starten diesen erneut. 
+# Ändern der Konfiguration in der Datei /etc/my.cnf.
+
+# Melden Sie sich dazu als root auf Ihrem Server an und öffnen Sie die Datei /etc/my.cnf, zum Beispiel mit einem Editor:
+#     /etc/my.cnf
+
+# Suchen Sie die Zeile bind-address = 127.0.0.1.
+
+# Da diese die MySQL-Datenbank anweist, eingehende Netzwerkverbindungen nur vom Loopback-Interface anzunehmen, 
+# deaktivieren Sie diese mit einem Kommentarzeichen ('#'):
+#      #bind-address = 127.0.0.1 
+
+# Hinweis
+
+# In manchen Linux-Distributionen ist die o.g. Zeile nicht vorhanden. Hier lautet die Zeile, die auskommentiert wird, wie folgt:
+
+# 	#Skip Networking 
+
+# Starten Sie den Datenbankserver neu, damit sich Ihre Konfigurationsänderung auswirkt:
+#     /etc/init.d/mysql restart
+# Der MySQL-Server nimmt jetzt externe Verbindungen über den Standardport für MySQL (3306) an.
+
+# Datenbankzugriff auf bestimmte IP-Adresse einschränken
+
+# Loggen Sie sich mit folgendem Kommando in Ihre MySQL-Shell auf Ihrem Server ein, halten Sie Ihr Root-Benutzer- bzw. Admin-Passwort bereit:
+#     mysql -u admin -p
+
+# Geben Sie folgenden Befehl ein:
+#     use mysql; 
+
+# Schränken Sie mit folgenden Befehlen den Zugriff auf Ihre Datenbank auf eine bestimmte IP-Adresse ein, 
+# ersetzen Sie dabei die Beispielnamen und Ip-Adresse durch die gewünschten Daten. 
+# Achten Sie außerdem darauf, dass Sie nach jedem ; die ENTER-Taste drücken:
+#     mysql> update db set Host='123.123.123.123' where Db='yourdatabasename';
+#     mysql> update user set Host='123.123.123.123' where user='yourdatabaseUsername'; 
+
+# Verlassen Sie die MySQl-Shell mit dem Befehl Exit.
+############################################################################################################################################
+############################################################################################################################################
+
 ##
  #* db_backup.
  # sichert eine einzelne Datenbank.
@@ -7333,6 +7412,43 @@ function db_backuptabellen() {
 		sleep 10
 		mysqldump -u"$username" -p"$password" "$databasename" "$tabellenname" | zip >/$STARTVERZEICHNIS/backup/"$databasename"/"$tabellenname".sql.zip
 		log info "Datenbank Tabelle: $databasename - $tabellenname wurde gesichert."
+	done </$STARTVERZEICHNIS/backup/"$databasename"/liste.txt
+
+	return 0
+}
+
+##
+ #* db_backuptabelle_noassets.
+ # Eine Datenbanken Tabellenweise ohne die Tabelle assets speichern.
+ # bash osmtool.sh db_backuptabellen username password databasename
+ # 
+ #? @param db_backuptabellen DB_Benutzername DB_Passwort Datenbankname.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+function db_backuptabelle_noassets() {
+	# Hier fehlt noch das die Asset Datenbank gesplittet wird.
+	username=$1
+	password=$2
+	databasename=$3 #tabellenname=$3;
+	#DATEIDATUM=$(date +%d_%m_%Y);
+
+	# Verzeichnis erstellen:
+	mkdir -p /$STARTVERZEICHNIS/backup/"$databasename" || exit
+	# Tabellennamen holen.
+	mysqlrest "$username" "$password" "$databasename" "SHOW TABLES FROM $databasename"
+	# Tabellennamen in eine Datei schreiben.
+	echo "$result_mysqlrest" >/$STARTVERZEICHNIS/backup/"$databasename"/liste.txt
+
+	tabellenname=()
+	while IFS= read -r tabellenname; do
+		sleep 10
+
+	if [[ "${tabellenname}" != "assets" ]]; then
+		mysqldump -u"$username" -p"$password" "$databasename" "$tabellenname" | zip >/$STARTVERZEICHNIS/backup/"$databasename"/"$tabellenname".sql.zip
+		log info "Datenbank Tabelle: $databasename - $tabellenname wurde gesichert."
+	fi		
+		
 	done </$STARTVERZEICHNIS/backup/"$databasename"/liste.txt
 
 	return 0
@@ -8992,6 +9108,43 @@ function db_tabellencopy() {
 	mysqlrest "$username" "$password" "$nachdatenbank" "INSERT INTO $kopieretabelle SELECT * FROM $vondatenbank.$kopieretabelle" # Tabelle kopieren Test
 
 	echo "$result_mysqlrest"
+}
+
+##
+ #* db_tabellencopy_extern.
+ # Datenbank Tabelle aus einer anderen Datenbank kopieren.
+ # bash osmtool.sh db_tabellencopy von_Datenbankname nach_Datenbankname Tabellenname Benutzername Passwort
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+function db_tabellencopy_extern() {
+	# Datenbank Tabelle aus einer anderen Datenbank kopieren.
+	# db_tabellencopy von_Datenbankname nach_Datenbankname Tabellenname Benutzername Passwort
+
+	EXTERNERSERVER=$1
+	vondatenbank=$2
+	nachdatenbank=$3
+	kopieretabelle=$4	
+
+	username=$5
+	password=$6
+
+	# Für den externen weg muss der externe Server angegeben werden testen ob es ein teil 
+	#EXTERNERSERVER="root@192.168.1.155"
+	#$EXTERNERSERVER:/usr/src/
+
+	#CREATE TABLE new_table LIKE old_table
+	#INSERT INTO new_table SELECT * FROM old_table
+
+	# Mit CREATE TABLE erzeugt ihr eine neue Tabelle, mit der selbsten Struktur wie die „Alte“.
+	mysqlrest "$username" "$password" "$nachdatenbank" "CREATE TABLE $nachdatenbank.$kopieretabelle LIKE $vondatenbank.$kopieretabelle" # Tabellenstruktur kopieren Funktioniert
+	echo "$result_mysqlrest"
+
+	# Mit INSERT INTO kopiert ihr dann den Inhalt von der alten Tabelle in die neue Tabelle hinein.
+	#mysqlrest "$username" "$password" "$nachdatenbank" "INSERT INTO $kopieretabelle SELECT * FROM $vondatenbank.$kopieretabelle" # Tabelle kopieren Test
+	#echo "$result_mysqlrest"
 }
 
 ##
@@ -13750,6 +13903,7 @@ case $KOMMANDO in
 	fail2banset) fail2banset ;;
 	db_gridlist) db_gridlist "$2" "$3" "$4" ;;
 	db_backuptabellentypen) db_backuptabellentypen "$2" "$3" "$4" ;;
+	db_ungenutzteobjekte) db_ungenutzteobjekte "$2" "$3" "$4" "$5" "$6" ;;
 	senddata) senddata "$2" "$3" "$4" ;;
 	gridcachedelete) gridcachedelete ;;
 	config | gridkonfiguration | configabfrage) configabfrage ;;
