@@ -197,7 +197,9 @@ Bisher sind nur Funktionen im Menü die maximal 1 Übergabewert voraussetzen.
 
 ## TODO und Informationen
 
-Assets Objekte, alles anzeigen was zuletzt zwischen zwei Daten aufgerufen wurde.  (Datumsformat: 2000-1-01 2021-1-01)
+Assets Objekte, alles anzeigen was zuletzt zwischen zwei Daten aufgerufen wurde.  
+
+(Datumsformat: 2000-1-01 2021-1-01)
 
      bash osmtool.sh db_ungenutzteobjekte username password	databasename from_date to_date
 
