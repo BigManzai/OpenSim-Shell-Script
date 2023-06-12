@@ -197,6 +197,10 @@ Bisher sind nur Funktionen im Menü die maximal 1 Übergabewert voraussetzen.
 
 ## TODO und Informationen
 
+Assets Objekte, alles anzeigen was zuletzt zwischen zwei Daten aufgerufen wurde.
+
+     bash osmtool.sh db_ungenutzteobjekte username password	databasename from_date to_date
+
 db_tabellencopy
 
 Datenbank Tabelle aus einer anderen Datenbank kopieren.
