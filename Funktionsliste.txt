@@ -1,0 +1,4217 @@
+
+##
+ #* ostimestamp Test
+ # Timestamp Experimente.
+ # 
+ #? @param keiner.
+ #? @return $VERSION
+ # todo: nichts.
+##
+bash osmtool.sh ostimestamp
+--
+
+##
+ #* xhelp Test
+ # hilfe ausgeben.
+ # 
+ #? @param keiner.
+ #? @return $VERSION
+ # todo: nichts.
+##
+bash osmtool.sh xhelp
+--
+
+##
+ #* skriptversion.
+ # Skriptversion ausgeben.
+ # 
+ #? @param keiner.
+ #? @return $VERSION
+ # todo: nichts.
+##
+bash osmtool.sh skriptversion
+--
+
+##
+ #* Zufallsnamen.
+ # Array aus Bezeichnungen von Deutschen Orten und Voelker (Unvollstaendig da keine umlaute funktionieren).
+ # 
+ #? @param keiner.
+ #? @return NEUERREGIONSNAME - Es wird ein Name zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh namen
+--
+
+##
+ #* Zufallsvornamen.
+ # 
+ #? @param keiner.
+ #? @return NEUERREGIONSNAME - Es wird ein Name zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh vornamen
+--
+
+##
+ #* osmtoolconfig autoconfigure.
+ # Hier wird die Konfigurationsdatei fuer das opensimTOOL erstellt.
+ # 
+ #? @param STARTVERZEICHNIS ROBUSTVERZEICHNIS MONEYVERZEICHNIS OPENSIMVERZEICHNIS CONFIGPFAD OSTOOLINI
+ #? @return Eine Datei wird geschrieben.
+ # todo: nichts.
+##
+bash osmtool.sh osmtoolconfig
+--
+
+##
+ #* dummyvar, shellcheck disable=SC2034 umgehen.
+ # Shell-Check ueberlisten wegen der Konfigurationsdatei, 
+ # hat sonst keinerlei Funktion und wird auch nicht aufgerufen.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh dummyvar
+--
+
+##
+ #* osmtoolconfigabfrage.
+ # Hier wird die Konfigurationsparameter für opensimTOOL abgefragt.
+ # 
+ #? @param STARTVERZEICHNIS ROBUSTVERZEICHNIS MONEYVERZEICHNIS OPENSIMVERZEICHNIS CONFIGPFAD SCRIPTPATH.
+ #? @return STARTVERZEICHNIS ROBUSTVERZEICHNIS MONEYVERZEICHNIS OPENSIMVERZEICHNIS CONFIGPFAD SCRIPTPATH.
+ # todo: nichts.
+##
+bash osmtool.sh osmtoolconfigabfrage
+--
+
+##
+ #* instdialog.
+ # installation von dialog.
+ # 
+ #? @param keine.
+ #? @return keine.
+ # todo: nichts.
+##
+# install dialog
+bash osmtool.sh instdialog
+--
+
+##
+ #* vardel.
+ # Variablen auf einen schlag loeschen.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh vardel
+--
+
+##
+ #* ScreenLog.
+ # Bildschirmausgabe reduzieren.
+ # 
+ #? @param ScreenLogLevel.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh ScreenLog
+--
+
+##
+ #* dialogclear.
+ # Dialog Intern loeschen.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh dialogclear
+--
+
+##
+ #* ende.
+ # Beenden mit ausgabe der letzten Meldung.
+ # 
+ #? @param keine.
+ #? @return letzten Meldung.
+ # todo: nichts.
+##
+bash osmtool.sh ende
+--
+
+##
+ #* fehler.
+ # Den aufrufenden Prozess mit der letzten Meldung beenden.
+ # 
+ #? @param keine.
+ #? @return letzten Meldung.
+ # todo: nichts.
+##
+bash osmtool.sh fehler
+--
+
+##
+ #* clearuserlist.
+ # Alle Besucherlisten loeschen.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh clearuserlist
+--
+
+##
+ #* historylogclear.
+ # Log Dateien von Ubuntu loeschen Beispiel: historylogclear "history".
+ # das loeschen von history, apache2error, mysqlerror und mysqlmariadb.
+ #
+ #? @param history, apache2error, mysqlerror und mysqlmariadb.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh historylogclear
+--
+
+##
+ #* log.
+ # Log Dateien und Funktionen.
+ # 
+ #? @param logtype.
+ #? @return Textausgabe.
+ # todo: nichts.
+##
+bash osmtool.sh log
+--
+
+##
+ #* functionslist
+ # Funktionen eines Bash Skript auslesen und in eine Text Datei schreiben.
+ # 
+ #? @param keine.
+ #? @return datediff.
+ # todo: nichts.
+##
+bash osmtool.sh bash functionslist
+--
+
+##
+ #* remarklist
+ # Funktionen eines Bash Skript inklusive 8 remark-Zeilen auslesen und in eine Text Datei schreiben.
+ # Hilfreich fuer Handbuch und Hilfen.
+ #? @param keine.
+ #? @return datediff.
+ # todo: nichts.
+##
+bash osmtool.sh remarklist
+--
+
+##
+ #* lastrebootdatum.
+ # Letzter reboot des Servers.
+ # 
+ #? @param keine.
+ #? @return $datediff.
+ # todo: nichts.
+##
+bash osmtool.sh lastrebootdatum
+--
+
+##
+ #* trimm.
+ # Leerzeichen korrigieren, trimm "   Beispiel   Text    "
+ # oder trimm $variable, rueckgabe in Variable: $trimmvar.
+ #
+ #? @param $variable.
+ #? @return $trimmvar.
+ # todo: nichts.
+##
+bash osmtool.sh trimm
+--
+
+##
+ #* osgitstatus.
+ # opensim quellcode status und upgraden.
+ #
+ #? @param $variable.
+ #? @return $trimmvar.
+ # todo: nichts.
+##
+bash osmtool.sh osgitstatus
+--
+
+##
+ #* schreibeinfo.
+ # Kopfzeile erstellen.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh schreibeinfo
+--
+
+##
+ #* letterdel.
+ # Zeichen entfernen.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh letterdel
+--
+
+##
+ #* trim_string.
+ # Zeichen entfernen.
+ # Usage: trim_string "   example   string    "
+ #
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh trim_string
+--
+
+##
+ #* vartest.
+ # Variable auf inhalt testen.
+ # 
+ #? @param $VARIABLE.
+ #? @return ${result} true false.
+ # todo: nichts.
+##
+bash osmtool.sh vartest
+--
+
+##
+ #* iinstall.
+ # Linux apt-get Installationsroutine.
+ # 
+ #? @param $installation.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh iinstall
+--
+
+##
+ #* iinstall2.
+ # Linux apt Installationsroutine.
+ # 
+ #? @param $installation.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh iinstall2
+--
+
+##
+ #* finstall.
+ # Neue apt-get installationsroutine aus Datei.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh finstall
+--
+
+##
+ #* menufinstall.
+ # Neue Menue installationsroutine aus Datei.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh menufinstall
+--
+
+##
+ #* uncompress.
+ # ermittelt welcher Kompressor eingesetzt wurde und gibt den entpack Befehl zurueck.
+ # 
+ #? @param $datei.
+ #? @return $uncompress.
+ # todo: nichts.
+##
+bash osmtool.sh uncompress
+--
+
+##
+ #* downloados.
+ # Opensim download.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh downloados
+--
+
+##
+ #* radiolist.
+ # Radioliste-Linkliste erstellen aus Webseitenlinks.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh radiolist
+--
+
+##
+ #* rebootdatum .
+ # letzter reboot des Servers.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh rebootdatum
+--
+
+##
+ #* warnbox.
+ # warnbox Meldung anzeigen.
+ # 
+ #? @param $1.
+ #? @return dialog Textanzeige.
+ # todo: nichts.
+##
+bash osmtool.sh warnbox
+--
+
+##
+ #* edittextbox.
+ # Text in einer Box editieren.
+ # 
+ #? @param $1.
+ #? @return dialog Textanzeige.
+ # todo: nichts.
+##
+bash osmtool.sh edittextbox
+--
+
+##
+ #* textbox.
+ # Text Meldung anzeigen.
+ # 
+ #? @param $1.
+ #? @return dialog Textanzeige.
+ # todo: nichts.
+##
+bash osmtool.sh textbox
+--
+
+##
+ #* nachrichtbox.
+ # Eine Nachrichtbox Meldung anzeigen.
+ # 
+ #? @param $1 $result.
+ #? @return dialog Textanzeige.
+ # todo: nichts.
+##
+bash osmtool.sh nachrichtbox
+--
+
+##
+ #* apacheerror.
+ # php log Datei anzeigen.
+ # 
+ #? @param $apache2errorlog.
+ #? @return dialog Textanzeige.
+ # todo: nichts.
+##
+bash osmtool.sh apacheerror
+--
+
+##
+ #* mysqldberror.
+ # mysql log Datei anzeigen.
+ # 
+ #? @param $mysqlerrorlog.
+ #? @return dialog Textanzeige.
+ # todo: nichts.
+##
+bash osmtool.sh mysqldberror
+--
+
+##
+ #* mariadberror.
+ # mariadb error Datei anzeigen.
+ # 
+ #? @param $mysqlmariadberor.
+ #? @return dialog Textanzeige.
+ # todo: nichts.
+##
+bash osmtool.sh mariadberror
+--
+
+##
+ #* ufwlog.
+ # ufw log Datei anzeigen.
+ # 
+ #? @param $ufwlog.
+ #? @return dialog Textanzeige.
+ # todo: nichts.
+##
+bash osmtool.sh ufwlog
+--
+
+##
+ #* authlog.
+ # auth log Datei anzeigen.
+ # 
+ #? @param $authlog.
+ #? @return dialog Textanzeige.
+ # todo: nichts.
+##
+bash osmtool.sh authlog
+--
+
+##
+ #* accesslog.
+ # access log Datei anzeigen.
+ # 
+ #? @param $apache2accesslog.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh accesslog
+--
+
+##
+ #* fpspeicher.
+ # Festplattenspeicher anzeigen.
+ # 
+ #? @param keine.
+ #? @return result.
+ # todo: nichts.
+##
+bash osmtool.sh fpspeicher
+--
+
+##
+ #* screenlist.
+ # Laufende Screens auflisten.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh screenlist
+--
+
+##
+ #* screenlistrestart.
+ # Alle laufende Screens anzeigen.
+ # 
+ #? @param keine.
+ #? @return $mynewlist.
+ # todo: nichts.
+##
+bash osmtool.sh screenlistrestart
+--
+
+##
+ #* makeverzeichnisliste.
+ # Erstellen eines Arrays aus einer Textdatei - Verzeichnisse.
+ # 
+ #? @param keine.
+ #? @return $ANZAHLVERZEICHNISSLISTE.
+ # todo: nichts.
+##
+bash osmtool.sh makeverzeichnisliste
+--
+
+##
+ #* makeregionsliste 
+ # Erstellen eines Arrays aus einer Textdatei.
+ # 
+ #? @param keine.
+ #? @return REGIONSLISTE.
+ #? @return ANZAHLREGIONSLISTE.
+ # todo: nichts.
+##
+bash osmtool.sh makeregionsliste
+--
+
+##
+ #* mysqlrest Funktion zum abfragen von mySQL Datensaetzen.
+ # mymysql "username" "password" "databasename" "mysqlcommand".
+ # 
+ #? @param "username" "password" "databasename" "mysqlcommand".
+ #? @return result_mysqlrest.
+ # todo: nichts.
+##
+bash osmtool.sh mysqlrest
+--
+
+##
+ #* mysqlrestnodb.
+ # Funktion mySQL Datensaetzen: mymysql "username" "password" "mysqlcommand".
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh mysqlrestnodb
+--
+
+##
+ #* mysqlbackup.
+ # Funktion zum sichern von mySQL Datensaetzen: 
+ # mysqlbackup "username" "password" "databasename"
+ # 
+ #? @param username password databasename.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh mysqlbackup
+--
+
+##
+ #* passgen.
+ # Passwortgenerator.
+ # passgen Passwortlaenge.
+ #
+ #? @param $PASSWORTLAENGE.
+ #? @return $NEWPASSWD.
+ # todo: nichts.
+##
+bash osmtool.sh passgen
+--
+
+##
+ #* passwdgenerator.
+ # Passwortgenerator mit dialog.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh passwdgenerator
+--
+
+##
+ #* assetdel.
+ # Asset von der Region loeschen. Aufruf: assetdel screen_name Regionsname Objektname.
+ # 
+ #? @param screen_name Regionsname Objektname.
+ #? @return Text.
+ # todo: nichts.
+##
+bash osmtool.sh assetdel
+--
+
+##
+ #* menuassetdel.
+ # Asset mit dialog von der Region loeschen.
+ # 
+ #? @param dialog.
+ #? @return dialog.
+ # todo: nichts.
+##
+bash osmtool.sh menuassetdel
+--
+
+##
+ #* landclear.
+ # Land clear - Loescht alle Parzellen auf dem Land. # Aufruf: landclear screen_name Regionsname
+ # 
+ #? @param screen_name Regionsname.
+ #? @return Text.
+ # todo: nichts.
+##
+bash osmtool.sh landclear
+--
+
+##
+ #* menulandclear.
+ # Land clear - Loescht alle Parzellen auf dem Land, dialog ein- ausgabe.
+ # 
+ #? @param dialog.
+ #? @return dialog.
+ # todo: nichts.
+##
+bash osmtool.sh menulandclear
+--
+
+##
+ #* loadinventar.
+ # load iar inventar "NAME" "VERZEICHNIS" "PASSWORD" "DATEImitPFAD".
+ # 
+ #? @param "NAME" "VERZEICHNIS" "PASSWORD" "DATEImitPFAD".
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh loadinventar
+--
+
+##
+ #* menuloadinventar.
+ # Lade Inventar mit dialog Menue in den OpenSimulator.
+ # 
+ #? @param dialog.
+ #? @return dialog.
+ # todo: nichts.
+##
+bash osmtool.sh menuloadinventar
+--
+
+##
+ #* saveinventar.
+ # Speichere iar inventar "NAME" "VERZEICHNIS" "PASSWORD" "DATEImitPFAD".
+ # 
+ #? @param "NAME" "VERZEICHNIS" "PASSWORD" "DATEImitPFAD".
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh saveinventar
+--
+
+##
+ #* menusaveinventar.
+ # Speichere Inventar mit dialog Menue in den OpenSimulator.
+ # 
+ #? @param dialog.
+ #? @return dialog.
+ # todo: nichts.
+##
+bash osmtool.sh menusaveinventar
+--
+
+ #* oscommand.
+ # OpenSim Command direkt in den screen senden. # Aufruf: oscommand Screen Region Befehl Parameter.
+ # Beispiel: bash osmtool.sh oscommand sim1 Welcome "alert Hallo liebe Leute dies ist eine Nachricht"
+ # Beispiel: bash osmtool.sh oscommand sim1 Welcome "alert-user John Doe Hallo John Doe"
+ # 
+ #? @param Screen Region Befehl Parameter.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh oscommand
+--
+
+##
+ #* menuoscommand.
+ # OpenSim Command direkt in den screen senden.
+ # 
+ #? @param dialog.
+ #? @return dialog.
+ # todo: nichts.
+##
+bash osmtool.sh menuoscommand
+--
+
+##
+ #* oswriteconfig.
+ # Konfiguration lesen.
+ # 
+ #? @param $SETSIMULATOR.
+ #? @return $CONFIGWRITE.
+ # todo: nichts.
+##
+bash osmtool.sh oswriteconfig
+--
+
+##
+ #* menuoswriteconfig.
+ # Konfiguration lesen.
+ # 
+ #? @param dialog.
+ #? @return dialog.
+ # todo: nichts.
+##
+bash osmtool.sh menuoswriteconfig
+--
+
+##
+ #* menuworks.
+ # screen pruefen ob er laeuft, dialog auswahl.
+ # 
+ #? @param dialog.
+ #? @return dialog.
+ # todo: nichts.
+##
+bash osmtool.sh menuworks
+--
+
+##
+ #* works.
+ # screen pruefen ob er laeuft.
+ # Aufruf: works screen_name
+ # 
+ #? @param $WORKSSCREEN.
+ #? @return $WORKSSCREEN.
+ # todo: nichts.
+##
+bash osmtool.sh works
+--
+
+##
+ #* waslauft.
+ # Zeigt alle Laufenden Screens an.
+ # 
+ #? @param keine.
+ #? @return $ergebnis.
+ # todo: nichts.
+##
+bash osmtool.sh waslauft
+--
+
+##
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+## menuwaslauft - Zeigt alle Laufenden Screens an im dialog.
+bash osmtool.sh menuwaslauft
+--
+
+##
+ #* checkfile.
+ # pruefen ob Datei vorhanden ist.
+ # Aufruf: checkfile "pfad/name"
+ # 
+ #? @param $DATEINAME.
+ #? @return $?.
+ # todo: nichts.
+##
+bash osmtool.sh checkfile
+--
+
+##
+ #* mapdel.
+ # loescht die Map-Karten.
+ # Aufruf: mapdel Verzeichnis
+ # 
+ #? @param $VERZEICHNIS.
+ #? @return $VERZEICHNIS.
+ # todo: nichts.
+##
+bash osmtool.sh mapdel
+--
+
+##
+ #* logdel.
+ # loescht die Log Dateien. 
+ # Aufruf: logdel Verzeichnis
+ # 
+ #? @param $VERZEICHNIS.
+ #? @return $VERZEICHNIS.
+ # todo: nichts.
+##
+bash osmtool.sh logdel
+--
+
+##
+ #* rologdel.
+ # loescht die Log Dateien. 
+ # Aufruf: rologdel
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh rologdel
+--
+
+##
+ #* menumapdel.
+ # loescht die Log Dateien.
+ # 
+ #? @param dialog.
+ #? @return dialog.
+ # todo: nichts.
+##
+bash osmtool.sh menumapdel
+--
+
+##
+ #* menulogdel.
+ # loescht die Log Dateien.
+ # 
+ #? @param dialog.
+ #? @return dialog.
+ # todo: nichts.
+##
+bash osmtool.sh menulogdel
+--
+
+##
+ #* assetcachedel.
+ # loescht die asset cache Dateien. 
+ # Aufruf: assetcachedel Verzeichnis
+ # Das Verzeichnis samt neuer Daten werden beim naechsten start des opensimulator neu geschrieben.
+ #? @param $VERZEICHNIS.
+ #? @return $VERZEICHNIS.
+ # todo: nichts.
+##
+bash osmtool.sh assetcachedel
+--
+
+##
+ #* autoassetcachedel.
+ # automatisches loeschen aller asset cache Dateien.
+ # Die Verzeichnisse samt neuer Daten werden beim naechsten start des opensimulator neu geschrieben.
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh autoassetcachedel
+--
+
+##
+ #* ossettings.
+ # stellt den Linux Server fuer OpenSim ein.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh ossettings
+--
+
+##
+ #* scstart.
+ # startet Region Server - Kurzversion.
+ # Beispiel-Example: bash osmtool.sh scstart sim1
+ # 
+ #? @param $SCSTARTSCREEN.
+ #? @return nichts wird zurueckgegeben.
+ # todo: testen.
+##
+bash osmtool.sh scstart
+--
+
+##
+ #* scstop.
+ # stoppt Region Server - Kurzversion.
+ # Beispiel-Example: bash osmtool.sh scstop sim1
+ # 
+ #? @param $SCSTOPSCREEN.
+ #? @return nichts wird zurueckgegeben.
+ # todo: testen.
+##
+bash osmtool.sh scstop
+--
+
+##
+ #* sckill.
+ # Killt Region Server - Kurzversion.
+ # Beispiel-Example: bash osmtool.sh sckill sim1
+ # 
+ #? @param $SCKILLSCREEN.
+ #? @return nichts wird zurueckgegeben.
+ # todo: testen.
+##
+bash osmtool.sh sckill
+--
+
+##
+ #* osstart.
+ # startet Region Server. 
+ # Beispiel-Example: bash osmtool.sh osstart sim1
+ # 
+ #? @param $OSSTARTSCREEN.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh osstart
+--
+
+##
+ #* osstop.
+ # stoppt Region Server. 
+ # Beispiel-Example: bash osmtool.sh osstop sim1
+ # 
+ #? @param $OSSTOPSCREEN.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh osstop
+--
+
+##
+ #* menuosstart.
+ # startet Region Server.
+ # 
+ #? @param dialog.
+ #? @return dialog.
+ # todo: nichts.
+##
+bash osmtool.sh menuosstart
+--
+
+##
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##  menuosstop() ist die dialog Version von osstop()
+bash osmtool.sh menuosstop
+--
+
+##
+ #* rostart93.
+ # Robust Server starten.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh rostart93
+--
+
+##
+ #* rostart.
+ # Robust Server starten.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh rostart
+--
+
+##
+ #* menurostart.
+ # Robust Server starten.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh menurostart
+--
+
+##
+ #* osstarteintrag.
+ # Fuegt der osmsimlist.ini einen Region Simulator hinzu und sortiert diese.
+ # 
+ #? @param $OSEINTRAG.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh osstarteintrag
+--
+
+##
+ #* menuosstarteintrag.
+ # Fuegt der osmsimlist.ini einen Region Simulator hinzu und sortiert diese.
+ # 
+ #? @param dialog.
+ #? @return dialog.
+ # todo: nichts.
+##
+bash osmtool.sh menuosstarteintrag
+--
+
+##
+ #* osstarteintragdel.
+ # entfernt einen Region Simulator aus  der osmsimlist.ini und sortiert diese.
+ # 
+ #? @param $OSEINTRAGDEL.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh osstarteintragdel
+--
+
+##
+ #* menuosstarteintragdel.
+ # entfernt einen Region Simulator aus  der osmsimlist.ini und sortiert diese.
+ # 
+ #? @param dialog.
+ #? @return dialog.
+ # todo: nichts.
+##
+bash osmtool.sh menuosstarteintragdel
+--
+
+##
+ #* osdauerstop.
+ # stoppt Region Server und aus der Startliste loeschen. 
+ # Beispiel-Example: bash osmtool.sh osdauerstop sim1
+ # 
+ #? @param $OSDAUERSTOPSCREEN.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh osdauerstop
+--
+
+##
+ #* menuosdauerstop.
+ # stoppt Region Server und aus der Startliste loeschen.
+ # 
+ #? @param dialog.
+ #? @return dialog.
+ # todo: nichts.
+##
+bash osmtool.sh menuosdauerstop
+--
+
+##
+ #* osdauerstart.
+ # startet Region Server und setzt ihn in die Startkonfiguration.
+ # Beispiel-Example: bash osmtool.sh osdauerstart sim1
+ # 
+ #? @param $OSDAUERSTARTSCREEN.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh osdauerstart
+--
+
+##
+ #* menuosdauerstart.
+ # startet Region Server und setzt ihn in die Startkonfiguration.
+ # 
+ #? @param dialog.
+ #? @return dialog.
+ # todo: nichts.
+##
+bash osmtool.sh menuosdauerstart
+--
+
+##
+ #* rostop.
+ # Robust herunterfahren.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh rostop
+--
+
+##
+ #* menurostop.
+ # Robust herunterfahren.
+ # 
+ #? @param dialog.
+ #? @return dialog.
+ # todo: nichts.
+##
+bash osmtool.sh menurostop
+--
+
+##
+ #* mostart93.
+ # Money Server starten.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh mostart93
+--
+
+##
+ #* mostart.
+ # Money Server starten.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh mostart
+--
+
+##
+ #* menumostart.
+ # Money Server starten.
+ # 
+ #? @param dialog.
+ #? @return dialog.
+ # todo: nichts.
+##
+bash osmtool.sh menumostart
+--
+
+##
+ #* mostop.
+ # Money Server herunterfahren.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh mostop
+--
+}
+
+##
+ #* menumostop.
+ # Money Server herunterfahren.
+ # 
+ #? @param dialog.
+ #? @return dialog.
+ # todo: nichts.
+bash osmtool.sh menumostop
+--
+
+##
+ #* osscreenstop.
+ # beendet ein Screeen. 
+ # Beispiel-Example: osscreenstop sim1
+ # 
+ #? @param $SCREENSTOPSCREEN.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh osscreenstop
+--
+
+##
+ #* gridstart93.
+ # startet erst Robust und dann Money.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh gridstart93
+--
+
+##
+ #* gridstart.
+ # startet erst Robust und dann Money.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh gridstart
+--
+
+##
+ #* menugridstart.
+ # startet erst Robust und dann Money.
+ # 
+ #? @param dialog.
+ #? @return dialog.
+ # todo: nichts.
+##
+bash osmtool.sh menugridstart
+--
+
+##
+ #* simstats.
+ # zeigt Simstatistik an. 
+ # simstats screen_name
+ # erzeugt im Hauptverzeichnis eine Datei namens sim1.log in dieser Datei ist die Statistik zu finden.
+ #? @param $STATSSCREEN.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh simstats
+--
+
+##
+ #* terminator.
+ # killt alle noch offene Screens.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh terminator
+--
+
+##
+ #* oscompi93.
+ # kompilieren des OpenSimulator.
+ # 
+ #? @param $netversion.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh oscompi93
+--
+
+##
+ #* oscompi.
+ # kompilieren des OpenSimulator.
+ # 
+ #? @param $netversion.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh oscompi
+--
+
+##
+ #* opensimgitcopy93.
+ # OpenSimulator Source Dateien vom Github kopieren.
+ # 
+ #? @param nichts.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh opensimgitcopy93
+--
+
+##
+ #* moneygitcopy93.
+ # Money Server Source Dateien vom Github kopieren.
+ # 
+ #? @param $MONEYCOPY.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh moneygitcopy93
+--
+
+##
+ #* moneygitcopy.
+ # Money Server Source Dateien vom Github kopieren.
+ # 
+ #? @param $MONEYCOPY.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh moneygitcopy
+--
+
+##
+ #* divagitcopy.
+ # Diva Source Dateien vom Github kopieren.
+ # 
+ #? @param $DIVACOPY.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh divagitcopy
+--
+}
+##
+ #* divacopy.
+ # DIVA Server Dateien kopieren.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: testen.
+##
+bash osmtool.sh divacopy
+--
+
+##
+ #* scriptgitcopy.
+ # Script Assets Dateien vom Github kopieren.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh scriptgitcopy
+--
+
+##
+ #* scriptcopy.
+ # lsl ossl scripte kopieren.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh scriptcopy
+--
+
+##
+ #* moneycopy93.
+ # Money Server Dateien kopieren.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh moneycopy93
+--
+
+##
+ #* moneycopy.
+ # Money Server Dateien kopieren.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh moneycopy
+--
+
+##
+ #* mutelistcopy.
+ # OpenSimMutelist Dateien kopieren.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: Testen.
+##
+bash osmtool.sh mutelistcopy
+--
+}
+##
+ #* searchcopy.
+ # OpenSimSearch Dateien kopieren.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: Testen.
+##
+bash osmtool.sh searchcopy
+--
+
+##
+ #* makeaot.
+ # aot generieren.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh makeaot
+--
+
+##
+ #* cleanaot.
+ # aot entfernen.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh cleanaot
+--
+
+##
+ #* setversion.
+ # Prebuild erstellen 
+ # Aufruf Beispiel: osmtool.sh prebuild 1330.
+ # 
+ #? @param $NUMMER.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh setversion
+--
+
+##
+ #* versionsausgabe93
+ # Version OpenSimulator unter dotnet6
+ # Aufruf Beispiel: osmtool.sh versionsausgabe
+ # 
+ #? @param Keine.
+ #? @return Ausgabe Informationen.
+ # todo: nichts.
+##
+bash osmtool.sh versionsausgabe93
+--
+
+##
+ #* setversion93.
+ # Versionsnummer Setzen
+ # Aufruf Beispiel: osmtool.sh setversion93 1234.
+ # 
+ #? @param Nummer, d, p, z.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh setversion93
+--
+
+##
+ #* osstruktur.
+ # legt die Verzeichnisstruktur fuer OpenSim an. 
+ # Aufruf: osmtool.sh osstruktur ersteSIM letzteSIM.
+ # Beispiel: ./osmtool.sh osstruktur 1 10 - erstellt ein Grid Verzeichnis fuer 10 Simulatoren inklusive der $SIMDATEI.
+ #? @param ersteSIM letzteSIM.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh osstruktur
+--
+
+##
+ #* menuosstruktur.
+ # legt die Verzeichnisstruktur fuer OpenSim an.
+ # 
+ #? @param dialog.
+ #? @return dialog.
+ # todo: nichts.
+##
+bash osmtool.sh menuosstruktur
+--
+
+##
+ #* osdelete.
+ # altes opensim loeschen und letztes opensim als Backup umbenennen.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh osdelete
+--
+
+##
+ #* oscopyrobust.
+ # Robust Daten kopieren.
+ # bash osmtools.sh oscopyrobust
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh oscopyrobust
+--
+
+##
+ #* oscopysim.
+ # Simulatoren kopieren aus dem Verzeichnis opensim.
+ # bash osmtools.sh oscopysim
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh oscopysim
+--
+
+##
+ #* oscopy.
+ # Simulator kopieren aus dem Verzeichnis opensim.
+ # bash osmtools.sh oscopy sim1
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh oscopy
+--
+
+##
+ #* configlesen.
+ # Regionskonfigurationen lesen. 
+ # Beispiel: configlesen sim1
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh configlesen
+--
+
+##
+ #* regionsconfigdateiliste.
+ # schreibt Dateinamen mit Pfad in eine Datei.
+ # regionsconfigdateiliste -b(Bildschirm) -d(Datei)  Vereichnis
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh regionsconfigdateiliste
+--
+
+##
+ #* meineregionen.
+ # listet alle Regionen aus den Konfigurationen auf.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh meineregionen
+--
+
+##
+ #* regionsinisuchen.
+ # sucht alle Regionen.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh regionsinisuchen
+--
+
+##
+ #* get_regionsarray.
+ # gibt ein Array aller Regionsabschnitte zurueck.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh get_regionsarray
+--
+
+##
+ #* get_value_from_Region_key.
+ # gibt den Wert eines bestimmten Schluessels im angegebenen Abschnitt zurueck.
+ # $1 - Datei - $2 - Schluessel - $3 - Sektion
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh get_value_from_Region_key
+--
+
+##
+ #* regionsiniteilen.
+ # holt aus der Regions.ini eine Region heraus und speichert sie mit ihrem Regionsnamen.
+ # Aufruf: regionsiniteilen Verzeichnis Regionsname
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh regionsiniteilen
+--
+
+##
+ #* autoregionsiniteilen.
+ # Die gemeinschaftsdatei Regions.ini in einzelne Regionen teilen.
+ # diese dann unter dem Regionsnamen speichern, danach die Alte Regions.ini umbenennen in Regions.ini.old.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh autoregionsiniteilen
+--
+
+##
+ #* regionliste.
+ # Die RegionListe ermitteln und mit dem Verzeichnisnamen in die osmregionlist.ini schreiben.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##  
+bash osmtool.sh regionliste
+--
+
+##
+ #* makewebmaps.
+ # Kopiere Maptile aus dem Robust nach html fuer Webanzeige.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: Nur Bilder kopieren, wenn sie nicht vorhanden sind, oder aelter als bla bla sind.
+##
+bash osmtool.sh makewebmaps
+--
+
+##
+ #* moneydelete.
+ # loescht den MoneyServer ohne die OpenSim Config zu veraendern.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh moneydelete
+--
+
+##
+ #* osgitholen.
+ # kopiert eine Entwicklerversion in das opensim Verzeichnis.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh osgitholen
+--
+
+##
+ #* osgitholen93.
+ # kopiert eine Entwicklerversion in das opensim Verzeichnis.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh osgitholen93
+--
+
+##
+ #* osbauen93
+ # Baut einen neuen OpenSimulator mit dotnet 6.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh osbauen93
+--
+
+##
+ #* opensimholen.
+ # holt den OpenSimulator in das Arbeitsverzeichnis.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh opensimholen
+--
+
+##
+ #* install_mysqltuner.
+ # Installation von mysqltuner.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh install_mysqltuner
+--
+
+##
+ #* regionbackup.
+ # backup einer Region.
+ # regionbackup Screenname "Der Regionsname"
+ # 
+ #? @param BACKUPVERZEICHNISSCREENNAME REGIONSNAME.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh regionbackup
+--
+
+##
+ #* menuregionbackup.
+ # ist die dialog Version von regionbackup().
+ # 
+ #? @param dialog.
+ #? @return dialog.
+ # todo: nichts.
+##
+bash osmtool.sh menuregionbackup
+--
+ #* regionrestore.
+ # hochladen einer Region.
+ # regionrestore Screenname "Der Regionsname"
+ # Ich kann nicht pruefen ob die Region im OpenSimulator vorhanden ist. Sollte sie nicht vorhanden sein wird root (Alle) oder die letzte ausgewaehlte Region wiederhergestellt. 
+ # Dies zerstoert eventuell vorhandene Regionen.
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh regionrestore
+--
+
+##
+ #* menuregionrestore.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # Ich kann nicht pruefen ob die Region im OpenSimulator vorhanden ist. Sollte sie nicht vorhanden sein wird root (Alle) oder die letzte ausgewaehlte Region wiederhergestellt. 
+ # Dies zerstoert eventuell vorhandene Regionen.
+ #? @param dialog.
+ #? @return dialog.
+ # todo: nichts.
+##
+bash osmtool.sh menuregionrestore
+--
+
+##
+ #* autosimstart93.
+ # automatischer sim start ohne Robust und Money.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh autosimstart93
+--
+
+##
+ #* autosimstart.
+ # automatischer sim start ohne Robust und Money.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh autosimstart
+--
+
+##
+ #* autosimstop.
+ # Stoppen aller laufenden Simulatoren.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh autosimstop
+--
+
+##
+ #* menuautosimstart.
+ # Starten aller Simulatoren.
+ # 
+ #? @param dialog.
+ #? @return dialog.
+ # todo: nichts.
+##
+bash osmtool.sh menuautosimstart
+--
+
+##
+ #* menuautosimstop.
+ # Stoppen aller laufenden Simulatoren.
+ # 
+ #? @param dialog.
+ #? @return dialog.
+ # todo: nichts.
+##
+bash osmtool.sh menuautosimstop
+--
+
+##
+ #* autologdel.
+ # automatisches loeschen aller log Dateien.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+# Die Dateien samt neuer Daten werden beim naechsten start des opensimulator neu geschrieben.
+bash osmtool.sh autologdel
+--
+
+##
+ #* menuautologdel.
+ # automatisches loeschen aller log Dateien.
+ # 
+ #? @param dialog.
+ #? @return dialog.
+ # todo: nichts.
+##
+bash osmtool.sh menuautologdel
+--
+
+##
+ #* automapdel.
+ # utomatisches loeschen aller Map/Karten Dateien.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+# Die Dateien samt neuer Daten werden beim naechsten start des opensimulator neu geschrieben.
+bash osmtool.sh automapdel
+--
+
+##
+ #* autorobustmapdel.
+ # automatisches loeschen aller Map/Karten Dateien in Robust.
+ # Die Dateien samt neuer Daten werden beim naechsten start des opensimulator neu geschrieben.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh autorobustmapdel
+--
+
+##
+ #* cleaninstall.
+ # loeschen aller externen addon Module.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh cleaninstall
+--
+
+##
+ #* cleanprebuild.
+ # loeschen aller Prebuild Dateien, da sie von OpenSim Prebuild clean nicht geloescht werden.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh cleanprebuild
+--
+
+##
+ #* allclean.
+ # loescht Log, dll, so, exe, aot Dateien fuer einen saubere neue installation, ohne Robust.
+ # Hierbei werden keine Datenbanken oder Konfigurationen geloescht aber opensim ist anschliessend nicht mehr startbereit.
+ # Um opensim wieder Funktionsbereit zu machen muss ein Upgrade oder ein oscopy vorgang ausgefuehrt werden.
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh allclean
+--
+
+##
+ #* getcachesinglegroesse.
+ # Zeigt Cache Dateien und die größe aus einem einzelnen Simulator an.
+ # du steht für disk usage.
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh getcachesinglegroesse
+--
+
+##
+ #* getcachegroesse.
+ # Zeigt Cache Dateien und die größe aus dem gesamten Grid an.
+ # du steht für disk usage.
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh getcachegroesse
+--
+
+##
+ #* gridcachedelete.
+ # loescht alle Cache Dateien die sich im laufe der Zeit angesammelt haben.
+ # GRIDCACHECLEAR="yes"; ASSETCACHECLEAR="yes"; MAPTILESCLEAR="yes"; SCRIPTCLEAR="yes"; RMAPTILESCLEAR="yes"; RBAKESCLEAR="yes";
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh gridcachedelete
+--
+
+##
+ #* autoallclean.
+ # loescht Log, dll, so, exe, aot Dateien fuer einen saubere neue installation, mit Robust.
+ # Hierbei werden keine Datenbanken oder Konfigurationen geloescht aber opensim ist anschliessend nicht mehr startbereit.
+ # Um opensim wieder Funktionsbereit zu machen muss ein Upgrade oder ein oscopy vorgang ausgefuehrt werden.
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh autoallclean
+--
+
+##
+ #* autoregionbackup.
+ # automatischer Backup aller Regionen die in der Regionsliste eingetragen sind.
+  #* Zuerst muss aber einmalig eine Regionliste erstellt werden mit "osmtool.sh regionliste". Die RegionListe ermitteln und mit dem Verzeichnisnamen in die osmregionlist.ini schreiben.
+ # 
+ #? @param keine.
+ #? @return regionbackup BACKUPSCREEN BACKUPREGION.
+ # todo: Uebergabe Parameter Fehler. Bug Modus mit extra ausgaben. Ist keine osmregionlist.ini vorhanden muss sie erstellt werden.
+##
+bash osmtool.sh autoregionbackup
+--
+
+##
+ #* autoscreenstop.
+ # beendet alle laufenden simX screens.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh autoscreenstop
+--
+
+##
+ #* menuautoscreenstop.
+ # beendet alle laufenden simX screens.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh menuautoscreenstop
+--
+
+##
+ #* autostart93.
+ # startet das komplette Grid mit allen sims.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh autostart93
+--
+
+##
+ #* autostart.
+ # startet das komplette Grid mit allen sims.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh autostart
+--
+
+##
+ #*  gridstop.
+ # Stoppt erst Money dann Robust.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##  
+bash osmtool.sh gridstop
+--
+
+##
+ #* autostop.
+ # stoppt das komplette Grid mit allen sims.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh autostop
+--
+
+##
+ #* menuautostart.
+ # startet das komplette Grid mit allen sims.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh menuautostart
+--
+
+##
+ #* menuautostop.
+ # stoppt das komplette Grid mit allen sims.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh menuautostop
+--
+
+##
+ #* autorestart93.
+ # startet das gesamte Grid neu und loescht die log Dateien.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh autorestart93
+--
+
+##
+ #* autorestart.
+ # startet das gesamte Grid neu und loescht die log Dateien.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh autorestart
+--
+
+##
+ #* menuautorestart.
+ # startet das gesamte Grid neu und loescht die log Dateien.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh menuautorestart
+--
+
+##
+ #* serverupgrade.
+ # Linux Server Updaten und Upgraden.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh serverupgrade
+--
+
+##
+ #* installmariadb18.
+ # Installation oder Migration von MariaDB 10.8.3 oder hoeher fuer Ubuntu 18.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh installmariadb18
+--
+
+##
+ #* installmariadb22.
+ # Installation oder Migration von MariaDB fuer Ubuntu 22.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh installmariadb22
+--
+
+##
+ #* monoinstall.
+ # mono 6.x installieren.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh monoinstall
+--
+
+##
+ #* monoinstall18.
+ # mono installation auf Ubuntu 18.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh monoinstall18
+--
+
+##
+ #* monoinstall20.
+ # mono installation auf Ubuntu 20.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh monoinstall20
+--
+
+##
+ #* monoinstall22.
+ # mono installation auf Ubuntu 22.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh monoinstall22
+--
+
+##
+ #* sourcelist18.
+ # Sourcelist fuer Ubuntu bionic anzeigen.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh sourcelist18
+--
+
+##
+ #* sourcelist22.
+ # Sourcelist fuer Ubuntu jammy anzeigen.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh sourcelist22
+--
+
+##
+ #* installwordpress.
+ # Installiert oder Upgradet alles was für WordPress benötigt wird.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh installwordpress
+--
+
+##
+ #* installopensimulator.
+ # Installiert alles fuer den OpenSimulator ausser mono.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh installopensimulator
+--
+
+##
+ #* installbegin.
+ # Linux Updaten und Upgraden.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh installbegin 
+--
+
+##
+ #* linuxupgrade.
+ # Linux Updaten und Upgraden.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh linuxupgrade 
+--
+
+##
+ #* installubuntu22.
+ # Installiert alles fuer den OpenSimulator ausser mono.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh installubuntu22
+--
+
+##
+ #* iptablesset.
+ # IP sperren.
+ # 
+ #? @param ipsperradresse.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh iptablesset
+--
+
+##
+ #* fail2banset.
+ # Hier stimmt was nicht ist wohl der erste Test.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh fail2banset
+--
+
+##
+ #* ufwset.
+ # ufw Ports einstellen.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh ufwset
+--
+
+##
+ #* installphpmyadmin.
+ # Installieren von PhpMyAdmin.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh installphpmyadmin
+--
+
+##
+ #* installfinish.
+ # Zum abschluss noch einmal alles pruefen und nachinstallieren.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh installfinish
+--
+
+##
+ #* installationhttps22.
+ # HTTPS installieren: installationhttps22 "myemail@server.com" "myworld.com".
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh installationhttps22
+--
+
+##
+ #* serverinstall22.
+ # Server Installationen aufrufen.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh serverinstall22
+--
+
+##
+ #* serverinstall.
+ # Auswahl der zu installierenden Pakete (Dies ist meinem Geschmack angepasst).
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh serverinstall
+--
+
+##
+ #* installationen.
+ # installationen, Was habe ich alles Installiert? sortiert auflisten.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh installationen
+--
+
+##
+ #* checkupgrade93.
+ # Wenn es ein Upgrade gibt, dann baut dies automatisch einen neuen OpenSimulator mit den eingestellten Plugins.
+ # 
+ #? @param keine.
+ #? @return Already up to date.
+ # todo: nichts.
+##
+bash osmtool.sh checkupgrade93
+--
+
+##
+ #* osbuilding93.
+ # Baut automatisch einen neuen OpenSimulator mit den eingestellten Plugins.
+ # Beispiel Datei: opensim-0.9.2.2Dev-1187-gcf0b1b1.zip
+ # bash osmtool.sh osbuilding 1187
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh osbuilding93
+--
+
+##
+ #* osbuildingupgrade93.
+ # Upgradet automatisch den OpenSimulator 0.9.3.0 .
+ # bash osmtool.sh osbuildingupgrade93
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: Test.
+##
+bash osmtool.sh osbuildingupgrade93
+--
+ #* osbuilding.
+ # Baut automatisch einen neuen OpenSimulator mit den eingestellten Plugins.
+ # Beispiel Datei: opensim-0.9.2.2Dev-1187-gcf0b1b1.zip
+ # bash osmtool.sh osbuilding 1187
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh osbuilding
+--
+
+##
+ #* createuser.
+ # Erstellen eines neuen Benutzer in der Robust Konsole.
+ # Mit dem Konsolenkomanndo: create user [first] [last] [passw] [RegionX] [RegionY] [Email] - creates a new user and password.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh createuser
+--
+
+##
+ #* menucreateuser.
+ # Erstellen eines neuen Benutzer in der Robust Konsole.
+ # Mit dem Konsolenkomanndo: create user [first] [last] [passw] [RegionX] [RegionY] [Email] - creates a new user and password.
+ # 
+ #? @param dialog.
+ #? @return dialog.
+ # todo: nichts.
+##
+bash osmtool.sh menucreateuser
+--
+
+##
+ #* db_friends.
+ # Listet alle internen Freunde auf, aber keine hg freunde.
+ # 
+ #? @param username password databasename useruuid.
+ #? @return "$result_mysqlrest".
+ # todo: nichts.
+##
+bash osmtool.sh db_friends
+--
+
+##
+ #* db_online.
+ # Listet Online User auf.
+ # 
+ #? @param "$username" "$password" "$databasename".
+ #? @return "$result_mysqlrest".
+ # todo: nichts.
+##
+bash osmtool.sh db_online
+--
+
+##
+ #* db_region.
+ # Listet die Regionen aus Ihrer Datenbank auf.
+ # 
+ #? @param "$username" "$password" "$databasename".
+ #? @return "$result_mysqlrest".
+ # todo: nichts.
+##
+bash osmtool.sh db_region
+--
+
+##
+ #* db_gridlist.
+ # Gridliste der Benutzer, die schon einmal im eigenen Grid waren.
+ # Aufruf: bash osmtool.sh db_gridlist databaseusername databasepassword databasename
+ # 
+ #? @param "$username" "$password" "$databasename".
+ #? @return "$mygridliste".
+ # todo: nichts.
+##
+bash osmtool.sh db_gridlist
+--
+
+##
+ #* db_inv_search.
+ # Inventareinträge mit einem bestimmten Namen auflisten.
+ # 
+ #? @param username password databasename invname.
+ #? @return $result_mysqlrest.
+ # todo: nichts.
+##
+bash osmtool.sh db_inv_search
+--
+
+##
+ #* db_ungenutzteobjekte.
+ # # Asset Objekte, alles anzeigen was zuletzt zwischen zwei Daten aufgerufen wurde.
+ # 
+ #? @param username password databasename invname.
+ #? @return $result_mysqlrest.
+ # todo: nichts.
+##
+bash osmtool.sh db_ungenutzteobjekte
+--
+
+##
+ #* db_user_anzahl.
+ # Zaehlt die Gesamtzahl der Benutzer.
+ # 
+ #? @param username password databasename.
+ #? @return $result_mysqlrest.
+ # todo: nichts.
+##
+bash osmtool.sh db_user_anzahl
+--
+
+##
+ #* db_user_online.
+ # Users Online?
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh db_user_online
+--
+
+##
+ #* db_region_parzelle.
+ # Zaehlt die Regionen mit Parzellen.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh db_region_parzelle
+--
+
+##
+ #* db_region_parzelle_pakete.
+ # Zaehlt die Gesamtzahl der Pakete.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh db_region_parzelle_pakete
+--
+
+##
+ #* db_region_anzahl_regionsnamen.
+ # Zaehlt eindeutige Regionsnamen.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh db_region_anzahl_regionsnamen
+--
+
+##
+ #* db_region_anzahl_regionsid.
+ # Zaehlt RegionIDs.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh db_region_anzahl_regionsid
+--
+
+##
+ #* db_inventar_no_assets.
+ # Listet alle Inventareintraege auf, die auf nicht vorhandene Assets verweisen.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+## 
+bash osmtool.sh db_inventar_no_assets
+--
+
+##
+ #* db_anzeigen.
+ # Alle Datenbanken anzeigen, listet alle erstellten Datenbanken auf.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh db_anzeigen
+--
+}
+##
+ #* db_anzeigen_dialog.
+ # Alle Datenbanken anzeigen, listet alle erstellten Datenbanken auf.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh db_anzeigen_dialog
+--
+
+##
+ #* db_tables.
+ # Tabellenabfrage, listet alle Tabellen in einer Datenbank auf.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh db_tables
+--
+
+##
+ #* db_tables_dialog.
+ # Tabellenabfrage, listet alle Tabellen in einer Datenbank auf.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh db_tables_dialog
+--
+
+##
+ #* db_benutzer_anzeigen.
+ # Alle angelegten Benutzer von mySQL anzeigen.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh db_benutzer_anzeigen
+--
+
+##
+ #* db_regions.
+ # Alle Regionen listen (Dies geht nur im Grid (Grid Datenbank) oder Standalone Modus).
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+## 
+bash osmtool.sh db_regions
+--
+
+##
+ #* db_regionsuri.
+ #  Region URI pruefen sortiert nach URI (Dies geht nur im Grid (Grid Datenbank) oder Standalone Modus).
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh db_regionsuri
+--
+
+##
+ #* db_regionsport.
+ # Ports pruefen sortiert nach Ports (Dies geht nur im Grid (Grid Datenbank) oder Standalone Modus).
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh db_regionsport
+--
+
+##
+ #* create_db.
+ # erstellt eine neue Datenbank.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh create_db
+--
+
+##
+ #* create_db_user.
+ # Operation CREATE USER failed - Fehler.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh create_db_user
+--
+
+##
+ #* delete_db.
+ # loescht eine Datenbank.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh delete_db
+--
+
+##
+ #* db_empty.
+ # loescht eine Datenbank und erstellt diese anschliessend neu. Das ist Datenbank leeren auf die schnelle Art.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh db_empty
+--
+
+##
+ #*allrepair_db.
+ # CHECK – REPAIR – ANALYZE – OPTIMIZE, alle Datenbanken.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh allrepair_db
+--
+
+##
+ #* mysql_neustart.
+ # startet mySQL neu.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh mysql_neustart
+--
+
+##
+ #* db_backup.
+ # sichert eine einzelne Datenbank.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh db_backup
+--
+}
+##
+ #* db_compress_backup.
+ # sichert eine einzelne Datenbank mit gz komprimierung.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh db_compress_backup
+--
+
+##
+ #* db_backuptabellen.
+ # Eine Datenbanken Tabellenweise speichern.
+ # bash osmtool.sh db_backuptabellen username password databasename
+ # 
+ #? @param db_backuptabellen DB_Benutzername DB_Passwort Datenbankname.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh db_backuptabellen
+--
+
+##
+ #* db_backuptabelle_noassets.
+ # Eine Datenbanken Tabellenweise ohne die Tabelle assets speichern.
+ # bash osmtool.sh db_backuptabellen username password databasename
+ # 
+ #? @param db_backuptabellen DB_Benutzername DB_Passwort Datenbankname.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh db_backuptabelle_noassets
+--
+
+##
+ #* db_backuptabellentypen.
+ # Aus dem mit mysqldump generierten Backup die Asset Datenbank Tabelle geteilt in Typen speichern.
+ # 
+ #? @param "$username" "$password" "$databasename".
+ #? @return name was wird zurueckgegeben.
+ # todo: Das gleiche mit der Asset Tabelle machen. 
+ # todo: Direkt die Asset bereiche vom Server holen.
+##
+bash osmtool.sh db_backuptabellentypen
+--
+ #* db_restorebackuptabellen.
+ # Backup Test, eine Datenbanken Tabellenweise wiederherstellen.
+ # db_restorebackuptabellen DB_Benutzername DB_Passwort AlterDatenbankname NeuerDatenbankname
+ # Die Tabellenweise gesicherte Datenbank in einer neuen Datenbank zusammensetzen.
+ # bash osmtool.sh db_restorebackuptabellen username password databasename newdatabasename
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ ##
+bash osmtool.sh db_restorebackuptabellen
+--
+ #* db_restorebackuptabellen2test.
+ # Backup Test, eine Datenbanken Tabellenweise wiederherstellen.
+ # db_restorebackuptabellen DB_Benutzername DB_Passwort AlterDatenbankname NeuerDatenbankname
+ # Die Tabellenweise gesicherte Datenbank in einer neuen Datenbank zusammensetzen.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh db_restorebackuptabellen2test
+--
+
+##
+ #* db_create.
+ # erstellt eine neue Datenbank. db_create "username" "password" "databasename"
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh db_create
+--
+
+##
+ #* db_dbuser.
+ # listet alle erstellten Datenbankbenutzer auf.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh db_dbuser
+--
+
+##
+ #* db_dbuserrechte.
+ # listet alle erstellten Benutzerrechte auf. db_dbuserrechte root 123456 testuser.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh db_dbuserrechte
+--
+
+##
+ #* db_deldbuser.
+ # loescht einen Datenbankbenutzer. db_deldbuser root 123456 testuser.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh db_deldbuser
+--
+
+##
+ #* db_create_new_dbuser.
+ # db_create_new_dbuser root password NEUERNAME NEUESPASSWORT.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh db_create_new_dbuser
+--
+
+##
+ #* createdatabase.
+ # Andere Art Datenbanken und Benutzer anzulegen.
+ # createdatabase DBNAME DBUSER DBPASSWD
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh createdatabase
+--
+ #* createdatabase.
+ # Andere Art Datenbanken und Benutzer anzulegen.
+ # createdbuser ROOTUSER ROOTPASSWD NEWDBUSER NEWDBPASSWD
+ # ROOTPASSWD ist optional.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh createdbuser
+--
+
+##
+ #* db_delete.
+ # loescht eine Datenbank komplett.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh db_delete
+--
+
+##
+ #* tabellenabfrage.
+ # tabellenabfrage, listet alle Tabellen in einer Datenbank auf.
+ # Es geht hier um die machbarkeit und nicht den Sinn.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+## 
+bash osmtool.sh tabellenabfrage
+--
+
+##
+ #* regionsabfrage.
+ # Alle Regionen listen (Dies geht nur im Grid (Grid Datenbank) oder Standalone Modus).
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh regionsabfrage
+--
+
+##
+ #* regionsuri.
+ # Region URI pruefen sortiert nach URI (Dies geht nur im Grid (Grid Datenbank) oder Standalone Modus).
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh regionsuri
+--
+
+##
+ #* regionsport.
+ # Ports pruefen sortiert nach Ports (Dies geht nur im Grid (Grid Datenbank) oder Standalone Modus).
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh regionsport
+--
+
+##
+ #* setpartner.
+ # Partner setzen bei einer Person. Also bei beiden Partnern muss dies gemacht werden.
+ # osmtool.sh setpartner Datenbankbenutzer Datenbankpasswort Robustdatenbank "AvatarUUID" "PartnerUUID"
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh setpartner
+--
+
+##
+ #* db_setpartner.
+ #  Partner setzen bei einer Person. Also bei beiden Partnern muss dies gemacht werden.
+ # osmtool.sh setpartner Datenbankbenutzer Datenbankpasswort Robustdatenbank "AvatarUUID" "PartnerUUID"
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh db_setpartner
+--
+
+##
+ #* db_deletepartner.
+ # Partner loeschen bei einer Person. Also bei beiden Partnern muss dies gemacht werden.
+ # osmtool.sh setpartner Datenbankbenutzer Datenbankpasswort Robustdatenbank "AvatarUUID" "PartnerUUID"
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh db_deletepartner
+--
+
+##
+ #* db_all_user.
+ # #Daten von allen Benutzern anzeigen: db_all_user "username" "password" "databasename".
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh db_all_user
+--
+
+##
+ #*db_all_user_dialog.
+ # Eine tabellenabfrage, Daten von allen Benutzern anzeigen.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh db_all_user_dialog
+--
+
+##
+ #* db_all_uuid.
+ # UUID von allen Benutzern anzeigen: db_all_uuid "username" "password" "databasename".
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh db_all_uuid
+--
+
+##
+ #* db_all_uuid_dialog.
+ # UUID von allen Benutzern anzeigen.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh db_all_uuid_dialog
+--
+
+##
+ #* db_all_name.
+ # Alle Benutzernamen des Grids anzeigen.
+ # db_all_name "username" "password" "databasename".
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+## 
+bash osmtool.sh db_all_name
+--
+
+##
+ #* db_all_name_dialog.
+ #  db_all_name_dialog "username" "password" "databasename".
+ #  Alle Benutzernamen des Grids anzeigen.
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh db_all_name_dialog
+--
+
+##
+ #* db_user_data.
+ # Daten von einem Benutzer anzeigen: db_user_data "username" "password" "databasename" "firstname" "lastname".
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh db_user_data
+--
+}
+##
+ #* db_user_data_dialog.
+ # Daten von einem Benutzer anzeigen: db_user_data_dialog "username" "password" "databasename" "firstname" "lastname".
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh db_user_data_dialog
+--
+
+##
+ #* db_user_infos.
+ # UUID Vor- und Nachname sowie E-Mail Adresse von einem Benutzer anzeigen: 
+ # db_user_infos "username" "password" "databasename" "firstname" "lastname".
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh db_user_infos
+--
+
+##
+ #* db_user_infos_dialog.
+ # UUID Vor- und Nachname sowie E-Mail Adresse von einem Benutzer anzeigen: 
+ # db_user_infos "username" "password" "databasename" "firstname" "lastname".
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh db_user_infos_dialog
+--
+
+##
+ #* db_user_uuid.
+ # UUID von einem Benutzer anzeigen: db_user_uuid.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh db_user_uuid
+--
+}
+##
+ #* db_user_uuid_dialog.
+ # UUID von einem Benutzer anzeigen: db_user_uuid_dialog.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh db_user_uuid_dialog
+--
+
+##
+ #* db_foldertyp_user.
+ # Alles vom inventoryfolders type des User anzeigen: db_foldertyp_user "username" "password" "databasename" "firstname" "lastname" "foldertyp".
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh db_foldertyp_user
+--
+
+##
+ #* db_all_userfailed.
+ # Alles vom inventoryfolders was type -1 des User: db_all_userfailed "username" "password" "databasename" "firstname" "lastname".
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+## 
+bash osmtool.sh db_all_userfailed
+--
+
+##
+ #*db_userdate.
+ # Zeige Erstellungsdatum eines Users an: db_userdate "username" "password" "databasename" "firstname" "lastname".
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh db_userdate
+--
+
+##
+ #* db_false_email.
+ # Finde offensichtlich falsche E-Mail Adressen der User: db_false_email "username" "password" "databasename".
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+## Finde offensichtlich falsche E-Mail Adressen der User: db_false_email "username" "password" "databasename"
+bash osmtool.sh db_false_email
+--
+
+##
+ #* set_empty_user.
+ # Einen User in der Datenbank erstellen und das ohne Inventar (Gut fuer Picker): 
+ # set_empty_user "username" "password" "databasename" "firstname" "lastname" "email".
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh set_empty_user
+--
+ #* db_email_setincorrectuseroff.
+ # Finde alle offensichtlich falschen E-Mail Adressen der Grid User und
+ # deaktiviere dauerhaft dessen Account:
+ # bash osmtool.sh db_email_setincorrectuseroff "GRIDdatabaseusername" "GRIDdatabasepassword" "GRIDdatabasename"
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh db_email_setincorrectuseroff
+--
+ #* db_email_setincorrectuseroff_dialog.
+ # Finde alle offensichtlich falschen E-Mail Adressen der Grid User und
+ # deaktiviere dauerhaft dessen Account:
+ # bash osmtool.sh db_email_setincorrectuseroff "GRIDdatabaseusername" "GRIDdatabasepassword" "GRIDdatabasename"
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh db_email_setincorrectuseroff_dialog
+--
+
+##
+ #* db_setuserofline.
+ # Grid User dauerhaft abschalten:
+ # bash osmtool.sh db_setuserofline "GRIDdatabaseusername" "GRIDdatabasepassword" "GRIDdatabasename" "firstname" "lastname"
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh db_setuserofline
+--
+
+##
+ #* db_setuserofline_dialog.
+ # Grid User dauerhaft abschalten:
+ # bash osmtool.sh db_setuserofline_dialog "GRIDdatabaseusername" "GRIDdatabasepassword" "GRIDdatabasename" "firstname" "lastname"
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh db_setuserofline_dialog
+--
+
+##
+ #* db_setuseronline.
+ # Grid User dauerhaft aktivieren:
+ # bash osmtool.sh db_setuseronline "GRIDdatabaseusername" "GRIDdatabasepassword" "GRIDdatabasename" "firstname" "lastname"
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh db_setuseronline
+--
+
+##
+ #* db_setuseronline_dialog.
+ # Grid User dauerhaft aktivieren:
+ # bash osmtool.sh db_setuseronline "GRIDdatabaseusername" "GRIDdatabasepassword" "GRIDdatabasename" "firstname" "lastname"
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh db_setuseronline_dialog
+--
+
+##
+ #* db_tabellencopy.
+ # Datenbank Tabelle aus einer anderen Datenbank kopieren.
+ # bash osmtool.sh db_tabellencopy von_Datenbankname nach_Datenbankname Tabellenname Benutzername Passwort
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh db_tabellencopy
+--
+
+##
+ #* db_tabellencopy_extern.
+ # Datenbank Tabelle aus einer anderen Datenbank kopieren.
+ # bash osmtool.sh db_tabellencopy von_Datenbankname nach_Datenbankname Tabellenname Benutzername Passwort
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh db_tabellencopy_extern
+--
+
+##
+ #* default_master_connection.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+## default_master_connection "$2" "$3"
+bash osmtool.sh default_master_connection
+--
+
+##
+ #* connection_name.
+ # connection_name "$2" "$3".
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+## connection_name "$2" "$3"
+bash osmtool.sh connection_name
+--
+
+##
+ #* MASTER_USER.
+ # MASTER_USER "$2" "$3".
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+## 
+bash osmtool.sh MASTER_USER
+--
+
+##
+ #*MASTER_PASSWORD.
+ # MASTER_PASSWORD "$2" "$3"
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+## 
+bash osmtool.sh MASTER_PASSWORD
+--
+ #* MASTER_HOST.
+ # MASTER_HOST "$2" "$3" "$4"
+ # CHANGE MASTER TO ist nützlich zum Einrichten eines Replikats, 
+ # wenn Sie über den Snapshot der Quelle verfügen und die Binärprotokollkoordinaten 
+ # der Quelle entsprechend dem Zeitpunkt des Snapshots aufgezeichnet haben.
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+## 
+bash osmtool.sh MASTER_HOST
+--
+
+##
+ #*MASTER_PORT.
+ # MASTER_PORT "$2" "$3" "$4" "$5"
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh MASTER_PORT
+--
+
+##
+ #* MASTER_CONNECT_RETRY.
+ # MASTER_CONNECT_RETRY "$2" "$3" "$4"
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+## 
+bash osmtool.sh MASTER_CONNECT_RETRY
+--
+
+##
+ #* MASTER_SSL.
+ # MASTER_SSL "$2" "$3"
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+## 
+bash osmtool.sh MASTER_SSL
+--
+
+##
+ #* MASTER_SSL_CA.
+ # MASTER_SSL_CA "$2" "$3".
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+## 
+bash osmtool.sh MASTER_SSL_CA
+--
+
+##
+ #*  MASTER_SSL_CAPATH.
+ # MASTER_SSL_CAPATH "$2" "$3".
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+## 
+bash osmtool.sh MASTER_SSL_CAPATH
+--
+
+##
+ #* MASTER_SSL_CERT.
+ # MASTER_SSL_CERT "$2" "$3".
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+## 
+bash osmtool.sh MASTER_SSL_CERT
+--
+
+##
+ #* MASTER_SSL_CRL.
+ # MASTER_SSL_CRL "$2" "$3".
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+## 
+bash osmtool.sh MASTER_SSL_CRL
+--
+
+##
+ #* MASTER_SSL_CRLPATH.
+ # MASTER_SSL_CRLPATH "$2" "$3".
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+## 
+bash osmtool.sh MASTER_SSL_CRLPATH
+--
+
+##
+ #* MASTER_SSL_KEY.
+ # MASTER_SSL_KEY "$2" "$3".
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+## 
+bash osmtool.sh MASTER_SSL_KEY
+--
+
+##
+ #* MASTER_SSL_CIPHER.
+ # MASTER_SSL_CIPHER "$2" "$3".
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+## 
+bash osmtool.sh MASTER_SSL_CIPHER
+--
+
+##
+ #* MASTER_SSL_VERIFY_SERVER_CERT.
+ # MASTER_SSL_VERIFY_SERVER_CERT "$2" "$3".
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+## 
+bash osmtool.sh MASTER_SSL_VERIFY_SERVER_CERT
+--
+
+##
+ #* MASTER_LOG_FILE.
+ # MASTER_LOG_FILE "$2" "$3" "$4" "$5".
+ # CHANGE MASTER TO bewirkt, dass die vorherigen Werte für MASTER_HOST, MASTER_PORT, MASTER_LOG_FILE und MASTER_LOG_POS zusammen 
+ # mit anderen Informationen über den Status des Replikats vor der Ausführung in das Fehlerprotokoll geschrieben werden.
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+## 
+bash osmtool.sh MASTER_LOG_FILE
+--
+
+##
+ #* MASTER_LOG_POS.
+ # MASTER_LOG_POS "$2" "$3" "$4" "$5".
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+## 
+bash osmtool.sh MASTER_LOG_POS
+--
+
+##
+ #* RELAY_LOG_FILE.
+ # RELAY_LOG_FILE "$2" "$3" "$4" "$5".
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+## 
+bash osmtool.sh RELAY_LOG_FILE
+--
+
+##
+ #* RELAY_LOG_POS.
+ # RELAY_LOG_POS "$2" "$3" "$4" "$5".
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+## 
+bash osmtool.sh RELAY_LOG_POS
+--
+
+##
+ #* MASTER_USE_GTID.
+ # MASTER_USE_GTID "$2" "$3".
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+## 
+bash osmtool.sh MASTER_USE_GTID
+--
+}
+##
+ #* MASTER_USE_GTID2.
+ # MASTER_USE_GTID2 "$2" "$3" "$4".
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+## 
+bash osmtool.sh MASTER_USE_GTID2
+--
+
+##
+ #* IGNORE_SERVER_IDS.
+ # IGNORE_SERVER_IDS "$2" "$3" "$4".
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+## 
+bash osmtool.sh IGNORE_SERVER_IDS
+--
+
+##
+ #* DO_DOMAIN_IDS.
+ # DO_DOMAIN_IDS "$2" "$3" "$4".
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+## 
+bash osmtool.sh DO_DOMAIN_IDS
+--
+}
+##
+ #* DO_DOMAIN_IDS2.
+ # DO_DOMAIN_IDS2 "$2" "$3".
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+## 
+bash osmtool.sh DO_DOMAIN_IDS2
+--
+
+##
+ #* IGNORE_DOMAIN_IDS.
+ # IGNORE_DOMAIN_IDS "$2" "$3" "$4".
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+## 
+bash osmtool.sh IGNORE_DOMAIN_IDS
+--
+}
+##
+ #* IGNORE_DOMAIN_IDS2.
+ # IGNORE_DOMAIN_IDS2 "$2" "$3".
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+## 
+bash osmtool.sh IGNORE_DOMAIN_IDS2
+--
+
+##
+ #* MASTER_DELAY.
+ # MASTER_DELAY "$2" "$3" "$4".
+ # Use the MASTER_DELAY option for CHANGE MASTER TO to set the delay to N seconds.
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+## 
+bash osmtool.sh MASTER_DELAY
+--
+
+##
+ #* Replica_Backup.
+ # Creating a Replica from a Backup "$2" "$3" "$4" "$5".
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+## 
+bash osmtool.sh Replica_Backup
+--
+}
+##
+ #* Replica_Backup2.
+ # Creating a Replica from a Backup2 "$2" "$3" "$4".
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+## 
+bash osmtool.sh Replica_Backup2
+--
+}
+##
+ #* ReplikatKoordinaten.
+ # Dies aendert die Koordinaten des primaeren und des primaeren Binaerlogs "$2" "$3" "$4" "$5" "$6" "$7" "$8".
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh ReplikatKoordinaten
+--
+
+##
+ #* db_tablesplitt.
+ # Alle Tabellen aus einer SQL Datensicherung in ein gleichnahmigen Verzeichniss extrahieren.
+ # db_tablesplitt /Pfad/SQL_Datei.sql
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh db_tablesplitt
+--
+
+##
+ #* db_tablextract.
+ # Eine einzelne Tabelle aus einem SQL Datenbank Backup extrahieren.
+ # db_tablextract /Pfad/SQL_Datei.sql Tabellenname
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh db_tablextract
+--
+ #* db_tablextract_regex.
+ # Extrahiere Tabelle aus SQL Datenbank Backup unter zuhilfenahme von regex.
+ # db_tablextract_regex DUMP-FILE-NAME -S TABLE-NAME-REGEXP Extrahiert
+ # Tabellen aus der sql Datei mit dem angegebenen regulaeren Ausdruck.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh db_tablextract_regex
+--
+
+##
+ #* conf_write.
+ #  Konfiguration schreiben ersatz fuer alle UNGETESTETEN ini Funktionen.
+ # ./osmtool.sh conf_write Einstellung NeuerParameter Verzeichnis Dateiname
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh conf_write
+--
+
+##
+ #* conf_read.
+ # Ganze Zeile aus der Konfigurationsdatei anzeigen.
+ # ./osmtool.sh conf_read Einstellungsbereich Verzeichnis Dateiname
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##  
+bash osmtool.sh conf_read
+--
+
+##
+ #* conf_delete.
+ # Ganze Zeile aus der Konfigurationsdatei loeschen.
+ # ./osmtool.sh conf_delete Einstellungsbereich Verzeichnis Dateiname
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##  
+bash osmtool.sh conf_delete
+--
+
+##
+ #* ramspeicher.
+ # Den echten RAM Speicher auslesen.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##  
+bash osmtool.sh ramspeicher
+--
+ #* mysqleinstellen.
+ # Ermitteln wieviel RAM Speicher vorhanden ist und anschliessend mySQL Einstellen.
+ # Einstellungen sind in der my.cnf nicht moeglich es muss in die /etc/mysql/mysql.conf.d/mysqld.cnf
+ # Hier wird nicht geprueft ob die Einstellungen schon vorhanden sind sondern nur angehaengt.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##  
+bash osmtool.sh mysqleinstellen
+--
+
+##
+ #* newregionini.
+ # newregionini - eine neue Regionsdatei schreiben.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##  
+bash osmtool.sh newregionini
+--
+
+##
+ #*constconfig.
+ # constconfig, const schreiben.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+## 
+bash osmtool.sh constconfig
+--
+
+##
+ #* regionconfig.
+ # Region Konfigurationen schreiben
+ # regionconfig REGIONSNAME STARTLOCATION SIZE INTERNALPORT REGIONSINI
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+## 
+bash osmtool.sh regionconfig
+--
+
+##
+ #* flotsamconfig.
+ # FlotsamCache Konfigurationen schreiben
+ # FlotsamCache.ini - flotsamconfig FLOTSAMCACHEINI
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+## 
+bash osmtool.sh flotsamconfig
+--
+
+##
+ #* osslEnableconfig.
+ # Konfigurationen schreiben
+ # osslEnable.ini.example
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+## 
+bash osmtool.sh osslEnableconfig
+--
+
+##
+ #* moneyconfig.
+ # moneyconfig DATABASE USERNAME PASSWORD MONEYINI.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+## 
+bash osmtool.sh moneyconfig
+--
+
+##
+ #* osconfigstruktur.
+ # Legt die Verzeichnisstruktur fuer OpenSim an. # Aufruf: osmtool.sh osstruktur ersteSIM letzteSIM
+ # Beispiel: ./osmtool.sh osstruktur 1 10 - erstellt ein Grid Verzeichnis fuer 10 Simulatoren inklusive der $SIMDATEI.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##  
+bash osmtool.sh osconfigstruktur
+--
+
+##
+ #* configabfrage.
+ # Die Konfigurationsabfrage füt die OpenSim Konfigurationen.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh configabfrage
+--
+
+##
+ #* firstinstallation.
+ # Nachfolgende 3 Funktionen müssen noch getestet werden.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh firstinstallation
+--
+
+##
+ #* createmasteravatar.
+ # Einen Master Avatar erstellen.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh createmasteravatar
+--
+
+##
+ #* createregionavatar.
+ # Besitzerrechte und estate eintragen.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh createregionavatar
+--
+
+##
+ #* menugridstop.
+ # Stoppt erst Money dann Robust.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##  gridstop, stoppt erst Money dann Robust.
+bash osmtool.sh menugridstop
+--
+
+##
+ #* compilieren.
+ # Kompilieren des OpenSimulator.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##  
+bash osmtool.sh compilieren
+--
+
+##
+ #* osgridcopy.
+ # Automatisches kopieren des opensimulator aus dem verzeichnis opensim.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##  
+bash osmtool.sh osgridcopy
+--
+
+##
+ #* osupgrade93.
+ # Automatisches upgrade des opensimulator aus dem verzeichnis opensim.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##  
+bash osmtool.sh osupgrade93
+--
+
+##
+ #* osupgrade.
+ # Automatisches upgrade des opensimulator aus dem verzeichnis opensim.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##  
+bash osmtool.sh osupgrade
+--
+
+##
+ #* osdowngrade.
+ #  Automatisches downgrade des opensimulator aus dem verzeichnis opensim.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+## 
+bash osmtool.sh osdowngrade
+--
+
+##
+ #* oszipupgrade.
+ # Automatisches upgrade des opensimulator aus einer opensim zip Datei.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##  
+bash osmtool.sh oszipupgrade
+--
+
+##
+ #* ConfigSet.
+ # Reduziert die Konfigurationsdateien auf ein uebersichtliches Mass.
+ # Aufruf: ./osmtool.sh AutoInstall
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh ConfigSet
+--
+
+##
+ #* AutoInstall.
+ # Grundinstallation ihreres Servers.
+ # Aufruf: ./osmtool.sh AutoInstall
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh AutoInstall
+--
+
+##
+ #* osslEnableConfig.
+ # Alle Skript Rechte an Grid Betreiber.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh osslEnableConfig
+--
+
+##
+ #* osslEnableConfigSet.
+ # Konfiguration der osslEnable.ini.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh osslEnableConfigSet
+--
+
+##
+ #* show_info.
+ # Funktion zum Anzeigen von Informationen der Auswahl.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+## 
+bash osmtool.sh show_info
+--
+
+##
+ #* systeminformation.
+ # Systeminformationen anzeigen.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+## 
+bash osmtool.sh systeminformation
+--
+
+##
+ #* info.
+ # Informationen auf den Bildschirm ausgeben.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh info
+--
+
+##
+ #* infodialog.
+ # Informationen auf den Bildschirm ausgeben.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh infodialog
+--
+
+##
+ #* kalender.
+ # Einfach nur ein Kalender.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh kalender
+--
+
+##
+ #* robustbackup.
+ # Grid Datenbank sichern.(Kalender) in bearbeitung.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh robustbackup
+--
+
+##
+ #* backupdatum.
+ # Grid Datenbank sichern.(Datum auswerten) in bearbeitung.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##  
+bash osmtool.sh backupdatum
+--
+
+##
+ #* senddata.
+ # Daten zu einem neuen Server senden ### Ungetestet ###
+ # senddata USERNAMEN SENDEVERZEICHNIS SERVERADRESS 
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##  
+bash osmtool.sh senddata
+--
+
+##
+ #* fortschritsanzeige.
+ # test fuer eine Fortschrittsanzeige.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##  
+bash osmtool.sh fortschritsanzeige
+--
+
+##
+ #* menuinfo.
+ #  Informationen im dialog ausgeben.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+## 
+bash osmtool.sh menuinfo
+--
+}
+##
+ #* menukonsolenhilfe.
+ # Konsolenhilfe auf dem Bildschirm anzeigen.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##  
+bash osmtool.sh menukonsolenhilfe
+--
+
+##
+ #* dotnetinfo.
+ # dotnetinfo .NET und CSharp Informationen.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+## 
+bash osmtool.sh dotnetinfo
+--
+
+##
+ #* dbhilfe.
+ # Datenbankhilfe auf dem Bildschirm anzeigen.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##  
+bash osmtool.sh dbhilfe
+--
+
+##
+ #* hilfe.
+ # Hilfe auf dem Bildschirm anzeigen.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##  
+bash osmtool.sh hilfe
+--
+
+##
+ #* hilfemenudirektaufrufe.
+ # Hilfe auf dem Bildschirm anzeigen.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+## 
+bash osmtool.sh hilfemenudirektaufrufe
+--
+
+##
+ #* konsolenhilfe.
+ # Konsolenhilfe auf dem Bildschirm anzeigen.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh konsolenhilfe
+--
+
+##
+ #* commandhelp.
+ # Help OpenSim Commands.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##  
+bash osmtool.sh commandhelp
+--
+FARBE2=2
+##
+ #* MoneyServerCommands.
+ # MoneyServer Commands.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##  
+bash osmtool.sh MoneyServerCommands
+--
+
+##
+ #* OpenSimCommands.
+ # OpenSim Commands.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##  
+bash osmtool.sh OpenSimCommands
+--
+
+##
+ #* RobustCommands.
+ # Robust Commands.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##  
+bash osmtool.sh RobustCommands
+--
+
+##
+ #* all.
+ # Ruft die Hilfen fuer Robust Commands, OpenSim Commands, Money Server Commands auf.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+## 
+bash osmtool.sh all
+--
+
+##
+ #* hauptmenu.
+ # Startmenue.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##  hauptmenu
+bash osmtool.sh hauptmenu
+--
+
+##
+ #* hilfemenu.
+ # Menue der Hilfe.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh hilfemenu
+--
+
+##
+ #* funktionenmenu.
+ # Menue fuer Funktionen.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh funktionenmenu
+--
+
+##
+ #* dateimenu.
+ # Menue fuer Dateifunktionen.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##  dateimenu
+bash osmtool.sh dateimenu
+--
+
+##
+ #* mySQLmenu.
+ # Menue fuer SQL Funktionen.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##  mySQLmenu
+bash osmtool.sh mySQLmenu
+--
+
+##
+ #* avatarmenu.
+ # Menue fuer Benutzerfunktionen.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##  avatarmenu
+bash osmtool.sh avatarmenu
+--
+
+##
+ #* expertenmenu.
+ # Menuepunkte fuer Experten.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##  expertenmenu
+bash osmtool.sh expertenmenu
+--
+
+##
+ #* buildmenu.
+ # Menue zum erstellen von OpenSim Versionen.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##
+bash osmtool.sh buildmenu
+--
+
+##
+ #* newhelp.
+ # newhelp Hilfe.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##  expertenmenu
+bash osmtool.sh newhelp

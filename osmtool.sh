@@ -16,7 +16,7 @@
 # ! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 # ! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-# * Status 06.04.2023 355 Funktionen.
+# * Status 15.06.2023 415 Funktionen.
 
 # # Installieren sie bitte: #* Visual Studio Code - Mac, Linux, Windows
 #* dazu die Plugins:
@@ -29,7 +29,7 @@
 #### ? Einstellungen ####
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.872" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.876" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 ##
@@ -544,7 +544,6 @@ function vardel() {
  #? @return nichts wird zurueckgegeben.
  # todo: nichts.
 ##
-### ScreenLog Bildschirmausgabe reduzieren.
 function ScreenLog() {
 	if (( ScreenLogLevel == 1 )); then
 		clear # Bildschirmausgabe loeschen Scrollbereich bleibt zum ueberpruefen.
@@ -710,6 +709,22 @@ function functionslist() {
 }
 
 ##
+ #* remarklist
+ # Funktionen eines Bash Skript inklusive 8 remark-Zeilen auslesen und in eine Text Datei schreiben.
+ # Hilfreich fuer Handbuch und Hilfen.
+ #? @param keine.
+ #? @return datediff.
+ # todo: nichts.
+##
+function remarklist() {
+	# -A Zeile nach suchwort -- -B zeile vor suchwort -- -C zeile vor und nach suchwort
+	file="/$STARTVERZEICHNIS/osmtool.sh"
+	suche="function"
+	ergebnisflist=$(grep -B9 -i -r "$suche " $file) # B8 Acht Zeilen vor dem Funktionsnamen.
+	echo "$ergebnisflist" >/$STARTVERZEICHNIS/osmRemarklist"$DATEIDATUM".txt
+}
+
+##
  #* lastrebootdatum.
  # Letzter reboot des Servers.
  # 
@@ -845,8 +860,8 @@ schreibeinfo
  #? @return nichts wird zurueckgegeben.
  # todo: nichts.
 ##
-# letterdel $variable "[aAbBcCdD]" - letterdel $variable "[[:space:]]"
 function letterdel() {
+	# letterdel $variable "[aAbBcCdD]" - letterdel $variable "[[:space:]]"
 	printf '%s\n' "${1//$2/}"
 }
 
@@ -2319,13 +2334,11 @@ function menulogdel() {
  #* assetcachedel.
  # loescht die asset cache Dateien. 
  # Aufruf: assetcachedel Verzeichnis
- # 
+ # Das Verzeichnis samt neuer Daten werden beim naechsten start des opensimulator neu geschrieben.
  #? @param $VERZEICHNIS.
  #? @return $VERZEICHNIS.
  # todo: nichts.
 ##
-# assetdel.sh sim1
-# Das Verzeichnis samt neuer Daten werden beim naechsten start des opensimulator neu geschrieben.
 function assetcachedel() {
 	VERZEICHNIS=$1
 	if [ -d "$VERZEICHNIS" ]; then
@@ -2341,12 +2354,11 @@ function assetcachedel() {
 ##
  #* autoassetcachedel.
  # automatisches loeschen aller asset cache Dateien.
- # 
+ # Die Verzeichnisse samt neuer Daten werden beim naechsten start des opensimulator neu geschrieben.
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
  # todo: nichts.
 ##
-# Die Verzeichnisse samt neuer Daten werden beim naechsten start des opensimulator neu geschrieben.
 function autoassetcachedel() {
 	#log line
 	makeverzeichnisliste
@@ -2515,14 +2527,6 @@ function osstop() {
  #? @return dialog.
  # todo: nichts.
 ##
-##
- #* Wozu ist diese Funktion gedacht.
- # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
- # 
- #? @param name Erklaerung.
- #? @return name was wird zurueckgegeben.
- # todo: nichts.
-##  menuosstart() ist die dialog Version von osstart()
 function menuosstart() {
 	IOSSTARTSCREEN=$(
 		dialog --backtitle "opensimMULTITOOL $VERSION" --title "opensimMULTITOOL Eingabe" \
@@ -3105,15 +3109,6 @@ function mostop() {
  #? @param dialog.
  #? @return dialog.
  # todo: nichts.
-##
-##
- #* Wozu ist diese Funktion gedacht.
- # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
- # 
- #? @param name Erklaerung.
- #? @return name was wird zurueckgegeben.
- # todo: nichts.
-##  menumostop, Money herunterfahren.
 function menumostop() {
 	if screen -list | grep -q "MO"; then
 		screen -S MO -p 0 -X eval "stuff 'shutdown'^M"
@@ -3221,13 +3216,11 @@ function menugridstart() {
  #* simstats.
  # zeigt Simstatistik an. 
  # simstats screen_name
- # 
+ # erzeugt im Hauptverzeichnis eine Datei namens sim1.log in dieser Datei ist die Statistik zu finden.
  #? @param $STATSSCREEN.
  #? @return nichts wird zurueckgegeben.
  # todo: nichts.
 ##
-# Beispiel-Example: simstats sim1
-# erzeugt im Hauptverzeichnis eine Datei namens sim1.log in dieser Datei ist die Statistik zu finden.
 function simstats() {
 	STATSSCREEN=$1 # OpenSimulator, Verzeichnis und Screen Name
 	if screen -list | grep -q "$STATSSCREEN"; then
@@ -3775,7 +3768,6 @@ function setversion() {
 	return 0
 }
 
-
 ##
  #* versionsausgabe93
  # Version OpenSimulator unter dotnet6
@@ -3791,7 +3783,6 @@ function versionsausgabe93() {
     git log -n 1
     git describe --abbrev=7 --always  --long --match v* master
 }
-
 
 ##
  #* setversion93.
@@ -3846,12 +3837,11 @@ function setversion93() {
  #* osstruktur.
  # legt die Verzeichnisstruktur fuer OpenSim an. 
  # Aufruf: osmtool.sh osstruktur ersteSIM letzteSIM.
- # 
+ # Beispiel: ./osmtool.sh osstruktur 1 10 - erstellt ein Grid Verzeichnis fuer 10 Simulatoren inklusive der $SIMDATEI.
  #? @param ersteSIM letzteSIM.
  #? @return nichts wird zurueckgegeben.
  # todo: nichts.
 ##
-# Beispiel: ./osmtool.sh osstruktur 1 10 - erstellt ein Grid Verzeichnis fuer 10 Simulatoren inklusive der $SIMDATEI.
 function osstruktur() {
 	if [ ! -f "/$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/" ]; then
 		log info "OSSTRUKTUR: Lege robust an im Verzeichnis $ROBUSTVERZEICHNIS"
@@ -4587,10 +4577,8 @@ function menuregionbackup() {
  #* regionrestore.
  # hochladen einer Region.
  # regionrestore Screenname "Der Regionsname"
- # Ich kann nicht pruefen ob die Region im OpenSimulator vorhanden ist.
- # Sollte sie nicht vorhanden sein wird root (Alle) oder die letzte ausgewaehlte Region wiederhergestellt. 
+ # Ich kann nicht pruefen ob die Region im OpenSimulator vorhanden ist. Sollte sie nicht vorhanden sein wird root (Alle) oder die letzte ausgewaehlte Region wiederhergestellt. 
  # Dies zerstoert eventuell vorhandene Regionen.
- # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
  # todo: nichts.
@@ -4616,22 +4604,12 @@ function regionrestore() {
 ##
  #* menuregionrestore.
  # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
- # Ich kann nicht pruefen ob die Region im OpenSimulator vorhanden ist.
- # Sollte sie nicht vorhanden sein wird root (Alle) oder die letzte ausgewaehlte Region wiederhergestellt. 
+ # Ich kann nicht pruefen ob die Region im OpenSimulator vorhanden ist. Sollte sie nicht vorhanden sein wird root (Alle) oder die letzte ausgewaehlte Region wiederhergestellt. 
  # Dies zerstoert eventuell vorhandene Regionen.
- # 
  #? @param dialog.
  #? @return dialog.
  # todo: nichts.
 ##
-##
- #* Wozu ist diese Funktion gedacht.
- # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
- # 
- #? @param name Erklaerung.
- #? @return name was wird zurueckgegeben.
- # todo: nichts.
-##  menuregionrestore() ist die dialog Version von regionrestore()
 function menuregionrestore() {
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
@@ -4987,7 +4965,6 @@ function cleanprebuild() {
  # loescht Log, dll, so, exe, aot Dateien fuer einen saubere neue installation, ohne Robust.
  # Hierbei werden keine Datenbanken oder Konfigurationen geloescht aber opensim ist anschliessend nicht mehr startbereit.
  # Um opensim wieder Funktionsbereit zu machen muss ein Upgrade oder ein oscopy vorgang ausgefuehrt werden.
- # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
  # todo: nichts.
@@ -5108,7 +5085,6 @@ function gridcachedelete() {
  # loescht Log, dll, so, exe, aot Dateien fuer einen saubere neue installation, mit Robust.
  # Hierbei werden keine Datenbanken oder Konfigurationen geloescht aber opensim ist anschliessend nicht mehr startbereit.
  # Um opensim wieder Funktionsbereit zu machen muss ein Upgrade oder ein oscopy vorgang ausgefuehrt werden.
- # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
  # todo: nichts.
@@ -5703,6 +5679,7 @@ function sourcelist22() {
 ##
  #* installwordpress.
  # Installiert oder Upgradet alles was für WordPress benötigt wird.
+ # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
  # todo: nichts.
@@ -5930,14 +5907,6 @@ findtime = 600" >/etc/fail2ban/jail.local
  #? @return nichts wird zurueckgegeben.
  # todo: nichts.
 ##
-##
- #* Wozu ist diese Funktion gedacht.
- # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
- # 
- #? @param name Erklaerung.
- #? @return name was wird zurueckgegeben.
- # todo: nichts.
-##  ufwset
 function ufwset() {
 	### Uncomplicated Firewall
 	#sudo ufw app list
@@ -6099,24 +6068,6 @@ function installationen() {
 }
 
 ##
- #* osbuilding093.
- # Baut automatisch einen neuen OpenSimulator mit den eingestellten Plugins.
- # Beispiel Datei: opensim-0.9.3 ???
- # bash osmtool.sh osbuilding 1
- # opensim 0.9.3 dotnet 4.8 Status WORKS
- #? @param
- #? @return
- # todo: opensim 0.9.3 dotnet6: building no executable files only dll libraries.
-##
-function osbuilding093() {
-    git clone git://opensimulator.org/git/opensim opensim
-    cd opensim93 || exit
-    git checkout dotnet6
-    ./runprebuild.sh
-    dotnet build --configuration Release OpenSim.sln
-}
-
-##
  #* checkupgrade93.
  # Wenn es ein Upgrade gibt, dann baut dies automatisch einen neuen OpenSimulator mit den eingestellten Plugins.
  # 
@@ -6141,7 +6092,6 @@ function checkupgrade93() {
  # Baut automatisch einen neuen OpenSimulator mit den eingestellten Plugins.
  # Beispiel Datei: opensim-0.9.2.2Dev-1187-gcf0b1b1.zip
  # bash osmtool.sh osbuilding 1187
- # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
  # todo: nichts.
@@ -6816,7 +6766,8 @@ function db_tables() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
- ##
+ # todo: nichts.
+##
 function db_tables_dialog() {
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
@@ -6861,7 +6812,8 @@ function db_tables_dialog() {
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
- ##
+ # todo: nichts.
+##
 function db_benutzer_anzeigen() {
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
@@ -13457,7 +13409,7 @@ function expertenmenu() {
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
  # todo: nichts.
-##  buildmenu
+##
 function buildmenu() {
 	HEIGHT=0
 	WIDTH=0
@@ -13943,6 +13895,7 @@ case $KOMMANDO in
 	getcachegroesse) getcachegroesse ;;
 	getcachesinglegroesse) getcachesinglegroesse "$2" ;;
 	db_tabellencopy) db_tabellencopy "$2" "$3" "$4" "$5" "$6" ;;
+	remarklist) remarklist ;;
 	hda | hilfedirektaufruf | hilfemenudirektaufrufe) hilfemenudirektaufrufe ;;
 	h) newhelp
 	exit ;;
