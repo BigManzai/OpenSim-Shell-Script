@@ -29,7 +29,7 @@
 #### ? Einstellungen ####
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.877" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.878" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 ##
@@ -6002,6 +6002,7 @@ function serverinstall22() {
 	installubuntu22
 	monoinstall20 # 22 gibt es nicht.
 	monoinstall22 # Upgrade monoistall20
+	installmariadb22
 	installphpmyadmin
 	ufwset
 	#installationhttps22
