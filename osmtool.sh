@@ -16,7 +16,7 @@
 # ! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 # ! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-# * Status 15.06.2023 406 Funktionen.
+# * Status 19.06.2024 394 Funktionen.
 
 # # Installieren sie bitte: #* Visual Studio Code - Mac, Linux, Windows
 #* dazu die Plugins:
@@ -29,7 +29,7 @@
 #### ? Einstellungen ####
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.878" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.881" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 ##
@@ -855,8 +855,8 @@ schreibeinfo
 ##
  #* letterdel.
  # Zeichen entfernen.
- # 
- #? @param keine.
+ # letterdel $variable "[aAbBcCdD]" - letterdel $variable "[[:space:]]"
+ #? @param $variable $variable
  #? @return nichts wird zurueckgegeben.
  # todo: nichts.
 ##
@@ -5880,7 +5880,7 @@ function iptablesset() {
 
 ##
  #* fail2banset.
- # Hier stimmt was nicht ist wohl der erste Test.
+ # Bannen nach fehlerhaften anmeldungsversuchen am Server.
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
@@ -5890,6 +5890,8 @@ function fail2banset() {
 	echo ""
 	# /etc/fail2ban/jail.local
 	# fail2ban - In der Datei jail.local werden alle von der jail.conf abweichenden Eintraege eingestellt.
+	# bantime = Sekunden
+	# Hier nach 3 Fehlversuchen wird die IP 15 Minuten lang gebannt.
 	# maxfailures = 3 
 	# bantime = 900 
 	# findtime = 600
@@ -5905,7 +5907,7 @@ findtime = 600" >/etc/fail2ban/jail.local
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+ # todo: Das ganze muss automatisch nach ports in den Konfigs suchen und diese einstellen. Es darf nicht zuviel geoeffnet werden wie hier.
 ##
 function ufwset() {
 	### Uncomplicated Firewall
@@ -5916,13 +5918,41 @@ function ufwset() {
 	sudo ufw allow 'Apache Full'
 	sudo ufw enable
 
-	# Test
+	# Tests
 	#sudo ufw status
 	# alles erlauben
 	#sudo ufw default allow
 	# alles verbieten
 	#sudo ufw default deny
 
+	
+	# Öffnen Sie den Port (in diesem Beispiel SSH):
+	# sudo ufw allow 22
+
+	# Regeln können in einem nummerierten Format hinzugefügt werden:
+	# sudo ufw insert 1 allow 80
+
+	# Auf ähnliche Weise können Sie einen offenen Port schließen:
+	# sudo ufw deny 22
+
+	# Um eine Regel zu löschen, verwenden Sie delete:
+	# sudo ufw delete deny 22
+
+	#######################################
+
+	#Nach robust Konfigurationen suchen und die eingestellten Ports mit ufw freischalten.
+	# Ist im Vereichnis robust/bin irgendeine ini Datei wo etwas mit Port steht und nicht mit ; ausdokumentiert ist.
+
+	#Nach simX Konfigurationen suchen und die eingestellten Ports mit ufw freischalten.
+	# Ist im Vereichnis simX/bin irgendeine ini Datei wo etwas mit Port steht und nicht mit ; ausdokumentiert ist.
+
+	#Nach Money Konfigurationen suchen und die eingestellten Ports mit ufw freischalten.
+
+	# Alle gefundenen Ports in eine Variable schreiben und die doppelten Einträge entfernen.
+
+	#######################################
+
+	### Nachfolgende Einstellungen sind nur, damit es irgendwie laeuft.
 	# Port oeffnen robust
 	sudo ufw allow 8000/tcp
 	sudo ufw allow 8001/tcp
@@ -5933,12 +5963,62 @@ function ufwset() {
 	sudo ufw allow 8006/tcp
 	sudo ufw allow 8895/tcp
 
+	# ohne udp keine Viewer kommunikation - Assets fehlen sonst.
+	sudo ufw allow 8000/udp
+	sudo ufw allow 8001/udp
+	sudo ufw allow 8002/udp
+	sudo ufw allow 8003/udp
+	sudo ufw allow 8004/udp
+	sudo ufw allow 8005/udp
+	sudo ufw allow 8006/udp
+	sudo ufw allow 8895/udp
+
 	# Port oeffnen OpenSim
-	sudo ufw allow 9000/tcp
-	# von 9000 bis 9100 oeffnen
-	sudo ufw allow 9000:9100/udp
-	# XmlRpcPort = 20800 ?
-	sudo ufw allow 20800:20900/udp
+	# von 9000 bis 9250 oeffnen - zu viel ich weiss
+	sudo ufw allow 9000:9250/tcp	
+	sudo ufw allow 9000:9250/udp
+
+	# XmlRpcPort = 20800 bis 20999 oeffnen - zu viel ich weiss
+	sudo ufw allow 20800:20999/tcp
+	sudo ufw allow 20800:20999/udp
+}
+
+##
+ #* ufwport.
+ # ufw Firewall Port hinzufuegen.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+function ufwport() {
+	PORTLOCK=$1
+	sudo ufw allow $PORTLOCK/tcp
+	sudo ufw allow $PORTLOCK/udp
+}
+
+##
+ #* ufwoff.
+ # ufw Firewall abschalten.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+function ufwoff() {
+	sudo ufw disable
+}
+
+##
+ #* ufwblock.
+ # ufw Firewall alles verbieten blocken.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+function ufwblock() {
+	sudo ufw default deny
 }
 
 ##
@@ -13493,66 +13573,6 @@ function buildmenu() {
 	fi
 }
 
-###########################################################################
-# Web Interface Test
-
-# ### wiparameter0 - Webinterface ohne Parameterangabe gestartet.
-# function wiparameter0() {
-# 	echo "Rueckgabe: Webinterface ohne Parameterangabe gestartet."
-# }
-# ### wiparameter1 - Webinterface mit 1 Parameterangabe gestartet.
-# function wiparameter1() {
-# 	parameter1=$1;
-# 	echo "Rueckgabe: Webinterface mit 1 Parameterangabe gestartet."
-# 	echo "Parameter1= $parameter1"
-# }
-# ### wiparameter2 - Webinterface mit 2 Parameterangaben gestartet.
-# function wiparameter2() {
-# 	parameter1=$1; parameter2=$2;
-# 	echo "Rueckgabe: Webinterface mit 1 Parameterangaben gestartet."
-# 	echo "Parameter1= $parameter1 Parameter2= $parameter2"
-# }
-# ### wiparameter3 - Webinterface mit 3 Parameterangaben gestartet.
-# function wiparameter3() {
-# 	parameter1=$1; parameter2=$2; parameter3=$3;
-# 	echo "Rueckgabe: Webinterface mit 3 Parameterangaben gestartet."
-# 	echo "Parameter1= $parameter1 Parameter2= $parameter2 Parameter3= $parameter3"
-# }
-# ### wiparameter4 - Webinterface mit 4 Parameterangaben gestartet.
-# function wiparameter4() {
-# 	parameter1=$1; parameter2=$2; parameter3=$3; parameter4=$4;
-# 	echo "Rueckgabe: Webinterface mit 4 Parameterangaben gestartet."
-# 	echo "Parameter1= $parameter1 Parameter2= $parameter2 Parameter3= $parameter3 Parameter4= $parameter4"
-# }
-# ### wiparameter5 - Webinterface mit 5 Parameterangaben gestartet.
-# function wiparameter5() {
-# 	parameter1=$1; parameter2=$2; parameter3=$3; parameter4=$4; parameter5=$5;
-# 	echo "Rueckgabe: Webinterface mit 5 Parameterangaben gestartet."
-# 	echo "Parameter1= $parameter1 Parameter2= $parameter2 Parameter3= $parameter3 Parameter4= $parameter4 Parameter5= $parameter5"
-# }
-# ### wiparameter6 - Webinterface mit 6 Parameterangaben gestartet.
-# function wiparameter6() {
-# 	parameter1=$1; parameter2=$2; parameter3=$3; parameter4=$4; parameter5=$5; parameter6=$6;
-# 	echo "Rueckgabe: Webinterface mit 6 Parameterangaben gestartet."
-# 	echo "Parameter1= $parameter1 Parameter2= $parameter2 Parameter3= $parameter3 Parameter4= $parameter4"
-# 	echo "Parameter5= $parameter5 Parameter6= $parameter6"
-# }
-# ### wiparameter7 - Webinterface mit 7 Parameterangaben gestartet.
-# function wiparameter7() {
-# 	parameter1=$1; parameter2=$2; parameter3=$3; parameter4=$4; parameter5=$5; parameter6=$6; parameter7=$7;
-# 	echo "Rueckgabe: Webinterface mit 7 Parameterangaben gestartet."
-# 	echo "Parameter1= $parameter1 Parameter2= $parameter2 Parameter3= $parameter3 Parameter4= $parameter4"
-# 	echo "Parameter5= $parameter5 Parameter6= $parameter6 Parameter7= $parameter7"
-# }
-# ### wiparameter8 - Webinterface mit 8 Parameterangaben gestartet.
-# #  test1 test2 test3 test4 test5 test6 test7 test8
-# function wiparameter8() {
-# 	parameter1=$1; parameter2=$2; parameter3=$3; parameter4=$4; parameter5=$5; parameter6=$6; parameter7=$7; parameter8=$8;
-# 	echo "Rueckgabe: Webinterface mit 8 Parameterangaben gestartet."
-# 	echo "Parameter1= $parameter1 Parameter2= $parameter2 Parameter3= $parameter3 Parameter4= $parameter4"
-# 	echo "Parameter5= $parameter5 Parameter6= $parameter6 Parameter7= $parameter7 Parameter8= $parameter8"
-# }
-
 ##
  #* newhelp.
  # newhelp Hilfe.
@@ -13826,22 +13846,16 @@ case $KOMMANDO in
 	sto | autosimstop | simstop) autosimstop ;;
 	systeminformation) systeminformation ;;
 	tabellenabfrage) tabellenabfrage "$2" "$3" "$4" ;;
-	textbox) textbox "$8" ;;
+	textbox) textbox "$2" ;;
 	ufwlog) ufwlog ;;
 	ufwset) ufwset ;;
+	ufwoff) ufwoff ;;
+	ufwblock) ufwblock ;;
+	ufwport) ufwport "$2" ;;
 	unlockexample) unlockexample ;;
 	w | works) works "$2" ;;
 	warnbox) warnbox "$2" ;;
 	waslauft) waslauft ;;
-	wiparameter0) wiparameter0 ;;
-	wiparameter1) wiparameter1 "$2" ;;
-	wiparameter2) wiparameter2 "$2" "$3" ;;
-	wiparameter3) wiparameter3 "$2" "$3" "$4" ;;
-	wiparameter4) wiparameter4 "$2" "$3" "$4" "$5" ;;
-	wiparameter5) wiparameter5 "$2" "$3" "$4" "$5" "$6" ;;
-	wiparameter6) wiparameter6 "$2" "$3" "$4" "$5" "$6" "$7" ;;
-	wiparameter7) wiparameter7 "$2" "$3" "$4" "$5" "$6" "$7" "$8" ;;
-	wiparameter8) wiparameter8 "$2" "$3" "$4" "$5" "$6" "$7" "$8" "$9" ;;
 	lastrebootdatum) lastrebootdatum ;;
 	db_friends) db_friends "$2" "$3" "$4" "$5" ;;
 	db_online) db_online "$2" "$3" "$4" ;;
@@ -13898,7 +13912,7 @@ case $KOMMANDO in
 	getcachegroesse) getcachegroesse ;;
 	getcachesinglegroesse) getcachesinglegroesse "$2" ;;
 	db_tabellencopy) db_tabellencopy "$2" "$3" "$4" "$5" "$6" ;;
-	remarklist) remarklist ;;
+	remarklist) remarklist ;;	
 	hda | hilfedirektaufruf | hilfemenudirektaufrufe) hilfemenudirektaufrufe ;;
 	h) newhelp
 	exit ;;
