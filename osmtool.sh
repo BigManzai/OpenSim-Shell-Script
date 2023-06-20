@@ -16,20 +16,20 @@
 # ! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 # ! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-# * Status 19.06.2024 394 Funktionen.
+# * Status 20.06.2024 396 Funktionen.
 
 # # Installieren sie bitte: #* Visual Studio Code - Mac, Linux, Windows
 #* dazu die Plugins:
 # ShellCheck #! ist eine geniale Hilfe gegen Fehler.
 # shellman #? Shell Skript Schnipsel.
 # Better Comments #* Bessere Farbliche Darstellung. Standards: #! #* #? #// #todo
-# outline map #? Navigationsleiste zwischen den Funktionen.
+# outline map #? Navigationsleiste für Funktionen.
 # todo: nichts.
 
 #### ? Einstellungen ####
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.881" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.900" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 ##
@@ -55,6 +55,8 @@ echo "$DATE_TO_UNIX_TIMESTAMP" datum zu timestamp ausgabe
 UNIX_TIMESTAMP_TO_DATE=$(date -d "@$DATE_TO_UNIX_TIMESTAMP" '+%Y-%m-%d %H:%M:%S')
 echo "$UNIX_TIMESTAMP_TO_DATE" timestamp zu date ausgabe
 }
+
+DOTNETINFO="no"
 
 ##
  #* xhelp Test
@@ -231,6 +233,9 @@ function osmtoolconfig() {
 		echo '    OSSEARCHSZIP="OpenSimSearch-master.zip"'
 		echo "     "
 		echo '    BUILDOLD="yes"'
+		echo "     "
+		echo "    DOTNETMODUS=\"$DOTNETMODUS\""
+		echo "     "
 		echo "## Schrift- und Hintergrundfarben"
 		echo "##  0 – Black, 1 – Red, 2 – Green, 3 – Yellow, 4 – Blue, 5 – Magenta, 6 – Cyan, 7 – White"
 		echo "    # font color;       background color;"
@@ -372,7 +377,7 @@ function dummyvar() {
 	authlog="/var/log/auth.log"	ufwlog="/var/log/ufw.log"	mysqlmariadberor="/var/log/mysql/mariadb.err"; mysqlerrorlog="/var/log/mysql/error.log"; listVar=""; ScreenLogLevel=0
 	# DIALOG_OK=0; DIALOG_HELP=2; DIALOG_EXTRA=3; DIALOG_ITEM_HELP=4; SIG_NONE=0; SIG_HUP=1; SIG_INT=2; SIG_QUIT=3; SIG_KILL=9; SIG_TERM=15
 	DIALOG_CANCEL=1; DIALOG_ESC=255; DIALOG=dialog; VISITORLIST="yes"; REGIONSANZEIGE="yes"; #DELREGIONS="no";
-	netversion="1946"; CONFIGPFAD="OpenSimConfig";
+	netversion="1946"; CONFIGPFAD="OpenSimConfig"; DOTNETMODUS="yes";
 	OSVERSION="opensim-0.9.2.2Dev";
 	OPENSIMVERSION="opensim-0.9.2.2.zip";
 }
@@ -428,6 +433,12 @@ function osmtoolconfigabfrage() {
 	read -r CONFIGPFAD
 	if [ "$CONFIGPFAD" = "" ]; then CONFIGPFAD="OpenSimConfig"; fi
 	echo "Ihr Konfigurationsdateienverzeichnis ist $CONFIGPFAD"
+	echo "##################################################################"
+
+	echo "Soll dotnet 6 benutzt werden [yes] no"
+	read -r DOTNETMODUS
+	if [ "$DOTNETMODUS" = "" ]; then DOTNETMODUS="yes"; fi
+	echo "Ihre dotnet 6 auswahl ist DOTNETMODUS=$DOTNETMODUS"
 	echo "##################################################################"
 
     # Fertig und abfragen
@@ -2133,14 +2144,6 @@ function waslauft() {
  #? @return dialog.
  # todo: nichts.
 ##
-##
- #* Wozu ist diese Funktion gedacht.
- # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
- # 
- #? @param name Erklaerung.
- #? @return name was wird zurueckgegeben.
- # todo: nichts.
-## menuwaslauft - Zeigt alle Laufenden Screens an im dialog.
 function menuwaslauft() {
 	# Die screen -ls ausgabe zu einer Liste aendern.
 	# sed '1d' = erste Zeile loeschen - sed '$d' letzte Zeile loeschen.
@@ -2426,8 +2429,20 @@ function ossettings() {
 function scstart() {
 	SCSTARTSCREEN=$1 # OpenSimulator, Verzeichnis und Screen Name
 	cd /$STARTVERZEICHNIS/"$SCSTARTSCREEN"/bin || return 1
-	screen -fa -S "$SCSTARTSCREEN" -d -U -m mono OpenSim.exe
+
+	# DOTNETMODUS="yes"
+	if [[ "${DOTNETMODUS}" == "yes" ]]; then
+
+		if [[ "${DOTNETINFO}" == "yes" ]]; then echo "dotnet 6 ist eingeschaltet!"; fi		
+		screen -fa -S "$OSSTARTSCREEN" -d -U -m dotnet OpenSim.dll
+		fi
+	# DOTNETMODUS="no"
+	if [[ "${DOTNETMODUS}" == "no" ]]; then
+		if [[ "${DOTNETINFO}" == "yes" ]]; then echo ".net 4.8 oder 4.6 ist eingeschaltet!"; fi		
+		screen -fa -S "$SCSTARTSCREEN" -d -U -m mono OpenSim.exe
+	fi
 }
+
 ##
  #* scstop.
  # stoppt Region Server - Kurzversion.
@@ -2476,7 +2491,19 @@ function osstart() {
 			cd /$STARTVERZEICHNIS/"$OSSTARTSCREEN"/bin || return 1			
 			# Ersteinmal Killen dann starten.
 			screen -X -S "$OSSTARTSCREEN" kill
-			screen -fa -S "$OSSTARTSCREEN" -d -U -m mono OpenSim.exe
+
+			# DOTNETMODUS="yes"
+			if [[ "${DOTNETMODUS}" == "yes" ]]; then
+				if [[ "${DOTNETINFO}" == "yes" ]]; then echo "dotnet 6 ist eingeschaltet!"; fi
+				screen -fa -S "$OSSTARTSCREEN" -d -U -m dotnet OpenSim.dll
+			fi
+
+			# DOTNETMODUS="no"
+			if [[ "${DOTNETMODUS}" == "no" ]]; then
+				if [[ "${DOTNETINFO}" == "yes" ]]; then echo ".net 4.8 oder 4.6 ist eingeschaltet!"; fi
+				screen -fa -S "$SCSTARTSCREEN" -d -U -m mono OpenSim.exe
+			fi
+
 			sleep 10
 		else
 			log error "OpenSimulator $OSSTARTSCREEN nicht vorhanden"
@@ -2626,28 +2653,6 @@ function menuosstop() {
 }
 
 ##
- #* rostart93.
- # Robust Server starten.
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
-##
-function rostart93() {
-	log line
-	if checkfile /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/Robust.dll; then
-		cd /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin || return 1
-		# Start mit oder ohne AOT.
-			log info "Robust wird gestartet..."
-			screen -fa -S RO -d -U -m dotnet Robust.dll
-			sleep $ROBUSTWARTEZEIT
-	else
-		log error " Robust wurde nicht gefunden"
-		return 1
-	fi
-}
-
-##
  #* rostart.
  # Robust Server starten.
  # 
@@ -2657,24 +2662,25 @@ function rostart93() {
 ##
 function rostart() {
 	log line
-	if checkfile /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/Robust.exe; then
-		cd /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin || return 1
-		# Start mit oder ohne AOT.
-		if [[ $SETAOTON = "yes" ]]; then
-			log info "Robust wird gestartet mit aot..."
-			screen -fa -S RO -d -U -m mono --desktop -O=all Robust.exe
-			sleep $ROBUSTWARTEZEIT
-			return 0
-		else
-			log info "Robust wird gestartet..."
-			screen -fa -S RO -d -U -m mono Robust.exe
-			sleep $ROBUSTWARTEZEIT
-			return 0
-		fi
-	else
-		log error " Robust wurde nicht gefunden"
-		return 1
+	log info "Robust wird gestartet..."
+	cd /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin || return 1	
+
+	# DOTNETMODUS="yes"
+	if [[ "${DOTNETMODUS}" == "yes" ]]; then
+		if [[ "${DOTNETINFO}" == "yes" ]]; then echo "dotnet 6 ist eingeschaltet!"; fi
+		screen -fa -S RO -d -U -m dotnet Robust.dll
 	fi
+	
+	# DOTNETMODUS="no"
+	if [[ "${DOTNETMODUS}" == "no" ]]; then
+		if [[ "${DOTNETINFO}" == "yes" ]]; then echo ".net 4.8 oder 4.6 ist eingeschaltet!"; fi
+		screen -fa -S RO -d -U -m mono Robust.exe
+	fi
+
+	sleep $ROBUSTWARTEZEIT
+
+	log info " Robust wurde gestartet"
+	return 0
 }
 
 ##
@@ -2686,23 +2692,26 @@ function rostart() {
  # todo: nichts.
 ##
 function menurostart() {
-	# log line
-	if checkfile /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/Robust.exe; then
-		cd /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin || return 1
 
-		# Start mit oder ohne AOT.
-		if [[ $SETAOTON = "yes" ]]; then
-			log info "Robust wird mit aot gestartet..."
-			screen -fa -S RO -d -U -m mono --desktop -O=all Robust.exe
-			sleep $ROBUSTWARTEZEIT
-		else
-			log info "Robust wird gestartet..."
-			screen -fa -S RO -d -U -m mono Robust.exe
-			sleep $ROBUSTWARTEZEIT
-		fi
-	else
-		log error " Robust wurde nicht gefunden"
+	log info "Robust wird gestartet..."
+	cd /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin || return 1	
+
+	# DOTNETMODUS="yes"
+	if [[ "${DOTNETMODUS}" == "yes" ]]; then
+		if [[ "${DOTNETINFO}" == "yes" ]]; then echo "dotnet 6 ist eingeschaltet!"; fi
+		screen -fa -S RO -d -U -m dotnet Robust.dll
 	fi
+
+	# DOTNETMODUS="no"
+	if [[ "${DOTNETMODUS}" == "no" ]]; then
+		if [[ "${DOTNETINFO}" == "yes" ]]; then echo ".net 4.8 oder 4.6 ist eingeschaltet!"; fi
+		screen -fa -S RO -d -U -m mono Robust.exe
+	fi
+
+	sleep $ROBUSTWARTEZEIT
+
+	log info " Robust wurde gestartet"
+	return 0
 }
 
 ##
@@ -3006,26 +3015,6 @@ function menurostop() {
 }
 
 ##
- #* mostart93.
- # Money Server starten.
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
-##
-function mostart93() {
-	if checkfile /$STARTVERZEICHNIS/$MONEYVERZEICHNIS/bin/MoneyServer.dll; then
-		cd /$STARTVERZEICHNIS/$MONEYVERZEICHNIS/bin || return 1
-
-
-			log info "Money wird gestartet..."
-			screen -fa -S MO -d -U -m dotnet MoneyServer.dll
-			sleep $MONEYWARTEZEIT
-			return 0
-	fi
-}
-
-##
  #* mostart.
  # Money Server starten.
  # 
@@ -3034,22 +3023,25 @@ function mostart93() {
  # todo: nichts.
 ##
 function mostart() {
-	if checkfile /$STARTVERZEICHNIS/$MONEYVERZEICHNIS/bin/MoneyServer.exe; then
-		cd /$STARTVERZEICHNIS/$MONEYVERZEICHNIS/bin || return 1
-
-		# AOT Aktiveren oder Deaktivieren.
-		if [[ $SETAOTON = "yes" ]]; then
-			log info "Money wird mit aot gestartet..."
-			screen -fa -S MO -d -U -m mono --desktop -O=all MoneyServer.exe
-			sleep $MONEYWARTEZEIT
-			return 0
-		else
-			log info "Money wird gestartet..."
-			screen -fa -S MO -d -U -m mono MoneyServer.exe
-			sleep $MONEYWARTEZEIT
-			return 0
-		fi
+	log info "Money wird gestartet..."
+	cd /$STARTVERZEICHNIS/$MONEYVERZEICHNIS/bin || return 1
+	
+	#screen -fa -S MO -d -U -m mono MoneyServer.exe
+	# DOTNETMODUS="yes"
+	if [[ "${DOTNETMODUS}" == "yes" ]]; then
+		if [[ "${DOTNETINFO}" == "yes" ]]; then echo "dotnet 6 ist eingeschaltet!"; fi
+		screen -fa -S MO -d -U -m dotnet MoneyServer.dll
 	fi
+
+	# DOTNETMODUS="no"
+	if [[ "${DOTNETMODUS}" == "no" ]]; then
+		if [[ "${DOTNETINFO}" == "yes" ]]; then echo ".net 4.8 oder 4.6 ist eingeschaltet!"; fi
+		screen -fa -S MO -d -U -m mono MoneyServer.exe
+	fi
+
+	sleep $MONEYWARTEZEIT
+	log info " Money wurde gestartet"
+	return 0
 }
 
 ##
@@ -3061,25 +3053,25 @@ function mostart() {
  # todo: nichts.
 ##
 function menumostart() {
-	if checkfile /$STARTVERZEICHNIS/$MONEYVERZEICHNIS/bin/MoneyServer.exe; then
-		cd /$STARTVERZEICHNIS/$MONEYVERZEICHNIS/bin || return 1
-
-		# AOT Aktiveren oder Deaktivieren.
-		if [[ $SETAOTON = "yes" ]]; then
-			log info "Money wird gestartet mit aot..."
-			screen -fa -S MO -d -U -m mono --desktop -O=all MoneyServer.exe
-			sleep $MONEYWARTEZEIT
-			return 0
-		else
-			log info "Money wird gestartet..."
-			screen -fa -S MO -d -U -m mono MoneyServer.exe
-			sleep $MONEYWARTEZEIT
-			return 0
-		fi
-	else
-		log error "Money wurde nicht gefunden"
-		return 1
+	log info "Money wird gestartet..."
+	cd /$STARTVERZEICHNIS/$MONEYVERZEICHNIS/bin || return 1
+	
+	#screen -fa -S MO -d -U -m mono MoneyServer.exe
+	# DOTNETMODUS="yes"
+	if [[ "${DOTNETMODUS}" == "yes" ]]; then
+		if [[ "${DOTNETINFO}" == "yes" ]]; then echo "dotnet 6 ist eingeschaltet!"; fi
+		screen -fa -S MO -d -U -m dotnet MoneyServer.dll
 	fi
+
+	# DOTNETMODUS="no"
+	if [[ "${DOTNETMODUS}" == "no" ]]; then
+		if [[ "${DOTNETINFO}" == "yes" ]]; then echo ".net 4.8 oder 4.6 ist eingeschaltet!"; fi
+		screen -fa -S MO -d -U -m mono MoneyServer.exe
+	fi
+
+	sleep $MONEYWARTEZEIT
+	log info " Money wurde gestartet"
+	return 0
 }
 
 ##
@@ -3141,29 +3133,6 @@ function osscreenstop() {
 		return 1
 	fi
 	log text "No screen session found. Ist hier kein Fehler, sondern ein Beweis, das alles zuvor sauber heruntergefahren wurde."
-}
-
-##
- #* gridstart93.
- # startet erst Robust und dann Money.
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
-##
-function gridstart93() {
-	ossettings
-	if screen -list | grep -q RO; then
-		log error "Robust laeuft bereits"
-	else
-		rostart93
-	fi
-	if screen -list | grep -q MO; then
-		log error "Money laeuft bereits"
-	else
-		mostart93
-	fi
-	return 0
 }
 
 ##
@@ -4021,6 +3990,58 @@ function configlesen() {
 }
 
 ##
+ #* ini_get.
+ # Konfigurationsbereich lesen.
+ # Verwendung: ini_get Dateiname SECTION KEY
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+function ini_get() {
+    local KONFIGDATEI=$1
+    local SECTION=$2
+    local KEY=$3
+
+    if [ $# != 3 ]
+        then
+        echo "Verwendung: ini_get Dateiname SECTION KEY"
+        return $?
+    fi
+
+    awk -F "[=;#]+" '/^\[[ \t]*'"$SECTION"'[ \t]*\]/{a=1}a==1&&$1~/^[ \t]*'"$KEY"'[ \t]*/{gsub(/[ \t]+/,"",$0);print $2;exit}' "$KONFIGDATEI"
+    return $?
+}
+
+##
+ #* ini_set.
+ # Konfigurationsbereich schreiben. 
+ # Verwendung: ini_set Dateiname SECTION KEY WERT
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: Testen, schreibt nicht.
+##
+function ini_set() {
+    local KONFIGDATEI=$1
+    local SECTION=$2
+    local KEY=$3
+    local WERT=$4
+
+    # if [ $# != 4 ]
+    #     then
+    #     echo "Verwendung: ini_set Dateiname SECTION KEY WERT"
+    #     return $?
+    # fi
+
+    #sed -i "/^\[[ \t]*'"$SECTION"'[ \t]*\]/,/^\[/s/^[ \t]*\('"$KEY"'[ \t]*=[ \t]*\)[^ \t;#]*/\1$WERT/" "$KONFIGDATEI"
+	#sed -i "/^\[[ \t]*'"$SECTION"'[ \t]*\]/,/^\[/s/^[ \t]*\('"$KEY"'[ \t]*=[ \t]*\)[^ \t;#]*/\1'\""$WERT"\"'/" "$KONFIGDATEI"
+
+	sed -i '/^\['$SECTION'\]$/,/^\[/ s/^'$KEY' =/'$KEY' = "'$WERT'"/' "$KONFIGDATEI"
+    return $?
+}
+
+##
  #* regionsconfigdateiliste.
  # schreibt Dateinamen mit Pfad in eine Datei.
  # regionsconfigdateiliste -b(Bildschirm) -d(Datei)  Vereichnis
@@ -4654,41 +4675,6 @@ function menuregionrestore() {
 }
 
 ##
- #* autosimstart93.
- # automatischer sim start ohne Robust und Money.
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
-##
-function autosimstart93() {
-	if ! screen -list | grep -q 'sim'; then
-		# es laeuft kein Simulator - not work
-		makeverzeichnisliste
-		sleep 2
-		for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
-			log info "Regionen ${VERZEICHNISSLISTE[$i]} werden gestartet"
-			cd /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin || return 1
-
-			if [ "$REGIONSANZEIGE" = "yes" ]; then
-				# Zeigt die Regionsnamen aus einer Regions.ini an
-				STARTREGIONSAUSGABE=$(awk -F "[" '/\[/ {print $1 $2 $3}' /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/Regions/*.ini | sed s/'\]'//g);
-				log info "${VERZEICHNISSLISTE[$i]} hat folgende Regionen:";
-				for regionen in "${STARTREGIONSAUSGABE[@]}"; do log rohtext "$regionen"; done
-			fi
-
-			screen -fa -S "${VERZEICHNISSLISTE[$i]}" -d -U -m dotnet OpenSim.dll
-
-			sleep $STARTWARTEZEIT
-		done
-	else
-		# es laeuft mindestens ein Simulator - work
-		log text "WORKS:  Regionen laufen bereits!"
-	fi
-	return 0
-}
-
-##
  #* autosimstart.
  # automatischer sim start ohne Robust und Money.
  # 
@@ -4717,7 +4703,18 @@ function autosimstart() {
 				screen -fa -S "${VERZEICHNISSLISTE[$i]}" -d -U -m mono --desktop -O=all OpenSim.exe
 			else
 
-				screen -fa -S "${VERZEICHNISSLISTE[$i]}" -d -U -m mono OpenSim.exe
+				#screen -fa -S "${VERZEICHNISSLISTE[$i]}" -d -U -m mono OpenSim.exe
+				# DOTNETMODUS="yes"
+				if [[ "${DOTNETMODUS}" == "yes" ]]; then
+					if [[ "${DOTNETINFO}" == "yes" ]]; then echo "dotnet 6 ist eingeschaltet!"; fi
+					screen -fa -S "${VERZEICHNISSLISTE[$i]}" -d -U -m dotnet OpenSim.dll
+				fi
+				# DOTNETMODUS="no"
+				if [[ "${DOTNETMODUS}" == "no" ]]; then
+					if [[ "${DOTNETINFO}" == "yes" ]]; then echo ".net 4.8 oder 4.6 ist eingeschaltet!"; fi
+					screen -fa -S "${VERZEICHNISSLISTE[$i]}" -d -U -m mono OpenSim.exe
+				fi
+
 			fi
 			sleep $STARTWARTEZEIT
 		done
@@ -4779,18 +4776,30 @@ function menuautosimstart() {
 			fi
 
 			# AOT Aktiveren oder Deaktivieren.
-			if [[ $SETAOTON = "yes" ]]; then
+			#if [[ $SETAOTON = "yes" ]]; then
 				#BERECHNUNG1=$((100 / "$ANZAHLVERZEICHNISSLISTE"))
 				#BALKEN1=$(("$i" * "$BERECHNUNG1"))
-				screen -fa -S "${VERZEICHNISSLISTE[$i]}" -d -U -m mono --desktop -O=all OpenSim.exe | log info "${VERZEICHNISSLISTE[$i]} wurde gestartet" # dialog --gauge "Auto Sim start..." 6 64 $BALKEN1
+				#screen -fa -S "${VERZEICHNISSLISTE[$i]}" -d -U -m mono --desktop -O=all OpenSim.exe | log info "${VERZEICHNISSLISTE[$i]} wurde gestartet" # dialog --gauge "Auto Sim start..." 6 64 $BALKEN1
 				#dialogclear
-			else
+			#else
 				#BERECHNUNG1=$((100 / "$ANZAHLVERZEICHNISSLISTE"))
 				#BALKEN1=$(("$i" * "$BERECHNUNG1"))
-				screen -fa -S "${VERZEICHNISSLISTE[$i]}" -d -U -m mono OpenSim.exe | log info "${VERZEICHNISSLISTE[$i]} wurde gestartet" # dialog --gauge "Auto Sim start..." 6 64 $BALKEN1
-				#dialogclear
 
+			#screen -fa -S "${VERZEICHNISSLISTE[$i]}" -d -U -m mono OpenSim.exe | log info "${VERZEICHNISSLISTE[$i]} wurde gestartet" # dialog --gauge "Auto Sim start..." 6 64 $BALKEN1
+			# DOTNETMODUS="yes"
+			if [[ "${DOTNETMODUS}" == "yes" ]]; then
+				if [[ "${DOTNETINFO}" == "yes" ]]; then echo "dotnet 6 ist eingeschaltet!"; fi
+				screen -fa -S "${VERZEICHNISSLISTE[$i]}" -d -U -m dotnet OpenSim.dll
+				fi
+			# DOTNETMODUS="no"
+			if [[ "${DOTNETMODUS}" == "no" ]]; then
+				if [[ "${DOTNETINFO}" == "yes" ]]; then echo ".net 4.8 oder 4.6 ist eingeschaltet!"; fi
+				screen -fa -S "${VERZEICHNISSLISTE[$i]}" -d -U -m mono OpenSim.exe
 			fi
+
+			#dialogclear
+
+			#fi
 			sleep $STARTWARTEZEIT
 		done
 	else
@@ -5283,28 +5292,6 @@ function menuautoscreenstop() {
 }
 
 ##
- #* autostart93.
- # startet das komplette Grid mit allen sims.
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
-##
-function autostart93() {
-	#log line
-	#log info "Starte das Grid!"
-	if [[ $ROBUSTVERZEICHNIS == "robust" ]]; then
-		gridstart93
-	fi
-	autosimstart93
-	log line
-	screenlist
-	log line
-	log info "Auto Start abgeschlossen"
-	return 0
-}
-
-##
  #* autostart.
  # startet das komplette Grid mit allen sims.
  # 
@@ -5398,7 +5385,7 @@ function menuautostart() {
 		menugridstart
 	fi
 	menuautosimstart
-	screenlist
+	#screenlist
 	log info "Auto Start abgeschlossen!"
 	return 0
 }
@@ -5412,6 +5399,7 @@ function menuautostart() {
  # todo: nichts.
 ##
 function menuautostop() {
+	log warn "### Stoppe das Grid! ###"
 	# schauen ob screens laufen wenn ja beenden.
 	if screen -list | grep -q 'sim'; then log info "Bitte warten..."; menuautosimstop; fi
 	if screen -list | grep -q "RO"; then log info "Bitte warten..."; menugridstop; fi
@@ -5423,25 +5411,6 @@ function menuautostop() {
 }
 
 ##
- #* autorestart93.
- # startet das gesamte Grid neu und loescht die log Dateien.
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
-##
-function autorestart93() {
-	autostop
-	if [ "$LOGDELETE" = "yes" ]; then autologdel; fi
-	#if [ "$DELREGIONS" = "yes" ]; then deleteregionfromdatabase; fi
-	gridstart93
-	autosimstart93
-	screenlistrestart
-	log info "Auto Restart abgeschlossen."
-	return 0
-}
-
-##
  #* autorestart.
  # startet das gesamte Grid neu und loescht die log Dateien.
  # 
@@ -5450,12 +5419,16 @@ function autorestart93() {
  # todo: nichts.
 ##
 function autorestart() {
+	log rohtext " Automatischer Restart wird ausgeführt!"
+	# Alles stoppen.
 	autostop
 	if [ "$LOGDELETE" = "yes" ]; then autologdel; fi
 	#if [ "$DELREGIONS" = "yes" ]; then deleteregionfromdatabase; fi
+
 	gridstart
 	autosimstart
 	screenlistrestart
+
 	log info "Auto Restart abgeschlossen."
 	return 0
 }
@@ -5469,12 +5442,14 @@ function autorestart() {
  # todo: nichts.
 ##
 function menuautorestart() {
+	log rohtext " Automatischer Restart wird ausgeführt!"
 	autostop
 	if [ "$LOGDELETE" = "yes" ]; then autologdel; fi
 	#if [ "$DELREGIONS" = "yes" ]; then deleteregionfromdatabase; fi
 	gridstart
 	autosimstart
 	screenlistrestart
+
 	# log info "Auto Restart abgeschlossen."
 	menuinfo
 }
@@ -5950,6 +5925,18 @@ function ufwset() {
 
 	# Alle gefundenen Ports in eine Variable schreiben und die doppelten Einträge entfernen.
 
+	# Portnamen:
+	# PublicPort
+	# PrivatePort
+	# SimulatorPort
+	# port
+	# ServerPort
+	# MTP_SERVER_PORT
+	# http_listener_port
+	# http_listener_sslport
+	# XmlRpcPort
+	# InternalPort
+
 	#######################################
 
 	### Nachfolgende Einstellungen sind nur, damit es irgendwie laeuft.
@@ -5977,10 +5964,20 @@ function ufwset() {
 	# von 9000 bis 9250 oeffnen - zu viel ich weiss
 	sudo ufw allow 9000:9250/tcp	
 	sudo ufw allow 9000:9250/udp
+	# MTP_SERVER_PORT
+	sudo ufw allow 25/tcp	
+	sudo ufw allow 25/udp
 
 	# XmlRpcPort = 20800 bis 20999 oeffnen - zu viel ich weiss
 	sudo ufw allow 20800:20999/tcp
 	sudo ufw allow 20800:20999/udp
+
+	# Money Ports ?
+	sudo ufw allow 3306/tcp
+	sudo ufw allow 3306/udp
+	sudo ufw allow 8008/tcp
+	sudo ufw allow 8008/udp
+
 }
 
 ##
@@ -13651,8 +13648,8 @@ case $KOMMANDO in
 	asdel | assetdel) assetdel "$2" "$3" "$4" ;;
 	assetcachedel) assetcachedel "$2" ;; # Test
 	astart | autostart | start) autostart ;;
-	astart93 | autostart93 | start93) autostart93 ;;
-	astop | autostop | stop) autostop ;;
+	astart93 | autostart93 | start93) autostart ;;
+	astop | autostop | stop | astop93 | autostop93 | stop93) autostop ;;
 	authlog) authlog ;;
 	autoallclean) autoallclean ;;
 	autoassetcachedel) autoassetcachedel ;;
@@ -13728,7 +13725,7 @@ case $KOMMANDO in
 	get_value_from_Region_key) get_value_from_Region_key ;;
 	gridcommonini) gridcommonini ;;
 	gsta | gridstart) gridstart ;;
-	gsto | gridstop) gridstop ;;
+	gsto | gridstop | gsto93 | gridstop93) gridstop ;;
 	hilfe | help | aider | ayuda) hilfe ;;
 	historylogclear) historylogclear "$2" ;;
 	info) info ;;
@@ -13769,7 +13766,7 @@ case $KOMMANDO in
 	monoinstall) monoinstall ;;
 	mr | meineregionen) meineregionen ;;
 	ms | moneystart | mostart) mostart ;;
-	mstop | moneystop | mostop) mostop ;;
+	mstop | moneystop | mostop | mstop93 | moneystop93 | mostop93) mostop ;;
 	mutelistcopy) mutelistcopy ;;
 	mysql_neustart) mysql_neustart ;;
 	mysqldberror) mysqldberror ;;
@@ -13801,15 +13798,15 @@ case $KOMMANDO in
 	osstarteintrag) osstarteintrag "$2" ;; # Test
 	osstarteintragdel) osstarteintragdel "$2" ;; # Test
 	osta | osstart) osstart "$2" ;;
-	osto | osstop) osstop "$2" ;;
+	osta93 | osstart93) osstart "$2" ;;
+	osto | osstop | osto93 | osstop93) osstop "$2" ;;
 	oswriteconfig) oswriteconfig "$2" ;;
 	ou | osupgrade) osupgrade ;;
 	ou93 | osupgrade93) osupgrade93 ;;
 	passgen) passgen "$2" ;;
 	passwdgenerator) passwdgenerator "$2" ;;
 	pythoncopy) pythoncopy ;;
-	r | restart) autorestart ;;
-	r93 | restart93 | autorestart93) autorestart93 ;;
+	r | restart | autorestart | r93 | restart93 | autorestart93) autorestart ;;
 	radiolist) radiolist ;;
 	ramspeicher) ramspeicher ;;
 	rb | regionbackup) regionbackup "$2" "$3" ;;
@@ -13826,7 +13823,7 @@ case $KOMMANDO in
 	robustini) robustini ;;
 	rologdel) rologdel ;;
 	rs | robuststart | rostart) rostart ;;
-	rsto | robuststop | rostop) rostop ;;
+	rsto | robuststop | rostop | rsto93 | robuststop93 | rostop93) rostop ;;
 	s | settings | ossettings) ossettings ;;
 	saveinventar) saveinventar "$2" "$3" "$4" "$5" ;;
 	sc | scriptcopy) scriptcopy ;;
@@ -13840,10 +13837,10 @@ case $KOMMANDO in
 	set_empty_user) set_empty_user "$2" "$3" "$4" "$5" "$6" "$7" ;;
 	setpartner) setpartner "$2" "$3" "$4" "$5" "$6" ;;
 	simstats) simstats "$2" ;;
-	ss | osscreenstop) osscreenstop "$2" ;;
+	ss | osscreenstop | ss93 | osscreenstop93) osscreenstop "$2" ;;
 	sta | autosimstart | simstart) autosimstart ;;
-	sta93 | autosimstart93 | simstart93) autosimstart93 ;;
-	sto | autosimstop | simstop) autosimstop ;;
+	sta93 | autosimstart93 | simstart93) autosimstart ;;
+	sto | autosimstop | simstop | sto93 | autosimstop93 | simstop93) autosimstop ;;
 	systeminformation) systeminformation ;;
 	tabellenabfrage) tabellenabfrage "$2" "$3" "$4" ;;
 	textbox) textbox "$2" ;;
@@ -13912,10 +13909,11 @@ case $KOMMANDO in
 	getcachegroesse) getcachegroesse ;;
 	getcachesinglegroesse) getcachesinglegroesse "$2" ;;
 	db_tabellencopy) db_tabellencopy "$2" "$3" "$4" "$5" "$6" ;;
-	remarklist) remarklist ;;	
+	remarklist) remarklist ;;
+	ini_get) ini_get "$2" "$3" "$4" ;;
+	ini_set) ini_set "$2" "$3" "$4" "$5" ;;
 	hda | hilfedirektaufruf | hilfemenudirektaufrufe) hilfemenudirektaufrufe ;;
-	h) newhelp
-	exit ;;
+	h) newhelp ;;
 	V | v) echo "$SCRIPTNAME $VERSION" ;;
 	*) hauptmenu ;;
 esac
