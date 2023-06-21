@@ -41,19 +41,19 @@ Als erstes wird die Datei osmtool.sh auf den Server hochgeladen.
 
 Ich empfehle das Verzeichnis /opt für Optionale Software.
 
-Dies muss jetzt ausführbar gemacht werden mit:
+Dies sollte jetzt ausführbar gemacht werden mit:
 
      chmod +x /opt/osmtool.sh
 
-Gestartet werden kann das nun mit:
+Gestartet werden kann das aber auch direkt mit:
 
      bash osmtool.sh
 
-oder
+oder (ausführbar gemacht)
 
      ./osmtool.sh
 
-oder
+oder (ausführbar gemacht)
 
      /opt/osmtool.sh
 
