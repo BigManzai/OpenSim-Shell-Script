@@ -93,10 +93,6 @@ Server Installation Ubuntu 22 mit mariaDB
 		all                     Alle OpenSimulator Konsolenkommandos.
 		hda                     Dialog Menue direktaufrufe.
 
-		 Der Kommando aufruf:
-		 # Beispiel: bash osmtool.sh oscommand sim1 Welcome "alert Hallo Welt"
-		 # Beispiel: bash osmtool.sh oscommand sim1 Welcome "alert-user John Doe Hallo John Doe"
-		 
 
 ## Der Kommando aufruf:
  
