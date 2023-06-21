@@ -71,19 +71,26 @@ Eine Server erstinstallation eines Ubuntu 18 oder 22 Servers kann mit folgender 
 
 ## Hilfe
 
-    /opt/osmtool.sh Auswahl
+    bash osmtool.sh h
     
-     Auswahl:                Information:
-     h                       Zeigt diese hilfe.
-     hilfe                   Haupthilfefunktionen.
-     konsolenhilfe           Konsolenhilfe dreht sich um Putty.
-     dbhilfe                 Hilfe rund um die Datenbankmanipulation.
-     commandhelp             OpenSimulator Kommandos in Deutsch.
-     RobustCommands          Robust Kommandos.
-     OpenSimCommands         OpenSimulator Kommandos.
-     MoneyServerCommands     MoneyServer Kommandos.
-     all                     Alle OpenSimulator Konsolenkommandos.
-     hda                     Dialog Menue direktaufrufe.
+		Display Hilfe
+		Syntax: osmtool.sh [h|hilfe|konsolenhilfe|dbhilfe|commandhelp|RobustCommands|RobustCommands|OpenSimCommands|hda]
+		Optionen:
+		h                       Zeigt diese hilfe.
+		hilfe                   Haupthilfefunktionen.
+		konsolenhilfe           Konsolenhilfe dreht sich um Putty.
+		dbhilfe                 Hilfe rund um die Datenbankmanipulation.
+		commandhelp             OpenSimulator Kommandos in Deutsch.
+		RobustCommands          Robust Kommandos.
+		OpenSimCommands         OpenSimulator Kommandos.
+		MoneyServerCommands     MoneyServer Kommandos.
+		all                     Alle OpenSimulator Konsolenkommandos.
+		hda                     Dialog Menue direktaufrufe.
+
+		 Der Kommando aufruf:
+		 # Beispiel: bash osmtool.sh oscommand sim1 Welcome "alert Hallo Welt"
+		 # Beispiel: bash osmtool.sh oscommand sim1 Welcome "alert-user John Doe Hallo John Doe"
+		 
 
 ## Der Kommando aufruf:
  
