@@ -80,7 +80,7 @@ Server Installation Ubuntu 22 mit mariaDB
     bash osmtool.sh h
     
 		Display Hilfe
-		Syntax: osmtool.sh [h|hilfe|konsolenhilfe|dbhilfe|commandhelp|RobustCommands|RobustCommands|OpenSimCommands|hda]
+		Syntax: osmtool.sh [h|hilfe|konsolenhilfe|dbhilfe|commandhelp|RobustCommands|OpenSimCommands|hda]
 		Optionen:
 		h                       Zeigt diese hilfe.
 		hilfe                   Haupthilfefunktionen.
