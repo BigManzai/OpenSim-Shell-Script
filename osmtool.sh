@@ -1,5 +1,9 @@
 #!/bin/bash
 
+###########################################################################
+#* Informationen Funktionsgruppe
+###########################################################################
+
 # ? opensimMULTITOOL Copyright (c) 2021 2023 BigManzai Manfred Aabye
 # osmtool.sh Basiert auf meinen Einzelscripten, an denen ich bereits 7 Jahre Arbeite und verbessere.
 # Da Server unterschiedlich sind, kann eine einwandfreie fuunktion nicht gewaehrleistet werden, also bitte mit bedacht verwenden.
@@ -26,37 +30,132 @@
 # outline map #? Navigationsleiste für Funktionen.
 # todo: nichts.
 
-#### ? Einstellungen ####
+
+###########################################################################
+#* Einstellungen Funktionsgruppe
+###########################################################################
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.900" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.901" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
+DOTNETINFO="no"
+
 ##
- #* ostimestamp Test
- # Timestamp Experimente.
+ #* vardel.
+ # Variablen auf einen schlag loeschen.
  # 
- #? @param keiner.
- #? @return $VERSION
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
  # todo: nichts.
 ##
-function ostimestamp() {
-# “yyyy-mm-dd”
-# Deutsch dd-mm-yyyy
-EN_DATUM=$(date '+%Y-%m-%d %H:%M:%S')
-echo "$EN_DATUM" Aktuelles Datum Aktuell in Englisch
-
-DE_DATUM=$(date '+%d-%m-%Y %H:%M:%S')
-echo "$DE_DATUM" Aktuelles Datum Aktuell in Deutsch
-
-DATE_TO_UNIX_TIMESTAMP=$(date -d "$EN_DATUM" +%s)
-echo "$DATE_TO_UNIX_TIMESTAMP" datum zu timestamp ausgabe
-
-UNIX_TIMESTAMP_TO_DATE=$(date -d "@$DATE_TO_UNIX_TIMESTAMP" '+%Y-%m-%d %H:%M:%S')
-echo "$UNIX_TIMESTAMP_TO_DATE" timestamp zu date ausgabe
+function vardel() {
+	# ? Alte Variablen loeschen aus eventuellen voherigen sessions
+	unset STARTVERZEICHNIS
+	unset MONEYVERZEICHNIS
+	unset ROBUSTVERZEICHNIS
+	unset OPENSIMVERZEICHNIS
+	unset SCRIPTSOURCE
+	unset SCRIPTZIP
+	unset MONEYSOURCE
+	unset MONEYZIP
+	unset REGIONSNAME
+	unset REGIONSNAMEb
+	unset REGIONSNAMEc
+	unset REGIONSNAMEd
+	unset VERZEICHNISSCREEN
+	unset NUMMER
+	unset WARTEZEIT
+	unset STARTWARTEZEIT
+	unset STOPWARTEZEIT
+	unset MONEYWARTEZEIT
+	unset NAME
+	unset VERZEICHNIS
+	unset PASSWORD
+	unset DATEI
+	unset SCRIPTZIP
+	return 0
 }
+vardel
 
-DOTNETINFO="no"
+NEUERREGIONSNAME="Welcome"
+
+# manpage auf Deutsch - man Befehl/Kommando
+alias man="LANG=de_DE.UTF-8 man"
+
+AKTUELLEVERZ=$(pwd) # Aktuelles Verzeichnis
+
+# Datumsvariablen Datum, Dateidatum und Uhrzeit
+DATUM=$(date +%d.%m.%Y)
+DATEIDATUM=$(date +%d_%m_%Y) # UHRZEIT=$(date +%H:%M:%S)
+
+# Linux Version
+myDescription=$(lsb_release -d) # Description: Ubuntu 22.04 LTS
+myRelease=$(lsb_release -r)     # Release: 22.04
+myCodename=$(lsb_release -sc)   # jammy
+
+ubuntuDescription=$(cut -f2 <<<"$myDescription") # Ubuntu 22.04 LTS
+ubuntuRelease=$(cut -f2 <<<"$myRelease")         # 22.04
+ubuntuCodename=$(cut -f2 <<<"$myCodename")       # jammy
+# SQL Version
+SQLVERSIONVOLL=$(mysqld --version)
+SQLVERSION=$(echo "${SQLVERSIONVOLL:0:45}")
+
+### Einstellungen aus osmtoolconfig.ini laden, bei einem Script upgrade gehen so die einstellungen nicht mehr verloren.
+
+# Pfad des osmtool.sh Skriptes herausfinden
+SCRIPTPATH=$(cd "$(dirname "$0")" && pwd)
+
+# Nutzer mit Konfigurationsfragen quaelen
+# Abfrage Konfig Einstellungen
+if ! [ -f "/$SCRIPTPATH/osmtoolconfig.ini" ]; then osmtoolconfigabfrage; fi
+
+# Wenn es keine Konfigurationsdatei gibt anlegen
+#if ! [ -f "/$SCRIPTPATH/osmtoolconfig.ini" ]; then osmtoolconfig "/$SCRIPTPATH/osmtoolconfig.ini"; fi
+
+# Variablen aus config Datei laden osmtoolconfig.ini muss sich im gleichen Verzeichnis wie osmtool.sh befinden.
+# shellcheck disable=SC1091
+. "$SCRIPTPATH"/osmtoolconfig.ini
+
+# Aktuelle IP ueber Suchadresse ermitteln und Ausfuehrungszeichen anhaengen.
+AKTUELLEIP='"'$(wget -O - -q $SEARCHADRES)'"'
+
+# gibt es das Startverzeichnis wenn nicht abbruch.
+cd /"$STARTVERZEICHNIS" || return 1
+sleep 1
+
+# Eingabeauswertung fuer Funktionen ohne dialog.
+KOMMANDO=$1
+
+###########################################################################
+#* Hilfsfunktionen Funktionsgruppe
+###########################################################################
+
+##
+ #* dummyvar, shellcheck disable=SC2034 umgehen.
+ # Shell-Check ueberlisten wegen der Konfigurationsdatei, 
+ # hat sonst keinerlei Funktion und wird auch nicht aufgerufen.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+function dummyvar() {
+	# shellcheck disable=SC2034
+	MONEYVERZEICHNIS="robust"; ROBUSTVERZEICHNIS="robust"; OPENSIMVERZEICHNIS="opensim"; SCRIPTSOURCE="ScriptNeu"; SCRIPTZIP="opensim-ossl-example-scripts-main.zip"; MONEYSOURCE="money48"
+	MONEYZIP="OpenSimCurrencyServer-2021-master.zip"; REGIONSDATEI="osmregionlist.ini"; SIMDATEI="osmsimlist.ini"; WARTEZEIT=30; STARTWARTEZEIT=10; STOPWARTEZEIT=30; MONEYWARTEZEIT=60; ROBUSTWARTEZEIT=60
+	BACKUPWARTEZEIT=120; AUTOSTOPZEIT=60; SETMONOTHREADS=800; SETMONOTHREADSON="yes"; OPENSIMDOWNLOAD="http://opensimulator.org/dist/"; SEARCHADRES="icanhazip.com"; # AUTOCONFIG="no"
+	CONFIGURESOURCE="opensim-configuration-addon-modul-main"; CONFIGUREZIP="opensim-configuration-addon-modul-main.zip"
+	textfontcolor=7; textbaggroundcolor=0; debugfontcolor=4; debugbaggroundcolor=0	infofontcolor=2	infobaggroundcolor=0; warnfontcolor=3; warnbaggroundcolor=0
+	errorfontcolor=1; errorbaggroundcolor=0; SETMONOGCPARAMSON1="no"; SETMONOGCPARAMSON2="yes"	LOGDELETE="no"; LOGWRITE="no"; "$trimmvar"; logfilename="_multitool"
+	username="username"	password="userpasswd"	databasename="grid"	linefontcolor=7	linebaggroundcolor=0; apache2errorlog="/var/log/apache2/error.log"; apache2accesslog="/var/log/apache2/access.log"
+	authlog="/var/log/auth.log"	ufwlog="/var/log/ufw.log"	mysqlmariadberor="/var/log/mysql/mariadb.err"; mysqlerrorlog="/var/log/mysql/error.log"; listVar=""; ScreenLogLevel=0
+	# DIALOG_OK=0; DIALOG_HELP=2; DIALOG_EXTRA=3; DIALOG_ITEM_HELP=4; SIG_NONE=0; SIG_HUP=1; SIG_INT=2; SIG_QUIT=3; SIG_KILL=9; SIG_TERM=15
+	DIALOG_CANCEL=1; DIALOG_ESC=255; DIALOG=dialog; VISITORLIST="yes"; REGIONSANZEIGE="yes"; #DELREGIONS="no";
+	netversion="1946"; CONFIGPFAD="OpenSimConfig"; DOTNETMODUS="yes";
+	OSVERSION="opensim-0.9.2.2Dev";
+	OPENSIMVERSION="opensim-0.9.2.2.zip";
+}
 
 ##
  #* xhelp Test
@@ -85,27 +184,6 @@ function skriptversion() {
 	echo "$VERSION";
 	exit 0;
 }
-
-# ? Alte Variablen loeschen aus eventuellen voherigen sessions
-unset STARTVERZEICHNIS
-unset MONEYVERZEICHNIS
-unset ROBUSTVERZEICHNIS
-unset OPENSIMVERZEICHNIS
-unset SCRIPTSOURCE
-unset SCRIPTZIP
-unset MONEYSOURCE
-unset MONEYZIP
-unset REGIONSNAME
-unset REGIONSNAMEb
-unset REGIONSNAMEc
-unset REGIONSNAMEd
-unset VERZEICHNISSCREEN
-unset NUMMER
-
-NEUERREGIONSNAME="Welcome"
-
-# manpage auf Deutsch - man Befehl/Kommando
-alias man="LANG=de_DE.UTF-8 man"
 
 ##
  #* Zufallsnamen.
@@ -155,7 +233,6 @@ function namen() {
 
 	# Regionsname ausgeben	
 	NEUERREGIONSNAME=${namensarray[$REGIONSNAMENZAHL]}
-	echo "Neuer Name: $NEUERREGIONSNAME"
 }
 
 ##
@@ -173,7 +250,14 @@ function vornamen() {
 					"Polaroid" "Candy" "Fast" "Mike" "Savage" "Chop" "Edgar" "Cereal" "The" "KillMe" "Spicy" "Terrifying" "Smufus" "Harry" "Airport" "Chicken" "Donkey" "Bread" "Hairy" "Sillje" \
 					"Weina" "Marlo" "Toffel" "Binder" "Performance" "Abyss" "Qual" "Claw" "Ball" "Turtle" "Aspirin" "Nygma" "Forgiven" "Avenger" "Time" "Eintragen" "Monade" "Ticker" \
 					"Meefood" "LANister" "Kenobi" "Skyrouter" "Bolognese" "Box" "Patronum" "Solo" "Jessica" "Isberga" "Calilia" "Ehrentraud" "Frida" "Gebba" "Randy" "Kano" "Pal" "Butcher" \
-					"Curious" "Tython" "Sam" "Chop" "AllenBro" "Killer" "Muffin" "NowPlease" "Chicken" "Terry" "BroCode" "Dotter" "Hobo" "Dinner" "Bong" "Pitt" "Poppins")
+					"Curious" "Tython" "Sam" "Chop" "AllenBro" "Killer" "Muffin" "NowPlease" "Chicken" "Terry" "BroCode" "Dotter" "Hobo" "Dinner" "Bong" "Pitt" "Poppins" "Thomas" "Brigitte" \
+					"Peter" "Angelika" "Hans" "Sabine" "Klaus" "Monika" "Wolfgang" "Karin" "Andreas" "Marion" "Jürgen" "Petra" "Bernd" "Birgit" "Reiner" "Gabriele" "Manfred" "Susanne" "Uwe" "Barbara" \
+					"Joachim" "Renate" "Dieter" "Ute" "Werner" "Jutta" "Karl" "Ursula" "Holger" "Cornelia" "Frank" "Ingrid" "Norbert" "Heike" "Ralf, Rolf" "Regina" "Ulrich" "Maria" "Jörg" "Silvia" \
+					"Helmut" "Elke" "Günter" "Angela" "Gerhard" "Andrea" "Horst" "Ulrike" "Jens" "Gisela" "Harald" "Dagmar" "Martin" "Helga" "Heinz" "Christine" "Reinhard" "Eva" "Matthias" "Claudia" \
+					"Stefan" "Marianne" "Detlef" "Bärbel" "Volker" "Doris" "Walter" "Beate" "Bernhard" "Rita" "Hartmut" "Gudrun" "Alexander" "Hannelore" "Christian" "Anke" "Rüdiger" "Marlis" "Georg" \
+					"Heidi" "Roland" "Anette" "Axel" "Rosemarie" "Herbert" "Carmen" "Jan" "Inge" "Dirk" "Margrit" "Carsten" "Irene" "Udo" "Maren" "Siegfried" "Kerstin" "Kurt" "Olga" "Herrmann" "Anita" \
+					"Lutz" "Frauke" "Johannes" "Annelise" "Hubert" "Susanne" "Heiko" "Meike" "Wilhelm" "Gertrud" "Paul" "Ina" "Arno" "Gunda" "Jochen" "Stephanie" "Heiner" "Gerlinde" "Niels" "Tamara" \
+					"Henning" "Liane" "Anton" "Ursel" "Edmund" "Rosa" )
 
 	# Zaehlen wie viele es sind.
 	count=${#firstnamensarray[@]}
@@ -185,523 +269,22 @@ function vornamen() {
 
 	# Regionsname ausgeben	
 	NEUERAVATARVORNAME=${firstnamensarray[$VORNAMENZAHL]}
-	namen
+}
+
+##
+ #* randomname.
+ # 
+ #? @param keiner.
+ #? @return Es werden Name zurueckgegeben.
+ # todo: nichts.
+##
+function randomname() {
+	vornamen
 	echo "Neuer Vorname: $NEUERAVATARVORNAME"
+	namen
 	echo "Neuer Avatarname: $NEUERAVATARVORNAME $NEUERREGIONSNAME"
-}
-
-##
- #* osmtoolconfig autoconfigure.
- # Hier wird die Konfigurationsdatei fuer das opensimTOOL erstellt.
- # 
- #? @param STARTVERZEICHNIS ROBUSTVERZEICHNIS MONEYVERZEICHNIS OPENSIMVERZEICHNIS CONFIGPFAD OSTOOLINI
- #? @return Eine Datei wird geschrieben.
- # todo: nichts.
-##
-function osmtoolconfig() {
-	# if [[ $1 == "help" ]]; then	echo "Hier wird die Konfigurationsdatei fuer das opensimTOOL erstellt."; exit 0; fi
-	STARTVERZEICHNIS=$1; ROBUSTVERZEICHNIS=$2; MONEYVERZEICHNIS=$3; OPENSIMVERZEICHNIS=$4; CONFIGPFAD=$5; OSTOOLINI=$6	
-    {		
-		echo "### Einstellungen $SCRIPTNAME $VERSION"
-		echo "     "
-		echo "## Das Startverzeichnis home oder opt zum Beispiel."
-		echo "    STARTVERZEICHNIS=\"$STARTVERZEICHNIS\""
-		echo "    MONEYVERZEICHNIS=\"$MONEYVERZEICHNIS\""
-		echo "    ROBUSTVERZEICHNIS=\"$ROBUSTVERZEICHNIS\""
-		echo "    OPENSIMVERZEICHNIS=\"$OPENSIMVERZEICHNIS\""
-		echo "    CONFIGPFAD=\"$CONFIGPFAD\""
-		echo "     "
-		echo '    SCRIPTSOURCE="opensim-ossl-example-scripts-main"'
-		echo '    SCRIPTZIP="opensim-ossl-example-scripts-main.zip"'
-		echo "     "
-		echo '    MONEYSOURCE="OpenSimCurrencyServer-2021-master"'
-		echo '    MONEYZIP="OpenSimCurrencyServer-2021-master.zip"'
-		echo '    #MONEYSOURCE="OpenSimCurrencyServer-2023"'
-		echo '    #MONEYZIP="OpenSimCurrencyServer-2023.zip"'
-		echo '    #MUTELISTSOURCE="opensim-ossl-example-scripts-main"'
-		echo '    #MUTELISTZIP="OpenSimCurrencyServer-2021-master.zip"'
-		echo '    #OSSEARCHSOURCE="opensim-ossl-example-scripts-main"'
-		echo '    #OSSEARCHZIP="OpenSimCurrencyServer-2021-master.zip"'
-		echo "     "
-		echo '    #DIVASOURCE="diva-distribution"'
-    	echo '    #DIVAZIP="diva-distribution-master.zip"'
-		echo "     "
-		echo '    CONFIGURESOURCE="opensim-configuration-addon-modul-main"'
-		echo '    CONFIGUREZIP="opensim-configuration-addon-modul-main.zip"'
-		echo "     "
-		echo '    OSSEARCHSOURCE="OpenSimSearch"'
-		echo '    OSSEARCHSZIP="OpenSimSearch-master.zip"'
-		echo "     "
-		echo '    BUILDOLD="yes"'
-		echo "     "
-		echo "    DOTNETMODUS=\"$DOTNETMODUS\""
-		echo "     "
-		echo "## Schrift- und Hintergrundfarben"
-		echo "##  0 – Black, 1 – Red, 2 – Green, 3 – Yellow, 4 – Blue, 5 – Magenta, 6 – Cyan, 7 – White"
-		echo "    # font color;       background color;"
-		echo "    textfontcolor=7;    textbaggroundcolor=0;"
-		echo "    debugfontcolor=4;   debugbaggroundcolor=0;"
-		echo "    infofontcolor=2;    infobaggroundcolor=0;"
-		echo "    warnfontcolor=3;    warnbaggroundcolor=0;"
-		echo "    errorfontcolor=1;   errorbaggroundcolor=7;"
-		echo "    linefontcolor=7;    linebaggroundcolor=0;"
-		echo "     "
-		echo "    ScreenLogLevel=0; # ScreenLogLevel=0 nichts machen, bis ScreenLogLevel=5 Funktionsnamen ausgeben."
-		echo '    LOGWRITE="yes" # yes/no'
-		echo '    logfilename="_multitool"'
-		echo '    line="############################################################";'
-		echo "     "
-		echo "## Dateien"
-		echo '    REGIONSDATEI="osmregionlist.ini"'
-		echo '    SIMDATEI="osmsimlist.ini"'
-		echo '    OPENSIMDOWNLOAD="http://opensimulator.org/dist/"'
-		echo '    OPENSIMVERSION="opensim-0.9.2.2Dev"'
-		echo '    #OPENSIMVERSION="opensim-0.9.3.0Dev"'
-		echo '    SEARCHADRES="icanhazip.com" # Suchadresse'
-		echo "     "
-		echo '    REGIONSANZEIGE="yes"'
-		echo "     "
-		echo '    LOGDELETE="yes" # yes/no'
-		echo '    VISITORLIST="yes" # yes/no - schreibt vor dem loeschen alle Besucher samt mac in eine log Datei.'
-		echo "     "
-		echo "## Inklusive"
-		echo '    SCRIPTCOPY="yes"'
-		echo '    MONEYCOPY="yes"'
-		echo '    MUTELISTCOPY="yes"'
-		echo '    OSSEARCHCOPY="yes"'
-		echo '    DIVACOPY="no"'
-		echo '    PYTHONCOPY="no"'
-		echo '    CHRISOSCOPY="no"'
-		echo '    AUTOCONFIG="no"'
-		echo '    OSSEARCHCOPY="no"'
-		echo "     "
-		echo "## Die unterschiedlichen wartezeiten bis die Aktion ausgefuehrt wurde."
-		echo "    WARTEZEIT=60 # Ist eine allgemeine Wartezeit."
-		echo "    STARTWARTEZEIT=10 # Startwartezeit ist eine Pause, damit nicht alle Simulatoren gleichzeitig starten."
-		echo "    STOPWARTEZEIT=30 # Stopwartezeit ist eine Pause, damit nicht alle Simulatoren gleichzeitig herunterfahren."
-		echo "    MONEYWARTEZEIT=60 # Moneywartezeit ist eine Extra Pause, weil dieser zwischen Robust und Simulatoren gestartet werden muss."
-		echo "    ROBUSTWARTEZEIT=90 # Robust wartezeit ist eine Extra Pause, weil dieser komplett gestartet werden muss."
-		echo "    BACKUPWARTEZEIT=180 # Backupwartezeit ist eine Pause, damit der Server nicht ueberlastet wird."
-		echo "    AUTOSTOPZEIT=60 # Autostopzeit ist eine Pause, um den Simulatoren zeit zum herunterfahren gegeben wird, bevor haengende Simulatoren gekillt werden."
-		echo "     "
-		echo "## Linux Einstellungen"
-		echo '    SETMONOTHREADSON="yes"'
-		echo "    SETMONOTHREADS=1024"
-		echo '    SETULIMITON="yes"'
-		echo '    SETMONOGCPARAMSON1="no"'
-		echo '    SETMONOGCPARAMSON2="yes"'
-		echo "     "
-		echo "## Mono Version fuer Build Vorgang Visual Studio 2019 oder 2022 - Zweite Zahl net/mono framework."
-		echo "    # 1948, 1950, 1960, 1970 - 2248, 2250, 2260, 2270"
-		echo '    netversion="2248"'
-		echo "     "
-		echo "## Divers"
-		echo '    SETOSCOMPION="no" # Mit oder ohne log Datei kompilieren. yes oder no.'
-		echo '    SETAOTON="no"'
-		echo "    # opensim-0.9.2.2Dev-4-g5e9b3b4.zip"
-		echo '    OSVERSION="opensim-0.9.2.2Dev-"'
-		echo '    # OSVERSION="opensim-0.9.3.0Dev-"'
-		echo '    insterweitert="yes"'
-		echo "     "
-		echo "## Bereinigungen"
-		echo '    AUTOCLEANALL="yes"'
-		echo '    GRIDCACHECLEAR="yes"'
-		echo '    SCRIPTCLEAR="no"'
-		echo '    ASSETCACHECLEAR="yes"'
-		echo '    MAPTILESCLEAR="yes"'
-		echo '    RMAPTILESCLEAR="yes"'
-		echo '    RBAKESCLEAR="no"'
-		echo "     "
-		echo "## OpenSim Downloads"
-		echo '    LINK01="http://opensimulator.org/dist/OpenSim-LastAutoBuild.zip"'
-		echo '    LINK02="http://opensimulator.org/dist/opensim-0.8.2.1-source.tar.gz"'
-		echo '    LINK03="http://opensimulator.org/dist/opensim-0.8.2.1-source.zip"'
-		echo '    LINK04="http://opensimulator.org/dist/opensim-0.8.2.1.tar.gz"'
-		echo '    LINK05="http://opensimulator.org/dist/opensim-0.8.2.1.zip"'
-		echo '    LINK06="http://opensimulator.org/dist/opensim-0.9.0.0-source.tar.gz"'
-		echo '    LINK07="http://opensimulator.org/dist/opensim-0.9.0.0-source.zip"'
-		echo '    LINK08="http://opensimulator.org/dist/opensim-0.9.0.0.tar.gz"'
-		echo '    LINK09="http://opensimulator.org/dist/opensim-0.9.0.0.zip"'
-		echo '    LINK10="http://opensimulator.org/dist/opensim-0.9.0.1-source.tar.gz"'
-		echo '    LINK11="http://opensimulator.org/dist/opensim-0.9.0.1-source.zip"'
-		echo '    LINK12="http://opensimulator.org/dist/opensim-0.9.0.1.tar.gz"'
-		echo '    LINK13="http://opensimulator.org/dist/opensim-0.9.0.1.zip"'
-		echo '    LINK14="http://opensimulator.org/dist/opensim-0.9.1.0-source.tar.gz"'
-		echo '    LINK15="http://opensimulator.org/dist/opensim-0.9.1.0-source.zip"'
-		echo '    LINK16="http://opensimulator.org/dist/opensim-0.9.1.0.tar.gz"'
-		echo '    LINK17="http://opensimulator.org/dist/opensim-0.9.1.0.zip"'
-		echo '    LINK18="http://opensimulator.org/dist/opensim-0.9.1.1-source.tar.gz"'
-		echo '    LINK19="http://opensimulator.org/dist/opensim-0.9.1.1-source.zip"'
-		echo '    LINK20="http://opensimulator.org/dist/opensim-0.9.1.1.tar.gz"'
-		echo '    LINK21="http://opensimulator.org/dist/opensim-0.9.1.1.zip"'
-		echo '    LINK22="http://opensimulator.org/dist/opensim-0.9.2.0-source.tar.gz"'
-		echo '    LINK23="http://opensimulator.org/dist/opensim-0.9.2.0-source.zip"'
-		echo '    LINK24="http://opensimulator.org/dist/opensim-0.9.2.0.tar.gz"'
-		echo '    LINK25="http://opensimulator.org/dist/opensim-0.9.2.0.zip"'
-		echo '    LINK26="http://opensimulator.org/dist/opensim-0.9.2.1.zip"'
-		echo "     "
-		echo "## Log Dateien"
-		echo '    apache2errorlog="/var/log/apache2/error.log"'
-		echo '    apache2accesslog="/var/log/apache2/access.log"'
-		echo '    authlog="/var/log/auth.log"'
-		echo '    ufwlog="/var/log/ufw.log"'
-		echo '    mysqlmariadberor="/var/log/mysql/mariadb.err"'
-		echo '    mysqlerrorlog="/var/log/mysql/error.log"'
-		echo "     "
-		echo "## Liste der zu verwendende Musiklisten."
-		echo '    listVar="50s 60s 70s 80s 90s Alternative Blues Classic Club Country Dance Disco EDM Easy Electronic Folk Funk Gothic Heavy Hits House Indie Jazz Metal Misc Oldies Party Pop Reggae Rock Schlager Soul Techno Top Trance industrial pop"'
-    } > "$OSTOOLINI"
-
-	echo "### Ihre neuen Konfigurationsdateien wurden geschrieben! ###"
-	echo "#####################  FERTIG  #############################"
-}
-
-##
- #* dummyvar, shellcheck disable=SC2034 umgehen.
- # Shell-Check ueberlisten wegen der Konfigurationsdatei, 
- # hat sonst keinerlei Funktion und wird auch nicht aufgerufen.
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
-##
-function dummyvar() {
-	# shellcheck disable=SC2034
-	MONEYVERZEICHNIS="robust"; ROBUSTVERZEICHNIS="robust"; OPENSIMVERZEICHNIS="opensim"; SCRIPTSOURCE="ScriptNeu"; SCRIPTZIP="opensim-ossl-example-scripts-main.zip"; MONEYSOURCE="money48"
-	MONEYZIP="OpenSimCurrencyServer-2021-master.zip"; REGIONSDATEI="osmregionlist.ini"; SIMDATEI="osmsimlist.ini"; WARTEZEIT=30; STARTWARTEZEIT=10; STOPWARTEZEIT=30; MONEYWARTEZEIT=60; ROBUSTWARTEZEIT=60
-	BACKUPWARTEZEIT=120; AUTOSTOPZEIT=60; SETMONOTHREADS=800; SETMONOTHREADSON="yes"; OPENSIMDOWNLOAD="http://opensimulator.org/dist/"; SEARCHADRES="icanhazip.com"; # AUTOCONFIG="no"
-	CONFIGURESOURCE="opensim-configuration-addon-modul-main"; CONFIGUREZIP="opensim-configuration-addon-modul-main.zip"
-	textfontcolor=7; textbaggroundcolor=0; debugfontcolor=4; debugbaggroundcolor=0	infofontcolor=2	infobaggroundcolor=0; warnfontcolor=3; warnbaggroundcolor=0
-	errorfontcolor=1; errorbaggroundcolor=0; SETMONOGCPARAMSON1="no"; SETMONOGCPARAMSON2="yes"	LOGDELETE="no"; LOGWRITE="no"; "$trimmvar"; logfilename="_multitool"
-	username="username"	password="userpasswd"	databasename="grid"	linefontcolor=7	linebaggroundcolor=0; apache2errorlog="/var/log/apache2/error.log"; apache2accesslog="/var/log/apache2/access.log"
-	authlog="/var/log/auth.log"	ufwlog="/var/log/ufw.log"	mysqlmariadberor="/var/log/mysql/mariadb.err"; mysqlerrorlog="/var/log/mysql/error.log"; listVar=""; ScreenLogLevel=0
-	# DIALOG_OK=0; DIALOG_HELP=2; DIALOG_EXTRA=3; DIALOG_ITEM_HELP=4; SIG_NONE=0; SIG_HUP=1; SIG_INT=2; SIG_QUIT=3; SIG_KILL=9; SIG_TERM=15
-	DIALOG_CANCEL=1; DIALOG_ESC=255; DIALOG=dialog; VISITORLIST="yes"; REGIONSANZEIGE="yes"; #DELREGIONS="no";
-	netversion="1946"; CONFIGPFAD="OpenSimConfig"; DOTNETMODUS="yes";
-	OSVERSION="opensim-0.9.2.2Dev";
-	OPENSIMVERSION="opensim-0.9.2.2.zip";
-}
-
-##
- #* osmtoolconfigabfrage.
- # Hier wird die Konfigurationsparameter für opensimTOOL abgefragt.
- # 
- #? @param STARTVERZEICHNIS ROBUSTVERZEICHNIS MONEYVERZEICHNIS OPENSIMVERZEICHNIS CONFIGPFAD SCRIPTPATH.
- #? @return STARTVERZEICHNIS ROBUSTVERZEICHNIS MONEYVERZEICHNIS OPENSIMVERZEICHNIS CONFIGPFAD SCRIPTPATH.
- # todo: nichts.
-##
-function osmtoolconfigabfrage() {
-	# Ausgabe Kopfzeilen
-	VSTARTVERZEICHNIS=$(pwd); # Vorläufiges Startverzeichnis
-	echo "$SCRIPTNAME Version $VERSION"
 	echo " "
-	echo "##################################################################"
-	echo "########### ABBRUCH MIT DER TASTENKOMBINATION ####################"
-	echo "####################  STRG + C  ##################################"
-	echo "##################################################################"
-	echo "##     Die Werte in den [Klammern] sind vorschläge              ##"
-	echo "##     und können mit Enter übernommen werden.                  ##"
-	echo "##################################################################"
-	echo "##   Daten stehen gegeben falls auch in der alten opensim.cnf   ##"
-	echo "##################################################################"
-	echo " "
-	echo "Das Verzeichnis wo sich ihr Grid befindet oder befinden soll ["${VSTARTVERZEICHNIS//\//}"]"
-	read -r STARTVERZEICHNIS
-	if [ "$STARTVERZEICHNIS" = "" ]; then STARTVERZEICHNIS=""${VSTARTVERZEICHNIS//\//}""; fi
-	echo "Ihr Gridverzeichnis ist $STARTVERZEICHNIS"
-	echo "##################################################################"
-
-	echo "Das Verzeichnis wo sich ihr Robust befindet [robust]"
-	read -r ROBUSTVERZEICHNIS
-	if [ "$ROBUSTVERZEICHNIS" = "" ]; then ROBUSTVERZEICHNIS="robust"; fi
-	echo "Ihr Robustverzeichnis ist $ROBUSTVERZEICHNIS"
-	echo "##################################################################"
-
-	echo "Das Verzeichnis wo sich ihr Moneyverzeichnis befindet [robust]"
-	read -r MONEYVERZEICHNIS
-	if [ "$MONEYVERZEICHNIS" = "" ]; then MONEYVERZEICHNIS="robust"; fi
-	echo "Ihr Moneyverzeichnis ist $MONEYVERZEICHNIS"
-	echo "##################################################################"
-
-	echo "Das Verzeichnis wo sich ihr OpenSimverzeichnis befindet [opensim]"
-	read -r OPENSIMVERZEICHNIS
-	if [ "$OPENSIMVERZEICHNIS" = "" ]; then OPENSIMVERZEICHNIS="opensim"; fi
-	echo "Ihr OpenSimverzeichnis ist $OPENSIMVERZEICHNIS"
-	echo "##################################################################"
-
-	echo "Das Verzeichnis wo sich ihre Konfigurationsdateien befindet [OpenSimConfig]"
-	read -r CONFIGPFAD
-	if [ "$CONFIGPFAD" = "" ]; then CONFIGPFAD="OpenSimConfig"; fi
-	echo "Ihr Konfigurationsdateienverzeichnis ist $CONFIGPFAD"
-	echo "##################################################################"
-
-	echo "Soll dotnet 6 benutzt werden [yes] no"
-	read -r DOTNETMODUS
-	if [ "$DOTNETMODUS" = "" ]; then DOTNETMODUS="yes"; fi
-	echo "Ihre dotnet 6 auswahl ist DOTNETMODUS=$DOTNETMODUS"
-	echo "##################################################################"
-
-    # Fertig und abfragen
-    #osmtoolconfig "/$STARTVERZEICHNIS/osmtoolconfig.ini"
-	osmtoolconfig $STARTVERZEICHNIS $ROBUSTVERZEICHNIS $MONEYVERZEICHNIS $OPENSIMVERZEICHNIS $CONFIGPFAD "/$SCRIPTPATH/osmtoolconfig.ini"
-}
-
-### Diverse Voreinstellungen
-AKTUELLEVERZ=$(pwd) # Aktuelles Verzeichnis
-
-# Datumsvariablen Datum, Dateidatum und Uhrzeit
-DATUM=$(date +%d.%m.%Y)
-DATEIDATUM=$(date +%d_%m_%Y) # UHRZEIT=$(date +%H:%M:%S)
-
-# Linux Version
-myDescription=$(lsb_release -d) # Description: Ubuntu 22.04 LTS
-myRelease=$(lsb_release -r)     # Release: 22.04
-myCodename=$(lsb_release -sc)   # jammy
-
-ubuntuDescription=$(cut -f2 <<<"$myDescription") # Ubuntu 22.04 LTS
-ubuntuRelease=$(cut -f2 <<<"$myRelease")         # 22.04
-ubuntuCodename=$(cut -f2 <<<"$myCodename")       # jammy
-# SQL Version
-SQLVERSIONVOLL=$(mysqld --version)
-SQLVERSION=$(echo "${SQLVERSIONVOLL:0:45}")
-
-### Einstellungen aus osmtoolconfig.ini laden, bei einem Script upgrade gehen so die einstellungen nicht mehr verloren.
-
-# Pfad des osmtool.sh Skriptes herausfinden
-SCRIPTPATH=$(cd "$(dirname "$0")" && pwd)
-
-# Nutzer mit Konfigurationsfragen quaelen
-# Abfrage Konfig Einstellungen
-if ! [ -f "/$SCRIPTPATH/osmtoolconfig.ini" ]; then osmtoolconfigabfrage; fi
-
-# Wenn es keine Konfigurationsdatei gibt anlegen
-#if ! [ -f "/$SCRIPTPATH/osmtoolconfig.ini" ]; then osmtoolconfig "/$SCRIPTPATH/osmtoolconfig.ini"; fi
-
-# Variablen aus config Datei laden osmtoolconfig.ini muss sich im gleichen Verzeichnis wie osmtool.sh befinden.
-# shellcheck disable=SC1091
-. "$SCRIPTPATH"/osmtoolconfig.ini
-
-# Aktuelle IP ueber Suchadresse ermitteln und Ausfuehrungszeichen anhaengen.
-AKTUELLEIP='"'$(wget -O - -q $SEARCHADRES)'"'
-
-# gibt es das Startverzeichnis wenn nicht abbruch.
-cd /"$STARTVERZEICHNIS" || return 1
-sleep 1
-
-# Eingabeauswertung fuer Funktionen ohne dialog.
-KOMMANDO=$1
-### Diverse Voreinstellungen Ende.
-
-##
- #* instdialog.
- # installation von dialog.
- # 
- #? @param keine.
- #? @return keine.
- # todo: nichts.
-##
-# install dialog
-function instdialog() {
-	echo "Ich installiere jetzt dialog"
-	sudo apt-get -y update
-	sudo apt-get -y upgrade
-	sudo apt-get -y install dialog
-	# Warscheinlich ist die Installation fehlgeschlagen da abhängigkeiten fehlen.
-	sudo apt-get -f install # abhängiketen nachinstallieren
-	sudo apt-get -y install dialog # erneute installation
-	#dialog --title 'Dialog Nachricht' --msgbox '. . . . Dialog wurde Installiert!' 6 50
-	dialog --title 'Die erste Dialog Nachricht' --calendar 'Dialog wurde Installiert am:' 0 0
-	tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
-}
-
-##
- #* vardel.
- # Variablen auf einen schlag loeschen.
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
-##
-function vardel() {
-	unset STARTVERZEICHNIS
-	unset MONEYVERZEICHNIS
-	unset ROBUSTVERZEICHNIS
-	unset WARTEZEIT
-	unset STARTWARTEZEIT
-	unset STOPWARTEZEIT
-	unset MONEYWARTEZEIT
-	unset NAME
-	unset VERZEICHNIS
-	unset PASSWORD
-	unset DATEI
-	unset OPENSIMVERZEICHNIS
-	unset SCRIPTSOURCE
-	unset SCRIPTZIP
-	unset MONEYSOURCE
-	unset MONEYZIP
-	unset REGIONSNAME
-	unset REGIONSNAMEb
-	unset REGIONSNAMEc
-	unset REGIONSNAMEd
-	unset VERZEICHNISSCREEN
-	return 0
-}
-
-##
- #* ScreenLog.
- # Bildschirmausgabe reduzieren.
- # 
- #? @param ScreenLogLevel.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
-##
-function ScreenLog() {
-	if (( ScreenLogLevel == 1 )); then
-		clear # Bildschirmausgabe loeschen Scrollbereich bleibt zum ueberpruefen.
-	fi	
-	if (( ScreenLogLevel == 2 )); then
-		reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
-	fi
-	if (( ScreenLogLevel == 3 )); then
-		tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich (schneller).
-	fi
-	if (( ScreenLogLevel == 4 )); then
-		printf '\e[3J' # Bildschirmausgabe sauber loeschen inklusive dem Scrollbereich.
-	fi
-	if (( ScreenLogLevel == 5 )); then
-		MYFUNCNAME=${FUNCNAME[0]};
-		echo "$MYFUNCNAME" # Funktionsname mit ausgeben.
-	fi
-	unset MYFUNCNAME
-	return 0
-}
-
-##
- #* dialogclear.
- # Dialog Intern loeschen.
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
-##
-function dialogclear() {
-	dialog --clear
-	return 0
-}
-
-##
- #* ende.
- # Beenden mit ausgabe der letzten Meldung.
- # 
- #? @param keine.
- #? @return letzten Meldung.
- # todo: nichts.
-##
-function ende() {
-	return
-	log info "$?" # Beenden mit ausgabe der letzten Meldung.
-}
-
-##
- #* fehler.
- # Den aufrufenden Prozess mit der letzten Meldung beenden.
- # 
- #? @param keine.
- #? @return letzten Meldung.
- # todo: nichts.
-##
-function fehler() {
-	exit
-	log error "$?" # Den aufrufenden Prozess mit der letzten Meldung beenden.
-}
-
-##
- #* clearuserlist.
- # Alle Besucherlisten loeschen.
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
-##
-function clearuserlist() {
-	echo "Lösche Besucherlisten log"
-	rm -r /$STARTVERZEICHNIS/*_osmvisitorlist.log
-	echo "Lösche Besucherlisten txt"
-	rm -r /$STARTVERZEICHNIS/*_osmvisitorlist.txt
-}
-
-##
- #* historylogclear.
- # Log Dateien von Ubuntu loeschen Beispiel: historylogclear "history".
- # das loeschen von history, apache2error, mysqlerror und mysqlmariadb.
- #
- #? @param history, apache2error, mysqlerror und mysqlmariadb.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
-##
-function historylogclear() {
-	hlclear=$1
-	case $hlclear in
-		history) 
-		history -cw; history -c; history -w
-		;;
-		apache2error) 
-			echo "" >$apache2errorlog  
-		;;
-		mysqlerror) 
-			echo "" >$mysqlerrorlog  
-		;;
-		mysqlmariadb) 
-			echo "" >$mysqlmariadberor  
-		;;
-		*) 
-			log info "  Nur das loeschen von history, apache2error, mysqlerror,"
-			log info "  und mysqlmariadb Error Log Dateien ist zur Zeit moeglich!"
-		;;
-	esac
-}
-
-##
- #* log.
- # Log Dateien und Funktionen.
- # 
- #? @param logtype.
- #? @return Textausgabe.
- # todo: nichts.
-##
-function log() {
-	local text
-	local logtype
-	#local datetime
-	logtype="$1"
-	text="$2"
-	#datetime=$(date +'%F %H:%M:%S')
-	DATEIDATUM=$(date +%d_%m_%Y)
-	lline="#####################################################################################"
-
-	if [ "$LOGWRITE" = "yes" ]; then
-		case $logtype in
-		line) echo $lline >>/$STARTVERZEICHNIS/"$DATEIDATUM""$logfilename".log ;;
-		rohtext) echo "$text" >>/$STARTVERZEICHNIS/"$DATEIDATUM""$logfilename".log ;;
-		text) echo "$(date +'%d.%m.%Y-%H:%M:%S') TEXT: $text" >>/$STARTVERZEICHNIS/"$DATEIDATUM""$logfilename".log ;;
-		debug) echo "$(date +'%d.%m.%Y-%H:%M:%S') DEBUG: $text" >>/$STARTVERZEICHNIS/"$DATEIDATUM""$logfilename".log ;;
-		info) echo "$(date +'%d.%m.%Y-%H:%M:%S') INFO: $text" >>/$STARTVERZEICHNIS/"$DATEIDATUM""$logfilename".log ;;
-		warn) echo "$(date +'%d.%m.%Y-%H:%M:%S') WARNING: $text" >>/$STARTVERZEICHNIS/"$DATEIDATUM""$logfilename".log ;;
-		error) echo "$(date +'%d.%m.%Y-%H:%M:%S') ERROR: $text" >>/$STARTVERZEICHNIS/"$DATEIDATUM""$logfilename".log ;;
-		*) return 0 ;;
-		esac
-	fi
-	case $logtype in
-	line) echo "$(tput setaf $linefontcolor) $(tput setab $linebaggroundcolor)$lline $(tput sgr 0)" ;;
-	rohtext) echo "$text" ;;
-	text) echo "$(tput setaf $textfontcolor) $(tput setab $textbaggroundcolor) $(date +'%d.%m.%Y-%H:%M:%S') TEXT: $text $(tput sgr 0)" ;;
-	debug) echo "$(tput setaf $debugfontcolor) $(tput setab $debugbaggroundcolor) $(date +'%d.%m.%Y-%H:%M:%S') DEBUG: $text $(tput sgr 0)" ;;
-	info) echo "$(tput setaf $infofontcolor) $(tput setab $infobaggroundcolor) $(date +'%d.%m.%Y-%H:%M:%S') INFO: $text $(tput sgr 0)" ;;
-	warn) echo "$(tput setaf $warnfontcolor) $(tput setab $warnbaggroundcolor) $(date +'%d.%m.%Y-%H:%M:%S') WARNING: $text $(tput sgr 0)" ;;
-	error) echo "$(tput setaf $errorfontcolor) $(tput setab $errorbaggroundcolor) $(date +'%d.%m.%Y-%H:%M:%S') ERROR: $text $(tput sgr 0)" ;;
-	*) return 0 ;;
-	esac
-	return 0
+	echo "Neuer Regionsname: $NEUERREGIONSNAME"
 }
 
 ##
@@ -802,66 +385,30 @@ function osgitstatus() {
 }
 
 ##
- #* schreibeinfo.
- # Kopfzeile erstellen.
+ #* ende.
+ # Beenden mit ausgabe der letzten Meldung.
  # 
  #? @param keine.
- #? @return nichts wird zurueckgegeben.
+ #? @return letzten Meldung.
  # todo: nichts.
 ##
-function schreibeinfo() {
-	# *Wenn die Log Datei nicht existiert muss sie erstellt werden sonst gibt es eine Fehlermeldung.
-	if [ "$LOGWRITE" = "yes" ]; then
-		if [ -f /$STARTVERZEICHNIS/"$DATEIDATUM""$logfilename".log ]; then
-			# echo "/$STARTVERZEICHNIS/$DATEIDATUM$logfilename.log ist vorhanden!"
-			echo " "
-		else
-			# echo "/$STARTVERZEICHNIS/$DATEIDATUM$logfilename.log ist nicht vorhanden und wird jetzt angelegt!"
-			echo " " >/$STARTVERZEICHNIS/"$DATEIDATUM""$logfilename".log
-		fi
-	fi
-		log rohtext "   ____                        _____  _                    _         _               "
-		log rohtext "  / __ \                      / ____|(_)                  | |       | |              "
-		log rohtext " | |  | | _ __    ___  _ __  | (___   _  _ __ ___   _   _ | |  __ _ | |_  ___   _ __ "
-		log rohtext " | |  | ||  _ \  / _ \|  _ \  \___ \ | ||  _   _ \ | | | || | / _  || __|/ _ \ |  __|"
-		log rohtext " | |__| || |_) ||  __/| | | | ____) || || | | | | || |_| || || (_| || |_| (_) || |   "
-		log rohtext "  \____/ |  __/  \___||_| |_||_____/ |_||_| |_| |_| \____||_| \____| \__|\___/ |_|   "
-		log rohtext "         | |                                                                         "
-		log rohtext "         |_|                                                                         "
-		log rohtext "            $SCRIPTNAME $VERSION"
-		log rohtext " "
-		log line
-		log rohtext "  $DATUM $(date +%H:%M:%S) MULTITOOL: wurde gestartet am $(date +%d.%m.%Y) um $(date +%H:%M:%S) Uhr"
-		log rohtext "  $DATUM $(date +%H:%M:%S) INFO: Server Name: ${HOSTNAME}"
-		log rohtext "  $DATUM $(date +%H:%M:%S) INFO: Server IP: ${AKTUELLEIP}"
-		log rohtext "  $DATUM $(date +%H:%M:%S) INFO: Linux Version: $ubuntuDescription"
-		log rohtext "  $DATUM $(date +%H:%M:%S) INFO: Release Nummer: $ubuntuRelease"
-		log rohtext "  $DATUM $(date +%H:%M:%S) INFO: Linux Name: $ubuntuCodename"
-		log rohtext "  $DATUM $(date +%H:%M:%S) INFO: Bash Version: ${BASH_VERSION}"
-		txtmono=$(mono --version);
-		log rohtext "  $DATUM $(date +%H:%M:%S) INFO: MONO Version: ${txtmono:0:37}"
-		log rohtext "  $DATUM $(date +%H:%M:%S) INFO: MONO THREAD Einstellung: ${MONO_THREADS_PER_CPU}"
-		log rohtext "  $DATUM $(date +%H:%M:%S) INFO: Spracheinstellung: ${LANG}"
-		log rohtext "  $DATUM $(date +%H:%M:%S) INFO: $(screen --version)"
-		SYSTEMBOOT=$(who -b);
-		trimm $SYSTEMBOOT;
-		log rohtext "  $DATUM $(date +%H:%M:%S) INFO: $trimmvar"
-		log rohtext "  $DATUM $(date +%H:%M:%S) INFO: $SQLVERSION"
-		lastrebootdatum
-		# Nachfolgendes hab ich rausgenommen weil die opensimulator.org so laggt.
-		# osdate=$(date --utc --date "$1" +%F)
-		# if curl -s "http://opensimulator.org/viewgit/?a=shortlog&p=opensim"  |  grep -q "$osdate"; then
-		# 	echo "  $DATUM $(date +%H:%M:%S) INFO:$(tput setaf 2) Eine neue OpenSimulator Master Version ist da.$(tput sgr 0)"
-		# else
-		# 	echo "  $DATUM $(date +%H:%M:%S) INFO:$(tput setaf 1) Es ist keine neue OpenSimulator Master Version da.$(tput sgr 0)"
-		# fi
-		log line
-		log rohtext " "
-	return 0
+function ende() {
+	return
+	log info "$?" # Beenden mit ausgabe der letzten Meldung.
 }
 
-# *Kopfzeile in die Log Datei schreiben.
-schreibeinfo
+##
+ #* fehler.
+ # Den aufrufenden Prozess mit der letzten Meldung beenden.
+ # 
+ #? @param keine.
+ #? @return letzten Meldung.
+ # todo: nichts.
+##
+function fehler() {
+	exit
+	log error "$?" # Den aufrufenden Prozess mit der letzten Meldung beenden.
+}
 
 ##
  #* letterdel.
@@ -1053,129 +600,903 @@ function uncompress() {
 }
 
 ##
- #* downloados.
- # Opensim download.
+ #* makeverzeichnisliste.
+ # Erstellen eines Arrays aus einer Textdatei - Verzeichnisse.
+ # 
+ #? @param keine.
+ #? @return $ANZAHLVERZEICHNISSLISTE.
+ # todo: nichts.
+##
+function makeverzeichnisliste() {
+	VERZEICHNISSLISTE=()
+	while IFS= read -r line; do
+		VERZEICHNISSLISTE+=("$line")
+	done </$STARTVERZEICHNIS/$SIMDATEI
+	# Anzahl der Eintraege.
+	ANZAHLVERZEICHNISSLISTE=${#VERZEICHNISSLISTE[*]}
+	return 0
+}
+
+##
+ #* makeregionsliste 
+ # Erstellen eines Arrays aus einer Textdatei.
+ # 
+ #? @param keine.
+ #? @return REGIONSLISTE.
+ #? @return ANZAHLREGIONSLISTE.
+ # todo: nichts.
+##
+function makeregionsliste() {
+	REGIONSLISTE=()
+	while IFS= read -r line; do
+		REGIONSLISTE+=("$line")
+	done </$STARTVERZEICHNIS/$REGIONSDATEI
+	ANZAHLREGIONSLISTE=${#REGIONSLISTE[*]} # Anzahl der Eintraege.
+	return 0
+}
+
+##
+ #* mysqlrest Funktion zum abfragen von mySQL Datensaetzen.
+ # mymysql "username" "password" "databasename" "mysqlcommand".
+ # 
+ #? @param "username" "password" "databasename" "mysqlcommand".
+ #? @return result_mysqlrest.
+ # todo: nichts.
+##
+function mysqlrest() {
+	username=$1
+	password=$2
+	databasename=$3
+	mysqlcommand=$4
+	result_mysqlrest=$(echo "$mysqlcommand;" | MYSQL_PWD=$password mysql -u"$username" "$databasename" -N) 2>/dev/null
+}
+
+##
+ #* mysqlrestnodb.
+ # Funktion mySQL Datensaetzen: mymysql "username" "password" "mysqlcommand".
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
  # todo: nichts.
 ##
-function downloados() {
-	ASSETDELBOXERGEBNIS=$(dialog --menu "Downloads" 30 80 25 \
-		"Download1: " "$LINK01" \
-		"Download2: " "$LINK02" \
-		"Download3: " "$LINK03" \
-		"Download4: " "$LINK04" \
-		"Download5: " "$LINK05" \
-		"Download6: " "$LINK06" \
-		"Download7: " "$LINK07" \
-		"Download8: " "$LINK08" \
-		"Download9: " "$LINK09" \
-		"Download10: " "$LINK10" \
-		"Download11: " "$LINK11" \
-		"Download12: " "$LINK12" \
-		"Download13: " "$LINK13" \
-		"Download14: " "$LINK14" \
-		"Download15: " "$LINK15" \
-		"Download16: " "$LINK16" \
-		"Download17: " "$LINK17" \
-		"Download18: " "$LINK18" \
-		"Download19: " "$LINK19" \
-		"Download20: " "$LINK20" \
-		"Download21: " "$LINK21" \
-		"Download22: " "$LINK22" \
-		"Download23: " "$LINK23" \
-		"Download24: " "$LINK24" \
-		"Download25: " "$LINK25" \
-		"Download26: " "$LINK26" 3>&1 1>&2 2>&3 3>&-)
+function mysqlrestnodb() {
+	username=$1
+	password=$2
+	mysqlcommand=$3
+	result_mysqlrestnodb=$(echo "$mysqlcommand" | MYSQL_PWD=$password mysql -u"$username")
+}
+
+###########################################################################
+#* Konfigurationen Funktionsgruppe
+###########################################################################
+
+##
+ #* instdialog.
+ # installation von dialog.
+ # 
+ #? @param keine.
+ #? @return keine.
+ # todo: nichts.
+##
+# install dialog
+function instdialog() {
+	echo "Ich installiere jetzt dialog"
+	sudo apt-get -y update
+	sudo apt-get -y upgrade
+	sudo apt-get -y install dialog
+	# Warscheinlich ist die Installation fehlgeschlagen da abhängigkeiten fehlen.
+	sudo apt-get -f install # abhängiketen nachinstallieren
+	sudo apt-get -y install dialog # erneute installation
+	#dialog --title 'Dialog Nachricht' --msgbox '. . . . Dialog wurde Installiert!' 6 50
+	dialog --title 'Die erste Dialog Nachricht' --calendar 'Dialog wurde Installiert am:' 0 0
+	tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
+}
+
+##
+ #* osmtoolconfig autoconfigure.
+ # Hier wird die Konfigurationsdatei fuer das opensimTOOL erstellt.
+ # 
+ #? @param STARTVERZEICHNIS ROBUSTVERZEICHNIS MONEYVERZEICHNIS OPENSIMVERZEICHNIS CONFIGPFAD OSTOOLINI
+ #? @return Eine Datei wird geschrieben.
+ # todo: nichts.
+##
+function osmtoolconfig() {
+	# if [[ $1 == "help" ]]; then	echo "Hier wird die Konfigurationsdatei fuer das opensimTOOL erstellt."; exit 0; fi
+	STARTVERZEICHNIS=$1; ROBUSTVERZEICHNIS=$2; MONEYVERZEICHNIS=$3; OPENSIMVERZEICHNIS=$4; CONFIGPFAD=$5; OSTOOLINI=$6	
+    {		
+		echo "### Einstellungen $SCRIPTNAME $VERSION"
+		echo "     "
+		echo "## Das Startverzeichnis home oder opt zum Beispiel."
+		echo "    STARTVERZEICHNIS=\"$STARTVERZEICHNIS\""
+		echo "    MONEYVERZEICHNIS=\"$MONEYVERZEICHNIS\""
+		echo "    ROBUSTVERZEICHNIS=\"$ROBUSTVERZEICHNIS\""
+		echo "    OPENSIMVERZEICHNIS=\"$OPENSIMVERZEICHNIS\""
+		echo "    CONFIGPFAD=\"$CONFIGPFAD\""
+		echo "     "
+		echo '    SCRIPTSOURCE="opensim-ossl-example-scripts-main"'
+		echo '    SCRIPTZIP="opensim-ossl-example-scripts-main.zip"'
+		echo "     "
+		echo '    MONEYSOURCE="OpenSimCurrencyServer-2021-master"'
+		echo '    MONEYZIP="OpenSimCurrencyServer-2021-master.zip"'
+		echo '    #MONEYSOURCE="OpenSimCurrencyServer-2023"'
+		echo '    #MONEYZIP="OpenSimCurrencyServer-2023.zip"'
+		echo '    #MUTELISTSOURCE="opensim-ossl-example-scripts-main"'
+		echo '    #MUTELISTZIP="OpenSimCurrencyServer-2021-master.zip"'
+		echo '    #OSSEARCHSOURCE="opensim-ossl-example-scripts-main"'
+		echo '    #OSSEARCHZIP="OpenSimCurrencyServer-2021-master.zip"'
+		echo "     "
+		echo '    #DIVASOURCE="diva-distribution"'
+    	echo '    #DIVAZIP="diva-distribution-master.zip"'
+		echo "     "
+		echo '    CONFIGURESOURCE="opensim-configuration-addon-modul-main"'
+		echo '    CONFIGUREZIP="opensim-configuration-addon-modul-main.zip"'
+		echo "     "
+		echo '    OSSEARCHSOURCE="OpenSimSearch"'
+		echo '    OSSEARCHSZIP="OpenSimSearch-master.zip"'
+		echo "     "
+		echo '    BUILDOLD="yes"'
+		echo "     "
+		echo "    DOTNETMODUS=\"$DOTNETMODUS\""
+		echo "     "
+		echo "## Schrift- und Hintergrundfarben"
+		echo "##  0 – Black, 1 – Red, 2 – Green, 3 – Yellow, 4 – Blue, 5 – Magenta, 6 – Cyan, 7 – White"
+		echo "    # font color;       background color;"
+		echo "    textfontcolor=7;    textbaggroundcolor=0;"
+		echo "    debugfontcolor=4;   debugbaggroundcolor=0;"
+		echo "    infofontcolor=2;    infobaggroundcolor=0;"
+		echo "    warnfontcolor=3;    warnbaggroundcolor=0;"
+		echo "    errorfontcolor=1;   errorbaggroundcolor=7;"
+		echo "    linefontcolor=7;    linebaggroundcolor=0;"
+		echo "     "
+		echo "    ScreenLogLevel=0; # ScreenLogLevel=0 nichts machen, bis ScreenLogLevel=5 Funktionsnamen ausgeben."
+		echo '    LOGWRITE="yes" # yes/no'
+		echo '    logfilename="_multitool"'
+		echo '    line="############################################################";'
+		echo "     "
+		echo "## Dateien"
+		echo '    REGIONSDATEI="osmregionlist.ini"'
+		echo '    SIMDATEI="osmsimlist.ini"'
+		echo '    OPENSIMDOWNLOAD="http://opensimulator.org/dist/"'
+		echo '    OPENSIMVERSION="opensim-0.9.2.2Dev"'
+		echo '    #OPENSIMVERSION="opensim-0.9.3.0Dev"'
+		echo '    SEARCHADRES="icanhazip.com" # Suchadresse'
+		echo "     "
+		echo '    REGIONSANZEIGE="yes"'
+		echo "     "
+		echo '    LOGDELETE="yes" # yes/no'
+		echo '    VISITORLIST="yes" # yes/no - schreibt vor dem loeschen alle Besucher samt mac in eine log Datei.'
+		echo "     "
+		echo "## Inklusive"
+		echo '    SCRIPTCOPY="yes"'
+		echo '    MONEYCOPY="yes"'
+		echo '    MUTELISTCOPY="yes"'
+		echo '    OSSEARCHCOPY="yes"'
+		echo '    DIVACOPY="no"'
+		echo '    PYTHONCOPY="no"'
+		echo '    CHRISOSCOPY="no"'
+		echo '    AUTOCONFIG="no"'
+		echo '    OSSEARCHCOPY="no"'
+		echo "     "
+		echo "## Die unterschiedlichen wartezeiten bis die Aktion ausgefuehrt wurde."
+		echo "    WARTEZEIT=60 # Ist eine allgemeine Wartezeit."
+		echo "    STARTWARTEZEIT=10 # Startwartezeit ist eine Pause, damit nicht alle Simulatoren gleichzeitig starten."
+		echo "    STOPWARTEZEIT=30 # Stopwartezeit ist eine Pause, damit nicht alle Simulatoren gleichzeitig herunterfahren."
+		echo "    MONEYWARTEZEIT=60 # Moneywartezeit ist eine Extra Pause, weil dieser zwischen Robust und Simulatoren gestartet werden muss."
+		echo "    ROBUSTWARTEZEIT=90 # Robust wartezeit ist eine Extra Pause, weil dieser komplett gestartet werden muss."
+		echo "    BACKUPWARTEZEIT=180 # Backupwartezeit ist eine Pause, damit der Server nicht ueberlastet wird."
+		echo "    AUTOSTOPZEIT=60 # Autostopzeit ist eine Pause, um den Simulatoren zeit zum herunterfahren gegeben wird, bevor haengende Simulatoren gekillt werden."
+		echo "     "
+		echo "## Linux Einstellungen"
+		echo '    SETMONOTHREADSON="yes"'
+		echo "    SETMONOTHREADS=1024"
+		echo '    SETULIMITON="yes"'
+		echo '    SETMONOGCPARAMSON1="no"'
+		echo '    SETMONOGCPARAMSON2="yes"'
+		echo "     "
+		echo "## Mono Version fuer Build Vorgang Visual Studio 2019 oder 2022 - Zweite Zahl net/mono framework."
+		echo "    # 1948, 1950, 1960, 1970 - 2248, 2250, 2260, 2270"
+		echo '    netversion="2248"'
+		echo "     "
+		echo "## Divers"
+		echo '    SETOSCOMPION="no" # Mit oder ohne log Datei kompilieren. yes oder no.'
+		echo '    SETAOTON="no"'
+		echo "    # opensim-0.9.2.2Dev-4-g5e9b3b4.zip"
+		echo '    OSVERSION="opensim-0.9.2.2Dev-"'
+		echo '    # OSVERSION="opensim-0.9.3.0Dev-"'
+		echo '    insterweitert="yes"'
+		echo "     "
+		echo "## Bereinigungen"
+		echo '    AUTOCLEANALL="yes"'
+		echo '    GRIDCACHECLEAR="yes"'
+		echo '    SCRIPTCLEAR="no"'
+		echo '    ASSETCACHECLEAR="yes"'
+		echo '    MAPTILESCLEAR="yes"'
+		echo '    RMAPTILESCLEAR="yes"'
+		echo '    RBAKESCLEAR="no"'
+		echo "     "
+		echo "## OpenSim Downloads"
+		echo '    LINK01="http://opensimulator.org/dist/OpenSim-LastAutoBuild.zip"'
+		echo '    LINK02="http://opensimulator.org/dist/opensim-0.8.2.1-source.tar.gz"'
+		echo '    LINK03="http://opensimulator.org/dist/opensim-0.8.2.1-source.zip"'
+		echo '    LINK04="http://opensimulator.org/dist/opensim-0.8.2.1.tar.gz"'
+		echo '    LINK05="http://opensimulator.org/dist/opensim-0.8.2.1.zip"'
+		echo '    LINK06="http://opensimulator.org/dist/opensim-0.9.0.0-source.tar.gz"'
+		echo '    LINK07="http://opensimulator.org/dist/opensim-0.9.0.0-source.zip"'
+		echo '    LINK08="http://opensimulator.org/dist/opensim-0.9.0.0.tar.gz"'
+		echo '    LINK09="http://opensimulator.org/dist/opensim-0.9.0.0.zip"'
+		echo '    LINK10="http://opensimulator.org/dist/opensim-0.9.0.1-source.tar.gz"'
+		echo '    LINK11="http://opensimulator.org/dist/opensim-0.9.0.1-source.zip"'
+		echo '    LINK12="http://opensimulator.org/dist/opensim-0.9.0.1.tar.gz"'
+		echo '    LINK13="http://opensimulator.org/dist/opensim-0.9.0.1.zip"'
+		echo '    LINK14="http://opensimulator.org/dist/opensim-0.9.1.0-source.tar.gz"'
+		echo '    LINK15="http://opensimulator.org/dist/opensim-0.9.1.0-source.zip"'
+		echo '    LINK16="http://opensimulator.org/dist/opensim-0.9.1.0.tar.gz"'
+		echo '    LINK17="http://opensimulator.org/dist/opensim-0.9.1.0.zip"'
+		echo '    LINK18="http://opensimulator.org/dist/opensim-0.9.1.1-source.tar.gz"'
+		echo '    LINK19="http://opensimulator.org/dist/opensim-0.9.1.1-source.zip"'
+		echo '    LINK20="http://opensimulator.org/dist/opensim-0.9.1.1.tar.gz"'
+		echo '    LINK21="http://opensimulator.org/dist/opensim-0.9.1.1.zip"'
+		echo '    LINK22="http://opensimulator.org/dist/opensim-0.9.2.0-source.tar.gz"'
+		echo '    LINK23="http://opensimulator.org/dist/opensim-0.9.2.0-source.zip"'
+		echo '    LINK24="http://opensimulator.org/dist/opensim-0.9.2.0.tar.gz"'
+		echo '    LINK25="http://opensimulator.org/dist/opensim-0.9.2.0.zip"'
+		echo '    LINK26="http://opensimulator.org/dist/opensim-0.9.2.1.zip"'
+		echo "     "
+		echo "## Log Dateien"
+		echo '    apache2errorlog="/var/log/apache2/error.log"'
+		echo '    apache2accesslog="/var/log/apache2/access.log"'
+		echo '    authlog="/var/log/auth.log"'
+		echo '    ufwlog="/var/log/ufw.log"'
+		echo '    mysqlmariadberor="/var/log/mysql/mariadb.err"'
+		echo '    mysqlerrorlog="/var/log/mysql/error.log"'
+		echo "     "
+		echo "## Liste der zu verwendende Musiklisten."
+		echo '    listVar="50s 60s 70s 80s 90s Alternative Blues Classic Club Country Dance Disco EDM Easy Electronic Folk Funk Gothic Heavy Hits House Indie Jazz Metal Misc Oldies Party Pop Reggae Rock Schlager Soul Techno Top Trance industrial pop"'
+    } > "$OSTOOLINI"
+
+	echo "### Ihre neuen Konfigurationsdateien wurden geschrieben! ###"
+	echo "#####################  FERTIG  #############################"
+}
+
+##
+ #* osmtoolconfigabfrage.
+ # Hier wird die Konfigurationsparameter für opensimTOOL abgefragt.
+ # 
+ #? @param STARTVERZEICHNIS ROBUSTVERZEICHNIS MONEYVERZEICHNIS OPENSIMVERZEICHNIS CONFIGPFAD SCRIPTPATH.
+ #? @return STARTVERZEICHNIS ROBUSTVERZEICHNIS MONEYVERZEICHNIS OPENSIMVERZEICHNIS CONFIGPFAD SCRIPTPATH.
+ # todo: nichts.
+##
+function osmtoolconfigabfrage() {
+	# Ausgabe Kopfzeilen
+	VSTARTVERZEICHNIS=$(pwd); # Vorläufiges Startverzeichnis
+	echo "$SCRIPTNAME Version $VERSION"
+	echo " "
+	echo "##################################################################"
+	echo "########### ABBRUCH MIT DER TASTENKOMBINATION ####################"
+	echo "####################  STRG + C  ##################################"
+	echo "##################################################################"
+	echo "##     Die Werte in den [Klammern] sind vorschläge              ##"
+	echo "##     und können mit Enter übernommen werden.                  ##"
+	echo "##################################################################"
+	echo "##   Daten stehen gegeben falls auch in der alten opensim.cnf   ##"
+	echo "##################################################################"
+	echo " "
+	echo "Das Verzeichnis wo sich ihr Grid befindet oder befinden soll ["${VSTARTVERZEICHNIS//\//}"]"
+	read -r STARTVERZEICHNIS
+	if [ "$STARTVERZEICHNIS" = "" ]; then STARTVERZEICHNIS=""${VSTARTVERZEICHNIS//\//}""; fi
+	echo "Ihr Gridverzeichnis ist $STARTVERZEICHNIS"
+	echo "##################################################################"
+
+	echo "Das Verzeichnis wo sich ihr Robust befindet [robust]"
+	read -r ROBUSTVERZEICHNIS
+	if [ "$ROBUSTVERZEICHNIS" = "" ]; then ROBUSTVERZEICHNIS="robust"; fi
+	echo "Ihr Robustverzeichnis ist $ROBUSTVERZEICHNIS"
+	echo "##################################################################"
+
+	echo "Das Verzeichnis wo sich ihr Moneyverzeichnis befindet [robust]"
+	read -r MONEYVERZEICHNIS
+	if [ "$MONEYVERZEICHNIS" = "" ]; then MONEYVERZEICHNIS="robust"; fi
+	echo "Ihr Moneyverzeichnis ist $MONEYVERZEICHNIS"
+	echo "##################################################################"
+
+	echo "Das Verzeichnis wo sich ihr OpenSimverzeichnis befindet [opensim]"
+	read -r OPENSIMVERZEICHNIS
+	if [ "$OPENSIMVERZEICHNIS" = "" ]; then OPENSIMVERZEICHNIS="opensim"; fi
+	echo "Ihr OpenSimverzeichnis ist $OPENSIMVERZEICHNIS"
+	echo "##################################################################"
+
+	echo "Das Verzeichnis wo sich ihre Konfigurationsdateien befindet [OpenSimConfig]"
+	read -r CONFIGPFAD
+	if [ "$CONFIGPFAD" = "" ]; then CONFIGPFAD="OpenSimConfig"; fi
+	echo "Ihr Konfigurationsdateienverzeichnis ist $CONFIGPFAD"
+	echo "##################################################################"
+
+	echo "Soll dotnet 6 benutzt werden [yes] no"
+	read -r DOTNETMODUS
+	if [ "$DOTNETMODUS" = "" ]; then DOTNETMODUS="yes"; fi
+	echo "Ihre dotnet 6 auswahl ist DOTNETMODUS=$DOTNETMODUS"
+	echo "##################################################################"
+
+    # Fertig und abfragen
+    #osmtoolconfig "/$STARTVERZEICHNIS/osmtoolconfig.ini"
+	osmtoolconfig $STARTVERZEICHNIS $ROBUSTVERZEICHNIS $MONEYVERZEICHNIS $OPENSIMVERZEICHNIS $CONFIGPFAD "/$SCRIPTPATH/osmtoolconfig.ini"
+}
+
+##
+ #* oswriteconfig.
+ # Konfiguration lesen.
+ # 
+ #? @param $SETSIMULATOR.
+ #? @return $CONFIGWRITE.
+ # todo: nichts.
+##
+function oswriteconfig() {
+	SETSIMULATOR=$1
+	CONFIGWRITE="config save /$STARTVERZEICHNIS/$SETSIMULATOR.ini"
+	screen -S "$SETSIMULATOR" -p 0 -X eval "stuff '$CONFIGWRITE'^M"
+}
+
+##
+ #* menuoswriteconfig.
+ # Konfiguration lesen.
+ # 
+ #? @param dialog.
+ #? @return dialog.
+ # todo: nichts.
+##
+function menuoswriteconfig() {
+	SETSIMULATOR=$1 # OpenSimulator, Verzeichnis und Screen Name
+
+	# zuerst schauen ob dialog installiert ist
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
+		# Alle Aktionen mit dialog
+		boxtitel="opensimMULTITOOL Eingabe"
+		boxtext="Screen Name:"
+		SETSIMULATOR=$(dialog --backtitle "opensimMULTITOOL $VERSION" --title "$boxtitel" --inputbox "$boxtext" 8 40 3>&1 1>&2 2>&3 3>&-)
+		dialogclear
+		ScreenLog
+
+		if ! screen -list | grep -q "$SETSIMULATOR"; then
+			# es laeuft nicht - not work
+			dialog --backtitle "opensimMULTITOOL $VERSION" --msgbox "OpenSimulator $SETSIMULATOR OFFLINE!" 5 40
+			dialogclear
+			ScreenLog
+		else
+			# es laeuft - work
+			# Konfig schreiben
+			CONFIGWRITE="config save /$STARTVERZEICHNIS/$SETSIMULATOR.ini"			
+			screen -S "$SETSIMULATOR" -p 0 -X eval "stuff '$CONFIGWRITE'^M"
+			sleep 1
+			CONFIGREAD=$(sed '' "$SETSIMULATOR.ini")
+			# # Konfig lesen
+			dialog --backtitle "opensimMULTITOOL $VERSION" --msgbox "$CONFIGREAD" 0 0
+			#dialog --editbox "$CONFIGREAD" 0 0
+			#dialog --textbox "$CONFIGREAD" 0 0
+			dialogclear
+			ScreenLog
+		fi
+	else
+		# Alle Aktionen ohne dialog
+		if ! screen -list | grep -q "$SETSIMULATOR"; then
+			# es laeuft nicht - not work
+			log info "WORKS: $SETSIMULATOR OFFLINE!"
+			return 1
+		else
+			# es laeuft - work
+			# Konfig schreiben
+			CONFIGWRITE="config save /$STARTVERZEICHNIS/$SETSIMULATOR.ini"
+			screen -S "$SETSIMULATOR" -p 0 -X eval "stuff '$CONFIGWRITE'^M"
+			return 0
+		fi
+	fi
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then hauptmenu; fi
+}
+
+##
+ #* osstarteintrag.
+ # Fuegt der osmsimlist.ini einen Region Simulator hinzu und sortiert diese.
+ # 
+ #? @param $OSEINTRAG.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+function osstarteintrag() {
+	OSEINTRAG=$1 # OpenSimulator, Verzeichnis und Screen Name
+	log info "OpenSimulator $OSEINTRAG wird der Datei $SIMDATEI hinzugefuegt!"
+	sed -i '1s/.*$/'"$OSEINTRAG"'\n&/g' /"$STARTVERZEICHNIS"/$SIMDATEI
+	sort /"$STARTVERZEICHNIS"/$SIMDATEI -o /"$STARTVERZEICHNIS"/$SIMDATEI
+}
+
+##
+ #* menuosstarteintrag.
+ # Fuegt der osmsimlist.ini einen Region Simulator hinzu und sortiert diese.
+ # 
+ #? @param dialog.
+ #? @return dialog.
+ # todo: nichts.
+##
+function menuosstarteintrag() {
+	MENUOSEINTRAG=$(
+		dialog --backtitle "opensimMULTITOOL $VERSION" --title "opensimMULTITOOL Eingabe" \
+			--inputbox "Simulator:" 8 40 \
+			3>&1 1>&2 2>&3 3>&-
+	)
+	dialogclear
+	ScreenLog
+
+	log info "OpenSimulator $MENUOSEINTRAG wird der Datei $SIMDATEI hinzugefuegt!"
+	sed -i '1s/.*$/'"$MENUOSEINTRAG"'\n&/g' /"$STARTVERZEICHNIS"/$SIMDATEI
+	sort /"$STARTVERZEICHNIS"/$SIMDATEI -o /"$STARTVERZEICHNIS"/$SIMDATEI
+
+	dateimenu
+}
+
+##
+ #* osstarteintragdel.
+ # entfernt einen Region Simulator aus  der osmsimlist.ini und sortiert diese.
+ # 
+ #? @param $OSEINTRAGDEL.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+function osstarteintragdel() {
+	OSEINTRAGDEL=$1 # OpenSimulator, Verzeichnis und Screen Name
+	log info "OpenSimulator $OSEINTRAGDEL wird aus der Datei $SIMDATEI entfernt!"
+	sed -i '/'"$OSEINTRAGDEL"'/d' /"$STARTVERZEICHNIS"/$SIMDATEI
+	sort /"$STARTVERZEICHNIS"/$SIMDATEI -o /"$STARTVERZEICHNIS"/$SIMDATEI
+}
+
+##
+ #* menuosstarteintragdel.
+ # entfernt einen Region Simulator aus  der osmsimlist.ini und sortiert diese.
+ # 
+ #? @param dialog.
+ #? @return dialog.
+ # todo: nichts.
+##
+function menuosstarteintragdel() {
+	MENUOSEINTRAGDEL=$(
+		dialog --backtitle "opensimMULTITOOL $VERSION" --title "opensimMULTITOOL Eingabe" \
+			--inputbox "Simulator:" 8 40 \
+			3>&1 1>&2 2>&3 3>&-
+	)
+	dialogclear
+	ScreenLog
+
+	log info "OpenSimulator $MENUOSEINTRAGDEL wird aus der Datei $SIMDATEI entfernt!"
+	sed -i '/'"$MENUOSEINTRAGDEL"'/d' /"$STARTVERZEICHNIS"/$SIMDATEI
+	sort /"$STARTVERZEICHNIS"/$SIMDATEI -o /"$STARTVERZEICHNIS"/$SIMDATEI
+
+	dateimenu
+}
+
+##
+ #* osdauerstop.
+ # stoppt Region Server und aus der Startliste loeschen. 
+ # Beispiel-Example: bash osmtool.sh osdauerstop sim1
+ # 
+ #? @param $OSDAUERSTOPSCREEN.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+function osdauerstop() {
+	OSDAUERSTOPSCREEN=$1 # OpenSimulator, Verzeichnis und Screen Name
+	if screen -list | grep -q "$OSDAUERSTOPSCREEN"; then
+		log warn "OpenSimulator $OSDAUERSTOPSCREEN Beenden und aus der Startliste loeschen!"
+		osstarteintrag "$OSDAUERSTOPSCREEN"
+
+		screen -S "$OSDAUERSTOPSCREEN" -p 0 -X eval "stuff 'shutdown'^M"
+		sleep 10
+		return 0
+	else
+		log error "OpenSimulator $OSDAUERSTOPSCREEN nicht vorhanden"
+		osstarteintrag "$OSDAUERSTOPSCREEN"
+		return 1
+	fi
+
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then hauptmenu; fi
+}
+
+##
+ #* menuosdauerstop.
+ # stoppt Region Server und aus der Startliste loeschen.
+ # 
+ #? @param dialog.
+ #? @return dialog.
+ # todo: nichts.
+##
+function menuosdauerstop() {
+	IOSDAUERSTOPSCREEN=$(
+		dialog --backtitle "opensimMULTITOOL $VERSION" --title "opensimMULTITOOL Eingabe" \
+			--inputbox "Simulator:" 8 40 \
+			3>&1 1>&2 2>&3 3>&-
+	)
+	dialogclear
+	ScreenLog
+
+	if screen -list | grep -q "$IOSDAUERSTOPSCREEN"; then
+		DIALOG=dialog
+		(
+			echo "10"
+			screen -S "$IOSDAUERSTOPSCREEN" -p 0 -X eval "stuff 'shutdown'^M"
+			osstarteintragdel "$IOSDAUERSTOPSCREEN"
+			sleep 3
+			echo "100"
+			sleep 1
+		) |
+			$DIALOG --title "$IOSDAUERSTOPSCREEN" --gauge "Stop" 8 30
+		dialogclear
+		
+		$DIALOG --msgbox "$IOSDAUERSTOPSCREEN beendet!" 5 20
+		dialogclear
+		ScreenLog
+		osstarteintragdel "$IOSDAUERSTOPSCREEN"
+		dateimenu
+	else
+		osstarteintragdel "$IOSDAUERSTOPSCREEN"
+		dateimenu
+	fi
+}
+
+##
+ #* osdauerstart.
+ # startet Region Server und setzt ihn in die Startkonfiguration.
+ # Beispiel-Example: bash osmtool.sh osdauerstart sim1
+ # 
+ #? @param $OSDAUERSTARTSCREEN.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+function osdauerstart() {
+	OSDAUERSTARTSCREEN=$1 # OpenSimulator, Verzeichnis und Screen Name
+	osstarteintrag "$OSDAUERSTARTSCREEN"
+
+	if ! screen -list | grep -q "$OSDAUERSTARTSCREEN"; then
+		if [ -d "$OSDAUERSTARTSCREEN" ]; then
+
+			cd /$STARTVERZEICHNIS/"$OSDAUERSTARTSCREEN"/bin || return 1
+
+			# AOT Aktiveren oder Deaktivieren.
+			if [[ $SETAOTON = "yes" ]]; then
+				log info "OpenSimulator $OSDAUERSTARTSCREEN Starten mit aot"
+				screen -fa -S "$OSDAUERSTARTSCREEN" -d -U -m mono --desktop -O=all OpenSim.exe
+				return 0
+				log info "OpenSimulator $OSDAUERSTARTSCREEN Starten"
+				screen -fa -S "$OSDAUERSTARTSCREEN" -d -U -m mono OpenSim.exe
+				return 0
+			fi
+			sleep 10
+		else
+			log error "OpenSimulator $OSDAUERSTARTSCREEN nicht vorhanden"
+			return 1
+		fi
+
+	else
+		# es laeuft - work
+		log warn "OpenSimulator $OSDAUERSTARTSCREEN laeuft bereits"
+		return 1
+	fi
+
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then hauptmenu; fi
+}
+
+##
+ #* menuosdauerstart.
+ # startet Region Server und setzt ihn in die Startkonfiguration.
+ # 
+ #? @param dialog.
+ #? @return dialog.
+ # todo: nichts.
+##
+function menuosdauerstart() {
+	IOSDAUERSTARTSCREEN=$(
+		dialog --backtitle "opensimMULTITOOL $VERSION" --title "opensimMULTITOOL Eingabe" \
+			--inputbox "Simulator:" 8 40 \
+			3>&1 1>&2 2>&3 3>&-
+	)
 
 	dialogclear
+	ScreenLog
 
-	DownloadAntwort=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '1p')
+	osstarteintrag "$IOSDAUERSTARTSCREEN"
+	cd /$STARTVERZEICHNIS/"$IOSDAUERSTARTSCREEN"/bin || return 1
+	screen -fa -S "$IOSDAUERSTARTSCREEN" -d -U -m mono OpenSim.exe
 
-	if [[ $DownloadAntwort = "Download1: " ]]; then wget "$LINK01"; fi
-	if [[ $DownloadAntwort = "Download2: " ]]; then wget "$LINK02"; fi
-	if [[ $DownloadAntwort = "Download3: " ]]; then wget "$LINK03"; fi
-	if [[ $DownloadAntwort = "Download4: " ]]; then wget "$LINK04"; fi
-	if [[ $DownloadAntwort = "Download5: " ]]; then wget "$LINK05"; fi
-	if [[ $DownloadAntwort = "Download6: " ]]; then wget "$LINK06"; fi
-	if [[ $DownloadAntwort = "Download7: " ]]; then wget "$LINK07"; fi
-	if [[ $DownloadAntwort = "Download8: " ]]; then wget "$LINK08"; fi
-	if [[ $DownloadAntwort = "Download9: " ]]; then wget "$LINK09"; fi
-	if [[ $DownloadAntwort = "Download10: " ]]; then wget "$LINK10"; fi
+	if ! screen -list | grep -q "$IOSDAUERSTARTSCREEN"; then
+		# es laeuft nicht - not work
 
-	if [[ $DownloadAntwort = "Download11: " ]]; then wget "$LINK11"; fi
-	if [[ $DownloadAntwort = "Download12: " ]]; then wget "$LINK12"; fi
-	if [[ $DownloadAntwort = "Download13: " ]]; then wget "$LINK13"; fi
-	if [[ $DownloadAntwort = "Download14: " ]]; then wget "$LINK14"; fi
-	if [[ $DownloadAntwort = "Download15: " ]]; then wget "$LINK15"; fi
-	if [[ $DownloadAntwort = "Download16: " ]]; then wget "$LINK16"; fi
-	if [[ $DownloadAntwort = "Download17: " ]]; then wget "$LINK17"; fi
-	if [[ $DownloadAntwort = "Download18: " ]]; then wget "$LINK18"; fi
-	if [[ $DownloadAntwort = "Download19: " ]]; then wget "$LINK19"; fi
-	if [[ $DownloadAntwort = "Download20: " ]]; then wget "$LINK20"; fi
+		if [ -d "$IOSDAUERSTARTSCREEN" ]; then
 
-	if [[ $DownloadAntwort = "Download21: " ]]; then wget "$LINK21"; fi
-	if [[ $DownloadAntwort = "Download22: " ]]; then wget "$LINK22"; fi
-	if [[ $DownloadAntwort = "Download23: " ]]; then wget "$LINK23"; fi
-	if [[ $DownloadAntwort = "Download24: " ]]; then wget "$LINK24"; fi
-	if [[ $DownloadAntwort = "Download25: " ]]; then wget "$LINK25"; fi
+			cd /$STARTVERZEICHNIS/"$IOSDAUERSTARTSCREEN"/bin || return 1
 
-	hauptmenu
+			# AOT Aktiveren oder Deaktivieren.
+			if [[ $SETAOTON = "yes" ]]; then
+				DIALOG=dialog
+				(
+					echo "10"
+					screen -fa -S "$IOSDAUERSTARTSCREEN" -d -U -m mono --desktop -O=all OpenSim.exe
+					sleep 3
+					echo "100"
+					sleep 1
+				) 
+				#|
+				#$DIALOG --title "$IOSDAUERSTARTSCREEN" --gauge "Start" 8 30
+				#$dialogclear
+				#$DIALOG --msgbox "$IOSDAUERSTARTSCREEN gestartet!" 5 20
+				#$dialogclear
+				ScreenLog
+				return 0
+			else
+				DIALOG=dialog
+				(
+					echo "10"
+					screen -fa -S "$IOSDAUERSTARTSCREEN" -d -U -m mono OpenSim.exe
+					sleep 3
+					echo "100"
+					sleep 1
+				) #|
+					#$DIALOG --title "$IOSDAUERSTARTSCREEN" --gauge "Start" 8 30
+				#$dialogclear
+				#$DIALOG --msgbox "$IOSDAUERSTARTSCREEN gestartet!" 5 20
+				#$dialogclear
+				ScreenLog
+				dateimenu
+			fi
+		else
+			echo "OpenSimulator $IOSDAUERSTARTSCREEN nicht vorhanden"
+			dateimenu
+		fi
+	else
+		# es laeuft - work
+		log error "OpenSimulator $IOSDAUERSTARTSCREEN laeuft bereits"
+		dateimenu
+	fi
+
 }
 
 ##
- #* radiolist.
- # Radioliste-Linkliste erstellen aus Webseitenlinks.
+ #* ossettings.
+ # stellt den Linux Server fuer OpenSim ein.
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
  # todo: nichts.
 ##
-function radiolist() {
-    rm /tmp/radio.tmp
-    mkdir -p /"$STARTVERZEICHNIS"/radiolist
-    for genre in $listVar; do        
-        # Link Liste holen
-        lynx -listonly -nonumbers -dump https://dir.xiph.org/genres/"$genre" > /tmp/radio.tmp
+function ossettings() {
+	log line
+	# Hier kommen alle gewuenschten Einstellungen rein.
+	# ulimit
+	if [[ $SETULIMITON = "yes" ]]; then
+		log info "Setze die Einstellung: ulimit -s 1048576"
+		ulimit -s 1048576
+	fi
+	# MONO_THREADS_PER_CPU
+	if [[ $SETMONOTHREADSON = "yes" ]]; then
+		log info "Setze die Mono Threads auf $SETMONOTHREADS"
+		MONO_THREADS_PER_CPU=$SETMONOTHREADS
+		# Test 30.06.2022
+		export MONO_THREADS_PER_CPU=$SETMONOTHREADS
+		# MonoSetEnv MONO_THREADS_PER_CPU=$SETMONOTHREADS
+	fi
 
-        # Alles unnoetige herausfiltern.
-        sed -i '/dir/d'     /tmp/radio.tmp
-    
-        # Ueberschrift
-    echo "# $genre" > /"$STARTVERZEICHNIS"/radiolist/"$genre".txt
+	# MONO_GC_PARAMS
+	if [[ $SETMONOGCPARAMSON1 = "yes" ]]; then
+		log info "Setze die Einstellung: minor=split,promotion-age=14,nursery-size=64m"
+		export MONO_GC_PARAMS="minor=split,promotion-age=14,nursery-size=64m"
+	fi
+	if [[ $SETMONOGCPARAMSON2 = "yes" ]]; then
+		log info "Setze die Einstellung: promotion-age=14,"
+		log info "minor=split,major=marksweep,no-lazy-sweep,alloc-ratio=50,"
+		log info "nursery-size=64m"
 
-	log info "$genre Liste wird erstellt."
-
-    readarray lines < /tmp/radio.tmp
-
-    for line_no in "${!lines[@]}" 
-    do
-        IFS=';' read -ra values <<<"${lines[$line_no]}"
-        ((line_no ++))
-        for element_index in "${!values[@]}" 
-        do
-            url="${values[$element_index]}"
-
-            # das Protokoll extrahieren.
-            proto="$(echo "$url" | grep :// | sed -e's,^\(.*://\).*,\1,g')"
-
-            # das Protokoll entfernen.
-            # shellcheck disable=SC2001
-            url=$(echo "$url" | sed -e s,"$proto",,g)
-
-            # Host extrahieren.
-            # shellcheck disable=SC2154
-            host=$(echo "$url" | sed -e s,"$user"@,,g | cut -d/ -f1 | sed -e 's,:.*,,g')
-
-            # extract the path (if any)
-            path="$(echo "$url" | grep / | cut -d/ -f2-)"
-
-            echo "$genre|$host|$path|${values[$element_index]}" >> /"$STARTVERZEICHNIS"/radiolist/"$genre".txt
-        done
-    done
-done
+		# Test 26.02.2022
+		export MONO_GC_PARAMS="promotion-age=14,minor=split,major=marksweep,no-lazy-sweep,alloc-ratio=50,nursery-size=64m"
+		export MONO_GC_DEBUG=""
+		export MONO_ENV_OPTIONS="--desktop"
+	fi
+	return 0
 }
+
+###########################################################################
+#* Log und Cache Dateien Funktionsgruppe
+###########################################################################
+
+##
+ #* ScreenLog.
+ # Bildschirmausgabe reduzieren.
+ # 
+ #? @param ScreenLogLevel.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+function ScreenLog() {
+	if (( ScreenLogLevel == 1 )); then
+		clear # Bildschirmausgabe loeschen Scrollbereich bleibt zum ueberpruefen.
+	fi	
+	if (( ScreenLogLevel == 2 )); then
+		reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
+	fi
+	if (( ScreenLogLevel == 3 )); then
+		tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich (schneller).
+	fi
+	if (( ScreenLogLevel == 4 )); then
+		printf '\e[3J' # Bildschirmausgabe sauber loeschen inklusive dem Scrollbereich.
+	fi
+	if (( ScreenLogLevel == 5 )); then
+		MYFUNCNAME=${FUNCNAME[0]};
+		echo "$MYFUNCNAME" # Funktionsname mit ausgeben.
+	fi
+	unset MYFUNCNAME
+	return 0
+}
+
+##
+ #* dialogclear.
+ # Dialog Intern loeschen.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+function dialogclear() {
+	dialog --clear
+	return 0
+}
+
+##
+ #* clearuserlist.
+ # Alle Besucherlisten loeschen.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+function clearuserlist() {
+	echo "Lösche Besucherlisten log"
+	rm -r /$STARTVERZEICHNIS/*_osmvisitorlist.log
+	echo "Lösche Besucherlisten txt"
+	rm -r /$STARTVERZEICHNIS/*_osmvisitorlist.txt
+}
+
+##
+ #* historylogclear.
+ # Log Dateien von Ubuntu loeschen Beispiel: historylogclear "history".
+ # das loeschen von history, apache2error, mysqlerror und mysqlmariadb.
+ #
+ #? @param history, apache2error, mysqlerror und mysqlmariadb.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+function historylogclear() {
+	hlclear=$1
+	case $hlclear in
+		history) 
+		history -cw; history -c; history -w
+		;;
+		apache2error) 
+			echo "" >$apache2errorlog  
+		;;
+		mysqlerror) 
+			echo "" >$mysqlerrorlog  
+		;;
+		mysqlmariadb) 
+			echo "" >$mysqlmariadberor  
+		;;
+		*) 
+			log info "  Nur das loeschen von history, apache2error, mysqlerror,"
+			log info "  und mysqlmariadb Error Log Dateien ist zur Zeit moeglich!"
+		;;
+	esac
+}
+
+##
+ #* log.
+ # Log Dateien und Funktionen.
+ # 
+ #? @param logtype.
+ #? @return Textausgabe.
+ # todo: nichts.
+##
+function log() {
+	local text
+	local logtype
+	#local datetime
+	logtype="$1"
+	text="$2"
+	#datetime=$(date +'%F %H:%M:%S')
+	DATEIDATUM=$(date +%d_%m_%Y)
+	lline="#####################################################################################"
+
+	if [ "$LOGWRITE" = "yes" ]; then
+		case $logtype in
+		line) echo $lline >>/$STARTVERZEICHNIS/"$DATEIDATUM""$logfilename".log ;;
+		rohtext) echo "$text" >>/$STARTVERZEICHNIS/"$DATEIDATUM""$logfilename".log ;;
+		text) echo "$(date +'%d.%m.%Y-%H:%M:%S') TEXT: $text" >>/$STARTVERZEICHNIS/"$DATEIDATUM""$logfilename".log ;;
+		debug) echo "$(date +'%d.%m.%Y-%H:%M:%S') DEBUG: $text" >>/$STARTVERZEICHNIS/"$DATEIDATUM""$logfilename".log ;;
+		info) echo "$(date +'%d.%m.%Y-%H:%M:%S') INFO: $text" >>/$STARTVERZEICHNIS/"$DATEIDATUM""$logfilename".log ;;
+		warn) echo "$(date +'%d.%m.%Y-%H:%M:%S') WARNING: $text" >>/$STARTVERZEICHNIS/"$DATEIDATUM""$logfilename".log ;;
+		error) echo "$(date +'%d.%m.%Y-%H:%M:%S') ERROR: $text" >>/$STARTVERZEICHNIS/"$DATEIDATUM""$logfilename".log ;;
+		*) return 0 ;;
+		esac
+	fi
+	case $logtype in
+	line) echo "$(tput setaf $linefontcolor) $(tput setab $linebaggroundcolor)$lline $(tput sgr 0)" ;;
+	rohtext) echo "$text" ;;
+	text) echo "$(tput setaf $textfontcolor) $(tput setab $textbaggroundcolor) $(date +'%d.%m.%Y-%H:%M:%S') TEXT: $text $(tput sgr 0)" ;;
+	debug) echo "$(tput setaf $debugfontcolor) $(tput setab $debugbaggroundcolor) $(date +'%d.%m.%Y-%H:%M:%S') DEBUG: $text $(tput sgr 0)" ;;
+	info) echo "$(tput setaf $infofontcolor) $(tput setab $infobaggroundcolor) $(date +'%d.%m.%Y-%H:%M:%S') INFO: $text $(tput sgr 0)" ;;
+	warn) echo "$(tput setaf $warnfontcolor) $(tput setab $warnbaggroundcolor) $(date +'%d.%m.%Y-%H:%M:%S') WARNING: $text $(tput sgr 0)" ;;
+	error) echo "$(tput setaf $errorfontcolor) $(tput setab $errorbaggroundcolor) $(date +'%d.%m.%Y-%H:%M:%S') ERROR: $text $(tput sgr 0)" ;;
+	*) return 0 ;;
+	esac
+	return 0
+}
+
+###########################################################################
+#* Bildschirmausgaben Funktionsgruppe
+###########################################################################
+
+##
+ #* schreibeinfo.
+ # Kopfzeile erstellen.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+function schreibeinfo() {
+	# *Wenn die Log Datei nicht existiert muss sie erstellt werden sonst gibt es eine Fehlermeldung.
+	if [ "$LOGWRITE" = "yes" ]; then
+		if [ -f /$STARTVERZEICHNIS/"$DATEIDATUM""$logfilename".log ]; then
+			# echo "/$STARTVERZEICHNIS/$DATEIDATUM$logfilename.log ist vorhanden!"
+			echo " "
+		else
+			# echo "/$STARTVERZEICHNIS/$DATEIDATUM$logfilename.log ist nicht vorhanden und wird jetzt angelegt!"
+			echo " " >/$STARTVERZEICHNIS/"$DATEIDATUM""$logfilename".log
+		fi
+	fi
+		log rohtext "   ____                        _____  _                    _         _               "
+		log rohtext "  / __ \                      / ____|(_)                  | |       | |              "
+		log rohtext " | |  | | _ __    ___  _ __  | (___   _  _ __ ___   _   _ | |  __ _ | |_  ___   _ __ "
+		log rohtext " | |  | ||  _ \  / _ \|  _ \  \___ \ | ||  _   _ \ | | | || | / _  || __|/ _ \ |  __|"
+		log rohtext " | |__| || |_) ||  __/| | | | ____) || || | | | | || |_| || || (_| || |_| (_) || |   "
+		log rohtext "  \____/ |  __/  \___||_| |_||_____/ |_||_| |_| |_| \____||_| \____| \__|\___/ |_|   "
+		log rohtext "         | |                                                                         "
+		log rohtext "         |_|                                                                         "
+		log rohtext "            $SCRIPTNAME $VERSION"
+		log rohtext " "
+		log line
+		log rohtext "  $DATUM $(date +%H:%M:%S) MULTITOOL: wurde gestartet am $(date +%d.%m.%Y) um $(date +%H:%M:%S) Uhr"
+		log rohtext "  $DATUM $(date +%H:%M:%S) INFO: Server Name: ${HOSTNAME}"
+		log rohtext "  $DATUM $(date +%H:%M:%S) INFO: Server IP: ${AKTUELLEIP}"
+		log rohtext "  $DATUM $(date +%H:%M:%S) INFO: Linux Version: $ubuntuDescription"
+		log rohtext "  $DATUM $(date +%H:%M:%S) INFO: Release Nummer: $ubuntuRelease"
+		log rohtext "  $DATUM $(date +%H:%M:%S) INFO: Linux Name: $ubuntuCodename"
+		log rohtext "  $DATUM $(date +%H:%M:%S) INFO: Bash Version: ${BASH_VERSION}"
+		txtmono=$(mono --version);
+		log rohtext "  $DATUM $(date +%H:%M:%S) INFO: MONO Version: ${txtmono:0:37}"
+		log rohtext "  $DATUM $(date +%H:%M:%S) INFO: MONO THREAD Einstellung: ${MONO_THREADS_PER_CPU}"
+		log rohtext "  $DATUM $(date +%H:%M:%S) INFO: Spracheinstellung: ${LANG}"
+		log rohtext "  $DATUM $(date +%H:%M:%S) INFO: $(screen --version)"
+		SYSTEMBOOT=$(who -b);
+		trimm $SYSTEMBOOT;
+		log rohtext "  $DATUM $(date +%H:%M:%S) INFO: $trimmvar"
+		log rohtext "  $DATUM $(date +%H:%M:%S) INFO: $SQLVERSION"
+		lastrebootdatum
+		# Nachfolgendes hab ich rausgenommen weil die opensimulator.org so laggt.
+		# osdate=$(date --utc --date "$1" +%F)
+		# if curl -s "http://opensimulator.org/viewgit/?a=shortlog&p=opensim"  |  grep -q "$osdate"; then
+		# 	echo "  $DATUM $(date +%H:%M:%S) INFO:$(tput setaf 2) Eine neue OpenSimulator Master Version ist da.$(tput sgr 0)"
+		# else
+		# 	echo "  $DATUM $(date +%H:%M:%S) INFO:$(tput setaf 1) Es ist keine neue OpenSimulator Master Version da.$(tput sgr 0)"
+		# fi
+		log line
+		log rohtext " "
+	return 0
+}
+
+# *Kopfzeile in die Log Datei schreiben.
+schreibeinfo
 
 ##
  #* rebootdatum .
@@ -1442,71 +1763,133 @@ function screenlistrestart() {
 	return 0
 }
 
-##
- #* makeverzeichnisliste.
- # Erstellen eines Arrays aus einer Textdatei - Verzeichnisse.
- # 
- #? @param keine.
- #? @return $ANZAHLVERZEICHNISSLISTE.
- # todo: nichts.
-##
-function makeverzeichnisliste() {
-	VERZEICHNISSLISTE=()
-	while IFS= read -r line; do
-		VERZEICHNISSLISTE+=("$line")
-	done </$STARTVERZEICHNIS/$SIMDATEI
-	# Anzahl der Eintraege.
-	ANZAHLVERZEICHNISSLISTE=${#VERZEICHNISSLISTE[*]}
-	return 0
-}
+###########################################################################
+#* Downloads Funktionsgruppe
+###########################################################################
 
 ##
- #* makeregionsliste 
- # Erstellen eines Arrays aus einer Textdatei.
- # 
- #? @param keine.
- #? @return REGIONSLISTE.
- #? @return ANZAHLREGIONSLISTE.
- # todo: nichts.
-##
-function makeregionsliste() {
-	REGIONSLISTE=()
-	while IFS= read -r line; do
-		REGIONSLISTE+=("$line")
-	done </$STARTVERZEICHNIS/$REGIONSDATEI
-	ANZAHLREGIONSLISTE=${#REGIONSLISTE[*]} # Anzahl der Eintraege.
-	return 0
-}
-
-##
- #* mysqlrest Funktion zum abfragen von mySQL Datensaetzen.
- # mymysql "username" "password" "databasename" "mysqlcommand".
- # 
- #? @param "username" "password" "databasename" "mysqlcommand".
- #? @return result_mysqlrest.
- # todo: nichts.
-##
-function mysqlrest() {
-	username=$1
-	password=$2
-	databasename=$3
-	mysqlcommand=$4
-	result_mysqlrest=$(echo "$mysqlcommand;" | MYSQL_PWD=$password mysql -u"$username" "$databasename" -N) 2>/dev/null
-}
-
-##
- #* mysqlrestnodb.
- # Funktion mySQL Datensaetzen: mymysql "username" "password" "mysqlcommand".
+ #* downloados.
+ # Opensim download.
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
  # todo: nichts.
 ##
-function mysqlrestnodb() {
-	username=$1
-	password=$2
-	mysqlcommand=$3
-	result_mysqlrestnodb=$(echo "$mysqlcommand" | MYSQL_PWD=$password mysql -u"$username")
+function downloados() {
+	ASSETDELBOXERGEBNIS=$(dialog --menu "Downloads" 30 80 25 \
+		"Download1: " "$LINK01" \
+		"Download2: " "$LINK02" \
+		"Download3: " "$LINK03" \
+		"Download4: " "$LINK04" \
+		"Download5: " "$LINK05" \
+		"Download6: " "$LINK06" \
+		"Download7: " "$LINK07" \
+		"Download8: " "$LINK08" \
+		"Download9: " "$LINK09" \
+		"Download10: " "$LINK10" \
+		"Download11: " "$LINK11" \
+		"Download12: " "$LINK12" \
+		"Download13: " "$LINK13" \
+		"Download14: " "$LINK14" \
+		"Download15: " "$LINK15" \
+		"Download16: " "$LINK16" \
+		"Download17: " "$LINK17" \
+		"Download18: " "$LINK18" \
+		"Download19: " "$LINK19" \
+		"Download20: " "$LINK20" \
+		"Download21: " "$LINK21" \
+		"Download22: " "$LINK22" \
+		"Download23: " "$LINK23" \
+		"Download24: " "$LINK24" \
+		"Download25: " "$LINK25" \
+		"Download26: " "$LINK26" 3>&1 1>&2 2>&3 3>&-)
+
+	dialogclear
+
+	DownloadAntwort=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '1p')
+
+	if [[ $DownloadAntwort = "Download1: " ]]; then wget "$LINK01"; fi
+	if [[ $DownloadAntwort = "Download2: " ]]; then wget "$LINK02"; fi
+	if [[ $DownloadAntwort = "Download3: " ]]; then wget "$LINK03"; fi
+	if [[ $DownloadAntwort = "Download4: " ]]; then wget "$LINK04"; fi
+	if [[ $DownloadAntwort = "Download5: " ]]; then wget "$LINK05"; fi
+	if [[ $DownloadAntwort = "Download6: " ]]; then wget "$LINK06"; fi
+	if [[ $DownloadAntwort = "Download7: " ]]; then wget "$LINK07"; fi
+	if [[ $DownloadAntwort = "Download8: " ]]; then wget "$LINK08"; fi
+	if [[ $DownloadAntwort = "Download9: " ]]; then wget "$LINK09"; fi
+	if [[ $DownloadAntwort = "Download10: " ]]; then wget "$LINK10"; fi
+
+	if [[ $DownloadAntwort = "Download11: " ]]; then wget "$LINK11"; fi
+	if [[ $DownloadAntwort = "Download12: " ]]; then wget "$LINK12"; fi
+	if [[ $DownloadAntwort = "Download13: " ]]; then wget "$LINK13"; fi
+	if [[ $DownloadAntwort = "Download14: " ]]; then wget "$LINK14"; fi
+	if [[ $DownloadAntwort = "Download15: " ]]; then wget "$LINK15"; fi
+	if [[ $DownloadAntwort = "Download16: " ]]; then wget "$LINK16"; fi
+	if [[ $DownloadAntwort = "Download17: " ]]; then wget "$LINK17"; fi
+	if [[ $DownloadAntwort = "Download18: " ]]; then wget "$LINK18"; fi
+	if [[ $DownloadAntwort = "Download19: " ]]; then wget "$LINK19"; fi
+	if [[ $DownloadAntwort = "Download20: " ]]; then wget "$LINK20"; fi
+
+	if [[ $DownloadAntwort = "Download21: " ]]; then wget "$LINK21"; fi
+	if [[ $DownloadAntwort = "Download22: " ]]; then wget "$LINK22"; fi
+	if [[ $DownloadAntwort = "Download23: " ]]; then wget "$LINK23"; fi
+	if [[ $DownloadAntwort = "Download24: " ]]; then wget "$LINK24"; fi
+	if [[ $DownloadAntwort = "Download25: " ]]; then wget "$LINK25"; fi
+
+	hauptmenu
+}
+
+##
+ #* radiolist.
+ # Radioliste-Linkliste erstellen aus Webseitenlinks.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+function radiolist() {
+    rm /tmp/radio.tmp
+    mkdir -p /"$STARTVERZEICHNIS"/radiolist
+    for genre in $listVar; do        
+        # Link Liste holen
+        lynx -listonly -nonumbers -dump https://dir.xiph.org/genres/"$genre" > /tmp/radio.tmp
+
+        # Alles unnoetige herausfiltern.
+        sed -i '/dir/d'     /tmp/radio.tmp
+    
+        # Ueberschrift
+    echo "# $genre" > /"$STARTVERZEICHNIS"/radiolist/"$genre".txt
+
+	log info "$genre Liste wird erstellt."
+
+    readarray lines < /tmp/radio.tmp
+
+    for line_no in "${!lines[@]}" 
+    do
+        IFS=';' read -ra values <<<"${lines[$line_no]}"
+        ((line_no ++))
+        for element_index in "${!values[@]}" 
+        do
+            url="${values[$element_index]}"
+
+            # das Protokoll extrahieren.
+            proto="$(echo "$url" | grep :// | sed -e's,^\(.*://\).*,\1,g')"
+
+            # das Protokoll entfernen.
+            # shellcheck disable=SC2001
+            url=$(echo "$url" | sed -e s,"$proto",,g)
+
+            # Host extrahieren.
+            # shellcheck disable=SC2154
+            host=$(echo "$url" | sed -e s,"$user"@,,g | cut -d/ -f1 | sed -e 's,:.*,,g')
+
+            # extract the path (if any)
+            path="$(echo "$url" | grep / | cut -d/ -f2-)"
+
+            echo "$genre|$host|$path|${values[$element_index]}" >> /"$STARTVERZEICHNIS"/radiolist/"$genre".txt
+        done
+    done
+done
 }
 
 ##
@@ -1534,6 +1917,10 @@ function mysqlbackup() {
 	mysqldump -u $username -p$password $databasename --single-transaction --quick | zip >/$STARTVERZEICHNIS/backup/"$databasename".sql.zip;
 	fi
 }
+
+###########################################################################
+#* Sicherheitsfunktionen Funktionsgruppe
+###########################################################################
 
 ##
  #* passgen.
@@ -1584,6 +1971,87 @@ function passwdgenerator() {
 		return 0
 	fi # dialog Aktionen Ende
 	return 0
+}
+
+###########################################################################
+#* OpenSimulator Kommandos-Funktionen Funktionsgruppe
+###########################################################################
+
+##
+ #* oscommand.
+ # OpenSim Command direkt in den screen senden. # Aufruf: oscommand Screen Region Befehl Parameter.
+ # Beispiel: bash osmtool.sh oscommand sim1 Welcome "alert Hallo liebe Leute dies ist eine Nachricht"
+ # Beispiel: bash osmtool.sh oscommand sim1 Welcome "alert-user John Doe Hallo John Doe"
+ # 
+ #? @param Screen Region Befehl Parameter.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+function oscommand() {
+	OSCOMMANDSCREEN=$1
+	REGION=$2
+	COMMAND=$3
+	if screen -list | grep -q "$OSCOMMANDSCREEN"; then
+		log info "OSCOMMAND: $COMMAND an $OSCOMMANDSCREEN senden"
+		screen -S "$OSCOMMANDSCREEN" -p 0 -X eval "stuff 'change region ""$REGION""'^M" # Region wechseln
+		screen -S "$OSCOMMANDSCREEN" -p 0 -X eval "stuff '$COMMAND'^M"
+	else
+		log error "OSCOMMAND: Der Screen $OSCOMMANDSCREEN existiert nicht"
+	fi
+	return 0
+}
+
+##
+ #* menuoscommand.
+ # OpenSim Command direkt in den screen senden.
+ # 
+ #? @param dialog.
+ #? @return dialog.
+ # todo: nichts.
+##
+function menuoscommand() {
+	# zuerst schauen ob dialog installiert ist
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
+
+		# Einstellungen
+		boxbacktitel="opensimMULTITOOL"
+		boxtitel="opensimMULTITOOL Eingabe"
+		formtitle="Kommando an den Simulator"
+		lable1="Simulator:"
+		lablename1=""
+		lable2="Region:"
+		lablename2=""
+		lable3="Befehlskette:"
+		lablename3=""
+
+		# Abfrage
+		oscommandBOXERGEBNIS=$(dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 3>&1 1>&2 2>&3 3>&-)
+
+		# Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
+		OSCOMMANDSCREEN=$(echo "$oscommandBOXERGEBNIS" | sed -n '1p')
+		REGION=$(echo "$oscommandBOXERGEBNIS" | sed -n '2p')
+		COMMAND=$(echo "$oscommandBOXERGEBNIS" | sed -n '3p')
+
+		# Alles loeschen.
+		dialogclear
+		ScreenLog
+	else
+		# Alle Aktionen ohne dialog
+		echo "Keine Menuelose Funktion" | exit
+	fi # dialog Aktionen Ende
+
+	if screen -list | grep -q "$OSCOMMANDSCREEN"; then
+		log info "OSCOMMAND: $COMMAND an $OSCOMMANDSCREEN senden"
+		screen -S "$OSCOMMANDSCREEN" -p 0 -X eval "stuff 'change region ""$REGION""'^M" # Region wechseln
+		screen -S "$OSCOMMANDSCREEN" -p 0 -X eval "stuff '$COMMAND'^M"
+		return 0
+	else
+		log error "OSCOMMAND: Der Screen $OSCOMMANDSCREEN existiert nicht"
+		return 1
+	fi
+
+	# Zum schluss alle Variablen loeschen.
+	unset OSCOMMANDSCREEN REGION COMMAND
 }
 
 ##
@@ -1822,6 +2290,463 @@ function menuloadinventar() {
 	unset LOADINVSCREEN NAME VERZEICHNIS PASSWORD DATEI
 }
 
+###########################################################################
+#* Starten und Stoppen Funktionsgruppe
+###########################################################################
+
+##
+ #* osstart.
+ # startet Region Server. 
+ # Beispiel-Example: bash osmtool.sh osstart sim1
+ # 
+ #? @param $OSSTARTSCREEN.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+function osstart() {
+	OSSTARTSCREEN=$1 # OpenSimulator, Verzeichnis und Screen Name
+
+	log info "OpenSimulator $OSSTARTSCREEN Starten"
+
+	if ! screen -list | grep -q "$OSSTARTSCREEN"; then
+
+		if [ -d "$OSSTARTSCREEN" ]; then
+
+			cd /$STARTVERZEICHNIS/"$OSSTARTSCREEN"/bin || return 1			
+			# Ersteinmal Killen dann starten.
+			screen -X -S "$OSSTARTSCREEN" kill
+
+			# DOTNETMODUS="yes"
+			if [[ "${DOTNETMODUS}" == "yes" ]]; then
+				if [[ "${DOTNETINFO}" == "yes" ]]; then echo "dotnet 6 ist eingeschaltet!"; fi
+				screen -fa -S "$OSSTARTSCREEN" -d -U -m dotnet OpenSim.dll
+			fi
+
+			# DOTNETMODUS="no"
+			if [[ "${DOTNETMODUS}" == "no" ]]; then
+				if [[ "${DOTNETINFO}" == "yes" ]]; then echo ".net 4.8 oder 4.6 ist eingeschaltet!"; fi
+				screen -fa -S "$SCSTARTSCREEN" -d -U -m mono OpenSim.exe
+			fi
+
+			sleep 10
+		else
+			log error "OpenSimulator $OSSTARTSCREEN nicht vorhanden"
+			return 1
+		fi
+
+	else
+		# es laeuft - work
+		log warn "OpenSimulator $OSSTARTSCREEN laeuft bereits"
+		return 1
+	fi
+
+	#if dpkg-query -s dialog 2>/dev/null | grep -q installed; then hauptmenu; fi
+}
+
+##
+ #* osstop.
+ # stoppt Region Server. 
+ # Beispiel-Example: bash osmtool.sh osstop sim1
+ # 
+ #? @param $OSSTOPSCREEN.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+function osstop() {
+	OSSTOPSCREEN=$1 # OpenSimulator, Verzeichnis und Screen Name
+	
+	if screen -list | grep -q "$OSSTOPSCREEN"; then
+		log warn "OpenSimulator $OSSTOPSCREEN Beenden"
+		screen -S "$OSSTOPSCREEN" -p 0 -X eval "stuff 'shutdown'^M" || echo "$OSSTOPSCREEN wurde nicht gefunden."
+		sleep $STOPWARTEZEIT
+		# Killen.
+		screen -X -S "$OSSTOPSCREEN" kill || echo "$OSSTOPSCREEN wurde korrekt heruntergefahren."
+		return 0
+	else
+		log error "OpenSimulator $OSSTOPSCREEN nicht vorhanden"
+		return 1
+	fi
+
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then hauptmenu; fi
+}
+
+##
+ #* menuosstart.
+ # startet Region Server.
+ # 
+ #? @param dialog.
+ #? @return dialog.
+ # todo: nichts.
+##
+function menuosstart() {
+	IOSSTARTSCREEN=$(
+		dialog --backtitle "opensimMULTITOOL $VERSION" --title "opensimMULTITOOL Eingabe" \
+			--inputbox "Simulator:" 8 40 \
+			3>&1 1>&2 2>&3 3>&-
+	)
+
+	dialogclear
+	ScreenLog
+
+	if ! screen -list | grep -q "$IOSSTARTSCREEN"; then
+		# es laeuft nicht - not work
+
+		if [ -d "$IOSSTARTSCREEN" ]; then
+
+			cd /$STARTVERZEICHNIS/"$IOSSTARTSCREEN"/bin || return 1
+
+			DIALOG=dialog
+			(
+				echo "Starte: $IOSSTARTSCREEN"
+				# Ersteinmal Killen dann starten.
+				screen -X -S "$IOSSTARTSCREEN" kill || echo "$IOSSTARTSCREEN läuft nicht."
+
+				# DOTNETMODUS="yes"
+				if [[ "${DOTNETMODUS}" == "yes" ]]; then
+					echo "dotnet 6 ist eingeschaltet!"
+					screen -fa -S "$IOSSTARTSCREEN" -d -U -m dotnet OpenSim.dll
+				fi
+
+				# DOTNETMODUS="no"
+				if [[ "${DOTNETMODUS}" == "no" ]]; then
+					echo ".net 4.8 oder 4.6 ist eingeschaltet!"
+					screen -fa -S "$IOSSTARTSCREEN" -d -U -m mono OpenSim.exe
+				fi
+
+				#screen -fa -S "$IOSSTARTSCREEN" -d -U -m mono OpenSim.exe
+				sleep 3
+			)
+			ScreenLog
+			hauptmenu
+
+		else
+			echo "OpenSimulator $IOSSTARTSCREEN nicht vorhanden"
+			hauptmenu
+		fi
+	else
+		# es laeuft - work
+		log error "OpenSimulator $IOSSTARTSCREEN laeuft bereits"
+		hauptmenu
+	fi
+	# hauptmenu
+}
+
+##
+ #* menuosstop.
+ # stoppt Region Server.
+ # 
+ #? @param dialog.
+ #? @return dialog.
+ # todo: nichts.
+##
+##
+ #* Wozu ist diese Funktion gedacht.
+ # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##  menuosstop() ist die dialog Version von osstop()
+function menuosstop() {
+	IOSSTOPSCREEN=$(
+		dialog --backtitle "opensimMULTITOOL $VERSION" --title "opensimMULTITOOL Eingabe" \
+			--inputbox "Simulator:" 8 40 \
+			3>&1 1>&2 2>&3 3>&-
+	)
+	dialogclear
+	ScreenLog
+
+	if screen -list | grep -q "$IOSSTOPSCREEN"; then
+		DIALOG=dialog
+		(
+			echo "Stoppe: $IOSSTOPSCREEN"
+			screen -S "$IOSSTOPSCREEN" -p 0 -X eval "stuff 'shutdown'^M"
+			sleep $STOPWARTEZEIT
+			# Killen.
+			screen -X -S "$IOSSTOPSCREEN" kill
+		) |
+			$DIALOG --title "$IOSSTOPSCREEN" --gauge "Stop" 8 30
+		dialogclear
+		$DIALOG --msgbox "$IOSSTOPSCREEN beendet!" 5 20
+		dialogclear
+		ScreenLog
+		hauptmenu
+	else
+		hauptmenu
+	fi
+}
+
+##
+ #* rostart.
+ # Robust Server starten.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+function rostart() {
+	log line
+	log info "Robust wird gestartet..."
+	cd /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin || return 1	
+
+	# DOTNETMODUS="yes"
+	if [[ "${DOTNETMODUS}" == "yes" ]]; then
+		if [[ "${DOTNETINFO}" == "yes" ]]; then echo "dotnet 6 ist eingeschaltet!"; fi
+		screen -fa -S RO -d -U -m dotnet Robust.dll
+	fi
+	
+	# DOTNETMODUS="no"
+	if [[ "${DOTNETMODUS}" == "no" ]]; then
+		if [[ "${DOTNETINFO}" == "yes" ]]; then echo ".net 4.8 oder 4.6 ist eingeschaltet!"; fi
+		screen -fa -S RO -d -U -m mono Robust.exe
+	fi
+
+	sleep $ROBUSTWARTEZEIT
+
+	log info " Robust wurde gestartet"
+	return 0
+}
+
+##
+ #* menurostart.
+ # Robust Server starten.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+function menurostart() {
+
+	log info "Robust wird gestartet..."
+	cd /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin || return 1	
+
+	# DOTNETMODUS="yes"
+	if [[ "${DOTNETMODUS}" == "yes" ]]; then
+		if [[ "${DOTNETINFO}" == "yes" ]]; then echo "dotnet 6 ist eingeschaltet!"; fi
+		screen -fa -S RO -d -U -m dotnet Robust.dll
+	fi
+
+	# DOTNETMODUS="no"
+	if [[ "${DOTNETMODUS}" == "no" ]]; then
+		if [[ "${DOTNETINFO}" == "yes" ]]; then echo ".net 4.8 oder 4.6 ist eingeschaltet!"; fi
+		screen -fa -S RO -d -U -m mono Robust.exe
+	fi
+
+	sleep $ROBUSTWARTEZEIT
+
+	log info " Robust wurde gestartet"
+	return 0
+}
+
+##
+ #* rostop.
+ # Robust herunterfahren.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+function rostop() {
+	if screen -list | grep -q "RO"; then
+		screen -S RO -p 0 -X eval "stuff 'shutdown'^M"
+		log warn "Robust Beenden"
+		sleep $WARTEZEIT
+		return 0
+	else
+		log error "Robust nicht vorhanden"
+		return 1
+	fi
+}
+
+##
+ #* menurostop.
+ # Robust herunterfahren.
+ # 
+ #? @param dialog.
+ #? @return dialog.
+ # todo: nichts.
+##
+function menurostop() {
+	if screen -list | grep -q "RO"; then
+		screen -S RO -p 0 -X eval "stuff 'shutdown'^M"
+		log warn "Robust Beenden"
+		sleep $WARTEZEIT
+	else
+		log error "Robust nicht vorhanden"
+	fi
+}
+
+##
+ #* mostart.
+ # Money Server starten.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+function mostart() {
+	log info "Money wird gestartet..."
+	cd /$STARTVERZEICHNIS/$MONEYVERZEICHNIS/bin || return 1
+	
+	#screen -fa -S MO -d -U -m mono MoneyServer.exe
+	# DOTNETMODUS="yes"
+	if [[ "${DOTNETMODUS}" == "yes" ]]; then
+		if [[ "${DOTNETINFO}" == "yes" ]]; then echo "dotnet 6 ist eingeschaltet!"; fi
+		screen -fa -S MO -d -U -m dotnet MoneyServer.dll
+	fi
+
+	# DOTNETMODUS="no"
+	if [[ "${DOTNETMODUS}" == "no" ]]; then
+		if [[ "${DOTNETINFO}" == "yes" ]]; then echo ".net 4.8 oder 4.6 ist eingeschaltet!"; fi
+		screen -fa -S MO -d -U -m mono MoneyServer.exe
+	fi
+
+	sleep $MONEYWARTEZEIT
+	log info " Money wurde gestartet"
+	return 0
+}
+
+##
+ #* menumostart.
+ # Money Server starten.
+ # 
+ #? @param dialog.
+ #? @return dialog.
+ # todo: nichts.
+##
+function menumostart() {
+	log info "Money wird gestartet..."
+	cd /$STARTVERZEICHNIS/$MONEYVERZEICHNIS/bin || return 1
+	
+	#screen -fa -S MO -d -U -m mono MoneyServer.exe
+	# DOTNETMODUS="yes"
+	if [[ "${DOTNETMODUS}" == "yes" ]]; then
+		if [[ "${DOTNETINFO}" == "yes" ]]; then echo "dotnet 6 ist eingeschaltet!"; fi
+		screen -fa -S MO -d -U -m dotnet MoneyServer.dll
+	fi
+
+	# DOTNETMODUS="no"
+	if [[ "${DOTNETMODUS}" == "no" ]]; then
+		if [[ "${DOTNETINFO}" == "yes" ]]; then echo ".net 4.8 oder 4.6 ist eingeschaltet!"; fi
+		screen -fa -S MO -d -U -m mono MoneyServer.exe
+	fi
+
+	sleep $MONEYWARTEZEIT
+	log info " Money wurde gestartet"
+	return 0
+}
+
+##
+ #* mostop.
+ # Money Server herunterfahren.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+function mostop() {
+	if screen -list | grep -q "MO"; then
+		screen -S MO -p 0 -X eval "stuff 'shutdown'^M"
+		log warn "Money Beenden"
+		sleep $MONEYWARTEZEIT
+		return 0
+	else
+		log error "Money nicht vorhanden"
+		return 1
+	fi
+}
+
+##
+ #* menumostop.
+ # Money Server herunterfahren.
+ # 
+ #? @param dialog.
+ #? @return dialog.
+ # todo: nichts.
+function menumostop() {
+	if screen -list | grep -q "MO"; then
+		screen -S MO -p 0 -X eval "stuff 'shutdown'^M"
+		log warn "Money Beenden"
+		sleep $MONEYWARTEZEIT
+		return 0
+	else
+		log error "Money nicht vorhanden"
+		return 1
+	fi
+}
+
+##
+ #* osscreenstop.
+ # beendet ein Screeen. 
+ # Beispiel-Example: osscreenstop sim1
+ # 
+ #? @param $SCREENSTOPSCREEN.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+function osscreenstop() {
+	SCREENSTOPSCREEN=$1
+	if screen -list | grep -q "$SCREENSTOPSCREEN"; then
+		log text "Screeen $SCREENSTOPSCREEN Beenden"
+		screen -S "$SCREENSTOPSCREEN" -X quit
+		return 0
+	else
+		log error "Screeen $SCREENSTOPSCREEN nicht vorhanden"
+		return 1
+	fi
+	log text "No screen session found. Ist hier kein Fehler, sondern ein Beweis, das alles zuvor sauber heruntergefahren wurde."
+}
+
+##
+ #* gridstart.
+ # startet erst Robust und dann Money.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+function gridstart() {
+	ossettings
+	if screen -list | grep -q RO; then
+		log error "Robust laeuft bereits"
+	else
+		rostart
+	fi
+	if screen -list | grep -q MO; then
+		log error "Money laeuft bereits"
+	else
+		mostart
+	fi
+	return 0
+}
+
+##
+ #* menugridstart.
+ # startet erst Robust und dann Money.
+ # 
+ #? @param dialog.
+ #? @return dialog.
+ # todo: nichts.
+##
+function menugridstart() {
+	ossettings
+	log line
+	if screen -list | grep -q RO; then
+		log error " Robust laeuft bereits"
+	else
+		menurostart
+	fi
+	if screen -list | grep -q MO; then
+		log error "MoneyServer laeuft bereits"
+	else
+		menumostart
+	fi
+}
+
+###########################################################################
+#* Dateifunktionen Funktionsgruppe
+###########################################################################
+
 ##
  #* saveinventar.
  # Speichere iar inventar "NAME" "VERZEICHNIS" "PASSWORD" "DATEImitPFAD".
@@ -1900,153 +2825,6 @@ function menusaveinventar() {
 
 	# Zum schluss alle Variablen loeschen.
 	unset SAVEINVSCREEN NAME VERZEICHNIS PASSWORD DATEI
-}
-
-##
- #* oscommand.
- # OpenSim Command direkt in den screen senden. # Aufruf: oscommand Screen Region Befehl Parameter.
- # Beispiel: bash osmtool.sh oscommand sim1 Welcome "alert Hallo liebe Leute dies ist eine Nachricht"
- # Beispiel: bash osmtool.sh oscommand sim1 Welcome "alert-user John Doe Hallo John Doe"
- # 
- #? @param Screen Region Befehl Parameter.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
-##
-function oscommand() {
-	OSCOMMANDSCREEN=$1
-	REGION=$2
-	COMMAND=$3
-	if screen -list | grep -q "$OSCOMMANDSCREEN"; then
-		log info "OSCOMMAND: $COMMAND an $OSCOMMANDSCREEN senden"
-		screen -S "$OSCOMMANDSCREEN" -p 0 -X eval "stuff 'change region ""$REGION""'^M" # Region wechseln
-		screen -S "$OSCOMMANDSCREEN" -p 0 -X eval "stuff '$COMMAND'^M"
-	else
-		log error "OSCOMMAND: Der Screen $OSCOMMANDSCREEN existiert nicht"
-	fi
-	return 0
-}
-
-##
- #* menuoscommand.
- # OpenSim Command direkt in den screen senden.
- # 
- #? @param dialog.
- #? @return dialog.
- # todo: nichts.
-##
-function menuoscommand() {
-	# zuerst schauen ob dialog installiert ist
-	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
-
-		# Einstellungen
-		boxbacktitel="opensimMULTITOOL"
-		boxtitel="opensimMULTITOOL Eingabe"
-		formtitle="Kommando an den Simulator"
-		lable1="Simulator:"
-		lablename1=""
-		lable2="Region:"
-		lablename2=""
-		lable3="Befehlskette:"
-		lablename3=""
-
-		# Abfrage
-		oscommandBOXERGEBNIS=$(dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 3>&1 1>&2 2>&3 3>&-)
-
-		# Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
-		OSCOMMANDSCREEN=$(echo "$oscommandBOXERGEBNIS" | sed -n '1p')
-		REGION=$(echo "$oscommandBOXERGEBNIS" | sed -n '2p')
-		COMMAND=$(echo "$oscommandBOXERGEBNIS" | sed -n '3p')
-
-		# Alles loeschen.
-		dialogclear
-		ScreenLog
-	else
-		# Alle Aktionen ohne dialog
-		echo "Keine Menuelose Funktion" | exit
-	fi # dialog Aktionen Ende
-
-	if screen -list | grep -q "$OSCOMMANDSCREEN"; then
-		log info "OSCOMMAND: $COMMAND an $OSCOMMANDSCREEN senden"
-		screen -S "$OSCOMMANDSCREEN" -p 0 -X eval "stuff 'change region ""$REGION""'^M" # Region wechseln
-		screen -S "$OSCOMMANDSCREEN" -p 0 -X eval "stuff '$COMMAND'^M"
-		return 0
-	else
-		log error "OSCOMMAND: Der Screen $OSCOMMANDSCREEN existiert nicht"
-		return 1
-	fi
-
-	# Zum schluss alle Variablen loeschen.
-	unset OSCOMMANDSCREEN REGION COMMAND
-}
-
-##
- #* oswriteconfig.
- # Konfiguration lesen.
- # 
- #? @param $SETSIMULATOR.
- #? @return $CONFIGWRITE.
- # todo: nichts.
-##
-function oswriteconfig() {
-	SETSIMULATOR=$1
-	CONFIGWRITE="config save /$STARTVERZEICHNIS/$SETSIMULATOR.ini"
-	screen -S "$SETSIMULATOR" -p 0 -X eval "stuff '$CONFIGWRITE'^M"
-}
-
-##
- #* menuoswriteconfig.
- # Konfiguration lesen.
- # 
- #? @param dialog.
- #? @return dialog.
- # todo: nichts.
-##
-function menuoswriteconfig() {
-	SETSIMULATOR=$1 # OpenSimulator, Verzeichnis und Screen Name
-
-	# zuerst schauen ob dialog installiert ist
-	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
-		# Alle Aktionen mit dialog
-		boxtitel="opensimMULTITOOL Eingabe"
-		boxtext="Screen Name:"
-		SETSIMULATOR=$(dialog --backtitle "opensimMULTITOOL $VERSION" --title "$boxtitel" --inputbox "$boxtext" 8 40 3>&1 1>&2 2>&3 3>&-)
-		dialogclear
-		ScreenLog
-
-		if ! screen -list | grep -q "$SETSIMULATOR"; then
-			# es laeuft nicht - not work
-			dialog --backtitle "opensimMULTITOOL $VERSION" --msgbox "OpenSimulator $SETSIMULATOR OFFLINE!" 5 40
-			dialogclear
-			ScreenLog
-		else
-			# es laeuft - work
-			# Konfig schreiben
-			CONFIGWRITE="config save /$STARTVERZEICHNIS/$SETSIMULATOR.ini"			
-			screen -S "$SETSIMULATOR" -p 0 -X eval "stuff '$CONFIGWRITE'^M"
-			sleep 2
-			CONFIGREAD=$(sed '' "$SETSIMULATOR.ini")
-			# # Konfig lesen
-			dialog --backtitle "opensimMULTITOOL $VERSION" --msgbox "$CONFIGREAD" 0 0
-			#dialog --editbox "$CONFIGREAD" 0 0
-			#dialog --textbox "$CONFIGREAD" 0 0
-			dialogclear
-			ScreenLog
-		fi
-	else
-		# Alle Aktionen ohne dialog
-		if ! screen -list | grep -q "$SETSIMULATOR"; then
-			# es laeuft nicht - not work
-			log info "WORKS: $SETSIMULATOR OFFLINE!"
-			return 1
-		else
-			# es laeuft - work
-			# Konfig schreiben
-			CONFIGWRITE="config save /$STARTVERZEICHNIS/$SETSIMULATOR.ini"
-			screen -S "$SETSIMULATOR" -p 0 -X eval "stuff '$CONFIGWRITE'^M"
-			return 0
-		fi
-	fi
-	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then hauptmenu; fi
 }
 
 ##
@@ -2365,54 +3143,34 @@ function assetcachedel() {
 function autoassetcachedel() {
 	#log line
 	makeverzeichnisliste
-	sleep 2
+	sleep 1
 	for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
 		rm -r /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/assetcache 2>/dev/null | log info "OpenSimulator ${VERZEICHNISSLISTE[$i]} assetcache Verzeichnisse geloescht" || log warn "${VERZEICHNISSLISTE[$i]} assetcache Verzeichnis wurde nicht gefunden! "
 		
-		sleep 2
+		sleep 1
 	done
 	return 0
 }
 
+###########################################################################
+#* Starten und Stoppen Funktionsgruppe
+###########################################################################
+
 ##
- #* ossettings.
- # stellt den Linux Server fuer OpenSim ein.
+ #* menugridstop.
+ # Stoppt erst Money dann Robust.
  # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
  # todo: nichts.
-##
-function ossettings() {
-	log line
-	# Hier kommen alle gewuenschten Einstellungen rein.
-	# ulimit
-	if [[ $SETULIMITON = "yes" ]]; then
-		log info "Setze die Einstellung: ulimit -s 1048576"
-		ulimit -s 1048576
-	fi
-	# MONO_THREADS_PER_CPU
-	if [[ $SETMONOTHREADSON = "yes" ]]; then
-		log info "Setze die Mono Threads auf $SETMONOTHREADS"
-		MONO_THREADS_PER_CPU=$SETMONOTHREADS
-		# Test 30.06.2022
-		export MONO_THREADS_PER_CPU=$SETMONOTHREADS
-		# MonoSetEnv MONO_THREADS_PER_CPU=$SETMONOTHREADS
+##  gridstop, stoppt erst Money dann Robust.
+function menugridstop() {
+	if screen -list | grep -q MO; then
+		menumostop
 	fi
 
-	# MONO_GC_PARAMS
-	if [[ $SETMONOGCPARAMSON1 = "yes" ]]; then
-		log info "Setze die Einstellung: minor=split,promotion-age=14,nursery-size=64m"
-		export MONO_GC_PARAMS="minor=split,promotion-age=14,nursery-size=64m"
-	fi
-	if [[ $SETMONOGCPARAMSON2 = "yes" ]]; then
-		log info "Setze die Einstellung: promotion-age=14,"
-		log info "minor=split,major=marksweep,no-lazy-sweep,alloc-ratio=50,"
-		log info "nursery-size=64m"
-
-		# Test 26.02.2022
-		export MONO_GC_PARAMS="promotion-age=14,minor=split,major=marksweep,no-lazy-sweep,alloc-ratio=50,nursery-size=64m"
-		export MONO_GC_DEBUG=""
-		export MONO_ENV_OPTIONS="--desktop"
+	if screen -list | grep -q RO; then
+		menurostop
 	fi
 	return 0
 }
@@ -2471,717 +3229,6 @@ function sckill() {
 }
 
 ##
- #* osstart.
- # startet Region Server. 
- # Beispiel-Example: bash osmtool.sh osstart sim1
- # 
- #? @param $OSSTARTSCREEN.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
-##
-function osstart() {
-	OSSTARTSCREEN=$1 # OpenSimulator, Verzeichnis und Screen Name
-
-	log info "OpenSimulator $OSSTARTSCREEN Starten"
-
-	if ! screen -list | grep -q "$OSSTARTSCREEN"; then
-
-		if [ -d "$OSSTARTSCREEN" ]; then
-
-			cd /$STARTVERZEICHNIS/"$OSSTARTSCREEN"/bin || return 1			
-			# Ersteinmal Killen dann starten.
-			screen -X -S "$OSSTARTSCREEN" kill
-
-			# DOTNETMODUS="yes"
-			if [[ "${DOTNETMODUS}" == "yes" ]]; then
-				if [[ "${DOTNETINFO}" == "yes" ]]; then echo "dotnet 6 ist eingeschaltet!"; fi
-				screen -fa -S "$OSSTARTSCREEN" -d -U -m dotnet OpenSim.dll
-			fi
-
-			# DOTNETMODUS="no"
-			if [[ "${DOTNETMODUS}" == "no" ]]; then
-				if [[ "${DOTNETINFO}" == "yes" ]]; then echo ".net 4.8 oder 4.6 ist eingeschaltet!"; fi
-				screen -fa -S "$SCSTARTSCREEN" -d -U -m mono OpenSim.exe
-			fi
-
-			sleep 10
-		else
-			log error "OpenSimulator $OSSTARTSCREEN nicht vorhanden"
-			return 1
-		fi
-
-	else
-		# es laeuft - work
-		log warn "OpenSimulator $OSSTARTSCREEN laeuft bereits"
-		return 1
-	fi
-
-	#if dpkg-query -s dialog 2>/dev/null | grep -q installed; then hauptmenu; fi
-}
-
-##
- #* osstop.
- # stoppt Region Server. 
- # Beispiel-Example: bash osmtool.sh osstop sim1
- # 
- #? @param $OSSTOPSCREEN.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
-##
-function osstop() {
-	OSSTOPSCREEN=$1 # OpenSimulator, Verzeichnis und Screen Name
-	
-	if screen -list | grep -q "$OSSTOPSCREEN"; then
-		log warn "OpenSimulator $OSSTOPSCREEN Beenden"
-		screen -S "$OSSTOPSCREEN" -p 0 -X eval "stuff 'shutdown'^M"
-		sleep 60
-		# Killen.
-		screen -X -S "$OSSTOPSCREEN" kill
-		return 0
-	else
-		log error "OpenSimulator $OSSTOPSCREEN nicht vorhanden"
-		return 1
-	fi
-
-	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then hauptmenu; fi
-}
-
-##
- #* menuosstart.
- # startet Region Server.
- # 
- #? @param dialog.
- #? @return dialog.
- # todo: nichts.
-##
-function menuosstart() {
-	IOSSTARTSCREEN=$(
-		dialog --backtitle "opensimMULTITOOL $VERSION" --title "opensimMULTITOOL Eingabe" \
-			--inputbox "Simulator:" 8 40 \
-			3>&1 1>&2 2>&3 3>&-
-	)
-
-	dialogclear
-	ScreenLog
-
-	if ! screen -list | grep -q "$IOSSTARTSCREEN"; then
-		# es laeuft nicht - not work
-
-		if [ -d "$IOSSTARTSCREEN" ]; then
-
-			cd /$STARTVERZEICHNIS/"$IOSSTARTSCREEN"/bin || return 1
-
-			# AOT Aktiveren oder Deaktivieren.
-			if [[ $SETAOTON = "yes" ]]; then
-				DIALOG=dialog
-				(
-					echo "10"
-					screen -fa -S "$IOSSTARTSCREEN" -d -U -m mono --desktop -O=all OpenSim.exe
-					sleep 3
-					echo "100"
-					sleep 2
-				) 
-				ScreenLog
-				return 0
-			else
-				DIALOG=dialog
-				(
-					echo "Starte: $IOSSTARTSCREEN"
-					# Ersteinmal Killen dann starten.
-					screen -X -S "$IOSSTARTSCREEN" kill
-					screen -fa -S "$IOSSTARTSCREEN" -d -U -m mono OpenSim.exe
-					sleep 3
-				)
-				ScreenLog
-				hauptmenu
-			fi
-		else
-			echo "OpenSimulator $IOSSTARTSCREEN nicht vorhanden"
-			hauptmenu
-		fi
-	else
-		# es laeuft - work
-		log error "OpenSimulator $IOSSTARTSCREEN laeuft bereits"
-		hauptmenu
-	fi
-	# hauptmenu
-}
-
-##
- #* menuosstop.
- # stoppt Region Server.
- # 
- #? @param dialog.
- #? @return dialog.
- # todo: nichts.
-##
-##
- #* Wozu ist diese Funktion gedacht.
- # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
- # 
- #? @param name Erklaerung.
- #? @return name was wird zurueckgegeben.
- # todo: nichts.
-##  menuosstop() ist die dialog Version von osstop()
-function menuosstop() {
-	IOSSTOPSCREEN=$(
-		dialog --backtitle "opensimMULTITOOL $VERSION" --title "opensimMULTITOOL Eingabe" \
-			--inputbox "Simulator:" 8 40 \
-			3>&1 1>&2 2>&3 3>&-
-	)
-	dialogclear
-	ScreenLog
-
-	if screen -list | grep -q "$IOSSTOPSCREEN"; then
-		DIALOG=dialog
-		(
-			echo "Stoppe: $IOSSTOPSCREEN"
-			screen -S "$IOSSTOPSCREEN" -p 0 -X eval "stuff 'shutdown'^M"
-			sleep 60
-			# Killen.
-			screen -X -S "$IOSSTOPSCREEN" kill
-		) |
-			$DIALOG --title "$IOSSTOPSCREEN" --gauge "Stop" 8 30
-		dialogclear
-		$DIALOG --msgbox "$IOSSTOPSCREEN beendet!" 5 20
-		dialogclear
-		ScreenLog
-		hauptmenu
-	else
-		hauptmenu
-	fi
-}
-
-##
- #* rostart.
- # Robust Server starten.
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
-##
-function rostart() {
-	log line
-	log info "Robust wird gestartet..."
-	cd /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin || return 1	
-
-	# DOTNETMODUS="yes"
-	if [[ "${DOTNETMODUS}" == "yes" ]]; then
-		if [[ "${DOTNETINFO}" == "yes" ]]; then echo "dotnet 6 ist eingeschaltet!"; fi
-		screen -fa -S RO -d -U -m dotnet Robust.dll
-	fi
-	
-	# DOTNETMODUS="no"
-	if [[ "${DOTNETMODUS}" == "no" ]]; then
-		if [[ "${DOTNETINFO}" == "yes" ]]; then echo ".net 4.8 oder 4.6 ist eingeschaltet!"; fi
-		screen -fa -S RO -d -U -m mono Robust.exe
-	fi
-
-	sleep $ROBUSTWARTEZEIT
-
-	log info " Robust wurde gestartet"
-	return 0
-}
-
-##
- #* menurostart.
- # Robust Server starten.
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
-##
-function menurostart() {
-
-	log info "Robust wird gestartet..."
-	cd /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin || return 1	
-
-	# DOTNETMODUS="yes"
-	if [[ "${DOTNETMODUS}" == "yes" ]]; then
-		if [[ "${DOTNETINFO}" == "yes" ]]; then echo "dotnet 6 ist eingeschaltet!"; fi
-		screen -fa -S RO -d -U -m dotnet Robust.dll
-	fi
-
-	# DOTNETMODUS="no"
-	if [[ "${DOTNETMODUS}" == "no" ]]; then
-		if [[ "${DOTNETINFO}" == "yes" ]]; then echo ".net 4.8 oder 4.6 ist eingeschaltet!"; fi
-		screen -fa -S RO -d -U -m mono Robust.exe
-	fi
-
-	sleep $ROBUSTWARTEZEIT
-
-	log info " Robust wurde gestartet"
-	return 0
-}
-
-##
- #* osstarteintrag.
- # Fuegt der osmsimlist.ini einen Region Simulator hinzu und sortiert diese.
- # 
- #? @param $OSEINTRAG.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
-##
-function osstarteintrag() {
-	OSEINTRAG=$1 # OpenSimulator, Verzeichnis und Screen Name
-	log info "OpenSimulator $OSEINTRAG wird der Datei $SIMDATEI hinzugefuegt!"
-	sed -i '1s/.*$/'"$OSEINTRAG"'\n&/g' /"$STARTVERZEICHNIS"/$SIMDATEI
-	sort /"$STARTVERZEICHNIS"/$SIMDATEI -o /"$STARTVERZEICHNIS"/$SIMDATEI
-}
-
-##
- #* menuosstarteintrag.
- # Fuegt der osmsimlist.ini einen Region Simulator hinzu und sortiert diese.
- # 
- #? @param dialog.
- #? @return dialog.
- # todo: nichts.
-##
-function menuosstarteintrag() {
-	MENUOSEINTRAG=$(
-		dialog --backtitle "opensimMULTITOOL $VERSION" --title "opensimMULTITOOL Eingabe" \
-			--inputbox "Simulator:" 8 40 \
-			3>&1 1>&2 2>&3 3>&-
-	)
-	dialogclear
-	ScreenLog
-
-	log info "OpenSimulator $MENUOSEINTRAG wird der Datei $SIMDATEI hinzugefuegt!"
-	sed -i '1s/.*$/'"$MENUOSEINTRAG"'\n&/g' /"$STARTVERZEICHNIS"/$SIMDATEI
-	sort /"$STARTVERZEICHNIS"/$SIMDATEI -o /"$STARTVERZEICHNIS"/$SIMDATEI
-
-	dateimenu
-}
-
-##
- #* osstarteintragdel.
- # entfernt einen Region Simulator aus  der osmsimlist.ini und sortiert diese.
- # 
- #? @param $OSEINTRAGDEL.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
-##
-function osstarteintragdel() {
-	OSEINTRAGDEL=$1 # OpenSimulator, Verzeichnis und Screen Name
-	log info "OpenSimulator $OSEINTRAGDEL wird aus der Datei $SIMDATEI entfernt!"
-	sed -i '/'"$OSEINTRAGDEL"'/d' /"$STARTVERZEICHNIS"/$SIMDATEI
-	sort /"$STARTVERZEICHNIS"/$SIMDATEI -o /"$STARTVERZEICHNIS"/$SIMDATEI
-}
-
-##
- #* menuosstarteintragdel.
- # entfernt einen Region Simulator aus  der osmsimlist.ini und sortiert diese.
- # 
- #? @param dialog.
- #? @return dialog.
- # todo: nichts.
-##
-function menuosstarteintragdel() {
-	MENUOSEINTRAGDEL=$(
-		dialog --backtitle "opensimMULTITOOL $VERSION" --title "opensimMULTITOOL Eingabe" \
-			--inputbox "Simulator:" 8 40 \
-			3>&1 1>&2 2>&3 3>&-
-	)
-	dialogclear
-	ScreenLog
-
-	log info "OpenSimulator $MENUOSEINTRAGDEL wird aus der Datei $SIMDATEI entfernt!"
-	sed -i '/'"$MENUOSEINTRAGDEL"'/d' /"$STARTVERZEICHNIS"/$SIMDATEI
-	sort /"$STARTVERZEICHNIS"/$SIMDATEI -o /"$STARTVERZEICHNIS"/$SIMDATEI
-
-	dateimenu
-}
-
-##
- #* osdauerstop.
- # stoppt Region Server und aus der Startliste loeschen. 
- # Beispiel-Example: bash osmtool.sh osdauerstop sim1
- # 
- #? @param $OSDAUERSTOPSCREEN.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
-##
-function osdauerstop() {
-	OSDAUERSTOPSCREEN=$1 # OpenSimulator, Verzeichnis und Screen Name
-	if screen -list | grep -q "$OSDAUERSTOPSCREEN"; then
-		log warn "OpenSimulator $OSDAUERSTOPSCREEN Beenden und aus der Startliste loeschen!"
-		osstarteintrag "$OSDAUERSTOPSCREEN"
-
-		screen -S "$OSDAUERSTOPSCREEN" -p 0 -X eval "stuff 'shutdown'^M"
-		sleep 10
-		return 0
-	else
-		log error "OpenSimulator $OSDAUERSTOPSCREEN nicht vorhanden"
-		osstarteintrag "$OSDAUERSTOPSCREEN"
-		return 1
-	fi
-
-	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then hauptmenu; fi
-}
-
-##
- #* menuosdauerstop.
- # stoppt Region Server und aus der Startliste loeschen.
- # 
- #? @param dialog.
- #? @return dialog.
- # todo: nichts.
-##
-function menuosdauerstop() {
-	IOSDAUERSTOPSCREEN=$(
-		dialog --backtitle "opensimMULTITOOL $VERSION" --title "opensimMULTITOOL Eingabe" \
-			--inputbox "Simulator:" 8 40 \
-			3>&1 1>&2 2>&3 3>&-
-	)
-	dialogclear
-	ScreenLog
-
-	if screen -list | grep -q "$IOSDAUERSTOPSCREEN"; then
-		DIALOG=dialog
-		(
-			echo "10"
-			screen -S "$IOSDAUERSTOPSCREEN" -p 0 -X eval "stuff 'shutdown'^M"
-			osstarteintragdel "$IOSDAUERSTOPSCREEN"
-			sleep 3
-			echo "100"
-			sleep 2
-		) |
-			$DIALOG --title "$IOSDAUERSTOPSCREEN" --gauge "Stop" 8 30
-		dialogclear
-		
-		$DIALOG --msgbox "$IOSDAUERSTOPSCREEN beendet!" 5 20
-		dialogclear
-		ScreenLog
-		osstarteintragdel "$IOSDAUERSTOPSCREEN"
-		dateimenu
-	else
-		osstarteintragdel "$IOSDAUERSTOPSCREEN"
-		dateimenu
-	fi
-}
-
-##
- #* osdauerstart.
- # startet Region Server und setzt ihn in die Startkonfiguration.
- # Beispiel-Example: bash osmtool.sh osdauerstart sim1
- # 
- #? @param $OSDAUERSTARTSCREEN.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
-##
-function osdauerstart() {
-	OSDAUERSTARTSCREEN=$1 # OpenSimulator, Verzeichnis und Screen Name
-	osstarteintrag "$OSDAUERSTARTSCREEN"
-
-	if ! screen -list | grep -q "$OSDAUERSTARTSCREEN"; then
-		if [ -d "$OSDAUERSTARTSCREEN" ]; then
-
-			cd /$STARTVERZEICHNIS/"$OSDAUERSTARTSCREEN"/bin || return 1
-
-			# AOT Aktiveren oder Deaktivieren.
-			if [[ $SETAOTON = "yes" ]]; then
-				log info "OpenSimulator $OSDAUERSTARTSCREEN Starten mit aot"
-				screen -fa -S "$OSDAUERSTARTSCREEN" -d -U -m mono --desktop -O=all OpenSim.exe
-				return 0
-				log info "OpenSimulator $OSDAUERSTARTSCREEN Starten"
-				screen -fa -S "$OSDAUERSTARTSCREEN" -d -U -m mono OpenSim.exe
-				return 0
-			fi
-			sleep 10
-		else
-			log error "OpenSimulator $OSDAUERSTARTSCREEN nicht vorhanden"
-			return 1
-		fi
-
-	else
-		# es laeuft - work
-		log warn "OpenSimulator $OSDAUERSTARTSCREEN laeuft bereits"
-		return 1
-	fi
-
-	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then hauptmenu; fi
-}
-
-##
- #* menuosdauerstart.
- # startet Region Server und setzt ihn in die Startkonfiguration.
- # 
- #? @param dialog.
- #? @return dialog.
- # todo: nichts.
-##
-function menuosdauerstart() {
-	IOSDAUERSTARTSCREEN=$(
-		dialog --backtitle "opensimMULTITOOL $VERSION" --title "opensimMULTITOOL Eingabe" \
-			--inputbox "Simulator:" 8 40 \
-			3>&1 1>&2 2>&3 3>&-
-	)
-
-	dialogclear
-	ScreenLog
-
-	osstarteintrag "$IOSDAUERSTARTSCREEN"
-	cd /$STARTVERZEICHNIS/"$IOSDAUERSTARTSCREEN"/bin || return 1
-	screen -fa -S "$IOSDAUERSTARTSCREEN" -d -U -m mono OpenSim.exe
-
-	if ! screen -list | grep -q "$IOSDAUERSTARTSCREEN"; then
-		# es laeuft nicht - not work
-
-		if [ -d "$IOSDAUERSTARTSCREEN" ]; then
-
-			cd /$STARTVERZEICHNIS/"$IOSDAUERSTARTSCREEN"/bin || return 1
-
-			# AOT Aktiveren oder Deaktivieren.
-			if [[ $SETAOTON = "yes" ]]; then
-				DIALOG=dialog
-				(
-					echo "10"
-					screen -fa -S "$IOSDAUERSTARTSCREEN" -d -U -m mono --desktop -O=all OpenSim.exe
-					sleep 3
-					echo "100"
-					sleep 2
-				) 
-				#|
-				#$DIALOG --title "$IOSDAUERSTARTSCREEN" --gauge "Start" 8 30
-				#$dialogclear
-				#$DIALOG --msgbox "$IOSDAUERSTARTSCREEN gestartet!" 5 20
-				#$dialogclear
-				ScreenLog
-				return 0
-			else
-				DIALOG=dialog
-				(
-					echo "10"
-					screen -fa -S "$IOSDAUERSTARTSCREEN" -d -U -m mono OpenSim.exe
-					sleep 3
-					echo "100"
-					sleep 2
-				) #|
-					#$DIALOG --title "$IOSDAUERSTARTSCREEN" --gauge "Start" 8 30
-				#$dialogclear
-				#$DIALOG --msgbox "$IOSDAUERSTARTSCREEN gestartet!" 5 20
-				#$dialogclear
-				ScreenLog
-				dateimenu
-			fi
-		else
-			echo "OpenSimulator $IOSDAUERSTARTSCREEN nicht vorhanden"
-			dateimenu
-		fi
-	else
-		# es laeuft - work
-		log error "OpenSimulator $IOSDAUERSTARTSCREEN laeuft bereits"
-		dateimenu
-	fi
-
-}
-
-##
- #* rostop.
- # Robust herunterfahren.
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
-##
-function rostop() {
-	if screen -list | grep -q "RO"; then
-		screen -S RO -p 0 -X eval "stuff 'shutdown'^M"
-		log warn "Robust Beenden"
-		sleep $WARTEZEIT
-		return 0
-	else
-		log error "Robust nicht vorhanden"
-		return 1
-	fi
-}
-
-##
- #* menurostop.
- # Robust herunterfahren.
- # 
- #? @param dialog.
- #? @return dialog.
- # todo: nichts.
-##
-function menurostop() {
-	if screen -list | grep -q "RO"; then
-		screen -S RO -p 0 -X eval "stuff 'shutdown'^M"
-		log warn "Robust Beenden"
-		sleep $WARTEZEIT
-	else
-		log error "Robust nicht vorhanden"
-	fi
-}
-
-##
- #* mostart.
- # Money Server starten.
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
-##
-function mostart() {
-	log info "Money wird gestartet..."
-	cd /$STARTVERZEICHNIS/$MONEYVERZEICHNIS/bin || return 1
-	
-	#screen -fa -S MO -d -U -m mono MoneyServer.exe
-	# DOTNETMODUS="yes"
-	if [[ "${DOTNETMODUS}" == "yes" ]]; then
-		if [[ "${DOTNETINFO}" == "yes" ]]; then echo "dotnet 6 ist eingeschaltet!"; fi
-		screen -fa -S MO -d -U -m dotnet MoneyServer.dll
-	fi
-
-	# DOTNETMODUS="no"
-	if [[ "${DOTNETMODUS}" == "no" ]]; then
-		if [[ "${DOTNETINFO}" == "yes" ]]; then echo ".net 4.8 oder 4.6 ist eingeschaltet!"; fi
-		screen -fa -S MO -d -U -m mono MoneyServer.exe
-	fi
-
-	sleep $MONEYWARTEZEIT
-	log info " Money wurde gestartet"
-	return 0
-}
-
-##
- #* menumostart.
- # Money Server starten.
- # 
- #? @param dialog.
- #? @return dialog.
- # todo: nichts.
-##
-function menumostart() {
-	log info "Money wird gestartet..."
-	cd /$STARTVERZEICHNIS/$MONEYVERZEICHNIS/bin || return 1
-	
-	#screen -fa -S MO -d -U -m mono MoneyServer.exe
-	# DOTNETMODUS="yes"
-	if [[ "${DOTNETMODUS}" == "yes" ]]; then
-		if [[ "${DOTNETINFO}" == "yes" ]]; then echo "dotnet 6 ist eingeschaltet!"; fi
-		screen -fa -S MO -d -U -m dotnet MoneyServer.dll
-	fi
-
-	# DOTNETMODUS="no"
-	if [[ "${DOTNETMODUS}" == "no" ]]; then
-		if [[ "${DOTNETINFO}" == "yes" ]]; then echo ".net 4.8 oder 4.6 ist eingeschaltet!"; fi
-		screen -fa -S MO -d -U -m mono MoneyServer.exe
-	fi
-
-	sleep $MONEYWARTEZEIT
-	log info " Money wurde gestartet"
-	return 0
-}
-
-##
- #* mostop.
- # Money Server herunterfahren.
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
-##
-function mostop() {
-	if screen -list | grep -q "MO"; then
-		screen -S MO -p 0 -X eval "stuff 'shutdown'^M"
-		log warn "Money Beenden"
-		sleep $MONEYWARTEZEIT
-		return 0
-	else
-		log error "Money nicht vorhanden"
-		return 1
-	fi
-}
-
-##
- #* menumostop.
- # Money Server herunterfahren.
- # 
- #? @param dialog.
- #? @return dialog.
- # todo: nichts.
-function menumostop() {
-	if screen -list | grep -q "MO"; then
-		screen -S MO -p 0 -X eval "stuff 'shutdown'^M"
-		log warn "Money Beenden"
-		sleep $MONEYWARTEZEIT
-		return 0
-	else
-		log error "Money nicht vorhanden"
-		return 1
-	fi
-}
-
-##
- #* osscreenstop.
- # beendet ein Screeen. 
- # Beispiel-Example: osscreenstop sim1
- # 
- #? @param $SCREENSTOPSCREEN.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
-##
-function osscreenstop() {
-	SCREENSTOPSCREEN=$1
-	if screen -list | grep -q "$SCREENSTOPSCREEN"; then
-		log text "Screeen $SCREENSTOPSCREEN Beenden"
-		screen -S "$SCREENSTOPSCREEN" -X quit
-		return 0
-	else
-		log error "Screeen $SCREENSTOPSCREEN nicht vorhanden"
-		return 1
-	fi
-	log text "No screen session found. Ist hier kein Fehler, sondern ein Beweis, das alles zuvor sauber heruntergefahren wurde."
-}
-
-##
- #* gridstart.
- # startet erst Robust und dann Money.
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
-##
-function gridstart() {
-	ossettings
-	if screen -list | grep -q RO; then
-		log error "Robust laeuft bereits"
-	else
-		rostart
-	fi
-	if screen -list | grep -q MO; then
-		log error "Money laeuft bereits"
-	else
-		mostart
-	fi
-	return 0
-}
-
-##
- #* menugridstart.
- # startet erst Robust und dann Money.
- # 
- #? @param dialog.
- #? @return dialog.
- # todo: nichts.
-##
-function menugridstart() {
-	ossettings
-	log line
-	if screen -list | grep -q RO; then
-		log error " Robust laeuft bereits"
-	else
-		menurostart
-	fi
-	if screen -list | grep -q MO; then
-		log error "MoneyServer laeuft bereits"
-	else
-		menumostart
-	fi
-}
-
-##
  #* simstats.
  # zeigt Simstatistik an. 
  # simstats screen_name
@@ -3198,7 +3245,7 @@ function simstats() {
 		fi
 		log info "OpenSimulator $STATSSCREEN Simstatistik anzeigen"
 		screen -S "$STATSSCREEN" -p 0 -X eval "stuff 'stats save /$STARTVERZEICHNIS/$STATSSCREEN.log'^M"
-		sleep 2
+		sleep 1
 		cat /$STARTVERZEICHNIS/"$STATSSCREEN".log
 	else
 		log error "Simulator $STATSSCREEN nicht vorhanden"
@@ -3919,7 +3966,7 @@ function oscopyrobust() {
 	if [ -d /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/ ]; then
 		log line
 		log info "Kopiere Robust, Money!"
-		sleep 2		
+		sleep 1		
 		cd /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin || return 1
 		cp -r /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS
 		#log info "Robust und Money wurden kopiert"
@@ -3944,12 +3991,12 @@ function oscopysim() {
 	makeverzeichnisliste
 	#log info "Kopiere Simulatoren!"
 	#log line
-	sleep 2
+	sleep 1
 	for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
 		log info "OpenSimulator ${VERZEICHNISSLISTE[$i]} kopiert"
 		cd /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin || return 1 # Prüfen ob Verzeichnis vorhanden ist.
 		cp -r /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"
-		sleep 2
+		sleep 1
 	done
 	return 0
 }
@@ -4073,7 +4120,7 @@ function regionsconfigdateiliste() {
 function meineregionen() {
 	makeverzeichnisliste
 	log info "MEINEREGIONEN: Regionsliste"
-	sleep 2
+	sleep 1
 	for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
 		VERZEICHNIS="${VERZEICHNISSLISTE[$i]}"
 		REGIONSAUSGABE=$(awk -F "[" '/\[/ {print $1 $2 $3}' /$STARTVERZEICHNIS/"$VERZEICHNIS"/bin/Regions/*.ini | sed s/'\]'//g) # Zeigt nur die Regionsnamen aus einer Regions.ini an
@@ -4094,7 +4141,7 @@ function meineregionen() {
 ##
 function regionsinisuchen() {
 	makeverzeichnisliste
-	sleep 2
+	sleep 1
 
 	for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
 		VERZEICHNIS="${VERZEICHNISSLISTE[$i]}"
@@ -4214,7 +4261,7 @@ function regionsiniteilen() {
 ##
 function autoregionsiniteilen() {
 	makeverzeichnisliste
-	sleep 2
+	sleep 1
 	for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
 		log info "Region.ini ${VERZEICHNISSLISTE[$i]} zerlegen"
 		log line
@@ -4227,7 +4274,7 @@ function autoregionsiniteilen() {
 		# shellcheck disable=SC2068
 		for MeineRegion in ${TARGETS[@]}; do
 			regionsiniteilen "$VERZEICHNIS" "$MeineRegion"
-			sleep 2
+			sleep 1
 			echo "regionsiniteilen $VERZEICHNIS $MeineRegion"
 		done
 		#  Dann umbenennen:
@@ -4258,7 +4305,7 @@ function regionliste() {
 	# Die mit regionsconfigdateiliste erstellte Datei osmregionlist.ini nach sim Verzeichnis und Regionsnamen in die osmregionlist.ini speichern.
 	declare -A Dateien # Array erstellen
 	makeverzeichnisliste
-	sleep 2
+	sleep 1
 	for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
 		log info "Regionnamen ${VERZEICHNISSLISTE[$i]} schreiben"
 		VERZEICHNIS="${VERZEICHNISSLISTE[$i]}"
@@ -4313,7 +4360,7 @@ function makewebmaps() {
 ##
 function moneydelete() {
 	makeverzeichnisliste
-	sleep 2
+	sleep 1
 	# MoneyServer aus den sims entfernen
 	for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
 		cd /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin || return 1               # Pruefen ob Verzeichnis vorhanden ist.
@@ -4322,7 +4369,7 @@ function moneydelete() {
 		rm -r /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/OpenSim.Data.MySQL.MySQLMoneyDataWrapper.dll
 		rm -r /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/OpenSim.Modules.Currency.dll
 		log info "MONEYDELETE: MoneyServer ${VERZEICHNISSLISTE[$i]} geloescht"
-		sleep 2
+		sleep 1
 	done
 	# MoneyServer aus Robust entfernen
 	if [ -d /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/ ]; then
@@ -4472,7 +4519,7 @@ function regionbackup() {
 	# regionbackup "$BACKUPSCREEN" "$BACKUPREGION"
 	echo "Empfange: $BACKUPSCREEN $BACKUPREGION"
 
-	sleep 2
+	sleep 1
 	BACKUPVERZEICHNISSCREENNAME=$1
 	REGIONSNAME=$2
 
@@ -4564,7 +4611,7 @@ function menuregionbackup() {
 		echo "Keine Menuelose Funktion" | exit
 	fi # dialog Aktionen Ende
 
-	sleep 2
+	sleep 1
 	log line
 	log info "Backup der Region $REGIONSNAME"
 	cd /$STARTVERZEICHNIS/"$MBACKUPVERZEICHNISSCREENNAME"/bin || return 1 # Test ob Verzeichnis vorhanden.
@@ -4686,7 +4733,7 @@ function autosimstart() {
 	if ! screen -list | grep -q 'sim'; then
 		# es laeuft kein Simulator - not work
 		makeverzeichnisliste
-		sleep 2
+		sleep 1
 		for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
 			log info "Regionen ${VERZEICHNISSLISTE[$i]} werden gestartet"
 			cd /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin || return 1
@@ -4735,7 +4782,7 @@ function autosimstart() {
 ##
 function autosimstop() {
 	makeverzeichnisliste
-	sleep 2
+	sleep 1
 	for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
 		if screen -list | grep -q "${VERZEICHNISSLISTE[$i]}"; then
 			log warn "Regionen ${VERZEICHNISSLISTE[$i]} Beenden"
@@ -4760,7 +4807,7 @@ function menuautosimstart() {
 	if ! screen -list | grep -q 'sim'; then
 		# es laeuft kein Simulator - not work
 		makeverzeichnisliste
-		sleep 2
+		sleep 1
 		for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
 			log info "Regionen ${VERZEICHNISSLISTE[$i]} werden gestartet"
 			cd /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin || return 1
@@ -4819,7 +4866,7 @@ function menuautosimstart() {
 ##
 function menuautosimstop() {
 	makeverzeichnisliste
-	sleep 2
+	sleep 1
 	for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
 		if screen -list | grep -q "${VERZEICHNISSLISTE[$i]}"; then
 			log text "Regionen ${VERZEICHNISSLISTE[$i]} Beenden"
@@ -4876,14 +4923,14 @@ function autologdel() {
 function menuautologdel() {
 	log line
 	makeverzeichnisliste
-	sleep 2
+	sleep 1
 	for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
 		#BERECHNUNG3=$((100 / "$ANZAHLVERZEICHNISSLISTE"))
 		#BALKEN3=$(("$i" * "$BERECHNUNG3"))
 		rm /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/*.log #| log info "" # dialog --gauge "Auto Sim stop..." 6 64 $BALKEN3
 		#dialogclear || return 0
 		log info "OpenSimulator log ${VERZEICHNISSLISTE[$i]} geloescht"
-		sleep 2
+		sleep 1
 	done
 
 	rologdel
@@ -4900,12 +4947,12 @@ function menuautologdel() {
 # Die Dateien samt neuer Daten werden beim naechsten start des opensimulator neu geschrieben.
 function automapdel() {
 	makeverzeichnisliste
-	sleep 2
+	sleep 1
 	for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
 		cd /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin || return 1
 		rm -r maptiles/* || echo " "
 		log warn "OpenSimulator maptile ${VERZEICHNISSLISTE[$i]} geloescht"
-		sleep 2
+		sleep 1
 	done
 	autorobustmapdel
 	return 0
@@ -5040,7 +5087,7 @@ function getcachegroesse() {
 	#log line
 	log info "Zeige Cache Dateien und die größe aus dem gesamten Grid an!"
 	makeverzeichnisliste
-	#sleep 2
+	#sleep 1
 
 	# Simualtoren
 	for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
@@ -5074,7 +5121,7 @@ function gridcachedelete() {
 	log line
 	log warn "Lösche Cache Dateien aus dem gesamten Grid!"
 	makeverzeichnisliste
-	sleep 2
+	sleep 1
 	# Simualtoren
 	for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do	
 	if [ "$ASSETCACHECLEAR" = "yes" ]; then  rm -r /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/assetcache || echo " "; fi
@@ -5100,7 +5147,7 @@ function gridcachedelete() {
 ##
 function autoallclean() {
 	makeverzeichnisliste
-	sleep 2
+	sleep 1
 	for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
 		# Dateien
 		rm /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/*.log
@@ -5141,7 +5188,7 @@ function autoallclean() {
 		fi
 
 		log warn "autoallclean: ${VERZEICHNISSLISTE[$i]} geloescht"
-		sleep 2
+		sleep 1
 	done
 	# nochmal das gleiche mit Robust
 	log warn "autoallclean: $ROBUSTVERZEICHNIS geloescht"
@@ -5205,7 +5252,7 @@ function autoregionbackup() {
     fi
 
 	makeregionsliste
-	sleep 2
+	sleep 1
 	for ((i = 0; i < "$ANZAHLREGIONSLISTE"; i++)); do
 		BACKUPSCREEN=$(echo "${REGIONSLISTE[$i]}" | cut -d ' ' -f 1)
 		BACKUPREGION=$(echo "${REGIONSLISTE[$i]}" | cut -d ' ' -f 2)
@@ -5231,7 +5278,7 @@ function autoregionbackup() {
 ##
 function autoscreenstop() {
 	makeverzeichnisliste
-	sleep 2
+	sleep 1
 
 	# shellcheck disable=SC2022
 	if ! screen -list | grep -q 'sim'; then
@@ -5266,7 +5313,7 @@ function autoscreenstop() {
 ##
 function menuautoscreenstop() {
 	makeverzeichnisliste
-	sleep 2
+	sleep 1
 
 	# shellcheck disable=SC2022
 	if ! screen -list | grep -q 'sim'; then
@@ -5527,7 +5574,7 @@ function monoinstall() {
 		log info "mono-complete ist nicht installiert."
 		log info "Installation von mono 6.x fuer Ubuntu 18"
 
-		sleep 2
+		sleep 1
 
 		sudo apt install gnupg ca-certificates
 		sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
@@ -5552,7 +5599,7 @@ function monoinstall18() {
 		echo "mono-complete ist bereits installiert."
 	else
 		echo "Ich installiere jetzt mono-complete"
-		sleep 2
+		sleep 1
 
 		sudo apt install gnupg ca-certificates
 		sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
@@ -5577,7 +5624,7 @@ function monoinstall20() {
 		echo "mono-complete ist bereits installiert."
 	else
 		echo "Ich installiere jetzt mono-complete"
-		sleep 2
+		sleep 1
 
 		sudo apt install gnupg ca-certificates
 		sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
@@ -6234,7 +6281,7 @@ function osbuildingupgrade93() {
 	SETOSVERSION=$1
 	# if [ "$SETOSVERSION" = "" ]; then SETOSVERSION=$(date +"%d%m%Y"); fi
 	# Alte Versionsdatei loeschen nicht vergessen.    
-    sleep 2
+    sleep 1
 	# Ist opensim vorhanden?
 	if [ -d "/$STARTVERZEICHNIS/opensim" ] 
 	then
@@ -7523,7 +7570,7 @@ function db_backuptabellentypen() {
 
 	tabellenname=()
 	while IFS= read -r tabellenname; do
-		sleep 2
+		sleep 1
 		if [ "$tabellenname" = "-1" ]; then dateiname="NoneUnknown"; fi
 		if [ "$tabellenname" = "-2" ]; then dateiname="LLmaterialIAR"; fi
 		if [ "$tabellenname" = "0" ]; then dateiname="Texture"; fi
@@ -7598,7 +7645,7 @@ function db_restorebackuptabellen() {
 
 	tabellenname=()
 	while IFS= read -r tabellenname; do
-		sleep 2
+		sleep 1
 		unzip -p /"$STARTVERZEICHNIS"/backup/"$databasename"/"$tabellenname".sql.zip | mysql >MYSQL_PWD="$password" -u"$username" "$newdatabasename"
 		log info "Datenbank Tabelle: $newdatabasename - $tabellenname widerhergestellt."
 	done </$STARTVERZEICHNIS/backup/"$databasename"/liste.txt
@@ -7625,7 +7672,7 @@ function db_restorebackuptabellen2test() {
 
 	tabellenname=()
 	while IFS= read -r tabellenname; do
-		sleep 2		
+		sleep 1		
         for file in foo*; do
             case $(file "$file") in
                 *ASCII*) /"$STARTVERZEICHNIS"/backup/"$databasename"/"$tabellenname".sql | mysql >MYSQL_PWD="$password" -u"$username" "$newdatabasename" ;;
@@ -11018,30 +11065,15 @@ function createregionavatar() {
 		screen -S "$OSCOMMANDSCREEN" -p 0 -X eval "stuff '$LASTNAMEMASTER'^M"
 		screen -S "$OSCOMMANDSCREEN" -p 0 -X eval "stuff '$ESTATENAMEMASTER'^M"
 
-		sleep 2
+		sleep 1
 	done
 
 	return 0
 }
 
-##
- #* menugridstop.
- # Stoppt erst Money dann Robust.
- # 
- #? @param name Erklaerung.
- #? @return name was wird zurueckgegeben.
- # todo: nichts.
-##  gridstop, stoppt erst Money dann Robust.
-function menugridstop() {
-	if screen -list | grep -q MO; then
-		menumostop
-	fi
-
-	if screen -list | grep -q RO; then
-		menurostop
-	fi
-	return 0
-}
+###########################################################################
+#* Build Funktionen Funktionsgruppe
+###########################################################################
 
 ##
  #* compilieren.
@@ -11300,7 +11332,7 @@ function oszipupgrade() {
 }
 
 ###########################################################################
-# Automatische Konfigurationen Prototype
+#* Automatische Konfigurationen Prototype Funktionsgruppe
 ###########################################################################
 
 ##
@@ -11572,7 +11604,7 @@ function osslEnableConfigSet() {
 }
 
 ###########################################################################
-# Hilfen und Info
+#* Hilfen und Info Funktionsgruppe
 ###########################################################################
 
 ##
@@ -12921,7 +12953,7 @@ MoneyServerCommands
 }
 
 ###########################################################################
-# Menu Menue
+#* Menu Menue Funktionsgruppe
 ###########################################################################
 
 ##
@@ -13581,7 +13613,7 @@ function buildmenu() {
 function newhelp() {
 	# $(tput setab 5) $(tput setaf 2) $(tput sgr 0)
 	echo "$(tput setaf 2)Display Hilfe"
-	echo "Syntax:$(tput sgr 0) osmtool.sh [h|hilfe|konsolenhilfe|dbhilfe|commandhelp|RobustCommands|RobustCommands|OpenSimCommands|hda]"
+	echo "Syntax:$(tput sgr 0) osmtool.sh [h|hilfe|konsolenhilfe|dbhilfe|commandhelp|RobustCommands|OpenSimCommands|hda]"
 	echo "$(tput setaf 2)Optionen:$(tput sgr 0)"
 	echo "h                       $(tput setaf 2)Zeigt diese hilfe.$(tput sgr 0)"
 	echo "hilfe                   $(tput setaf 2)Haupthilfefunktionen.$(tput sgr 0)"
@@ -13599,10 +13631,38 @@ function newhelp() {
 	echo "$(tput setaf $FARBE1) $(tput setab $FARBE2)# Beispiel: bash osmtool.sh oscommand sim1 Welcome \"alert-user John Doe Hallo John Doe\" $(tput sgr 0)"
 }
 
+###########################################################################
+#* Tests Funktionsgruppe
+###########################################################################
+
+##
+ #* ostimestamp Test
+ # Timestamp Experimente.
+ # 
+ #? @param keiner.
+ #? @return $VERSION
+ # todo: nichts.
+##
+function ostimestamp() {
+# “yyyy-mm-dd”
+# Deutsch dd-mm-yyyy
+EN_DATUM=$(date '+%Y-%m-%d %H:%M:%S')
+echo "$EN_DATUM" Aktuelles Datum Aktuell in Englisch
+
+DE_DATUM=$(date '+%d-%m-%Y %H:%M:%S')
+echo "$DE_DATUM" Aktuelles Datum Aktuell in Deutsch
+
+DATE_TO_UNIX_TIMESTAMP=$(date -d "$EN_DATUM" +%s)
+echo "$DATE_TO_UNIX_TIMESTAMP" datum zu timestamp ausgabe
+
+UNIX_TIMESTAMP_TO_DATE=$(date -d "@$DATE_TO_UNIX_TIMESTAMP" '+%Y-%m-%d %H:%M:%S')
+echo "$UNIX_TIMESTAMP_TO_DATE" timestamp zu date ausgabe
+}
+
 
 
 ###########################################################################
-# Eingabeauswertung Konsolenmenue
+#* Eingabeauswertung Konsolenmenue Funktionsgruppe
 ###########################################################################
 case $KOMMANDO in
 	AutoInstall) AutoInstall ;;
@@ -13912,6 +13972,7 @@ case $KOMMANDO in
 	remarklist) remarklist ;;
 	ini_get) ini_get "$2" "$3" "$4" ;;
 	ini_set) ini_set "$2" "$3" "$4" "$5" ;;
+	randomname) randomname ;;
 	hda | hilfedirektaufruf | hilfemenudirektaufrufe) hilfemenudirektaufrufe ;;
 	h) newhelp ;;
 	V | v) echo "$SCRIPTNAME $VERSION" ;;
