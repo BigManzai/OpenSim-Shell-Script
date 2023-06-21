@@ -110,7 +110,7 @@ Bitte beachtet der Verzeichnisname des OpenSimulator ist gleichzeitig der Screen
 
 Wird kein Robust oder Money Verzeichnis gefunden, werden diese auch nicht gestartet.
 
-## Informationen
+## Struktur
 Die Struktur baut sich folgendermaßen auf:
 
     robust (Robust Server und eventuell Money Server)
