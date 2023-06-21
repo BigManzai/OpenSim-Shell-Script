@@ -36,7 +36,7 @@
 ###########################################################################
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.901" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.902" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 DOTNETINFO="no"
@@ -2318,13 +2318,13 @@ function osstart() {
 
 			# DOTNETMODUS="yes"
 			if [[ "${DOTNETMODUS}" == "yes" ]]; then
-				if [[ "${DOTNETINFO}" == "yes" ]]; then echo "dotnet 6 ist eingeschaltet!"; fi
+				echo "dotnet 6 ist eingeschaltet!"
 				screen -fa -S "$OSSTARTSCREEN" -d -U -m dotnet OpenSim.dll
 			fi
 
 			# DOTNETMODUS="no"
 			if [[ "${DOTNETMODUS}" == "no" ]]; then
-				if [[ "${DOTNETINFO}" == "yes" ]]; then echo ".net 4.8 oder 4.6 ist eingeschaltet!"; fi
+				echo ".net 4.8 oder 4.6 ist eingeschaltet!"
 				screen -fa -S "$SCSTARTSCREEN" -d -U -m mono OpenSim.exe
 			fi
 
@@ -2339,8 +2339,6 @@ function osstart() {
 		log warn "OpenSimulator $OSSTARTSCREEN laeuft bereits"
 		return 1
 	fi
-
-	#if dpkg-query -s dialog 2>/dev/null | grep -q installed; then hauptmenu; fi
 }
 
 ##
@@ -2412,8 +2410,6 @@ function menuosstart() {
 					echo ".net 4.8 oder 4.6 ist eingeschaltet!"
 					screen -fa -S "$IOSSTARTSCREEN" -d -U -m mono OpenSim.exe
 				fi
-
-				#screen -fa -S "$IOSSTARTSCREEN" -d -U -m mono OpenSim.exe
 				sleep 3
 			)
 			ScreenLog
@@ -2462,7 +2458,7 @@ function menuosstop() {
 			echo "Stoppe: $IOSSTOPSCREEN"
 			screen -S "$IOSSTOPSCREEN" -p 0 -X eval "stuff 'shutdown'^M"
 			sleep $STOPWARTEZEIT
-			# Killen.
+			# Killen wenn noch nicht gestoppt.
 			screen -X -S "$IOSSTOPSCREEN" kill
 		) |
 			$DIALOG --title "$IOSSTOPSCREEN" --gauge "Stop" 8 30
@@ -2491,13 +2487,13 @@ function rostart() {
 
 	# DOTNETMODUS="yes"
 	if [[ "${DOTNETMODUS}" == "yes" ]]; then
-		if [[ "${DOTNETINFO}" == "yes" ]]; then echo "dotnet 6 ist eingeschaltet!"; fi
+		echo "dotnet 6 ist eingeschaltet!"
 		screen -fa -S RO -d -U -m dotnet Robust.dll
 	fi
 	
 	# DOTNETMODUS="no"
 	if [[ "${DOTNETMODUS}" == "no" ]]; then
-		if [[ "${DOTNETINFO}" == "yes" ]]; then echo ".net 4.8 oder 4.6 ist eingeschaltet!"; fi
+		echo ".net 4.8 oder 4.6 ist eingeschaltet!"
 		screen -fa -S RO -d -U -m mono Robust.exe
 	fi
 
@@ -2522,13 +2518,13 @@ function menurostart() {
 
 	# DOTNETMODUS="yes"
 	if [[ "${DOTNETMODUS}" == "yes" ]]; then
-		if [[ "${DOTNETINFO}" == "yes" ]]; then echo "dotnet 6 ist eingeschaltet!"; fi
+		echo "dotnet 6 ist eingeschaltet!"
 		screen -fa -S RO -d -U -m dotnet Robust.dll
 	fi
 
 	# DOTNETMODUS="no"
 	if [[ "${DOTNETMODUS}" == "no" ]]; then
-		if [[ "${DOTNETINFO}" == "yes" ]]; then echo ".net 4.8 oder 4.6 ist eingeschaltet!"; fi
+		echo ".net 4.8 oder 4.6 ist eingeschaltet!"
 		screen -fa -S RO -d -U -m mono Robust.exe
 	fi
 
@@ -2591,13 +2587,13 @@ function mostart() {
 	#screen -fa -S MO -d -U -m mono MoneyServer.exe
 	# DOTNETMODUS="yes"
 	if [[ "${DOTNETMODUS}" == "yes" ]]; then
-		if [[ "${DOTNETINFO}" == "yes" ]]; then echo "dotnet 6 ist eingeschaltet!"; fi
+		echo "dotnet 6 ist eingeschaltet!"
 		screen -fa -S MO -d -U -m dotnet MoneyServer.dll
 	fi
 
 	# DOTNETMODUS="no"
 	if [[ "${DOTNETMODUS}" == "no" ]]; then
-		if [[ "${DOTNETINFO}" == "yes" ]]; then echo ".net 4.8 oder 4.6 ist eingeschaltet!"; fi
+		echo ".net 4.8 oder 4.6 ist eingeschaltet!"
 		screen -fa -S MO -d -U -m mono MoneyServer.exe
 	fi
 
@@ -2618,16 +2614,15 @@ function menumostart() {
 	log info "Money wird gestartet..."
 	cd /$STARTVERZEICHNIS/$MONEYVERZEICHNIS/bin || return 1
 	
-	#screen -fa -S MO -d -U -m mono MoneyServer.exe
 	# DOTNETMODUS="yes"
 	if [[ "${DOTNETMODUS}" == "yes" ]]; then
-		if [[ "${DOTNETINFO}" == "yes" ]]; then echo "dotnet 6 ist eingeschaltet!"; fi
+		echo "dotnet 6 ist eingeschaltet!"
 		screen -fa -S MO -d -U -m dotnet MoneyServer.dll
 	fi
 
 	# DOTNETMODUS="no"
 	if [[ "${DOTNETMODUS}" == "no" ]]; then
-		if [[ "${DOTNETINFO}" == "yes" ]]; then echo ".net 4.8 oder 4.6 ist eingeschaltet!"; fi
+		echo ".net 4.8 oder 4.6 ist eingeschaltet!"
 		screen -fa -S MO -d -U -m mono MoneyServer.exe
 	fi
 
@@ -3190,13 +3185,12 @@ function scstart() {
 
 	# DOTNETMODUS="yes"
 	if [[ "${DOTNETMODUS}" == "yes" ]]; then
-
-		if [[ "${DOTNETINFO}" == "yes" ]]; then echo "dotnet 6 ist eingeschaltet!"; fi		
+		echo "dotnet 6 ist eingeschaltet!"
 		screen -fa -S "$OSSTARTSCREEN" -d -U -m dotnet OpenSim.dll
 		fi
 	# DOTNETMODUS="no"
 	if [[ "${DOTNETMODUS}" == "no" ]]; then
-		if [[ "${DOTNETINFO}" == "yes" ]]; then echo ".net 4.8 oder 4.6 ist eingeschaltet!"; fi		
+		echo ".net 4.8 oder 4.6 ist eingeschaltet!"
 		screen -fa -S "$SCSTARTSCREEN" -d -U -m mono OpenSim.exe
 	fi
 }
@@ -4753,12 +4747,12 @@ function autosimstart() {
 				#screen -fa -S "${VERZEICHNISSLISTE[$i]}" -d -U -m mono OpenSim.exe
 				# DOTNETMODUS="yes"
 				if [[ "${DOTNETMODUS}" == "yes" ]]; then
-					if [[ "${DOTNETINFO}" == "yes" ]]; then echo "dotnet 6 ist eingeschaltet!"; fi
+					echo "dotnet 6 ist eingeschaltet!"
 					screen -fa -S "${VERZEICHNISSLISTE[$i]}" -d -U -m dotnet OpenSim.dll
 				fi
 				# DOTNETMODUS="no"
 				if [[ "${DOTNETMODUS}" == "no" ]]; then
-					if [[ "${DOTNETINFO}" == "yes" ]]; then echo ".net 4.8 oder 4.6 ist eingeschaltet!"; fi
+					echo ".net 4.8 oder 4.6 ist eingeschaltet!"
 					screen -fa -S "${VERZEICHNISSLISTE[$i]}" -d -U -m mono OpenSim.exe
 				fi
 
@@ -4835,12 +4829,12 @@ function menuautosimstart() {
 			#screen -fa -S "${VERZEICHNISSLISTE[$i]}" -d -U -m mono OpenSim.exe | log info "${VERZEICHNISSLISTE[$i]} wurde gestartet" # dialog --gauge "Auto Sim start..." 6 64 $BALKEN1
 			# DOTNETMODUS="yes"
 			if [[ "${DOTNETMODUS}" == "yes" ]]; then
-				if [[ "${DOTNETINFO}" == "yes" ]]; then echo "dotnet 6 ist eingeschaltet!"; fi
+				echo "dotnet 6 ist eingeschaltet!"
 				screen -fa -S "${VERZEICHNISSLISTE[$i]}" -d -U -m dotnet OpenSim.dll
 				fi
 			# DOTNETMODUS="no"
 			if [[ "${DOTNETMODUS}" == "no" ]]; then
-				if [[ "${DOTNETINFO}" == "yes" ]]; then echo ".net 4.8 oder 4.6 ist eingeschaltet!"; fi
+				echo ".net 4.8 oder 4.6 ist eingeschaltet!"
 				screen -fa -S "${VERZEICHNISSLISTE[$i]}" -d -U -m mono OpenSim.exe
 			fi
 
@@ -12230,7 +12224,6 @@ function hilfe() {
 	echo "dotnetinfo	- $(tput setab 5)keine Parameter$(tput sgr 0) – .NET und CSharp Informationen."
 
 	echo "downloados	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "dummyvar	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
 	echo "edittextbox	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
 	echo "ende	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
 	echo "expertenmenu	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
