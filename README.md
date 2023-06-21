@@ -67,7 +67,13 @@ Dazu müssen sie ein paar fragen beantworten.
 
 Eine Server erstinstallation eines Ubuntu 18 oder 22 Servers kann mit folgender Funktion ausgelöst werden:
 
-      /opt/osmtool.sh serverinstall
+Server Installation Ubuntu 18 mit mySQL
+
+     bash osmtool.sh serverinstall
+     
+Server Installation Ubuntu 22 mit mariaDB
+
+     bash osmtool.sh serverinstall22
 
 ## Hilfe
 
