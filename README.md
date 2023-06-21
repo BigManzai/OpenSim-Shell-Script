@@ -181,20 +181,6 @@ Crontab zum prüfen noch einmal anzeigen:
 
      crontab -l
 
-## Menü mit dialog
-Ich habe eine Menüfunktion integriert diese schaut zuerst ob dialog installiert ist oder nicht.
-
-Wenn ihr dialog installiert habt dann öffnet sich nach der Eingabe von ./osmtool.sh ein Menü.
-
-In diesem Menü kann man einige Funktionen bequem aufrufen.
-
-Bisher sind nur Funktionen im Menü die maximal 1 Übergabewert voraussetzen.
-
-     Nachinstallieren von dialog mit:
-     apt install dialog
-     oder
-     sudo apt-get install dialog
-
 ## TODO und Informationen
 
 NEU
