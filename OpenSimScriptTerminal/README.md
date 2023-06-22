@@ -15,5 +15,8 @@ Die Skript-Tasten sind einfache Shell Skripte in Textform, bei denen der Dateina
 
 Die vordefinierten Tasten beziehen sich auf das opensimMULTITOOL können aber beliebig geändert werden.
 
+# Installation
+Einfach das OpenSimScriptTerminal Verzeichnis auf die Festplatte C:/ kopieren oder Verschieben.
+
 # TODO
 Passwörter dürfen nicht lesbar gespeichert werden.
