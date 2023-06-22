@@ -1,0 +1,1 @@
+OpenSim Script Terminal ist ein Terminal ähnlich Putty mit dem zusatz das Scripte als Buttons eingefügt werden können.
