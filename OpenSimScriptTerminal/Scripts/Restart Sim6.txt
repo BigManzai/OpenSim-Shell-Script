@@ -1,0 +1,3 @@
+cd /opt
+bash osmtool.sh osstop sim6
+bash osmtool.sh osstart sim6

@@ -1,0 +1,3 @@
+cd /opt
+bash osmtool.sh osstop sim8
+bash osmtool.sh osstart sim8
