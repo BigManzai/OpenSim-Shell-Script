@@ -20,7 +20,7 @@
 # ! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 # ! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-# * Status 20.06.2024 396 Funktionen.
+# * Status 22.06.2024 402 Funktionen.
 
 # # Installieren sie bitte: #* Visual Studio Code - Mac, Linux, Windows
 #* dazu die Plugins:
@@ -36,10 +36,8 @@
 ###########################################################################
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.902" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.904" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
-
-DOTNETINFO="no"
 
 ##
  #* vardel.
@@ -76,7 +74,7 @@ function vardel() {
 	unset SCRIPTZIP
 	return 0
 }
-vardel
+# vardel
 
 NEUERREGIONSNAME="Welcome"
 
@@ -316,40 +314,6 @@ function remarklist() {
 	suche="function"
 	ergebnisflist=$(grep -B9 -i -r "$suche " $file) # B8 Acht Zeilen vor dem Funktionsnamen.
 	echo "$ergebnisflist" >/$STARTVERZEICHNIS/osmRemarklist"$DATEIDATUM".txt
-}
-
-##
- #* lastrebootdatum.
- # Letzter reboot des Servers.
- # 
- #? @param keine.
- #? @return $datediff.
- # todo: nichts.
-##
-function lastrebootdatum() {
-	HEUTEDATUM=$(date +%Y-%m-%d) # Heute
-
-	# Parsen: system boot  2021-11-30 14:26
-	LETZTERREBOOT=$(who -b | awk -F' ' '{print $3}' | xargs) # Letzter Reboot
-
-	# Tolles Datum Script
-	first_date=$(date -d "$HEUTEDATUM" "+%s")
-	second_date=$(date -d "$LETZTERREBOOT" "+%s")
-	EINST="-d" # Manuelle auswahl umgehen.
-	case "$EINST" in
-	"--seconds" | "-s") period=1 ;;
-	"--minutes" | "-m") period=60 ;;
-	"--hours" | "-h") period=$((60 * 60)) ;;
-	"--days" | "-d" | "") period=$((60 * 60 * 24)) ;;
-	esac
-	datediff=$(( ("$first_date" - "$second_date") / ("$period") ))
-	lastrebootdatuminfo="Sie haben vor $datediff Tag(en) ihren Server neu gestartet"
-	if (( $(echo "${datediff} >= 30") )); then
-		log warn "$lastrebootdatuminfo"
-	else
-		log info "$lastrebootdatuminfo"
-	fi
-	return $datediff
 }
 
 ##
@@ -1437,6 +1401,40 @@ function log() {
 ###########################################################################
 
 ##
+ #* lastrebootdatum.
+ # Letzter reboot des Servers.
+ # 
+ #? @param keine.
+ #? @return $datediff.
+ # todo: nichts.
+##
+function lastrebootdatum() {
+	HEUTEDATUM=$(date +%Y-%m-%d) # Heute
+
+	# Parsen: system boot  2021-11-30 14:26
+	LETZTERREBOOT=$(who -b | awk -F' ' '{print $3}' | xargs) # Letzter Reboot
+
+	# Tolles Datum Script
+	first_date=$(date -d "$HEUTEDATUM" "+%s")
+	second_date=$(date -d "$LETZTERREBOOT" "+%s")
+	EINST="-d" # Manuelle auswahl umgehen.
+	case "$EINST" in
+	"--seconds" | "-s") period=1 ;;
+	"--minutes" | "-m") period=60 ;;
+	"--hours" | "-h") period=$((60 * 60)) ;;
+	"--days" | "-d" | "") period=$((60 * 60 * 24)) ;;
+	esac
+	datediff=$(( ("$first_date" - "$second_date") / ("$period") ))
+	lastrebootdatuminfo="Sie haben vor $datediff Tag(en) ihren Server neu gestartet"
+	if (( $(echo "${datediff} >= 30") )); then
+		log warn "$lastrebootdatuminfo"
+	else
+		log info "$lastrebootdatuminfo"
+	fi
+	return $datediff
+}
+
+##
  #* schreibeinfo.
  # Kopfzeile erstellen.
  # 
@@ -1538,11 +1536,26 @@ function rebootdatum() {
 		# Ja herunterfahren von Robust und OpenSim anschliessend ein Server Reboot ausfuehren.
 		autostop
 		shutdown -r now
+		#reboot now -y
 	else
 		# Nein
 		hauptmenu
 	fi
 	return 0
+}
+
+##
+ #* reboot.
+ # Reboot des Servers.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+function reboot() {
+	echo "Server wird jetzt heruntergefahren und neu gestartet!"
+		autostop
+		shutdown -r now
 }
 
 ##
@@ -2318,13 +2331,11 @@ function osstart() {
 
 			# DOTNETMODUS="yes"
 			if [[ "${DOTNETMODUS}" == "yes" ]]; then
-				echo "dotnet 6 ist eingeschaltet!"
 				screen -fa -S "$OSSTARTSCREEN" -d -U -m dotnet OpenSim.dll
 			fi
 
 			# DOTNETMODUS="no"
 			if [[ "${DOTNETMODUS}" == "no" ]]; then
-				echo ".net 4.8 oder 4.6 ist eingeschaltet!"
 				screen -fa -S "$SCSTARTSCREEN" -d -U -m mono OpenSim.exe
 			fi
 
@@ -2401,13 +2412,11 @@ function menuosstart() {
 
 				# DOTNETMODUS="yes"
 				if [[ "${DOTNETMODUS}" == "yes" ]]; then
-					echo "dotnet 6 ist eingeschaltet!"
 					screen -fa -S "$IOSSTARTSCREEN" -d -U -m dotnet OpenSim.dll
 				fi
 
 				# DOTNETMODUS="no"
 				if [[ "${DOTNETMODUS}" == "no" ]]; then
-					echo ".net 4.8 oder 4.6 ist eingeschaltet!"
 					screen -fa -S "$IOSSTARTSCREEN" -d -U -m mono OpenSim.exe
 				fi
 				sleep 3
@@ -2487,13 +2496,11 @@ function rostart() {
 
 	# DOTNETMODUS="yes"
 	if [[ "${DOTNETMODUS}" == "yes" ]]; then
-		echo "dotnet 6 ist eingeschaltet!"
 		screen -fa -S RO -d -U -m dotnet Robust.dll
 	fi
 	
 	# DOTNETMODUS="no"
 	if [[ "${DOTNETMODUS}" == "no" ]]; then
-		echo ".net 4.8 oder 4.6 ist eingeschaltet!"
 		screen -fa -S RO -d -U -m mono Robust.exe
 	fi
 
@@ -2518,13 +2525,11 @@ function menurostart() {
 
 	# DOTNETMODUS="yes"
 	if [[ "${DOTNETMODUS}" == "yes" ]]; then
-		echo "dotnet 6 ist eingeschaltet!"
 		screen -fa -S RO -d -U -m dotnet Robust.dll
 	fi
 
 	# DOTNETMODUS="no"
 	if [[ "${DOTNETMODUS}" == "no" ]]; then
-		echo ".net 4.8 oder 4.6 ist eingeschaltet!"
 		screen -fa -S RO -d -U -m mono Robust.exe
 	fi
 
@@ -2587,13 +2592,11 @@ function mostart() {
 	#screen -fa -S MO -d -U -m mono MoneyServer.exe
 	# DOTNETMODUS="yes"
 	if [[ "${DOTNETMODUS}" == "yes" ]]; then
-		echo "dotnet 6 ist eingeschaltet!"
 		screen -fa -S MO -d -U -m dotnet MoneyServer.dll
 	fi
 
 	# DOTNETMODUS="no"
 	if [[ "${DOTNETMODUS}" == "no" ]]; then
-		echo ".net 4.8 oder 4.6 ist eingeschaltet!"
 		screen -fa -S MO -d -U -m mono MoneyServer.exe
 	fi
 
@@ -2616,13 +2619,11 @@ function menumostart() {
 	
 	# DOTNETMODUS="yes"
 	if [[ "${DOTNETMODUS}" == "yes" ]]; then
-		echo "dotnet 6 ist eingeschaltet!"
 		screen -fa -S MO -d -U -m dotnet MoneyServer.dll
 	fi
 
 	# DOTNETMODUS="no"
 	if [[ "${DOTNETMODUS}" == "no" ]]; then
-		echo ".net 4.8 oder 4.6 ist eingeschaltet!"
 		screen -fa -S MO -d -U -m mono MoneyServer.exe
 	fi
 
@@ -2736,6 +2737,54 @@ function menugridstart() {
 	else
 		menumostart
 	fi
+}
+
+##
+ #* icecaststart.
+ # startet icecast2.
+ # 
+ #? @param dialog.
+ #? @return dialog.
+ # todo: nichts.
+##
+function icecaststart() {
+	sudo /etc/init.d/icecast2 start
+}
+
+##
+ #* icecaststop.
+ # startet icecast2.
+ # 
+ #? @param dialog.
+ #? @return dialog.
+ # todo: nichts.
+##
+function icecaststop() {
+	sudo /etc/init.d/icecast2 stop
+}
+
+##
+ #* icecastrestart.
+ # startet icecast2.
+ # 
+ #? @param dialog.
+ #? @return dialog.
+ # todo: nichts.
+##
+function icecastrestart() {
+	sudo /etc/init.d/icecast2 restart
+}
+
+##
+ #* icecastversion.
+ # startet icecast2.
+ # 
+ #? @param dialog.
+ #? @return dialog.
+ # todo: nichts.
+##
+function icecastversion() {
+	/usr/bin/icecast2 -v
 }
 
 ###########################################################################
@@ -3185,12 +3234,10 @@ function scstart() {
 
 	# DOTNETMODUS="yes"
 	if [[ "${DOTNETMODUS}" == "yes" ]]; then
-		echo "dotnet 6 ist eingeschaltet!"
 		screen -fa -S "$OSSTARTSCREEN" -d -U -m dotnet OpenSim.dll
 		fi
 	# DOTNETMODUS="no"
 	if [[ "${DOTNETMODUS}" == "no" ]]; then
-		echo ".net 4.8 oder 4.6 ist eingeschaltet!"
 		screen -fa -S "$SCSTARTSCREEN" -d -U -m mono OpenSim.exe
 	fi
 }
@@ -4747,12 +4794,10 @@ function autosimstart() {
 				#screen -fa -S "${VERZEICHNISSLISTE[$i]}" -d -U -m mono OpenSim.exe
 				# DOTNETMODUS="yes"
 				if [[ "${DOTNETMODUS}" == "yes" ]]; then
-					echo "dotnet 6 ist eingeschaltet!"
 					screen -fa -S "${VERZEICHNISSLISTE[$i]}" -d -U -m dotnet OpenSim.dll
 				fi
 				# DOTNETMODUS="no"
 				if [[ "${DOTNETMODUS}" == "no" ]]; then
-					echo ".net 4.8 oder 4.6 ist eingeschaltet!"
 					screen -fa -S "${VERZEICHNISSLISTE[$i]}" -d -U -m mono OpenSim.exe
 				fi
 
@@ -4829,12 +4874,10 @@ function menuautosimstart() {
 			#screen -fa -S "${VERZEICHNISSLISTE[$i]}" -d -U -m mono OpenSim.exe | log info "${VERZEICHNISSLISTE[$i]} wurde gestartet" # dialog --gauge "Auto Sim start..." 6 64 $BALKEN1
 			# DOTNETMODUS="yes"
 			if [[ "${DOTNETMODUS}" == "yes" ]]; then
-				echo "dotnet 6 ist eingeschaltet!"
 				screen -fa -S "${VERZEICHNISSLISTE[$i]}" -d -U -m dotnet OpenSim.dll
 				fi
 			# DOTNETMODUS="no"
 			if [[ "${DOTNETMODUS}" == "no" ]]; then
-				echo ".net 4.8 oder 4.6 ist eingeschaltet!"
 				screen -fa -S "${VERZEICHNISSLISTE[$i]}" -d -U -m mono OpenSim.exe
 			fi
 
@@ -5640,6 +5683,45 @@ function monoinstall20() {
 ##
 function monoinstall22() {
 	sudo apt install mono-roslyn mono-complete mono-dbg mono-xbuild -y
+}
+
+##
+ #* icecastinstall.
+ # icecast installieren.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+function icecastinstall() {
+	passwortsource=$(tr -dc 'A-Za-z0-9' </dev/urandom | head -c 12)
+	passwortrelay=$(tr -dc 'A-Za-z0-9' </dev/urandom | head -c 14)
+	passwortadmin=$(tr -dc 'A-Za-z0-9' </dev/urandom | head -c 18)
+
+	echo "Bitte halten sie 3 Passwörter bereit für die icecast2 installation."
+	echo "Der hostname ist der Domainname oder die IP."
+	echo "Beispiele mit Zufallsgenerator erstellt:"
+	echo "Icecast2 Hostname: $AKTUELLEIP"
+	echo "Benutzername: source Passwort: $passwortsource"
+	echo "Benutzername: relay Passwort: $passwortrelay"
+	echo "Benutzername: admin Passwort: $passwortadmin"
+	sudo apt-get install icecast2
+	# Der Port muss noch von 8000, auf irgend etwas, was noch nicht vom OpenSimulator benutzt wird, umgestellt werden.
+	icecastconfig
+}
+
+##
+ #* icecastconfig.
+ # icecast konfigurieren.
+ # Der Port muss noch von 8000, auf irgend etwas, was noch nicht vom OpenSimulator benutzt wird, umgestellt werden.
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+function icecastconfig() {
+	echo "Icecast2 von Port 8000 auf Port 8999 setzen"
+	sudo sed -i 's|8000|8999|' /etc/icecast2/icecast.xml
+	echo "Aufrufbeispiel: $AKTUELLEIP:8999"
 }
 
 ##
@@ -12338,7 +12420,7 @@ function hilfe() {
 	echo "ufwlog	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
 	echo "ufwset	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
 	echo "uncompress	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "vardel	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	#echo "vardel	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
 	echo "vartest	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
 	echo "warnbox	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
 	echo "waslauft	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
@@ -13906,7 +13988,9 @@ case $KOMMANDO in
 	w | works) works "$2" ;;
 	warnbox) warnbox "$2" ;;
 	waslauft) waslauft ;;
+	rebootdatum) rebootdatum ;;
 	lastrebootdatum) lastrebootdatum ;;
+	reboot) reboot ;;
 	db_friends) db_friends "$2" "$3" "$4" "$5" ;;
 	db_online) db_online "$2" "$3" "$4" ;;
 	db_region) db_region "$2" "$3" "$4" ;;
@@ -13966,10 +14050,16 @@ case $KOMMANDO in
 	ini_get) ini_get "$2" "$3" "$4" ;;
 	ini_set) ini_set "$2" "$3" "$4" "$5" ;;
 	randomname) randomname ;;
+	icecaststart) icecaststart ;;
+	icecaststop) icecaststop ;;
+	icecastrestart) icecastrestart ;;
+	icecastversion) icecastversion ;;
+	icecastinstall) icecastinstall ;;
+	icecastconfig) icecastconfig ;;	
 	hda | hilfedirektaufruf | hilfemenudirektaufrufe) hilfemenudirektaufrufe ;;
 	h) newhelp ;;
 	V | v) echo "$SCRIPTNAME $VERSION" ;;
 	*) hauptmenu ;;
 esac
-vardel
+# vardel
 exit 0
