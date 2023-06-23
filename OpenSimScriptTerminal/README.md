@@ -9,6 +9,8 @@ Das Programm ist nur zu lernzwecken entstanden. Die nutzung dieses Programms ges
 ## Systemvoraussetzung 
 Windows mit .NET
 
+![GitHub Logo](https://github.com/BigManzai/OpenSim-Shell-Script/blob/main/sharposmtool.jpg)
+
 ## Zugang
 Es kann der Zugang zum Server gespeichert werden.
 
