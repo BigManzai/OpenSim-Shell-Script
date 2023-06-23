@@ -3,13 +3,16 @@
 # OpenSim Script Terminal
 OpenSim Script Terminal ist ein CSharp Terminal ähnlich Putty, mit dem zusatz das Scripte als Tasten eingefügt werden können.
 
+## Haftungsauschluss
+Das Programm ist nur zu lernzwecken entstanden. Die nutzung dieses Programms geschieht auf eigene gefahr.
+
 ## Systemvoraussetzung 
 Windows mit .NET
 
 ## Zugang
 Es kann der Zugang zum Server gespeichert werden.
 
-In dieser Version wird das Passwort leserlich gespeichert, was ein Sicherheitsrisiko darstellt.
+Das speichern von Passwörtern ist immer mit einem Sicherheitsrisiko verbunden auch wenn es verschlüsselt wird.
 
 Die Datei trägt den Namen der Serveradresse und wird als Text gespeichert.
 
@@ -22,4 +25,4 @@ Die vordefinierten Tasten beziehen sich auf das opensimMULTITOOL können aber be
 Einfach das OpenSimScriptTerminal Verzeichnis auf die Festplatte C:/ kopieren oder Verschieben.
 
 ## TODO
-Passwörter dürfen nicht lesbar gespeichert werden.
+
