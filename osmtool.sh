@@ -36,7 +36,7 @@
 ###########################################################################
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.904" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.905" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 ##
@@ -11286,7 +11286,7 @@ function osupgrade93() {
 	if [ "$MONEYVERZEICHNIS" = "keins" ] || [ "$MONEYVERZEICHNIS" = "no" ] || [ "$MONEYVERZEICHNIS" = "nein" ]; then moneydelete; fi
 	# Grid Starten.
 	# log info "Das Grid wird jetzt gestartet"
-	autostart93
+	autostart
 	return 0
 }
 
