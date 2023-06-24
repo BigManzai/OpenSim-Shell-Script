@@ -23,11 +23,17 @@ sind einfache Shell Skripte in Textform, bei denen der Dateiname als Tastenbezei
 
 Die vordefinierten Tasten beziehen sich auf das opensimMULTITOOL können aber beliebig geändert oder entfernt werden.
 
-## Eingabe
-Die Eingabe hat jetzt eine Autovervollständigung.
+## Konsoleneingabe
+Die Eingabe hat eine Autovervollständigung aus dem Bereich Linux, Robust, Money, OpenSim und opensimMULTITOOL.
 
 ## Installation
 Einfach das OpenSimScriptTerminal Verzeichnis auf die Festplatte C:/ kopieren oder Verschieben.
 
+## Versionen
+1.0.4 Stark erweiterte Autovervollständigung. Neue Konsoleschriftart.
+1.0.3 Die Eingabe hat jetzt eine Autovervollständigung.
+1.0.2 Fehler behoben.
+1.0.1 Fehler behoben.
+
 ## TODO
-Am Zeilenende wird )B angehängt, was ein wenig in der ausgabe stört, aber sonst keine auswirkungen hat.
+
