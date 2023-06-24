@@ -26,6 +26,8 @@ Die vordefinierten Tasten beziehen sich auf das opensimMULTITOOL können aber be
 ## Konsolenanwendung
 Die Eingabe hat eine Autovervollständigung mit 645 Begriffen aus dem Bereich Linux, Robust, Money, OpenSim und opensimMULTITOOL.
 
+Die Daten aus der Ausgabe können mit STRG + C kopiert und in die Eingabe oder eine Textdatei mit STRG + V eingefügt werden.
+
 ## Installation
 Einfach das OpenSimScriptTerminal Verzeichnis auf die Festplatte C:/ kopieren oder Verschieben.
 
