@@ -36,7 +36,7 @@
 ###########################################################################
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.905" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.907" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 ##
@@ -6284,7 +6284,15 @@ function checkupgrade93() {
     if [ "$CHECKERGEBNIS" = "Already up to date." ]; then 
         log info "Der OpenSimulator ist Tagesaktuell.";
     else
-        osbuildingupgrade93 d
+		log info "Es gibt einen neuen OpenSimulator.";
+
+		log rohtext "soll ich direkt ein Upgrade machen? ja [nein]";
+		read -r OSUPGRADESIX
+
+		if [ "$OSUPGRADESIX" = "" ]; then OSUPGRADESIX="nein"; fi
+		log info "Ihre Upgrade auswahl ist: $OSUPGRADESIX"
+		
+		if [ "$OSUPGRADESIX" = "ja" ]; then osbuildingupgrade93 p; fi
     fi
 }
 
