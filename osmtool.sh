@@ -20,7 +20,7 @@
 # ! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 # ! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-# * Status 22.06.2024 402 Funktionen.
+# * Status 08.07.2023 405 Funktionen.
 
 # # Installieren sie bitte: #* Visual Studio Code - Mac, Linux, Windows
 #* dazu die Plugins:
@@ -28,7 +28,7 @@
 # shellman #? Shell Skript Schnipsel.
 # Better Comments #* Bessere Farbliche Darstellung. Standards: #! #* #? #// #todo
 # outline map #? Navigationsleiste für Funktionen.
-# todo: nichts.
+# todo: eine Menge warten wir´s ab.
 
 
 ###########################################################################
@@ -36,7 +36,7 @@
 ###########################################################################
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.907" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.913" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 ##
@@ -104,556 +104,104 @@ SQLVERSION=$(echo "${SQLVERSIONVOLL:0:45}")
 # Pfad des osmtool.sh Skriptes herausfinden
 SCRIPTPATH=$(cd "$(dirname "$0")" && pwd)
 
-# Nutzer mit Konfigurationsfragen quaelen
-# Abfrage Konfig Einstellungen
-if ! [ -f "/$SCRIPTPATH/osmtoolconfig.ini" ]; then osmtoolconfigabfrage; fi
-
-# Wenn es keine Konfigurationsdatei gibt anlegen
-#if ! [ -f "/$SCRIPTPATH/osmtoolconfig.ini" ]; then osmtoolconfig "/$SCRIPTPATH/osmtoolconfig.ini"; fi
-
-# Variablen aus config Datei laden osmtoolconfig.ini muss sich im gleichen Verzeichnis wie osmtool.sh befinden.
-# shellcheck disable=SC1091
-. "$SCRIPTPATH"/osmtoolconfig.ini
-
-# Aktuelle IP ueber Suchadresse ermitteln und Ausfuehrungszeichen anhaengen.
-AKTUELLEIP='"'$(wget -O - -q $SEARCHADRES)'"'
-
-# gibt es das Startverzeichnis wenn nicht abbruch.
-cd /"$STARTVERZEICHNIS" || return 1
-sleep 1
-
-# Eingabeauswertung fuer Funktionen ohne dialog.
-KOMMANDO=$1
-
-###########################################################################
-#* Hilfsfunktionen Funktionsgruppe
-###########################################################################
-
 ##
- #* dummyvar, shellcheck disable=SC2034 umgehen.
- # Shell-Check ueberlisten wegen der Konfigurationsdatei, 
- # hat sonst keinerlei Funktion und wird auch nicht aufgerufen.
+ #* osmtranslateinstall
+ # Automatischen übersetzer installieren.
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
  # todo: nichts.
 ##
-function dummyvar() {
-	# shellcheck disable=SC2034
-	MONEYVERZEICHNIS="robust"; ROBUSTVERZEICHNIS="robust"; OPENSIMVERZEICHNIS="opensim"; SCRIPTSOURCE="ScriptNeu"; SCRIPTZIP="opensim-ossl-example-scripts-main.zip"; MONEYSOURCE="money48"
-	MONEYZIP="OpenSimCurrencyServer-2021-master.zip"; REGIONSDATEI="osmregionlist.ini"; SIMDATEI="osmsimlist.ini"; WARTEZEIT=30; STARTWARTEZEIT=10; STOPWARTEZEIT=30; MONEYWARTEZEIT=60; ROBUSTWARTEZEIT=60
-	BACKUPWARTEZEIT=120; AUTOSTOPZEIT=60; SETMONOTHREADS=800; SETMONOTHREADSON="yes"; OPENSIMDOWNLOAD="http://opensimulator.org/dist/"; SEARCHADRES="icanhazip.com"; # AUTOCONFIG="no"
-	CONFIGURESOURCE="opensim-configuration-addon-modul-main"; CONFIGUREZIP="opensim-configuration-addon-modul-main.zip"
-	textfontcolor=7; textbaggroundcolor=0; debugfontcolor=4; debugbaggroundcolor=0	infofontcolor=2	infobaggroundcolor=0; warnfontcolor=3; warnbaggroundcolor=0
-	errorfontcolor=1; errorbaggroundcolor=0; SETMONOGCPARAMSON1="no"; SETMONOGCPARAMSON2="yes"	LOGDELETE="no"; LOGWRITE="no"; "$trimmvar"; logfilename="_multitool"
-	username="username"	password="userpasswd"	databasename="grid"	linefontcolor=7	linebaggroundcolor=0; apache2errorlog="/var/log/apache2/error.log"; apache2accesslog="/var/log/apache2/access.log"
-	authlog="/var/log/auth.log"	ufwlog="/var/log/ufw.log"	mysqlmariadberor="/var/log/mysql/mariadb.err"; mysqlerrorlog="/var/log/mysql/error.log"; listVar=""; ScreenLogLevel=0
-	# DIALOG_OK=0; DIALOG_HELP=2; DIALOG_EXTRA=3; DIALOG_ITEM_HELP=4; SIG_NONE=0; SIG_HUP=1; SIG_INT=2; SIG_QUIT=3; SIG_KILL=9; SIG_TERM=15
-	DIALOG_CANCEL=1; DIALOG_ESC=255; DIALOG=dialog; VISITORLIST="yes"; REGIONSANZEIGE="yes"; #DELREGIONS="no";
-	netversion="1946"; CONFIGPFAD="OpenSimConfig"; DOTNETMODUS="yes";
-	OSVERSION="opensim-0.9.2.2Dev";
-	OPENSIMVERSION="opensim-0.9.2.2.zip";
+function osmtranslateinstall() {
+    echo "Ich installiere nun das Tool translate-shell";
+    apt install translate-shell
+    # oder
+    #sudo apt-get install translate-shell
 }
 
 ##
- #* xhelp Test
- # hilfe ausgeben.
- # 
- #? @param keiner.
- #? @return $VERSION
- # todo: nichts.
-##
-function xhelp() {
-	if [[ $1 == "help" ]]; then	echo "Zeigt die Hilfe einzelner Funktionen an."; exit 0; fi
-	exit 0;	
-}
-
-##
- #* skriptversion.
- # Skriptversion ausgeben.
- # 
- #? @param keiner.
- #? @return $VERSION
- # todo: nichts.
-##
-function skriptversion() {
-	# Test einer neuen Hilfe.
-	if [[ $1 == "help" ]]; then	echo "Zeigt die skriptversion vom opensimMULTITOOL an."; exit 0; fi
-	echo "$VERSION";
-	exit 0;
-}
-
-##
- #* Zufallsnamen.
- # Array aus Bezeichnungen von Deutschen Orten und Voelker (Unvollstaendig da keine umlaute funktionieren).
- # 
- #? @param keiner.
- #? @return NEUERREGIONSNAME - Es wird ein Name zurueckgegeben.
- # todo: nichts.
-##
-function namen() {
-	if [[ $1 == "help" ]]; then	echo "Ein Zufallsname wird ausgegeben."; exit 0; fi
-	namensarray=("Terwingen" "Angeron" "Vidivarier" "Usipeten" "Sibiner" "Ranier" "Sabalingier" "Aglier" "Aduatuker" \
-	"Favonen" "Sachsen" "Karpen" "Gautigoten" "Gepiden" "Mugilonen" "Bardongavenses" "Steoringun" "Guiones" "Teutonen" \
-	"Brukterer" "Omanen" "Astfalon" "Langobarden" "Frumtingas" "Eruler" "Moselfranken" "Tylangier" "Gillingas" \
-	"Singulonen" "Pharodiner" "Ahelmil" "Scopingun" "Waledungun" "Rosomonen" "Peukiner" "Elbsueben" "Scharuder" \
-	"Suardonen" "Suetiden" "Finnaithen" "Ambivareten" "Gegingas" "Aringon" "Anglier" "Glomman" "Raumariker" \
-	"Alemannen" "Narvaler" "Sunuker" "Mattiaker" "Kasuarier" "Bastarnen" "Sahslingun" "Frisiavonen" "Skiren" \
-	"Normannen" "Gambrivier" "Salfranken" "Holtsaeten" "Bergio" "Harier" "Holsten" "Lognai" "Vandalen" "Evagre" \
-	"Sigambrer" "Euten" "Kaoulkoi" "Burgunden" "Bajuwaren" "Hundingas" "Ostgoten" "Nervier" "Merscware" "Sturier" \
-	"Hillevionen" "Anglevarier" "Marsaker" "Schasuaren" "Otingis" "Cilternsaetan" "Falen" "Tenkterer" "Suonen" \
-	"Dounoi" "Teutonoaren" "Hugones" "Amoþingas" "Kalukonen" "Ostheruler" "Rus" "Wangionen" "Háleygir" "Triboker" \
-	"Markomannen" "Hordar" "Thiadmariska" "Holsten" "Gauten" "Krimgoten" "Herefinnas" "Fervir" "Hessen" "Sithonen" \
-	"Nuitonen" "Hringar" "Westheruler" "Bucinobanten" "Lakringen" "Eburonen" "Boutones" "Korkonter" "Angelsachsen" \
-	"Clondikus" "Donausweben" "Franken" "Nertereanen" "Barden" "Frugundionen" "Vinoviloth" "Treverer" "Elouaiones" \
-	"Schamaver" "Anarten" "Leuonoi" "Westgoten" "Winiler" "Turonen" "Visburgier" "Wandalen" "Landoudioer" "Harier" \
-	"Narisker" "Kimbern" "Kampen" "Semnonen" "Sugamber" "Haruden" "Colduer" "Geddingas" "Helvekonen" "Sedusier" \
-	"Baetasier" "Heinir" "Endosen" "Curionen" "Urugunden" "Hadubarden" "Taetel" "Tubanten" "Wariner" "Silinger" \
-	"Katten" "Marser" "Gumeningas" "Fundusier" "Levoner" "Helusii" "Sidones" "Varasker" "Manimer" "Angeln" "Daukionen" \
-	"Engern" "Segner" "Visper" "Scherusker" "Tungrer" "Bainaib" "Kannanefaten" "Mimmas" "Breisgauer" "Rheinfranken" \
-	"Condruser" "Batavier" "Neckarsueben" "Belger" "Gotthograikoi" "Engern" "Burgodionen" "Guddingen" "Ulmeraner" \
-	"Kampsianoi" "Viktofalen" "Nemeter" "Turkilinger" "Liothida" "Routiklioi" "Hermionen" "Rygir" "Veneter" "Schaler" \
-	"Zumer" "Firaesen" "Menapier" "Linzgauer" "Diduner" "Kleingoten" "Rugier" "Theusten" "Sidiner" "Amsivarier" \
-	"Greutungen" "Eunixer" "Hedeninge" "Scotelingun" "Agradingun" "Granier" "Schaubi" "Dulgubiner" "Halogit" \
-	"Marvingen" "Eudosen" "Halliner" "Elmetsaetan" "Kantwarier" "Dorsaetan" "Augandxer" "Gifle" "Firihsetan" \
-	"Maiaten" "Goten" "Cobander" "Sulones" "Lugier" "Kugerner" "Peukmer" "Caritner" "Ubier" "Toxandrer" "Graioceler" \
-	"Texuandrer" "Variner" "Elbgermanen" "Arosaetan" "Viruner" "Friesen" "Obronen" "Campsianer" "Derlingun" "Helisier" \
-	"Quaden" "Myrgingas" "Buren" "Permanen" "Doelir" "Schauken" "Foser" "Taifalen" "Avionen" "Nictrenses" "Svear" \
-	"Ermunduren" "Danduten")
-
-	# Zaehlen wie viele es sind.
-	count=${#namensarray[@]}
-	#echo $count
-
-	# Zufallszahl ermmiteln aus der anzahl von eintraegen in dem namensarray.
-	REGIONSNAMENZAHL=$(($RANDOM % $count))
-	#echo $REGIONSNAMENZAHL
-
-	# Regionsname ausgeben	
-	NEUERREGIONSNAME=${namensarray[$REGIONSNAMENZAHL]}
-}
-
-##
- #* Zufallsvornamen.
- # 
- #? @param keiner.
- #? @return NEUERREGIONSNAME - Es wird ein Name zurueckgegeben.
- # todo: nichts.
-##
-function vornamen() {
-	if [[ $1 == "help" ]]; then	echo "Ein Zufallsname wird ausgegeben."; exit 0; fi
-
-	firstnamensarray=("Peter" "Rainer" "Sergej" "Karl" "Daredevil" "Relative" "Into" "Agony" "Carbon" "Wrecking" "Crazy" "Unique" "Daydreamer" "Ed" "Nickname" "Anger" "Justin" \
-					"Lee" "Roman" "Yum" "House" "ObiLAN" "Anakin" "Spaghetti" "Fritzchen" "Connecto" "Lan" "Jutta" "Bertha" "Chilly" "Agata" "Regen" "Siegtraude" "Wilma" "Raging" "King" \
-					"Polaroid" "Candy" "Fast" "Mike" "Savage" "Chop" "Edgar" "Cereal" "The" "KillMe" "Spicy" "Terrifying" "Smufus" "Harry" "Airport" "Chicken" "Donkey" "Bread" "Hairy" "Sillje" \
-					"Weina" "Marlo" "Toffel" "Binder" "Performance" "Abyss" "Qual" "Claw" "Ball" "Turtle" "Aspirin" "Nygma" "Forgiven" "Avenger" "Time" "Eintragen" "Monade" "Ticker" \
-					"Meefood" "LANister" "Kenobi" "Skyrouter" "Bolognese" "Box" "Patronum" "Solo" "Jessica" "Isberga" "Calilia" "Ehrentraud" "Frida" "Gebba" "Randy" "Kano" "Pal" "Butcher" \
-					"Curious" "Tython" "Sam" "Chop" "AllenBro" "Killer" "Muffin" "NowPlease" "Chicken" "Terry" "BroCode" "Dotter" "Hobo" "Dinner" "Bong" "Pitt" "Poppins" "Thomas" "Brigitte" \
-					"Peter" "Angelika" "Hans" "Sabine" "Klaus" "Monika" "Wolfgang" "Karin" "Andreas" "Marion" "Jürgen" "Petra" "Bernd" "Birgit" "Reiner" "Gabriele" "Manfred" "Susanne" "Uwe" "Barbara" \
-					"Joachim" "Renate" "Dieter" "Ute" "Werner" "Jutta" "Karl" "Ursula" "Holger" "Cornelia" "Frank" "Ingrid" "Norbert" "Heike" "Ralf, Rolf" "Regina" "Ulrich" "Maria" "Jörg" "Silvia" \
-					"Helmut" "Elke" "Günter" "Angela" "Gerhard" "Andrea" "Horst" "Ulrike" "Jens" "Gisela" "Harald" "Dagmar" "Martin" "Helga" "Heinz" "Christine" "Reinhard" "Eva" "Matthias" "Claudia" \
-					"Stefan" "Marianne" "Detlef" "Bärbel" "Volker" "Doris" "Walter" "Beate" "Bernhard" "Rita" "Hartmut" "Gudrun" "Alexander" "Hannelore" "Christian" "Anke" "Rüdiger" "Marlis" "Georg" \
-					"Heidi" "Roland" "Anette" "Axel" "Rosemarie" "Herbert" "Carmen" "Jan" "Inge" "Dirk" "Margrit" "Carsten" "Irene" "Udo" "Maren" "Siegfried" "Kerstin" "Kurt" "Olga" "Herrmann" "Anita" \
-					"Lutz" "Frauke" "Johannes" "Annelise" "Hubert" "Susanne" "Heiko" "Meike" "Wilhelm" "Gertrud" "Paul" "Ina" "Arno" "Gunda" "Jochen" "Stephanie" "Heiner" "Gerlinde" "Niels" "Tamara" \
-					"Henning" "Liane" "Anton" "Ursel" "Edmund" "Rosa" )
-
-	# Zaehlen wie viele es sind.
-	count=${#firstnamensarray[@]}
-	#echo $count
-
-	# Zufallszahl ermmiteln aus der anzahl von eintraegen in dem firstnamensarray.
-	VORNAMENZAHL=$(($RANDOM % $count))
-	#echo $REGIONSNAMENZAHL
-
-	# Regionsname ausgeben	
-	NEUERAVATARVORNAME=${firstnamensarray[$VORNAMENZAHL]}
-}
-
-##
- #* randomname.
- # 
- #? @param keiner.
- #? @return Es werden Name zurueckgegeben.
- # todo: nichts.
-##
-function randomname() {
-	vornamen
-	echo "Neuer Vorname: $NEUERAVATARVORNAME"
-	namen
-	echo "Neuer Avatarname: $NEUERAVATARVORNAME $NEUERREGIONSNAME"
-	echo " "
-	echo "Neuer Regionsname: $NEUERREGIONSNAME"
-}
-
-##
- #* functionslist
- # Funktionen eines Bash Skript auslesen und in eine Text Datei schreiben.
+ #* osmtranslate
+ # Text übersetzen.
  # 
  #? @param keine.
- #? @return datediff.
+ #? @return text.
  # todo: nichts.
-##
-function functionslist() {
-	file="/$STARTVERZEICHNIS/osmtool.sh"
-	suche="function"
-	ergebnisflist=$(grep -i -r "$suche " $file)
-	echo "$ergebnisflist" >/$STARTVERZEICHNIS/osmfunktion"$DATEIDATUM".txt
-}
-
-##
- #* remarklist
- # Funktionen eines Bash Skript inklusive 8 remark-Zeilen auslesen und in eine Text Datei schreiben.
- # Hilfreich fuer Handbuch und Hilfen.
- #? @param keine.
- #? @return datediff.
- # todo: nichts.
-##
-function remarklist() {
-	# -A Zeile nach suchwort -- -B zeile vor suchwort -- -C zeile vor und nach suchwort
-	file="/$STARTVERZEICHNIS/osmtool.sh"
-	suche="function"
-	ergebnisflist=$(grep -B9 -i -r "$suche " $file) # B8 Acht Zeilen vor dem Funktionsnamen.
-	echo "$ergebnisflist" >/$STARTVERZEICHNIS/osmRemarklist"$DATEIDATUM".txt
-}
-
-##
- #* trimm.
- # Leerzeichen korrigieren, trimm "   Beispiel   Text    "
- # oder trimm $variable, rueckgabe in Variable: $trimmvar.
- #
- #? @param $variable.
- #? @return $trimmvar.
- # todo: nichts.
-##
-function trimm() {
-	set -f
-	# shellcheck disable=SC2086,SC2048
-	set -- $*
-	trimmvar=$(printf '%s\n' "$*")
-	set +f
-}
-
-##
- #* osgitstatus.
- # opensim quellcode status und upgraden.
- #
- #? @param $variable.
- #? @return $trimmvar.
- # todo: nichts.
-##
-function osgitstatus() {
-	log info "OpenSim Sourcecode wird Upgegradet."
-	cd /$STARTVERZEICHNIS/opensim || return 1
-	echo "  OpenSim ist: $(git pull)" || echo "OpenSim kann nicht upgegradet werden."
-	cd /$STARTVERZEICHNIS || return 0
-}
-
-##
- #* ende.
- # Beenden mit ausgabe der letzten Meldung.
- # 
- #? @param keine.
- #? @return letzten Meldung.
- # todo: nichts.
-##
-function ende() {
-	return
-	log info "$?" # Beenden mit ausgabe der letzten Meldung.
-}
-
-##
- #* fehler.
- # Den aufrufenden Prozess mit der letzten Meldung beenden.
- # 
- #? @param keine.
- #? @return letzten Meldung.
- # todo: nichts.
-##
-function fehler() {
-	exit
-	log error "$?" # Den aufrufenden Prozess mit der letzten Meldung beenden.
-}
-
-##
- #* letterdel.
- # Zeichen entfernen.
- # letterdel $variable "[aAbBcCdD]" - letterdel $variable "[[:space:]]"
- #? @param $variable $variable
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
-##
-function letterdel() {
-	# letterdel $variable "[aAbBcCdD]" - letterdel $variable "[[:space:]]"
-	printf '%s\n' "${1//$2/}"
-}
-
-##
- #* trim_string.
- # Zeichen entfernen.
- # Usage: trim_string "   example   string    "
- #
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
-##
-function trim_string() {
-    : "${1#"${1%%[![:space:]]*}"}"
-    : "${_%"${_##*[![:space:]]}"}"
-    printf '%s\n' "$_"
-}
-
-##
- #* vartest.
- # Variable auf inhalt testen.
- # 
- #? @param $VARIABLE.
- #? @return ${result} true false.
- # todo: nichts.
-##
-function vartest() {
-    VARIABLE="$1"
-    if [ -z "$VARIABLE" ]
-    then
-        result="false"
-    else
-        result="true"
-    fi
-}
-
-##
- #* trim_all.
- # Alle Zeichen entfernen.
- # Usage: trim_all "   example   string    "
- #
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
-##
-trim_all() {
-    set -f
-# shellcheck disable=SC2086,SC2048
-    set -- $*
-    printf '%s\n' "$*"
-    set +f
-}
-
-##
- #* iinstall.
- # Linux apt-get Installationsroutine.
- # 
- #? @param $installation.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
-##
-function iinstall() {
-	installation=$1
-	if dpkg-query -s "$installation" 2>/dev/null | grep -q installed; then
-		echo "$installation ist bereits installiert."
+function osmtranslate() {
+    OSMTRANSTEXT=$1
+	#OSMTRANSLATOR="off"
+	if [ "$OSMTRANSLATOR" = "ON" ]; then
+    	text=$(trans -brief -no-warn $OSMTRANS "$OSMTRANSTEXT")
 	else
-		echo "Ich installiere jetzt $installation"
-		sudo apt-get -y install "$installation"
+		text=$OSMTRANSTEXT
+		return 0
 	fi
 }
 
 ##
- #* iinstall2.
- # Linux apt Installationsroutine.
+ #* janein
+ # ja oder nein aus verschiedenen Sprachen in Deutsch übersetzen.
  # 
- #? @param $installation.
- #? @return nichts wird zurueckgegeben.
+ #? @param ja oder nein in verschiedenen Sprachen.
+ #? @return ja oder nein in Deutsch.
  # todo: nichts.
 ##
-function iinstall2() {
-	installation=$1
-	if dpkg-query -s "$installation" 2>/dev/null | grep -q installed; then
-		echo "$installation ist bereits installiert."
-	else
-		echo "Ich installiere jetzt $installation"
-		sudo apt install "$installation" -y
+function janein() {
+	JNTRANSLATOR=$1	
+	#echo "Eingabe: $JNTRANSLATOR"
+	JNTRANSLATOR=$(trans -brief -no-warn :de "$JNTRANSLATOR")
+	# Falls leer dann nein.
+	if [ "$JNTRANSLATOR" = "" ]; then JNTRANSLATOR="nein"; fi
+	# alles muss klein geschrieben sein.
+	JNTRANSLATOR=$(echo "$JNTRANSLATOR"|tr "[:upper:]" "[:lower:]")
+}
+
+##
+ #* log.
+ # Log Dateien und Funktionen.
+ # 
+ #? @param logtype.
+ #? @return Textausgabe.
+ # todo: nichts.
+##
+function log() {
+	local text
+	local logtype
+	#local datetime	
+	logtype="$1"
+
+	### Translate
+	#text="$2"
+	rohtext="$2"
+	OSMTRANSTEXT="$2"
+    osmtranslate "$rohtext"
+	
+	#datetime=$(date +'%F %H:%M:%S')
+	DATEIDATUM=$(date +%d_%m_%Y)
+	lline="#####################################################################################"
+
+	if [ "$LOGWRITE" = "yes" ]; then
+		case $logtype in
+		line) echo $lline >>/$STARTVERZEICHNIS/"$DATEIDATUM""$logfilename".log ;;
+		rohtext) echo "$text" >>/$STARTVERZEICHNIS/"$DATEIDATUM""$logfilename".log ;;
+		text) echo "$(date +'%d.%m.%Y-%H:%M:%S') TEXT: $text" >>/$STARTVERZEICHNIS/"$DATEIDATUM""$logfilename".log ;;
+		debug) echo "$(date +'%d.%m.%Y-%H:%M:%S') DEBUG: $text" >>/$STARTVERZEICHNIS/"$DATEIDATUM""$logfilename".log ;;
+		info) echo "$(date +'%d.%m.%Y-%H:%M:%S') INFO: $text" >>/$STARTVERZEICHNIS/"$DATEIDATUM""$logfilename".log ;;
+		warn) echo "$(date +'%d.%m.%Y-%H:%M:%S') WARNING: $text" >>/$STARTVERZEICHNIS/"$DATEIDATUM""$logfilename".log ;;
+		error) echo "$(date +'%d.%m.%Y-%H:%M:%S') ERROR: $text" >>/$STARTVERZEICHNIS/"$DATEIDATUM""$logfilename".log ;;
+		*) return 0 ;;
+		esac
 	fi
-}
-
-##
- #* finstall.
- # Neue apt-get installationsroutine aus Datei.
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
-##
-function finstall() {
-	TXTLISTE=$1
-
-	while read -r txtline; do
-		if dpkg-query -s "$txtline" 2>/dev/null | grep -q installed; then
-			echo "$txtline ist bereits installiert!"
-		else
-			echo "Ich installiere jetzt: $txtline"
-			sudo apt-get -y install "$txtline"
-		fi
-	done <"$TXTLISTE"
-}
-
-##
- #* menufinstall.
- # Neue Menue installationsroutine aus Datei.
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
-##
-function menufinstall() {
-	TXTLISTE=$1
-	# zuerst schauen ob dialog installiert ist
-	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
-		# Alle Aktionen mit dialog
-		boxtitel="opensimMULTITOOL Eingabe"
-		boxtext="Screen Name:"
-		TXTLISTE=$(dialog --backtitle "opensimMULTITOOL $VERSION" --title "$boxtitel" --inputbox "$boxtext" 8 40 3>&1 1>&2 2>&3 3>&-)
-		dialogclear
-		ScreenLog
-
-		while read -r line; do
-			if dpkg-query -s "$line" 2>/dev/null | grep -q installed; then
-				echo "$line ist bereits installiert!"
-			else
-				echo "Ich installiere jetzt: $line"
-				sudo apt-get -y install "$line"
-			fi
-		done <"$TXTLISTE"
-	else
-		# Alle Aktionen ohne dialog
-		while read -r line; do
-			if dpkg-query -s "$line" 2>/dev/null | grep -q installed; then
-				echo "$line ist bereits installiert!"
-			else
-				echo "Ich installiere jetzt: $line"
-				sudo apt-get -y install "$line"
-			fi
-		done <"$TXTLISTE"
-	fi
-}
-
-##
- #* uncompress.
- # ermittelt welcher Kompressor eingesetzt wurde und gibt den entpack Befehl zurueck.
- # 
- #? @param $datei.
- #? @return $uncompress.
- # todo: nichts.
-##
-function uncompress() {
-    datei=$1
-
-    for file in $datei; do
-        case $(file "$file") in
-            *ASCII*)    export uncompress=""            ;;
-            *gzip*)     export uncompress="gunzip"      ;;
-            *zip*)      export uncompress="unzip -p"    ;;
-            *7z*)       export uncompress="7z e"        ;;          
-            *rar*)      export uncompress="unrar e"     ;;
-            *tar.gz*)   export uncompress="tar -xf"     ;;
-            *tar.bz2*)  export uncompress="tar -xjf"    ;;
-            *tar.xz*)   export uncompress="tar -xJf"    ;;
-            *bz2*)      export uncompress="bunzip2"     ;;
-            *xz*)       export uncompress="unxz"        ;;
-        esac
-    done
-
-    return $uncompress;
-}
-
-##
- #* makeverzeichnisliste.
- # Erstellen eines Arrays aus einer Textdatei - Verzeichnisse.
- # 
- #? @param keine.
- #? @return $ANZAHLVERZEICHNISSLISTE.
- # todo: nichts.
-##
-function makeverzeichnisliste() {
-	VERZEICHNISSLISTE=()
-	while IFS= read -r line; do
-		VERZEICHNISSLISTE+=("$line")
-	done </$STARTVERZEICHNIS/$SIMDATEI
-	# Anzahl der Eintraege.
-	ANZAHLVERZEICHNISSLISTE=${#VERZEICHNISSLISTE[*]}
+	case $logtype in
+	line) echo "$(tput setaf $linefontcolor) $(tput setab $linebaggroundcolor)$lline $(tput sgr 0)" ;;
+	rohtext) echo "$text" ;;
+	text) echo "$(tput setaf $textfontcolor) $(tput setab $textbaggroundcolor) $(date +'%d.%m.%Y-%H:%M:%S') TEXT: $text $(tput sgr 0)" ;;
+	debug) echo "$(tput setaf $debugfontcolor) $(tput setab $debugbaggroundcolor) $(date +'%d.%m.%Y-%H:%M:%S') DEBUG: $text $(tput sgr 0)" ;;
+	info) echo "$(tput setaf $infofontcolor) $(tput setab $infobaggroundcolor) $(date +'%d.%m.%Y-%H:%M:%S') INFO: $text $(tput sgr 0)" ;;
+	warn) echo "$(tput setaf $warnfontcolor) $(tput setab $warnbaggroundcolor) $(date +'%d.%m.%Y-%H:%M:%S') WARNING: $text $(tput sgr 0)" ;;
+	error) echo "$(tput setaf $errorfontcolor) $(tput setab $errorbaggroundcolor) $(date +'%d.%m.%Y-%H:%M:%S') ERROR: $text $(tput sgr 0)" ;;
+	*) return 0 ;;
+	esac
 	return 0
-}
-
-##
- #* makeregionsliste 
- # Erstellen eines Arrays aus einer Textdatei.
- # 
- #? @param keine.
- #? @return REGIONSLISTE.
- #? @return ANZAHLREGIONSLISTE.
- # todo: nichts.
-##
-function makeregionsliste() {
-	REGIONSLISTE=()
-	while IFS= read -r line; do
-		REGIONSLISTE+=("$line")
-	done </$STARTVERZEICHNIS/$REGIONSDATEI
-	ANZAHLREGIONSLISTE=${#REGIONSLISTE[*]} # Anzahl der Eintraege.
-	return 0
-}
-
-##
- #* mysqlrest Funktion zum abfragen von mySQL Datensaetzen.
- # mymysql "username" "password" "databasename" "mysqlcommand".
- # 
- #? @param "username" "password" "databasename" "mysqlcommand".
- #? @return result_mysqlrest.
- # todo: nichts.
-##
-function mysqlrest() {
-	username=$1
-	password=$2
-	databasename=$3
-	mysqlcommand=$4
-	result_mysqlrest=$(echo "$mysqlcommand;" | MYSQL_PWD=$password mysql -u"$username" "$databasename" -N) 2>/dev/null
-}
-
-##
- #* mysqlrestnodb.
- # Funktion mySQL Datensaetzen: mymysql "username" "password" "mysqlcommand".
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
-##
-function mysqlrestnodb() {
-	username=$1
-	password=$2
-	mysqlcommand=$3
-	result_mysqlrestnodb=$(echo "$mysqlcommand" | MYSQL_PWD=$password mysql -u"$username")
-}
-
-###########################################################################
-#* Konfigurationen Funktionsgruppe
-###########################################################################
-
-##
- #* instdialog.
- # installation von dialog.
- # 
- #? @param keine.
- #? @return keine.
- # todo: nichts.
-##
-# install dialog
-function instdialog() {
-	echo "Ich installiere jetzt dialog"
-	sudo apt-get -y update
-	sudo apt-get -y upgrade
-	sudo apt-get -y install dialog
-	# Warscheinlich ist die Installation fehlgeschlagen da abhängigkeiten fehlen.
-	sudo apt-get -f install # abhängiketen nachinstallieren
-	sudo apt-get -y install dialog # erneute installation
-	#dialog --title 'Dialog Nachricht' --msgbox '. . . . Dialog wurde Installiert!' 6 50
-	dialog --title 'Die erste Dialog Nachricht' --calendar 'Dialog wurde Installiert am:' 0 0
-	tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 }
 
 ##
@@ -701,6 +249,61 @@ function osmtoolconfig() {
 		echo '    BUILDOLD="yes"'
 		echo "     "
 		echo "    DOTNETMODUS=\"$DOTNETMODUS\""
+		echo "     "
+		echo "## Translate Konfigurationsbereich."
+		echo "   OSMTRANSLATOR=\"$OSMTRANSLATOR\" # ON/OFF"
+		echo "   OSMTRANS=\"$OSMTRANS\" # Sprache in der übersetzt werdn soll."
+		echo "#     OSMTRANS=":fr" # Sprache in der übersetzt werdn soll."
+		echo "#     OSMTRANS=":es" # Sprache in der übersetzt werdn soll."
+		echo "#     OSMTRANS=":it" # Sprache in der übersetzt werdn soll."
+		echo "#     OSMTRANS=":uk" # Sprache in der übersetzt werdn soll."
+		echo "#     OSMTRANS=":fi" # Sprache in der übersetzt werdn soll."
+		echo "#     OSMTRANS=":zh-CN" # Sprache in der übersetzt werdn soll."
+		echo "#     OSMTRANS=":zh-TW" # Sprache in der übersetzt werdn soll."
+		echo "# Alle Sprachen die möglich sind."
+		echo "#     ┌───────────────────────┬───────────────────────┬───────────────────────┐"
+		echo "#     │ Afrikaans      -   af │ Hebrew         -   he │ Portuguese     -   pt │"
+		echo "#     │ Albanian       -   sq │ Hill Mari      -  mrj │ Punjabi        -   pa │"
+		echo "#     │ Amharic        -   am │ Hindi          -   hi │ Querétaro Otomi-  otq │"
+		echo "#     │ Arabic         -   ar │ Hmong          -  hmn │ Romanian       -   ro │"
+		echo "#     │ Armenian       -   hy │ Hmong Daw      -  mww │ Russian        -   ru │"
+		echo "#     │ Azerbaijani    -   az │ Hungarian      -   hu │ Samoan         -   sm │"
+		echo "#     │ Bashkir        -   ba │ Icelandic      -   is │ Scots Gaelic   -   gd │"
+		echo "#     │ Basque         -   eu │ Igbo           -   ig │ Serbian (Cyr...-sr-Cyrl"
+		echo "#     │ Belarusian     -   be │ Indonesian     -   id │ Serbian (Latin)-sr-Latn"
+		echo "#     │ Bengali        -   bn │ Irish          -   ga │ Sesotho        -   st │"
+		echo "#     │ Bosnian        -   bs │ Italian        -   it │ Shona          -   sn │"
+		echo "#     │ Bulgarian      -   bg │ Japanese       -   ja │ Sindhi         -   sd │"
+		echo "#     │ Cantonese      -  yue │ Javanese       -   jv │ Sinhala        -   si │"
+		echo "#     │ Catalan        -   ca │ Kannada        -   kn │ Slovak         -   sk │"
+		echo "#     │ Cebuano        -  ceb │ Kazakh         -   kk │ Slovenian      -   sl │"
+		echo "#     │ Chichewa       -   ny │ Khmer          -   km │ Somali         -   so │"
+		echo "#     │ Chinese Simp...- zh-CN│ Klingon        -  tlh │ Spanish        -   es │"
+		echo "#     │ Chinese Trad...- zh-TW│ Klingon (pIqaD)tlh-Qaak Sundanese      -   su │"
+		echo "#     │ Corsican       -   co │ Korean         -   ko │ Swahili        -   sw │"
+		echo "#     │ Croatian       -   hr │ Kurdish        -   ku │ Swedish        -   sv │"
+		echo "#     │ Czech          -   cs │ Kyrgyz         -   ky │ Tahitian       -   ty │"
+		echo "#     │ Danish         -   da │ Lao            -   lo │ Tajik          -   tg │"
+		echo "#     │ Dutch          -   nl │ Latin          -   la │ Tamil          -   ta │"
+		echo "#     │ Eastern Mari   -  mhr │ Latvian        -   lv │ Tatar          -   tt │"
+		echo "#     │ Emoji          -  emj │ Lithuanian     -   lt │ Telugu         -   te │"
+		echo "#     │ English        -   en │ Luxembourgish  -   lb │ Thai           -   th │"
+		echo "#     │ Esperanto      -   eo │ Macedonian     -   mk │ Tongan         -   to │"
+		echo "#     │ Estonian       -   et │ Malagasy       -   mg │ Turkish        -   tr │"
+		echo "#     │ Fijian         -   fj │ Malay          -   ms │ Udmurt         -  udm │"
+		echo "#     │ Filipino       -   tl │ Malayalam      -   ml │ Ukrainian      -   uk │"
+		echo "#     │ Finnish        -   fi │ Maltese        -   mt │ Urdu           -   ur │"
+		echo "#     │ French         -   fr │ Maori          -   mi │ Uzbek          -   uz │"
+		echo "#     │ Frisian        -   fy │ Marathi        -   mr │ Vietnamese     -   vi │"
+		echo "#     │ Galician       -   gl │ Mongolian      -   mn │ Welsh          -   cy │"
+		echo "#     │ Georgian       -   ka │ Myanmar        -   my │ Xhosa          -   xh │"
+		echo "#     │ German         -   de │ Nepali         -   ne │ Yiddish        -   yi │"
+		echo "#     │ Greek          -   el │ Norwegian      -   no │ Yoruba         -   yo │"
+		echo "#     │ Gujarati       -   gu │ Papiamento     -  pap │ Yucatec Maya   -  yua │"
+		echo "#     │ Haitian Creole -   ht │ Pashto         -   ps │ Zulu           -   zu │"
+		echo "#     │ Hausa          -   ha │ Persian        -   fa │                       │"
+		echo "#     │ Hawaiian       -  haw │ Polish         -   pl │                       │"
+		echo "#     └───────────────────────┴───────────────────────┴───────────────────────┘"
 		echo "     "
 		echo "## Schrift- und Hintergrundfarben"
 		echo "##  0 – Black, 1 – Red, 2 – Green, 3 – Yellow, 4 – Blue, 5 – Magenta, 6 – Cyan, 7 – White"
@@ -833,57 +436,638 @@ function osmtoolconfig() {
 function osmtoolconfigabfrage() {
 	# Ausgabe Kopfzeilen
 	VSTARTVERZEICHNIS=$(pwd); # Vorläufiges Startverzeichnis
-	echo "$SCRIPTNAME Version $VERSION"
-	echo " "
-	echo "##################################################################"
-	echo "########### ABBRUCH MIT DER TASTENKOMBINATION ####################"
-	echo "####################  STRG + C  ##################################"
-	echo "##################################################################"
-	echo "##     Die Werte in den [Klammern] sind vorschläge              ##"
-	echo "##     und können mit Enter übernommen werden.                  ##"
-	echo "##################################################################"
-	echo "##   Daten stehen gegeben falls auch in der alten opensim.cnf   ##"
-	echo "##################################################################"
-	echo " "
-	echo "Das Verzeichnis wo sich ihr Grid befindet oder befinden soll ["${VSTARTVERZEICHNIS//\//}"]"
+	log rohtext "$SCRIPTNAME Version $VERSION"
+
+	log rohtext "Do you want to enable automatic translation? ON [OFF]"
+	read -r OSMTRANSLATOR
+	if [ "$OSMTRANSLATOR" = "" ]; then OSMTRANSLATOR="OFF"; fi
+	log rohtext "your selection: $OSMTRANSLATOR"
+	log rohtext "##################################################################"
+
+	log rohtext "Please select your language: [:en]"
+	read -r OSMTRANS
+	if [ "$OSMTRANS" = "" ]; then OSMTRANS=":en"; fi
+	log rohtext "Your language $OSMTRANS"
+	log rohtext "##################################################################"
+
+	log rohtext " "
+	log rohtext "##################################################################"
+	log rohtext "########### ABBRUCH MIT DER TASTENKOMBINATION ####################"
+	log rohtext "####################  CTRL/STRG + C  #############################"
+	log rohtext "##################################################################"
+	log rohtext "##     Die Werte in den [Klammern] sind vorschläge              ##"
+	log rohtext "##     und können mit Enter übernommen werden.                  ##"
+	log rohtext "##################################################################"
+	log rohtext "##   Daten stehen gegeben falls auch in der alten opensim.cnf   ##"
+	log rohtext "##################################################################"
+	log rohtext " "
+	log rohtext "Das Verzeichnis wo sich ihr Grid befindet oder befinden soll ["${VSTARTVERZEICHNIS//\//}"]"
 	read -r STARTVERZEICHNIS
 	if [ "$STARTVERZEICHNIS" = "" ]; then STARTVERZEICHNIS=""${VSTARTVERZEICHNIS//\//}""; fi
-	echo "Ihr Gridverzeichnis ist $STARTVERZEICHNIS"
-	echo "##################################################################"
+	log rohtext "Ihr Gridverzeichnis ist $STARTVERZEICHNIS"
+	log rohtext "##################################################################"
 
-	echo "Das Verzeichnis wo sich ihr Robust befindet [robust]"
+	log rohtext "Das Verzeichnis wo sich ihr Robust befindet [robust]"
 	read -r ROBUSTVERZEICHNIS
 	if [ "$ROBUSTVERZEICHNIS" = "" ]; then ROBUSTVERZEICHNIS="robust"; fi
-	echo "Ihr Robustverzeichnis ist $ROBUSTVERZEICHNIS"
-	echo "##################################################################"
+	log rohtext "Ihr Robustverzeichnis ist $ROBUSTVERZEICHNIS"
+	log rohtext "##################################################################"
 
-	echo "Das Verzeichnis wo sich ihr Moneyverzeichnis befindet [robust]"
+	log rohtext "Das Verzeichnis wo sich ihr Moneyverzeichnis befindet [robust]"
 	read -r MONEYVERZEICHNIS
 	if [ "$MONEYVERZEICHNIS" = "" ]; then MONEYVERZEICHNIS="robust"; fi
-	echo "Ihr Moneyverzeichnis ist $MONEYVERZEICHNIS"
-	echo "##################################################################"
+	log rohtext "Ihr Moneyverzeichnis ist $MONEYVERZEICHNIS"
+	log rohtext "##################################################################"
 
-	echo "Das Verzeichnis wo sich ihr OpenSimverzeichnis befindet [opensim]"
+	log rohtext "Das Verzeichnis wo sich ihr OpenSimverzeichnis befindet [opensim]"
 	read -r OPENSIMVERZEICHNIS
 	if [ "$OPENSIMVERZEICHNIS" = "" ]; then OPENSIMVERZEICHNIS="opensim"; fi
-	echo "Ihr OpenSimverzeichnis ist $OPENSIMVERZEICHNIS"
-	echo "##################################################################"
+	log rohtext "Ihr OpenSimverzeichnis ist $OPENSIMVERZEICHNIS"
+	log rohtext "##################################################################"
 
-	echo "Das Verzeichnis wo sich ihre Konfigurationsdateien befindet [OpenSimConfig]"
+	log rohtext "Das Verzeichnis wo sich ihre Konfigurationsdateien befindet [OpenSimConfig]"
 	read -r CONFIGPFAD
 	if [ "$CONFIGPFAD" = "" ]; then CONFIGPFAD="OpenSimConfig"; fi
-	echo "Ihr Konfigurationsdateienverzeichnis ist $CONFIGPFAD"
-	echo "##################################################################"
+	log rohtext "Ihr Konfigurationsdateienverzeichnis ist $CONFIGPFAD"
+	log rohtext "##################################################################"
 
-	echo "Soll dotnet 6 benutzt werden [yes] no"
+	log rohtext "Soll dotnet 6 benutzt werden [yes] no"
 	read -r DOTNETMODUS
 	if [ "$DOTNETMODUS" = "" ]; then DOTNETMODUS="yes"; fi
-	echo "Ihre dotnet 6 auswahl ist DOTNETMODUS=$DOTNETMODUS"
-	echo "##################################################################"
+	log rohtext "Ihre dotnet 6 auswahl ist DOTNETMODUS=$DOTNETMODUS"
+	log rohtext "##################################################################"
 
     # Fertig und abfragen
     #osmtoolconfig "/$STARTVERZEICHNIS/osmtoolconfig.ini"
 	osmtoolconfig $STARTVERZEICHNIS $ROBUSTVERZEICHNIS $MONEYVERZEICHNIS $OPENSIMVERZEICHNIS $CONFIGPFAD "/$SCRIPTPATH/osmtoolconfig.ini"
+}
+
+# Nutzer mit Konfigurationsfragen quaelen
+# Abfrage Konfig Einstellungen
+if ! [ -f "/$SCRIPTPATH/osmtoolconfig.ini" ]; then osmtoolconfigabfrage; fi
+
+# Wenn es keine Konfigurationsdatei gibt anlegen
+#if ! [ -f "/$SCRIPTPATH/osmtoolconfig.ini" ]; then osmtoolconfig "/$SCRIPTPATH/osmtoolconfig.ini"; fi
+
+# Variablen aus config Datei laden osmtoolconfig.ini muss sich im gleichen Verzeichnis wie osmtool.sh befinden.
+# shellcheck disable=SC1091
+. "$SCRIPTPATH"/osmtoolconfig.ini
+
+# Aktuelle IP ueber Suchadresse ermitteln und Ausfuehrungszeichen anhaengen.
+AKTUELLEIP='"'$(wget -O - -q $SEARCHADRES)'"'
+
+# gibt es das Startverzeichnis wenn nicht abbruch.
+cd /"$STARTVERZEICHNIS" || return 1
+sleep 1
+
+# Eingabeauswertung fuer Funktionen ohne dialog.
+KOMMANDO=$1
+
+###########################################################################
+#* Hilfsfunktionen Funktionsgruppe
+###########################################################################
+
+##
+ #* dummyvar, shellcheck disable=SC2034 umgehen.
+ # Shell-Check ueberlisten wegen der Konfigurationsdatei, 
+ # hat sonst keinerlei Funktion und wird auch nicht aufgerufen.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+function dummyvar() {
+	# shellcheck disable=SC2034
+	MONEYVERZEICHNIS="robust"; ROBUSTVERZEICHNIS="robust"; OPENSIMVERZEICHNIS="opensim"; SCRIPTSOURCE="ScriptNeu"; SCRIPTZIP="opensim-ossl-example-scripts-main.zip"; MONEYSOURCE="money48"
+	MONEYZIP="OpenSimCurrencyServer-2021-master.zip"; REGIONSDATEI="osmregionlist.ini"; SIMDATEI="osmsimlist.ini"; WARTEZEIT=30; STARTWARTEZEIT=10; STOPWARTEZEIT=30; MONEYWARTEZEIT=60; ROBUSTWARTEZEIT=60
+	BACKUPWARTEZEIT=120; AUTOSTOPZEIT=60; SETMONOTHREADS=800; SETMONOTHREADSON="yes"; OPENSIMDOWNLOAD="http://opensimulator.org/dist/"; SEARCHADRES="icanhazip.com"; # AUTOCONFIG="no"
+	CONFIGURESOURCE="opensim-configuration-addon-modul-main"; CONFIGUREZIP="opensim-configuration-addon-modul-main.zip"
+	textfontcolor=7; textbaggroundcolor=0; debugfontcolor=4; debugbaggroundcolor=0	infofontcolor=2	infobaggroundcolor=0; warnfontcolor=3; warnbaggroundcolor=0
+	errorfontcolor=1; errorbaggroundcolor=0; SETMONOGCPARAMSON1="no"; SETMONOGCPARAMSON2="yes"	LOGDELETE="no"; LOGWRITE="no"; "$trimmvar"; logfilename="_multitool"
+	username="username"	password="userpasswd"	databasename="grid"	linefontcolor=7	linebaggroundcolor=0; apache2errorlog="/var/log/apache2/error.log"; apache2accesslog="/var/log/apache2/access.log"
+	authlog="/var/log/auth.log"	ufwlog="/var/log/ufw.log"	mysqlmariadberor="/var/log/mysql/mariadb.err"; mysqlerrorlog="/var/log/mysql/error.log"; listVar=""; ScreenLogLevel=0
+	# DIALOG_OK=0; DIALOG_HELP=2; DIALOG_EXTRA=3; DIALOG_ITEM_HELP=4; SIG_NONE=0; SIG_HUP=1; SIG_INT=2; SIG_QUIT=3; SIG_KILL=9; SIG_TERM=15
+	DIALOG_CANCEL=1; DIALOG_ESC=255; DIALOG=dialog; VISITORLIST="yes"; REGIONSANZEIGE="yes"; #DELREGIONS="no";
+	netversion="1946"; CONFIGPFAD="OpenSimConfig"; DOTNETMODUS="yes";
+	OSVERSION="opensim-0.9.2.2Dev";
+	OPENSIMVERSION="opensim-0.9.2.2.zip"; OSMTRANS=":en"; OSMTRANSLATOR="OFF";
+}
+
+##
+ #* xhelp Test
+ # hilfe ausgeben.
+ # 
+ #? @param keiner.
+ #? @return $VERSION
+ # todo: nichts.
+##
+function xhelp() {
+	if [[ $1 == "help" ]]; then	echo "Zeigt die Hilfe einzelner Funktionen an."; exit 0; fi
+	exit 0;	
+}
+
+##
+ #* skriptversion.
+ # Skriptversion ausgeben.
+ # 
+ #? @param keiner.
+ #? @return $VERSION
+ # todo: nichts.
+##
+function skriptversion() {
+	# Test einer neuen Hilfe.
+	if [[ $1 == "help" ]]; then	echo "Zeigt die skriptversion vom opensimMULTITOOL an."; exit 0; fi
+	echo "$VERSION";
+	exit 0;
+}
+
+##
+ #* Zufallsnamen.
+ # Array aus Bezeichnungen von Deutschen Orten und Voelker (Unvollstaendig da keine umlaute funktionieren).
+ # 
+ #? @param keiner.
+ #? @return NEUERREGIONSNAME - Es wird ein Name zurueckgegeben.
+ # todo: nichts.
+##
+function namen() {
+	if [[ $1 == "help" ]]; then	echo "Ein Zufallsname wird ausgegeben."; exit 0; fi
+	namensarray=("Terwingen" "Angeron" "Vidivarier" "Usipeten" "Sibiner" "Ranier" "Sabalingier" "Aglier" "Aduatuker" \
+	"Favonen" "Sachsen" "Karpen" "Gautigoten" "Gepiden" "Mugilonen" "Bardongavenses" "Steoringun" "Guiones" "Teutonen" \
+	"Brukterer" "Omanen" "Astfalon" "Langobarden" "Frumtingas" "Eruler" "Moselfranken" "Tylangier" "Gillingas" \
+	"Singulonen" "Pharodiner" "Ahelmil" "Scopingun" "Waledungun" "Rosomonen" "Peukiner" "Elbsueben" "Scharuder" \
+	"Suardonen" "Suetiden" "Finnaithen" "Ambivareten" "Gegingas" "Aringon" "Anglier" "Glomman" "Raumariker" \
+	"Alemannen" "Narvaler" "Sunuker" "Mattiaker" "Kasuarier" "Bastarnen" "Sahslingun" "Frisiavonen" "Skiren" \
+	"Normannen" "Gambrivier" "Salfranken" "Holtsaeten" "Bergio" "Harier" "Holsten" "Lognai" "Vandalen" "Evagre" \
+	"Sigambrer" "Euten" "Kaoulkoi" "Burgunden" "Bajuwaren" "Hundingas" "Ostgoten" "Nervier" "Merscware" "Sturier" \
+	"Hillevionen" "Anglevarier" "Marsaker" "Schasuaren" "Otingis" "Cilternsaetan" "Falen" "Tenkterer" "Suonen" \
+	"Dounoi" "Teutonoaren" "Hugones" "Amoþingas" "Kalukonen" "Ostheruler" "Rus" "Wangionen" "Háleygir" "Triboker" \
+	"Markomannen" "Hordar" "Thiadmariska" "Holsten" "Gauten" "Krimgoten" "Herefinnas" "Fervir" "Hessen" "Sithonen" \
+	"Nuitonen" "Hringar" "Westheruler" "Bucinobanten" "Lakringen" "Eburonen" "Boutones" "Korkonter" "Angelsachsen" \
+	"Clondikus" "Donausweben" "Franken" "Nertereanen" "Barden" "Frugundionen" "Vinoviloth" "Treverer" "Elouaiones" \
+	"Schamaver" "Anarten" "Leuonoi" "Westgoten" "Winiler" "Turonen" "Visburgier" "Wandalen" "Landoudioer" "Harier" \
+	"Narisker" "Kimbern" "Kampen" "Semnonen" "Sugamber" "Haruden" "Colduer" "Geddingas" "Helvekonen" "Sedusier" \
+	"Baetasier" "Heinir" "Endosen" "Curionen" "Urugunden" "Hadubarden" "Taetel" "Tubanten" "Wariner" "Silinger" \
+	"Katten" "Marser" "Gumeningas" "Fundusier" "Levoner" "Helusii" "Sidones" "Varasker" "Manimer" "Angeln" "Daukionen" \
+	"Engern" "Segner" "Visper" "Scherusker" "Tungrer" "Bainaib" "Kannanefaten" "Mimmas" "Breisgauer" "Rheinfranken" \
+	"Condruser" "Batavier" "Neckarsueben" "Belger" "Gotthograikoi" "Engern" "Burgodionen" "Guddingen" "Ulmeraner" \
+	"Kampsianoi" "Viktofalen" "Nemeter" "Turkilinger" "Liothida" "Routiklioi" "Hermionen" "Rygir" "Veneter" "Schaler" \
+	"Zumer" "Firaesen" "Menapier" "Linzgauer" "Diduner" "Kleingoten" "Rugier" "Theusten" "Sidiner" "Amsivarier" \
+	"Greutungen" "Eunixer" "Hedeninge" "Scotelingun" "Agradingun" "Granier" "Schaubi" "Dulgubiner" "Halogit" \
+	"Marvingen" "Eudosen" "Halliner" "Elmetsaetan" "Kantwarier" "Dorsaetan" "Augandxer" "Gifle" "Firihsetan" \
+	"Maiaten" "Goten" "Cobander" "Sulones" "Lugier" "Kugerner" "Peukmer" "Caritner" "Ubier" "Toxandrer" "Graioceler" \
+	"Texuandrer" "Variner" "Elbgermanen" "Arosaetan" "Viruner" "Friesen" "Obronen" "Campsianer" "Derlingun" "Helisier" \
+	"Quaden" "Myrgingas" "Buren" "Permanen" "Doelir" "Schauken" "Foser" "Taifalen" "Avionen" "Nictrenses" "Svear" \
+	"Ermunduren" "Danduten")
+
+	# Zaehlen wie viele es sind.
+	count=${#namensarray[@]}
+	#echo $count
+
+	# Zufallszahl ermmiteln aus der anzahl von eintraegen in dem namensarray.
+	REGIONSNAMENZAHL=$(($RANDOM % $count))
+	#echo $REGIONSNAMENZAHL
+
+	# Regionsname ausgeben	
+	NEUERREGIONSNAME=${namensarray[$REGIONSNAMENZAHL]}
+}
+
+##
+ #* Zufallsvornamen.
+ # 
+ #? @param keiner.
+ #? @return NEUERREGIONSNAME - Es wird ein Name zurueckgegeben.
+ # todo: nichts.
+##
+function vornamen() {
+	if [[ $1 == "help" ]]; then	echo "Ein Zufallsname wird ausgegeben."; exit 0; fi
+
+	firstnamensarray=("Peter" "Rainer" "Sergej" "Karl" "Daredevil" "Relative" "Into" "Agony" "Carbon" "Wrecking" "Crazy" "Unique" "Daydreamer" "Ed" "Nickname" "Anger" "Justin" \
+					"Lee" "Roman" "Yum" "House" "ObiLAN" "Anakin" "Spaghetti" "Fritzchen" "Connecto" "Lan" "Jutta" "Bertha" "Chilly" "Agata" "Regen" "Siegtraude" "Wilma" "Raging" "King" \
+					"Polaroid" "Candy" "Fast" "Mike" "Savage" "Chop" "Edgar" "Cereal" "The" "KillMe" "Spicy" "Terrifying" "Smufus" "Harry" "Airport" "Chicken" "Donkey" "Bread" "Hairy" "Sillje" \
+					"Weina" "Marlo" "Toffel" "Binder" "Performance" "Abyss" "Qual" "Claw" "Ball" "Turtle" "Aspirin" "Nygma" "Forgiven" "Avenger" "Time" "Eintragen" "Monade" "Ticker" \
+					"Meefood" "LANister" "Kenobi" "Skyrouter" "Bolognese" "Box" "Patronum" "Solo" "Jessica" "Isberga" "Calilia" "Ehrentraud" "Frida" "Gebba" "Randy" "Kano" "Pal" "Butcher" \
+					"Curious" "Tython" "Sam" "Chop" "AllenBro" "Killer" "Muffin" "NowPlease" "Chicken" "Terry" "BroCode" "Dotter" "Hobo" "Dinner" "Bong" "Pitt" "Poppins" "Thomas" "Brigitte" \
+					"Peter" "Angelika" "Hans" "Sabine" "Klaus" "Monika" "Wolfgang" "Karin" "Andreas" "Marion" "Jürgen" "Petra" "Bernd" "Birgit" "Reiner" "Gabriele" "Manfred" "Susanne" "Uwe" "Barbara" \
+					"Joachim" "Renate" "Dieter" "Ute" "Werner" "Jutta" "Karl" "Ursula" "Holger" "Cornelia" "Frank" "Ingrid" "Norbert" "Heike" "Ralf, Rolf" "Regina" "Ulrich" "Maria" "Jörg" "Silvia" \
+					"Helmut" "Elke" "Günter" "Angela" "Gerhard" "Andrea" "Horst" "Ulrike" "Jens" "Gisela" "Harald" "Dagmar" "Martin" "Helga" "Heinz" "Christine" "Reinhard" "Eva" "Matthias" "Claudia" \
+					"Stefan" "Marianne" "Detlef" "Bärbel" "Volker" "Doris" "Walter" "Beate" "Bernhard" "Rita" "Hartmut" "Gudrun" "Alexander" "Hannelore" "Christian" "Anke" "Rüdiger" "Marlis" "Georg" \
+					"Heidi" "Roland" "Anette" "Axel" "Rosemarie" "Herbert" "Carmen" "Jan" "Inge" "Dirk" "Margrit" "Carsten" "Irene" "Udo" "Maren" "Siegfried" "Kerstin" "Kurt" "Olga" "Herrmann" "Anita" \
+					"Lutz" "Frauke" "Johannes" "Annelise" "Hubert" "Susanne" "Heiko" "Meike" "Wilhelm" "Gertrud" "Paul" "Ina" "Arno" "Gunda" "Jochen" "Stephanie" "Heiner" "Gerlinde" "Niels" "Tamara" \
+					"Henning" "Liane" "Anton" "Ursel" "Edmund" "Rosa" )
+
+	# Zaehlen wie viele es sind.
+	count=${#firstnamensarray[@]}
+	#echo $count
+
+	# Zufallszahl ermmiteln aus der anzahl von eintraegen in dem firstnamensarray.
+	VORNAMENZAHL=$(($RANDOM % $count))
+	#echo $REGIONSNAMENZAHL
+
+	# Regionsname ausgeben	
+	NEUERAVATARVORNAME=${firstnamensarray[$VORNAMENZAHL]}
+}
+
+##
+ #* randomname.
+ # 
+ #? @param keiner.
+ #? @return Es werden Name zurueckgegeben.
+ # todo: nichts.
+##
+function randomname() {
+	vornamen
+	log rohtext "Neuer Vorname: $NEUERAVATARVORNAME"
+	namen
+	log rohtext "Neuer Avatarname: $NEUERAVATARVORNAME $NEUERREGIONSNAME"
+	echo " "
+	log rohtext "Neuer Regionsname: $NEUERREGIONSNAME"
+}
+
+##
+ #* functionslist
+ # Funktionen eines Bash Skript auslesen und in eine Text Datei schreiben.
+ # 
+ #? @param keine.
+ #? @return datediff.
+ # todo: nichts.
+##
+function functionslist() {
+	file="/$STARTVERZEICHNIS/osmtool.sh"
+	suche="function"
+	ergebnisflist=$(grep -i -r "$suche " $file)
+	echo "$ergebnisflist" >/$STARTVERZEICHNIS/osmfunktion"$DATEIDATUM".txt
+}
+
+##
+ #* remarklist
+ # Funktionen eines Bash Skript inklusive 8 remark-Zeilen auslesen und in eine Text Datei schreiben.
+ # Hilfreich fuer Handbuch und Hilfen.
+ #? @param keine.
+ #? @return datediff.
+ # todo: nichts.
+##
+function remarklist() {
+	# -A Zeile nach suchwort -- -B zeile vor suchwort -- -C zeile vor und nach suchwort
+	file="/$STARTVERZEICHNIS/osmtool.sh"
+	suche="function"
+	ergebnisflist=$(grep -B9 -i -r "$suche " $file) # B8 Acht Zeilen vor dem Funktionsnamen.
+	echo "$ergebnisflist" >/$STARTVERZEICHNIS/osmRemarklist"$DATEIDATUM".txt
+}
+
+##
+ #* trimm.
+ # Leerzeichen korrigieren, trimm "   Beispiel   Text    "
+ # oder trimm $variable, rueckgabe in Variable: $trimmvar.
+ #
+ #? @param $variable.
+ #? @return $trimmvar.
+ # todo: nichts.
+##
+function trimm() {
+	set -f
+	# shellcheck disable=SC2086,SC2048
+	set -- $*
+	trimmvar=$(printf '%s\n' "$*")
+	set +f
+}
+
+##
+ #* osgitstatus.
+ # opensim quellcode status und upgraden.
+ #
+ #? @param $variable.
+ #? @return $trimmvar.
+ # todo: nichts.
+##
+function osgitstatus() {
+	log info "OpenSim Sourcecode wird Upgegradet."
+	cd /$STARTVERZEICHNIS/opensim || return 1
+	log rohtext "  OpenSim ist: $(git pull)" || log rohtext "OpenSim kann nicht upgegradet werden."
+	cd /$STARTVERZEICHNIS || return 0
+}
+
+##
+ #* ende.
+ # Beenden mit ausgabe der letzten Meldung.
+ # 
+ #? @param keine.
+ #? @return letzten Meldung.
+ # todo: nichts.
+##
+function ende() {
+	return
+	log info "$?" # Beenden mit ausgabe der letzten Meldung.
+}
+
+##
+ #* fehler.
+ # Den aufrufenden Prozess mit der letzten Meldung beenden.
+ # 
+ #? @param keine.
+ #? @return letzten Meldung.
+ # todo: nichts.
+##
+function fehler() {
+	exit
+	log error "$?" # Den aufrufenden Prozess mit der letzten Meldung beenden.
+}
+
+##
+ #* letterdel.
+ # Zeichen entfernen.
+ # letterdel $variable "[aAbBcCdD]" - letterdel $variable "[[:space:]]"
+ #? @param $variable $variable
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+function letterdel() {
+	# letterdel $variable "[aAbBcCdD]" - letterdel $variable "[[:space:]]"
+	printf '%s\n' "${1//$2/}"
+}
+
+##
+ #* trim_string.
+ # Zeichen entfernen.
+ # Usage: trim_string "   example   string    "
+ #
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+function trim_string() {
+    : "${1#"${1%%[![:space:]]*}"}"
+    : "${_%"${_##*[![:space:]]}"}"
+    printf '%s\n' "$_"
+}
+
+##
+ #* vartest.
+ # Variable auf inhalt testen.
+ # 
+ #? @param $VARIABLE.
+ #? @return ${result} true false.
+ # todo: nichts.
+##
+function vartest() {
+    VARIABLE="$1"
+    if [ -z "$VARIABLE" ]
+    then
+        result="false"
+    else
+        result="true"
+    fi
+}
+
+##
+ #* trim_all.
+ # Alle Zeichen entfernen.
+ # Usage: trim_all "   example   string    "
+ #
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+trim_all() {
+    set -f
+# shellcheck disable=SC2086,SC2048
+    set -- $*
+    printf '%s\n' "$*"
+    set +f
+}
+
+##
+ #* osmtranslatedirekt
+ # Text übersetzen.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+function osmtranslatedirekt() {  
+    OSMTRANSTEXT=$1
+	if [ "$OSMTRANS" = ":de" ]; then echo "Es funktioniert nicht von der gleichen Sprache in dieselbe zu übersetzen."; fi
+    #trans -show-original n -show-original-phonetics n -show-translation Y -show-translation-phonetics n -show-prompt-message n -show-languages n -show-original-dictionary N -show-dictionary n -show-alternatives n -no-warn $OSMTRANS "$OSMTRANSTEXT"
+	trans -brief $OSMTRANS "$OSMTRANSTEXT"
+}
+
+
+##
+ #* iinstall.
+ # Linux apt-get Installationsroutine.
+ # 
+ #? @param $installation.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+function iinstall() {
+	installation=$1
+	if dpkg-query -s "$installation" 2>/dev/null | grep -q installed; then
+		log rohtext "$installation ist bereits installiert."
+	else
+		log rohtext "Ich installiere jetzt $installation"
+		sudo apt-get -y install "$installation"
+	fi
+}
+
+##
+ #* iinstall2.
+ # Linux apt Installationsroutine.
+ # 
+ #? @param $installation.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+function iinstall2() {
+	installation=$1
+	if dpkg-query -s "$installation" 2>/dev/null | grep -q installed; then
+		log rohtext "$installation ist bereits installiert."
+	else
+		log rohtext "Ich installiere jetzt $installation"
+		sudo apt install "$installation" -y
+	fi
+}
+
+##
+ #* finstall.
+ # Neue apt-get installationsroutine aus Datei.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+function finstall() {
+	TXTLISTE=$1
+
+	while read -r txtline; do
+		if dpkg-query -s "$txtline" 2>/dev/null | grep -q installed; then
+			log rohtext "$txtline ist bereits installiert!"
+		else
+			log rohtext "Ich installiere jetzt: $txtline"
+			sudo apt-get -y install "$txtline"
+		fi
+	done <"$TXTLISTE"
+}
+
+##
+ #* menufinstall.
+ # Neue Menue installationsroutine aus Datei.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+function menufinstall() {
+	TXTLISTE=$1
+	# zuerst schauen ob dialog installiert ist
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
+		# Alle Aktionen mit dialog
+		boxtitel="opensimMULTITOOL Eingabe"
+		boxtext="Screen Name:"
+		TXTLISTE=$(dialog --backtitle "opensimMULTITOOL $VERSION" --title "$boxtitel" --inputbox "$boxtext" 8 40 3>&1 1>&2 2>&3 3>&-)
+		dialogclear
+		ScreenLog
+
+		while read -r line; do
+			if dpkg-query -s "$line" 2>/dev/null | grep -q installed; then
+				log rohtext "$line ist bereits installiert!"
+			else
+				log rohtext "Ich installiere jetzt: $line"
+				sudo apt-get -y install "$line"
+			fi
+		done <"$TXTLISTE"
+	else
+		# Alle Aktionen ohne dialog
+		while read -r line; do
+			if dpkg-query -s "$line" 2>/dev/null | grep -q installed; then
+				log rohtext "$line ist bereits installiert!"
+			else
+				log rohtext "Ich installiere jetzt: $line"
+				sudo apt-get -y install "$line"
+			fi
+		done <"$TXTLISTE"
+	fi
+}
+
+##
+ #* uncompress.
+ # ermittelt welcher Kompressor eingesetzt wurde und gibt den entpack Befehl zurueck.
+ # 
+ #? @param $datei.
+ #? @return $uncompress.
+ # todo: nichts.
+##
+function uncompress() {
+    datei=$1
+
+    for file in $datei; do
+        case $(file "$file") in
+            *ASCII*)    export uncompress=""            ;;
+            *gzip*)     export uncompress="gunzip"      ;;
+            *zip*)      export uncompress="unzip -p"    ;;
+            *7z*)       export uncompress="7z e"        ;;          
+            *rar*)      export uncompress="unrar e"     ;;
+            *tar.gz*)   export uncompress="tar -xf"     ;;
+            *tar.bz2*)  export uncompress="tar -xjf"    ;;
+            *tar.xz*)   export uncompress="tar -xJf"    ;;
+            *bz2*)      export uncompress="bunzip2"     ;;
+            *xz*)       export uncompress="unxz"        ;;
+        esac
+    done
+
+    return $uncompress;
+}
+
+##
+ #* makeverzeichnisliste.
+ # Erstellen eines Arrays aus einer Textdatei - Verzeichnisse.
+ # 
+ #? @param keine.
+ #? @return $ANZAHLVERZEICHNISSLISTE.
+ # todo: nichts.
+##
+function makeverzeichnisliste() {
+	VERZEICHNISSLISTE=()
+	while IFS= read -r line; do
+		VERZEICHNISSLISTE+=("$line")
+	done </$STARTVERZEICHNIS/$SIMDATEI
+	# Anzahl der Eintraege.
+	ANZAHLVERZEICHNISSLISTE=${#VERZEICHNISSLISTE[*]}
+	return 0
+}
+
+##
+ #* makeregionsliste 
+ # Erstellen eines Arrays aus einer Textdatei.
+ # 
+ #? @param keine.
+ #? @return REGIONSLISTE.
+ #? @return ANZAHLREGIONSLISTE.
+ # todo: nichts.
+##
+function makeregionsliste() {
+	REGIONSLISTE=()
+	while IFS= read -r line; do
+		REGIONSLISTE+=("$line")
+	done </$STARTVERZEICHNIS/$REGIONSDATEI
+	ANZAHLREGIONSLISTE=${#REGIONSLISTE[*]} # Anzahl der Eintraege.
+	return 0
+}
+
+##
+ #* mysqlrest Funktion zum abfragen von mySQL Datensaetzen.
+ # mymysql "username" "password" "databasename" "mysqlcommand".
+ # 
+ #? @param "username" "password" "databasename" "mysqlcommand".
+ #? @return result_mysqlrest.
+ # todo: nichts.
+##
+function mysqlrest() {
+	username=$1
+	password=$2
+	databasename=$3
+	mysqlcommand=$4
+	result_mysqlrest=$(echo "$mysqlcommand;" | MYSQL_PWD=$password mysql -u"$username" "$databasename" -N) 2>/dev/null
+}
+
+##
+ #* mysqlrestnodb.
+ # Funktion mySQL Datensaetzen: mymysql "username" "password" "mysqlcommand".
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+function mysqlrestnodb() {
+	username=$1
+	password=$2
+	mysqlcommand=$3
+	result_mysqlrestnodb=$(echo "$mysqlcommand" | MYSQL_PWD=$password mysql -u"$username")
+}
+
+###########################################################################
+#* Konfigurationen Funktionsgruppe
+###########################################################################
+
+##
+ #* instdialog.
+ # installation von dialog.
+ # 
+ #? @param keine.
+ #? @return keine.
+ # todo: nichts.
+##
+# install dialog
+function instdialog() {
+	log rohtext "Ich installiere jetzt dialog"
+	sudo apt-get -y update
+	sudo apt-get -y upgrade
+	sudo apt-get -y install dialog
+	# Warscheinlich ist die Installation fehlgeschlagen da abhängigkeiten fehlen.
+	sudo apt-get -f install # abhängiketen nachinstallieren
+	sudo apt-get -y install dialog # erneute installation
+	#dialog --title 'Dialog Nachricht' --msgbox '. . . . Dialog wurde Installiert!' 6 50
+	dialog --title 'Die erste Dialog Nachricht' --calendar 'Dialog wurde Installiert am:' 0 0
+	tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 }
 
 ##
@@ -1207,7 +1391,7 @@ function menuosdauerstart() {
 				dateimenu
 			fi
 		else
-			echo "OpenSimulator $IOSDAUERSTARTSCREEN nicht vorhanden"
+			log rohtext "OpenSimulator $IOSDAUERSTARTSCREEN nicht vorhanden"
 			dateimenu
 		fi
 	else
@@ -1316,9 +1500,9 @@ function dialogclear() {
  # todo: nichts.
 ##
 function clearuserlist() {
-	echo "Lösche Besucherlisten log"
+	log rohtext "Lösche Besucherlisten log"
 	rm -r /$STARTVERZEICHNIS/*_osmvisitorlist.log
-	echo "Lösche Besucherlisten txt"
+	log rohtext "Lösche Besucherlisten txt"
 	rm -r /$STARTVERZEICHNIS/*_osmvisitorlist.txt
 }
 
@@ -1351,49 +1535,6 @@ function historylogclear() {
 			log info "  und mysqlmariadb Error Log Dateien ist zur Zeit moeglich!"
 		;;
 	esac
-}
-
-##
- #* log.
- # Log Dateien und Funktionen.
- # 
- #? @param logtype.
- #? @return Textausgabe.
- # todo: nichts.
-##
-function log() {
-	local text
-	local logtype
-	#local datetime
-	logtype="$1"
-	text="$2"
-	#datetime=$(date +'%F %H:%M:%S')
-	DATEIDATUM=$(date +%d_%m_%Y)
-	lline="#####################################################################################"
-
-	if [ "$LOGWRITE" = "yes" ]; then
-		case $logtype in
-		line) echo $lline >>/$STARTVERZEICHNIS/"$DATEIDATUM""$logfilename".log ;;
-		rohtext) echo "$text" >>/$STARTVERZEICHNIS/"$DATEIDATUM""$logfilename".log ;;
-		text) echo "$(date +'%d.%m.%Y-%H:%M:%S') TEXT: $text" >>/$STARTVERZEICHNIS/"$DATEIDATUM""$logfilename".log ;;
-		debug) echo "$(date +'%d.%m.%Y-%H:%M:%S') DEBUG: $text" >>/$STARTVERZEICHNIS/"$DATEIDATUM""$logfilename".log ;;
-		info) echo "$(date +'%d.%m.%Y-%H:%M:%S') INFO: $text" >>/$STARTVERZEICHNIS/"$DATEIDATUM""$logfilename".log ;;
-		warn) echo "$(date +'%d.%m.%Y-%H:%M:%S') WARNING: $text" >>/$STARTVERZEICHNIS/"$DATEIDATUM""$logfilename".log ;;
-		error) echo "$(date +'%d.%m.%Y-%H:%M:%S') ERROR: $text" >>/$STARTVERZEICHNIS/"$DATEIDATUM""$logfilename".log ;;
-		*) return 0 ;;
-		esac
-	fi
-	case $logtype in
-	line) echo "$(tput setaf $linefontcolor) $(tput setab $linebaggroundcolor)$lline $(tput sgr 0)" ;;
-	rohtext) echo "$text" ;;
-	text) echo "$(tput setaf $textfontcolor) $(tput setab $textbaggroundcolor) $(date +'%d.%m.%Y-%H:%M:%S') TEXT: $text $(tput sgr 0)" ;;
-	debug) echo "$(tput setaf $debugfontcolor) $(tput setab $debugbaggroundcolor) $(date +'%d.%m.%Y-%H:%M:%S') DEBUG: $text $(tput sgr 0)" ;;
-	info) echo "$(tput setaf $infofontcolor) $(tput setab $infobaggroundcolor) $(date +'%d.%m.%Y-%H:%M:%S') INFO: $text $(tput sgr 0)" ;;
-	warn) echo "$(tput setaf $warnfontcolor) $(tput setab $warnbaggroundcolor) $(date +'%d.%m.%Y-%H:%M:%S') WARNING: $text $(tput sgr 0)" ;;
-	error) echo "$(tput setaf $errorfontcolor) $(tput setab $errorbaggroundcolor) $(date +'%d.%m.%Y-%H:%M:%S') ERROR: $text $(tput sgr 0)" ;;
-	*) return 0 ;;
-	esac
-	return 0
 }
 
 ###########################################################################
@@ -1453,16 +1594,16 @@ function schreibeinfo() {
 			echo " " >/$STARTVERZEICHNIS/"$DATEIDATUM""$logfilename".log
 		fi
 	fi
-		log rohtext "   ____                        _____  _                    _         _               "
-		log rohtext "  / __ \                      / ____|(_)                  | |       | |              "
-		log rohtext " | |  | | _ __    ___  _ __  | (___   _  _ __ ___   _   _ | |  __ _ | |_  ___   _ __ "
-		log rohtext " | |  | ||  _ \  / _ \|  _ \  \___ \ | ||  _   _ \ | | | || | / _  || __|/ _ \ |  __|"
-		log rohtext " | |__| || |_) ||  __/| | | | ____) || || | | | | || |_| || || (_| || |_| (_) || |   "
-		log rohtext "  \____/ |  __/  \___||_| |_||_____/ |_||_| |_| |_| \____||_| \____| \__|\___/ |_|   "
-		log rohtext "         | |                                                                         "
-		log rohtext "         |_|                                                                         "
-		log rohtext "            $SCRIPTNAME $VERSION"
-		log rohtext " "
+		echo "   ____                        _____  _                    _         _               "
+		echo "  / __ \                      / ____|(_)                  | |       | |              "
+		echo " | |  | | _ __    ___  _ __  | (___   _  _ __ ___   _   _ | |  __ _ | |_  ___   _ __ "
+		echo " | |  | ||  _ \  / _ \|  _ \  \___ \ | ||  _   _ \ | | | || | / _  || __|/ _ \ |  __|"
+		echo " | |__| || |_) ||  __/| | | | ____) || || | | | | || |_| || || (_| || |_| (_) || |   "
+		echo "  \____/ |  __/  \___||_| |_||_____/ |_||_| |_| |_| \____||_| \____| \__|\___/ |_|   "
+		echo "         | |                                                                         "
+		echo "         |_|                                                                         "
+		echo "            $SCRIPTNAME $VERSION"
+		echo " "
 		log line
 		log rohtext "  $DATUM $(date +%H:%M:%S) MULTITOOL: wurde gestartet am $(date +%d.%m.%Y) um $(date +%H:%M:%S) Uhr"
 		log rohtext "  $DATUM $(date +%H:%M:%S) INFO: Server Name: ${HOSTNAME}"
@@ -1489,7 +1630,7 @@ function schreibeinfo() {
 		# 	echo "  $DATUM $(date +%H:%M:%S) INFO:$(tput setaf 1) Es ist keine neue OpenSimulator Master Version da.$(tput sgr 0)"
 		# fi
 		log line
-		log rohtext " "
+		echo " "
 	return 0
 }
 
@@ -1553,7 +1694,7 @@ function rebootdatum() {
  # todo: nichts.
 ##
 function reboot() {
-	echo "Server wird jetzt heruntergefahren und neu gestartet!"
+	log rohtext "Server wird jetzt heruntergefahren und neu gestartet!"
 		autostop
 		shutdown -r now
 }
@@ -1920,7 +2061,7 @@ function mysqlbackup() {
 	password=$2
 	databasename=$3
 	dbcompress=$4
-	mkdir -p /$STARTVERZEICHNIS/backup || echo "Verzeichnis vorhanden"
+	mkdir -p /$STARTVERZEICHNIS/backup || log rohtext "Verzeichnis vorhanden"
 	cd /$STARTVERZEICHNIS/backup || return 1
 
 	if [ "$dbcompress" = "" ]; then 
@@ -2050,7 +2191,7 @@ function menuoscommand() {
 		ScreenLog
 	else
 		# Alle Aktionen ohne dialog
-		echo "Keine Menuelose Funktion" | exit
+		log rohtext "Keine Menuelose Funktion" | exit
 	fi # dialog Aktionen Ende
 
 	if screen -list | grep -q "$OSCOMMANDSCREEN"; then
@@ -2129,7 +2270,7 @@ function menuassetdel() {
 		ScreenLog
 	else
 		# Alle Aktionen ohne dialog
-		echo "Keine Menuelose Funktion" | exit
+		log rohtext "Keine Menuelose Funktion" | exit
 	fi # dialog Aktionen Ende
 
 	# Nachschauen ob der Screen und die Region existiert.
@@ -2205,7 +2346,7 @@ function menulandclear() {
 		ScreenLog
 	else
 		# Alle Aktionen ohne dialog
-		echo "Keine Menuelose Funktion" | exit
+		log rohtext "Keine Menuelose Funktion" | exit
 	fi # dialog Aktionen Ende
 
 	# Nachschauen ob der Screen und die Region existiert.
@@ -2286,7 +2427,7 @@ function menuloadinventar() {
 		ScreenLog
 	else
 		# Alle Aktionen ohne dialog
-		echo "Keine Menuelose Funktion" | exit
+		log rohtext "Keine Menuelose Funktion" | exit
 	fi # dialog Aktionen Ende
 
 	LOADINVSCREEN="sim1"
@@ -2366,10 +2507,10 @@ function osstop() {
 	
 	if screen -list | grep -q "$OSSTOPSCREEN"; then
 		log warn "OpenSimulator $OSSTOPSCREEN Beenden"
-		screen -S "$OSSTOPSCREEN" -p 0 -X eval "stuff 'shutdown'^M" || echo "$OSSTOPSCREEN wurde nicht gefunden."
+		screen -S "$OSSTOPSCREEN" -p 0 -X eval "stuff 'shutdown'^M" || log rohtext "$OSSTOPSCREEN wurde nicht gefunden."
 		sleep $STOPWARTEZEIT
 		# Killen.
-		screen -X -S "$OSSTOPSCREEN" kill || echo "$OSSTOPSCREEN wurde korrekt heruntergefahren."
+		screen -X -S "$OSSTOPSCREEN" kill || log rohtext "$OSSTOPSCREEN wurde korrekt heruntergefahren."
 		return 0
 	else
 		log error "OpenSimulator $OSSTOPSCREEN nicht vorhanden"
@@ -2406,9 +2547,9 @@ function menuosstart() {
 
 			DIALOG=dialog
 			(
-				echo "Starte: $IOSSTARTSCREEN"
+				log rohtext "Starte: $IOSSTARTSCREEN"
 				# Ersteinmal Killen dann starten.
-				screen -X -S "$IOSSTARTSCREEN" kill || echo "$IOSSTARTSCREEN läuft nicht."
+				screen -X -S "$IOSSTARTSCREEN" kill || log rohtext "$IOSSTARTSCREEN läuft nicht."
 
 				# DOTNETMODUS="yes"
 				if [[ "${DOTNETMODUS}" == "yes" ]]; then
@@ -2425,7 +2566,7 @@ function menuosstart() {
 			hauptmenu
 
 		else
-			echo "OpenSimulator $IOSSTARTSCREEN nicht vorhanden"
+			log rohtext "OpenSimulator $IOSSTARTSCREEN nicht vorhanden"
 			hauptmenu
 		fi
 	else
@@ -2464,7 +2605,7 @@ function menuosstop() {
 	if screen -list | grep -q "$IOSSTOPSCREEN"; then
 		DIALOG=dialog
 		(
-			echo "Stoppe: $IOSSTOPSCREEN"
+			log rohtext "Stoppe: $IOSSTOPSCREEN"
 			screen -S "$IOSSTOPSCREEN" -p 0 -X eval "stuff 'shutdown'^M"
 			sleep $STOPWARTEZEIT
 			# Killen wenn noch nicht gestoppt.
@@ -2854,7 +2995,7 @@ function menusaveinventar() {
 		ScreenLog
 	else
 		# Alle Aktionen ohne dialog
-		echo "Keine Menuelose Funktion" | exit
+		log rohtext "Keine Menuelose Funktion" | exit
 	fi # dialog Aktionen Ende
 
 	SAVEINVSCREEN="sim1"
@@ -3029,7 +3170,7 @@ function mapdel() {
 function logdel() {
 	VERZEICHNIS=$1
 	if [ -d "$VERZEICHNIS" ]; then
-		rm /$STARTVERZEICHNIS/"$VERZEICHNIS"/bin/*.log 2>/dev/null || echo "Ich habe die $VERZEICHNIS log nicht gefunden!"		
+		rm /$STARTVERZEICHNIS/"$VERZEICHNIS"/bin/*.log 2>/dev/null || log rohtext "Ich habe die $VERZEICHNIS log nicht gefunden!"		
 	else
 		log error "LOGDEL: $VERZEICHNIS logs nicht gefunden"
 		return 1
@@ -3167,7 +3308,7 @@ function menulogdel() {
 function assetcachedel() {
 	VERZEICHNIS=$1
 	if [ -d "$VERZEICHNIS" ]; then
-		rm -r /$STARTVERZEICHNIS/"$VERZEICHNIS"/bin/assetcache 2>/dev/null || echo "Ich habe das $VERZEICHNIS assetcache Verzeichnis nicht gefunden!"	
+		rm -r /$STARTVERZEICHNIS/"$VERZEICHNIS"/bin/assetcache 2>/dev/null || log rohtext "Ich habe das $VERZEICHNIS assetcache Verzeichnis nicht gefunden!"	
 	else
 		log error "assetcachedel: $VERZEICHNIS assetcache Verzeichnis wurde nicht gefunden"
 		return 1
@@ -3836,7 +3977,7 @@ function setversion() {
 ##
 function versionsausgabe93() {
 	cd /opt/opensim || exit
-	echo Verionsausgabe:
+	log rohtext Verionsausgabe:
     git log -n 1
     git describe --abbrev=7 --always  --long --match v* master
 }
@@ -3907,9 +4048,9 @@ function osstruktur() {
 		log error "OSSTRUKTUR: Verzeichnis $ROBUSTVERZEICHNIS existiert bereits"
 	fi
 	for ((i = $1; i <= $2; i++)); do
-		echo "Lege sim$i an"
+		log rohtext "Lege sim$i an"
 		mkdir -p /$STARTVERZEICHNIS/sim"$i"/bin
-		echo "Schreibe sim$i in $SIMDATEI"
+		log rohtext "Schreibe sim$i in $SIMDATEI"
 		# xargs sollte leerzeichen entfernen.
 		printf 'sim'"$i"'\t%s\n' | xargs >>/$STARTVERZEICHNIS/$SIMDATEI
 	done
@@ -3950,7 +4091,7 @@ function menuosstruktur() {
 		ScreenLog
 	else
 		# Alle Aktionen ohne dialog
-		echo "Keine Menuelose Funktion" | exit
+		log rohtext "Keine Menuelose Funktion" | exit
 	fi # dialog Aktionen Ende
 
 	if [ ! -f "/$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/" ]; then
@@ -3961,9 +4102,9 @@ function menuosstruktur() {
 	fi
 	# shellcheck disable=SC2004
 	for ((i = $EINGABE; i <= $EINGABE2; i++)); do
-		echo "Lege sim$i an"
+		log rohtext "Lege sim$i an"
 		mkdir -p /$STARTVERZEICHNIS/sim"$i"/bin
-		echo "Schreibe sim$i in $SIMDATEI"
+		log rohtext "Schreibe sim$i in $SIMDATEI"
 		printf 'sim'"$i"'\t%s\n' >>/$STARTVERZEICHNIS/$SIMDATEI
 	done
 	log info "OSSTRUKTUR: Lege robust an ,Schreibe sim$i in $SIMDATEI"
@@ -4093,7 +4234,7 @@ function ini_get() {
 
     if [ $# != 3 ]
         then
-        echo "Verwendung: ini_get Dateiname SECTION KEY"
+        log rohtext "Verwendung: ini_get Dateiname SECTION KEY"
         return $?
     fi
 
@@ -4316,7 +4457,7 @@ function autoregionsiniteilen() {
 		for MeineRegion in ${TARGETS[@]}; do
 			regionsiniteilen "$VERZEICHNIS" "$MeineRegion"
 			sleep 1
-			echo "regionsiniteilen $VERZEICHNIS $MeineRegion"
+			log rohtext "regionsiniteilen $VERZEICHNIS $MeineRegion"
 		done
 		#  Dann umbenennen:
 		# Pruefung ob Datei vorhanden ist, wenn ja umbenennen.
@@ -4434,7 +4575,7 @@ function moneydelete() {
 ##
 function osgitholen() {
 	if [ -d /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/ ]; then
-		echo "$(tput setaf 1) $(tput setaf 7)Kopieren der Entwicklungsversion des OpenSimulator aus dem Git$(tput sgr 0)"
+		log rohtext "Kopieren der Entwicklungsversion des OpenSimulator aus dem Git."
 		log info "##############################"
 		cd /$STARTVERZEICHNIS || return 1
 		rm -r /$STARTVERZEICHNIS/opensim1
@@ -4442,7 +4583,7 @@ function osgitholen() {
 		git clone git://opensimulator.org/git/opensim opensim
 		log info "OPENSIMHOLEN: Git klonen"
 	else
-		echo "$(tput setaf 1) $(tput setaf 7)Kopieren der Entwicklungsversion des OpenSimulator aus dem Git$(tput sgr 0)"
+		log rohtext "Kopieren der Entwicklungsversion des OpenSimulator aus dem Git."
 		log info "##############################"
 		log info "Kopieren der Entwicklungsversion des OpenSimulator aus dem Git"
 		git clone git://opensimulator.org/git/opensim opensim
@@ -4459,7 +4600,7 @@ function osgitholen() {
  # todo: nichts.
 ##
 function osgitholen93() {
-	echo "$(tput setaf 1) $(tput setaf 7)Kopieren der Entwicklungsversion des OpenSimulator aus dem Git$(tput sgr 0)"
+	log rohtext "Kopieren der Entwicklungsversion des OpenSimulator aus dem Git."
 	log info "##############################"
 	cd /$STARTVERZEICHNIS || return 1
 	rm -r /$STARTVERZEICHNIS/opensim1
@@ -4473,7 +4614,7 @@ function osgitholen93() {
     # git checkout dotnet6
     # ./runprebuild.sh
     # dotnet build --configuration Release OpenSim.sln
-    echo "Eine Besonderheit ist, der Startvorgang hat sich geaendert, es wird nicht mehr mit mono OpenSim.exe gestartet, sondern mit dotnet OpenSim.dll."
+    log rohtext "Eine Besonderheit ist, der Startvorgang hat sich geaendert, es wird nicht mehr mit mono OpenSim.exe gestartet, sondern mit dotnet OpenSim.dll."
 }
 
 ##
@@ -4490,7 +4631,7 @@ function osbauen93() {
     git checkout dotnet6
     ./runprebuild.sh
     dotnet build --configuration Release OpenSim.sln
-    echo "Eine Besonderheit ist, der Startvorgang hat sich geaendert, es wird nicht mehr mit mono OpenSim.exe gestartet, sondern mit dotnet OpenSim.dll."
+    log rohtext "Eine Besonderheit ist, der Startvorgang hat sich geaendert, es wird nicht mehr mit mono OpenSim.exe gestartet, sondern mit dotnet OpenSim.dll."
 }
 
 ##
@@ -4558,7 +4699,7 @@ function install_mysqltuner() {
 ##
 function regionbackup() {
 	# regionbackup "$BACKUPSCREEN" "$BACKUPREGION"
-	echo "Empfange: $BACKUPSCREEN $BACKUPREGION"
+	log rohtext "Empfange: $BACKUPSCREEN $BACKUPREGION"
 
 	sleep 1
 	BACKUPVERZEICHNISSCREENNAME=$1
@@ -4572,7 +4713,7 @@ function regionbackup() {
 	log info "Sollte sie nicht vorhanden sein wird root also alle Regionen gespeichert"
 	# Ist die Region Online oder Offline?
 	if [ -f /$STARTVERZEICHNIS/"$BACKUPVERZEICHNISSCREENNAME"/bin/Regions/"$REGIONSNAME".ini.offline ]; then
-	echo "$REGIONSNAME ist heruntergefahren."
+	log rohtext "$REGIONSNAME ist heruntergefahren."
 	else
 	screen -S "$BACKUPVERZEICHNISSCREENNAME" -p 0 -X eval "stuff 'change region ${REGIONSNAME//\"/}'^M"
 	log info "$BACKUPVERZEICHNISSCREENNAME $REGIONSNAME"
@@ -4612,7 +4753,7 @@ function regionbackup() {
 	# 	cp -r /$STARTVERZEICHNIS/"$BACKUPVERZEICHNISSCREENNAME"/bin/Regions/Regions.ini /$STARTVERZEICHNIS/backup/"$DATUM"-"$REGIONSNAME".ini
 	# 	log info "Die Regions $NSDATEINAME.ini wird gespeichert"
 	# fi
-	echo "Backup der Region $REGIONSNAME wird fertiggestellt."
+	log rohtext "Backup der Region $REGIONSNAME wird fertiggestellt."
 	return 0
 }
 
@@ -4649,7 +4790,7 @@ function menuregionbackup() {
 		ScreenLog
 	else
 		# Alle Aktionen ohne dialog
-		echo "Keine Menuelose Funktion" | exit
+		log rohtext "Keine Menuelose Funktion" | exit
 	fi # dialog Aktionen Ende
 
 	sleep 1
@@ -4744,7 +4885,7 @@ function menuregionrestore() {
 		ScreenLog
 	else
 		# Alle Aktionen ohne dialog
-		echo "Keine Menuelose Funktion" | exit
+		log rohtext "Keine Menuelose Funktion" | exit
 	fi # dialog Aktionen Ende
 
 	DATEINAME=${REGIONSNAME//\"/}
@@ -5282,10 +5423,10 @@ function autoregionbackup() {
 
     # Ist die osmregionlist.ini vorhanden?
     if [ ! -f "/$STARTVERZEICHNIS/osmregionlist.ini" ]; then
-        echo "Die osmregionlist.ini Datei ist noch nicht vorhanden und wird erstellt."
+        log rohtext "Die osmregionlist.ini Datei ist noch nicht vorhanden und wird erstellt."
 		regionliste
     else
-        echo "Die osmregionlist.ini Datei ist bereits vorhanden."
+        log rohtext "Die osmregionlist.ini Datei ist bereits vorhanden."
     fi
 
 	makeregionsliste
@@ -5293,13 +5434,13 @@ function autoregionbackup() {
 	for ((i = 0; i < "$ANZAHLREGIONSLISTE"; i++)); do
 		BACKUPSCREEN=$(echo "${REGIONSLISTE[$i]}" | cut -d ' ' -f 1)
 		BACKUPREGION=$(echo "${REGIONSLISTE[$i]}" | cut -d ' ' -f 2)
-		echo "Sende: " "$BACKUPSCREEN" "$BACKUPREGION" # Testausgabe
+		log rohtext "Sende: " "$BACKUPSCREEN" "$BACKUPREGION" # Testausgabe
 		regionbackup "$BACKUPSCREEN" "$BACKUPREGION"
 		if [ -f /$STARTVERZEICHNIS/"$BACKUPSCREEN"/bin/Regions/"$BACKUPREGION".ini.offline ]; then
-			echo "$BACKUPREGION Region ist Offline und wird uebersprungen."
+			log rohtext "$BACKUPREGION Region ist Offline und wird uebersprungen."
 		else
 			sleep $BACKUPWARTEZEIT
-			echo "BACKUPWARTEZEIT $BACKUPWARTEZEIT Sekunden." # Testausgabe
+			log rohtext "BACKUPWARTEZEIT $BACKUPWARTEZEIT Sekunden." # Testausgabe
 		fi
 	done
 	return 0
@@ -5633,9 +5774,9 @@ function monoinstall() {
 ##
 function monoinstall18() {
 	if dpkg-query -s mono-complete 2>/dev/null | grep -q installed; then
-		echo "mono-complete ist bereits installiert."
+		log rohtext "mono-complete ist bereits installiert."
 	else
-		echo "Ich installiere jetzt mono-complete"
+		log rohtext "Ich installiere jetzt mono-complete"
 		sleep 1
 
 		sudo apt install gnupg ca-certificates
@@ -5658,9 +5799,9 @@ function monoinstall18() {
 ##
 function monoinstall20() {
 	if dpkg-query -s mono-complete 2>/dev/null | grep -q installed; then
-		echo "mono-complete ist bereits installiert."
+		log rohtext "mono-complete ist bereits installiert."
 	else
-		echo "Ich installiere jetzt mono-complete"
+		log rohtext "Ich installiere jetzt mono-complete"
 		sleep 1
 
 		sudo apt install gnupg ca-certificates
@@ -5698,13 +5839,13 @@ function icecastinstall() {
 	passwortrelay=$(tr -dc 'A-Za-z0-9' </dev/urandom | head -c 14)
 	passwortadmin=$(tr -dc 'A-Za-z0-9' </dev/urandom | head -c 18)
 
-	echo "Bitte halten sie 3 Passwörter bereit für die icecast2 installation."
-	echo "Der hostname ist der Domainname oder die IP."
-	echo "Beispiele mit Zufallsgenerator erstellt:"
-	echo "Icecast2 Hostname: $AKTUELLEIP"
-	echo "Benutzername: source Passwort: $passwortsource"
-	echo "Benutzername: relay Passwort: $passwortrelay"
-	echo "Benutzername: admin Passwort: $passwortadmin"
+	log rohtext "Bitte halten sie 3 Passwörter bereit für die icecast2 installation."
+	log rohtext "Der hostname ist der Domainname oder die IP."
+	log rohtext "Beispiele mit Zufallsgenerator erstellt:"
+	log rohtext "Icecast2 Hostname: $AKTUELLEIP"
+	log rohtext "Benutzername: source Passwort: $passwortsource"
+	log rohtext "Benutzername: relay Passwort: $passwortrelay"
+	log rohtext "Benutzername: admin Passwort: $passwortadmin"
 	sudo apt-get install icecast2
 	# Der Port muss noch von 8000, auf irgend etwas, was noch nicht vom OpenSimulator benutzt wird, umgestellt werden.
 	icecastconfig
@@ -5719,9 +5860,9 @@ function icecastinstall() {
  # todo: nichts.
 ##
 function icecastconfig() {
-	echo "Icecast2 von Port 8000 auf Port 8999 setzen"
+	log rohtext "Icecast2 von Port 8000 auf Port 8999 setzen"
 	sudo sed -i 's|8000|8999|' /etc/icecast2/icecast.xml
-	echo "Aufrufbeispiel: $AKTUELLEIP:8999"
+	log rohtext "Aufrufbeispiel: $AKTUELLEIP:8999"
 }
 
 ##
@@ -5926,6 +6067,7 @@ function installubuntu22() {
 	iinstall2 apt-utils
     iinstall2 libgdiplus
     iinstall2 libc6-dev
+	iinstall2 translate-shell
 
 	if [ $insterweitert = "yes" ]; then
 		iinstall2 libldns-dev
@@ -6247,7 +6389,7 @@ function serverinstall() {
 			monoinstall18
 			installfinish
 		else
-			echo "Abbruch"
+			log rohtext "Abbruch"
 		fi
 	fi
 	# dialog Aktionen Ende
@@ -6288,6 +6430,8 @@ function checkupgrade93() {
 
 		log rohtext "soll ich direkt ein Upgrade machen? ja [nein]";
 		read -r OSUPGRADESIX
+		#janein "$OSUPGRADESIX"
+		#OSUPGRADESIX="$JNTRANSLATOR"
 
 		if [ "$OSUPGRADESIX" = "" ]; then OSUPGRADESIX="nein"; fi
 		log info "Ihre Upgrade auswahl ist: $OSUPGRADESIX"
@@ -6494,10 +6638,10 @@ function createuser() {
 	EMAIL=$4
 	userid=$5
 
-	if [ -z "$VORNAME" ]; then echo "Der VORNAME fehlt!"; fi
-	if [ -z "$NACHNAME" ]; then echo "Der NACHNAME fehlt!"; fi
-	if [ -z "$PASSWORT" ]; then echo "Das PASSWORT fehlt!"; fi
-	if [ -z "$EMAIL" ]; then echo "Die EMAIL Adresse fehlt!"; fi
+	if [ -z "$VORNAME" ]; then log rohtext "Der VORNAME fehlt!"; fi
+	if [ -z "$NACHNAME" ]; then log rohtext "Der NACHNAME fehlt!"; fi
+	if [ -z "$PASSWORT" ]; then log rohtext "Das PASSWORT fehlt!"; fi
+	if [ -z "$EMAIL" ]; then log rohtext "Die EMAIL Adresse fehlt!"; fi
 
 	if screen -list | grep -q "RO"; then
 		# Befehlskette
@@ -6567,13 +6711,13 @@ function menucreateuser() {
 		ScreenLog
 	else
 		# Alle Aktionen ohne dialog
-		echo "Keine Menuelose Funktion" | exit
+		log rohtext "Keine Menuelose Funktion" | exit
 	fi # dialog Aktionen Ende
 
-	if [ -z "$VORNAME" ]; then echo "Der VORNAME fehlt!"; fi
-	if [ -z "$NACHNAME" ]; then echo "Der NACHNAME fehlt!"; fi
-	if [ -z "$PASSWORT" ]; then echo "Das PASSWORT fehlt!"; fi
-	if [ -z "$EMAIL" ]; then echo "Die EMAIL Adresse fehlt!"; fi
+	if [ -z "$VORNAME" ]; then log rohtext "Der VORNAME fehlt!"; fi
+	if [ -z "$NACHNAME" ]; then log rohtext "Der NACHNAME fehlt!"; fi
+	if [ -z "$PASSWORT" ]; then log rohtext "Das PASSWORT fehlt!"; fi
+	if [ -z "$EMAIL" ]; then log rohtext "Die EMAIL Adresse fehlt!"; fi
 
 	if screen -list | grep -q "RO"; then
 		# Befehlskette
@@ -6618,7 +6762,7 @@ function db_friends() {
 	databasename=$3
 	useruuid=$4
 
-	echo "Listet alle internen Freunde auf, aber keine hg freunde:"
+	log rohtext "Listet alle internen Freunde auf, aber keine hg freunde:"
 	mysqlrest "$username" "$password" "$databasename" "SELECT Friends.PrincipalID, CONCAT(UserAccounts.FirstName, ' ', UserAccounts.LastName) AS 'Friend' FROM Friends,UserAccounts WHERE Friends.Friend = '$useruuid' AND UserAccounts.PrincipalID = Friends.PrincipalID UNION SELECT Friends.Friend, CONCAT(UserAccounts.FirstName, ' ', UserAccounts.LastName) AS 'Friend'  FROM Friends, UserAccounts WHERE Friends.PrincipalID ='$useruuid' AND UserAccounts.PrincipalID = Friends.Friend"
 	echo "$result_mysqlrest"
 
@@ -6638,7 +6782,7 @@ function db_online() {
 	password=$2
 	databasename=$3
 
-	echo "Listet Online User auf:"
+	log rohtext "Listet Online User auf:"
 	mysqlrest "$username" "$password" "$databasename" "SELECT concat(FirstName, ' ', LastName) AS 'Online Users' FROM UserAccounts INNER JOIN GridUser ON UserAccounts.PrincipalID = GridUser.UserID WHERE GridUser.Online = 'True'"
 	echo "$result_mysqlrest"
 
@@ -6658,7 +6802,7 @@ function db_region() {
 	password=$2
 	databasename=$3
 
-	echo "Listet die Regionen in Ihrer Datenbank auf:"
+	log rohtext "Listet die Regionen in Ihrer Datenbank auf:"
 	mysqlrest "$username" "$password" "$databasename" "SELECT regionName as 'Regions' FROM regions"
 	echo "$result_mysqlrest"
 
@@ -6679,7 +6823,7 @@ function db_gridlist() {
 	password=$2
 	databasename=$3
 
-	echo "Listet die Grids aus Ihrer Datenbank auf:"
+	log rohtext "Listet die Grids aus Ihrer Datenbank auf:"
 	# SELECT * FROM 'GridUser' ORDER BY 'GridUser'.'UserID' ASC 
 	#mysqlrest "$username" "$password" "$databasename" "SELECT regionName as 'Regions' FROM regions"
 	mysqlrest "$username" "$password" "$databasename" "SELECT * FROM GridUser ORDER BY GridUser.UserID"
@@ -6704,7 +6848,7 @@ function db_inv_search() {
 	databasename=$3
     invname=$4
 
-	echo "Inventareinträge mit einem bestimmten Namen auflisten:"
+	log rohtext "Inventareinträge mit einem bestimmten Namen auflisten:"
 	mysqlrest "$username" "$password" "$databasename" "SELECT concat(inventoryName, ' - ',  replace(inventoryID, '-', '')) AS 'Inventory', concat(assets.name, ' - ', hex(assets.id)) AS 'Asset' FROM inventoryitems LEFT JOIN assets ON replace(assetID, '-', '')=hex(assets.id) WHERE inventoryName = '$invname'"
 	echo "$result_mysqlrest"
 
@@ -6739,9 +6883,9 @@ function db_ungenutzteobjekte() {
 	to_date="2021-1-01 0:00";
 	mysqlrest "$username" "$password" "$databasename" "SELECT name, id, create_time, access_time, CreatorID FROM assets WHERE access_time BETWEEN UNIX_TIMESTAMP('$from_date 0:00') AND UNIX_TIMESTAMP('$to_date 0:00')"
 
-	echo Objektname----------UUID---------Erstellungsdatum----------Zuletzt Aufgerufen-----------Ersteller
+	log rohtext Objektname----------UUID---------Erstellungsdatum----------Zuletzt Aufgerufen-----------Ersteller
 	echo "$result_mysqlrest"
-	echo "Objektname----------UUID---------Erstellungsdatum----------Zuletzt Aufgerufen-----------Ersteller" >UngenutzteObjekte.txt
+	log rohtext "Objektname----------UUID---------Erstellungsdatum----------Zuletzt Aufgerufen-----------Ersteller" >UngenutzteObjekte.txt
 	echo "$result_mysqlrest" >>UngenutzteObjekte.txt
 return 0
 }
@@ -6759,7 +6903,7 @@ function db_user_anzahl() {
 	password=$2
 	databasename=$3
 
-	echo "Zaehlt die Gesamtzahl der Benutzer:"
+	log rohtext "Zaehlt die Gesamtzahl der Benutzer:"
 	mysqlrest "$username" "$password" "$databasename" "SELECT count(PrincipalID) AS 'Users' FROM UserAccounts"
 	echo "$result_mysqlrest"
 
@@ -6779,7 +6923,7 @@ function db_user_online() {
 	password=$2
 	databasename=$3
 
-	echo "Users Online:"
+	log rohtext "Users Online:"
 	mysqlrest "$username" "$password" "$databasename" "SELECT count(UserID) AS 'Online' FROM GridUser WHERE Online = 'True'"
 	echo "$result_mysqlrest"
 
@@ -6799,7 +6943,7 @@ function db_region_parzelle() {
 	password=$2
 	databasename=$3
 
-	echo "Zaehlt die Regionen mit Parzellen:"
+	log rohtext "Zaehlt die Regionen mit Parzellen:"
 	mysqlrest "$username" "$password" "$databasename" "SELECT count(DISTINCT regionUUID) FROM parcels"
 	echo "$result_mysqlrest"
 
@@ -6819,7 +6963,7 @@ function db_region_parzelle_pakete() {
 	password=$2
 	databasename=$3
 
-	echo "Zaehlt die Gesamtzahl der Pakete:"
+	log rohtext "Zaehlt die Gesamtzahl der Pakete:"
 	mysqlrest "$username" "$password" "$databasename" "SELECT count(parcelUUID) AS 'Parcels' FROM parcels"
 	echo "$result_mysqlrest"
 
@@ -6839,7 +6983,7 @@ function db_region_anzahl_regionsnamen() {
 	password=$2
 	databasename=$3
 
-	echo "Zaehlt eindeutige Regionsnamen:"
+	log rohtext "Zaehlt eindeutige Regionsnamen:"
 	mysqlrest "$username" "$password" "$databasename" "SELECT count(DISTINCT regionName) AS 'Regions' FROM regions"
 	echo "$result_mysqlrest"
 
@@ -6859,7 +7003,7 @@ function db_region_anzahl_regionsid() {
 	password=$2
 	databasename=$3
 
-	echo "Zaehlt RegionIDs:"
+	log rohtext "Zaehlt RegionIDs:"
 	mysqlrest "$username" "$password" "$databasename" "SELECT count(UUID) AS 'Regions' FROM regions"
 	echo "$result_mysqlrest"
 
@@ -6879,7 +7023,7 @@ function db_inventar_no_assets() {
 	password=$2
 	databasename=$3
 
-	echo "Listet alle Inventareintraege auf, die auf nicht vorhandene Assets verweisen:"
+	log rohtext "Listet alle Inventareintraege auf, die auf nicht vorhandene Assets verweisen:"
 	mysqlrest "$username" "$password" "$databasename" "SELECT inventoryname, inventoryID, assetID FROM inventoryitems WHERE replace(assetID, '-', '') NOT IN (SELECT hex(id) FROM assets)"
 	echo "$result_mysqlrest"
 
@@ -6940,7 +7084,7 @@ function db_anzeigen_dialog() {
 		ScreenLog
 	else
 		# Alle Aktionen ohne dialog
-		echo "Keine Menuelose Funktion" | exit
+		log rohtext "Keine Menuelose Funktion" | exit
 	fi # dialog Aktionen Ende
 
 	# Abfrage
@@ -7007,7 +7151,7 @@ function db_tables_dialog() {
 		ScreenLog
 	else
 		# Alle Aktionen ohne dialog
-		echo "Keine Menuelose Funktion" | exit
+		log rohtext "Keine Menuelose Funktion" | exit
 	fi # dialog Aktionen Ende
 
 	mysqlrest "$username" "$password" "$databasename" "SHOW TABLES FROM $databasename"
@@ -7242,16 +7386,14 @@ function create_db() {
 	DBPASSWORT=$2
 	DATENBANKNAME=$3
 
-	echo "$(tput setaf 5)CREATE DATABASE: Datenbanken anlegen. $(tput sgr0)"
-	echo "$DATUM $(date +%H:%M:%S) CREATE DATABASE: Datenbanken anlegen" >>"/$STARTVERZEICHNIS/$DATEIDATUM$logfilename.log"
-	echo "$DBBENUTZER, ********, $DATENBANKNAME" >>"/$STARTVERZEICHNIS/$DATEIDATUM$logfilename.log"
+	log info "CREATE DATABASE: Datenbanken anlegen."
+	log info  "$DBBENUTZER, ********, $DATENBANKNAME"
 
 	# 2>/dev/null verhindert die Fehlerausgabe - mysql warning using a password on the command line interface can be insecure. disable.
 	mysql -u"$DBBENUTZER" -p"$DBPASSWORT" -e "CREATE DATABASE IF NOT EXISTS $DATENBANKNAME CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci" 2>/dev/null
 	# utf8mb4 COLLATE utf8mb4_unicode_ci
 
-	echo "$(tput setaf 5)CREATE DATABASE: Datenbanken $DATENBANKNAME wurde angelegt. $(tput sgr0)"
-	echo "$DATUM $(date +%H:%M:%S) CREATE DATABASE: Datenbanken $DATENBANKNAME wurde angelegt" >>"/$STARTVERZEICHNIS/$DATEIDATUM$logfilename.log"
+	log info "CREATE DATABASE: Datenbanken $DATENBANKNAME wurde angelegt."
 
 	# Eingabe Variablen loeschen
 	unset DBBENUTZER
@@ -7275,9 +7417,8 @@ function create_db_user() {
 	NEUERNAME=$3
 	NEUESPASSWORT=$4
 
-	echo "$(tput setaf 5)CREATE DATABASE USER: Datenbankbenutzer anlegen. $(tput sgr0)"
-	echo "$DATUM $(date +%H:%M:%S) CREATE DATABASE USER: Datenbankbenutzer anlegen" >>"/$STARTVERZEICHNIS/$DATEIDATUM$logfilename.log"
-	echo "$DBBENUTZER, ********, $NEUERNAME, ********" >>"/$STARTVERZEICHNIS/$DATEIDATUM$logfilename.log"
+	log info "CREATE DATABASE USER: Datenbankbenutzer anlegen."
+	log info  "$DBBENUTZER, ********, $NEUERNAME, ********"
 
 	mysql -u"$DBBENUTZER" -p"$DBPASSWORT" -e "CREATE USER '$NEUERNAME'@'localhost' IDENTIFIED BY '$NEUESPASSWORT'"
 	mysql -u"$DBBENUTZER" -p"$DBPASSWORT" -e "GRANT ALL PRIVILEGES ON * . * TO '$NEUERNAME'@'localhost'"
@@ -7305,10 +7446,9 @@ function delete_db() {
 	DBPASSWORT=$2
 	DATENBANKNAME=$3
 
-	echo "$(tput setaf 5)DELETE DATABASE: Datenbank loeschen. $(tput sgr0)"
-	echo "$DATUM $(date +%H:%M:%S) DELETE DATABASE: Datenbank loeschen" >>"/$STARTVERZEICHNIS/$DATEIDATUM$logfilename.log"
+	log info  "DELETE DATABASE: Datenbank loeschen"
+	log info  "$DBBENUTZER, ********, $DATENBANKNAME"
 
-	echo "$DBBENUTZER, ********, $DATENBANKNAME" >>"/$STARTVERZEICHNIS/$DATEIDATUM$logfilename.log"
 	# 2>/dev/null verhindert die Fehlerausgabe - mysql warning using a password on the command line interface can be insecure. disable.
 	mysql -u"$DBBENUTZER" -p"$DBPASSWORT" -e "DROP DATABASE $DATENBANKNAME" 2>/dev/null
 
@@ -8047,9 +8187,9 @@ function createdatabase() {
     DBPASSWD=$3
 
     # Abbruch bei fehlender Parameterangabe.
-    if [ "$DBNAME" = "" ]; then echo "Datenbankname fehlt"; exit 1; fi
-    if [ "$DBUSER" = "" ]; then echo "Benutzername fehlt"; exit 1; fi
-    if [ "$DBPASSWD" = "" ]; then echo "Datenbankpasswort fehlt"; exit 1; fi
+    if [ "$DBNAME" = "" ]; then log rohtext "Datenbankname fehlt"; exit 1; fi
+    if [ "$DBUSER" = "" ]; then log rohtext "Benutzername fehlt"; exit 1; fi
+    if [ "$DBPASSWD" = "" ]; then log rohtext "Datenbankpasswort fehlt"; exit 1; fi
 
     # Ausführung
     mysql -u "$DBUSER" -pDBPASSWD <<EOF
@@ -8080,10 +8220,10 @@ function createdbuser() {
 
 
     # Abbruch bei fehlender Parameterangabe.
-    if [ "$ROOTUSER" = "" ]; then echo "Root Datenbankbenutzername fehlt"; exit 1; fi
-    if [ "$ROOTPASSWD" = "" ]; then echo "Root Datenbankpasswort fehlt"; exit 1; fi
-    if [ "$NEWDBUSER" = "" ]; then echo "Neuer Benutzername fehlt"; exit 1; fi
-    if [ "$NEWDBPASSWD" = "" ]; then echo "Neues Datenbankpasswort fehlt"; exit 1; fi
+    if [ "$ROOTUSER" = "" ]; then log rohtext "Root Datenbankbenutzername fehlt"; exit 1; fi
+    if [ "$ROOTPASSWD" = "" ]; then log rohtext "Root Datenbankpasswort fehlt"; exit 1; fi
+    if [ "$NEWDBUSER" = "" ]; then log rohtext "Neuer Benutzername fehlt"; exit 1; fi
+    if [ "$NEWDBPASSWD" = "" ]; then log rohtext "Neues Datenbankpasswort fehlt"; exit 1; fi
     
 
     # Ausführung
@@ -8257,8 +8397,7 @@ USE $DATENBANKNAME
 UPDATE userprofile SET profilePartner = '$NEUERPARTNER' WHERE userprofile.useruuid = '$AVATARUUID'
 MEIN_ABFRAGE_ENDE
 
-	echo "$(tput setaf 5)SETPARTNER: $NEUERPARTNER ist jetzt Partner von $AVATARUUID. $(tput sgr0)"
-	echo "$DATUM $(date +%H:%M:%S) SETPARTNER: $NEUERPARTNER ist jetzt Partner von $AVATARUUID" >>"/$STARTVERZEICHNIS/$DATEIDATUM$logfilename.log"
+	log info "SETPARTNER: $NEUERPARTNER ist jetzt Partner von $AVATARUUID."
 	return 0
 }
 
@@ -8324,7 +8463,7 @@ function db_all_user() {
 	username=$1
 	password=$2
 	databasename=$3
-	echo "Daten von allen Benutzern anzeigen:"
+	log rohtext "Daten von allen Benutzern anzeigen:"
 	echo " "
 	mysqlrest "$username" "$password" "$databasename" "SELECT * FROM UserAccounts" # Alles holen und in die Variable result_mysqlrest schreiben.
 	log rohtext "$result_mysqlrest"
@@ -8368,7 +8507,7 @@ function db_all_user_dialog() {
 		ScreenLog
 	else
 		# Alle Aktionen ohne dialog
-		echo "Keine Menuelose Funktion" | exit
+		log rohtext "Keine Menuelose Funktion" | exit
 	fi # dialog Aktionen Ende
 
 	mysqlrest "$username" "$password" "$databasename" "SELECT * FROM UserAccounts" # Alles holen und in die Variable result_mysqlrest schreiben.
@@ -8390,7 +8529,7 @@ function db_all_uuid() {
 	username=$1
 	password=$2
 	databasename=$3
-	echo "UUID von allen Benutzern anzeigen:"
+	log rohtext "UUID von allen Benutzern anzeigen:"
 	echo " "
 	mysqlrest "$username" "$password" "$databasename" "SELECT PrincipalID FROM UserAccounts"
 	log rohtext "$result_mysqlrest"
@@ -8434,7 +8573,7 @@ function db_all_uuid_dialog() {
 		ScreenLog
 	else
 		# Alle Aktionen ohne dialog
-		echo "Keine Menuelose Funktion" | exit
+		log rohtext "Keine Menuelose Funktion" | exit
 	fi # dialog Aktionen Ende
 
 	mysqlrest "$username" "$password" "$databasename" "SELECT PrincipalID FROM UserAccounts"
@@ -8457,7 +8596,7 @@ function db_all_name() {
 	username=$1
 	password=$2
 	databasename=$3
-	echo "Vor- und Zuname von allen Benutzern anzeigen:"
+	log rohtext "Vor- und Zuname von allen Benutzern anzeigen:"
 	echo " "
 	mysqlrest "$username" "$password" "$databasename" "SELECT FirstName, LastName FROM UserAccounts"
 	log rohtext "$result_mysqlrest"
@@ -8501,7 +8640,7 @@ function db_all_name_dialog() {
 		ScreenLog
 	else
 		# Alle Aktionen ohne dialog
-		echo "Keine Menuelose Funktion" | exit
+		log rohtext "Keine Menuelose Funktion" | exit
 	fi # dialog Aktionen Ende
 
 	mysqlrest "$username" "$password" "$databasename" "SELECT FirstName, LastName FROM UserAccounts"
@@ -8525,7 +8664,7 @@ function db_user_data() {
 	databasename=$3
 	firstname=$4
 	lastname=$5
-	echo "Daten von einem Benutzer anzeigen:"
+	log rohtext "Daten von einem Benutzer anzeigen:"
 	echo " "
 	mysqlrest "$username" "$password" "$databasename" "SELECT * FROM UserAccounts WHERE firstname='$firstname' AND lastname LIKE '$lastname'"
 	log rohtext "$result_mysqlrest"
@@ -8574,7 +8713,7 @@ function db_user_data_dialog() {
 		ScreenLog
 	else
 		# Alle Aktionen ohne dialog
-		echo "Keine Menuelose Funktion" | exit
+		log rohtext "Keine Menuelose Funktion" | exit
 	fi # dialog Aktionen Ende
 
 	mysqlrest "$username" "$password" "$databasename" "SELECT * FROM UserAccounts WHERE firstname='$firstname' AND lastname LIKE '$lastname'"
@@ -8599,7 +8738,7 @@ function db_user_infos() {
 	databasename=$3
 	firstname=$4
 	lastname=$5
-	echo "UUID Vor- und Nachname sowie E-Mail Adresse von einem Benutzer anzeigen:"
+	log rohtext "UUID Vor- und Nachname sowie E-Mail Adresse von einem Benutzer anzeigen:"
 	echo " "
 	mysqlrest "$username" "$password" "$databasename" "SELECT PrincipalID, FirstName, LastName, Email FROM UserAccounts WHERE firstname='$firstname' AND lastname LIKE '$lastname'"
 	log rohtext "$result_mysqlrest"
@@ -8650,7 +8789,7 @@ function db_user_infos_dialog() {
 		ScreenLog
 	else
 		# Alle Aktionen ohne dialog
-		echo "Keine Menuelose Funktion" | exit
+		log rohtext "Keine Menuelose Funktion" | exit
 	fi # dialog Aktionen Ende
 
 	mysqlrest "$username" "$password" "$databasename" "SELECT PrincipalID, FirstName, LastName, Email FROM UserAccounts WHERE firstname='$firstname' AND lastname LIKE '$lastname'"
@@ -8674,7 +8813,7 @@ function db_user_uuid() {
 	databasename=$3
 	firstname=$4
 	lastname=$5
-	echo "UUID von einem Benutzer anzeigen:"
+	log rohtext "UUID von einem Benutzer anzeigen:"
 	echo " "
 	mysqlrest "$username" "$password" "$databasename" "SELECT PrincipalID FROM UserAccounts WHERE FirstName='$firstname' AND LastName='$lastname'"
 	log rohtext "$result_mysqlrest"
@@ -8723,7 +8862,7 @@ function db_user_uuid_dialog() {
 		ScreenLog
 	else
 		# Alle Aktionen ohne dialog
-		echo "Keine Menuelose Funktion" | exit
+		log rohtext "Keine Menuelose Funktion" | exit
 	fi # dialog Aktionen Ende
 
 	mysqlrest "$username" "$password" "$databasename" "SELECT PrincipalID FROM UserAccounts WHERE FirstName='$firstname' AND LastName='$lastname'"
@@ -8774,7 +8913,7 @@ function db_foldertyp_user() {
 	*) $foldertyp ;;
 	esac
 
-	echo "Alles vom Inventar des User, nach Verzeichnissnamen oder ID:"
+	log rohtext "Alles vom Inventar des User, nach Verzeichnissnamen oder ID:"
 	echo " "
 	mysqlrest "$username" "$password" "$databasename" "SELECT PrincipalID FROM UserAccounts WHERE FirstName='$firstname' AND LastName='$lastname'"
 	user_uuid="$result_mysqlrest"
@@ -9072,7 +9211,7 @@ function db_email_setincorrectuseroff_dialog() {
 		ScreenLog
 	else
 		# Alle Aktionen ohne dialog
-		echo "Keine Menuelose Funktion" | exit
+		log rohtext "Keine Menuelose Funktion" | exit
 	fi # dialog Aktionen Ende
 
 	ausnahmefirstname="GRID"
@@ -9101,7 +9240,7 @@ function db_setuserofline() {
 	firstname=$4
 	lastname=$5
 
-	echo "Setze User $firstname $lastname offline."
+	log rohtext "Setze User $firstname $lastname offline."
 	echo " "
 	mysqlrest "$username" "$password" "$databasename" "UPDATE UserAccounts SET active='-1' WHERE FirstName='$firstname' AND LastName='$lastname'"
 	echo "$result_mysqlrest"
@@ -9152,7 +9291,7 @@ function db_setuserofline_dialog() {
 		ScreenLog
 	else
 		# Alle Aktionen ohne dialog
-		echo "Keine Menuelose Funktion" | exit
+		log rohtext "Keine Menuelose Funktion" | exit
 	fi # dialog Aktionen Ende
 
 	mysqlrest "$username" "$password" "$databasename" "UPDATE UserAccounts SET active='-1' WHERE FirstName='$firstname' AND LastName='$lastname'"
@@ -9178,7 +9317,7 @@ function db_setuseronline() {
 	firstname=$4
 	lastname=$5
 
-	echo "Setze User $firstname $lastname online."
+	log rohtext "Setze User $firstname $lastname online."
 	echo " "
 	mysqlrest "$username" "$password" "$databasename" "UPDATE UserAccounts SET active='1' WHERE FirstName='$firstname' AND LastName='$lastname'"
 	echo "$result_mysqlrest"
@@ -9229,7 +9368,7 @@ function db_setuseronline_dialog() {
 		ScreenLog
 	else
 		# Alle Aktionen ohne dialog
-		echo "Keine Menuelose Funktion" | exit
+		log rohtext "Keine Menuelose Funktion" | exit
 	fi # dialog Aktionen Ende
 
 	mysqlrest "$username" "$password" "$databasename" "UPDATE UserAccounts SET active='1' WHERE FirstName='$firstname' AND LastName='$lastname'"
@@ -10227,8 +10366,7 @@ function conf_write() {
 	CONF_PFAD=$3
 	CONF_DATEINAME=$4
 	sed -i 's/'"$CONF_SEARCH"' =.*$/'"$CONF_SEARCH"' = '"$CONF_ERSATZ"'/' /"$CONF_PFAD"/"$CONF_DATEINAME"
-	echo "Einstellung $CONF_SEARCH auf Parameter $CONF_ERSATZ geaendert in Datei /$CONF_PFAD/$CONF_DATEINAME"
-	echo "$DATUM $(date +%H:%M:%S) CONF_WRITE: Einstellung $CONF_SEARCH auf Parameter $CONF_ERSATZ geaendert in Datei /$CONF_PFAD/$CONF_DATEINAME" >>"/$STARTVERZEICHNIS/$DATEIDATUM$logfilename.log"
+	log info "Einstellung $CONF_SEARCH auf Parameter $CONF_ERSATZ geaendert in Datei /$CONF_PFAD/$CONF_DATEINAME"
 	return 0
 }
 
@@ -10246,8 +10384,7 @@ function conf_read() {
 	CONF_PFAD=$2
 	CONF_DATEINAME=$3
 	sed -n -e '/'"$CONF_SEARCH"'/p' /"$CONF_PFAD"/"$CONF_DATEINAME"
-	echo "Einstellung $CONF_SEARCH suchen in Datei /$CONF_PFAD/$CONF_DATEINAME"
-	echo "$DATUM $(date +%H:%M:%S) CONF_WRITE: Einstellung $CONF_SEARCH suchen in Datei /$CONF_PFAD/$CONF_DATEINAME" >>"/$STARTVERZEICHNIS/$DATEIDATUM$logfilename.log"
+	log info "Einstellung $CONF_SEARCH suchen in Datei /$CONF_PFAD/$CONF_DATEINAME"
 	return 0
 }
 
@@ -10265,8 +10402,7 @@ function conf_delete() {
 	CONF_PFAD=$2
 	CONF_DATEINAME=$3
 	sed -i 's/'"$CONF_SEARCH"' =.*$/''/' /"$CONF_PFAD"/"$CONF_DATEINAME"
-	echo "Zeile $CONF_SEARCH geloescht in Datei /$CONF_PFAD/$CONF_DATEINAME"
-	echo "$DATUM $(date +%H:%M:%S) CONF_DELETE: Zeile $CONF_SEARCH geloescht in Datei /$CONF_PFAD/$CONF_DATEINAME" >>"/$STARTVERZEICHNIS/$DATEIDATUM$logfilename.log"
+	log info "Zeile $CONF_SEARCH geloescht in Datei /$CONF_PFAD/$CONF_DATEINAME"
 	return 0
 }
 
@@ -10375,27 +10511,27 @@ function newregionini() {
 	DNAAKTUELLEIP="$(wget -O - -q $SEARCHADRES)"
 
 	# Wohin soll die Datei geschrieben werden 1.
-    echo "Fuer welchen Simulator moechten sie die Regionskonfigurationsdatei erstellen sim1, sim2, sim..."
-    echo "Enter fuer das Hauptverzeichnis."
+    log rohtext "Fuer welchen Simulator moechten sie die Regionskonfigurationsdatei erstellen sim1, sim2, sim..."
+    log rohtext "Enter fuer das Hauptverzeichnis."
     read -r simname
 
-    echo "Regionsname [Welcome]"
+    log rohtext "Regionsname [Welcome]"
 	read -r regionsname
 	if [ -z "$regionsname" ]; then regionsname="Welcome"; fi
 
-	echo "Geben Sie ihre Server Adresse ein: (Beispiel meinserver.de oder 192.168.2.1) [$AKTUELLEIP]"
+	log rohtext "Geben Sie ihre Server Adresse ein: (Beispiel meinserver.de oder 192.168.2.1) [$AKTUELLEIP]"
 	read -r DNANAME
 	if [ -z "$DNANAME" ]; then DNANAME=$DNAAKTUELLEIP; fi
 
-	echo "Ort im Grid X Y [4500,4500]"
+	log rohtext "Ort im Grid X Y [4500,4500]"
 	read -r STARTPUNKT
 	if [ -z "$STARTPUNKT" ]; then STARTPUNKT="4500,4500"; fi
 
-	echo "Groesse der Region: 512"
+	log rohtext "Groesse der Region: 512"
 	read -r groesseregion
 	if [ -z "$groesseregion" ]; then groesseregion=512; fi
 
-	echo "InternalPort Beispiel: 9150"
+	log rohtext "InternalPort Beispiel: 9150"
 	read -r INTERNALPORT
 	if [ -z "$INTERNALPORT" ]; then INTERNALPORT=9150; fi
 
@@ -10825,15 +10961,15 @@ function osconfigstruktur() {
     # Ist die /"$STARTVERZEICHNIS"/$SIMDATEI vorhanden dann zuerst löschen
     if [ ! -f "/$STARTVERZEICHNIS/$SIMDATEI" ]; then
         #rm /"$STARTVERZEICHNIS"/$SIMDATEI
-        echo "$SIMDATEI Datei ist noch nicht vorhanden"
+        log rohtext "$SIMDATEI Datei ist noch nicht vorhanden"
     else
-        echo "Lösche vorhandene $SIMDATEI"
+        log rohtext "Lösche vorhandene $SIMDATEI"
         rm /"$STARTVERZEICHNIS"/$SIMDATEI
     fi
 
     # Ist die Datei CONFIGPFAD="OpenSimConfig"
 	if [ ! -f "/$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/" ]; then
-		echo "Lege robust an im Verzeichnis $ROBUSTVERZEICHNIS an"
+		log rohtext "Lege robust an im Verzeichnis $ROBUSTVERZEICHNIS an"
 		mkdir -p /"$STARTVERZEICHNIS"/$ROBUSTVERZEICHNIS/bin/config-include
         cp "$AKTUELLEVERZ"/$CONFIGPFAD/config-include/GridCommon.ini /"$STARTVERZEICHNIS"/$ROBUSTVERZEICHNIS/bin/config-include
         cp "$AKTUELLEVERZ"/$CONFIGPFAD/Robust.ini /"$STARTVERZEICHNIS"/$ROBUSTVERZEICHNIS/bin
@@ -10849,7 +10985,7 @@ function osconfigstruktur() {
 
 
 	for ((i = 1; i <= $2; i++)); do
-		echo "Ich lege gerade sim$i an!"
+		log rohtext "Ich lege gerade sim$i an!"
 		mkdir -p /"$STARTVERZEICHNIS"/sim"$i"/bin/config-include
         mkdir -p /"$STARTVERZEICHNIS"/sim"$i"/bin/Regions
         cp "$AKTUELLEVERZ"/$CONFIGPFAD/config-include/GridCommon.ini /"$STARTVERZEICHNIS"/sim"$i"/bin/config-include
@@ -10884,7 +11020,7 @@ function osconfigstruktur() {
 		fi
 
         flotsamconfig "/$STARTVERZEICHNIS/sim$i/bin/config-include/FlotsamCache.ini"
-		echo "Schreibe sim$i in $SIMDATEI"
+		log rohtext "Schreibe sim$i in $SIMDATEI"
         #echo "Schreibe sim$i in $SIMDATEI, legen sie bitte Datenbank $MYSQLDATABASE an."
 		# xargs sollte leerzeichen entfernen.
 		printf 'sim'"$i"'\t%s\n' | xargs >>/"$STARTVERZEICHNIS"/$SIMDATEI
@@ -10924,77 +11060,77 @@ function configabfrage() {
 
 	# Ausgabe Kopfzeilen
 	echo "$SCRIPTNAME Version $VERSION"
-	echo "Ihre aktuelle externe IP ist $AKTUELLEIP"
+	log rohtext "Ihre aktuelle externe IP ist $AKTUELLEIP"
 	echo " "
 	echo "##################################################################"
-	echo "########### ABBRUCH MIT DER TASTENKOMBINATION ####################"
-	echo "####################  STRG + C  ##################################"
+	log rohtext "########### ABBRUCH MIT DER TASTENKOMBINATION ####################"
+	log rohtext "####################  CTRL/STRG + C  #############################"
 	echo "##################################################################"
-	echo "##     Die Werte in den [Klammern] sind vorschläge              ##"
-	echo "##     und können mit Enter übernommen werden.                  ##"
+	log rohtext "##     Die Werte in den [Klammern] sind vorschläge              ##"
+	log rohtext "##     und können mit Enter übernommen werden.                  ##"
 	echo "##################################################################"
 	echo " "
-	echo "Wieviele Konfigurationen darf ich ihnen schreiben? [5]"
+	log rohtext "Wieviele Konfigurationen darf ich ihnen schreiben? [5]"
 	read -r CONFIGANZAHL
 	if [ "$CONFIGANZAHL" = "" ]; then CONFIGANZAHL="5"; fi
-	echo "Ihre Anzahl ist $CONFIGANZAHL"
+	log rohtext "Ihre Anzahl ist $CONFIGANZAHL"
 	echo "##################################################################"
 
-	echo "Wohin darf ich diese schreiben? [$STARTVERZEICHNIS]"
+	log rohtext "Wohin darf ich diese schreiben? [$STARTVERZEICHNIS]"
 	read -r VERZEICHNISABFRAGE
-	if [ "$VERZEICHNISABFRAGE" = "" ]; then echo "Ihr Konfigurationsordner ist $STARTVERZEICHNIS"; else STARTVERZEICHNIS="$VERZEICHNISABFRAGE";fi
+	if [ "$VERZEICHNISABFRAGE" = "" ]; then log rohtext "Ihr Konfigurationsordner ist $STARTVERZEICHNIS"; else STARTVERZEICHNIS="$VERZEICHNISABFRAGE";fi
 	echo "##################################################################"
 
-	echo "Ihre Server Adresse? [$AKTUELLEIP]"
+	log rohtext "Ihre Server Adresse? [$AKTUELLEIP]"
 	read -r BASEHOSTNAME
 	if [ "$BASEHOSTNAME" = "" ]; then BASEHOSTNAME="$AKTUELLEIP"; fi
-	echo "Ihre Server Adresse ist $BASEHOSTNAME"
+	log rohtext "Ihre Server Adresse ist $BASEHOSTNAME"
 	echo "##################################################################"
 
-	echo "Ihr SimulatorPort startet bei: [9010]"
+	log rohtext "Ihr SimulatorPort startet bei: [9010]"
 	read -r SIMULATORPORT
 	if [ "$SIMULATORPORT" = "" ]; then SIMULATORPORT="9010"; fi
-	echo "Ihr SimulatorPort startet bei: $SIMULATORPORT"
+	log rohtext "Ihr SimulatorPort startet bei: $SIMULATORPORT"
 	echo "##################################################################"
 
-	echo "Bitte geben sie den mySQL/mariaDB Benutzernamen ihrer Datenbank an [opensim]:"
+	log rohtext "Bitte geben sie den mySQL/mariaDB Benutzernamen ihrer Datenbank an [opensim]:"
 	read -r MYSQLUSER
 	if [ "$MYSQLUSER" = "" ]; then MYSQLUSER="opensim"; fi
-	echo "Ihr Datenbank Benutzername lautet: $MYSQLUSER"
+	log rohtext "Ihr Datenbank Benutzername lautet: $MYSQLUSER"
 	echo "##################################################################"
 
-	echo "Bitte geben sie das Passwort ihrer mySQL/mariaDB Datenbank an [opensim]:"
+	log rohtext "Bitte geben sie das Passwort ihrer mySQL/mariaDB Datenbank an [opensim]:"
 	read -r MYSQLPASSWORD
 	if [ "$MYSQLPASSWORD" = "" ]; then MYSQLPASSWORD="opensim"; fi
-	echo "Ihr Passwort ihrer Datenbank lautet: $MYSQLPASSWORD"
+	log rohtext "Ihr Passwort ihrer Datenbank lautet: $MYSQLPASSWORD"
 	echo "##################################################################"
 
-	echo "Datenbanken jetzt direkt anlegen [nein]:"
+	log rohtext "Datenbanken jetzt direkt anlegen [nein]:"
 	read -r CREATEDATABASE
 	if [ "$CREATEDATABASE" = "" ]; then CREATEDATABASE="nein"; fi
 
 	if [ "$CREATEDATABASE" = "nein" ]; then
-		echo "Bitte geben sie den Datenbanknamen an [opensim]:"
+		log rohtext "Bitte geben sie den Datenbanknamen an [opensim]:"
 		read -r MYSQLDATABASE
 		if [ "$MYSQLDATABASE" = "" ]; then MYSQLDATABASE="opensim"; fi
-		echo "Ihr Datenbanknamen lautet: $MYSQLDATABASE"
+		log rohtext "Ihr Datenbanknamen lautet: $MYSQLDATABASE"
 		CREATEROBUSTDATABASENAME="$MYSQLDATABASE"
 		echo "##################################################################"
 	fi
 
 	if [ "$CREATEDATABASE" = "ja" ]; then
 		### OpenSim Datenbanken
-		echo "Name der Datenbanken [sim]:"
+		log rohtext "Name der Datenbanken [sim]:"
 		read -r CREATEDATABASENAME	
 		if [ "$CREATEDATABASENAME" = "" ]; then CREATEDATABASENAME="sim"; fi
 
 		### Robust Datenbank
-		echo "Robust Datenbank anlegen [nein]:"
+		log rohtext "Robust Datenbank anlegen [nein]:"
 		read -r CREATEROBUSTDATABASE
 		if [ "$CREATEROBUSTDATABASE" = "" ]; then CREATEROBUSTDATABASE="nein"; fi
 		
 		if [ "$CREATEROBUSTDATABASE" = "ja" ]; then
-			echo "Name der Robust Datenbank [robust]:"
+			log rohtext "Name der Robust Datenbank [robust]:"
 			read -r CREATEROBUSTDATABASENAME
 			if [ "$CREATEROBUSTDATABASENAME" = "" ]; then CREATEROBUSTDATABASENAME="robust"; fi
 			createdatabase $CREATEROBUSTDATABASENAME $MYSQLUSER $MYSQLPASSWORD
@@ -11004,41 +11140,41 @@ function configabfrage() {
 
 	# Der Grid Master Avatar
 
-	echo "Bitte geben sie den Vornamen ihres Grid Besitzer/Master Avatar an [John]:"
+	log rohtext "Bitte geben sie den Vornamen ihres Grid Besitzer/Master Avatar an [John]:"
 	read -r FIRSTNAMEMASTER
 	if [ "$FIRSTNAMEMASTER" = "" ]; then FIRSTNAMEMASTER="John"; fi
-	echo "Der Vornamen ihres Grid Besitzer/Master Avatar lautet: $FIRSTNAMEMASTER"
+	log rohtext "Der Vornamen ihres Grid Besitzer/Master Avatar lautet: $FIRSTNAMEMASTER"
 	echo "##################################################################"
 
-	echo "Bitte geben sie den Nachnamen ihres Grid Besitzer/Master Avatar an [Doe]:"
+	log rohtext "Bitte geben sie den Nachnamen ihres Grid Besitzer/Master Avatar an [Doe]:"
 	read -r LASTNAMEMASTER
 	if [ "$LASTNAMEMASTER" = "" ]; then LASTNAMEMASTER="Doe"; fi
-	echo "Der Nachnamen ihres Grid Besitzer/Master Avatar lautet: $LASTNAMEMASTER"
+	log rohtext "Der Nachnamen ihres Grid Besitzer/Master Avatar lautet: $LASTNAMEMASTER"
 	echo "##################################################################"
 
-	echo "Bitte geben sie das Passwort ihres Grid Besitzer/Master Avatar an [opensim]:"
+	log rohtext "Bitte geben sie das Passwort ihres Grid Besitzer/Master Avatar an [opensim]:"
 	read -r PASSWDNAMEMASTER
 	if [ "$PASSWDNAMEMASTER" = "" ]; then PASSWDNAMEMASTER="opensim"; fi
-	echo "Das Passwort ihres Grid Besitzer/Master Avatar lautet: $PASSWDNAMEMASTER"
+	log rohtext "Das Passwort ihres Grid Besitzer/Master Avatar lautet: $PASSWDNAMEMASTER"
 	echo "##################################################################"
 
-	echo "Bitte geben sie die E-Mail ihres Grid Besitzer/Master Avatar an [john@doe.com]:"
+	log rohtext "Bitte geben sie die E-Mail ihres Grid Besitzer/Master Avatar an [john@doe.com]:"
 	read -r EMAILNAMEMASTER
 	if [ "$EMAILNAMEMASTER" = "" ]; then EMAILNAMEMASTER="john@doe.com"; fi
-	echo "Die E-Mail ihres Grid Besitzer/Master Avatar lautet: $EMAILNAMEMASTER"
+	log rohtext "Die E-Mail ihres Grid Besitzer/Master Avatar lautet: $EMAILNAMEMASTER"
 	echo "##################################################################"
 
 	UUIDNAMEMASTER=$(uuidgen)
-	echo "Bitte geben sie die UUID ihres Grid Besitzer/Master Avatar an [$UUIDNAMEMASTER]:"
+	log rohtext "Bitte geben sie die UUID ihres Grid Besitzer/Master Avatar an [$UUIDNAMEMASTER]:"
 	read -r UUIDNAMEMASTER
 	if [ "$UUIDNAMEMASTER" = "" ]; then UUIDNAMEMASTER="$UUIDNAMEMASTER"; fi
-	echo "Die UUID ihres Grid Besitzer/Master Avatar lautet: $UUIDNAMEMASTER"
+	log rohtext "Die UUID ihres Grid Besitzer/Master Avatar lautet: $UUIDNAMEMASTER"
 	echo "##################################################################"
 
-	echo "Bitte geben sie das Estate ihres Grid Besitzer/Master Avatar an [MyGrid Estate]:"
+	log rohtext "Bitte geben sie das Estate ihres Grid Besitzer/Master Avatar an [MyGrid Estate]:"
 	read -r ESTATENAMEMASTER
 	if [ "$ESTATENAMEMASTER" = "" ]; then ESTATENAMEMASTER="MyGrid Estate"; fi
-	echo "Das Estate ihres Grid Besitzer/Master Avatar lautet: $ESTATENAMEMASTER"
+	log rohtext "Das Estate ihres Grid Besitzer/Master Avatar lautet: $ESTATENAMEMASTER"
 	echo "##################################################################"
 
 	MODELNAMEMASTER=""
@@ -11056,34 +11192,34 @@ function configabfrage() {
 
 	#echo "##################################################################"
 
-	echo "Bitte geben sie den Namen ihrer Startregion an [Welcome]:"
+	log rohtext "Bitte geben sie den Namen ihrer Startregion an [Welcome]:"
 	read -r STARTREGION
 	if [ "$STARTREGION" = "" ]; then STARTREGION="Welcome"; fi
-	echo "Der Name ihrer Startregion lautet: $STARTREGION"
+	log rohtext "Der Name ihrer Startregion lautet: $STARTREGION"
 	echo "##################################################################"
 
-	echo "Bitte geben sie den Namen ihres Grids an [MyGrid]:"
+	log rohtext "Bitte geben sie den Namen ihres Grids an [MyGrid]:"
 	read -r SIMULATORGRIDNAME
 	if [ "$SIMULATORGRIDNAME" = "" ]; then SIMULATORGRIDNAME="MyGrid"; fi
-	echo "Der Name ihrers Grids lautet: $SIMULATORGRIDNAME"
+	log rohtext "Der Name ihrers Grids lautet: $SIMULATORGRIDNAME"
 	echo "##################################################################"
 
-	echo "Bitte geben sie den Grid-Nickname an [MG]:"
+	log rohtext "Bitte geben sie den Grid-Nickname an [MG]:"
 	read -r SIMULATORGRIDNICK
 	if [ "$SIMULATORGRIDNICK" = "" ]; then SIMULATORGRIDNICK="MG"; fi
-	echo "Der Grid-Nickname lautet: $SIMULATORGRIDNICK"
+	log rohtext "Der Grid-Nickname lautet: $SIMULATORGRIDNICK"
 	echo "##################################################################"
 
-	echo "Möchten sie die Regionskonfigurationen direkt Aktivieren ja/nein [nein]:"
+	log rohtext "Möchten sie die Regionskonfigurationen direkt Aktivieren ja/nein [nein]:"
 	read -r REGIONAKTIV
 	if [ "$REGIONAKTIV" = "" ]; then REGIONAKTIV="nein"; fi
-	echo "Sie haben ausgewählt: $REGIONAKTIV"
+	log rohtext "Sie haben ausgewählt: $REGIONAKTIV"
 	echo "##################################################################"
 
-	echo "Möchten sie die Skriptkonfigurationen Aktivieren ja/nein [nein]:"
+	log rohtext "Möchten sie die Skriptkonfigurationen Aktivieren ja/nein [nein]:"
 	read -r SKRIPTAKTIV
 	if [ "$SKRIPTAKTIV" = "" ]; then SKRIPTAKTIV="nein"; fi
-	echo "Sie haben ausgewählt: $SKRIPTAKTIV"
+	log rohtext "Sie haben ausgewählt: $SKRIPTAKTIV"
 	echo "##################################################################"
 
 	# Weitere Auswertungen
@@ -11388,7 +11524,7 @@ function oszipupgrade() {
 		if [[ $antwort = 1 ]]; then exit; fi	
 	else
 		# Alle Aktionen ohne dialog
-		echo "Keine Menuelose Funktion vorhanden!" | exit
+		log rohtext "Keine Menuelose Funktion vorhanden!" | exit
 		#VERSIONSNUMMER=$1
 	fi
 	# dialog Aktionen Ende
@@ -11431,30 +11567,30 @@ function oszipupgrade() {
 function ConfigSet() {
     datei=$1
 
-    echo "Loesche $datei.ini.cnf"
+    log rohtext "Loesche $datei.ini.cnf"
     rm "$datei.ini.cnf"
 
-    echo "Kopiere $datei.ini nach $datei.ini.cnf"
+    log rohtext "Kopiere $datei.ini nach $datei.ini.cnf"
     cp "$datei.ini" "$datei.ini.cnf"
 
-    echo "Loesche alle Zeilen mit ;"
+    log rohtext "Loesche alle Zeilen mit ;"
     #sed -i -e '/string/d' input
     sed -i -e '/;/d' "$datei.ini.cnf"
 
-    echo "Fuehrende Leerzeichen (Leerzeichen, Tabulatoren) vor jeder Zeile loeschen"
+    log rohtext "Fuehrende Leerzeichen (Leerzeichen, Tabulatoren) vor jeder Zeile loeschen"
     sed -i -e 's/^[ \t]*//' "$datei.ini.cnf"
 
-    echo "Loesche alle leeren Zeilen"
+    log rohtext "Loesche alle leeren Zeilen"
     sed -i -e '/^$/d' "$datei.ini.cnf"
 
-    echo "Ersetze alle doppelten Hochstriche gegen einfache."
+    log rohtext "Ersetze alle doppelten Hochstriche gegen einfache."
     sed -i -e s/\"/\'/g "$datei.ini.cnf"
 
-    echo "Einstrich Sonderzeichen an den anfang und ende jeder Zeile haengen."
+    log rohtext "Einstrich Sonderzeichen an den anfang und ende jeder Zeile haengen."
     sed -i -e s/^/\"/ "$datei.ini.cnf"
     sed -i -e s/$/\"/g "$datei.ini.cnf"
 
-    echo "Ein Array daraus machen."
+    log rohtext "Ein Array daraus machen."
     sed -i -e 1 i\$dateiConfigList=\( "$datei.ini.cnf"
     sed -i -e '$a)' "$datei.ini.cnf"
 }
@@ -11483,10 +11619,10 @@ function AutoInstall() {
 	if [ "$ubuntuCodename" = "jammy" ]; then MYSERVER="Ubuntu 22 jammy"; fi
 	if [ "$ubuntuCodename" = "Bionic" ]; then MYSERVER="Ubuntu 18 Bionic"; fi
 
-    echo "Herzlich willkommen zur Grundinstallation ihreres Servers."
-    echo "Möchten sie eine Grundinstallation ihres $MYSERVER Servers, "
+    log rohtext "Herzlich willkommen zur Grundinstallation ihreres Servers."
+    log rohtext "Möchten sie eine Grundinstallation ihres $MYSERVER Servers, "
 
-    echo "damit alle für den Betrieb benötigten Linux Pakete installiert werden ja/nein: [nein]"
+    log rohtext "damit alle für den Betrieb benötigten Linux Pakete installiert werden ja/nein: [nein]"
 	read -r installation
 	if [ "$installation" = "" ]; then installation="nein"; fi
 
@@ -11508,7 +11644,7 @@ function AutoInstall() {
             monoinstall18
             installfinish
         else
-            echo "Ich erkenne das Betriebssystem nicht"
+            log rohtext "Ich erkenne das Betriebssystem nicht"
         fi
     fi
 }
@@ -11677,13 +11813,13 @@ function osslEnableConfigSet() {
     "Allow_osTeleportObject =          ${OSSL|osslParcelO}ESTATE_MANAGER,ESTATE_OWNER"
     "Allow_osSetContentType =          ${OSSL|osslParcelOG}ESTATE_MANAGER,ESTATE_OWNER"
     )
-    echo "Alte $osslEnabledatei Datei loeschen falls vorhanden."
+    log rohtext "Alte $osslEnabledatei Datei loeschen falls vorhanden."
     rm -f $osslEnabledatei # || echo "Keine $osslEnabledatei Datei vorhanden."
 
-    echo "$osslEnabledatei schreiben"
+    log rohtext "$osslEnabledatei schreiben"
     printf '%s\n' "${OsslEnableConfigList[@]}" > $osslEnabledatei
 
-    echo "Tausche Hochstriche aus."
+    log rohtext "Tausche Hochstriche aus."
     sed -i -e s/\'/\"/g "$GridCommondatei"
 }
 
@@ -11793,12 +11929,12 @@ function systeminformation() {
  # todo: nichts.
 ##
 function info() {
-	echo "$(tput setab 4) Server Name: ${HOSTNAME}"
-	echo " Bash Version: ${BASH_VERSION}"
-	echo " Server IP: ${AKTUELLEIP}"
-	echo " MONO THREAD Einstellung: ${MONO_THREADS_PER_CPU}"
-	echo " Spracheinstellung: ${LANG} $(tput sgr 0)"
-	echo " $(screen --version)"
+	log rohtext "$(tput setab 4) Server Name: ${HOSTNAME}"
+	log rohtext " Bash Version: ${BASH_VERSION}"
+	log rohtext " Server IP: ${AKTUELLEIP}"
+	log rohtext " MONO THREAD Einstellung: ${MONO_THREADS_PER_CPU}"
+	log rohtext " Spracheinstellung: ${LANG} $(tput sgr 0)"
+	log rohtext " $(screen --version)"
 	who -b
 	return 0
 }
@@ -11918,18 +12054,18 @@ function robustbackup() {
 ##  
 function backupdatum() {
 	# Ist die Datei backup.tmp vorhanden?
-	if [ -f /tmp/backup.tmp ]; then echo "Datei ist vorhanden!"; fi
+	if [ -f /tmp/backup.tmp ]; then log rohtext "Datei ist vorhanden!"; fi
 	# Beispiel Text in der backup.tmp Datei - 30.06.2022
 
 	# Heutiges Datum steht in $DATUM
-	echo "Heute ist der: $DATUM"
+	log rohtext "Heute ist der: $DATUM"
 
 	BACKUPDATUM=()
 	while IFS= read -r line; do BACKUPDATUM+=("$line"); done </tmp/backup.tmp
 	myDATUM=$(echo "${BACKUPDATUM[@]}" | sed -n '1p')
 
-	if [ "$myDATUM" = "$DATUM" ]; then echo "Datum ist gleich! $myDATUM - $DATUM"; fi
-	if [ ! "$myDATUM" = "$DATUM" ]; then echo "Datum ist nicht gleich! $myDATUM - $DATUM"; fi
+	if [ "$myDATUM" = "$DATUM" ]; then log rohtext "Datum ist gleich! $myDATUM - $DATUM"; fi
+	if [ ! "$myDATUM" = "$DATUM" ]; then log rohtext "Datum ist nicht gleich! $myDATUM - $DATUM"; fi
 
 	# Wenn das Datum gleich ist Grid herunterfahren.
 	# Backup der Griddatenbank machen.
@@ -11960,7 +12096,7 @@ function senddata() {
 	# USERNAMEN="root"
 	# SERVERADRESS="192.168.2.100"
 
-	echo " Ganzes Verzeichnis komprimiert an neuen Server im gleichen Verzeichnis senden."
+	log rohtext " Ganzes Verzeichnis komprimiert an neuen Server im gleichen Verzeichnis senden."
 
 	# Ganzes Verzeichnis(-r) komprimiert(-C) an neuen Server senden.
 	#scp -r -C "$SENDEVERZEICHNIS" "$USERNAMEN"@"$SERVERADRESS":"$SENDEVERZEICHNIS"
@@ -14063,7 +14199,10 @@ case $KOMMANDO in
 	icecastrestart) icecastrestart ;;
 	icecastversion) icecastversion ;;
 	icecastinstall) icecastinstall ;;
-	icecastconfig) icecastconfig ;;	
+	icecastconfig) icecastconfig ;;
+	osmtranslateinstall) osmtranslateinstall ;;
+	osmtranslate) osmtranslate "$2" ;;
+	janein) janein "$2" ;;
 	hda | hilfedirektaufruf | hilfemenudirektaufrufe) hilfemenudirektaufrufe ;;
 	h) newhelp ;;
 	V | v) echo "$SCRIPTNAME $VERSION" ;;
