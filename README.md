@@ -192,6 +192,9 @@ Crontab zum prüfen noch einmal anzeigen:
 
 ## TODO und Informationen
 
+     09.07.2023 Translate test 126 Languages.
+     Create new Config.
+
 NEU
 
 OpenSim 0.9.3.0 dotnet 6.
