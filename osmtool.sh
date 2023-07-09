@@ -36,7 +36,7 @@
 ###########################################################################
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.913" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.921" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 ##
@@ -13190,30 +13190,56 @@ function hauptmenu() {
 	BACKTITLE="opensimMULTITOOL"
 	TITLE="Hauptmenu"
 	MENU="opensimMULTITOOL $VERSION"
+
+	OpenSimRestart=$(trans -brief -no-warn $OSMTRANS "OpenSim Restart")
+	OpenSimAutostopp=$(trans -brief -no-warn $OSMTRANS "OpenSim Autostopp")
+	OpenSimAutostart=$(trans -brief -no-warn $OSMTRANS "OpenSim Autostart")
+
+	SimulatorStop=$(trans -brief -no-warn $OSMTRANS "Einzelner Simulator Stop")
+	SimulatorStart=$(trans -brief -no-warn $OSMTRANS "Einzelner Simulator Start")
+
+	Accountanlegen=$(trans -brief -no-warn $OSMTRANS "Benutzer Account anlegen")
+	Parzellenentfernen=$(trans -brief -no-warn $OSMTRANS "Parzellen entfernen")
+	Objektentfernen=$(trans -brief -no-warn $OSMTRANS "Objekt entfernen")
+
+	Systeminformationen=$(trans -brief -no-warn $OSMTRANS "Systeminformationen")
+	SimInformationen=$(trans -brief -no-warn $OSMTRANS "Sim Informationen")
+	ScreenListe=$(trans -brief -no-warn $OSMTRANS "Screen Liste")
+	ServerlaufzeitundNeustart=$(trans -brief -no-warn $OSMTRANS "Server laufzeit und Neustart")
+
+	Avatarmennu=$(trans -brief -no-warn $OSMTRANS "Avatarmennu")
+	WeitereFunktionen=$(trans -brief -no-warn $OSMTRANS "Weitere Funktionen")
+	Dateimennu=$(trans -brief -no-warn $OSMTRANS "Dateimennu")
+	mySQLmenu=$(trans -brief -no-warn $OSMTRANS "mySQLmenu")
+	BuildFunktionen=$(trans -brief -no-warn $OSMTRANS "Build Funktionen")
+	ExpertenFunktionen=$(trans -brief -no-warn $OSMTRANS "Experten Funktionen")
+
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
-		OPTIONS=("OpenSim Restart" ""
-			"OpenSim Autostopp" ""
-			"OpenSim Autostart" ""
+		OPTIONS=("$OpenSimRestart" ""
+			"$OpenSimAutostopp" ""
+			"$OpenSimAutostart" ""
 			"--------------------------" ""
-			"Einzelner Simulator Stop" ""
-			"Einzelner Simulator Start" ""
+			"$SimulatorStop" ""
+			"$SimulatorStart" ""
 			"--------------------------" ""
-			"Benutzer Account anlegen" ""
-			"Parzellen entfernen" ""
-			"Objekt entfernen" ""
+			"$Accountanlegen" ""
+			"$Parzellenentfernen" ""
+			"$Objektentfernen" ""
 			"--------------------------" ""
-			"Systeminformationen" ""
-			"Sim Informationen" ""
-			"Screen Liste" ""
-			"Server laufzeit und Neustart" ""
+			"$Systeminformationen" ""
+			"$SimInformationen" ""
+			"$ScreenListe" ""
+			"$ServerlaufzeitundNeustart" ""
 			"----------Menu------------" ""
-			"Avatarmennu" ""
-			"Weitere Funktionen" ""
-			"Dateimennu" ""
-			"mySQLmenu" ""
-			"Build Funktionen" ""
-			"Experten Funktionen" "")
+			"$Avatarmennu" ""
+			"$WeitereFunktionen" ""
+			"$Dateimennu" ""
+			"$mySQLmenu" ""
+			"$BuildFunktionen" ""
+			"$ExpertenFunktionen" "")
+
+		#osmtranslate $OPTIONS
 
 		mauswahl=$(dialog --backtitle "$BACKTITLE" --title "$TITLE" --help-button --defaultno --menu "$MENU" $HEIGHT $WIDTH $CHOICE_HEIGHT "${OPTIONS[@]}" 2>&1 >/dev/tty)
 		antwort=$?
@@ -13221,29 +13247,29 @@ function hauptmenu() {
 		dialog --clear
 		ScreenLog
 
-		if [[ $mauswahl = "OpenSim Autostart" ]]; then menuautostart; fi
-		if [[ $mauswahl = "OpenSim Autostopp" ]]; then menuautostop; fi
-		if [[ $mauswahl = "OpenSim Restart" ]]; then menuautorestart; fi
+		if [[ $mauswahl = "$OpenSimRestart" ]]; then menuautostart; fi
+		if [[ $mauswahl = "$OpenSimAutostopp" ]]; then menuautostop; fi
+		if [[ $mauswahl = "$OpenSimAutostart" ]]; then menuautorestart; fi
 
-		if [[ $mauswahl = "Einzelner Simulator Stop" ]]; then menuosstop; fi
-		if [[ $mauswahl = "Einzelner Simulator Start" ]]; then menuosstart; fi
+		if [[ $mauswahl = "$SimulatorStop" ]]; then menuosstop; fi
+		if [[ $mauswahl = "$SimulatorStart" ]]; then menuosstart; fi
 		#if [[ $mauswahl = "Einzelner Simulator Status" ]]; then menuworks; fi
 		#if [[ $mauswahl = "Alle Simulatoren Status" ]]; then menuwaslauft; fi
-		if [[ $mauswahl = "Sim Informationen" ]]; then menuinfo; fi
-		if [[ $mauswahl = "Systeminformationen" ]]; then systeminformation; fi
+		if [[ $mauswahl = "$SimInformationen" ]]; then menuinfo; fi
+		if [[ $mauswahl = "$Systeminformationen" ]]; then systeminformation; fi
 
-		if [[ $mauswahl = "Screen Liste" ]]; then screenlist; fi
-		if [[ $mauswahl = "Parzellen entfernen" ]]; then menulandclear; fi
-		if [[ $mauswahl = "Objekt entfernen" ]]; then menuassetdel; fi
-		if [[ $mauswahl = "Benutzer Account anlegen" ]]; then menucreateuser; fi
-		if [[ $mauswahl = "Server laufzeit und Neustart" ]]; then rebootdatum; fi
+		if [[ $mauswahl = "$ScreenListe" ]]; then screenlist; fi
+		if [[ $mauswahl = "$Parzellenentfernen" ]]; then menulandclear; fi
+		if [[ $mauswahl = "$Objektentfernen" ]]; then menuassetdel; fi
+		if [[ $mauswahl = "$Accountanlegen" ]]; then menucreateuser; fi
+		if [[ $mauswahl = "$ServerlaufzeitundNeustart" ]]; then rebootdatum; fi
 
-		if [[ $mauswahl = "Dateimennu" ]]; then dateimenu; fi
-		if [[ $mauswahl = "mySQLmenu" ]]; then mySQLmenu; fi
-		if [[ $mauswahl = "Weitere Funktionen" ]]; then funktionenmenu; fi
-		if [[ $mauswahl = "Experten Funktionen" ]]; then expertenmenu; fi
-		if [[ $mauswahl = "Build Funktionen" ]]; then buildmenu; fi
-		if [[ $mauswahl = "Avatarmennu" ]]; then avatarmenu; fi
+		if [[ $mauswahl = "$Dateimennu" ]]; then dateimenu; fi
+		if [[ $mauswahl = "$mySQLmenu" ]]; then mySQLmenu; fi
+		if [[ $mauswahl = "$WeitereFunktionen" ]]; then funktionenmenu; fi
+		if [[ $mauswahl = "$ExpertenFunktionen" ]]; then expertenmenu; fi
+		if [[ $mauswahl = "$BuildFunktionen" ]]; then buildmenu; fi
+		if [[ $mauswahl = "$Avatarmennu" ]]; then avatarmenu; fi
 
 		if [[ $antwort = 2 ]]; then hilfemenu; fi
 		if [[ $antwort = 1 ]]; then exit; fi
@@ -13269,20 +13295,33 @@ function hilfemenu() {
 	TITLE="Hilfemenu"
 	MENU="opensimMULTITOOL $VERSION"
 
+	Hilfe=$(trans -brief -no-warn $OSMTRANS "Hilfe")
+	Konsolenhilfe=$(trans -brief -no-warn $OSMTRANS "Konsolenhilfe")
+	Kommandohilfe=$(trans -brief -no-warn $OSMTRANS "Kommandohilfe")
+	RobustCommands=$(trans -brief -no-warn $OSMTRANS "RobustCommands")
+	OpenSimCommands=$(trans -brief -no-warn $OSMTRANS "OpenSimCommands")
+	MoneyServerCommands=$(trans -brief -no-warn $OSMTRANS "MoneyServerCommands")
+	Konfigurationlesen=$(trans -brief -no-warn $OSMTRANS "Konfiguration lesen")
+
+	Passwortgenerator=$(trans -brief -no-warn $OSMTRANS "Passwortgenerator")
+	Kalender=$(trans -brief -no-warn $OSMTRANS "Kalender")
+
+	Hauptmenu=$(trans -brief -no-warn $OSMTRANS "Hauptmenu")
+
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
-		OPTIONS=("Hilfe" ""
-			"Konsolenhilfe" ""
-			"Kommandohilfe" ""
-			"RobustCommands" ""
-			"OpenSimCommands" ""
-			"MoneyServerCommands" ""
-			"Konfiguration lesen" ""
+		OPTIONS=("$Hilfe" ""
+			"$Konsolenhilfe" ""
+			"$Kommandohilfe" ""
+			"$RobustCommands" ""
+			"$OpenSimCommands" ""
+			"$MoneyServerCommands" ""
+			"$Konfigurationlesen" ""
 			"--------------------------" ""
-			"Passwortgenerator" ""
-			"Kalender" ""
+			"$Passwortgenerator" ""
+			"$Kalender" ""
 			"--------------------------" ""
-			"Hauptmenu" "")
+			"$Hauptmenu" "")
 
 		hauswahl=$(dialog --clear \
 			--backtitle "$BACKTITLE" \
@@ -13298,20 +13337,20 @@ function hilfemenu() {
 		dialog --clear
 		ScreenLog
 
-		if [[ $hauswahl = "Hilfe" ]]; then hilfe; fi
-		if [[ $hauswahl = "Konsolenhilfe" ]]; then menukonsolenhilfe; fi # Test menukonsolenhilfe
-		if [[ $hauswahl = "Kommandohilfe" ]]; then commandhelp; fi
+		if [[ $hauswahl = "$Hilfe" ]]; then hilfe; fi
+		if [[ $hauswahl = "$Konsolenhilfe" ]]; then menukonsolenhilfe; fi # Test menukonsolenhilfe
+		if [[ $hauswahl = "$Kommandohilfe" ]]; then commandhelp; fi
 
-		if [[ $hauswahl = "RobustCommands" ]]; then RobustCommands; fi
-		if [[ $hauswahl = "OpenSimCommands" ]]; then OpenSimCommands; fi
-		if [[ $hauswahl = "MoneyServerCommands" ]]; then MoneyServerCommands; fi
+		if [[ $hauswahl = "$RobustCommands" ]]; then RobustCommands; fi
+		if [[ $hauswahl = "$OpenSimCommands" ]]; then OpenSimCommands; fi
+		if [[ $hauswahl = "$MoneyServerCommands" ]]; then MoneyServerCommands; fi
 
-		if [[ $hauswahl = "Konfiguration lesen" ]]; then menuoswriteconfig; fi
+		if [[ $hauswahl = "$Konfigurationlesen" ]]; then menuoswriteconfig; fi
 
-		if [[ $hauswahl = "Passwortgenerator" ]]; then passwdgenerator; fi
-		if [[ $hauswahl = "Kalender" ]]; then kalender; fi
+		if [[ $hauswahl = "$Passwortgenerator" ]]; then passwdgenerator; fi
+		if [[ $hauswahl = "$Kalender" ]]; then kalender; fi
 
-		if [[ $hauswahl = "Hauptmenu" ]]; then hauptmenu; fi
+		if [[ $hauswahl = "$Hauptmenu" ]]; then hauptmenu; fi
 		if [[ $antwort = 1 ]]; then hauptmenu; fi
 	else
 		# wenn dialog nicht installiert ist die Hilfe anzeigen.
@@ -13335,28 +13374,49 @@ function funktionenmenu() {
 	TITLE="Funktionsmenu"
 	MENU="opensimMULTITOOL $VERSION"
 
+	Gridstarten=$(trans -brief -no-warn $OSMTRANS "Grid starten")
+	Gridstoppen=$(trans -brief -no-warn $OSMTRANS "Grid stoppen")
+
+	Robuststarten=$(trans -brief -no-warn $OSMTRANS "Robust starten")
+	Robuststoppen=$(trans -brief -no-warn $OSMTRANS "Robust stoppen")
+	Moneystarten=$(trans -brief -no-warn $OSMTRANS "Money starten")
+	Moneystoppen=$(trans -brief -no-warn $OSMTRANS "Money stoppen")
+
+	AutomatischerSimstart=$(trans -brief -no-warn $OSMTRANS "Automatischer Sim start")
+	AutomatischerSimstop=$(trans -brief -no-warn $OSMTRANS "Automatischer Sim stop")
+
+	AutomatischerScreenstop=$(trans -brief -no-warn $OSMTRANS "Automatischer Screen stop")
+	Regionenanzeigen=$(trans -brief -no-warn $OSMTRANS "Regionen anzeigen")
+
+	Hauptmennu=$(trans -brief -no-warn $OSMTRANS "Hauptmennu")
+	Avatarmennu=$(trans -brief -no-warn $OSMTRANS "Avatarmennu")
+	Dateimennu=$(trans -brief -no-warn $OSMTRANS "Dateimennu")
+	mySQLmenu=$(trans -brief -no-warn $OSMTRANS "mySQLmenu")
+	BuildFunktionen=$(trans -brief -no-warn $OSMTRANS "Build Funktionen")
+	ExpertenFunktionen=$(trans -brief -no-warn $OSMTRANS "Experten Funktionen")
+
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
-		OPTIONS=("Grid starten" ""
-			"Grid stoppen" ""
+		OPTIONS=("$Gridstarten" ""
+			"$Gridstoppen" ""
 			"--------------------------" ""
-			"Robust starten" ""
-			"Robust stoppen" ""
-			"Money starten" ""
-			"Money stoppen" ""
+			"$Robuststarten" ""
+			"$Robuststoppen" ""
+			"$Moneystarten" ""
+			"$Moneystoppen" ""
 			"--------------------------" ""
-			"Automatischer Sim start" ""
-			"Automatischer Sim stop" ""
+			"$AutomatischerSimstart" ""
+			"$AutomatischerSimstop" ""
 			"--------------------------" ""
-			"Automatischer Screen stop" ""
-			"Regionen anzeigen" ""
+			"$AutomatischerScreenstop" ""
+			"$Regionenanzeigen" ""
 			"----------Menu------------" ""
-			"Hauptmennu" ""
-			"Avatarmennu" ""
-			"Dateimennu" ""
-			"mySQLmenu" ""
-			"Build Funktionen" ""
-			"Experten Funktionen" "")
+			"$Hauptmennu" ""
+			"$Avatarmennu" ""
+			"$Dateimennu" ""
+			"$mySQLmenu" ""
+			"$BuildFunktionen" ""
+			"$ExpertenFunktionen" "")
 
 		fauswahl=$(dialog --clear \
 			--backtitle "$BACKTITLE" \
@@ -13372,23 +13432,23 @@ function funktionenmenu() {
 		dialog --clear
 		ScreenLog
 
-		if [[ $fauswahl = "Grid starten" ]]; then gridstart; fi
-		if [[ $fauswahl = "Grid stoppen" ]]; then gridstop; fi
-		if [[ $fauswahl = "Robust starten" ]]; then rostart; fi
-		if [[ $fauswahl = "Robust stoppen" ]]; then rostop; fi
-		if [[ $fauswahl = "Money starten" ]]; then mostart; fi
-		if [[ $fauswahl = "Money stoppen" ]]; then mostop; fi
-		if [[ $fauswahl = "Automatischer Sim start" ]]; then menuautosimstart; fi
-		if [[ $fauswahl = "Automatischer Sim stop" ]]; then menuautosimstop; fi
-		if [[ $fauswahl = "Automatischer Screen stop" ]]; then autoscreenstop; fi
-		if [[ $fauswahl = "Regionen anzeigen" ]]; then meineregionen; fi
+		if [[ $fauswahl = "$Gridstarten" ]]; then gridstart; fi
+		if [[ $fauswahl = "$Gridstoppen" ]]; then gridstop; fi
+		if [[ $fauswahl = "$Robuststarten" ]]; then rostart; fi
+		if [[ $fauswahl = "$Robuststoppen" ]]; then rostop; fi
+		if [[ $fauswahl = "$Moneystarten" ]]; then mostart; fi
+		if [[ $fauswahl = "$Moneystoppen" ]]; then mostop; fi
+		if [[ $fauswahl = "$AutomatischerSimstart" ]]; then menuautosimstart; fi
+		if [[ $fauswahl = "$AutomatischerSimstop" ]]; then menuautosimstop; fi
+		if [[ $fauswahl = "$AutomatischerScreenstop" ]]; then autoscreenstop; fi
+		if [[ $fauswahl = "$Regionenanzeigen" ]]; then meineregionen; fi
 
-		if [[ $fauswahl = "Dateimennu" ]]; then dateimenu; fi
-		if [[ $fauswahl = "mySQLmenu" ]]; then mySQLmenu; fi
-		if [[ $fauswahl = "Hauptmennu" ]]; then hauptmenu; fi
-		if [[ $fauswahl = "Experten Funktionen" ]]; then expertenmenu; fi
-		if [[ $fauswahl = "Build Funktionen" ]]; then buildmenu; fi
-		if [[ $fauswahl = "Avatarmennu" ]]; then avatarmenu; fi
+		if [[ $fauswahl = "$Dateimennu" ]]; then dateimenu; fi
+		if [[ $fauswahl = "$mySQLmenu" ]]; then mySQLmenu; fi
+		if [[ $fauswahl = "$Hauptmennu" ]]; then hauptmenu; fi
+		if [[ $fauswahl = "$ExpertenFunktionen" ]]; then expertenmenu; fi
+		if [[ $fauswahl = "$BuildFunktionen" ]]; then buildmenu; fi
+		if [[ $fauswahl = "$Avatarmennu" ]]; then avatarmenu; fi
 
 		if [[ $antwort = 2 ]]; then hilfemenu; fi
 		if [[ $antwort = 1 ]]; then exit; fi
@@ -13414,26 +13474,45 @@ function dateimenu() {
 	TITLE="Dateimenu"
 	MENU="opensimMULTITOOL $VERSION"
 
+	Inventarspeichern=$(trans -brief -no-warn $OSMTRANS "Inventar speichern")
+	Inventarladen=$(trans -brief -no-warn $OSMTRANS "Inventar laden")
+	RegionOARsichern=$(trans -brief -no-warn $OSMTRANS "Region OAR sichern")
+	AutomatischerRegionsbackup=$(trans -brief -no-warn $OSMTRANS "Automatischer Regionsbackup")
+
+	LogDateienloeschen=$(trans -brief -no-warn $OSMTRANS "Log Dateien loeschen")
+	MapKartenloeschen=$(trans -brief -no-warn $OSMTRANS "Map Karten loeschen")
+	AssetCacheloeschen=$(trans -brief -no-warn $OSMTRANS "Asset Cache loeschen")
+	Assetloeschen=$(trans -brief -no-warn $OSMTRANS "Asset loeschen")
+
+	GridKonfigurationenerstellen=$(trans -brief -no-warn $OSMTRANS "Grid Konfigurationen erstellen")
+
+	Hauptmenu=$(trans -brief -no-warn $OSMTRANS "Hauptmenu")
+	Avatarmennu=$(trans -brief -no-warn $OSMTRANS "Avatarmennu")
+	WeitereFunktionen=$(trans -brief -no-warn $OSMTRANS "Weitere Funktionen")
+	mySQLmenu=$(trans -brief -no-warn $OSMTRANS "mySQLmenu")
+	BuildFunktionen=$(trans -brief -no-warn $OSMTRANS "Build Funktionen")
+	ExpertenFunktionen=$(trans -brief -no-warn $OSMTRANS "Experten Funktionen")
+
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
-		OPTIONS=("Inventar speichern" ""
-			"Inventar laden" ""
-			"Region OAR sichern" ""
-			"Automatischer Regionsbackup" ""
+		OPTIONS=("$Inventarspeichern" ""
+			"$Inventarladen" ""
+			"$RegionOARsichern" ""
+			"$AutomatischerRegionsbackup" ""
 			"--------------------------" ""
-			"Log Dateien loeschen" ""
-			"Map Karten loeschen" ""
-			"Asset Cache loeschen" ""
-			"Asset loeschen" ""
+			"$LogDateien loeschen" ""
+			"$MapKarten loeschen" ""
+			"$AssetCache loeschen" ""
+			"$Assetloeschen" ""
 			"--------------------------" ""
-			"Grid Konfigurationen erstellen" ""
+			"$GridKonfigurationenerstellen" ""
 			"----------Menu------------" ""
-			"Hauptmenu" ""
-			"Avatarmennu" ""
-			"Weitere Funktionen" ""
-			"mySQLmenu" ""
-			"Build Funktionen" ""
-			"Experten Funktionen" "")
+			"$Hauptmenu" ""
+			"$Avatarmennu" ""
+			"$WeitereFunktionen" ""
+			"$mySQLmenu" ""
+			"$BuildFunktionen" ""
+			"$ExpertenFunktionen" "")
 
 		dauswahl=$(dialog --clear \
 			--backtitle "$BACKTITLE" \
@@ -13449,24 +13528,24 @@ function dateimenu() {
 		dialog --clear
 		ScreenLog
 
-		if [[ $dauswahl = "Inventar speichern" ]]; then menusaveinventar; fi
-		if [[ $dauswahl = "Inventar laden" ]]; then menuloadinventar; fi
-		if [[ $dauswahl = "Region OAR sichern" ]]; then menuregionbackup; fi
-		if [[ $dauswahl = "Automatischer Regionsbackup" ]]; then autoregionbackup; fi
+		if [[ $dauswahl = "$Inventarspeichern" ]]; then menusaveinventar; fi
+		if [[ $dauswahl = "$Inventarladen" ]]; then menuloadinventar; fi
+		if [[ $dauswahl = "$RegionOARsichern" ]]; then menuregionbackup; fi
+		if [[ $dauswahl = "$AutomatischerRegionsbackup" ]]; then autoregionbackup; fi
 		# -----	
-		if [[ $dauswahl = "Log Dateien loeschen" ]]; then autologdel; fi
-		if [[ $dauswahl = "Map Karten loeschen" ]]; then automapdel; fi		
-		if [[ $dauswahl = "Asset loeschen" ]]; then menuassetdel; fi
-		if [[ $dauswahl = "Asset Cache loeschen" ]]; then autoassetcachedel; fi
+		if [[ $dauswahl = "$LogDateienloeschen" ]]; then autologdel; fi
+		if [[ $dauswahl = "$MapKartenloeschen" ]]; then automapdel; fi		
+		if [[ $dauswahl = "$Assetloeschen" ]]; then menuassetdel; fi
+		if [[ $dauswahl = "$AssetCacheloeschen" ]]; then autoassetcachedel; fi
 		# -----
-		if [[ $dauswahl = "Grid Konfigurationen erstellen" ]]; then configabfrage; fi		
+		if [[ $dauswahl = "$GridKonfigurationenerstellen" ]]; then configabfrage; fi		
 		# -----
-		if [[ $dauswahl = "Hauptmenu" ]]; then hauptmenu; fi
-		if [[ $dauswahl = "mySQLmenu" ]]; then mySQLmenu; fi
-		if [[ $dauswahl = "Weitere Funktionen" ]]; then funktionenmenu; fi
-		if [[ $dauswahl = "Experten Funktionen" ]]; then expertenmenu; fi
-		if [[ $dauswahl = "Build Funktionen" ]]; then buildmenu; fi
-		if [[ $dauswahl = "Avatarmennu" ]]; then avatarmenu; fi
+		if [[ $dauswahl = "$Hauptmenu" ]]; then hauptmenu; fi
+		if [[ $dauswahl = "$mySQLmenu" ]]; then mySQLmenu; fi
+		if [[ $dauswahl = "$WeitereFunktionen" ]]; then funktionenmenu; fi
+		if [[ $dauswahl = "$ExpertenFunktionen" ]]; then expertenmenu; fi
+		if [[ $dauswahl = "$BuildFunktionen" ]]; then buildmenu; fi
+		if [[ $dauswahl = "$Avatarmennu" ]]; then avatarmenu; fi
 
 		if [[ $antwort = 2 ]]; then hilfemenu; fi
 		if [[ $antwort = 1 ]]; then exit; fi
@@ -13491,35 +13570,64 @@ function mySQLmenu() {
 	BACKTITLE="opensimMULTITOOL"
 	TITLE="mySQLmenu"
 	MENU="opensimMULTITOOL $VERSION"
+
+	AlleDatenbankenanzeigen=$(trans -brief -no-warn $OSMTRANS "Alle Datenbanken anzeigen")
+	TabelleneinerDatenbank=$(trans -brief -no-warn $OSMTRANS "Tabellen einer Datenbank")
+	mySQLDatenbankbenutzeranzeigen=$(trans -brief -no-warn $OSMTRANS "mySQL Datenbankbenutzer anzeigen")
+	AlleGridRegionenlisten=$(trans -brief -no-warn $OSMTRANS "Alle Grid Regionen listen")			
+	RegionURIpruefensortiertnachURI=$(trans -brief -no-warn $OSMTRANS "Region URI pruefen sortiert nach URI")
+	PortspruefensortiertnachPorts=$(trans -brief -no-warn $OSMTRANS "Ports pruefen sortiert nach Ports")			
+	Benutzerinventoryfolders=$(trans -brief -no-warn $OSMTRANS "Benutzer inventoryfolders alles was type -1 ist anzeigen")
+	ZeigeErstellungsdatumeinesUsersan=$(trans -brief -no-warn $OSMTRANS "Zeige Erstellungsdatum eines Users an")
+	FindefalscheEMailAdressen=$(trans -brief -no-warn $OSMTRANS "Finde falsche E-Mail Adressen")
+	ListetalleerstelltenBenutzerrechteauf=$(trans -brief -no-warn $OSMTRANS "Listet alle erstellten Benutzerrechte auf")
+
+	NeueDatenbankerstellen=$(trans -brief -no-warn $OSMTRANS "Neue Datenbank erstellen")
+	NeuenDatenbankbenutzeranlegen=$(trans -brief -no-warn $OSMTRANS "Neuen Datenbankbenutzer anlegen")
+
+	Datenbankleeren=$(trans -brief -no-warn $OSMTRANS "Datenbank leeren")
+	Datenbankkomplettloeschen=$(trans -brief -no-warn $OSMTRANS "Datenbank komplett loeschen")
+	LoeschteinenDatenbankbenutzer=$(trans -brief -no-warn $OSMTRANS "Loescht einen Datenbankbenutzer")
+
+	mysqlTunerherunterladen=$(trans -brief -no-warn $OSMTRANS "mysqlTuner herunterladen")
+	AlleDatenbankenCheckenReparierenundOptimieren=$(trans -brief -no-warn $OSMTRANS "Alle Datenbanken Checken, Reparieren und Optimieren")			
+
+	Hauptmenu=$(trans -brief -no-warn $OSMTRANS "Hauptmenu")
+	Avatarmennu=$(trans -brief -no-warn $OSMTRANS "Avatarmennu")
+	WeitereFunktionen=$(trans -brief -no-warn $OSMTRANS "Weitere Funktionen")
+	Dateimennu=$(trans -brief -no-warn $OSMTRANS "Dateimennu")
+	BuildFunktionen=$(trans -brief -no-warn $OSMTRANS "Build Funktionen")
+	ExpertenFunktionen=$(trans -brief -no-warn $OSMTRANS "Experten Funktionen")
+
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
-		OPTIONS=("Alle Datenbanken anzeigen" ""
-			"Tabellen einer Datenbank" ""
-			"mySQL Datenbankbenutzer anzeigen" ""
-			"Alle Grid Regionen listen" ""			
-			"Region URI pruefen sortiert nach URI" ""
-			"Ports pruefen sortiert nach Ports" ""			
-			"Benutzer inventoryfolders alles was type -1 ist anzeigen" ""
-			"Zeige Erstellungsdatum eines Users an" ""
-			"Finde falsche E-Mail Adressen" ""
-			"Listet alle erstellten Benutzerrechte auf" ""
+		OPTIONS=("$AlleDatenbankenanzeigen" ""
+			"$TabelleneinerDatenbank" ""
+			"$mySQLDatenbankbenutzeranzeigen" ""
+			"$AlleGridRegionenlisten" ""			
+			"$RegionURIpruefensortiertnachURI" ""
+			"$PortspruefensortiertnachPorts" ""			
+			"$Benutzerinventoryfolders" ""
+			"$ZeigeErstellungsdatumeinesUsersan" ""
+			"$FindefalscheEMailAdressen" ""
+			"$ListetalleerstelltenBenutzerrechteauf" ""
 			"--------------------------" ""
-			"Neue Datenbank erstellen" ""
-			"Neuen Datenbankbenutzer anlegen" ""
+			"$NeueDatenbankerstellen" ""
+			"$NeuenDatenbankbenutzeranlegen" ""
 			"--------------------------" ""
-			"Datenbank leeren" ""
-			"Datenbank komplett loeschen" ""
-			"Loescht einen Datenbankbenutzer" ""
+			"$Datenbankleeren" ""
+			"$Datenbankkomplettloeschen" ""
+			"$LoeschteinenDatenbankbenutzer" ""
 			"--------------------------" ""
-			"mysqlTuner herunterladen" ""
-			"Alle Datenbanken Checken, Reparieren und Optimieren" ""			
+			"$mysqlTunerherunterladen" ""
+			"$AlleDatenbankenCheckenReparierenundOptimieren" ""			
 			"----------Menu------------" ""
-			"Hauptmenu" ""
-			"Avatarmennu" ""
-			"Weitere Funktionen" ""
-			"Dateimennu" ""
-			"Build Funktionen" ""
-			"Experten Funktionen" "")
+			"$Hauptmenu" ""
+			"$Avatarmennu" ""
+			"$WeitereFunktionen" ""
+			"$Dateimennu" ""
+			"$BuildFunktionen" ""
+			"$ExpertenFunktionen" "")
 
 		mysqlauswahl=$(dialog --backtitle "$BACKTITLE" --title "$TITLE" --help-button --defaultno --menu "$MENU" $HEIGHT $WIDTH $CHOICE_HEIGHT "${OPTIONS[@]}" 2>&1 >/dev/tty)
 		antwort=$?
@@ -13530,32 +13638,32 @@ function mySQLmenu() {
 		# db_anzeigen_dialog, db_tables_dialog, db_all_user_dialog, db_all_uuid_dialog, db_email_setincorrectuseroff_dialog, db_setuseronline_dialog, db_setuserofline_dialog
 		# db_all_name_dialog, db_user_data_dialog, db_user_infos_dialog, db_user_uuid_dialog
 
-		if [[ $mysqlauswahl = "Alle Datenbanken anzeigen" ]]; then db_anzeigen_dialog; fi
-		if [[ $mysqlauswahl = "Tabellen einer Datenbank" ]]; then db_tables_dialog; fi		
+		if [[ $mysqlauswahl = "$AlleDatenbankenanzeigen" ]]; then db_anzeigen_dialog; fi
+		if [[ $mysqlauswahl = "$TabelleneinerDatenbank" ]]; then db_tables_dialog; fi		
 
-		if [[ $mysqlauswahl = "mySQL Datenbankbenutzer anzeigen" ]]; then db_benutzer_anzeigen; fi
-		if [[ $mysqlauswahl = "Alle Grid Regionen listen" ]]; then db_regions; fi
-		if [[ $mysqlauswahl = "Region URI pruefen sortiert nach URI" ]]; then db_regionsuri; fi
-		if [[ $mysqlauswahl = "Ports pruefen sortiert nach Ports" ]]; then db_regionsport; fi
-		if [[ $mysqlauswahl = "Neue Datenbank erstellen" ]]; then db_create; fi
-		if [[ $mysqlauswahl = "Benutzer inventoryfolders alles was type -1 ist anzeigen" ]]; then db_all_userfailed; fi
-		if [[ $mysqlauswahl = "Zeige Erstellungsdatum eines Users an" ]]; then db_userdate; fi
-		if [[ $mysqlauswahl = "Finde falsche E-Mail Adressen" ]]; then db_false_email; fi
-		if [[ $mysqlauswahl = "Datenbank komplett loeschen" ]]; then db_delete; fi
+		if [[ $mysqlauswahl = "$mySQLDatenbankbenutzeranzeigen" ]]; then db_benutzer_anzeigen; fi
+		if [[ $mysqlauswahl = "$AlleGridRegionenlisten" ]]; then db_regions; fi
+		if [[ $mysqlauswahl = "$RegionURIpruefensortiertnachURI" ]]; then db_regionsuri; fi
+		if [[ $mysqlauswahl = "$PortspruefensortiertnachPorts" ]]; then db_regionsport; fi
+		if [[ $mysqlauswahl = "$NeueDatenbankerstellen" ]]; then db_create; fi
+		if [[ $mysqlauswahl = "$Benutzerinventoryfolders" ]]; then db_all_userfailed; fi
+		if [[ $mysqlauswahl = "$ZeigeErstellungsdatumeinesUsersan" ]]; then db_userdate; fi
+		if [[ $mysqlauswahl = "$FindefalscheEMailAdressen" ]]; then db_false_email; fi
+		if [[ $mysqlauswahl = "$Datenbankkomplettloeschen" ]]; then db_delete; fi
 
-		if [[ $mysqlauswahl = "Datenbank leeren" ]]; then db_empty; fi
-		if [[ $mysqlauswahl = "Neuen Datenbankbenutzer anlegen" ]]; then db_create_new_dbuser; fi
-		if [[ $mysqlauswahl = "Listet alle erstellten Benutzerrechte auf" ]]; then db_dbuserrechte; fi
-		if [[ $mysqlauswahl = "Loescht einen Datenbankbenutzer" ]]; then db_deldbuser; fi
-		if [[ $mysqlauswahl = "Alle Datenbanken Checken, Reparieren und Optimieren" ]]; then allrepair_db; fi
-		if [[ $mysqlauswahl = "mysqlTuner herunterladen" ]]; then install_mysqltuner; fi
+		if [[ $mysqlauswahl = "$Datenbankleeren" ]]; then db_empty; fi
+		if [[ $mysqlauswahl = "$NeuenDatenbankbenutzeranlegen" ]]; then db_create_new_dbuser; fi
+		if [[ $mysqlauswahl = "$ListetalleerstelltenBenutzerrechteauf" ]]; then db_dbuserrechte; fi
+		if [[ $mysqlauswahl = "$LoeschteinenDatenbankbenutzer" ]]; then db_deldbuser; fi
+		if [[ $mysqlauswahl = "$AlleDatenbankenCheckenReparierenundOptimieren" ]]; then allrepair_db; fi
+		if [[ $mysqlauswahl = "$mysqlTunerherunterladen" ]]; then install_mysqltuner; fi
 		# -----
-		if [[ $mysqlauswahl = "Hauptmenu" ]]; then hauptmenu; fi
-		if [[ $mysqlauswahl = "Dateimennu" ]]; then dateimenu; fi
-		if [[ $mysqlauswahl = "Weitere Funktionen" ]]; then funktionenmenu; fi
-		if [[ $mysqlauswahl = "Experten Funktionen" ]]; then expertenmenu; fi
-		if [[ $mysqlauswahl = "Build Funktionen" ]]; then buildmenu; fi
-		if [[ $mysqlauswahl = "Avatarmennu" ]]; then avatarmenu; fi
+		if [[ $mysqlauswahl = "$Hauptmenu" ]]; then hauptmenu; fi
+		if [[ $mysqlauswahl = "$Dateimennu" ]]; then dateimenu; fi
+		if [[ $mysqlauswahl = "$WeitereFunktionen" ]]; then funktionenmenu; fi
+		if [[ $mysqlauswahl = "$ExpertenFunktionen" ]]; then expertenmenu; fi
+		if [[ $mysqlauswahl = "$BuildFunktionen" ]]; then buildmenu; fi
+		if [[ $mysqlauswahl = "$Avatarmennu" ]]; then avatarmenu; fi
 
 		if [[ $antwort = 2 ]]; then hilfemenu; fi
 		if [[ $antwort = 1 ]]; then exit; fi
@@ -13581,25 +13689,43 @@ function avatarmenu() {
 	TITLE="Avatarmenu"
 	MENU="opensimMULTITOOL $VERSION"
 
+	AlleBenutzerdatenderROBUSTDatenbank=$(trans -brief -no-warn $OSMTRANS "Alle Benutzerdaten der ROBUST Datenbank")
+	UUIDvonallenBenutzernanzeigen=$(trans -brief -no-warn $OSMTRANS "UUID von allen Benutzern anzeigen")
+	AlleBenutzernamenanzeigen=$(trans -brief -no-warn $OSMTRANS "Alle Benutzernamen anzeigen")
+	DatenvoneinemBenutzeranzeigen=$(trans -brief -no-warn $OSMTRANS "Daten von einem Benutzer anzeigen")
+	UUIDVorNachnameEMailvomBenutzeranzeigen=$(trans -brief -no-warn $OSMTRANS "UUID, Vor, Nachname, E-Mail vom Benutzer anzeigen")
+	UUIDvoneinemBenutzeranzeigen=$(trans -brief -no-warn $OSMTRANS "UUID von einem Benutzer anzeigen")
+
+	AlleBenutzermitinkorrekterEMailabschalten=$(trans -brief -no-warn $OSMTRANS "Alle Benutzer mit inkorrekter EMail abschalten")
+	Benutzeracountabschalten=$(trans -brief -no-warn $OSMTRANS "Benutzeracount abschalten")
+	Benutzeracounteinschalten=$(trans -brief -no-warn $OSMTRANS "Benutzeracount einschalten")
+
+	Hauptmennu=$(trans -brief -no-warn $OSMTRANS "Hauptmennu")
+	Avatarmennu=$(trans -brief -no-warn $OSMTRANS "Avatarmennu")
+	Dateimennu=$(trans -brief -no-warn $OSMTRANS "Dateimennu")
+	mySQLmenu=$(trans -brief -no-warn $OSMTRANS "mySQLmenu")
+	BuildFunktionen=$(trans -brief -no-warn $OSMTRANS "Build Funktionen")
+	ExpertenFunktionen=$(trans -brief -no-warn $OSMTRANS "Experten Funktionen")
+
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
-		OPTIONS=("Alle Benutzerdaten der ROBUST Datenbank" ""
-			"UUID von allen Benutzern anzeigen" ""
-			"Alle Benutzernamen anzeigen" ""
-			"Daten von einem Benutzer anzeigen" ""
-			"UUID, Vor, Nachname, E-Mail vom Benutzer anzeigen" ""
-			"UUID von einem Benutzer anzeigen" ""
+		OPTIONS=("$AlleBenutzerdatenderROBUSTDatenbank" ""
+			"$UUIDvonallenBenutzernanzeigen" ""
+			"$AlleBenutzernamenanzeigen" ""
+			"$DatenvoneinemBenutzeranzeigen" ""
+			"$UUIDVorNachnameEMailvomBenutzeranzeigen" ""
+			"$UUIDvoneinemBenutzeranzeigen" ""
 			"--------------------------" ""
-			"Alle Benutzer mit inkorrekter EMail abschalten" ""
-			"Benutzeracount abschalten" ""
-			"Benutzeracount einschalten" ""
+			"$AlleBenutzermitinkorrekterEMailabschalten" ""
+			"$Benutzeracountabschalten" ""
+			"$Benutzeracounteinschalten" ""
 			"----------Menu------------" ""
-			"Hauptmennu" ""
-			"Avatarmennu" ""
-			"Dateimennu" ""
-			"mySQLmenu" ""
-			"Build Funktionen" ""
-			"Experten Funktionen" "")
+			"$Hauptmennu" ""
+			"$Avatarmennu" ""
+			"$Dateimennu" ""
+			"$mySQLmenu" ""
+			"$BuildFunktionen" ""
+			"$ExpertenFunktionen" "")
 
 		avatarauswahl=$(dialog --clear \
 			--backtitle "$BACKTITLE" \
@@ -13615,23 +13741,23 @@ function avatarmenu() {
 		dialog --clear
 		ScreenLog
 
-		if [[ $avatarauswahl = "Alle Benutzerdaten der ROBUST Datenbank" ]]; then db_all_user_dialog; fi
-		if [[ $avatarauswahl = "UUID von allen Benutzern anzeigen" ]]; then db_all_uuid_dialog; fi
+		if [[ $avatarauswahl = "$AlleBenutzerdatenderROBUSTDatenbank" ]]; then db_all_user_dialog; fi
+		if [[ $avatarauswahl = "$UUIDvonallenBenutzernanzeigen" ]]; then db_all_uuid_dialog; fi
 		
-		if [[ $avatarauswahl = "Alle Benutzernamen anzeigen" ]]; then db_all_name_dialog; fi
-		if [[ $avatarauswahl = "Daten von einem Benutzer anzeigen" ]]; then db_user_data_dialog; fi
-		if [[ $avatarauswahl = "UUID, Vor, Nachname, E-Mail vom Benutzer anzeigen" ]]; then db_user_infos_dialog; fi
-		if [[ $avatarauswahl = "UUID von einem Benutzer anzeigen" ]]; then db_user_uuid_dialog; fi
+		if [[ $avatarauswahl = "$AlleBenutzernamenanzeigen" ]]; then db_all_name_dialog; fi
+		if [[ $avatarauswahl = "$DatenvoneinemBenutzeranzeigen" ]]; then db_user_data_dialog; fi
+		if [[ $avatarauswahl = "$UUIDVorNachnameEMailvomBenutzeranzeigen" ]]; then db_user_infos_dialog; fi
+		if [[ $avatarauswahl = "$UUIDvoneinemBenutzeranzeigen" ]]; then db_user_uuid_dialog; fi
 		
-		if [[ $avatarauswahl = "Alle Benutzer mit inkorrekter EMail abschalten" ]]; then db_email_setincorrectuseroff_dialog; fi
-		if [[ $avatarauswahl = "Benutzeracount abschalten" ]]; then db_setuserofline_dialog; fi
-		if [[ $avatarauswahl = "Benutzeracount einschalten" ]]; then db_setuseronline_dialog; fi
+		if [[ $avatarauswahl = "$AlleBenutzermitinkorrekterEMailabschalten" ]]; then db_email_setincorrectuseroff_dialog; fi
+		if [[ $avatarauswahl = "$Benutzeracountabschalten" ]]; then db_setuserofline_dialog; fi
+		if [[ $avatarauswahl = "$Benutzeracounteinschalten" ]]; then db_setuseronline_dialog; fi
 
-		if [[ $avatarauswahl = "Dateimennu" ]]; then dateimenu; fi
-		if [[ $avatarauswahl = "mySQLmenu" ]]; then mySQLmenu; fi
-		if [[ $avatarauswahl = "Hauptmennu" ]]; then hauptmenu; fi
-		if [[ $avatarauswahl = "Experten Funktionen" ]]; then expertenmenu; fi
-		if [[ $avatarauswahl = "Build Funktionen" ]]; then buildmenu; fi
+		if [[ $avatarauswahl = "$Dateimennu" ]]; then dateimenu; fi
+		if [[ $avatarauswahl = "$mySQLmenu" ]]; then mySQLmenu; fi
+		if [[ $avatarauswahl = "$Hauptmennu" ]]; then hauptmenu; fi
+		if [[ $avatarauswahl = "$ExpertenFunktionen" ]]; then expertenmenu; fi
+		if [[ $avatarauswahl = "$BuildFunktionen" ]]; then buildmenu; fi
 
 		if [[ $antwort = 2 ]]; then hilfemenu; fi
 		if [[ $antwort = 1 ]]; then exit; fi
@@ -13657,32 +13783,57 @@ function expertenmenu() {
 	TITLE="Expertenmenu"
 	MENU="opensimMULTITOOL $VERSION"
 
+	ExampleDateienumbenennen=$(trans -brief -no-warn $OSMTRANS "Example Dateien umbenennen")
+	Voreinstellungensetzen=$(trans -brief -no-warn $OSMTRANS "Voreinstellungen setzen")
+
+	autoregionsiniteilen=$(trans -brief -no-warn $OSMTRANS "autoregionsiniteilen")
+	RegionListe=$(trans -brief -no-warn $OSMTRANS "RegionListe")
+
+	ServerInstallation=$(trans -brief -no-warn $OSMTRANS "Server Installation")
+	ServerInstallationfuerWordPress=$(trans -brief -no-warn $OSMTRANS "Server Installation fuer WordPress")
+	ServerInstallationohnemono=$(trans -brief -no-warn $OSMTRANS "Server Installation ohne mono")
+	MonoInstallation=$(trans -brief -no-warn $OSMTRANS "Mono Installation")
+
+	terminator=$(trans -brief -no-warn $OSMTRANS "terminator")
+	makeaot=$(trans -brief -no-warn $OSMTRANS "make AOT")
+	cleanaot=$(trans -brief -no-warn $OSMTRANS "clean AOT")
+	Installationenanzeigen=$(trans -brief -no-warn $OSMTRANS "Installationen anzeigen")
+
+	KommandoanOpenSimsenden=$(trans -brief -no-warn "Kommando an OpenSim senden")
+
+	Hauptmennu=$(trans -brief -no-warn $OSMTRANS "Hauptmennu")
+	Avatarmennu=$(trans -brief -no-warn $OSMTRANS "Avatarmennu")
+	Dateimennu=$(trans -brief -no-warn $OSMTRANS "Dateimennu")
+	mySQLmenu=$(trans -brief -no-warn $OSMTRANS "mySQLmenu")
+	BuildFunktionen=$(trans -brief -no-warn $OSMTRANS "Build Funktionen")
+	#ExpertenFunktionen=$(trans -brief -no-warn $OSMTRANS "Experten Funktionen")
+
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
-		OPTIONS=("Example Dateien umbenennen" ""
-			"Voreinstellungen setzen" ""
+		OPTIONS=("$ExampleDateienumbenennen" ""
+			"$Voreinstellungensetzen" ""
 			"--------------------------" ""
-			"autoregionsiniteilen" ""
-			"RegionListe" ""
+			"$autoregionsiniteilen" ""
+			"$RegionListe" ""
 			"--------------------------" ""
-			"Server Installation" ""
-			"Server Installation fuer WordPress" ""
-			"Server Installation ohne mono" ""
-			"Mono Installation" ""
+			"$ServerInstallation" ""
+			"$ServerInstallationfuerWordPress" ""
+			"$ServerInstallationohnemono" ""
+			"$MonoInstallation" ""
 			"--------------------------" ""
-			"terminator" ""
-			"makeaot" ""
-			"cleanaot" ""
-			"Installationen anzeigen" ""
+			"$terminator" ""
+			"$makeaot" ""
+			"$cleanaot" ""
+			"$Installationenanzeigen" ""
 			"--------------------------" ""
-			"Kommando an OpenSim senden" ""
+			"$KommandoanOpenSimsenden" ""
 			"----------Menu------------" ""
-			"Hauptmennu" ""
-			"Avatarmennu" ""
-			"Dateimennu" ""
-			"mySQLmenu" ""
-			"Build Funktionen" ""
-			"Weitere Funktionen" "")
+			"$Hauptmennu" ""
+			"$Avatarmennu" ""
+			"$Dateimennu" ""
+			"$mySQLmenu" ""
+			"$BuildFunktionen" ""
+			"$WeitereFunktionen" "")
 
 		feauswahl=$(dialog --clear \
 			--backtitle "$BACKTITLE" \
@@ -13692,38 +13843,39 @@ function expertenmenu() {
 			$HEIGHT $WIDTH $CHOICE_HEIGHT \
 			"${OPTIONS[@]}" \
 			2>&1 >/dev/tty)
+			
 
 		antwort=$?
 		#dialogclear
 		dialog --clear
 		ScreenLog
 
-		if [[ $feauswahl = "Example Dateien umbenennen" ]]; then unlockexample; fi
-		if [[ $feauswahl = "Voreinstellungen setzen" ]]; then ossettings; fi
+		if [[ $feauswahl = "$ExampleDateienumbenennen" ]]; then unlockexample; fi
+		if [[ $feauswahl = "$Voreinstellungensetzen" ]]; then ossettings; fi
 
-		if [[ $feauswahl = "Kommando an OpenSim senden" ]]; then menuoscommand; fi
+		if [[ $feauswahl = "$KommandoanOpenSimsenden" ]]; then menuoscommand; fi
 
-		if [[ $feauswahl = "autoregionsiniteilen" ]]; then autoregionsiniteilen; fi
-		if [[ $feauswahl = "RegionListe" ]]; then regionliste; fi
+		if [[ $feauswahl = "$autoregionsiniteilen" ]]; then autoregionsiniteilen; fi
+		if [[ $feauswahl = "$RegionListe" ]]; then regionliste; fi
 
-		if [[ $feauswahl = "terminator" ]]; then terminator; fi
-		if [[ $feauswahl = "makeaot" ]]; then makeaot; fi
-		if [[ $feauswahl = "cleanaot" ]]; then cleanaot; fi
-		if [[ $feauswahl = "Installationen anzeigen" ]]; then installationen; fi
+		if [[ $feauswahl = "$terminator" ]]; then terminator; fi
+		if [[ $feauswahl = "$makeaot" ]]; then makeaot; fi
+		if [[ $feauswahl = "$cleanaot" ]]; then cleanaot; fi
+		if [[ $feauswahl = "$Installationenanzeigen" ]]; then installationen; fi
 
-		if [[ $feauswahl = "Server Installation" ]]; then serverinstall; fi
-		if [[ $feauswahl = "Server Installation fuer WordPress" ]]; then installwordpress; fi
-		if [[ $feauswahl = "Server Installation ohne mono" ]]; then installopensimulator; fi
-		if [[ $feauswahl = "Mono Installation" ]]; then monoinstall; fi
+		if [[ $feauswahl = "$ServerInstallation" ]]; then serverinstall; fi
+		if [[ $feauswahl = "$ServerInstallationfuerWordPress" ]]; then installwordpress; fi
+		if [[ $feauswahl = "$ServerInstallationohnemono" ]]; then installopensimulator; fi
+		if [[ $feauswahl = "$MonoInstallation" ]]; then monoinstall; fi
 
-		if [[ $feauswahl = "Hilfe" ]]; then hilfemenu; fi
+		if [[ $feauswahl = "$Hilfe" ]]; then hilfemenu; fi
 
-		if [[ $feauswahl = "Dateimennu" ]]; then dateimenu; fi
-		if [[ $feauswahl = "mySQLmenu" ]]; then mySQLmenu; fi
-		if [[ $feauswahl = "Hauptmennu" ]]; then hauptmenu; fi
-		if [[ $feauswahl = "Weitere Funktionen" ]]; then funktionenmenu; fi
-		if [[ $feauswahl = "Build Funktionen" ]]; then buildmenu; fi
-		if [[ $feauswahl = "Avatarmennu" ]]; then avatarmenu; fi
+		if [[ $feauswahl = "$Dateimennu" ]]; then dateimenu; fi
+		if [[ $feauswahl = "$mySQLmenu" ]]; then mySQLmenu; fi
+		if [[ $feauswahl = "$Hauptmennu" ]]; then hauptmenu; fi
+		if [[ $feauswahl = "$WeitereFunktionen" ]]; then funktionenmenu; fi
+		if [[ $feauswahl = "$BuildFunktionen" ]]; then buildmenu; fi
+		if [[ $feauswahl = "$Avatarmennu" ]]; then avatarmenu; fi
 
 		if [[ $antwort = 2 ]]; then hilfemenu; fi
 		if [[ $antwort = 1 ]]; then exit; fi
@@ -13749,35 +13901,63 @@ function buildmenu() {
 	TITLE="Buildmenu"
 	MENU="opensimMULTITOOL $VERSION"
 
+	OpenSimherunterladen=$(trans -brief -no-warn $OSMTRANS "OpenSim herunterladen")
+	MoneyServervomgitkopieren=$(trans -brief -no-warn $OSMTRANS "MoneyServer vom git kopieren")
+	OSSLSkriptevomgitkopieren=$(trans -brief -no-warn $OSMTRANS "OSSL Skripte vom git kopieren")
+	OpensimvomGithubholen=$(trans -brief -no-warn $OSMTRANS "Opensim vom Github holen")
+
+	DowngradezurletztenVersion=$(trans -brief -no-warn $OSMTRANS "Downgrade zur letzten Version")
+	Kompilieren=$(trans -brief -no-warn $OSMTRANS "Kompilieren")
+	oscompi=$(trans -brief -no-warn $OSMTRANS "oscompi")
+	Opensimulatorupgraden=$(trans -brief -no-warn $OSMTRANS "Opensimulator upgraden")
+	Opensimulatorauszipupgraden=$(trans -brief -no-warn $OSMTRANS "Opensimulator aus zip upgraden")
+	Opensimulatorbauenundupgraden=$(trans -brief -no-warn $OSMTRANS "Opensimulator bauen und upgraden")
+			
+	KonfigurationenundVerzeichnisstrukturenanlegen=$(trans -brief -no-warn $OSMTRANS "Konfigurationen und Verzeichnisstrukturen anlegen")
+	Verzeichnisstrukturenanlegen=$(trans -brief -no-warn $OSMTRANS "Verzeichnisstrukturen anlegen")
+	RegionslisteerstellenBackup=$(trans -brief -no-warn $OSMTRANS "Regionsliste erstellen (Backup)")
+
+	SiminVerzeichnisstruktureneintragen=$(trans -brief -no-warn $OSMTRANS "Sim in Verzeichnisstrukturen eintragen")
+	SiminVerzeichnisstrukturenaustragen=$(trans -brief -no-warn $OSMTRANS "Sim in Verzeichnisstrukturen austragen")
+	SiminStartkonfigurationeinfuegen=$(trans -brief -no-warn $OSMTRANS "Sim in Startkonfiguration einfuegen")
+	SimausStartkonfigurationentfernen=$(trans -brief -no-warn $OSMTRANS "Sim aus Startkonfiguration entfernen")
+
+	Hauptmennu=$(trans -brief -no-warn $OSMTRANS "Hauptmennu")
+	Avatarmennu=$(trans -brief -no-warn $OSMTRANS "Avatarmennu")
+	Dateimennu=$(trans -brief -no-warn $OSMTRANS "Dateimennu")
+	mySQLmenu=$(trans -brief -no-warn $OSMTRANS "mySQLmenu")
+	BuildFunktionen=$(trans -brief -no-warn $OSMTRANS "Build Funktionen")
+	ExpertenFunktionen=$(trans -brief -no-warn $OSMTRANS "Experten Funktionen")
+
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
-		OPTIONS=("OpenSim herunterladen" ""
-			"MoneyServer vom git kopieren" ""
-			"OSSL Skripte vom git kopieren" ""
-			"Opensim vom Github holen" ""
+		OPTIONS=("$OpenSimherunterladen" ""
+			"$MoneyServervomgitkopieren" ""
+			"$OSSLSkriptevomgitkopieren" ""
+			"$OpensimvomGithubholen" ""
 			"--------------------------" ""
-			"Downgrade zur letzten Version" ""
-			"Kompilieren" ""
-			"oscompi" ""
-			"Opensimulator upgraden" ""
-			"Opensimulator aus zip upgraden" ""
-			"Opensimulator bauen und upgraden" ""
+			"$DowngradezurletztenVersion" ""
+			"$Kompilieren" ""
+			"$oscompi" ""
+			"$Opensimulatorupgraden" ""
+			"$Opensimulatorauszipupgraden" ""
+			"$Opensimulatorbauenundupgraden" ""
 			"--------------------------" ""			
-			"Konfigurationen und Verzeichnisstrukturen anlegen" ""
-			"Verzeichnisstrukturen anlegen" ""
-			"Regionsliste erstellen (Backup)" ""
+			"$KonfigurationenundVerzeichnisstrukturenanlegen" ""
+			"$Verzeichnisstrukturenanlegen" ""
+			"$RegionslisteerstellenBackup" ""
 			"--------------------------" ""
-			"Sim in Verzeichnisstrukturen eintragen" ""
-			"Sim in Verzeichnisstrukturen austragen" ""
-			"Sim in Startkonfiguration einfuegen" ""
-			"Sim aus Startkonfiguration entfernen" ""
+			"$SiminVerzeichnisstruktureneintragen" ""
+			"$SiminVerzeichnisstrukturenaustragen" ""
+			"$SiminStartkonfigurationeinfuegen" ""
+			"$SimausStartkonfigurationentfernen" ""
 			"----------Menu------------" ""
-			"Hauptmenu" ""
-			"Avatarmennu" ""
-			"Weitere Funktionen" ""
-			"Dateimennu" ""
-			"mySQLmenu" ""
-			"Experten Funktionen" "")
+			"$Hauptmenu" ""
+			"$Avatarmennu" ""
+			"$WeitereFunktionen" ""
+			"$Dateimennu" ""
+			"$mySQLmenu" ""
+			"$ExpertenFunktionen" "")
 
 		buildauswahl=$(dialog --backtitle "$BACKTITLE" --title "$TITLE" --help-button --defaultno --menu "$MENU" $HEIGHT $WIDTH $CHOICE_HEIGHT "${OPTIONS[@]}" 2>&1 >/dev/tty)
 		antwort=$?
@@ -13785,33 +13965,33 @@ function buildmenu() {
 		dialog --clear
 		ScreenLog
 
-		if [[ $buildauswahl = "OpenSim herunterladen" ]]; then downloados; fi
-		if [[ $buildauswahl = "MoneyServer vom git kopieren" ]]; then moneygitcopy; fi
-		if [[ $buildauswahl = "OSSL Skripte vom git kopieren" ]]; then scriptgitcopy; fi
-		if [[ $buildauswahl = "Opensim vom Github holen" ]]; then osgitholen; fi
+		if [[ $buildauswahl = "$OpenSimherunterladen" ]]; then downloados; fi
+		if [[ $buildauswahl = "$MoneyServervomgitkopieren" ]]; then moneygitcopy; fi
+		if [[ $buildauswahl = "$OSSLSkriptevomgitkopieren" ]]; then scriptgitcopy; fi
+		if [[ $buildauswahl = "$OpensimvomGithubholen" ]]; then osgitholen; fi
 		# -----
-		if [[ $buildauswahl = "Downgrade zur letzten Version" ]]; then osdowngrade; fi
-		if [[ $buildauswahl = "Kompilieren" ]]; then compilieren; fi
-		if [[ $buildauswahl = "oscompi" ]]; then oscompi; fi
-		if [[ $buildauswahl = "Opensimulator upgraden" ]]; then osupgrade; fi
-		if [[ $buildauswahl = "Opensimulator aus zip upgraden" ]]; then oszipupgrade; fi
-		if [[ $buildauswahl = "Opensimulator bauen und upgraden" ]]; then osbuilding; fi
+		if [[ $buildauswahl = "$DowngradezurletztenVersion" ]]; then osdowngrade; fi
+		if [[ $buildauswahl = "$Kompilieren" ]]; then compilieren; fi
+		if [[ $buildauswahl = "$oscompi" ]]; then oscompi; fi
+		if [[ $buildauswahl = "$Opensimulatorupgraden" ]]; then osupgrade; fi
+		if [[ $buildauswahl = "$Opensimulatorauszipupgraden" ]]; then oszipupgrade; fi
+		if [[ $buildauswahl = "$Opensimulatorbauenundupgraden" ]]; then osbuilding; fi
 		# -----
-		if [[ $buildauswahl = "Konfigurationen und Verzeichnisstrukturen anlegen" ]]; then configabfrage; fi
-		if [[ $buildauswahl = "Verzeichnisstrukturen anlegen" ]]; then menuosstruktur; fi
-		if [[ $buildauswahl = "Regionsliste erstellen (Backup)" ]]; then regionliste; fi
+		if [[ $buildauswahl = "$KonfigurationenundVerzeichnisstrukturenanlegen" ]]; then configabfrage; fi
+		if [[ $buildauswahl = "$Verzeichnisstrukturenanlegen" ]]; then menuosstruktur; fi
+		if [[ $buildauswahl = "$RegionslisteerstellenBackup" ]]; then regionliste; fi
 		# -----
-		if [[ $buildauswahl = "Sim in Verzeichnisstrukturen eintragen" ]]; then menuosstarteintrag; fi
-		if [[ $buildauswahl = "Sim in Verzeichnisstrukturen austragen" ]]; then menuosstarteintragdel; fi
-		if [[ $buildauswahl = "Sim in Startkonfiguration einfuegen" ]]; then menuosdauerstart; fi
-		if [[ $buildauswahl = "Sim aus Startkonfiguration entfernen" ]]; then menuosdauerstop; fi
+		if [[ $buildauswahl = "$SiminVerzeichnisstruktureneintragen" ]]; then menuosstarteintrag; fi
+		if [[ $buildauswahl = "$SiminVerzeichnisstrukturenaustragen" ]]; then menuosstarteintragdel; fi
+		if [[ $buildauswahl = "$SiminStartkonfigurationeinfuegen" ]]; then menuosdauerstart; fi
+		if [[ $buildauswahl = "$SimausStartkonfigurationentfernen" ]]; then menuosdauerstop; fi
 
-		if [[ $buildauswahl = "Hauptmenu" ]]; then hauptmenu; fi
-		if [[ $buildauswahl = "Dateimennu" ]]; then dateimenu; fi
-		if [[ $buildauswahl = "mySQLmenu" ]]; then mySQLmenu; fi
-		if [[ $buildauswahl = "Weitere Funktionen" ]]; then funktionenmenu; fi
-		if [[ $buildauswahl = "Experten Funktionen" ]]; then expertenmenu; fi
-		if [[ $buildauswahl = "Avatarmennu" ]]; then avatarmenu; fi
+		if [[ $buildauswahl = "$Hauptmenu" ]]; then hauptmenu; fi
+		if [[ $buildauswahl = "$Dateimennu" ]]; then dateimenu; fi
+		if [[ $buildauswahl = "$mySQLmenu" ]]; then mySQLmenu; fi
+		if [[ $buildauswahl = "$WeitereFunktionen" ]]; then funktionenmenu; fi
+		if [[ $buildauswahl = "$ExpertenFunktionen" ]]; then expertenmenu; fi
+		if [[ $buildauswahl = "$Avatarmennu" ]]; then avatarmenu; fi
 
 		if [[ $antwort = 2 ]]; then hilfemenu; fi
 		if [[ $antwort = 1 ]]; then exit; fi
@@ -13848,6 +14028,35 @@ function newhelp() {
 	echo " Der Kommando aufruf:"
 	echo "$(tput setaf $FARBE1) $(tput setab $FARBE2)# Beispiel: bash osmtool.sh oscommand sim1 Welcome \"alert Hallo Welt\" $(tput sgr 0)"
 	echo "$(tput setaf $FARBE1) $(tput setab $FARBE2)# Beispiel: bash osmtool.sh oscommand sim1 Welcome \"alert-user John Doe Hallo John Doe\" $(tput sgr 0)"
+}
+
+##
+ #* newhelp2
+ # newhelp Hilfe.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+##  expertenmenu
+function newhelp2() {
+	# $(tput setab 5) $(tput setaf 2) $(tput sgr 0)
+	log rohtext "Display Hilfe"
+	log rohtext "Syntax: osmtool.sh [h|hilfe|konsolenhilfe|dbhilfe|commandhelp|RobustCommands|OpenSimCommands|hda]"
+	log rohtext "Optionen:"
+	log info "h                       Zeigt diese hilfe."
+	log info "hilfe                   Haupthilfefunktionen."
+	log info "konsolenhilfe           Konsolenhilfe dreht sich um Putty."
+	log info "dbhilfe                 Hilfe rund um die Datenbankmanipulation."
+	log info "commandhelp             OpenSimulator Kommandos in Deutsch."
+	log info "RobustCommands          Robust Kommandos."
+	log info "OpenSimCommands         OpenSimulator Kommandos."
+	log info "MoneyServerCommands     MoneyServer Kommandos."
+	log info "all                     Alle OpenSimulator Konsolenkommandos."
+	log info "hda                     Dialog Menue direktaufrufe."
+	echo " "
+	log rohtext " Der Kommando aufruf:"
+	log rohtext "# Beispiel: bash osmtool.sh oscommand sim1 Welcome \"alert Hallo Welt\" "
+	log rohtext "# Beispiel: bash osmtool.sh oscommand sim1 Welcome \"alert-user John Doe Hallo John Doe\" "
 }
 
 ###########################################################################
