@@ -159,24 +159,59 @@ Nachfolgende Zeilen unten im mit "crontab -e" geöffneten Crontab einfügen.
 Format: Minute(0 - 59)-Stunde(0 - 23)-Tag(1 - 31)-Monat(1 - 12)-Wochentag(0 - 7) - Aktion/Program -
 
     # Restart um 6 Uhr
-    0 6 * * * /opt/osmtool.sh restart
-    
-    # Restart OpenSimulator 0.9.3.0 um 6 Uhr
-    0 6 * * * /opt/osmtool.sh autorestart93
+    # .net bis 4.8
+    0 6 * * * bash /opt/osmtool.sh restart
+    # dotnet 6
+    0 6 * * * bash /opt/osmtool.sh autorestart93
 
 (Format: Minute=0, Stunde=6)
 
 oder
 
     # Stoppen um 22 Uhr
-    0 22 * * * /opt/osmtool.sh autostop
+    0 22 * * * bash /opt/osmtool.sh autostop
 
     # Starten um 9 Uhr
-    0 9 * * * /opt/osmtool.shh autostart
+    0 9 * * * bash /opt/osmtool.sh autostart
     
 (Format: Minute=0, Stunde=22)
 
 (Format: Minute=0, Stunde=9)
+
+Beispiele:
+     
+     # Jede Minute
+    * * * * * bash /opt/osmtool.sh restart
+    # Jeden Tag um 22:30 Uhr
+    30 22 * * * bash /opt/osmtool.sh restart
+    # Jeden Montag um 16:00 Uhr
+    0 16 * * 1 bash /opt/osmtool.sh restart
+    # Jedes Jahr am 1. Januar um 12:00 Uhr
+    0 0 1 1 * bash /opt/osmtool.sh restart
+    # Der 1. jedes Monats um 12:00 Uhr
+    0 0 1 * * bash /opt/osmtool.sh restart
+    # Montags einmal pro Stunde
+    0 * * * 1 bash /opt/osmtool.sh restart
+    # Jede Minute 20 Stunden am Tag
+    * 1-20 * * * bash /opt/osmtool.sh restart
+    # Zweimal pro Stunde
+    0,30 * * * * bash /opt/osmtool.sh restart
+    # 5 mal am Tag
+    0 1-5 * * * bash /opt/osmtool.sh restart
+    # 5 Tage im Monat um 1:00 Uhr
+    0 1 1-5 * * bash /opt/osmtool.sh restart
+    # Alle 2 Minuten
+    */2 * * * * bash /opt/osmtool.sh restart
+    # Jede Minute alle 3 Stunden am 2. eines jeden Monats
+    * 1/3 2 * * bash /opt/osmtool.sh restart
+    # 3 Mal alle 5 Minuten
+    1-3/5 * * * * bash /opt/osmtool.sh restart
+    # Zweimal pro Stunde alle 2 Tage 2 Monate im Jahr um 12 Uhr
+    1,2 0 */2 1,2 * bash /opt/osmtool.sh restart
+    # Jeden Tag um 18:30 Uhr
+    30 18 * * *, de bash /opt/osmtool.sh restart
+    # Täglich um 18:30 Uhr
+    30 18 * * *, de, true bash /opt/osmtool.sh restart
 
 **Crontab speichern:**
 
