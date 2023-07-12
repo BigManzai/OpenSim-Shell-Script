@@ -228,7 +228,11 @@ Crontab zum prüfen noch einmal anzeigen:
 ## TODO und Informationen
 
      09.07.2023 Translate test 126 Languages.
-     Create new Config.
+     delete old config
+     start bash osmtool.sh
+     open osmtoolconfig.ini
+     OSMTRANSLATOR="ON" # ON/OFF
+     OSMTRANS=":en" # Language
      ┌───────────────────────┬───────────────────────┬───────────────────────┐
      │ Afrikaans      -   af │ Hebrew         -   he │ Portuguese     -   pt │
      │ Albanian       -   sq │ Hill Mari      -  mrj │ Punjabi        -   pa │
