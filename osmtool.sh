@@ -20,7 +20,7 @@
 # ! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 # ! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-# * Status 08.07.2023 405 Funktionen.
+# * Status 16.07.2023 410 Funktionen.
 
 # # Installieren sie bitte: #* Visual Studio Code - Mac, Linux, Windows
 #* dazu die Plugins:
@@ -36,7 +36,7 @@
 ###########################################################################
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.921" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.923" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 ##
@@ -617,7 +617,17 @@ function namen() {
 	"Maiaten" "Goten" "Cobander" "Sulones" "Lugier" "Kugerner" "Peukmer" "Caritner" "Ubier" "Toxandrer" "Graioceler" \
 	"Texuandrer" "Variner" "Elbgermanen" "Arosaetan" "Viruner" "Friesen" "Obronen" "Campsianer" "Derlingun" "Helisier" \
 	"Quaden" "Myrgingas" "Buren" "Permanen" "Doelir" "Schauken" "Foser" "Taifalen" "Avionen" "Nictrenses" "Svear" \
-	"Ermunduren" "Danduten")
+	"Alfheim" "Anundshög" "Asgard" "Beilen" "Berne" "Bifröst" "Bilskirnir" "Blouswardt" "Breidablik" "Brenz" "Brunsbüttel" \
+	"Bärhorst" "Büdingen" "Elivagar" "Emmerich" "Fanum" "Fensal" "Flögeln" "Fochteloo" "Folkwang" "Fyrisan" "Fünen" "Geltow" \
+	"Ginnungagap" "Gjallarbru" "Gjöll" "Gladsheim" "Glasisvellir" "Glauberg" "Glitnir" "Gnipahellir" "Gram" "Grenaa" "Grontoft" \
+	"Haldern" "Hel" "Helgeland" "Helheim" "Hemmed" "Himinbjörg" "Hjemstedt" "Hnitbjörg" "Hodde" "Hodorf" "Hohensalza" "Hojgärd" \
+	"Hvergelmir" "Idafeld" "Jomsburg" "Jötunheim" "Kablow" "Kamen" "Keitum" "Kosel" "Landwidi" "Langenbek" "Ledbergsten" "Leve" \
+	"Loxstedt" "Marmstorf" "Marwedel" "Midgard" "Mimirs" "Muspellsheim" "Naströnd" "Nidafelsen" "Nidawellir" "Niflheim" "Niflhel" \
+	"Noatun" "Norre" "Ockenhausen" "Odoom" "Olderdige" "Omme" "Ostermoor" "Putensen" "Reidgotaland" "Reinfeld" "Rullsdorf" \
+	"Schöningstedt" "Sessrumnir" "Skaerbaek" "Skalundahög" "Slidur" "Sontheim" "Speyer" "SteinvonMora" "Svartalfaheimr" "Sökkwabeck" \
+	"Sörupsten" "Thrudheim" "Thrymheim" "Tibirke" "Tinnum" "Tofting" "Uppsala" "Urach" "Urdbrunnen" "Utgard" "Valaskjalf" \
+	"Vanaheimr" "Vineta" "Vingolf" "Vorbasse" "Waberlohe" "Wahlitz" "Walhall" "Werder" "Westick" "Wierde" "Wigrid" "Winternheim" \
+	"Wittemoor"	"Ermunduren" "Danduten")
 
 	# Zaehlen wie viele es sind.
 	count=${#namensarray[@]}
@@ -2125,6 +2135,59 @@ function passwdgenerator() {
 		return 0
 	fi # dialog Aktionen Ende
 	return 0
+}
+
+###########################################################################
+#* KI AI Funktionsgruppe
+###########################################################################
+
+function kiserver() {
+    # Python 3.10 installieren
+    echo "Python 3.10 installieren"
+    sudo apt install python3.10
+
+    # Ohne jre lässt sich kein npm installieren.
+    echo "Ohne jre lässt sich kein npm installieren"
+    sudo apt install default-jre
+
+    # nodejs 18 installieren (19 funktioniert nicht)
+    echo "Nodejs installieren"
+    curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash - &&\
+    sudo apt-get install -y nodejs
+
+    apt update
+    apt upgrade
+}
+
+function kiinstall() {
+    KIVERSION=$1
+    if [ "$KIVERSION" = "" ]; then KIVERSION="7B"; fi
+    
+    echo "Dalai installieren"
+    npx dalai llama install "$KIVERSION"
+}
+
+function installinfos() {
+    echo "Python Version:"
+    python3 -V
+
+    echo "jre Version:"
+    java -version
+    
+    echo "Node Version:"
+    node -v
+}
+
+function kistart() {
+    echo "KI starten"
+    #npx dalai serve
+    screen -fa -S "KI" -d -U -m npx dalai serve
+}
+
+function kistop() {
+    echo "KI stoppen"
+	#sckill KI
+	screen -X -S KI kill
 }
 
 ###########################################################################
@@ -14412,6 +14475,11 @@ case $KOMMANDO in
 	osmtranslateinstall) osmtranslateinstall ;;
 	osmtranslate) osmtranslate "$2" ;;
 	janein) janein "$2" ;;
+	kiserver) kiserver ;;
+	kiinstall) kiinstall ;;
+	installinfos) installinfos ;;
+	kistart) kistart ;;
+	kistop) kistop ;;
 	hda | hilfedirektaufruf | hilfemenudirektaufrufe) hilfemenudirektaufrufe ;;
 	h) newhelp ;;
 	V | v) echo "$SCRIPTNAME $VERSION" ;;
