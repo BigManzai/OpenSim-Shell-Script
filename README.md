@@ -251,7 +251,7 @@ Starten oder stoppen sie die KI AI Software:
      bash osmtool.sh dalaistart
      bash osmtool.sh dalaistop
 
-     Der Zugang erfolgt über IP:3000
+Der Zugang erfolgt über IhreIP:3000
 
 ------------------------------------------------
 
