@@ -20,7 +20,7 @@
 # ! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 # ! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-# * Status 16.07.2023 410 Funktionen.
+# * Status 16.07.2023 411 Funktionen.
 
 # # Installieren sie bitte: #* Visual Studio Code - Mac, Linux, Windows
 #* dazu die Plugins:
@@ -36,7 +36,7 @@
 ###########################################################################
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.923" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.927" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 ##
@@ -2141,7 +2141,34 @@ function passwdgenerator() {
 #* KI AI Funktionsgruppe
 ###########################################################################
 
-function kiserver() {
+##
+ #* dalaiinstallinfos
+ # Versionsnummern benötigter Programme anzeigen.
+ # 
+ #? @param keine.
+ #? @return Versionsnummern.
+ # todo: nichts.
+##
+function dalaiinstallinfos() {
+    echo "Python Version:"
+    python3 -V
+
+    echo "jre Version:"
+    java -version
+    
+    echo "Node Version:"
+    node -v
+}
+
+##
+ #* dalaiserverinstall
+ # Benötigte Programme installieren.
+ # 
+ #? @param keine.
+ #? @return nichts.
+ # todo: nichts.
+##
+function dalaiserverinstall() {
     # Python 3.10 installieren
     echo "Python 3.10 installieren"
     sudo apt install python3.10
@@ -2159,36 +2186,91 @@ function kiserver() {
     apt upgrade
 }
 
-function kiinstall() {
+##
+ #* dalaiinstall
+ # Dalai und Modell installieren default ist 7B.
+ # 
+ #? @param keine.
+ #? @return nichts.
+ # todo: nichts.
+##
+function dalaiinstall() {
     KIVERSION=$1
+	dalaihome="home"
+	dalaimodells="models"
+
+	# Dalai Server Version 0.3.1
+	# License MIT
+
     if [ "$KIVERSION" = "" ]; then KIVERSION="7B"; fi
-    
-    echo "Dalai installieren"
-    npx dalai llama install "$KIVERSION"
+
+	if [ ! -f "/$dalaihome/$dalaimodells/" ]; then
+		echo "Lege Verzeichnis /$dalaihome/$dalaimodells an"
+		mkdir -p /$dalaihome/$dalaimodells
+	else
+		echo "Verzeichnis /$dalaihome/$dalaimodells existiert bereits"
+	fi
+
+	echo "Dalai installieren"
+    # --home - neues Modellverzeichnis setzen.
+	npx dalai llama install "$KIVERSION" --home /$dalaihome/$dalaimodells
 }
 
-function installinfos() {
-    echo "Python Version:"
-    python3 -V
-
-    echo "jre Version:"
-    java -version
-    
-    echo "Node Version:"
-    node -v
-}
-
-function kistart() {
+##
+ #* dalaistart
+ # Der eigentliche start von Dalai Server.
+ # 
+ #? @param keine.
+ #? @return nichts.
+ # todo: nichts.
+##
+function dalaistart() {
     echo "KI starten"
-    #npx dalai serve
-    screen -fa -S "KI" -d -U -m npx dalai serve
+    #Der eigentliche start: npx dalai serve
+    # --home - Modellverzeichnis muss beim start mit angegeben werden.
+	screen -fa -S "KI" -d -U -m npx dalai serve --home /$dalaihome/$dalaimodells
+	# ohne screen: npx dalai serve --home /home/models
+	echo " Der Dalai Server läuft auf der Adresse: ${AKTUELLEIP}:3000"
 }
 
-function kistop() {
+##
+ #* dalaistop
+ # Dalai killen.
+ # 
+ #? @param keine.
+ #? @return nichts.
+ # todo: nichts.
+##
+function dalaistop() {
     echo "KI stoppen"
-	#sckill KI
 	screen -X -S KI kill
 }
+
+##
+ #* dalaiupgrade
+ # Dalai aktualisieren.
+ # 
+ #? @param keine.
+ #? @return nichts.
+ # todo: Schauen ob es ein upgrade gibt und automatisch diese Nummer verwenden.
+##
+function dalaiupgrade() {
+
+	# Schauen ob es ein upgrade gibt.
+	# https://www.npmjs.com/package/dalai
+
+	# Dalai Server Version 0.3.1
+	# License MIT
+
+	dalaiversion=$1
+
+	if [ "$dalaiversion" = "" ]; then dalaiversion="0.3.1"; fi
+	
+    echo "Dalai aktualisieren"
+	npx dalai@$dalaiversion setup
+}
+
+
 
 ###########################################################################
 #* OpenSimulator Kommandos-Funktionen Funktionsgruppe
@@ -5347,6 +5429,18 @@ function getcachegroesse() {
 	du -sh /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/MeshCache 2> /dev/null
 	du -sh /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/j2kDecodeCache 2> /dev/null
 	du -sh /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/ScriptEngines 2> /dev/null
+}
+
+##
+ #* tastaturcachedelete
+ # history des Terminals löschen.
+ # 
+ #? @param keine.
+ #? @return nichts.
+ # todo: nichts.
+##
+function tastaturcachedelete() {
+	history -cw
 }
 
 ##
@@ -14475,11 +14569,13 @@ case $KOMMANDO in
 	osmtranslateinstall) osmtranslateinstall ;;
 	osmtranslate) osmtranslate "$2" ;;
 	janein) janein "$2" ;;
-	kiserver) kiserver ;;
-	kiinstall) kiinstall ;;
-	installinfos) installinfos ;;
-	kistart) kistart ;;
-	kistop) kistop ;;
+	kiserver) dalaiserverinstall ;;
+	kiinstall) dalaiinstall "$2" ;;
+	installinfos) dalaiinstallinfos ;;
+	kistart) dalaistart ;;
+	kistop) dalaistop ;;
+	dalaiupgrade) dalaiupgrade "$2" ;;
+	tastaturcachedelete) tastaturcachedelete ;;
 	hda | hilfedirektaufruf | hilfemenudirektaufrufe) hilfemenudirektaufrufe ;;
 	h) newhelp ;;
 	V | v) echo "$SCRIPTNAME $VERSION" ;;
