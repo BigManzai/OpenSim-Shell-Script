@@ -227,6 +227,34 @@ Crontab zum prüfen noch einmal anzeigen:
 
 ## TODO und Informationen
 
+VERSION 0.9.3.0.927 KI AI Test
+Dies ist eine Künstliche intelligenz (artificial intelligence) für Chats.
+
+Kopieren sie die Datei "osmtool.sh", auf ihren Server
+
+     https://github.com/BigManzai/OpenSim-Shell-Script
+
+Schauen sie nach, ob alle installationen, gewünschte Werte aufweisen:
+
+     bash osmtool.sh dalaiinstallinfos
+
+Wenn nicht, Installieren sie alle Abhängigkeiten für Ihren KI AI Server nach:
+
+     bash osmtool.sh dalaiserverinstall
+
+Installieren sie, die KI AI Software:
+
+     bash osmtool.sh dalaiinstall
+
+Starten oder stoppen sie die KI AI Software:
+
+     bash osmtool.sh dalaistart
+     bash osmtool.sh dalaistop
+
+     Der Zugang erfolgt über IP:3000
+
+------------------------------------------------
+
      09.07.2023 Translate test 126 Languages.
      delete old config
      start bash osmtool.sh
