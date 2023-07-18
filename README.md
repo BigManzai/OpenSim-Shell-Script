@@ -227,7 +227,10 @@ Crontab zum prüfen noch einmal anzeigen:
 
 ## TODO und Informationen
 
-VERSION 0.9.3.0.927 KI AI Test
+VERSION 0.9.3.0.927 KI AI Test.
+
+Test 929 Fehlerkorrektur und erweiterung.
+
 Dies ist eine Künstliche intelligenz (artificial intelligence) für Chats.
 
 Kopieren sie die Datei "osmtool.sh", auf ihren Server
@@ -242,7 +245,7 @@ Wenn nicht, Installieren sie alle Abhängigkeiten für Ihren KI AI Server nach:
 
      bash osmtool.sh dalaiserverinstall
 
-Installieren sie, die KI AI Software:
+Installieren sie, die KI AI Software 7B:
 
      bash osmtool.sh dalaiinstall
 
