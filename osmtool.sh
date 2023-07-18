@@ -20,7 +20,7 @@
 # ! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 # ! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-# * Status 16.07.2023 411 Funktionen.
+# * Status 16.07.2023 412 Funktionen.
 
 # # Installieren sie bitte: #* Visual Studio Code - Mac, Linux, Windows
 #* dazu die Plugins:
@@ -36,7 +36,7 @@
 ###########################################################################
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.927" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.929" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 ##
@@ -2187,6 +2187,54 @@ function dalaiserverinstall() {
 }
 
 ##
+ #* dalaimodelinstall
+ # Installation von Modellen für llama.
+ # 
+ #? @param keine.
+ #? @return Versionsnummern.
+ # todo: nichts.
+##
+function dalaimodelinstall() {
+    MKIVERSION=$1
+	mdalaihome="home/models/llama/models"
+	mdalaimodells="dalai/llama"
+	# /home/models/llama/models
+
+    if [ "$MKIVERSION" = "" ]; then MKIVERSION="7B"; fi
+
+	if [ ! -f "/$mdalaihome/" ]; then
+		echo "Lege Verzeichnis /$mdalaihome an"
+		mkdir -p /$mdalaihome
+	else
+		echo "Verzeichnis /$mdalaihome existiert bereits"
+	fi
+
+	#30B:  https://huggingface.co/guy1267/alpaca30B/tree/main	
+	if [ "$MKIVERSION" = "30B" ]; then 
+	echo "Lege Verzeichnis /$mdalaihome/30B an";
+	mkdir -p /$mdalaihome/30B;
+	cd /$mdalaihome/30B
+	wget https://huggingface.co/guy1267/alpaca30B/resolve/main/ggml-model-q4_0.bin; 
+	fi
+
+	#13B:  https://huggingface.co/guy1267/alpaca13B/tree/main
+	if [ "$MKIVERSION" = "13B" ]; then 
+	echo "Lege Verzeichnis /$mdalaihome/13B an";
+	mkdir -p /$mdalaihome/13B;
+	cd /$mdalaihome/13B
+	wget https://huggingface.co/guy1267/alpaca13B/resolve/main/ggml-model-q4_0.bin; 
+	fi
+
+	#7B:  https://huggingface.co/guy1267/alpaca7B/tree/main
+	if [ "$MKIVERSION" = "7B:" ]; then 
+	echo "Lege Verzeichnis /$mdalaihome/7B an";
+	mkdir -p /$mdalaihome/7B;
+	cd /$mdalaihome/7B
+	wget https://huggingface.co/guy1267/alpaca7B/resolve/main/ggml-model-q4_0.bin; 
+	fi
+}
+
+##
  #* dalaiinstall
  # Dalai und Modell installieren default ist 7B.
  # 
@@ -2197,7 +2245,7 @@ function dalaiserverinstall() {
 function dalaiinstall() {
     KIVERSION=$1
 	dalaihome="home"
-	dalaimodells="models"
+	dalaimodells="dalai"
 
 	# Dalai Server Version 0.3.1
 	# License MIT
@@ -2213,7 +2261,51 @@ function dalaiinstall() {
 
 	echo "Dalai installieren"
     # --home - neues Modellverzeichnis setzen.
-	npx dalai llama install "$KIVERSION" --home /$dalaihome/$dalaimodells
+	### llama
+	#npx dalai llama install "$KIVERSION" --home /$dalaihome/$dalaimodells
+	# npx dalai llama install 13B --home /home/models
+
+	### alpaca
+	npx dalai alpaca install 7B --home /home/dalai
+
+
+}
+
+##
+ #* dalaisearch
+ # wo sind die installationen.
+ # 
+ #? @param keine.
+ #? @return nichts.
+ # todo: nichts.
+##
+function dalaisearch() {
+	which node
+	#/usr/bin/node
+
+	which nodejs
+	#
+
+	which npm
+	#/usr/bin/npm
+
+	which dalai
+	#
+
+}
+
+##
+ #* dalaiuninstall
+ # Dalai und Modell installieren default ist 7B.
+ # 
+ #? @param keine.
+ #? @return nichts.
+ # todo: nichts.
+##
+function dalaiuninstall() {
+	#npm uninstall package-name
+	npx dalai llama uninstall 7B 13B 30B
+	npx dalai alpaca uninstall 7B 13B 30B
 }
 
 ##
@@ -2225,11 +2317,15 @@ function dalaiinstall() {
  # todo: nichts.
 ##
 function dalaistart() {
+	dalaihome="home"
+	dalaimodells="models"
+
     echo "KI starten"
     #Der eigentliche start: npx dalai serve
     # --home - Modellverzeichnis muss beim start mit angegeben werden.
-	screen -fa -S "KI" -d -U -m npx dalai serve --home /$dalaihome/$dalaimodells
+	screen -fa -S "KI" -d -U -m npx dalai serve --home /home/models
 	# ohne screen: npx dalai serve --home /home/models
+	screen -ls
 	echo " Der Dalai Server läuft auf der Adresse: ${AKTUELLEIP}:3000"
 }
 
@@ -2244,6 +2340,7 @@ function dalaistart() {
 function dalaistop() {
     echo "KI stoppen"
 	screen -X -S KI kill
+	screen -ls
 }
 
 ##
@@ -6568,7 +6665,7 @@ function installationen() {
 }
 
 ##
- #* checkupgrade93.
+ #* checkupgrade93
  # Wenn es ein Upgrade gibt, dann baut dies automatisch einen neuen OpenSimulator mit den eingestellten Plugins.
  # 
  #? @param keine.
@@ -14569,12 +14666,14 @@ case $KOMMANDO in
 	osmtranslateinstall) osmtranslateinstall ;;
 	osmtranslate) osmtranslate "$2" ;;
 	janein) janein "$2" ;;
-	kiserver) dalaiserverinstall ;;
-	kiinstall) dalaiinstall "$2" ;;
-	installinfos) dalaiinstallinfos ;;
-	kistart) dalaistart ;;
-	kistop) dalaistop ;;
+	dalaiserverinstall) dalaiserverinstall ;;
+	dalaiinstall) dalaiinstall "$2" ;;
+	dalaiinstallinfos) dalaiinstallinfos ;;
+	dalaistart) dalaistart ;;
+	dalaistop) dalaistop ;;
 	dalaiupgrade) dalaiupgrade "$2" ;;
+	dalaimodelinstall) dalaimodelinstall "$2" ;;
+	dalaiuninstall) dalaiuninstall ;;
 	tastaturcachedelete) tastaturcachedelete ;;
 	hda | hilfedirektaufruf | hilfemenudirektaufrufe) hilfemenudirektaufrufe ;;
 	h) newhelp ;;
