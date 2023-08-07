@@ -1,6 +1,8 @@
 # OpenSim-Shell-Script
 ![GitHub Logo](https://github.com/BigManzai/OpenSim-Shell-Script/blob/main/opensimMultitool.jpg)
 
+Info: This is not for neuromusculoskeletal modeling and simulation. This is OpenSim Metaverse software.
+
 Dieses opensimMULTITOOL Skript, ist in der Lage ein Komplettes Virtuelles Metaversum, auf einem Ubuntu Server zu erstellen. 
 
 Es ist aufgebaut auf meinem 16 Jährigen wissen, über das Metaversum und dessen Betrieb. 
