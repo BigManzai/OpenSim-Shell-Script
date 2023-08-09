@@ -5,10 +5,10 @@
 ###########################################################################
 
 # ? opensimMULTITOOL Copyright (c) 2021 2023 BigManzai Manfred Aabye
-# osmtool.sh Basiert auf meinen Einzelscripten, an denen ich bereits 7 Jahre Arbeite und verbessere.
+# osmtool.sh Basiert auf meinen Einzelscripten, für den OpenSimulator (OpenSim) von http://opensimulator.org an denen ich bereits 7 Jahre Arbeite und verbessere.
 # Da Server unterschiedlich sind, kann eine einwandfreie fuunktion nicht gewaehrleistet werden, also bitte mit bedacht verwenden.
 # Die Benutzung dieses Scriptes, oder deren Bestandteile, erfolgt auf eigene Gefahr!!!
-# Erstellt und getestet ist osmtool.sh, auf verschiedenen Ubuntu 18.04 und 20.04 Servern, unter verschiedenen Server Anbietern (Contabo, Hetzner ...).
+# Erstellt und getestet ist osmtool.sh, auf verschiedenen Ubuntu 18.04, 20.04 und 22.04 Servern, unter verschiedenen Server Anbietern (Contabo, Hetzner ...).
 
 # ? Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -20,7 +20,7 @@
 # ! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 # ! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-# * Status 16.07.2023 412 Funktionen.
+# * Status 09.08.2023 414 Funktionen.
 
 # # Installieren sie bitte: #* Visual Studio Code - Mac, Linux, Windows
 #* dazu die Plugins:
@@ -36,8 +36,60 @@
 ###########################################################################
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.929" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.932" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
+
+##
+ #* isroot
+ # Überprüft, ob der Benutzer root ist.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+function isroot() {
+# Überprüft, ob der Benutzer root ist
+if [ "$EUID" -ne 0 ]; then
+	echo "Sie haben keine root Rechte!"
+	exit 1
+	else 
+	echo "Sie haben root Rechte!"
+fi
+}
+
+##
+ #* osmupgrade
+ # Überprüft, ob das Skript auf GitHub aktualisiert wurde, wenn ja dann upgrade.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+function osmupgrade() {
+    # Definiert das Repository und die Dateinamen
+    repo_url="https://raw.githubusercontent.com/BigManzai/OpenSim-Shell-Script/main/osmtool.sh"
+    script_name="osmtool.sh"
+
+    # Überprüft, ob das Skript lokal existiert
+    if [ ! -f "$script_name" ]; then
+        echo "Das Skript wird heruntergeladen..."
+        wget "$repo_url" -O "$script_name"
+    else
+        echo "Das Skript ist bereits vorhanden"
+    fi
+
+    # Definiert die aktuelle und neueste Version
+    current_version="$(grep -o 'VERSION=\"[0-9]\{1,\}\.[0-9]\{1,\}\.[0-9]\{1,\}\"' "$script_name" | head -1 | tr -d '\;"')"
+    latest_version="$(curl "$repo_url" | grep -o 'VERSION=\"[0-9]\{1,\}\.[0-9]\{1,\}\.[0-9]\{1,\}\"' | head -1 | tr -d '\;"')"
+
+    # Überprüft, ob das Skript auf GitHub aktualisiert wurde
+    if dpkg --compare-versions "${current_version}" lt "${latest_version}"; then
+        echo "Neue Version verfügbar. Aktualisierung..."
+        wget "$repo_url" -O "$script_name"
+    else
+        echo "Keine Updates verfügbar"
+    fi
+}
 
 ##
  #* vardel.
@@ -128,13 +180,20 @@ function osmtranslateinstall() {
  # todo: nichts.
 function osmtranslate() {
     OSMTRANSTEXT=$1
-	#OSMTRANSLATOR="off"
 	if [ "$OSMTRANSLATOR" = "ON" ]; then
     	text=$(trans -brief -no-warn $OSMTRANS "$OSMTRANSTEXT")
 	else
 		text=$OSMTRANSTEXT
 		return 0
 	fi
+}
+function osmtranslateNEU() {
+  OSMTRANSTEXT=$1
+  if [ -z "$OSMTRANSLATOR" ] || [ "$OSMTRANSLATOR" != "ON" ]; then
+    text=$OSMTRANSTEXT
+    return 0
+  fi
+  text=$(trans -brief -no-warn $OSMTRANS "$OSMTRANSTEXT")
 }
 
 ##
@@ -153,6 +212,12 @@ function janein() {
 	if [ "$JNTRANSLATOR" = "" ]; then JNTRANSLATOR="nein"; fi
 	# alles muss klein geschrieben sein.
 	JNTRANSLATOR=$(echo "$JNTRANSLATOR"|tr "[:upper:]" "[:lower:]")
+}
+function janeinNEU() {
+  JNTRANSLATOR=$1
+  JNTRANSLATOR=$(trans -brief -no-warn :de "$JNTRANSLATOR")
+  if [ "$JNTRANSLATOR" = "" ]; then JNTRANSLATOR="nein"; fi
+  JNTRANSLATOR=$(echo "$JNTRANSLATOR"|tr "[[:upper:]]" "[[:lower:]]")
 }
 
 ##
@@ -3708,7 +3773,7 @@ function oscompi93() {
     git checkout dotnet6
     ./runprebuild.sh
     dotnet build --configuration Release OpenSim.sln
-    log info "ine Besonderheit ist, der Startvorgang hat sich geaendert, es wird nicht mehr mit mono OpenSim.exe gestartet, sondern mit dotnet OpenSim.dll."
+    log info "Eine Besonderheit ist, der Startvorgang hat sich geaendert, es wird nicht mehr mit mono OpenSim.exe gestartet, sondern mit dotnet OpenSim.dll."
 
 	log info "Kompilierung wurde durchgefuehrt"
 	return 0
@@ -8426,7 +8491,7 @@ function db_create_new_dbuser() {
 }
 
 ##
- #* createdatabase.
+ #* createdatabase
  # Andere Art Datenbanken und Benutzer anzulegen.
  # createdatabase DBNAME DBUSER DBPASSWD
  # 
@@ -8456,7 +8521,7 @@ EOF
 }
 
 ##
- #* createdatabase.
+ #* createdbuser
  # Andere Art Datenbanken und Benutzer anzulegen.
  # createdbuser ROOTUSER ROOTPASSWD NEWDBUSER NEWDBPASSWD
  # ROOTPASSWD ist optional.
@@ -14675,6 +14740,8 @@ case $KOMMANDO in
 	dalaimodelinstall) dalaimodelinstall "$2" ;;
 	dalaiuninstall) dalaiuninstall ;;
 	tastaturcachedelete) tastaturcachedelete ;;
+	isroot) isroot ;;
+	osmupgrade) osmupgrade ;;
 	hda | hilfedirektaufruf | hilfemenudirektaufrufe) hilfemenudirektaufrufe ;;
 	h) newhelp ;;
 	V | v) echo "$SCRIPTNAME $VERSION" ;;
