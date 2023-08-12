@@ -20,7 +20,7 @@
 # ! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 # ! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-# * Status 09.08.2023 414 Funktionen.
+# * Status 09.08.2023 415 Funktionen.
 
 # # Installieren sie bitte: #* Visual Studio Code - Mac, Linux, Windows
 #* dazu die Plugins:
@@ -36,7 +36,7 @@
 ###########################################################################
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.933" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.934" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 ##
@@ -55,6 +55,31 @@ if [ "$EUID" -ne 0 ]; then
 	else 
 	echo "Sie haben root Rechte!"
 fi
+}
+##
+ #* benutzer
+ # Überprüft, ob der Benutzer echt ist.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+function benutzer() {
+	log rohtext "Benutzername:"
+	read -r BBENUTZER
+	# echo $USER;
+	# echo $LOGNAME;
+	# echo $BBENUTZER;
+	if [ "$USER" = "$BBENUTZER" ]; then
+		if [ "$USER" = "$LOGNAME" ]; then 
+			echo "Sie haben das Recht das osmtool.sh zu nutzen!"
+			return 0; 
+		else 
+			echo "Sie haben kein Recht das osmtool.sh zu nutzen!" || exit
+		fi
+	else
+		echo "Sie haben kein Recht das osmtool.sh zu nutzen!" || exit
+	fi
 }
 
 ##
@@ -14728,6 +14753,7 @@ case $KOMMANDO in
 	tastaturcachedelete) tastaturcachedelete ;;
 	isroot) isroot ;;
 	osmupgrade) osmupgrade ;;
+	benutzer) benutzer ;;
 	hda | hilfedirektaufruf | hilfemenudirektaufrufe) hilfemenudirektaufrufe ;;
 	h) newhelp ;;
 	V | v) echo "$SCRIPTNAME $VERSION" ;;
