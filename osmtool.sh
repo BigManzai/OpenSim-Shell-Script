@@ -36,7 +36,7 @@
 ###########################################################################
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.932" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.933" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 ##
@@ -187,14 +187,6 @@ function osmtranslate() {
 		return 0
 	fi
 }
-function osmtranslateNEU() {
-  OSMTRANSTEXT=$1
-  if [ -z "$OSMTRANSLATOR" ] || [ "$OSMTRANSLATOR" != "ON" ]; then
-    text=$OSMTRANSTEXT
-    return 0
-  fi
-  text=$(trans -brief -no-warn $OSMTRANS "$OSMTRANSTEXT")
-}
 
 ##
  #* janein
@@ -212,12 +204,6 @@ function janein() {
 	if [ "$JNTRANSLATOR" = "" ]; then JNTRANSLATOR="nein"; fi
 	# alles muss klein geschrieben sein.
 	JNTRANSLATOR=$(echo "$JNTRANSLATOR"|tr "[:upper:]" "[:lower:]")
-}
-function janeinNEU() {
-  JNTRANSLATOR=$1
-  JNTRANSLATOR=$(trans -brief -no-warn :de "$JNTRANSLATOR")
-  if [ "$JNTRANSLATOR" = "" ]; then JNTRANSLATOR="nein"; fi
-  JNTRANSLATOR=$(echo "$JNTRANSLATOR"|tr "[[:upper:]]" "[[:lower:]]")
 }
 
 ##
@@ -509,9 +495,9 @@ function osmtoolconfigabfrage() {
 	log rohtext "your selection: $OSMTRANSLATOR"
 	log rohtext "##################################################################"
 
-	log rohtext "Please select your language: [:en]"
+	log rohtext "Please select your language: [:de]"
 	read -r OSMTRANS
-	if [ "$OSMTRANS" = "" ]; then OSMTRANS=":en"; fi
+	if [ "$OSMTRANS" = "" ]; then OSMTRANS=":de"; fi
 	log rohtext "Your language $OSMTRANS"
 	log rohtext "##################################################################"
 
@@ -615,7 +601,7 @@ function dummyvar() {
 	DIALOG_CANCEL=1; DIALOG_ESC=255; DIALOG=dialog; VISITORLIST="yes"; REGIONSANZEIGE="yes"; #DELREGIONS="no";
 	netversion="1946"; CONFIGPFAD="OpenSimConfig"; DOTNETMODUS="yes";
 	OSVERSION="opensim-0.9.2.2Dev";
-	OPENSIMVERSION="opensim-0.9.2.2.zip"; OSMTRANS=":en"; OSMTRANSLATOR="OFF";
+	OPENSIMVERSION="opensim-0.9.2.2.zip"; OSMTRANS=":de"; OSMTRANSLATOR="OFF";
 }
 
 ##
@@ -920,7 +906,7 @@ trim_all() {
 ##
 function osmtranslatedirekt() {  
     OSMTRANSTEXT=$1
-	if [ "$OSMTRANS" = ":de" ]; then echo "Es funktioniert nicht von der gleichen Sprache in dieselbe zu übersetzen."; fi
+	if [ "$OSMTRANS" = ":de" ]; then OSMTRANSLATOR="OFF"; echo "Es funktioniert nicht von der gleichen Sprache in dieselbe zu übersetzen."; fi
     #trans -show-original n -show-original-phonetics n -show-translation Y -show-translation-phonetics n -show-prompt-message n -show-languages n -show-original-dictionary N -show-dictionary n -show-alternatives n -no-warn $OSMTRANS "$OSMTRANSTEXT"
 	trans -brief $OSMTRANS "$OSMTRANSTEXT"
 }
