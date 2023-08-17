@@ -1,0 +1,6 @@
+example size
+Beispielgröße
+1280x522 pixel
+
+Please do not forget the config.php file, please enter your database data there.
+Bitte vergessen Sie nicht die config.php Datei, dort fügen Sie bitte ihre Datenbankdaten ein.
