@@ -8,7 +8,7 @@
     body {
     margin: 0px;
     font-family: Arial, Verdana, sans-serif;
-    font-size: 13px;
+    font-size: 26px;
     background: #FFF;}
 
     p {
