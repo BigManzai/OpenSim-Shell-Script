@@ -21,6 +21,7 @@
 <?php
 // Konfiguration einbinden
 include("./includes/config.php");
+$region['sizeX'] = 256; $region['sizeY'] = 256; //Define variable $region > NULL
 ?>
 
 <head>
@@ -52,7 +53,10 @@ w3-theme-dark-grey, w3-theme-black, w3-theme-w3schools more on w3school -->
 
 <?php
 //<!-- Sprachen laden -->
-$sprache = substr($_SERVER["HTTP_ACCEPT_LANGUAGE"],0,2);
+$browser_lang = !empty($_SERVER['HTTP_ACCEPT_LANGUAGE']) ? strtok(strip_tags($_SERVER['HTTP_ACCEPT_LANGUAGE']), ',') : '';
+$sprache = substr($browser_lang, 0,2);
+
+// $sprache = substr($_SERVER["HTTP_ACCEPT_LANGUAGE"],0,2);
 switch($sprache) {
 case 'de': include("./includes/de.php");break;
 case 'fr': include("./includes/fr.php");break;
@@ -176,7 +180,9 @@ if ($CONF_map_with == 5)
 $con = mysqli_connect($CONF_db_server,$CONF_db_user,$CONF_db_pass,$CONF_db_database);
 
 // Datenbank abfragen
-$db_regionsdaten = mysqli_query($con,"SELECT uuid,regionName,locX,locY,serverURI,sizeX,sizeY,owner_uuid FROM regions") or die("Error: " . mysqli_error($con));
+$db_regionsdaten = mysqli_query($con,"SELECT uuid,regionName,locX,locY,regionMapTexture,serverURI,sizeX,sizeY,owner_uuid FROM regions") or die("Error: " . mysqli_error($con));
+// regionMapTexture
+
 
 /* Datenbank pruefen */
 if (mysqli_connect_errno()) 
@@ -186,8 +192,8 @@ exit();
 }
 
 $xx = 0;
-if ($region['sizeX'] == 0) {$region['sizeX'] = 256; }
-if ($region['sizeY'] == 0) {$region['sizeY'] = 256; }
+if ( $region['sizeX'] == 0 ) { $region['sizeX'] = 256; $region['sizeY'] = 256;}
+//if ( $region['sizeY'] == 0 ) { $region['sizeY'] = 256; }
 
 // ********************************************************
 
@@ -195,6 +201,7 @@ while($region=mysqli_fetch_array($db_regionsdaten))
 {
 if ((($region['sizeX'] == 256) && ($region['sizeY'] == 256)) || (($region['sizeX'] == 256) && ($region['sizeY'] == 0)))
 {
+	// regionMapTexture .$region['regionMapTexture'].";"
 $work_reg = $region['uuid'].";".$region['regionName'].";".$region['locX'].";".$region['locY'].";".$region['serverURI'].";".$region['sizeX'].";".$region['sizeY'].";".$region['owner_uuid'].";SingleRegion";
 $region_sg[$xx] = $work_reg;
 $xx++;
