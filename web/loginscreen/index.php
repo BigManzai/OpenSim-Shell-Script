@@ -28,7 +28,7 @@ $logoon = "ON";
 // Text anzeigen
 $texton = "ON";
 // Logo ladeort
-$logo = "includes/Metavers.png";
+$logo = "includes/Metavers102.png";
 // Breite des Logos
 $breite = "40%";
 // Hoehe des Logos
