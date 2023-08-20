@@ -8,4 +8,4 @@ Logo und Text lassen sich abschalten.
 
 Einstellungen sind in der Config für die Datenbank und in der index für Logo Text und weitere Einstellungen.
 
-![GitHub Logo](https://github.com/BigManzai/OpenSim-Shell-Script/blob/main/web/loginscreen/loginscreen102.png)
+![GitHub Logo](https://github.com/BigManzai/OpenSim-Shell-Script/blob/main/web/loginscreen/loginscreen102.jpg)
