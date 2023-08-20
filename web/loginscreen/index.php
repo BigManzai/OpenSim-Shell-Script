@@ -1,6 +1,46 @@
 <!DOCTYPE html>
+  <!-- loginscreen Version 1.0.2 by Manfred Aabye Lizens MIT -->
+  <html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="Manfred Aabye">
+    <meta name="publisher" content="Manfred Aabye">
+    <meta name="copyright" content="Manfred Aabye">
+    <meta name="description" content="Welcome to the metaverse!">
+    <meta name="keywords" content="OpenSimulator, OpenSim, Grid, Metaversum, Metavers, Virtual, Reality, 3D, CAD, Rendering, 3D-Rendering, realtime 3d visualization">
+    <meta name="page-topic" content="Umwelt">
+    <meta name="page-type" content="Karte Plan">
+    <meta name="audience" content="Alle"><meta http-equiv="content-language" content="de">
+    <meta name="robots" content="index, follow">
+    <meta http-equiv="cache-control" content="no-cache">
+    <link rel="shortcut icon" href="includes/favicon.ico"/>
+    <title>loginscreen</title>
+</head>
+
+<?php
+//
+// Alle weiteren Einstellungen
+//
+// Logo anzeigen
+$logoon = "ON";
+// Text anzeigen
+$texton = "ON";
+// Logo ladeort
+$logo = "includes/Metavers.png";
+// Breite des Logos
+$breite = "40%";
+// Hoehe des Logos
+$hoehe = "40%";
+// Anzeigetext - Leerzeichen am Anfang = &nbsp;
+$text = "<p> &nbsp; Welcome to the metaverse! </p>";
+// Zeit zwischen den Bildern 1000 = 1 Sekunde
+$ptime = '9000';
+?>
+
 <html>
-  <!-- loginscreen Version 1.0.0 by Manfred Aabye Lizens MIT -->
+
   <head>
     <meta charset="UTF-8">
 
@@ -9,7 +49,7 @@
     margin: 0px;
     font-family: Arial, Verdana, sans-serif;
     font-size: 26px;
-    background: #FFF;}
+    background: #3A3A3A;}
 
     p {
     margin: 0px;
@@ -19,7 +59,7 @@
     font-weight: bold;}
 
     a {
-    color: #FFF;}
+    color: #3A3A3A;}
 
     a:hover {
     color: red;}
@@ -73,18 +113,15 @@
     fieldset.white {
     padding: 5px;
     height: 96%;
-    border:3px solid #FFFFFF;}
+    border:3px solid #3A3A3A;}
 
     fieldset.white2 {
     padding: 5px;
     height: 96%;
-    border:3px solid #FFFFFF;}
+    border:3px solid #3A3A3A;}
 </style>
 
-  <title>loginscreen</title>
-  <link rel="shortcut icon" href="includes/favicon.ico" />
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-</head>
+
 
 <body>
   <!-- PHP Script fuer alle Bilder aus einem Verzeichnis ANFANG -->
@@ -109,6 +146,10 @@
 
   </div>
 
+
+
+
+
   <!-- Logo oder Begruessungstext -->
     <div id='main'><br>
     <table border="0" width="100%" height="100%' cellspacing="0" cellpadding="0">
@@ -116,9 +157,11 @@
             <tr>
                     <!-- Das Logo Bild -->
                     <!-- <img border="0" src="./img/logo.png" width="40%" height="40%"> -->
+                    <?php if ($logoon == "ON") { echo "<img border=\"0\" src= $logo width= $breite height= $hoehe >"; } ?>
+
                     <!-- Der Begruessungstext -->
-                    <p>Welcome to the metaverse!</p>
-                    </td>
+                    <!-- <p>Welcome to the metaverse!</p> -->
+                    <?php if ($texton == "ON") { echo "$text"; } ?>
             </tr>
 
     </table>
@@ -172,7 +215,7 @@
       slideIndex++;
       if (slideIndex > x.length) {slideIndex = 1}
       x[slideIndex-1].style.display = "block";
-      setTimeout(carousel, 9000); // 1000 = 1 second slide 
+      setTimeout(carousel, <?php echo "$ptime" ?>); // 1000 = 1 second slide 
   }
   </script> 
 
