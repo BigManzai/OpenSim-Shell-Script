@@ -36,7 +36,7 @@
 ###########################################################################
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.934" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.938" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 ##
@@ -205,6 +205,11 @@ function osmtranslateinstall() {
  # todo: nichts.
 function osmtranslate() {
     OSMTRANSTEXT=$1
+	if [ "$OSMTRANSLATOR" = "OFF" ]; then 
+	text=$OSMTRANSTEXT; 
+	return 0; 
+	fi
+
 	if [ "$OSMTRANSLATOR" = "ON" ]; then
     	text=$(trans -brief -no-warn $OSMTRANS "$OSMTRANSTEXT")
 	else
@@ -212,6 +217,36 @@ function osmtranslate() {
 		return 0
 	fi
 }
+
+##
+ #* osmtranslatedirekt
+ # Text übersetzen.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+function osmtranslatedirekt() {  
+    OSMTRANSTEXT=$1
+	if [ "$OSMTRANSLATOR" = "OFF" ]; then text=$OSMTRANSTEXT; return 0; fi
+	if [ "$OSMTRANS" = ":de" ]; then OSMTRANSLATOR="OFF"; echo "Es funktioniert nicht von der gleichen Sprache in dieselbe zu übersetzen."; fi
+    #trans -show-original n -show-original-phonetics n -show-translation Y -show-translation-phonetics n -show-prompt-message n -show-languages n -show-original-dictionary N -show-dictionary n -show-alternatives n -no-warn $OSMTRANS "$OSMTRANSTEXT"
+	trans -brief $OSMTRANS "$OSMTRANSTEXT"
+}
+
+##
+ #* osmnotranslate
+ # keinen Text übersetzen.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+function osmnotranslate() {
+	text=$OSMTRANSTEXT
+	if [ "$OSMTRANSLATOR" = "OFF" ]; then text=$OSMTRANSTEXT; return 0; fi
+}
+
 
 ##
  #* janein
@@ -920,22 +955,6 @@ trim_all() {
     printf '%s\n' "$*"
     set +f
 }
-
-##
- #* osmtranslatedirekt
- # Text übersetzen.
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
-##
-function osmtranslatedirekt() {  
-    OSMTRANSTEXT=$1
-	if [ "$OSMTRANS" = ":de" ]; then OSMTRANSLATOR="OFF"; echo "Es funktioniert nicht von der gleichen Sprache in dieselbe zu übersetzen."; fi
-    #trans -show-original n -show-original-phonetics n -show-translation Y -show-translation-phonetics n -show-prompt-message n -show-languages n -show-original-dictionary N -show-dictionary n -show-alternatives n -no-warn $OSMTRANS "$OSMTRANSTEXT"
-	trans -brief $OSMTRANS "$OSMTRANSTEXT"
-}
-
 
 ##
  #* iinstall.
@@ -5311,45 +5330,37 @@ function menuautosimstart() {
 			cd /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin || return 1
 
 			if [ "$REGIONSANZEIGE" = "yes" ]; then
-				# Zeigt die Regionsnamen aus den Regions.ini an
+				# Zeigt die Regionsnamen aus einer Regions.ini an
 				STARTREGIONSAUSGABE=$(awk -F "[" '/\[/ {print $1 $2 $3}' /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/Regions/*.ini | sed s/'\]'//g);
 				log info "${VERZEICHNISSLISTE[$i]} hat folgende Regionen:";
-				#sed 's/^\(.\)/     \1/' "$STARTREGIONSAUSGABE"
-				echo "$STARTREGIONSAUSGABE";
-				#log info "$STARTREGIONSAUSGABE";
-				#printf '%s' "$STARTREGIONSAUSGABE";
+				for regionen in "${STARTREGIONSAUSGABE[@]}"; do log rohtext "$regionen"; done
 			fi
 
 			# AOT Aktiveren oder Deaktivieren.
-			#if [[ $SETAOTON = "yes" ]]; then
-				#BERECHNUNG1=$((100 / "$ANZAHLVERZEICHNISSLISTE"))
-				#BALKEN1=$(("$i" * "$BERECHNUNG1"))
-				#screen -fa -S "${VERZEICHNISSLISTE[$i]}" -d -U -m mono --desktop -O=all OpenSim.exe | log info "${VERZEICHNISSLISTE[$i]} wurde gestartet" # dialog --gauge "Auto Sim start..." 6 64 $BALKEN1
-				#dialogclear
-			#else
-				#BERECHNUNG1=$((100 / "$ANZAHLVERZEICHNISSLISTE"))
-				#BALKEN1=$(("$i" * "$BERECHNUNG1"))
+			if [[ $SETAOTON = "yes" ]]; then
+				screen -fa -S "${VERZEICHNISSLISTE[$i]}" -d -U -m mono --desktop -O=all OpenSim.exe
+			else
 
-			#screen -fa -S "${VERZEICHNISSLISTE[$i]}" -d -U -m mono OpenSim.exe | log info "${VERZEICHNISSLISTE[$i]} wurde gestartet" # dialog --gauge "Auto Sim start..." 6 64 $BALKEN1
-			# DOTNETMODUS="yes"
-			if [[ "${DOTNETMODUS}" == "yes" ]]; then
-				screen -fa -S "${VERZEICHNISSLISTE[$i]}" -d -U -m dotnet OpenSim.dll
+				#screen -fa -S "${VERZEICHNISSLISTE[$i]}" -d -U -m mono OpenSim.exe
+				# DOTNETMODUS="yes"
+				if [[ "${DOTNETMODUS}" == "yes" ]]; then
+					screen -fa -S "${VERZEICHNISSLISTE[$i]}" -d -U -m dotnet OpenSim.dll
 				fi
-			# DOTNETMODUS="no"
-			if [[ "${DOTNETMODUS}" == "no" ]]; then
-				screen -fa -S "${VERZEICHNISSLISTE[$i]}" -d -U -m mono OpenSim.exe
+				# DOTNETMODUS="no"
+				if [[ "${DOTNETMODUS}" == "no" ]]; then
+					screen -fa -S "${VERZEICHNISSLISTE[$i]}" -d -U -m mono OpenSim.exe
+				fi
+
 			fi
-
-			#dialogclear
-
-			#fi
 			sleep $STARTWARTEZEIT
 		done
 	else
 		# es laeuft mindestens ein Simulator - work
-		log error "Regionen laufen bereits!"
+		log text "WORKS:  Regionen laufen bereits!"
 	fi
-	return 0
+	#hauptmenu
+	menuinfo
+	#return 0
 }
 
 ##
@@ -6317,6 +6328,7 @@ function installopensimulator() {
 	iinstall2 apt-utils
     iinstall2 libgdiplus
     iinstall2 libc6-dev
+	iinstall2 translate-shell
 }
 
 ##
@@ -13506,6 +13518,20 @@ MoneyServerCommands
 ###########################################################################
 
 ##
+ #* menutrans
+ # Versuch das Menu schneller und besser zu uebersetzen.
+ # 
+ #? @param name Erklaerung.
+ #? @return name was wird zurueckgegeben.
+ # todo: nichts.
+## 
+function menutrans() {
+	OSMTRANSTEXT=$1
+	if [ "$OSMTRANSLATOR" = "OFF" ]; then echo $OSMTRANSTEXT; fi 
+	if [ "$OSMTRANSLATOR" = "ON" ]; then trans -brief -no-warn $OSMTRANS "$OSMTRANSTEXT"; fi
+}
+
+##
  #* hauptmenu.
  # Startmenue.
  # 
@@ -13521,28 +13547,28 @@ function hauptmenu() {
 	TITLE="Hauptmenu"
 	MENU="opensimMULTITOOL $VERSION"
 
-	OpenSimRestart=$(trans -brief -no-warn $OSMTRANS "OpenSim Restart")
-	OpenSimAutostopp=$(trans -brief -no-warn $OSMTRANS "OpenSim Autostopp")
-	OpenSimAutostart=$(trans -brief -no-warn $OSMTRANS "OpenSim Autostart")
+	OpenSimRestart=$(menutrans "OpenSim Restart")
+	OpenSimAutostopp=$(menutrans "OpenSim Autostopp")
+	OpenSimAutostart=$(menutrans "OpenSim Autostart")
 
-	SimulatorStop=$(trans -brief -no-warn $OSMTRANS "Einzelner Simulator Stop")
-	SimulatorStart=$(trans -brief -no-warn $OSMTRANS "Einzelner Simulator Start")
+	SimulatorStop=$(menutrans "Einzelner Simulator Stop")
+	SimulatorStart=$(menutrans "Einzelner Simulator Start")
 
-	Accountanlegen=$(trans -brief -no-warn $OSMTRANS "Benutzer Account anlegen")
-	Parzellenentfernen=$(trans -brief -no-warn $OSMTRANS "Parzellen entfernen")
-	Objektentfernen=$(trans -brief -no-warn $OSMTRANS "Objekt entfernen")
+	Accountanlegen=$(menutrans "Benutzer Account anlegen")
+	Parzellenentfernen=$(menutrans "Parzellen entfernen")
+	Objektentfernen=$(menutrans "Objekt entfernen")
 
-	Systeminformationen=$(trans -brief -no-warn $OSMTRANS "Systeminformationen")
-	SimInformationen=$(trans -brief -no-warn $OSMTRANS "Sim Informationen")
-	ScreenListe=$(trans -brief -no-warn $OSMTRANS "Screen Liste")
-	ServerlaufzeitundNeustart=$(trans -brief -no-warn $OSMTRANS "Server laufzeit und Neustart")
+	Systeminformationen=$(menutrans "Systeminformationen")
+	SimInformationen=$(menutrans "Sim Informationen")
+	ScreenListe=$(menutrans "Screen Liste")
+	ServerlaufzeitundNeustart=$(menutrans "Server laufzeit und Neustart")
 
-	Avatarmennu=$(trans -brief -no-warn $OSMTRANS "Avatarmennu")
-	WeitereFunktionen=$(trans -brief -no-warn $OSMTRANS "Weitere Funktionen")
-	Dateimennu=$(trans -brief -no-warn $OSMTRANS "Dateimennu")
-	mySQLmenu=$(trans -brief -no-warn $OSMTRANS "mySQLmenu")
-	BuildFunktionen=$(trans -brief -no-warn $OSMTRANS "Build Funktionen")
-	ExpertenFunktionen=$(trans -brief -no-warn $OSMTRANS "Experten Funktionen")
+	Avatarmennu=$(menutrans "Avatarmennu")
+	WeitereFunktionen=$(menutrans "Weitere Funktionen")
+	Dateimennu=$(menutrans "Dateimennu")
+	mySQLmenu=$(menutrans "mySQLmenu")
+	BuildFunktionen=$(menutrans "Build Funktionen")
+	ExpertenFunktionen=$(menutrans "Experten Funktionen")
 
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
@@ -13577,9 +13603,9 @@ function hauptmenu() {
 		dialog --clear
 		ScreenLog
 
-		if [[ $mauswahl = "$OpenSimRestart" ]]; then menuautostart; fi
+		if [[ $mauswahl = "$OpenSimRestart" ]]; then menuautorestart; fi
 		if [[ $mauswahl = "$OpenSimAutostopp" ]]; then menuautostop; fi
-		if [[ $mauswahl = "$OpenSimAutostart" ]]; then menuautorestart; fi
+		if [[ $mauswahl = "$OpenSimAutostart" ]]; then menuautostart; fi
 
 		if [[ $mauswahl = "$SimulatorStop" ]]; then menuosstop; fi
 		if [[ $mauswahl = "$SimulatorStart" ]]; then menuosstart; fi
@@ -13625,18 +13651,18 @@ function hilfemenu() {
 	TITLE="Hilfemenu"
 	MENU="opensimMULTITOOL $VERSION"
 
-	Hilfe=$(trans -brief -no-warn $OSMTRANS "Hilfe")
-	Konsolenhilfe=$(trans -brief -no-warn $OSMTRANS "Konsolenhilfe")
-	Kommandohilfe=$(trans -brief -no-warn $OSMTRANS "Kommandohilfe")
-	RobustCommands=$(trans -brief -no-warn $OSMTRANS "RobustCommands")
-	OpenSimCommands=$(trans -brief -no-warn $OSMTRANS "OpenSimCommands")
-	MoneyServerCommands=$(trans -brief -no-warn $OSMTRANS "MoneyServerCommands")
-	Konfigurationlesen=$(trans -brief -no-warn $OSMTRANS "Konfiguration lesen")
+	Hilfe=$(menutrans "Hilfe")
+	Konsolenhilfe=$(menutrans "Konsolenhilfe")
+	Kommandohilfe=$(menutrans "Kommandohilfe")
+	RobustCommands=$(menutrans "RobustCommands")
+	OpenSimCommands=$(menutrans "OpenSimCommands")
+	MoneyServerCommands=$(menutrans "MoneyServerCommands")
+	Konfigurationlesen=$(menutrans "Konfiguration lesen")
 
-	Passwortgenerator=$(trans -brief -no-warn $OSMTRANS "Passwortgenerator")
-	Kalender=$(trans -brief -no-warn $OSMTRANS "Kalender")
+	Passwortgenerator=$(menutrans "Passwortgenerator")
+	Kalender=$(menutrans "Kalender")
 
-	Hauptmenu=$(trans -brief -no-warn $OSMTRANS "Hauptmenu")
+	Hauptmenu=$(menutrans "Hauptmenu")
 
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
@@ -13704,26 +13730,26 @@ function funktionenmenu() {
 	TITLE="Funktionsmenu"
 	MENU="opensimMULTITOOL $VERSION"
 
-	Gridstarten=$(trans -brief -no-warn $OSMTRANS "Grid starten")
-	Gridstoppen=$(trans -brief -no-warn $OSMTRANS "Grid stoppen")
+	Gridstarten=$(menutrans "Grid starten")
+	Gridstoppen=$(menutrans "Grid stoppen")
 
-	Robuststarten=$(trans -brief -no-warn $OSMTRANS "Robust starten")
-	Robuststoppen=$(trans -brief -no-warn $OSMTRANS "Robust stoppen")
-	Moneystarten=$(trans -brief -no-warn $OSMTRANS "Money starten")
-	Moneystoppen=$(trans -brief -no-warn $OSMTRANS "Money stoppen")
+	Robuststarten=$(menutrans "Robust starten")
+	Robuststoppen=$(menutrans "Robust stoppen")
+	Moneystarten=$(menutrans "Money starten")
+	Moneystoppen=$(menutrans "Money stoppen")
 
-	AutomatischerSimstart=$(trans -brief -no-warn $OSMTRANS "Automatischer Sim start")
-	AutomatischerSimstop=$(trans -brief -no-warn $OSMTRANS "Automatischer Sim stop")
+	AutomatischerSimstart=$(menutrans "Automatischer Sim start")
+	AutomatischerSimstop=$(menutrans "Automatischer Sim stop")
 
-	AutomatischerScreenstop=$(trans -brief -no-warn $OSMTRANS "Automatischer Screen stop")
-	Regionenanzeigen=$(trans -brief -no-warn $OSMTRANS "Regionen anzeigen")
+	AutomatischerScreenstop=$(menutrans "Automatischer Screen stop")
+	Regionenanzeigen=$(menutrans "Regionen anzeigen")
 
-	Hauptmennu=$(trans -brief -no-warn $OSMTRANS "Hauptmennu")
-	Avatarmennu=$(trans -brief -no-warn $OSMTRANS "Avatarmennu")
-	Dateimennu=$(trans -brief -no-warn $OSMTRANS "Dateimennu")
-	mySQLmenu=$(trans -brief -no-warn $OSMTRANS "mySQLmenu")
-	BuildFunktionen=$(trans -brief -no-warn $OSMTRANS "Build Funktionen")
-	ExpertenFunktionen=$(trans -brief -no-warn $OSMTRANS "Experten Funktionen")
+	Hauptmennu=$(menutrans "Hauptmennu")
+	Avatarmennu=$(menutrans "Avatarmennu")
+	Dateimennu=$(menutrans "Dateimennu")
+	mySQLmenu=$(menutrans "mySQLmenu")
+	BuildFunktionen=$(menutrans "Build Funktionen")
+	ExpertenFunktionen=$(menutrans "Experten Funktionen")
 
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
@@ -13804,24 +13830,24 @@ function dateimenu() {
 	TITLE="Dateimenu"
 	MENU="opensimMULTITOOL $VERSION"
 
-	Inventarspeichern=$(trans -brief -no-warn $OSMTRANS "Inventar speichern")
-	Inventarladen=$(trans -brief -no-warn $OSMTRANS "Inventar laden")
-	RegionOARsichern=$(trans -brief -no-warn $OSMTRANS "Region OAR sichern")
-	AutomatischerRegionsbackup=$(trans -brief -no-warn $OSMTRANS "Automatischer Regionsbackup")
+	Inventarspeichern=$(menutrans "Inventar speichern")
+	Inventarladen=$(menutrans "Inventar laden")
+	RegionOARsichern=$(menutrans "Region OAR sichern")
+	AutomatischerRegionsbackup=$(menutrans "Automatischer Regionsbackup")
 
-	LogDateienloeschen=$(trans -brief -no-warn $OSMTRANS "Log Dateien loeschen")
-	MapKartenloeschen=$(trans -brief -no-warn $OSMTRANS "Map Karten loeschen")
-	AssetCacheloeschen=$(trans -brief -no-warn $OSMTRANS "Asset Cache loeschen")
-	Assetloeschen=$(trans -brief -no-warn $OSMTRANS "Asset loeschen")
+	LogDateienloeschen=$(menutrans "Log Dateien loeschen")
+	MapKartenloeschen=$(menutrans "Map Karten loeschen")
+	AssetCacheloeschen=$(menutrans "Asset Cache loeschen")
+	Assetloeschen=$(menutrans "Asset loeschen")
 
-	GridKonfigurationenerstellen=$(trans -brief -no-warn $OSMTRANS "Grid Konfigurationen erstellen")
+	GridKonfigurationenerstellen=$(menutrans "Grid Konfigurationen erstellen")
 
-	Hauptmenu=$(trans -brief -no-warn $OSMTRANS "Hauptmenu")
-	Avatarmennu=$(trans -brief -no-warn $OSMTRANS "Avatarmennu")
-	WeitereFunktionen=$(trans -brief -no-warn $OSMTRANS "Weitere Funktionen")
-	mySQLmenu=$(trans -brief -no-warn $OSMTRANS "mySQLmenu")
-	BuildFunktionen=$(trans -brief -no-warn $OSMTRANS "Build Funktionen")
-	ExpertenFunktionen=$(trans -brief -no-warn $OSMTRANS "Experten Funktionen")
+	Hauptmenu=$(menutrans "Hauptmenu")
+	Avatarmennu=$(menutrans "Avatarmennu")
+	WeitereFunktionen=$(menutrans "Weitere Funktionen")
+	mySQLmenu=$(menutrans "mySQLmenu")
+	BuildFunktionen=$(menutrans "Build Funktionen")
+	ExpertenFunktionen=$(menutrans "Experten Funktionen")
 
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
@@ -13901,33 +13927,33 @@ function mySQLmenu() {
 	TITLE="mySQLmenu"
 	MENU="opensimMULTITOOL $VERSION"
 
-	AlleDatenbankenanzeigen=$(trans -brief -no-warn $OSMTRANS "Alle Datenbanken anzeigen")
-	TabelleneinerDatenbank=$(trans -brief -no-warn $OSMTRANS "Tabellen einer Datenbank")
-	mySQLDatenbankbenutzeranzeigen=$(trans -brief -no-warn $OSMTRANS "mySQL Datenbankbenutzer anzeigen")
-	AlleGridRegionenlisten=$(trans -brief -no-warn $OSMTRANS "Alle Grid Regionen listen")			
-	RegionURIpruefensortiertnachURI=$(trans -brief -no-warn $OSMTRANS "Region URI pruefen sortiert nach URI")
-	PortspruefensortiertnachPorts=$(trans -brief -no-warn $OSMTRANS "Ports pruefen sortiert nach Ports")			
-	Benutzerinventoryfolders=$(trans -brief -no-warn $OSMTRANS "Benutzer inventoryfolders alles was type -1 ist anzeigen")
-	ZeigeErstellungsdatumeinesUsersan=$(trans -brief -no-warn $OSMTRANS "Zeige Erstellungsdatum eines Users an")
-	FindefalscheEMailAdressen=$(trans -brief -no-warn $OSMTRANS "Finde falsche E-Mail Adressen")
-	ListetalleerstelltenBenutzerrechteauf=$(trans -brief -no-warn $OSMTRANS "Listet alle erstellten Benutzerrechte auf")
+	AlleDatenbankenanzeigen=$(menutrans "Alle Datenbanken anzeigen")
+	TabelleneinerDatenbank=$(menutrans "Tabellen einer Datenbank")
+	mySQLDatenbankbenutzeranzeigen=$(menutrans "mySQL Datenbankbenutzer anzeigen")
+	AlleGridRegionenlisten=$(menutrans "Alle Grid Regionen listen")			
+	RegionURIpruefensortiertnachURI=$(menutrans "Region URI pruefen sortiert nach URI")
+	PortspruefensortiertnachPorts=$(menutrans "Ports pruefen sortiert nach Ports")			
+	Benutzerinventoryfolders=$(menutrans "Benutzer inventoryfolders alles was type -1 ist anzeigen")
+	ZeigeErstellungsdatumeinesUsersan=$(menutrans "Zeige Erstellungsdatum eines Users an")
+	FindefalscheEMailAdressen=$(menutrans "Finde falsche E-Mail Adressen")
+	ListetalleerstelltenBenutzerrechteauf=$(menutrans "Listet alle erstellten Benutzerrechte auf")
 
-	NeueDatenbankerstellen=$(trans -brief -no-warn $OSMTRANS "Neue Datenbank erstellen")
-	NeuenDatenbankbenutzeranlegen=$(trans -brief -no-warn $OSMTRANS "Neuen Datenbankbenutzer anlegen")
+	NeueDatenbankerstellen=$(menutrans "Neue Datenbank erstellen")
+	NeuenDatenbankbenutzeranlegen=$(menutrans "Neuen Datenbankbenutzer anlegen")
 
-	Datenbankleeren=$(trans -brief -no-warn $OSMTRANS "Datenbank leeren")
-	Datenbankkomplettloeschen=$(trans -brief -no-warn $OSMTRANS "Datenbank komplett loeschen")
-	LoeschteinenDatenbankbenutzer=$(trans -brief -no-warn $OSMTRANS "Loescht einen Datenbankbenutzer")
+	Datenbankleeren=$(menutrans "Datenbank leeren")
+	Datenbankkomplettloeschen=$(menutrans "Datenbank komplett loeschen")
+	LoeschteinenDatenbankbenutzer=$(menutrans "Loescht einen Datenbankbenutzer")
 
-	mysqlTunerherunterladen=$(trans -brief -no-warn $OSMTRANS "mysqlTuner herunterladen")
-	AlleDatenbankenCheckenReparierenundOptimieren=$(trans -brief -no-warn $OSMTRANS "Alle Datenbanken Checken, Reparieren und Optimieren")			
+	mysqlTunerherunterladen=$(menutrans "mysqlTuner herunterladen")
+	AlleDatenbankenCheckenReparierenundOptimieren=$(menutrans "Alle Datenbanken Checken, Reparieren und Optimieren")			
 
-	Hauptmenu=$(trans -brief -no-warn $OSMTRANS "Hauptmenu")
-	Avatarmennu=$(trans -brief -no-warn $OSMTRANS "Avatarmennu")
-	WeitereFunktionen=$(trans -brief -no-warn $OSMTRANS "Weitere Funktionen")
-	Dateimennu=$(trans -brief -no-warn $OSMTRANS "Dateimennu")
-	BuildFunktionen=$(trans -brief -no-warn $OSMTRANS "Build Funktionen")
-	ExpertenFunktionen=$(trans -brief -no-warn $OSMTRANS "Experten Funktionen")
+	Hauptmenu=$(menutrans "Hauptmenu")
+	Avatarmennu=$(menutrans "Avatarmennu")
+	WeitereFunktionen=$(menutrans "Weitere Funktionen")
+	Dateimennu=$(menutrans "Dateimennu")
+	BuildFunktionen=$(menutrans "Build Funktionen")
+	ExpertenFunktionen=$(menutrans "Experten Funktionen")
 
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
@@ -14019,23 +14045,23 @@ function avatarmenu() {
 	TITLE="Avatarmenu"
 	MENU="opensimMULTITOOL $VERSION"
 
-	AlleBenutzerdatenderROBUSTDatenbank=$(trans -brief -no-warn $OSMTRANS "Alle Benutzerdaten der ROBUST Datenbank")
-	UUIDvonallenBenutzernanzeigen=$(trans -brief -no-warn $OSMTRANS "UUID von allen Benutzern anzeigen")
-	AlleBenutzernamenanzeigen=$(trans -brief -no-warn $OSMTRANS "Alle Benutzernamen anzeigen")
-	DatenvoneinemBenutzeranzeigen=$(trans -brief -no-warn $OSMTRANS "Daten von einem Benutzer anzeigen")
-	UUIDVorNachnameEMailvomBenutzeranzeigen=$(trans -brief -no-warn $OSMTRANS "UUID, Vor, Nachname, E-Mail vom Benutzer anzeigen")
-	UUIDvoneinemBenutzeranzeigen=$(trans -brief -no-warn $OSMTRANS "UUID von einem Benutzer anzeigen")
+	AlleBenutzerdatenderROBUSTDatenbank=$(menutrans "Alle Benutzerdaten der ROBUST Datenbank")
+	UUIDvonallenBenutzernanzeigen=$(menutrans "UUID von allen Benutzern anzeigen")
+	AlleBenutzernamenanzeigen=$(menutrans "Alle Benutzernamen anzeigen")
+	DatenvoneinemBenutzeranzeigen=$(menutrans "Daten von einem Benutzer anzeigen")
+	UUIDVorNachnameEMailvomBenutzeranzeigen=$(menutrans "UUID, Vor, Nachname, E-Mail vom Benutzer anzeigen")
+	UUIDvoneinemBenutzeranzeigen=$(menutrans "UUID von einem Benutzer anzeigen")
 
-	AlleBenutzermitinkorrekterEMailabschalten=$(trans -brief -no-warn $OSMTRANS "Alle Benutzer mit inkorrekter EMail abschalten")
-	Benutzeracountabschalten=$(trans -brief -no-warn $OSMTRANS "Benutzeracount abschalten")
-	Benutzeracounteinschalten=$(trans -brief -no-warn $OSMTRANS "Benutzeracount einschalten")
+	AlleBenutzermitinkorrekterEMailabschalten=$(menutrans "Alle Benutzer mit inkorrekter EMail abschalten")
+	Benutzeracountabschalten=$(menutrans "Benutzeracount abschalten")
+	Benutzeracounteinschalten=$(menutrans "Benutzeracount einschalten")
 
-	Hauptmennu=$(trans -brief -no-warn $OSMTRANS "Hauptmennu")
-	Avatarmennu=$(trans -brief -no-warn $OSMTRANS "Avatarmennu")
-	Dateimennu=$(trans -brief -no-warn $OSMTRANS "Dateimennu")
-	mySQLmenu=$(trans -brief -no-warn $OSMTRANS "mySQLmenu")
-	BuildFunktionen=$(trans -brief -no-warn $OSMTRANS "Build Funktionen")
-	ExpertenFunktionen=$(trans -brief -no-warn $OSMTRANS "Experten Funktionen")
+	Hauptmennu=$(menutrans "Hauptmennu")
+	Avatarmennu=$(menutrans "Avatarmennu")
+	Dateimennu=$(menutrans "Dateimennu")
+	mySQLmenu=$(menutrans "mySQLmenu")
+	BuildFunktionen=$(menutrans "Build Funktionen")
+	ExpertenFunktionen=$(menutrans "Experten Funktionen")
 
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
@@ -14113,30 +14139,30 @@ function expertenmenu() {
 	TITLE="Expertenmenu"
 	MENU="opensimMULTITOOL $VERSION"
 
-	ExampleDateienumbenennen=$(trans -brief -no-warn $OSMTRANS "Example Dateien umbenennen")
-	Voreinstellungensetzen=$(trans -brief -no-warn $OSMTRANS "Voreinstellungen setzen")
+	ExampleDateienumbenennen=$(menutrans "Example Dateien umbenennen")
+	Voreinstellungensetzen=$(menutrans "Voreinstellungen setzen")
 
-	autoregionsiniteilen=$(trans -brief -no-warn $OSMTRANS "autoregionsiniteilen")
-	RegionListe=$(trans -brief -no-warn $OSMTRANS "RegionListe")
+	autoregionsiniteilen=$(menutrans "autoregionsiniteilen")
+	RegionListe=$(menutrans "RegionListe")
 
-	ServerInstallation=$(trans -brief -no-warn $OSMTRANS "Server Installation")
-	ServerInstallationfuerWordPress=$(trans -brief -no-warn $OSMTRANS "Server Installation fuer WordPress")
-	ServerInstallationohnemono=$(trans -brief -no-warn $OSMTRANS "Server Installation ohne mono")
-	MonoInstallation=$(trans -brief -no-warn $OSMTRANS "Mono Installation")
+	ServerInstallation=$(menutrans "Server Installation")
+	ServerInstallationfuerWordPress=$(menutrans "Server Installation fuer WordPress")
+	ServerInstallationohnemono=$(menutrans "Server Installation ohne mono")
+	MonoInstallation=$(menutrans "Mono Installation")
 
-	terminator=$(trans -brief -no-warn $OSMTRANS "terminator")
-	makeaot=$(trans -brief -no-warn $OSMTRANS "make AOT")
-	cleanaot=$(trans -brief -no-warn $OSMTRANS "clean AOT")
-	Installationenanzeigen=$(trans -brief -no-warn $OSMTRANS "Installationen anzeigen")
+	terminator=$(menutrans "terminator")
+	makeaot=$(menutrans "make AOT")
+	cleanaot=$(menutrans "clean AOT")
+	Installationenanzeigen=$(menutrans "Installationen anzeigen")
 
 	KommandoanOpenSimsenden=$(trans -brief -no-warn "Kommando an OpenSim senden")
 
-	Hauptmennu=$(trans -brief -no-warn $OSMTRANS "Hauptmennu")
-	Avatarmennu=$(trans -brief -no-warn $OSMTRANS "Avatarmennu")
-	Dateimennu=$(trans -brief -no-warn $OSMTRANS "Dateimennu")
-	mySQLmenu=$(trans -brief -no-warn $OSMTRANS "mySQLmenu")
-	BuildFunktionen=$(trans -brief -no-warn $OSMTRANS "Build Funktionen")
-	#ExpertenFunktionen=$(trans -brief -no-warn $OSMTRANS "Experten Funktionen")
+	Hauptmennu=$(menutrans "Hauptmennu")
+	Avatarmennu=$(menutrans "Avatarmennu")
+	Dateimennu=$(menutrans "Dateimennu")
+	mySQLmenu=$(menutrans "mySQLmenu")
+	BuildFunktionen=$(menutrans "Build Funktionen")
+	#ExpertenFunktionen=$(menutrans "Experten Funktionen")
 
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
@@ -14231,33 +14257,33 @@ function buildmenu() {
 	TITLE="Buildmenu"
 	MENU="opensimMULTITOOL $VERSION"
 
-	OpenSimherunterladen=$(trans -brief -no-warn $OSMTRANS "OpenSim herunterladen")
-	MoneyServervomgitkopieren=$(trans -brief -no-warn $OSMTRANS "MoneyServer vom git kopieren")
-	OSSLSkriptevomgitkopieren=$(trans -brief -no-warn $OSMTRANS "OSSL Skripte vom git kopieren")
-	OpensimvomGithubholen=$(trans -brief -no-warn $OSMTRANS "Opensim vom Github holen")
+	OpenSimherunterladen=$(menutrans "OpenSim herunterladen")
+	MoneyServervomgitkopieren=$(menutrans "MoneyServer vom git kopieren")
+	OSSLSkriptevomgitkopieren=$(menutrans "OSSL Skripte vom git kopieren")
+	OpensimvomGithubholen=$(menutrans "Opensim vom Github holen")
 
-	DowngradezurletztenVersion=$(trans -brief -no-warn $OSMTRANS "Downgrade zur letzten Version")
-	Kompilieren=$(trans -brief -no-warn $OSMTRANS "Kompilieren")
-	oscompi=$(trans -brief -no-warn $OSMTRANS "oscompi")
-	Opensimulatorupgraden=$(trans -brief -no-warn $OSMTRANS "Opensimulator upgraden")
-	Opensimulatorauszipupgraden=$(trans -brief -no-warn $OSMTRANS "Opensimulator aus zip upgraden")
-	Opensimulatorbauenundupgraden=$(trans -brief -no-warn $OSMTRANS "Opensimulator bauen und upgraden")
+	DowngradezurletztenVersion=$(menutrans "Downgrade zur letzten Version")
+	Kompilieren=$(menutrans "Kompilieren")
+	oscompi=$(menutrans "oscompi")
+	Opensimulatorupgraden=$(menutrans "Opensimulator upgraden")
+	Opensimulatorauszipupgraden=$(menutrans "Opensimulator aus zip upgraden")
+	Opensimulatorbauenundupgraden=$(menutrans "Opensimulator bauen und upgraden")
 			
-	KonfigurationenundVerzeichnisstrukturenanlegen=$(trans -brief -no-warn $OSMTRANS "Konfigurationen und Verzeichnisstrukturen anlegen")
-	Verzeichnisstrukturenanlegen=$(trans -brief -no-warn $OSMTRANS "Verzeichnisstrukturen anlegen")
-	RegionslisteerstellenBackup=$(trans -brief -no-warn $OSMTRANS "Regionsliste erstellen (Backup)")
+	KonfigurationenundVerzeichnisstrukturenanlegen=$(menutrans "Konfigurationen und Verzeichnisstrukturen anlegen")
+	Verzeichnisstrukturenanlegen=$(menutrans "Verzeichnisstrukturen anlegen")
+	RegionslisteerstellenBackup=$(menutrans "Regionsliste erstellen (Backup)")
 
-	SiminVerzeichnisstruktureneintragen=$(trans -brief -no-warn $OSMTRANS "Sim in Verzeichnisstrukturen eintragen")
-	SiminVerzeichnisstrukturenaustragen=$(trans -brief -no-warn $OSMTRANS "Sim in Verzeichnisstrukturen austragen")
-	SiminStartkonfigurationeinfuegen=$(trans -brief -no-warn $OSMTRANS "Sim in Startkonfiguration einfuegen")
-	SimausStartkonfigurationentfernen=$(trans -brief -no-warn $OSMTRANS "Sim aus Startkonfiguration entfernen")
+	SiminVerzeichnisstruktureneintragen=$(menutrans "Sim in Verzeichnisstrukturen eintragen")
+	SiminVerzeichnisstrukturenaustragen=$(menutrans "Sim in Verzeichnisstrukturen austragen")
+	SiminStartkonfigurationeinfuegen=$(menutrans "Sim in Startkonfiguration einfuegen")
+	SimausStartkonfigurationentfernen=$(menutrans "Sim aus Startkonfiguration entfernen")
 
-	Hauptmennu=$(trans -brief -no-warn $OSMTRANS "Hauptmennu")
-	Avatarmennu=$(trans -brief -no-warn $OSMTRANS "Avatarmennu")
-	Dateimennu=$(trans -brief -no-warn $OSMTRANS "Dateimennu")
-	mySQLmenu=$(trans -brief -no-warn $OSMTRANS "mySQLmenu")
-	BuildFunktionen=$(trans -brief -no-warn $OSMTRANS "Build Funktionen")
-	ExpertenFunktionen=$(trans -brief -no-warn $OSMTRANS "Experten Funktionen")
+	Hauptmennu=$(menutrans "Hauptmennu")
+	Avatarmennu=$(menutrans "Avatarmennu")
+	Dateimennu=$(menutrans "Dateimennu")
+	mySQLmenu=$(menutrans "mySQLmenu")
+	BuildFunktionen=$(menutrans "Build Funktionen")
+	ExpertenFunktionen=$(menutrans "Experten Funktionen")
 
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
