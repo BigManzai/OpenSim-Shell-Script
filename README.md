@@ -229,6 +229,14 @@ Crontab zum prüfen noch einmal anzeigen:
 
 ## TODO und Informationen
 
+VERSION 0.9.3.0.938
+
+Wichtige Änderungen:
+
+Autostart und Autorestart war vertauscht.
+
+Translate Fehler behoben.
+
 VERSION 0.9.3.0.927 KI AI Test.
 
 Test 929 Fehlerkorrektur und erweiterung.
