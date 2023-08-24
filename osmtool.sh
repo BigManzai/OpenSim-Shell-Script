@@ -36,7 +36,7 @@
 ###########################################################################
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.938" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.939" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 ##
@@ -13856,9 +13856,9 @@ function dateimenu() {
 			"$RegionOARsichern" ""
 			"$AutomatischerRegionsbackup" ""
 			"--------------------------" ""
-			"$LogDateien loeschen" ""
-			"$MapKarten loeschen" ""
-			"$AssetCache loeschen" ""
+			"$LogDateienloeschen" ""
+			"$MapKartenloeschen" ""
+			"$AssetCacheloeschen" ""
 			"$Assetloeschen" ""
 			"--------------------------" ""
 			"$GridKonfigurationenerstellen" ""
