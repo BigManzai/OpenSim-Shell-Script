@@ -9,4 +9,8 @@ Nur verbinden mit deiner E-Mail in der index.php und aktivieren in der Robust.in
 
      $adminMail = 'deine@email.de';
 
+     register = ${Const|BaseURL}/register/
+
+     
+
 ![GitHub Logo](https://github.com/BigManzai/OpenSim-Shell-Script/blob/main/web/register/register.jpg)
