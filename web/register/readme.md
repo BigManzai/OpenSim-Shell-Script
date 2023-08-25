@@ -8,3 +8,5 @@ Keine automatische erstellung eines Kontos.
 Nur verbinden mit deiner E-Mail in der index.php und aktivieren in der Robust.ini
 
      $adminMail = 'deine@email.de';
+
+![GitHub Logo](https://github.com/BigManzai/OpenSim-Shell-Script/blob/main/web/register/register.jpg)
