@@ -11,6 +11,10 @@ Nur verbinden mit deiner E-Mail in der index.php und aktivieren in der Robust.in
 
      register = ${Const|BaseURL}/register/
 
+Anschließend im osmtool im Hauptmenu einen Benutzeraccount für den neuen Avatar mit seinen gewünschten Daten anlegen.
+
+(Der direkte weg über das Webinterface ist leider zu gefährlich.)
+
      
 
 ![GitHub Logo](https://github.com/BigManzai/OpenSim-Shell-Script/blob/main/web/register/register.jpg)
