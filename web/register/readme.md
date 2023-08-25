@@ -15,6 +15,6 @@ Anschließend im osmtool im Hauptmenu einen Benutzeraccount für den neuen Avata
 
 (Der direkte weg über das Webinterface ist leider zu gefährlich.)
 
-     
+# Bild     
 
 ![GitHub Logo](https://github.com/BigManzai/OpenSim-Shell-Script/blob/main/web/register/register.jpg)
