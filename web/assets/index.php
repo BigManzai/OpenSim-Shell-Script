@@ -14,17 +14,15 @@ $servername = "localhost";
 $username = "username";
 $password = "password";
 $dbname = "dbname";
+// Replace 'user_id' with the user you want to list the inventory for
+$user_id = "da35d22a-0000-0000-0000-60110ddff000";
+
 // Create a connection
 $conn = new mysqli($servername, $username, $password, $dbname);
-
-
 // Check the connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
-
-// Replace 'user_id' with the user you want to list the inventory for
-$user_id = "da35d22a-0000-0000-0000-60110ddff000";
 
 // Query the inventory for the specific user
 //$sql = "SELECT item_name, item_type FROM inventory WHERE user_id = $user_id";
