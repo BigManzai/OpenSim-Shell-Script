@@ -7,15 +7,18 @@
     <title>OpenSim User Assets</title>
 
 <style>
+body { 
+  background: Ivory; 
+}
 li {  
   font-size: 60%;
   display: list-item;
-    background-color:AliceBlue;
+  background-color: AntiqueWhite;
 }
 p {  
   font-size: 80%;
   font-weight: bold;
-    background-color:AntiqueWhite;
+  background-color: Bisque;
 }
 </style>
 
@@ -29,10 +32,8 @@ p {
     </form>
 
     <?php
-    // OpenSim User Assets V 1.0.6
-    
-    error_reporting(E_ALL);
-    ini_set('display_errors', 1);
+    // error_reporting(E_ALL);
+    // ini_set('display_errors', 1);
 
     // Check if the form is submitted
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
