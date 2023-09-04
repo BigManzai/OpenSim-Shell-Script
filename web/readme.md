@@ -1,1 +1,1 @@
-# Diverse Web Sites
+# Divers Web
