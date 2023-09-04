@@ -10,10 +10,12 @@
 li {  
   font-size: 60%;
   display: list-item;
+    background-color:AliceBlue;
 }
 p {  
   font-size: 80%;
   font-weight: bold;
+    background-color:AntiqueWhite;
 }
 </style>
 
