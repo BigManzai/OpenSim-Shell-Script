@@ -169,8 +169,8 @@ $conn->close();
         }
     </style>
 <head>
-    <title>Banking</title>
-    <h1>Banking</h1>
+    <title>OpenSim Banking</title>
+    <h1>OpenSim Banking</h1>
 </head>
 <body>
     <div>
