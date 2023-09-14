@@ -1,25 +1,25 @@
 # HELPER
 
-avatarinfo.php Zeigt Avatar Informationen an.
+avatarinfo.php - Zeigt Avatar Informationen an.
 	
-banking.php WEB Banking.
+banking.php - WEB Banking (OpenSim DTL/NSL Money Server).
 	
-check_inventory.php
+check_inventory.php - Inventar überprüfen.
 	
-griduserinfo.php Zeigt Daten von Grid User an.
+griduserinfo.php - Zeigt Daten von Grid User an.
 	
 index.html
 	
-ip.plx Grid Teleport Liste.
+ip.plx - Grid Teleport Liste.
 	
-landtool.php 
+landtool.php - Landkauf.
 	
-mutelistinfo.php 
+mutelistinfo.php - Liste stummgeschalteter User.
 	
-regionsinfo.php Regionsinformationen.
+regionsinfo.php - Regionsinformationen.
 	
-sendemail.php 
+sendemail.php - Sendet E-Mail.
 	
-userinfo.php User Info
+userinfo.php - User Info
 	
-youreip.php Ermittelt die externe IP.
+youreip.php - Ermittelt die externe IP.
