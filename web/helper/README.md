@@ -1,3 +1,5 @@
+# HELPER
+
 avatarinfo.php Zeigt Avatar Informationen an.
 	
 banking.php WEB Banking.
