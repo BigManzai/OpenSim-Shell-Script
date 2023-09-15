@@ -185,6 +185,140 @@ function FetchTransactionUUID($transactionID) {
     }
 }
 
+// Funktion, um Transaktionen eines Benutzers abzurufen
+function FetchTransaction($userID, $startTime, $endTime, $index, $retNum) {
+    global $conn;
+    $query = "SELECT * FROM transactions WHERE sender = ? AND timestamp >= ? AND timestamp <= ? LIMIT ?, ?";
+    
+    if ($stmt = $conn->prepare($query)) {
+        $stmt->bind_param("siisi", $userID, $startTime, $endTime, $index, $retNum);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $transactions = [];
+        
+        while ($row = $result->fetch_assoc()) {
+            $transactions[] = $row;
+        }
+        
+        $stmt->close();
+        return $transactions;
+    } else {
+        die("Fehler beim Abrufen der Transaktionen: " . $conn->error);
+    }
+}
+
+// Funktion, um Benutzerinformationen abzurufen
+function fetchUserInfo($userID) {
+    global $conn;
+    $query = "SELECT * FROM user_info WHERE user_id = ?";
+    
+    if ($stmt = $conn->prepare($query)) {
+        $stmt->bind_param("s", $userID);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $user_info = $result->fetch_assoc();
+        $stmt->close();
+        return $user_info;
+    } else {
+        die("Fehler beim Abrufen von Benutzerinformationen: " . $conn->error);
+    }
+}
+
+// Funktion, um die Anzahl der Transaktionen eines Benutzers abzurufen
+function getTransactionNum($userID, $startTime, $endTime) {
+    global $conn;
+    $query = "SELECT COUNT(*) AS num_transactions FROM transactions WHERE sender = ? AND timestamp >= ? AND timestamp <= ?";
+    
+    if ($stmt = $conn->prepare($query)) {
+        $stmt->bind_param("sii", $userID, $startTime, $endTime);
+        $stmt->execute();
+        $stmt->bind_result($num_transactions);
+        $stmt->fetch();
+        $stmt->close();
+        return $num_transactions;
+    } else {
+        die("Fehler beim Abrufen der Transaktionsanzahl: " . $conn->error);
+    }
+}
+
+// Funktion, um Transaktionen als abgelaufen zu markieren
+function SetTransExpired($deadTime) {
+    global $conn;
+    $query = "UPDATE transactions SET status = 0 WHERE timestamp < ?";
+    
+    if ($stmt = $conn->prepare($query)) {
+        $stmt->bind_param("i", $deadTime);
+        $stmt->execute();
+        $stmt->close();
+    } else {
+        die("Fehler beim Markieren von Transaktionen als abgelaufen: " . $conn->error);
+    }
+}
+
+// Funktion, um eine Überweisung zu validieren
+function ValidateTransfer($secureCode, $transactionID) {
+    global $conn;
+    // Annahme: In deiner Datenbank gibt es eine Tabelle namens "transactions"
+    $query = "SELECT * FROM transactions WHERE UUID = ? AND secure_code = ?";
+    
+    if ($stmt = $conn->prepare($query)) {
+        $stmt->bind_param("ss", $transactionID, $secureCode);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        if ($result->num_rows === 1) {
+            // Die Transaktion wurde gefunden und ist gültig
+            $row = $result->fetch_assoc();
+            
+            // Du kannst hier weitere Validierungslogik hinzufügen, wenn benötigt
+            
+            // Setze den Status der Transaktion auf erfolgreich (1)
+            $status = 1;
+            $description = "Überweisung erfolgreich validiert";
+            updateTransactionStatus($transactionID, $status, $description);
+            
+            $stmt->close();
+        } else {
+            // Die Transaktion wurde nicht gefunden oder ist ungültig
+            // Setze den Status der Transaktion auf fehlgeschlagen (0)
+            $status = 0;
+            $description = "Überweisung ungültig";
+            updateTransactionStatus($transactionID, $status, $description);
+        }
+    } else {
+        die("Fehler bei der Validierung der Überweisung: " . $conn->error);
+    }
+}
+
+// Funktion, um Benutzerinformationen hinzuzufügen
+function addUserInfo($user) {
+    global $conn;
+    // Annahme: In deiner Datenbank gibt es eine Tabelle namens "user_info"
+    $query = "INSERT INTO user_info (user_id, username, email) VALUES (?, ?, ?)";
+    
+    if ($stmt = $conn->prepare($query)) {
+        $stmt->bind_param("sss", $user['user_id'], $user['username'], $user['email']);
+        $stmt->execute();
+        $stmt->close();
+    } else {
+        die("Fehler beim Hinzufügen von Benutzerinformationen: " . $conn->error);
+    }
+}
+
+// Funktion, um Benutzerinformationen zu aktualisieren
+function updateUserInfo($user) {
+    global $conn;
+    // Annahme: In deiner Datenbank gibt es eine Tabelle namens "user_info"
+    $query = "UPDATE user_info SET username = ?, email = ? WHERE user_id = ?";
+    
+    if ($stmt = $conn->prepare($query)) {
+        $stmt->bind_param("sss", $user['username'], $user['email'], $user['user_id']);
+        $stmt->execute();
+        $stmt->close();
+    } else {
+        die("Fehler beim Aktualisieren von Benutzerinformationen: " . $conn->error);
+    }
+}
 // Test Ende
 
 // Überprüfen, ob das Formular gesendet wurde
@@ -205,32 +339,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Füge die Ergebnisse der Abfrage in eine Variable ein, die du später ausgeben kannst
         $fetchTransactionResult = FetchTransactionUUID($transactionID);
     }
-
     if (isset($_POST["getBalance"])) {
         // Implementiere diese Funktion entsprechend deiner Anforderungen
         // Füge die Ergebnisse der Abfrage in eine Variable ein, die du später ausgeben kannst
         $getBalanceResult = getBalance($userID);
     }
-
     if (isset($_POST["updateBalance"])) {
-        // Funktionsaufruf für SetTransExpired
         // Implementiere diese Funktion entsprechend deiner Anforderungen
         // Füge die Ergebnisse der Abfrage in eine Variable ein, die du später ausgeben kannst
         $updateBalanceResult = updateBalance($userID, $amount);
     }
-
     if (isset($_POST["addTransaction"])) {
         // Implementiere diese Funktion entsprechend deiner Anforderungen
         // Füge die Ergebnisse der Abfrage in eine Variable ein, die du später ausgeben kannst
         $addTransactionResult = addTransaction($transactionData);
     }
-
     if (isset($_POST["updateTransactionStatus"])) {
         // Implementiere diese Funktion entsprechend deiner Anforderungen
         // Füge die Ergebnisse der Abfrage in eine Variable ein, die du später ausgeben kannst
         $updateTransactionStatusResult = updateTransactionStatus($UUID, $status, $description);
     }
-
     if (isset($_POST["getBalanceStatus"])) {
         // Implementiere diese Funktion entsprechend deiner Anforderungen
         // Füge die Ergebnisse der Abfrage in eine Variable ein, die du später ausgeben kannst
