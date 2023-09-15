@@ -445,6 +445,10 @@ input[type=text].red {
   background-color: #ffe6e6;
 }
 
+input[type=text].green {
+  background-color: #e6ffe6;
+}
+
 input[type=checkbox] {
   margin-right: 5px;
 }
@@ -525,8 +529,10 @@ div {
         <input type="checkbox" name="updateUserInfo" id="updateUserInfo">
         <label for="updateUserInfo">Benutzerinfo aktualisieren</label><br><br>
 
-        Benutzer-ID: <br><input type="text" name="userID" id="userID"><br>
-        Betrag: <br><input type="text" name="amount" id="amount"><br>
+        <!-- Eingabefelder sollen je nachdem was gefordert ist Rot oder Grün sein. -->
+
+        Benutzer-ID: <br><input type="text" name="userID" id="userID" class="green"><br>
+        Betrag: <br><input type="text" name="amount" id="amount" class="green"><br>
         Transaktions-ID: <br><input type="text" name="transactionID" id="transactionID" class="red"><br>
         Sender-ID: <br><input type="text" name="senderID" id="senderID" class="red"><br>
         Status: <br><input type="text" name="status" id="status" class="red"><br>
