@@ -3,6 +3,8 @@
 avatarinfo.php - Zeigt Avatar Informationen an.
 	
 banking.php - WEB Banking (OpenSim DTL/NSL Money Server).
+
+bankingExperimental.php - Experimental Funktionen zu OS Banking (OpenSim DTL/NSL Money Server).
 	
 check_inventory.php - Inventar überprüfen.
 	
