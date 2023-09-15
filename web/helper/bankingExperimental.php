@@ -374,6 +374,41 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Füge die Ergebnisse der Abfrage in eine Variable ein, die du später ausgeben kannst
         $withdrawMoneyResult = withdrawMoney($transactionID, $senderID, $amount);
     }
+    if (isset($_POST["FetchTransaction"])) {
+        // Implementiere diese Funktion entsprechend deiner Anforderungen
+        // Füge die Ergebnisse der Abfrage in eine Variable ein, die du später ausgeben kannst
+        $FetchTransactionResult = FetchTransaction($userID, $startTime, $endTime, $index, $retNum);
+    }
+    if (isset($_POST["fetchUserInfo"])) {
+        // Implementiere diese Funktion entsprechend deiner Anforderungen
+        // Füge die Ergebnisse der Abfrage in eine Variable ein, die du später ausgeben kannst
+        $fetchUserInfoResult = fetchUserInfo($userID);
+    }
+    if (isset($_POST["getTransactionNum"])) {
+        // Implementiere diese Funktion entsprechend deiner Anforderungen
+        // Füge die Ergebnisse der Abfrage in eine Variable ein, die du später ausgeben kannst
+        $getTransactionNumResult = getTransactionNum($userID, $startTime, $endTime);
+    }
+    if (isset($_POST["SetTransExpired"])) {
+        // Implementiere diese Funktion entsprechend deiner Anforderungen
+        // Füge die Ergebnisse der Abfrage in eine Variable ein, die du später ausgeben kannst
+        $SetTransExpiredResult = SetTransExpired($deadTime);
+    }
+    if (isset($_POST["ValidateTransfer"])) {
+        // Implementiere diese Funktion entsprechend deiner Anforderungen
+        // Füge die Ergebnisse der Abfrage in eine Variable ein, die du später ausgeben kannst
+        $ValidateTransferResult = ValidateTransfer($secureCode, $transactionID);
+    }
+    if (isset($_POST["addUserInfo"])) {
+        // Implementiere diese Funktion entsprechend deiner Anforderungen
+        // Füge die Ergebnisse der Abfrage in eine Variable ein, die du später ausgeben kannst
+        $addUserInfoResult = addUserInfo($user);
+    }
+    if (isset($_POST["updateUserInfo"])) {
+        // Implementiere diese Funktion entsprechend deiner Anforderungen
+        // Füge die Ergebnisse der Abfrage in eine Variable ein, die du später ausgeben kannst
+        $updateUserInfoResult = updateUserInfo($user);
+    }
 
     $balance = getBalance($userID);
     echo "<br>Guthaben von Benutzer $userID:<br> $balance<br>";
@@ -459,7 +494,28 @@ div {
         <label for="updateBalanceStatus">Kontostand Aktualisieren</label><br>
         
         <input type="checkbox" name="withdrawMoney" id="withdrawMoney">
-        <label for="withdrawMoney">Geld abheben</label><br><br><br>
+        <label for="withdrawMoney">Geld abheben</label><br>
+
+        <input type="checkbox" name="FetchTransaction" id="FetchTransaction">
+        <label for="FetchTransaction">Transaktion abrufen</label><br>
+
+        <input type="checkbox" name="fetchUserInfo" id="fetchUserInfo">
+        <label for="fetchUserInfo">UserInfo abrufen</label><br>
+
+        <input type="checkbox" name="getTransactionNum" id="getTransactionNum">
+        <label for="getTransactionNum">Transaktionsnummer holen</label><br>
+
+        <input type="checkbox" name="SetTransExpired" id="SetTransExpired">
+        <label for="SetTransExpired">Transaktion als abgelaufen eintragen</label><br>
+
+        <input type="checkbox" name="ValidateTransfer" id="ValidateTransfer">
+        <label for="ValidateTransfer">Übertragung validieren</label><br>
+
+        <input type="checkbox" name="addUserInfo" id="addUserInfo">
+        <label for="addUserInfo">Benutzerinformationen hinzufügen</label><br>
+
+        <input type="checkbox" name="updateUserInfo" id="updateUserInfo">
+        <label for="updateUserInfo">Benutzerinfo aktualisieren</label><br><br><br>
 
         Benutzer-ID: <br><input type="text" name="userID" id="userID"><br><br>
         Betrag: <br><input type="text" name="amount" id="amount"><br><br>
