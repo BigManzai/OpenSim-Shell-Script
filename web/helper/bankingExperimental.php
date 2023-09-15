@@ -437,6 +437,14 @@ input[type=text], select {
   box-sizing: border-box;
 }
 
+input[type=text].gray {
+  background-color: #f2f2f2;
+}
+
+input[type=text].red {
+  background-color: #ffe6e6;
+}
+
 input[type=checkbox] {
   margin-right: 5px;
 }
@@ -473,7 +481,7 @@ div {
     <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
         
         <input type="checkbox" name="giveMoney" id="giveMoney" checked="checked">
-        <label for="giveMoney">Geld an User</label><br>
+        <label for="giveMoney">Geld an User senden</label><br>
         
         <input type="checkbox" name="FetchTransactionUUID" id="FetchTransactionUUID">
         <label for="FetchTransactionUUID">Transaktions-UUID abrufen</label><br>
@@ -515,10 +523,14 @@ div {
         <label for="addUserInfo">Benutzerinformationen hinzufügen</label><br>
 
         <input type="checkbox" name="updateUserInfo" id="updateUserInfo">
-        <label for="updateUserInfo">Benutzerinfo aktualisieren</label><br><br><br>
+        <label for="updateUserInfo">Benutzerinfo aktualisieren</label><br><br>
 
-        Benutzer-ID: <br><input type="text" name="userID" id="userID"><br><br>
-        Betrag: <br><input type="text" name="amount" id="amount"><br><br>
+        Benutzer-ID: <br><input type="text" name="userID" id="userID"><br>
+        Betrag: <br><input type="text" name="amount" id="amount"><br>
+        Transaktions-ID: <br><input type="text" name="transactionID" id="transactionID" class="red"><br>
+        Sender-ID: <br><input type="text" name="senderID" id="senderID" class="red"><br>
+        Status: <br><input type="text" name="status" id="status" class="red"><br>
+        Beschreibung: <br><input type="text" name="description" id="description" class="red"><br>
         <input type="submit" value="Anwenden">
     </form>
 </div>
