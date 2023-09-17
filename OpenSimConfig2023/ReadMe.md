@@ -1,4 +1,4 @@
-# NEW Robust Configuration
+# NEW Configuration
 New, simplified configurations are created here.
 
 Neue, vereinfachte Konfigurationen entstehen hier.
