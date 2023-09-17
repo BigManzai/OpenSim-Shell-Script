@@ -1,4 +1,6 @@
 # NEW Configuration
+Version 1.2.0
+
 New, simplified configurations are created here.
 
 Neue, vereinfachte Konfigurationen entstehen hier.
