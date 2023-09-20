@@ -1,3 +1,15 @@
+<?php
+// Lizenz: Gemeinfrei nach deutschem Gesetz.
+// Diese PHP Datei kann erhebliche Schäden verursachen.
+// Ich, Manfred Zainhofer der Autor, übernimmt keinerlei Haftung.
+// Des Weiteren hat dieses Programm keinerlei Schutzfunktionen.
+
+// License: Public domain according to German law.
+// This PHP file can cause significant damage.
+// I, Manfred Zainhofer the author, assumes no liability.
+// Furthermore, this program does not have any protective functions.
+?>
+
 <!DOCTYPE html>
 <html>
 <title>User Info</title>
