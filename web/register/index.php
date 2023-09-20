@@ -1,4 +1,14 @@
 <?php
+// Lizenz: Gemeinfrei nach deutschem Gesetz.
+// Diese PHP Datei kann erhebliche Schäden verursachen.
+// Ich, Manfred Zainhofer der Autor, übernimmt keinerlei Haftung.
+// Des Weiteren hat dieses Programm keinerlei Schutzfunktionen.
+
+// License: Public domain according to German law.
+// This PHP file can cause significant damage.
+// I, Manfred Zainhofer the author, assumes no liability.
+// Furthermore, this program does not have any protective functions.
+
 	/* DIESEN CODE AN OBERSTER STELLE BELASSEN */
 	header('Content-Type: text/html; charset=utf-8'); // WENN DU KEIN UTF-8 NUTZT, DIESE ZEILE LÖSCHEN UND DAS SKRIPT ENTSPRECHEND ANPASSEN!
 	session_start();
