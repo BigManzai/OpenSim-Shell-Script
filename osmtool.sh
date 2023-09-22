@@ -20,9 +20,9 @@
 # ! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 # ! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-# * Status 09.08.2023 415 Funktionen.
+# * Status 22.09.2023 416 Funktionen.
 
-# # Installieren sie bitte: #* Visual Studio Code - Mac, Linux, Windows
+# # Installieren sie bitte: #* Visual Studio Code
 #* dazu die Plugins:
 # ShellCheck #! ist eine geniale Hilfe gegen Fehler.
 # shellman #? Shell Skript Schnipsel.
@@ -36,7 +36,7 @@
 ###########################################################################
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.939" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.941" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 ##
@@ -993,6 +993,42 @@ function iinstall2() {
 }
 
 ##
+ #* installbegin.
+ # Linux Updaten und Upgraden.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+function installbegin() { 
+	apt update && apt upgrade; 
+}
+
+##
+ #* linuxupgrade.
+ # Linux Updaten und Upgraden.
+ # 
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+function linuxupgrade() { 
+	apt update && apt upgrade -y; 
+}
+
+##
+ #* deladvantagetools
+ # ubuntu-advantage-tools entfernen.
+ # 
+ #? @param keine.
+ #? @return nichts.
+ # todo: nichts.
+##
+function deladvantagetools() {
+	sudo apt remove ubuntu-advantage-tools
+}
+
+##
  #* finstall.
  # Neue apt-get installationsroutine aus Datei.
  # 
@@ -1720,6 +1756,8 @@ function schreibeinfo() {
 		txtmono=$(mono --version);
 		log rohtext "  $DATUM $(date +%H:%M:%S) INFO: MONO Version: ${txtmono:0:37}"
 		log rohtext "  $DATUM $(date +%H:%M:%S) INFO: MONO THREAD Einstellung: ${MONO_THREADS_PER_CPU}"
+		dotnetversion=$(dotnet --version);
+		log rohtext "  $DATUM $(date +%H:%M:%S) INFO: DOTNET Version: ${dotnetversion}"
 		log rohtext "  $DATUM $(date +%H:%M:%S) INFO: Spracheinstellung: ${LANG}"
 		log rohtext "  $DATUM $(date +%H:%M:%S) INFO: $(screen --version)"
 		SYSTEMBOOT=$(who -b);
@@ -6325,34 +6363,11 @@ function installopensimulator() {
 	# maxfailures = 3 
 	# bantime = 900 
 	# findtime = 600
-	iinstall2 apt-utils
-    iinstall2 libgdiplus
-    iinstall2 libc6-dev
-	iinstall2 translate-shell
-}
+	iinstall apt-utils
+    iinstall libgdiplus
+    iinstall libc6-dev
+	iinstall translate-shell
 
-##
- #* installbegin.
- # Linux Updaten und Upgraden.
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
-##
-function installbegin() { 
-	apt update && apt upgrade; 
-}
-
-##
- #* linuxupgrade.
- # Linux Updaten und Upgraden.
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
-##
-function linuxupgrade() { 
-	apt update && apt upgrade -y; 
 }
 
 ##
@@ -6437,11 +6452,11 @@ function installubuntu22() {
 		iinstall2 libpython2.7-stdlib
 		iinstall2 libswresample-dev
 	fi
-
+	deladvantagetools
 }
 
 ##
- #* iptablesset.
+ #* iptablesset
  # IP sperren.
  # 
  #? @param ipsperradresse.
@@ -14582,6 +14597,7 @@ case $KOMMANDO in
 	installmariadb22) installmariadb22 ;;
 	installphpmyadmin) installphpmyadmin ;;
 	installubuntu22) installubuntu22 ;;
+	deladvantagetools) deladvantagetools ;;
 	ipsetzen) ipsetzen ;;
 	konsolenhilfe) konsolenhilfe ;;
 	l | list | screenlist) screenlist ;;
