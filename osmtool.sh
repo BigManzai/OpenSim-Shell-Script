@@ -20,32 +20,32 @@
 # ! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 # ! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-# * Status 22.09.2023 419 Funktionen.
+# * Status 26.09.2023 419 Funktionen.
 
-# # Installieren sie bitte: #* Visual Studio Code
-#* dazu die Plugins:
-# ShellCheck #! ist eine geniale Hilfe gegen Fehler.
-# shellman #? Shell Skript Schnipsel.
-# Better Comments #* Bessere Farbliche Darstellung. Standards: #! #* #? #// #todo
-# outline map #? Navigationsleiste für Funktionen.
-# todo: eine Menge warten wir´s ab.
+	# # Installieren sie bitte: #* Visual Studio Code
+	#* dazu die Plugins:
+	# ShellCheck #! ist eine geniale Hilfe gegen Fehler.
+	# shellman #? Shell Skript Schnipsel.
+	# Better Comments #* Bessere Farbliche Darstellung. Standards: #! #* #? #// #todo
+	# outline map #? Navigationsleiste für Funktionen.
+	# todo: eine Menge warten wir´s ab.
 
 ###########################################################################
 #* Einstellungen Funktionsgruppe
 ###########################################################################
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.951" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.961" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 ##
- #* Funktion: isroot - Überprüft, ob der Benutzer root-Rechte hat.
- # Diese Funktion überprüft den effektiven Benutzer (EUID) und gibt eine entsprechende Meldung aus.
- # 
- #? @param Keine Parameter erforderlich.
- #? @return - 0: Wenn der Benutzer root-Rechte hat.
- #? @return - 1: Wenn der Benutzer keine root-Rechte hat.
- # todo: nichts.
+	#* Funktion: isroot - Überprüft, ob der Benutzer root-Rechte hat.
+	# Diese Funktion überprüft den effektiven Benutzer (EUID) und gibt eine entsprechende Meldung aus.
+	# 
+	#? @param Keine Parameter erforderlich.
+	#? @return - 0: Wenn der Benutzer root-Rechte hat.
+	#? @return - 1: Wenn der Benutzer keine root-Rechte hat.
+	# todo: nichts.
 ##
 function isroot() {
 	# Letzte Bearbeitung 26.09.2023
@@ -61,20 +61,20 @@ function isroot() {
 }
 
 ##
- #* Funktion: benutzer
- # Diese Funktion überprüft, ob der aktuelle Benutzer mit dem angegebenen
- # Benutzernamen übereinstimmt und ob der aktuelle Benutzer mit dem
- # Anmeldebenutzernamen übereinstimmt. Wenn die Bedingungen erfüllt sind,
- # wird eine Erfolgsmeldung angezeigt, andernfalls wird eine Fehlermeldung
- # ausgegeben, und das Skript wird beendet.
- # 
- #? @param Keine Parameter erforderlich.
- #? @return    0 - Erfolg: Der aktuelle Benutzer stimmt mit dem angegebenen Benutzernamen
- #? @return        überein, und der Anmeldebenutzername stimmt ebenfalls überein.
- #? @return    1 - Fehler: Der aktuelle Benutzer stimmt nicht mit dem angegebenen
- #? @return        Benutzernamen überein oder der Anmeldebenutzername ist nicht gleich
- #? @return        dem aktuellen Benutzer.
- # todo: nichts.
+	#* Funktion: benutzer
+	# Diese Funktion überprüft, ob der aktuelle Benutzer mit dem angegebenen
+	# Benutzernamen übereinstimmt und ob der aktuelle Benutzer mit dem
+	# Anmeldebenutzernamen übereinstimmt. Wenn die Bedingungen erfüllt sind,
+	# wird eine Erfolgsmeldung angezeigt, andernfalls wird eine Fehlermeldung
+	# ausgegeben, und das Skript wird beendet.
+	# 
+	#? @param Keine Parameter erforderlich.
+	#? @return    0 - Erfolg: Der aktuelle Benutzer stimmt mit dem angegebenen Benutzernamen
+	#? @return        überein, und der Anmeldebenutzername stimmt ebenfalls überein.
+	#? @return    1 - Fehler: Der aktuelle Benutzer stimmt nicht mit dem angegebenen
+	#? @return        Benutzernamen überein oder der Anmeldebenutzername ist nicht gleich
+	#? @return        dem aktuellen Benutzer.
+	# todo: nichts.
 ##
 function benutzer() {
 	# Letzte Bearbeitung 26.09.2023
@@ -94,14 +94,14 @@ function benutzer() {
 }
 
 ##
- #* osmupgrade - Eine Funktion zum Aktualisieren des OpenSim-Shell-Skripts
- # Diese Funktion überprüft, ob das OpenSim-Shell-Skript auf GitHub aktualisiert wurde
- # und lädt es bei Bedarf herunter. Sie vergleicht die aktuelle installierte Version
- # mit der neuesten verfügbaren Version in einem GitHub-Repository.
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+	#* osmupgrade - Eine Funktion zum Aktualisieren des OpenSim-Shell-Skripts
+	# Diese Funktion überprüft, ob das OpenSim-Shell-Skript auf GitHub aktualisiert wurde
+	# und lädt es bei Bedarf herunter. Sie vergleicht die aktuelle installierte Version
+	# mit der neuesten verfügbaren Version in einem GitHub-Repository.
+	# 
+	#? @param keine.
+	#? @return nichts wird zurueckgegeben.
+	# todo: nichts.
 ##
 function osmupgrade() {
 	# Letzte Bearbeitung 26.09.2023
@@ -133,13 +133,13 @@ function osmupgrade() {
 }
 
 ##
- #* vardel - Eine Funktion zum Löschen von Umgebungsvariablen aus vorherigen Sitzungen
- # Diese Funktion löscht eine Reihe von Umgebungsvariablen, die möglicherweise aus
- # vorherigen Sitzungen oder Skripten übrig geblieben sind, um sicherzustellen, dass
- # keine alten Werte beibehalten werden.
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+	#* vardel - Eine Funktion zum Löschen von Umgebungsvariablen aus vorherigen Sitzungen
+	# Diese Funktion löscht eine Reihe von Umgebungsvariablen, die möglicherweise aus
+	# vorherigen Sitzungen oder Skripten übrig geblieben sind, um sicherzustellen, dass
+	# keine alten Werte beibehalten werden.
+	#? @param keine.
+	#? @return nichts wird zurueckgegeben.
+	# todo: nichts.
 ##
 function vardel() {
 	# Letzte Bearbeitung 26.09.2023
@@ -178,12 +178,12 @@ function vardel() {
 }
 
 ##
- #* vardelall - Eine Funktion zum Löschen aller Variablen
- # Diese Funktion geht alle definierten Variablen in der aktuellen Shell durch
- # und löscht sie mit unset.
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+	#* vardelall - Eine Funktion zum Löschen aller Variablen
+	# Diese Funktion geht alle definierten Variablen in der aktuellen Shell durch
+	# und löscht sie mit unset.
+	#? @param keine.
+	#? @return nichts wird zurueckgegeben.
+	# todo: nichts.
 ##
 function vardelall() {
 	# Letzte Bearbeitung 26.09.2023
@@ -230,12 +230,12 @@ SCRIPTPATH=$(cd "$(dirname "$0")" && pwd)
 ###
 
 ##
- #* osmtranslateinstall
- # osmtranslateinstall - Diese Funktion installiert das Tool 'translate-shell' auf Ihrem Ubuntu-System.
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+	#* osmtranslateinstall
+	# osmtranslateinstall - Diese Funktion installiert das Tool 'translate-shell' auf Ihrem Ubuntu-System.
+	# 
+	#? @param keine.
+	#? @return nichts wird zurueckgegeben.
+	# todo: nichts.
 ##
 function osmtranslateinstall() {
 	# Letzte Bearbeitung 26.09.2023
@@ -268,19 +268,19 @@ function osmtranslateinstall() {
 }
 
 ##
- #* osmtranslate - Übersetzt Text mithilfe des OSM Translator-Dienstes
- # Diese Funktion verwendet den OSM Translator, um Text aus einer
- # beliebigen Quellsprache in die Zielsprache zu übersetzen. Der OSM Translator-Dienst
- # muss für die Verwendung aktiviert sein.
- # 
- #? @param Parameter:
- #? @param   "Text zum Übersetzen" - Der Text, der übersetzt werden soll.
- #? @param Um den OSM Translator-Dienst zu aktivieren, setzen Sie die Umgebungsvariable OSMTRANSLATOR auf "ON".
- #? @param Wenn OSMTRANSLATOR auf "OFF" gesetzt ist, wird der Text nicht übersetzt.
- #? Beispiele:
- #?   OSMTRANSLATOR="ON"  # Aktiviert den OSM Translator-Dienst
- #?   osmtranslate "Hello, world!"  # Übersetzt den Text ins Ziel
- #?   echo $text  # Gibt die übersetzte Zeichenfolge aus
+	#* osmtranslate - Übersetzt Text mithilfe des OSM Translator-Dienstes
+	# Diese Funktion verwendet den OSM Translator, um Text aus einer
+	# beliebigen Quellsprache in die Zielsprache zu übersetzen. Der OSM Translator-Dienst
+	# muss für die Verwendung aktiviert sein.
+	# 
+	#? @param Parameter:
+	#? @param   "Text zum Übersetzen" - Der Text, der übersetzt werden soll.
+	#? @param Um den OSM Translator-Dienst zu aktivieren, setzen Sie die Umgebungsvariable OSMTRANSLATOR auf "ON".
+	#? @param Wenn OSMTRANSLATOR auf "OFF" gesetzt ist, wird der Text nicht übersetzt.
+	#? Beispiele:
+	#?   OSMTRANSLATOR="ON"  # Aktiviert den OSM Translator-Dienst
+	#?   osmtranslate "Hello, world!"  # Übersetzt den Text ins Ziel
+	#?   echo $text  # Gibt die übersetzte Zeichenfolge aus
 ##
 function osmtranslate() {
     OSMTRANSTEXT=$1
@@ -321,19 +321,19 @@ function osmtranslate2() {
 }
 
 ##
- #* osmtranslatedirekt - Übersetzt Text direkt mithilfe des OSM Translator-Dienstes
- # Diese Funktion verwendet den OSM Translator, um Text aus einer beliebigen Quellsprache in eine 
- # Zielsprache zu übersetzen. Der OSM Translator-Dienst muss für die Verwendung aktiviert sein.
- #
- #? @param Parameter:
- #? @param   "Text zum Übersetzen" - Der Text, der übersetzt werden soll.
- # Um den OSM Translator-Dienst zu aktivieren, setzen Sie die Umgebungsvariable OSMTRANSLATOR auf "ON".
- # Wenn OSMTRANSLATOR auf "OFF" gesetzt ist, wird der Text nicht übersetzt.
- #
- # Beispielaufruf:
- #   OSMTRANSLATOR="ON"  # Aktiviert den OSM Translator-Dienst
- #   osmtranslatedirekt "Hello, world!"  # Übersetzt den Text ins Ziel
- #   echo "Übersetzter Text: $text"  # Gibt die übersetzte Zeichenfolge aus
+	#* osmtranslatedirekt - Übersetzt Text direkt mithilfe des OSM Translator-Dienstes
+	# Diese Funktion verwendet den OSM Translator, um Text aus einer beliebigen Quellsprache in eine 
+	# Zielsprache zu übersetzen. Der OSM Translator-Dienst muss für die Verwendung aktiviert sein.
+	#
+	#? @param Parameter:
+	#? @param   "Text zum Übersetzen" - Der Text, der übersetzt werden soll.
+	# Um den OSM Translator-Dienst zu aktivieren, setzen Sie die Umgebungsvariable OSMTRANSLATOR auf "ON".
+	# Wenn OSMTRANSLATOR auf "OFF" gesetzt ist, wird der Text nicht übersetzt.
+	#
+	# Beispielaufruf:
+	#   OSMTRANSLATOR="ON"  # Aktiviert den OSM Translator-Dienst
+	#   osmtranslatedirekt "Hello, world!"  # Übersetzt den Text ins Ziel
+	#   echo "Übersetzter Text: $text"  # Gibt die übersetzte Zeichenfolge aus
 ##
 function osmtranslatedirekt() {  
     OSMTRANSTEXT=$1
@@ -368,19 +368,19 @@ function osmtranslatedirekt2() {
 }
 
 ##
- #* osmnotranslate - Kopiert den Text, ohne Übersetzung durchzuführen
- # Diese Funktion kopiert den angegebenen Text in eine Zielvariable. Wenn der OSM Translator-Dienst 
- # deaktiviert ist (OSMTRANSLATOR auf "OFF" gesetzt), wird der Text unverändert kopiert.
- #? @param Parameter:
- #? @param   "Text zum Kopieren" - Der Text, der kopiert werden soll.
- #
- # Um den OSM Translator-Dienst zu aktivieren, setzen Sie die Umgebungsvariable OSMTRANSLATOR auf "ON".
- # Wenn OSMTRANSLATOR auf "OFF" gesetzt ist, wird der Text nicht übersetzt und direkt kopiert.
- #
- # Beispielaufruf:
- #   OSMTRANSLATOR="ON"  # Aktiviert den OSM Translator-Dienst
- #   osmnotranslate "Hello, world!"  # Kopiert den Text
- #   echo "Kopierter Text: $text"  # Gibt den kopierten Text aus
+	#* osmnotranslate - Kopiert den Text, ohne Übersetzung durchzuführen
+	# Diese Funktion kopiert den angegebenen Text in eine Zielvariable. Wenn der OSM Translator-Dienst 
+	# deaktiviert ist (OSMTRANSLATOR auf "OFF" gesetzt), wird der Text unverändert kopiert.
+	#? @param Parameter:
+	#? @param   "Text zum Kopieren" - Der Text, der kopiert werden soll.
+	#
+	# Um den OSM Translator-Dienst zu aktivieren, setzen Sie die Umgebungsvariable OSMTRANSLATOR auf "ON".
+	# Wenn OSMTRANSLATOR auf "OFF" gesetzt ist, wird der Text nicht übersetzt und direkt kopiert.
+	#
+	# Beispielaufruf:
+	#   OSMTRANSLATOR="ON"  # Aktiviert den OSM Translator-Dienst
+	#   osmnotranslate "Hello, world!"  # Kopiert den Text
+	#   echo "Kopierter Text: $text"  # Gibt den kopierten Text aus
 ##
 function osmnotranslate() {
 	# Letzte Bearbeitung 26.09.2023
@@ -389,15 +389,15 @@ function osmnotranslate() {
 }
 
 ##
- #* janein - Übersetzt eine Eingabe in "ja" oder "nein"
- # Diese Funktion übersetzt eine Eingabe in die deutsche Sprache und gibt entweder "ja" oder "nein" zurück,
- # basierend auf der übersetzten Eingabe. Die Eingabe wird zuerst in Kleinbuchstaben umgewandelt und
- # falls leer, wird "nein" zurückgegeben.
- #? @param Parameter:
- #? @param   "Eingabe zum Übersetzen" - Die Eingabe, die übersetzt werden soll.
- # Beispielaufruf:
- #   janein "Yes"  # Übersetzt "Yes" in "ja"
- #   echo "Antwort: $JNTRANSLATOR"  # Gibt die übersetzte Antwort aus
+	#* janein - Übersetzt eine Eingabe in "ja" oder "nein"
+	# Diese Funktion übersetzt eine Eingabe in die deutsche Sprache und gibt entweder "ja" oder "nein" zurück,
+	# basierend auf der übersetzten Eingabe. Die Eingabe wird zuerst in Kleinbuchstaben umgewandelt und
+	# falls leer, wird "nein" zurückgegeben.
+	#? @param Parameter:
+	#? @param   "Eingabe zum Übersetzen" - Die Eingabe, die übersetzt werden soll.
+	# Beispielaufruf:
+	#   janein "Yes"  # Übersetzt "Yes" in "ja"
+	#   echo "Antwort: $JNTRANSLATOR"  # Gibt die übersetzte Antwort aus
 ##
 function janein() {
 	# Letzte Bearbeitung 26.09.2023
@@ -416,12 +416,23 @@ function janein() {
 }
 
 ##
- #* log.
- # Log Dateien und Funktionen.
- # 
- #? @param logtype.
- #? @return Textausgabe.
- # todo: nichts.
+	#* log - Schreibt Text in eine Log-Datei und gibt ihn auf der Konsole aus
+	# Diese Funktion akzeptiert zwei Parameter:
+	# 1. logtype: Der Typ des Log-Eintrags (line, rohtext, text, debug, info, warn, error).
+	# 2. text: Der Text, der geloggt werden soll.
+	#
+	#? Beispielaufrufe:
+	# log text "Das ist eine Protokollmeldung."
+	# log error "Ein Fehler ist aufgetreten!"
+	#
+	#? Optionale Umgebungsvariablen:
+	# - LOGWRITE: Wenn LOGWRITE auf "yes" gesetzt ist, wird der Log-Eintrag in eine Log-Datei geschrieben.
+	# - STARTVERZEICHNIS: Das Verzeichnis, in dem die Log-Datei erstellt werden soll.
+	# - logfilename: Der Name der Log-Datei.
+	#
+	# Hinweise:
+	# - Die Farben für die Log-Ausgabe werden mit tput festgelegt, um die Anzeige zu verbessern.
+	# - Das Datum und die Uhrzeit werden zu jedem Log-Eintrag hinzugefügt.
 ##
 function log() {
 	local text
@@ -463,17 +474,66 @@ function log() {
 	esac
 	return 0
 }
+function log2() {
+	# Letzte Bearbeitung 26.09.2023
+    local logtype
+    local rohtext
+    local text
+    logtype="$1"
+    rohtext="$2"
+
+    # Übersetzt den Roh-Text (rohtext) mit der Funktion osmtranslate.
+    osmtranslate "$rohtext"
+    
+    DATEIDATUM=$(date +%d_%m_%Y)
+    lline="#####################################################################################"
+
+    if [ "$LOGWRITE" = "yes" ]; then
+        case $logtype in
+            line) echo "$lline" >> "$STARTVERZEICHNIS/$DATEIDATUM$logfilename.log" ;;
+            rohtext) echo "$text" >> "$STARTVERZEICHNIS/$DATEIDATUM$logfilename.log" ;;
+            text) echo "$(date +'%d.%m.%Y-%H:%M:%S') TEXT: $text" >> "$STARTVERZEICHNIS/$DATEIDATUM$logfilename.log" ;;
+            debug) echo "$(date +'%d.%m.%Y-%H:%M:%S') DEBUG: $text" >> "$STARTVERZEICHNIS/$DATEIDATUM$logfilename.log" ;;
+            info) echo "$(date +'%d.%m.%Y-%H:%M:%S') INFO: $text" >> "$STARTVERZEICHNIS/$DATEIDATUM$logfilename.log" ;;
+            warn) echo "$(date +'%d.%m.%Y-%H:%M:%S') WARNING: $text" >> "$STARTVERZEICHNIS/$DATEIDATUM$logfilename.log" ;;
+            error) echo "$(date +'%d.%m.%Y-%H:%M:%S') ERROR: $text" >> "$STARTVERZEICHNIS/$DATEIDATUM$logfilename.log" ;;
+            *) return 0 ;;
+        esac
+    fi
+
+    case $logtype in
+        line) echo "$(tput setaf $linefontcolor)$(tput setab $linebackgroundcolor)$lline$(tput sgr 0)" ;;
+        rohtext) echo "$text" ;;
+        text) echo "$(tput setaf $textfontcolor)$(tput setab $textbackgroundcolor)$(date +'%d.%m.%Y-%H:%M:%S') TEXT: $text$(tput sgr 0)" ;;
+        debug) echo "$(tput setaf $debugfontcolor)$(tput setab $debugbackgroundcolor)$(date +'%d.%m.%Y-%H:%M:%S') DEBUG: $text$(tput sgr 0)" ;;
+        info) echo "$(tput setaf $infofontcolor)$(tput setab $infobackgroundcolor)$(date +'%d.%m.%Y-%H:%M:%S') INFO: $text$(tput sgr 0)" ;;
+        warn) echo "$(tput setaf $warnfontcolor)$(tput setab $warnbackgroundcolor)$(date +'%d.%m.%Y-%H:%M:%S') WARNING: $text$(tput sgr 0)" ;;
+        error) echo "$(tput setaf $errorfontcolor)$(tput setab $errorbackgroundcolor)$(date +'%d.%m.%Y-%H:%M:%S') ERROR: $text$(tput sgr 0)" ;;
+        *) return 0 ;;
+    esac
+    return 0
+}
 
 ##
- #* osmtoolconfig autoconfigure.
- # Hier wird die Konfigurationsdatei fuer das opensimTOOL erstellt.
- # 
- #? @param STARTVERZEICHNIS ROBUSTVERZEICHNIS MONEYVERZEICHNIS OPENSIMVERZEICHNIS CONFIGPFAD OSTOOLINI
- #? @return Eine Datei wird geschrieben.
- # todo: nichts.
+	#* osmtoolconfig - Erstellt die Konfigurationsdatei für das opensimTOOL.
+	# Usage: osmtoolconfig STARTVERZEICHNIS ROBUSTVERZEICHNIS MONEYVERZEICHNIS OPENSIMVERZEICHNIS CONFIGPFAD OSTOOLINI
+	#   STARTVERZEICHNIS: Das Verzeichnis für den Start von opensim (z.B., home oder opt).
+	#   ROBUSTVERZEICHNIS: Das Verzeichnis für die Robust-Dienste.
+	#   MONEYVERZEICHNIS: Das Verzeichnis für das Geld-Modul.
+	#   OPENSIMVERZEICHNIS: Das Hauptverzeichnis von OpenSim.
+	#   CONFIGPFAD: Der Pfad zur Konfigurationsdatei.
+	#   OSTOOLINI: Der Ausgabepfad für die opensimTOOL-Konfigurationsdatei.
+	#? Diese Funktion erstellt eine Konfigurationsdatei für das opensimTOOL.
+	# Die Konfiguration enthält Pfade zu verschiedenen Verzeichnissen für die OpenSim-Installation,
+	# Einstellungen für Skript-Quellen und Übersetzungsmodi.
+	# Sie können diese Konfigurationsdatei später verwenden, um opensimTOOL einzurichten.
+	#
+	#? Beispiele:
+	#   osmtoolconfig "/opensim/start" "/opensim/robust" "/opensim/money" "/opensim/main" "/opensim/config" "/opensim/osconfig.ini"
+	#   osmtoolconfig help
 ##
 function osmtoolconfig() {
-	# if [[ $1 == "help" ]]; then	echo "Hier wird die Konfigurationsdatei fuer das opensimTOOL erstellt."; exit 0; fi
+	# Letzte Bearbeitung 26.09.2023
 	STARTVERZEICHNIS=$1; ROBUSTVERZEICHNIS=$2; MONEYVERZEICHNIS=$3; OPENSIMVERZEICHNIS=$4; CONFIGPFAD=$5; OSTOOLINI=$6	
     {		
 		echo "### Einstellungen $SCRIPTNAME $VERSION"
@@ -686,14 +746,22 @@ function osmtoolconfig() {
 }
 
 ##
- #* osmtoolconfigabfrage.
- # Hier wird die Konfigurationsparameter für opensimTOOL abgefragt.
- # 
- #? @param STARTVERZEICHNIS ROBUSTVERZEICHNIS MONEYVERZEICHNIS OPENSIMVERZEICHNIS CONFIGPFAD SCRIPTPATH.
- #? @return STARTVERZEICHNIS ROBUSTVERZEICHNIS MONEYVERZEICHNIS OPENSIMVERZEICHNIS CONFIGPFAD SCRIPTPATH.
- # todo: nichts.
+	#* osmtoolconfigabfrage - Führt eine Benutzerabfrage durch und erstellt die opensimTOOL Konfigurationsdatei.
+	# Diese Funktion führt eine Benutzerabfrage durch, um Einstellungen für die opensimTOOL-Konfiguration zu sammeln.
+	# Anschließend wird die Konfigurationsdatei erstellt.
+	# Usage: osmtoolconfigabfrage
+	#
+	#? Diese Funktion erfasst die folgenden Einstellungen:
+	# - Aktivierung der automatischen Übersetzung (ON oder OFF)
+	# - Auswahl der Sprache (zum Beispiel: de)
+	# - Verzeichnisse für Start, Robust, Money, OpenSim und Konfiguration
+	# - Verwendung von dotnet 6 (yes oder no)
+	#
+	#? Beispielaufruf:
+	# osmtoolconfigabfrage
 ##
 function osmtoolconfigabfrage() {
+	# Letzte Bearbeitung 26.09.2023
 	# Ausgabe Kopfzeilen
 	VSTARTVERZEICHNIS=$(pwd); # Vorläufiges Startverzeichnis
 	log rohtext "$SCRIPTNAME Version $VERSION"
@@ -761,13 +829,90 @@ function osmtoolconfigabfrage() {
     #osmtoolconfig "/$STARTVERZEICHNIS/osmtoolconfig.ini"
 	osmtoolconfig $STARTVERZEICHNIS $ROBUSTVERZEICHNIS $MONEYVERZEICHNIS $OPENSIMVERZEICHNIS $CONFIGPFAD "/$SCRIPTPATH/osmtoolconfig.ini"
 }
+function osmtoolconfigabfrage2() {
+	# Letzte Bearbeitung 26.09.2023
+    VSTARTVERZEICHNIS=$(pwd) # Vorläufiges Startverzeichnis
 
+    log rohtext "$SCRIPTNAME Version $VERSION"
+
+    # Benutzereingabe für automatische Übersetzung aktivieren
+    log rohtext "Do you want to enable automatic translation? ON [OFF]"
+    read -r OSMTRANSLATOR
+    if [ "$OSMTRANSLATOR" = "" ]; then OSMTRANSLATOR="OFF"; fi
+    log rohtext "Your selection: $OSMTRANSLATOR"
+    log rohtext "##################################################################"
+
+    # Benutzereingabe für Sprachauswahl
+    log rohtext "Please select your language: [:de]"
+    read -r OSMTRANS
+    if [ "$OSMTRANS" = "" ]; then OSMTRANS=":de"; fi
+    log rohtext "Your language: $OSMTRANS"
+    log rohtext "##################################################################"
+
+    log rohtext " "
+    log rohtext "##################################################################"
+    log rohtext "########### CANCEL WITH KEY COMBINATION ###########################"
+    log rohtext "####################  CTRL/STRG + C  #############################"
+    log rohtext "##################################################################"
+    log rohtext "## Values in brackets [] are default suggestions                 ##"
+    log rohtext "## and can be accepted with Enter.                                ##"
+    log rohtext "##################################################################"
+    log rohtext "## Data may also be available in the old opensim.cnf file.       ##"
+    log rohtext "##################################################################"
+    log rohtext " "
+
+    # Benutzereingabe für Startverzeichnis
+    log rohtext "Directory where your grid is located or should be located [${VSTARTVERZEICHNIS//\//}]"
+    read -r STARTVERZEICHNIS
+    if [ "$STARTVERZEICHNIS" = "" ]; then STARTVERZEICHNIS="${VSTARTVERZEICHNIS//\//}"; fi
+    log rohtext "Your grid directory is: $STARTVERZEICHNIS"
+    log rohtext "##################################################################"
+
+    # Benutzereingabe für Robust-Verzeichnis
+    log rohtext "Directory where your Robust is located [robust]"
+    read -r ROBUSTVERZEICHNIS
+    if [ "$ROBUSTVERZEICHNIS" = "" ]; then ROBUSTVERZEICHNIS="robust"; fi
+    log rohtext "Your Robust directory is: $ROBUSTVERZEICHNIS"
+    log rohtext "##################################################################"
+
+    # Benutzereingabe für Money-Verzeichnis
+    log rohtext "Directory where your Money directory is located [robust]"
+    read -r MONEYVERZEICHNIS
+    if [ "$MONEYVERZEICHNIS" = "" ]; then MONEYVERZEICHNIS="robust"; fi
+    log rohtext "Your Money directory is: $MONEYVERZEICHNIS"
+    log rohtext "##################################################################"
+
+    # Benutzereingabe für OpenSim-Verzeichnis
+    log rohtext "Directory where your OpenSim directory is located [opensim]"
+    read -r OPENSIMVERZEICHNIS
+    if [ "$OPENSIMVERZEICHNIS" = "" ]; then OPENSIMVERZEICHNIS="opensim"; fi
+    log rohtext "Your OpenSim directory is: $OPENSIMVERZEICHNIS"
+    log rohtext "##################################################################"
+
+    # Benutzereingabe für Konfigurationsverzeichnis
+    log rohtext "Directory where your configuration files are located [OpenSimConfig]"
+    read -r CONFIGPFAD
+    if [ "$CONFIGPFAD" = "" ]; then CONFIGPFAD="OpenSimConfig"; fi
+    log rohtext "Your configuration files directory is: $CONFIGPFAD"
+    log rohtext "##################################################################"
+
+    # Benutzereingabe für dotnet 6 Modus
+    log rohtext "Should dotnet 6 be used [yes] no"
+    read -r DOTNETMODUS
+    if [ "$DOTNETMODUS" = "" ]; then DOTNETMODUS="yes"; fi
+    log rohtext "Your dotnet 6 selection is: DOTNETMODUS=$DOTNETMODUS"
+    log rohtext "##################################################################"
+
+    # Erstellen der opensimTOOL-Konfigurationsdatei
+    osmtoolconfig "$STARTVERZEICHNIS" "$ROBUSTVERZEICHNIS" "$MONEYVERZEICHNIS" "$OPENSIMVERZEICHNIS" "$CONFIGPFAD" "/$SCRIPTPATH/osmtoolconfig.ini"
+}
+
+###########################################################################
+#* Konfiguration opensimMULTITOOL # Letzte Bearbeitung 26.09.2023
+###########################################################################
 # Nutzer mit Konfigurationsfragen quaelen
 # Abfrage Konfig Einstellungen
 if ! [ -f "/$SCRIPTPATH/osmtoolconfig.ini" ]; then osmtoolconfigabfrage; fi
-
-# Wenn es keine Konfigurationsdatei gibt anlegen
-#if ! [ -f "/$SCRIPTPATH/osmtoolconfig.ini" ]; then osmtoolconfig "/$SCRIPTPATH/osmtoolconfig.ini"; fi
 
 # Variablen aus config Datei laden osmtoolconfig.ini muss sich im gleichen Verzeichnis wie osmtool.sh befinden.
 # shellcheck disable=SC1091
@@ -788,13 +933,13 @@ KOMMANDO=$1
 ###########################################################################
 
 ##
- #* dummyvar, shellcheck disable=SC2034 umgehen.
- # Shell-Check ueberlisten wegen der Konfigurationsdatei, 
- # hat sonst keinerlei Funktion und wird auch nicht aufgerufen.
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+	#* dummyvar, shellcheck disable=SC2034 umgehen.
+	# Shell-Check ueberlisten wegen der Konfigurationsdatei, 
+	# hat sonst keinerlei Funktion und wird auch nicht aufgerufen.
+	# 
+	#? @param keine.
+	#? @return nichts wird zurueckgegeben.
+	# todo: nichts.
 ##
 function dummyvar() {
 	# shellcheck disable=SC2034
@@ -814,25 +959,74 @@ function dummyvar() {
 }
 
 ##
- #* xhelp Test
- # hilfe ausgeben.
- # 
- #? @param keiner.
- #? @return $VERSION
- # todo: nichts.
+	#* xhelp Test
+	# hilfe ausgeben.
+	# 
+	#? @param keiner.
+	#? @return $VERSION
+	# todo: nichts.
 ##
 function xhelp() {
 	if [[ $1 == "help" ]]; then	echo "Zeigt die Hilfe einzelner Funktionen an."; exit 0; fi
 	exit 0;	
 }
+##
+	#* xhelp - Eine Funktion, um Hilfe für andere Funktionen anzuzeigen.
+	# Diese Funktion gibt Hilfeinformationen für andere Funktionen aus, indem sie den Funktionsnamen als Argument akzeptiert.
+	#? Verwendung:
+	#   xhelp <Funktionsname>
+	#? Argumente:
+	#   <Funktionsname>: Der Name der Funktion, für die Hilfe angezeigt werden soll.
+	#? Beispiele:
+	#   xhelp myfunction  # Zeigt die Hilfe für die Funktion "myfunction" an.
+	#? Rückgabewerte:
+	#   0 - Die Funktion wurde erfolgreich ausgeführt.
+	#   1 - Die Funktion wurde mit ungültigen Argumenten aufgerufen.
+##
+function xhelp2() {
+	# Letzte Bearbeitung 26.09.2023
+  if [[ $# -ne 1 ]]; then
+    echo "Fehler: Bitte geben Sie den Namen einer Funktion als Argument an."
+    echo "Verwendung: xhelp <Funktionsname>"
+    return 1
+  fi
+
+  local function_name="$1"
+
+  if [[ "$function_name" == "help" ]]; then
+    echo "Zeigt die Hilfe einzelner Funktionen an."
+    return 0
+  fi
+
+  # Prüfen, ob die angegebene Funktion existiert
+  if type -t "$function_name" &>/dev/null; then
+    # Die Dokumentation der Funktion anzeigen
+    type -t "$function_name"
+  else
+    echo "Fehler: Die Funktion '$function_name' existiert nicht."
+    return 1
+  fi
+}
 
 ##
- #* skriptversion.
- # Skriptversion ausgeben.
- # 
- #? @param keiner.
- #? @return $VERSION
- # todo: nichts.
+	#* skriptversion - Zeigt die Versionsnummer des opensimMULTITOOL-Skripts an.
+	# Diese Funktion gibt die Versionsnummer des opensimMULTITOOL-Skripts aus.
+	#
+	#? Verwendung:
+	#   skriptversion
+	#
+	#? Argumente:
+	#   Keine.
+	#
+	#? Optionen:
+	#   -h, --help: Zeigt die Hilfe für die Funktion an.
+	#
+	#? Beispiele:
+	#   skriptversion  # Zeigt die Versionsnummer des opensimMULTITOOL-Skripts an.
+	#
+	#? Rückgabewerte:
+	#   0 - Die Funktion wurde erfolgreich ausgeführt.
+	#   1 - Die Funktion wurde mit ungültigen Argumenten aufgerufen.
 ##
 function skriptversion() {
 	# Test einer neuen Hilfe.
@@ -840,14 +1034,34 @@ function skriptversion() {
 	echo "$VERSION";
 	exit 0;
 }
+function skriptversion2() {
+	# Letzte Bearbeitung 26.09.2023
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      -h|--help)
+        echo "Zeigt die Versionsnummer des opensimMULTITOOL-Skripts an."
+        return 0
+        ;;
+      *)
+        echo "Fehler: Ungültiges Argument: $1"
+        echo "Verwendung: skriptversion [-h|--help]"
+        return 1
+        ;;
+    esac
+    shift
+  done
+
+  echo "$VERSION"
+  return 0
+}
 
 ##
- #* Zufallsnamen.
- # Array aus Bezeichnungen von Deutschen Orten und Voelker (Unvollstaendig da keine umlaute funktionieren).
- # 
- #? @param keiner.
- #? @return NEUERREGIONSNAME - Es wird ein Name zurueckgegeben.
- # todo: nichts.
+	#* meZufallsnan.
+	# Array aus Bezeichnungen von Deutschen Orten und Voelker (Unvollstaendig da keine umlaute funktionieren).
+	# 
+	#? @param keiner.
+	#? @return NEUERREGIONSNAME - Es wird ein Name zurueckgegeben.
+	# todo: nichts.
 ##
 function namen() {
 	if [[ $1 == "help" ]]; then	echo "Ein Zufallsname wird ausgegeben."; exit 0; fi
@@ -902,11 +1116,11 @@ function namen() {
 }
 
 ##
- #* Zufallsvornamen.
- # 
- #? @param keiner.
- #? @return NEUERREGIONSNAME - Es wird ein Name zurueckgegeben.
- # todo: nichts.
+	#* Zufallsvornamen.
+	# 
+	#? @param keiner.
+	#? @return NEUERREGIONSNAME - Es wird ein Name zurueckgegeben.
+	# todo: nichts.
 ##
 function vornamen() {
 	if [[ $1 == "help" ]]; then	echo "Ein Zufallsname wird ausgegeben."; exit 0; fi
@@ -938,11 +1152,11 @@ function vornamen() {
 }
 
 ##
- #* randomname.
- # 
- #? @param keiner.
- #? @return Es werden Name zurueckgegeben.
- # todo: nichts.
+	#* randomname.
+	# 
+	#? @param keiner.
+	#? @return Es werden Name zurueckgegeben.
+	# todo: nichts.
 ##
 function randomname() {
 	vornamen
@@ -954,12 +1168,12 @@ function randomname() {
 }
 
 ##
- #* functionslist
- # Funktionen eines Bash Skript auslesen und in eine Text Datei schreiben.
- # 
- #? @param keine.
- #? @return datediff.
- # todo: nichts.
+	#* functionslist
+	# Funktionen eines Bash Skript auslesen und in eine Text Datei schreiben.
+	# 
+	#? @param keine.
+	#? @return datediff.
+	# todo: nichts.
 ##
 function functionslist() {
 	file="/$STARTVERZEICHNIS/osmtool.sh"
@@ -967,14 +1181,50 @@ function functionslist() {
 	ergebnisflist=$(grep -i -r "$suche " $file)
 	echo "$ergebnisflist" >/$STARTVERZEICHNIS/osmfunktion"$DATEIDATUM".txt
 }
+##
+	#* Funktion: functionslist
+	#? Beschreibung:
+	# Diese Funktion sucht nach Funktionen in einer angegebenen Shell-Datei und speichert
+	# die gefundenen Funktionen alphabetisch aufsteigend in einer Ausgabedatei im angegebenen Verzeichnis.
+	#? Parameter:
+	# $1 - Die Pfadangabe zur Shell-Datei, in der nach Funktionen gesucht werden soll.
+	# $2 - Die Ausgabedatei, in der die gefundenen Funktionen alphabetisch aufsteigend gespeichert werden sollen.
+	#? Beispielaufruf:
+	# functionslist "/Pfad/zur/Shell-Datei.sh" "/Ausgabeverzeichnis/ergebnis.txt"
+##
+function functionslist2() {
+	# Letzte Bearbeitung 26.09.2023
+    # Prüfen, ob die erforderlichen Parameter vorhanden sind
+    if [ $# -ne 2 ]; then
+        echo "Verwendung: functionslist <Shell-Datei> <Ausgabedatei>"
+        return 1
+    fi
+
+    local file="$1"
+    local output_file="$2"
+    local search="function"
+
+    # Überprüfen, ob die angegebene Datei existiert
+    if [ ! -f "$file" ]; then
+        echo "Die angegebene Shell-Datei existiert nicht."
+        return 1
+    fi
+
+    # Suchen nach Funktionen in der Datei und in die Ausgabedatei schreiben
+    #grep -i -r "$search " "$file" > "$output_file"
+	# Suchen nach Funktionen in der Datei, sortieren und in die Ausgabedatei schreiben
+    grep -i -r "$search " "$file" | sort -f > "$output_file"
+
+    echo "Die gefundenen Funktionen wurden in $output_file gespeichert."
+}
 
 ##
- #* remarklist
- # Funktionen eines Bash Skript inklusive 8 remark-Zeilen auslesen und in eine Text Datei schreiben.
- # Hilfreich fuer Handbuch und Hilfen.
- #? @param keine.
- #? @return datediff.
- # todo: nichts.
+	#* remarklist
+	# Funktionen eines Bash Skript inklusive 8 remark-Zeilen auslesen und in eine Text Datei schreiben.
+	# Hilfreich fuer Handbuch und Hilfen.
+	#? @param keine.
+	#? @return datediff.
+	# todo: nichts.
 ##
 function remarklist() {
 	# -A Zeile nach suchwort -- -B zeile vor suchwort -- -C zeile vor und nach suchwort
@@ -982,6 +1232,45 @@ function remarklist() {
 	suche="function"
 	ergebnisflist=$(grep -B9 -i -r "$suche " $file) # B8 Acht Zeilen vor dem Funktionsnamen.
 	echo "$ergebnisflist" >/$STARTVERZEICHNIS/osmRemarklist"$DATEIDATUM".txt
+}
+##
+	#* Funktion: remarklist
+	#
+	#? Beschreibung:
+	# Diese Funktion sucht nach Kommentaren, die Funktionen in einer angegebenen Shell-Datei
+	# vorangehen, und speichert die gefundenen Kommentare in einer Ausgabedatei im
+	# angegebenen Verzeichnis. Die Anzahl der Zeilen vor dem Funktionsnamen, die in
+	# den Ausgabekommentaren enthalten sein sollen, kann angepasst werden.
+	#? Parameter:
+	# $1 - Die Pfadangabe zur Shell-Datei, in der nach Kommentaren gesucht werden soll.
+	# $2 - Die Ausgabedatei, in der die gefundenen Kommentare gespeichert werden sollen.
+	# $3 - Die Anzahl der Zeilen vor dem Funktionsnamen, die in den Ausgabekommentaren enthalten sein sollen.
+	#? Beispielaufruf:
+	# remarklist "/Pfad/zur/Shell-Datei.sh" "/Ausgabeverzeichnis/ergebnis.txt" 8
+##
+function remarklist2() {
+	# Letzte Bearbeitung 26.09.2023
+    # Prüfen, ob die erforderlichen Parameter vorhanden sind
+    if [ $# -ne 3 ]; then
+        echo "Verwendung: remarklist <Shell-Datei> <Ausgabedatei> <Anzahl der Zeilen vor dem Funktionsnamen>"
+        return 1
+    fi
+
+    local file="$1"
+    local output_file="$2"
+    local lines_before_function="$3"
+    local search="function"
+
+    # Überprüfen, ob die angegebene Datei existiert
+    if [ ! -f "$file" ]; then
+        echo "Die angegebene Shell-Datei existiert nicht."
+        return 1
+    fi
+
+    # Suchen nach Kommentaren vor Funktionen in der Datei und in die Ausgabedatei schreiben
+    grep -B"$lines_before_function" -i -r "$search " "$file" > "$output_file"
+
+    echo "Die gefundenen Kommentare wurden in $output_file gespeichert."
 }
 
 ##
@@ -1000,6 +1289,44 @@ function trimm() {
 	trimmvar=$(printf '%s\n' "$*")
 	set +f
 }
+##
+	#* Funktion: trimm
+	#
+	#? Beschreibung:
+	# Diese Funktion entfernt führende und abschließende Leerzeichen aus den übergebenen
+	# Zeichenketten und speichert das bereinigte Ergebnis in einer Variablen.
+	#
+	#? Parameter:
+	# $@ - Die Zeichenketten, die bereinigt werden sollen.
+	#
+	#? Beispielaufruf:
+	# trimm "   Hallo, Welt!   " "   Guten Tag   "
+##
+function trimm2() {
+	# Letzte Bearbeitung 26.09.2023
+    # Prüfen, ob mindestens ein Parameter übergeben wurde
+    if [ $# -eq 0 ]; then
+        echo "Verwendung: trimm <Zeichenkette1> <Zeichenkette2> ..."
+        return 1
+    fi
+
+    local trimmvar=""  # Initialisiere die Ergebnisvariable
+
+    # Schleife durch alle übergebenen Zeichenketten
+    for arg in "$@"; do
+        # Entferne führende und abschließende Leerzeichen
+        trimmed_arg="${arg#"${arg%%[![:space:]]*}"}"
+        trimmed_arg="${trimmed_arg%"${trimmed_arg##*[![:space:]]}"}"
+
+        # Füge das bereinigte Argument zur Ergebnisvariable hinzu
+        trimmvar="$trimmvar$trimmed_arg "
+    done
+
+    # Entferne eventuelles letztes Leerzeichen aus der Ergebnisvariable
+    trimmvar="${trimmvar%"${trimmvar##*[![:space:]]}"}"
+
+    echo "$trimmvar"
+}
 
 ##
  #* osgitstatus.
@@ -1015,68 +1342,177 @@ function osgitstatus() {
 	log rohtext "  OpenSim ist: $(git pull)" || log rohtext "OpenSim kann nicht upgegradet werden."
 	cd /$STARTVERZEICHNIS || return 0
 }
+##
+	#* Funktion: osgitstatus
+	#? Beschreibung:
+	# Diese Funktion aktualisiert den OpenSim-Quellcode aus einem Git-Repository,
+	# sofern verfügbar, und gibt Informationen über den Status des Upgrades aus.
+	#? Parameter:
+	# Keine Parameter erforderlich.
+	#? Beispielaufruf:
+	# osgitstatus
+##
+function osgitstatus2() {
+	# Letzte Bearbeitung 26.09.2023
+    log info "OpenSim Sourcecode wird aktualisiert."
+
+    # Verzeichnis, in dem sich das Git-Repository für OpenSim befindet
+    opensim_dir="/$STARTVERZEICHNIS/opensim"
+
+    # Wechseln zum OpenSim-Verzeichnis oder Fehlermeldung ausgeben und die Funktion verlassen
+    cd "$opensim_dir" || { log rohtext "Fehler: Das OpenSim-Verzeichnis '$opensim_dir' existiert nicht."; return 1; }
+
+    # Aktualisieren des Git-Repositories und Speichern des Ergebnisses
+    git_result=$(git pull)
+
+    # Überprüfen, ob das Git-Update erfolgreich war
+    if [ $? -eq 0 ]; then
+        log rohtext "OpenSim wurde erfolgreich aktualisiert. Git-Ausgabe: $git_result"
+    else
+        log rohtext "Fehler: OpenSim konnte nicht aktualisiert werden. Git-Ausgabe: $git_result"
+    fi
+
+    # Zurück zum ursprünglichen Verzeichnis wechseln oder Fehlermeldung ausgeben
+    cd "$STARTVERZEICHNIS" || { log rohtext "Fehler: Das ursprüngliche Verzeichnis '$STARTVERZEICHNIS' existiert nicht."; return 0; }
+}
 
 ##
- #* ende.
- # Beenden mit ausgabe der letzten Meldung.
- # 
- #? @param keine.
- #? @return letzten Meldung.
- # todo: nichts.
+	#* Funktion: ende
+	#? Beschreibung:
+	# Diese Funktion beendet das aktuelle Skript und gibt die zuletzt gespeicherte
+	# Meldung aus.
+	#? Parameter:
+	# Keine Parameter erforderlich.
+	#? Rückgabewert:
+	# Die Funktion beendet das Skript mit dem Rückgabewert der letzten Meldung.
+	#? Beispielaufruf:
+	# ende
 ##
 function ende() {
-	return
-	log info "$?" # Beenden mit ausgabe der letzten Meldung.
+	# Letzte Bearbeitung 26.09.2023
+    return
+    log info "$?"  # Das Skript beenden und die letzte Meldung ausgeben.
 }
 
 ##
- #* fehler.
- # Den aufrufenden Prozess mit der letzten Meldung beenden.
- # 
- #? @param keine.
- #? @return letzten Meldung.
- # todo: nichts.
+	#* Funktion: fehler
+	#? Beschreibung:
+	# Diese Funktion beendet den aufrufenden Prozess und gibt die zuletzt
+	# gespeicherte Meldung aus.
+	#? Parameter:
+	# Keine Parameter erforderlich.
+	#? Rückgabewert:
+	# Die Funktion beendet den aufrufenden Prozess mit dem Rückgabewert der letzten Meldung.
+	#? Beispielaufruf:
+	# fehler
 ##
 function fehler() {
-	exit
-	log error "$?" # Den aufrufenden Prozess mit der letzten Meldung beenden.
+	# Letzte Bearbeitung 26.09.2023
+    exit "$?"
+    log error "$?"  # Den aufrufenden Prozess beenden und die letzte Meldung ausgeben.
 }
 
 ##
- #* letterdel.
- # Zeichen entfernen.
- # letterdel $variable "[aAbBcCdD]" - letterdel $variable "[[:space:]]"
- #? @param $variable $variable
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+	#* letterdel.
+	# Zeichen entfernen.
+	# letterdel $variable "[aAbBcCdD]" - letterdel $variable "[[:space:]]"
+	#? @param $variable $variable
+	#? @return nichts wird zurueckgegeben.
+	# todo: nichts.
 ##
 function letterdel() {
 	# letterdel $variable "[aAbBcCdD]" - letterdel $variable "[[:space:]]"
 	printf '%s\n' "${1//$2/}"
 }
+##
+	#* Funktion: letterdel
+	#? Beschreibung:
+	# Diese Funktion entfernt bestimmte Zeichen oder Muster aus einer Zeichenkette
+	# und gibt das bereinigte Ergebnis aus.
+	#? Parameter:
+	# $1 - Die Zeichenkette, aus der Zeichen oder Muster entfernt werden sollen.
+	# $2 - Das Zeichen oder Muster, das aus der Zeichenkette entfernt werden soll.
+	# Rückgabewert:
+	# Die bereinigte Zeichenkette wird auf die Standardausgabe ausgegeben.
+	#? Beispielaufruf:
+	# letterdel "Hallo, Welt!" "[aAbBcCdD]"
+	# Ergebnis: "llo, Welt!"
+##
+function letterdel2() {
+	# Letzte Bearbeitung 26.09.2023
+    # Prüfen, ob beide Parameter übergeben wurden
+    if [ $# -ne 2 ]; then
+        echo "Verwendung: letterdel <Zeichenkette> <Zeichen oder Muster>"
+        return 1
+    fi
+
+    local input_string="$1"
+    local pattern="$2"
+
+    # Verwenden Sie die printf-Funktion, um Zeichen oder Muster aus der Zeichenkette zu entfernen
+    cleaned_string=$(printf '%s\n' "${input_string//$pattern/}")
+
+    echo "$cleaned_string"
+}
 
 ##
- #* trim_string.
- # Zeichen entfernen.
- # Usage: trim_string "   example   string    "
- #
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+	#* trim_string.
+	# Zeichen entfernen.
+	# Usage: trim_string "   example   string    "
+	#
+	#? @param keine.
+	#? @return nichts wird zurueckgegeben.
+	# todo: nichts.
 ##
 function trim_string() {
     : "${1#"${1%%[![:space:]]*}"}"
     : "${_%"${_##*[![:space:]]}"}"
     printf '%s\n' "$_"
 }
+##
+	#* Funktion: trim_string
+	#
+	#? Beschreibung:
+	# Diese Funktion entfernt führende und abschließende Leerzeichen aus einer
+	# Zeichenkette und gibt das bereinigte Ergebnis aus.
+	#
+	#? Parameter:
+	# $1 - Die Zeichenkette, aus der die Leerzeichen entfernt werden sollen.
+	#
+	#? Rückgabewert:
+	# Die bereinigte Zeichenkette wird auf die Standardausgabe ausgegeben.
+	#
+	#? Beispielaufruf:
+	# trimmed_text=$(trim_string "   Hallo, Welt!   ")
+	# Ergebnis: "Hallo, Welt!"
+##
+function trim_string2() {
+	# Letzte Bearbeitung 26.09.2023
+    # Prüfen, ob ein Parameter übergeben wurde
+    if [ $# -ne 1 ]; then
+        echo "Verwendung: trim_string <Zeichenkette>"
+        return 1
+    fi
+
+    local input_string="$1"
+
+    # Entfernen führender Leerzeichen
+    : '${input_string#"${input_string%%[![:space:]]*"}'
+
+    # Entfernen abschließender Leerzeichen
+    : '${_%"${_##*[![:space:]]}"}'
+
+    printf '%s\n' "$_"
+}
+
 
 ##
- #* vartest.
- # Variable auf inhalt testen.
- # 
- #? @param $VARIABLE.
- #? @return ${result} true false.
- # todo: nichts.
+	#* vartest.
+	# Variable auf inhalt testen.
+	# 
+	#? @param $VARIABLE.
+	#? @return ${result} true false.
+	# todo: nichts.
 ##
 function vartest() {
     VARIABLE="$1"
@@ -1087,14 +1523,46 @@ function vartest() {
         result="true"
     fi
 }
+##
+	#* vartest - Diese Funktion überprüft, ob eine Variable einen Wert hat oder leer ist.
+	#? Verwendung: vartest VARIABLE
+	#   - VARIABLE: Die zu überprüfende Variable
+	#? Rückgabewert:
+	#   - "true", wenn die Variable einen Wert hat
+	#   - "false", wenn die Variable leer ist
+	#? Beispielaufruf:
+	# vartest "Hello, World!"
+	# Dies wird "true" zurückgeben, da die Variable einen Wert hat.
+##
+function vartest2() {
+	# Letzte Bearbeitung 26.09.2023
+    # Überprüfen, ob ein Argument übergeben wurde
+    if [ $# -ne 1 ]; then
+        echo "Fehler: Diese Funktion erwartet genau ein Argument."
+        return 1
+    fi
+
+    # Das übergebene Argument in die Variable VARIABLE speichern
+    VARIABLE="$1"
+
+    # Überprüfen, ob die Variable leer ist
+    if [ -z "$VARIABLE" ]; then
+        result="false"
+    else
+        result="true"
+    fi
+
+    # Den Ergebniswert ausgeben
+    echo "$result"
+}
 
 ##
- #* laeuftos
- # Prüfen, ob der OpenSimulator bereits läuft.
- # 
- #? @param Simulator im screen.
- #? @return Text.
- # todo: nichts.
+	#* laeuftos
+	# Prüfen, ob der OpenSimulator bereits läuft.
+	# 
+	#? @param Simulator im screen.
+	#? @return Text.
+	# todo: nichts.
 ##
 function laeuftos() {
 	TEST=$1
@@ -1114,21 +1582,89 @@ function laeuftos() {
 		log warn "$TEST läuft nicht mit .NET 4.8."
 	fi
 }
+##
+	#* laeuftos - Diese Funktion überprüft, ob ein Prozess mit dem angegebenen Namen läuft.
+	#
+	#? Verwendung: laeuftos PROZESSNAME
+	#   - PROZESSNAME: Der Name des Prozesses, der überprüft werden soll.
+	#
+	# Diese Funktion überprüft, ob ein Prozess mit dem angegebenen PROZESSNAME bereits läuft.
+	# Es wird sowohl nach einem Prozess mit .dotnet 6 als auch mit .NET 4.8 gesucht.
+	#
+	#? Rückgabewerte:
+	#   - "info": Der Prozess läuft bereits (mit .dotnet 6 oder .NET 4.8).
+	#   - "warn": Der Prozess läuft nicht (mit .dotnet 6 oder .NET 4.8).
+	#   - "error": Es gab ein Problem bei der Prozessüberprüfung.
+##
+function laeuftos2() {
+	# Letzte Bearbeitung 26.09.2023
+    # Überprüfen, ob genau ein Argument übergeben wurde
+    if [ $# -ne 1 ]; then
+        echo "Fehler: Diese Funktion erwartet genau ein Argument (PROZESSNAME)."
+        return 1
+    fi
+
+    PROZESSNAME="$1"
+
+    # Prüfen, ob der Prozess mit .dotnet 6 läuft
+    if pgrep -f "$PROZESSNAME" > /dev/null; then
+        log info "$PROZESSNAME läuft bereits mit .dotnet 6."
+    else
+        log warn "$PROZESSNAME läuft nicht mit .dotnet 6."
+    fi
+
+    # Prüfen, ob der Prozess mit .NET 4.8 läuft
+    if pgrep -x "$PROZESSNAME" > /dev/null; then
+        log info "$PROZESSNAME läuft bereits mit .NET 4.8."
+    else
+        log warn "$PROZESSNAME läuft nicht mit .NET 4.8."
+    fi
+}
 
 ##
- #* trim_all.
- # Alle Zeichen entfernen.
- # Usage: trim_all "   example   string    "
- #
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+	#* trim_all.
+	# Alle Zeichen entfernen.
+	# Usage: trim_all "   example   string    "
+	#
+	#? @param keine.
+	#? @return nichts wird zurueckgegeben.
+	# todo: nichts.
 ##
 trim_all() {
     set -f
 # shellcheck disable=SC2086,SC2048
     set -- $*
     printf '%s\n' "$*"
+    set +f
+}
+
+##
+	#* trim_all - Diese Funktion entfernt führende und nachfolgende Leerzeichen aus allen Argumenten und gibt das bereinigte Ergebnis zurück.
+	#
+	#? Verwendung: trim_all [ARGUMENT1] [ARGUMENT2] ...
+	#   - ARGUMENT1, ARGUMENT2, ...: Die Argumente, aus denen führende und nachfolgende Leerzeichen entfernt werden sollen.
+	#
+	# Diese Funktion entfernt führende und nachfolgende Leerzeichen aus allen angegebenen Argumenten und gibt die bereinigten Ergebnisse zurück,
+	# wobei jedes bereinigte Argument in einer separaten Zeile ausgegeben wird.
+	#
+	#? Beispiel:
+	#   trim_all "   Hallo  " "  Welt  "
+	#? Ausgabe:
+	#   "Hallo"
+	#   "Welt"
+##
+function trim_all2() {
+	# Letzte Bearbeitung 26.09.2023
+    # Aktiviert Optionen zum Splitten von Argumenten
+    set -f
+
+    # Speichert alle Argumente in $* und entfernt führende und nachfolgende Leerzeichen
+    set -- "$@"
+
+    # Gibt die bereinigten Argumente in separaten Zeilen aus
+    printf '%s\n' "$@"
+
+    # Deaktiviert die Optionen zum Splitten von Argumenten
     set +f
 }
 
@@ -1149,14 +1685,54 @@ function iinstall() {
 		sudo apt-get -y install "$installation"
 	fi
 }
+##
+	#* iinstall - Diese Funktion überprüft, ob ein Paket bereits installiert ist, und installiert es andernfalls.
+	#
+	#? Verwendung: iinstall PAKETNAME
+	#   - PAKETNAME: Der Name des Pakets, das installiert werden soll.
+	#
+	# Diese Funktion überprüft, ob das angegebene PAKETNAME bereits installiert ist. Wenn es bereits installiert ist, wird eine Meldung ausgegeben.
+	# Andernfalls wird versucht, das Paket mit sudo apt-get zu installieren.
+	#
+	#? Parameter:
+	#   - PAKETNAME: Der Name des Pakets, das installiert werden soll.
+	#
+	#? Beispiel:
+	#   iinstall "firefox"
+	#   Überprüft, ob das Paket "firefox" installiert ist, und installiert es andernfalls.
+##
+function iinstall_1b() {
+	# Letzte Bearbeitung 26.09.2023
+    # Überprüfen, ob genau ein Argument übergeben wurde
+    if [ $# -ne 1 ]; then
+        echo "Fehler: Diese Funktion erwartet genau ein Argument (PAKETNAME)."
+        return 1
+    fi
+
+    PAKETNAME="$1"
+
+    # Überprüfen, ob das Paket bereits installiert ist
+    if dpkg-query -s "$PAKETNAME" 2>/dev/null | grep -q installed; then
+        log rohtext "$PAKETNAME ist bereits installiert."
+    else
+        log rohtext "Ich installiere jetzt $PAKETNAME"
+        # Versuchen, das Paket zu installieren
+        sudo apt-get -y install "$PAKETNAME"
+        if [ $? -eq 0 ]; then
+            log rohtext "$PAKETNAME wurde erfolgreich installiert."
+        else
+            log error "Fehler beim Installieren von $PAKETNAME."
+        fi
+    fi
+}
 
 ##
- #* iinstall2.
- # Linux apt Installationsroutine.
- # 
- #? @param $installation.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+	#* iinstall2.
+	# Linux apt Installationsroutine.
+	# 
+	#? @param $installation.
+	#? @return nichts wird zurueckgegeben.
+	# todo: nichts.
 ##
 function iinstall2() {
 	installation=$1
@@ -1167,41 +1743,108 @@ function iinstall2() {
 		sudo apt install "$installation" -y
 	fi
 }
+##
+	#* iinstall2 - Diese Funktion überprüft, ob ein Paket bereits installiert ist, und installiert es andernfalls.
+	#
+	#? Verwendung: iinstall2 PAKETNAME
+	#   - PAKETNAME: Der Name des Pakets, das installiert werden soll.
+	#
+	# Diese Funktion überprüft, ob das angegebene PAKETNAME bereits installiert ist. Wenn es bereits installiert ist, wird eine Meldung ausgegeben.
+	# Andernfalls wird versucht, das Paket mit sudo apt install zu installieren.
+	#
+	#? Parameter:
+	#   - PAKETNAME: Der Name des Pakets, das installiert werden soll.
+	#
+	#? Beispiel:
+	#   iinstall2 "firefox"
+	#   Überprüft, ob das Paket "firefox" installiert ist, und installiert es andernfalls.
+##
+function iinstall2_2b() {
+	# Letzte Bearbeitung 26.09.2023
+    # Überprüfen, ob genau ein Argument übergeben wurde
+    if [ $# -ne 1 ]; then
+        echo "Fehler: Diese Funktion erwartet genau ein Argument (PAKETNAME)."
+        return 1
+    fi
 
-##
- #* installbegin.
- # Linux Updaten und Upgraden.
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
-##
-function installbegin() { 
-	apt update && apt upgrade; 
+    PAKETNAME="$1"
+
+    # Überprüfen, ob das Paket bereits installiert ist
+    if dpkg-query -s "$PAKETNAME" 2>/dev/null | grep -q installed; then
+        log rohtext "$PAKETNAME ist bereits installiert."
+    else
+        log rohtext "Ich installiere jetzt $PAKETNAME"
+        # Versuchen, das Paket zu installieren
+        sudo apt install "$PAKETNAME" -y
+        if [ $? -eq 0 ]; then
+            log rohtext "$PAKETNAME wurde erfolgreich installiert."
+        else
+            log error "Fehler beim Installieren von $PAKETNAME."
+        fi
+    fi
 }
 
 ##
- #* linuxupgrade.
- # Linux Updaten und Upgraden.
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+	#* linuxupgrade - Diese Funktion führt ein Systemupdate und ein System-Upgrade auf Ubuntu durch.
+	#
+	#? Verwendung: linuxupgrade
+	#
+	# Diese Funktion führt die Befehle "apt update" und "apt upgrade" aus, um das System zu aktualisieren.
+	# Zuerst werden die Paketlisten aktualisiert, und dann werden verfügbare Aktualisierungen installiert.
+	#
+	#? Hinweis: Die Ausführung dieses Befehls erfordert Root-Berechtigungen.
+	#
+	#? Beispiel:
+	#   linuxupgrade
+	#   Führt ein Systemupdate und System-Upgrade auf dem Ubuntu-System aus.
 ##
-function linuxupgrade() { 
-	apt update && apt upgrade -y; 
+function linuxupgrade() {
+	# Letzte Bearbeitung 26.09.2023
+    # Überprüfen, ob die Funktion mit Root-Berechtigungen ausgeführt wird.
+    if [ "$EUID" -ne 0 ]; then
+        echo "Fehler: Diese Funktion erfordert Root-Berechtigungen. Bitte führen Sie sie mit 'sudo' aus."
+        return 1
+    fi
+
+    echo "Systemupdate wird durchgeführt..."
+    # Aktualisiere die Paketlisten
+    apt update
+
+    # Führe ein System-Upgrade durch, um verfügbare Aktualisierungen zu installieren.
+    echo "System-Upgrade wird durchgeführt..."
+    apt upgrade -y
+
+    echo "Systemupdate und System-Upgrade abgeschlossen."
 }
 
 ##
- #* deladvantagetools
- # ubuntu-advantage-tools entfernen.
- # 
- #? @param keine.
- #? @return nichts.
- # todo: nichts.
+	#* deladvantagetools - Diese Funktion entfernt das Paket "ubuntu-advantage-tools" von Ihrem Ubuntu-System.
+	#
+	#? Verwendung: deladvantagetools
+	#
+	# Diese Funktion führt den Befehl "sudo apt remove ubuntu-advantage-tools" aus, um das Paket
+	# "ubuntu-advantage-tools" von Ihrem System zu entfernen. Dieses Paket ist ein kommerzielles
+	# Dienstprogramm zur Systemverwaltung und kann bei Bedarf deinstalliert werden.
+	#
+	#? Hinweis: Die Ausführung dieses Befehls erfordert Root-Berechtigungen.
+	#
+	#? Beispiel:
+	#   deladvantagetools
+	#   Entfernt das Paket "ubuntu-advantage-tools" von Ihrem Ubuntu-System.
 ##
 function deladvantagetools() {
-	sudo apt remove ubuntu-advantage-tools
+	# Letzte Bearbeitung 26.09.2023
+    # Überprüfen, ob die Funktion mit Root-Berechtigungen ausgeführt wird
+    if [ "$EUID" -ne 0 ]; then
+        echo "Fehler: Diese Funktion erfordert Root-Berechtigungen. Bitte führen Sie sie mit 'sudo' aus."
+        return 1
+    fi
+
+    echo "Entferne das Paket 'ubuntu-advantage-tools'..."
+    # Entfernen des Pakets ubuntu-advantage-tools
+    sudo apt remove ubuntu-advantage-tools -y
+
+    echo "Das Paket 'ubuntu-advantage-tools' wurde entfernt."
 }
 
 ##
@@ -1224,14 +1867,66 @@ function finstall() {
 		fi
 	done <"$TXTLISTE"
 }
+##
+	#* finstall - Diese Funktion installiert Pakete aus einer Textdatei, wenn sie nicht bereits auf dem System installiert sind.
+	#? Verwendung: finstall TEXTDATEI
+	#   - TEXTDATEI: Der Pfad zur Textdatei, die die Namen der zu installierenden Pakete enthält, jeweils in einer Zeile.
+	#
+	# Diese Funktion liest eine Liste von Paketnamen aus der angegebenen TEXTDATEI und überprüft, ob diese Pakete bereits auf dem System installiert sind.
+	# Wenn ein Paket nicht installiert ist, wird versucht, es mit "sudo apt-get" zu installieren.
+	#
+	#? Parameter:
+	#   - TEXTDATEI: Der Pfad zur Textdatei, die die Paketnamen enthält.
+	#
+	#? Hinweis: Die Ausführung dieses Befehls erfordert Root-Berechtigungen.
+	#
+	#? Beispiel:
+	#   finstall paketliste.txt
+	#   Liest die Paketnamen aus der Datei "paketliste.txt" und installiert sie, wenn sie nicht bereits installiert sind.
+##
+function finstall2() {
+	# Letzte Bearbeitung 26.09.2023
+    # Überprüfen, ob genau ein Argument übergeben wurde
+    if [ $# -ne 1 ]; then
+        echo "Fehler: Diese Funktion erwartet genau ein Argument (TEXTDATEI)."
+        return 1
+    fi
+
+    TEXTDATEI="$1"
+
+    # Überprüfen, ob die Funktion mit Root-Berechtigungen ausgeführt wird
+    if [ "$EUID" -ne 0 ]; then
+        echo "Fehler: Diese Funktion erfordert Root-Berechtigungen. Bitte führen Sie sie mit 'sudo' aus."
+        return 1
+    fi
+
+    # Überprüfen, ob die angegebene Textdatei existiert
+    if [ ! -f "$TEXTDATEI" ]; then
+        echo "Fehler: Die angegebene Textdatei existiert nicht."
+        return 1
+    fi
+
+    echo "Beginne mit der Installation der Pakete aus '$TEXTDATEI'..."
+
+    while read -r txtline; do
+        if dpkg-query -s "$txtline" 2>/dev/null | grep -q installed; then
+            log rohtext "$txtline ist bereits installiert!"
+        else
+            log rohtext "Ich installiere jetzt: $txtline"
+            sudo apt-get -y install "$txtline"
+        fi
+    done < "$TEXTDATEI"
+
+    echo "Die Installation der Pakete aus '$TEXTDATEI' ist abgeschlossen."
+}
 
 ##
- #* menufinstall.
- # Neue Menue installationsroutine aus Datei.
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+	#* menufinstall.
+	# Neue Menue installationsroutine aus Datei.
+	# 
+	#? @param keine.
+	#? @return nichts wird zurueckgegeben.
+	# todo: nichts.
 ##
 function menufinstall() {
 	TXTLISTE=$1
@@ -1263,6 +1958,63 @@ function menufinstall() {
 			fi
 		done <"$TXTLISTE"
 	fi
+}
+##
+	#* menufinstall - Diese Funktion installiert Pakete aus einer Textdatei unter Verwendung des Dialog-Tools (wenn verfügbar).
+	#? Verwendung: menufinstall TEXTDATEI
+	#   - TEXTDATEI: Der Pfad zur Textdatei, die die Namen der zu installierenden Pakete enthält, jeweils in einer Zeile.
+	#
+	# Diese Funktion überprüft zunächst, ob das Dialog-Tool auf dem System installiert ist.
+	# Wenn Dialog installiert ist, wird ein Dialogfeld angezeigt, um den Benutzer zur Eingabe eines Bildschirmnamens aufzufordern.
+	# Anschließend werden die aus der TEXTDATEI gelesenen Paketnamen angezeigt, und der Benutzer kann die Installation bestätigen.
+	# Wenn Dialog nicht installiert ist, werden die Pakete ohne Dialogfenster installiert.
+	#
+	#? Parameter:
+	#   - TEXTDATEI: Der Pfad zur Textdatei, die die Paketnamen enthält.
+	#
+	#? Hinweis: Die Ausführung dieses Befehls erfordert Root-Berechtigungen.
+	#
+	#? Beispiel:
+	#   menufinstall paketliste.txt
+	#   Liest die Paketnamen aus der Datei "paketliste.txt" und installiert sie mithilfe des Dialog-Tools (falls verfügbar).
+##
+function menufinstall2() {
+	# Letzte Bearbeitung 26.09.2023
+    # Überprüfen, ob genau ein Argument übergeben wurde
+    if [ $# -ne 1 ]; then
+        echo "Fehler: Diese Funktion erwartet genau ein Argument (TEXTDATEI)."
+        return 1
+    fi
+
+    TEXTDATEI="$1"
+
+    # Überprüfen, ob die Funktion mit Root-Berechtigungen ausgeführt wird
+    if [ "$EUID" -ne 0 ]; then
+        echo "Fehler: Diese Funktion erfordert Root-Berechtigungen. Bitte führen Sie sie mit 'sudo' aus."
+        return 1
+    fi
+
+    # Überprüfen, ob Dialog installiert ist
+    if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
+        boxtitel="opensimMULTITOOL Eingabe"
+        boxtext="Screen Name:"
+        TXTLISTE=$(dialog --backtitle "opensimMULTITOOL $VERSION" --title "$boxtitel" --inputbox "$boxtext" 8 40 3>&1 1>&2 2>&3 3>&-)
+        dialogclear
+        ScreenLog
+    fi
+
+    echo "Beginne mit der Installation der Pakete aus '$TEXTDATEI'..."
+
+    while read -r line; do
+        if dpkg-query -s "$line" 2>/dev/null | grep -q installed; then
+            log rohtext "$line ist bereits installiert!"
+        else
+            log rohtext "Ich installiere jetzt: $line"
+            sudo apt-get -y install "$line"
+        fi
+    done < "$TEXTDATEI"
+
+    echo "Die Installation der Pakete aus '$TEXTDATEI' ist abgeschlossen."
 }
 
 ##
@@ -6873,7 +7625,7 @@ function installationhttps22() {
  # todo: nichts.
 ##
 function serverinstall22() {
-	installbegin
+	linuxupgrade
 	installubuntu22
 	monoinstall20 # 22 gibt es nicht.
 	monoinstall22 # Upgrade monoistall20
@@ -12174,7 +12926,7 @@ function AutoInstall() {
     if [ "$installation" = "ja" ]; then
         if [ "$ubuntuCodename" = "jammy" ]; then
             #echo "entdeckt Ubuntu 22"
-            installbegin
+            linuxupgrade
             installubuntu22
 			monoinstall20 # 22 gibt es nicht.
 			monoinstall22 # Upgrade monoistall20
@@ -13020,7 +13772,7 @@ function hilfe() {
 	echo "infodialog	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
 	echo "install_mysqltuner	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
 	echo "installationhttps22	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "installbegin	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "linuxupgrade	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
 	echo "installfinish	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
 	echo "installmariadb18	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
 	echo "installmariadb22	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
@@ -14779,7 +15531,7 @@ case $KOMMANDO in
 	infodialog) infodialog ;;
 	installationen) installationen ;;
 	installationhttps22) installationhttps22 "$2" "$3" ;;
-	installbegin) installbegin ;;
+	linuxupgrade) linuxupgrade ;;
 	installfinish) installfinish ;;
 	installmariadb18) installmariadb18 ;;
 	installmariadb22) installmariadb22 ;;
