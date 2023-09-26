@@ -4,7 +4,7 @@
 #* Informationen Funktionsgruppe
 ###########################################################################
 
-# ? opensimMULTITOOL Copyright (c) 2021 2023 BigManzai Manfred Aabye
+# ? opensimMULTITOOL Copyright (c) 2021 2023 BigManzai Manfred Zainhofer
 # osmtool.sh Basiert auf meinen Einzelscripten, für den OpenSimulator (OpenSim) von http://opensimulator.org an denen ich bereits 7 Jahre Arbeite und verbessere.
 # Da Server unterschiedlich sind, kann eine einwandfreie fuunktion nicht gewaehrleistet werden, also bitte mit bedacht verwenden.
 # Die Benutzung dieses Scriptes, oder deren Bestandteile, erfolgt auf eigene Gefahr!!!
@@ -20,7 +20,7 @@
 # ! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 # ! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-# * Status 22.09.2023 416 Funktionen.
+# * Status 22.09.2023 419 Funktionen.
 
 # # Installieren sie bitte: #* Visual Studio Code
 #* dazu die Plugins:
@@ -30,70 +30,85 @@
 # outline map #? Navigationsleiste für Funktionen.
 # todo: eine Menge warten wir´s ab.
 
-
 ###########################################################################
 #* Einstellungen Funktionsgruppe
 ###########################################################################
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.941" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.951" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 ##
- #* isroot
- # Überprüft, ob der Benutzer root ist.
+ #* Funktion: isroot - Überprüft, ob der Benutzer root-Rechte hat.
+ # Diese Funktion überprüft den effektiven Benutzer (EUID) und gibt eine entsprechende Meldung aus.
  # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
+ #? @param Keine Parameter erforderlich.
+ #? @return - 0: Wenn der Benutzer root-Rechte hat.
+ #? @return - 1: Wenn der Benutzer keine root-Rechte hat.
  # todo: nichts.
 ##
 function isroot() {
-# Überprüft, ob der Benutzer root ist
-if [ "$EUID" -ne 0 ]; then
-	echo "Sie haben keine root Rechte!"
-	exit 1
+	# Letzte Bearbeitung 26.09.2023
+	# Überprüft, ob der Benutzer root ist.
+	# Checks whether the user is root.
+	if [ "$EUID" -ne 0 ]; then
+		echo "Sie haben keine root Rechte!" >&2
+		return 1
 	else 
-	echo "Sie haben root Rechte!"
-fi
-}
-##
- #* benutzer
- # Überprüft, ob der Benutzer echt ist.
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
-##
-function benutzer() {
-	log rohtext "Benutzername:"
-	read -r BBENUTZER
-	# echo $USER;
-	# echo $LOGNAME;
-	# echo $BBENUTZER;
-	if [ "$USER" = "$BBENUTZER" ]; then
-		if [ "$USER" = "$LOGNAME" ]; then 
-			echo "Sie haben das Recht das osmtool.sh zu nutzen!"
-			return 0; 
-		else 
-			echo "Sie haben kein Recht das osmtool.sh zu nutzen!" || exit
-		fi
-	else
-		echo "Sie haben kein Recht das osmtool.sh zu nutzen!" || exit
+		echo "Sie haben root Rechte!"
+		return 0
 	fi
 }
 
 ##
- #* osmupgrade
- # Überprüft, ob das Skript auf GitHub aktualisiert wurde, wenn ja dann upgrade.
+ #* Funktion: benutzer
+ # Diese Funktion überprüft, ob der aktuelle Benutzer mit dem angegebenen
+ # Benutzernamen übereinstimmt und ob der aktuelle Benutzer mit dem
+ # Anmeldebenutzernamen übereinstimmt. Wenn die Bedingungen erfüllt sind,
+ # wird eine Erfolgsmeldung angezeigt, andernfalls wird eine Fehlermeldung
+ # ausgegeben, und das Skript wird beendet.
+ # 
+ #? @param Keine Parameter erforderlich.
+ #? @return    0 - Erfolg: Der aktuelle Benutzer stimmt mit dem angegebenen Benutzernamen
+ #? @return        überein, und der Anmeldebenutzername stimmt ebenfalls überein.
+ #? @return    1 - Fehler: Der aktuelle Benutzer stimmt nicht mit dem angegebenen
+ #? @return        Benutzernamen überein oder der Anmeldebenutzername ist nicht gleich
+ #? @return        dem aktuellen Benutzer.
+ # todo: nichts.
+##
+function benutzer() {
+	# Letzte Bearbeitung 26.09.2023
+    # Benutzername abfragen
+    log rohtext "Benutzername:"
+    read -r BBENUTZER
+
+    # Überprüfen, ob der aktuelle Benutzer mit dem angegebenen Benutzernamen
+    # übereinstimmt und ob der Anmeldebenutzername gleich dem aktuellen Benutzer ist
+    if [ "$USER" = "$BBENUTZER" ] && [ "$USER" = "$LOGNAME" ]; then
+        echo "Sie haben das Recht, das osmtool.sh zu nutzen!"
+        return 0
+    else
+        echo "Sie haben kein Recht, das osmtool.sh zu nutzen!"
+        exit 1
+    fi
+}
+
+##
+ #* osmupgrade - Eine Funktion zum Aktualisieren des OpenSim-Shell-Skripts
+ # Diese Funktion überprüft, ob das OpenSim-Shell-Skript auf GitHub aktualisiert wurde
+ # und lädt es bei Bedarf herunter. Sie vergleicht die aktuelle installierte Version
+ # mit der neuesten verfügbaren Version in einem GitHub-Repository.
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
  # todo: nichts.
 ##
 function osmupgrade() {
+	# Letzte Bearbeitung 26.09.2023
     # Definiert das Repository und die Dateinamen
     repo_url="https://raw.githubusercontent.com/BigManzai/OpenSim-Shell-Script/main/osmtool.sh"
     script_name="osmtool.sh"
+	current_version="$VERSION" # Verwendet die Umgebungsvariable VERSION
 
     # Überprüft, ob das Skript lokal existiert
     if [ ! -f "$script_name" ]; then
@@ -105,104 +120,168 @@ function osmupgrade() {
 
     # Definiert die aktuelle und neueste Version
     current_version="$(grep -o 'VERSION=\"[0-9]\{1,\}\.[0-9]\{1,\}\.[0-9]\{1,\}\"' "$script_name" | head -1 | tr -d '\;"')"
-    latest_version="$(curl "$repo_url" | grep -o 'VERSION=\"[0-9]\{1,\}\.[0-9]\{1,\}\.[0-9]\{1,\}\"' | head -1 | tr -d '\;"')"
+    latest_version="$(curl -s "$repo_url" | grep -o 'VERSION=\"[0-9]\{1,\}\.[0-9]\{1,\}\.[0-9]\{1,\}\"' | head -1 | tr -d '\;"')"
 
     # Überprüft, ob das Skript auf GitHub aktualisiert wurde
     if dpkg --compare-versions "${current_version}" lt "${latest_version}"; then
         echo "Neue Version verfügbar. Aktualisierung..."
-        wget "$repo_url" -O "$script_name"
+        wget -q "$repo_url" -O "$script_name"
+        echo "Aktualisierung abgeschlossen. Version ${latest_version} installiert."
     else
-        echo "Keine Updates verfügbar"
+        echo "Keine Updates verfügbar. Aktuelle Version: $VERSION"
     fi
 }
 
 ##
- #* vardel.
- # Variablen auf einen schlag loeschen.
- # 
+ #* vardel - Eine Funktion zum Löschen von Umgebungsvariablen aus vorherigen Sitzungen
+ # Diese Funktion löscht eine Reihe von Umgebungsvariablen, die möglicherweise aus
+ # vorherigen Sitzungen oder Skripten übrig geblieben sind, um sicherzustellen, dass
+ # keine alten Werte beibehalten werden.
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
  # todo: nichts.
 ##
 function vardel() {
-	# ? Alte Variablen loeschen aus eventuellen voherigen sessions
-	unset STARTVERZEICHNIS
-	unset MONEYVERZEICHNIS
-	unset ROBUSTVERZEICHNIS
-	unset OPENSIMVERZEICHNIS
-	unset SCRIPTSOURCE
-	unset SCRIPTZIP
-	unset MONEYSOURCE
-	unset MONEYZIP
-	unset REGIONSNAME
-	unset REGIONSNAMEb
-	unset REGIONSNAMEc
-	unset REGIONSNAMEd
-	unset VERZEICHNISSCREEN
-	unset NUMMER
-	unset WARTEZEIT
-	unset STARTWARTEZEIT
-	unset STOPWARTEZEIT
-	unset MONEYWARTEZEIT
-	unset NAME
-	unset VERZEICHNIS
-	unset PASSWORD
-	unset DATEI
-	unset SCRIPTZIP
-	return 0
-}
-# vardel
+	# Letzte Bearbeitung 26.09.2023
+    # Liste der zu löschenden Variablen
+    local variables=(
+        STARTVERZEICHNIS
+        MONEYVERZEICHNIS
+        ROBUSTVERZEICHNIS
+        OPENSIMVERZEICHNIS
+        SCRIPTSOURCE
+        SCRIPTZIP
+        MONEYSOURCE
+        MONEYZIP
+        REGIONSNAME
+        REGIONSNAMEb
+        REGIONSNAMEc
+        REGIONSNAMEd
+        VERZEICHNISSCREEN
+        NUMMER
+        WARTEZEIT
+        STARTWARTEZEIT
+        STOPWARTEZEIT
+        MONEYWARTEZEIT
+        NAME
+        VERZEICHNIS
+        PASSWORD
+        DATEI
+    )
 
+    # Lösche alle aufgeführten Variablen
+    for var in "${variables[@]}"; do
+        unset "$var"
+    done
+
+    return 0
+}
+
+##
+ #* vardelall - Eine Funktion zum Löschen aller Variablen
+ # Diese Funktion geht alle definierten Variablen in der aktuellen Shell durch
+ # und löscht sie mit unset.
+ #? @param keine.
+ #? @return nichts wird zurueckgegeben.
+ # todo: nichts.
+##
+function vardelall() {
+	# Letzte Bearbeitung 26.09.2023
+    # Verwende `set` mit `eval` und `unset`, um alle Variablen zu durchlaufen und zu löschen.
+    for var in $(set | awk -F= '{print $1}'); do
+        unset "$var"
+    done
+}
+
+### osmtoolconfigvariablen
+# Letzte Bearbeitung 26.09.2023
+# Beschreibung: Dies dient dazu, wichtige Konfigurationsinformationen für das OSM-Tool zu initialisieren.
+
+# NEUERREGIONSNAME - Der Name der neuen Region
 NEUERREGIONSNAME="Welcome"
 
-# manpage auf Deutsch - man Befehl/Kommando
+# Alias zum Anzeigen der man-Seiten auf Deutsch
 alias man="LANG=de_DE.UTF-8 man"
 
-AKTUELLEVERZ=$(pwd) # Aktuelles Verzeichnis
+# Das aktuelle Verzeichnis speichern
+AKTUELLEVERZ=$(pwd)
 
-# Datumsvariablen Datum, Dateidatum und Uhrzeit
+# Datumsvariablen
 DATUM=$(date +%d.%m.%Y)
-DATEIDATUM=$(date +%d_%m_%Y) # UHRZEIT=$(date +%H:%M:%S)
+DATEIDATUM=$(date +%d_%m_%Y)
+UHRZEIT=$(date +%H:%M:%S)
 
-# Linux Version
-myDescription=$(lsb_release -d) # Description: Ubuntu 22.04 LTS
-myRelease=$(lsb_release -r)     # Release: 22.04
-myCodename=$(lsb_release -sc)   # jammy
+# Informationen zur Ubuntu-Version
+myDescription=$(lsb_release -d) # Beispiel: Description: Ubuntu 22.04 LTS
+myRelease=$(lsb_release -r)     # Beispiel: Release: 22.04
+myCodename=$(lsb_release -sc)   # Beispiel: jammy
 
-ubuntuDescription=$(cut -f2 <<<"$myDescription") # Ubuntu 22.04 LTS
-ubuntuRelease=$(cut -f2 <<<"$myRelease")         # 22.04
-ubuntuCodename=$(cut -f2 <<<"$myCodename")       # jammy
-# SQL Version
+# Extrahieren von Ubuntu-spezifischen Informationen
+ubuntuDescription=$(cut -f2 <<<"$myDescription") # Beispiel: Ubuntu 22.04 LTS
+ubuntuRelease=$(cut -f2 <<<"$myRelease")         # Beispiel: 22.04
+ubuntuCodename=$(cut -f2 <<<"$myCodename")       # Beispiel: jammy
+
+# Informationen zur MySQL-Version
 SQLVERSIONVOLL=$(mysqld --version)
 SQLVERSION=$(echo "${SQLVERSIONVOLL:0:45}")
 
-### Einstellungen aus osmtoolconfig.ini laden, bei einem Script upgrade gehen so die einstellungen nicht mehr verloren.
-
-# Pfad des osmtool.sh Skriptes herausfinden
+# Den Pfad des osmtool.sh Skriptes herausfinden
 SCRIPTPATH=$(cd "$(dirname "$0")" && pwd)
+###
 
 ##
  #* osmtranslateinstall
- # Automatischen übersetzer installieren.
+ # osmtranslateinstall - Diese Funktion installiert das Tool 'translate-shell' auf Ihrem Ubuntu-System.
  # 
  #? @param keine.
  #? @return nichts wird zurueckgegeben.
  # todo: nichts.
 ##
 function osmtranslateinstall() {
-    echo "Ich installiere nun das Tool translate-shell";
-    apt install translate-shell
-    # oder
-    #sudo apt-get install translate-shell
+	# Letzte Bearbeitung 26.09.2023
+    echo "Ich installiere nun das Tool translate-shell."
+
+    # Prüfen Sie, ob der Benutzer Root-Rechte hat, um 'apt' auszuführen.
+    if [[ $EUID -ne 0 ]]; then
+        echo "Diese Funktion erfordert Root-Rechte. Bitte führen Sie sie mit 'sudo' aus."
+        return 1
+    fi
+
+    # Überprüfen, ob das 'translate-shell' bereits installiert ist.
+    if dpkg -l | grep -q translate-shell; then
+        echo "'translate-shell' ist bereits installiert."
+        return 0
+    fi
+
+    # Installation von 'translate-shell' mit 'apt'.
+    apt update
+    apt install translate-shell -y
+
+    # Überprüfen, ob die Installation erfolgreich war.
+    if [ $? -eq 0 ]; then
+        echo "'translate-shell' wurde erfolgreich installiert."
+        return 0
+    else
+        echo "Die Installation von 'translate-shell' ist fehlgeschlagen. Bitte überprüfen Sie Ihre Internetverbindung und versuchen Sie es erneut."
+        return 1
+    fi
 }
 
 ##
- #* osmtranslate
- # Text übersetzen.
+ #* osmtranslate - Übersetzt Text mithilfe des OSM Translator-Dienstes
+ # Diese Funktion verwendet den OSM Translator, um Text aus einer
+ # beliebigen Quellsprache in die Zielsprache zu übersetzen. Der OSM Translator-Dienst
+ # muss für die Verwendung aktiviert sein.
  # 
- #? @param keine.
- #? @return text.
- # todo: nichts.
+ #? @param Parameter:
+ #? @param   "Text zum Übersetzen" - Der Text, der übersetzt werden soll.
+ #? @param Um den OSM Translator-Dienst zu aktivieren, setzen Sie die Umgebungsvariable OSMTRANSLATOR auf "ON".
+ #? @param Wenn OSMTRANSLATOR auf "OFF" gesetzt ist, wird der Text nicht übersetzt.
+ #? Beispiele:
+ #?   OSMTRANSLATOR="ON"  # Aktiviert den OSM Translator-Dienst
+ #?   osmtranslate "Hello, world!"  # Übersetzt den Text ins Ziel
+ #?   echo $text  # Gibt die übersetzte Zeichenfolge aus
+##
 function osmtranslate() {
     OSMTRANSTEXT=$1
 	if [ "$OSMTRANSLATOR" = "OFF" ]; then 
@@ -217,14 +296,44 @@ function osmtranslate() {
 		return 0
 	fi
 }
+function osmtranslate2() {
+	# Letzte Bearbeitung 26.09.2023
+    OSMTRANSTEXT="$1"
+    
+    if [ "$OSMTRANSLATOR" = "OFF" ]; then
+        text="$OSMTRANSTEXT"
+        return 0
+    fi
+
+    if [ "$OSMTRANSLATOR" = "ON" ]; then
+        # Nutzen Sie "trans" mit Optionen zur Übersetzung
+        text=$(trans -brief -no-warn "$OSMTRANS" "$OSMTRANSTEXT")
+
+        # Überprüfen Sie, ob die Übersetzung erfolgreich war
+        if [ $? -ne 0 ]; then
+            echo "Fehler beim Übersetzen des Textes."
+            return 1
+        fi
+    else
+        text="$OSMTRANSTEXT"
+        return 0
+    fi
+}
 
 ##
- #* osmtranslatedirekt
- # Text übersetzen.
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+ #* osmtranslatedirekt - Übersetzt Text direkt mithilfe des OSM Translator-Dienstes
+ # Diese Funktion verwendet den OSM Translator, um Text aus einer beliebigen Quellsprache in eine 
+ # Zielsprache zu übersetzen. Der OSM Translator-Dienst muss für die Verwendung aktiviert sein.
+ #
+ #? @param Parameter:
+ #? @param   "Text zum Übersetzen" - Der Text, der übersetzt werden soll.
+ # Um den OSM Translator-Dienst zu aktivieren, setzen Sie die Umgebungsvariable OSMTRANSLATOR auf "ON".
+ # Wenn OSMTRANSLATOR auf "OFF" gesetzt ist, wird der Text nicht übersetzt.
+ #
+ # Beispielaufruf:
+ #   OSMTRANSLATOR="ON"  # Aktiviert den OSM Translator-Dienst
+ #   osmtranslatedirekt "Hello, world!"  # Übersetzt den Text ins Ziel
+ #   echo "Übersetzter Text: $text"  # Gibt die übersetzte Zeichenfolge aus
 ##
 function osmtranslatedirekt() {  
     OSMTRANSTEXT=$1
@@ -233,37 +342,77 @@ function osmtranslatedirekt() {
     #trans -show-original n -show-original-phonetics n -show-translation Y -show-translation-phonetics n -show-prompt-message n -show-languages n -show-original-dictionary N -show-dictionary n -show-alternatives n -no-warn $OSMTRANS "$OSMTRANSTEXT"
 	trans -brief $OSMTRANS "$OSMTRANSTEXT"
 }
+function osmtranslatedirekt2() {
+	# Letzte Bearbeitung 26.09.2023
+    OSMTRANSTEXT="$1"
+
+    if [ "$OSMTRANSLATOR" = "OFF" ]; then
+        text="$OSMTRANSTEXT"
+        return 0
+    fi
+
+    if [ "$OSMTRANS" = ":de" ]; then
+        OSMTRANSLATOR="OFF"
+        echo "Es funktioniert nicht von derselben Sprache in dieselbe zu übersetzen."
+        return 1
+    fi
+
+    # Nutzen Sie "trans" mit Optionen zur Übersetzung
+    text=$(trans -brief "$OSMTRANS" "$OSMTRANSTEXT")
+
+    # Überprüfen Sie, ob die Übersetzung erfolgreich war
+    if [ $? -ne 0 ]; then
+        echo "Fehler beim Übersetzen des Textes."
+        return 1
+    fi
+}
 
 ##
- #* osmnotranslate
- # keinen Text übersetzen.
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+ #* osmnotranslate - Kopiert den Text, ohne Übersetzung durchzuführen
+ # Diese Funktion kopiert den angegebenen Text in eine Zielvariable. Wenn der OSM Translator-Dienst 
+ # deaktiviert ist (OSMTRANSLATOR auf "OFF" gesetzt), wird der Text unverändert kopiert.
+ #? @param Parameter:
+ #? @param   "Text zum Kopieren" - Der Text, der kopiert werden soll.
+ #
+ # Um den OSM Translator-Dienst zu aktivieren, setzen Sie die Umgebungsvariable OSMTRANSLATOR auf "ON".
+ # Wenn OSMTRANSLATOR auf "OFF" gesetzt ist, wird der Text nicht übersetzt und direkt kopiert.
+ #
+ # Beispielaufruf:
+ #   OSMTRANSLATOR="ON"  # Aktiviert den OSM Translator-Dienst
+ #   osmnotranslate "Hello, world!"  # Kopiert den Text
+ #   echo "Kopierter Text: $text"  # Gibt den kopierten Text aus
 ##
 function osmnotranslate() {
+	# Letzte Bearbeitung 26.09.2023
 	text=$OSMTRANSTEXT
 	if [ "$OSMTRANSLATOR" = "OFF" ]; then text=$OSMTRANSTEXT; return 0; fi
 }
 
-
 ##
- #* janein
- # ja oder nein aus verschiedenen Sprachen in Deutsch übersetzen.
- # 
- #? @param ja oder nein in verschiedenen Sprachen.
- #? @return ja oder nein in Deutsch.
- # todo: nichts.
+ #* janein - Übersetzt eine Eingabe in "ja" oder "nein"
+ # Diese Funktion übersetzt eine Eingabe in die deutsche Sprache und gibt entweder "ja" oder "nein" zurück,
+ # basierend auf der übersetzten Eingabe. Die Eingabe wird zuerst in Kleinbuchstaben umgewandelt und
+ # falls leer, wird "nein" zurückgegeben.
+ #? @param Parameter:
+ #? @param   "Eingabe zum Übersetzen" - Die Eingabe, die übersetzt werden soll.
+ # Beispielaufruf:
+ #   janein "Yes"  # Übersetzt "Yes" in "ja"
+ #   echo "Antwort: $JNTRANSLATOR"  # Gibt die übersetzte Antwort aus
 ##
 function janein() {
-	JNTRANSLATOR=$1	
-	#echo "Eingabe: $JNTRANSLATOR"
-	JNTRANSLATOR=$(trans -brief -no-warn :de "$JNTRANSLATOR")
-	# Falls leer dann nein.
-	if [ "$JNTRANSLATOR" = "" ]; then JNTRANSLATOR="nein"; fi
-	# alles muss klein geschrieben sein.
-	JNTRANSLATOR=$(echo "$JNTRANSLATOR"|tr "[:upper:]" "[:lower:]")
+	# Letzte Bearbeitung 26.09.2023
+    JNTRANSLATOR="$1"
+
+    # Übersetzen Sie die Eingabe in die deutsche Sprache
+    JNTRANSLATOR=$(trans -brief -no-warn :de "$JNTRANSLATOR")
+
+    # Wenn die Übersetzung leer ist, setzen Sie die Antwort auf "nein"
+    if [ -z "$JNTRANSLATOR" ]; then
+        JNTRANSLATOR="nein"
+    fi
+
+    # Wandeln Sie die Übersetzung in Kleinbuchstaben um
+    JNTRANSLATOR=$(echo "$JNTRANSLATOR" | tr "[:upper:]" "[:lower:]")
 }
 
 ##
@@ -937,6 +1086,33 @@ function vartest() {
     else
         result="true"
     fi
+}
+
+##
+ #* laeuftos
+ # Prüfen, ob der OpenSimulator bereits läuft.
+ # 
+ #? @param Simulator im screen.
+ #? @return Text.
+ # todo: nichts.
+##
+function laeuftos() {
+	TEST=$1
+	# Prüfen, ob der OpenSimulator bereits läuft
+	if pgrep -f $TEST > /dev/null
+	then
+		log info "$TEST läuft bereits mit .dotnet 6."
+	else
+		log warn "$TEST läuft nicht mit .dotnet 6."
+	fi
+
+	# Prüfen, ob der OpenSimulator bereits läuft
+	if pgrep -x $TEST > /dev/null
+	then
+		log info "$TEST läuft bereits mit .NET 4.8."
+	else
+		log warn "$TEST läuft nicht mit .NET 4.8."
+	fi
 }
 
 ##
@@ -6795,6 +6971,18 @@ function checkupgrade93() {
 		
 		if [ "$OSUPGRADESIX" = "ja" ]; then osbuildingupgrade93 p; fi
     fi
+}
+
+##
+ #* pull
+ # Upgrade check.
+ # 
+ #? @param keine.
+ #? @return Already up to date.
+ # todo: nichts.
+##
+function pull() {
+	git pull
 }
 
 ##
@@ -14794,12 +14982,16 @@ case $KOMMANDO in
 	dalaiuninstall) dalaiuninstall ;;
 	tastaturcachedelete) tastaturcachedelete ;;
 	isroot) isroot ;;
+	vardelall) vardelall ;;
+	vardel) vardel ;;
 	osmupgrade) osmupgrade ;;
 	benutzer) benutzer ;;
+	pull) pull ;;
+	laeuftos) laeuftos "$2" ;;
 	hda | hilfedirektaufruf | hilfemenudirektaufrufe) hilfemenudirektaufrufe ;;
 	h) newhelp ;;
 	V | v) echo "$SCRIPTNAME $VERSION" ;;
 	*) hauptmenu ;;
 esac
-# vardel
+# vardelall
 exit 0
