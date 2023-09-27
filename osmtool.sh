@@ -20,7 +20,7 @@
 # ! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 # ! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-# * Status 26.09.2023 419 Funktionen.
+# * Status 27.09.2023 419 Funktionen.
 
 	# # Installieren sie bitte: #* Visual Studio Code
 	#* dazu die Plugins:
@@ -35,7 +35,7 @@
 ###########################################################################
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.961" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.984" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 ##
@@ -473,45 +473,6 @@ function log() {
 	*) return 0 ;;
 	esac
 	return 0
-}
-function log2() {
-	# Letzte Bearbeitung 26.09.2023
-    local logtype
-    local rohtext
-    local text
-    logtype="$1"
-    rohtext="$2"
-
-    # Übersetzt den Roh-Text (rohtext) mit der Funktion osmtranslate.
-    osmtranslate "$rohtext"
-    
-    DATEIDATUM=$(date +%d_%m_%Y)
-    lline="#####################################################################################"
-
-    if [ "$LOGWRITE" = "yes" ]; then
-        case $logtype in
-            line) echo "$lline" >> "$STARTVERZEICHNIS/$DATEIDATUM$logfilename.log" ;;
-            rohtext) echo "$text" >> "$STARTVERZEICHNIS/$DATEIDATUM$logfilename.log" ;;
-            text) echo "$(date +'%d.%m.%Y-%H:%M:%S') TEXT: $text" >> "$STARTVERZEICHNIS/$DATEIDATUM$logfilename.log" ;;
-            debug) echo "$(date +'%d.%m.%Y-%H:%M:%S') DEBUG: $text" >> "$STARTVERZEICHNIS/$DATEIDATUM$logfilename.log" ;;
-            info) echo "$(date +'%d.%m.%Y-%H:%M:%S') INFO: $text" >> "$STARTVERZEICHNIS/$DATEIDATUM$logfilename.log" ;;
-            warn) echo "$(date +'%d.%m.%Y-%H:%M:%S') WARNING: $text" >> "$STARTVERZEICHNIS/$DATEIDATUM$logfilename.log" ;;
-            error) echo "$(date +'%d.%m.%Y-%H:%M:%S') ERROR: $text" >> "$STARTVERZEICHNIS/$DATEIDATUM$logfilename.log" ;;
-            *) return 0 ;;
-        esac
-    fi
-
-    case $logtype in
-        line) echo "$(tput setaf $linefontcolor)$(tput setab $linebackgroundcolor)$lline$(tput sgr 0)" ;;
-        rohtext) echo "$text" ;;
-        text) echo "$(tput setaf $textfontcolor)$(tput setab $textbackgroundcolor)$(date +'%d.%m.%Y-%H:%M:%S') TEXT: $text$(tput sgr 0)" ;;
-        debug) echo "$(tput setaf $debugfontcolor)$(tput setab $debugbackgroundcolor)$(date +'%d.%m.%Y-%H:%M:%S') DEBUG: $text$(tput sgr 0)" ;;
-        info) echo "$(tput setaf $infofontcolor)$(tput setab $infobackgroundcolor)$(date +'%d.%m.%Y-%H:%M:%S') INFO: $text$(tput sgr 0)" ;;
-        warn) echo "$(tput setaf $warnfontcolor)$(tput setab $warnbackgroundcolor)$(date +'%d.%m.%Y-%H:%M:%S') WARNING: $text$(tput sgr 0)" ;;
-        error) echo "$(tput setaf $errorfontcolor)$(tput setab $errorbackgroundcolor)$(date +'%d.%m.%Y-%H:%M:%S') ERROR: $text$(tput sgr 0)" ;;
-        *) return 0 ;;
-    esac
-    return 0
 }
 
 ##
@@ -1505,24 +1466,6 @@ function trim_string2() {
     printf '%s\n' "$_"
 }
 
-
-##
-	#* vartest.
-	# Variable auf inhalt testen.
-	# 
-	#? @param $VARIABLE.
-	#? @return ${result} true false.
-	# todo: nichts.
-##
-function vartest() {
-    VARIABLE="$1"
-    if [ -z "$VARIABLE" ]
-    then
-        result="false"
-    else
-        result="true"
-    fi
-}
 ##
 	#* vartest - Diese Funktion überprüft, ob eine Variable einen Wert hat oder leer ist.
 	#? Verwendung: vartest VARIABLE
@@ -1536,12 +1479,6 @@ function vartest() {
 ##
 function vartest2() {
 	# Letzte Bearbeitung 26.09.2023
-    # Überprüfen, ob ein Argument übergeben wurde
-    if [ $# -ne 1 ]; then
-        echo "Fehler: Diese Funktion erwartet genau ein Argument."
-        return 1
-    fi
-
     # Das übergebene Argument in die Variable VARIABLE speichern
     VARIABLE="$1"
 
@@ -1553,35 +1490,9 @@ function vartest2() {
     fi
 
     # Den Ergebniswert ausgeben
-    echo "$result"
+    #echo "$result"
 }
 
-##
-	#* laeuftos
-	# Prüfen, ob der OpenSimulator bereits läuft.
-	# 
-	#? @param Simulator im screen.
-	#? @return Text.
-	# todo: nichts.
-##
-function laeuftos() {
-	TEST=$1
-	# Prüfen, ob der OpenSimulator bereits läuft
-	if pgrep -f $TEST > /dev/null
-	then
-		log info "$TEST läuft bereits mit .dotnet 6."
-	else
-		log warn "$TEST läuft nicht mit .dotnet 6."
-	fi
-
-	# Prüfen, ob der OpenSimulator bereits läuft
-	if pgrep -x $TEST > /dev/null
-	then
-		log info "$TEST läuft bereits mit .NET 4.8."
-	else
-		log warn "$TEST läuft nicht mit .NET 4.8."
-	fi
-}
 ##
 	#* laeuftos - Diese Funktion überprüft, ob ein Prozess mit dem angegebenen Namen läuft.
 	#
@@ -1595,47 +1506,23 @@ function laeuftos() {
 	#   - "info": Der Prozess läuft bereits (mit .dotnet 6 oder .NET 4.8).
 	#   - "warn": Der Prozess läuft nicht (mit .dotnet 6 oder .NET 4.8).
 	#   - "error": Es gab ein Problem bei der Prozessüberprüfung.
+	# todo: Nicht wirklich funktionsfähig.
 ##
-function laeuftos2() {
+function laeuftos() {
 	# Letzte Bearbeitung 26.09.2023
-    # Überprüfen, ob genau ein Argument übergeben wurde
-    if [ $# -ne 1 ]; then
-        echo "Fehler: Diese Funktion erwartet genau ein Argument (PROZESSNAME)."
-        return 1
-    fi
-
     PROZESSNAME="$1"
 
     # Prüfen, ob der Prozess mit .dotnet 6 läuft
-    if pgrep -f "$PROZESSNAME" > /dev/null; then
-        log info "$PROZESSNAME läuft bereits mit .dotnet 6."
-    else
-        log warn "$PROZESSNAME läuft nicht mit .dotnet 6."
+    if pgrep -f "$PROZESSNAME" > /dev/null; 
+	then
+        log info "$PROZESSNAME läuft mit .dotnet 6."
     fi
 
     # Prüfen, ob der Prozess mit .NET 4.8 läuft
-    if pgrep -x "$PROZESSNAME" > /dev/null; then
-        log info "$PROZESSNAME läuft bereits mit .NET 4.8."
-    else
-        log warn "$PROZESSNAME läuft nicht mit .NET 4.8."
+    if pgrep -x "$PROZESSNAME" > /dev/null; 
+	then
+        log info "$PROZESSNAME läuft mit .NET 4.8."
     fi
-}
-
-##
-	#* trim_all.
-	# Alle Zeichen entfernen.
-	# Usage: trim_all "   example   string    "
-	#
-	#? @param keine.
-	#? @return nichts wird zurueckgegeben.
-	# todo: nichts.
-##
-trim_all() {
-    set -f
-# shellcheck disable=SC2086,SC2048
-    set -- $*
-    printf '%s\n' "$*"
-    set +f
 }
 
 ##
@@ -1653,38 +1540,22 @@ trim_all() {
 	#   "Hallo"
 	#   "Welt"
 ##
-function trim_all2() {
+trim_all() {
 	# Letzte Bearbeitung 26.09.2023
+
     # Aktiviert Optionen zum Splitten von Argumenten
     set -f
 
-    # Speichert alle Argumente in $* und entfernt führende und nachfolgende Leerzeichen
-    set -- "$@"
+# shellcheck disable=SC2086,SC2048
+    set -- $* # Speichert alle Argumente in $* und entfernt führende und nachfolgende Leerzeichen
 
-    # Gibt die bereinigten Argumente in separaten Zeilen aus
-    printf '%s\n' "$@"
+	# Gibt die bereinigten Argumente in separaten Zeilen aus
+    printf '%s\n' "$*"
 
-    # Deaktiviert die Optionen zum Splitten von Argumenten
+	# Deaktiviert die Optionen zum Splitten von Argumenten
     set +f
 }
 
-##
- #* iinstall.
- # Linux apt-get Installationsroutine.
- # 
- #? @param $installation.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
-##
-function iinstall() {
-	installation=$1
-	if dpkg-query -s "$installation" 2>/dev/null | grep -q installed; then
-		log rohtext "$installation ist bereits installiert."
-	else
-		log rohtext "Ich installiere jetzt $installation"
-		sudo apt-get -y install "$installation"
-	fi
-}
 ##
 	#* iinstall - Diese Funktion überprüft, ob ein Paket bereits installiert ist, und installiert es andernfalls.
 	#
@@ -1701,48 +1572,17 @@ function iinstall() {
 	#   iinstall "firefox"
 	#   Überprüft, ob das Paket "firefox" installiert ist, und installiert es andernfalls.
 ##
-function iinstall_1b() {
-	# Letzte Bearbeitung 26.09.2023
-    # Überprüfen, ob genau ein Argument übergeben wurde
-    if [ $# -ne 1 ]; then
-        echo "Fehler: Diese Funktion erwartet genau ein Argument (PAKETNAME)."
-        return 1
-    fi
-
-    PAKETNAME="$1"
-
-    # Überprüfen, ob das Paket bereits installiert ist
-    if dpkg-query -s "$PAKETNAME" 2>/dev/null | grep -q installed; then
-        log rohtext "$PAKETNAME ist bereits installiert."
-    else
-        log rohtext "Ich installiere jetzt $PAKETNAME"
-        # Versuchen, das Paket zu installieren
-        sudo apt-get -y install "$PAKETNAME"
-        if [ $? -eq 0 ]; then
-            log rohtext "$PAKETNAME wurde erfolgreich installiert."
-        else
-            log error "Fehler beim Installieren von $PAKETNAME."
-        fi
-    fi
-}
-
-##
-	#* iinstall2.
-	# Linux apt Installationsroutine.
-	# 
-	#? @param $installation.
-	#? @return nichts wird zurueckgegeben.
-	# todo: nichts.
-##
-function iinstall2() {
+function iinstall() {
 	installation=$1
+	# Überprüfen, ob das Paket bereits installiert ist
 	if dpkg-query -s "$installation" 2>/dev/null | grep -q installed; then
 		log rohtext "$installation ist bereits installiert."
 	else
 		log rohtext "Ich installiere jetzt $installation"
-		sudo apt install "$installation" -y
+		sudo apt-get -y install "$installation"
 	fi
 }
+
 ##
 	#* iinstall2 - Diese Funktion überprüft, ob ein Paket bereits installiert ist, und installiert es andernfalls.
 	#
@@ -1759,29 +1599,14 @@ function iinstall2() {
 	#   iinstall2 "firefox"
 	#   Überprüft, ob das Paket "firefox" installiert ist, und installiert es andernfalls.
 ##
-function iinstall2_2b() {
-	# Letzte Bearbeitung 26.09.2023
-    # Überprüfen, ob genau ein Argument übergeben wurde
-    if [ $# -ne 1 ]; then
-        echo "Fehler: Diese Funktion erwartet genau ein Argument (PAKETNAME)."
-        return 1
-    fi
-
-    PAKETNAME="$1"
-
-    # Überprüfen, ob das Paket bereits installiert ist
-    if dpkg-query -s "$PAKETNAME" 2>/dev/null | grep -q installed; then
-        log rohtext "$PAKETNAME ist bereits installiert."
-    else
-        log rohtext "Ich installiere jetzt $PAKETNAME"
-        # Versuchen, das Paket zu installieren
-        sudo apt install "$PAKETNAME" -y
-        if [ $? -eq 0 ]; then
-            log rohtext "$PAKETNAME wurde erfolgreich installiert."
-        else
-            log error "Fehler beim Installieren von $PAKETNAME."
-        fi
-    fi
+function iinstall2() {
+	installation=$1
+	if dpkg-query -s "$installation" 2>/dev/null | grep -q installed; then
+		log rohtext "$installation ist bereits installiert."
+	else
+		log rohtext "Ich installiere jetzt $installation"
+		sudo apt install "$installation" -y
+	fi
 }
 
 ##
@@ -1848,14 +1673,19 @@ function deladvantagetools() {
 }
 
 ##
- #* finstall.
- # Neue apt-get installationsroutine aus Datei.
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+	#* finstall - Führt eine apt-get-Installationsroutine aus einer Textdatei durch.
+	# Diese Funktion liest eine Textdatei, in der Paketnamen aufgeführt sind, und überprüft,
+	# ob die Pakete bereits installiert sind. Wenn ein Paket nicht installiert ist, wird es
+	# mithilfe von 'apt-get' installiert.
+	#? @return Diese Funktion gibt nichts zurück, sondern installiert die angegebenen Pakete aus der
+	# Textdatei, sofern sie nicht bereits installiert sind.
+	#
+	#? Beispiel:
+	#   finstall paketliste.txt
+	# todo: nichts.
 ##
 function finstall() {
+	# Letzte Bearbeitung 26.09.2023
 	TXTLISTE=$1
 
 	while read -r txtline; do
@@ -1867,70 +1697,27 @@ function finstall() {
 		fi
 	done <"$TXTLISTE"
 }
+
 ##
-	#* finstall - Diese Funktion installiert Pakete aus einer Textdatei, wenn sie nicht bereits auf dem System installiert sind.
-	#? Verwendung: finstall TEXTDATEI
+	#* menufinstall - Diese Funktion installiert Pakete aus einer Textdatei unter Verwendung des Dialog-Tools (wenn verfügbar).
+	#? Verwendung: menufinstall TEXTDATEI
 	#   - TEXTDATEI: Der Pfad zur Textdatei, die die Namen der zu installierenden Pakete enthält, jeweils in einer Zeile.
-	#
-	# Diese Funktion liest eine Liste von Paketnamen aus der angegebenen TEXTDATEI und überprüft, ob diese Pakete bereits auf dem System installiert sind.
-	# Wenn ein Paket nicht installiert ist, wird versucht, es mit "sudo apt-get" zu installieren.
-	#
+	# Diese Funktion überprüft zunächst, ob das Dialog-Tool auf dem System installiert ist.
+	# Wenn Dialog installiert ist, wird ein Dialogfeld angezeigt, um den Benutzer zur Eingabe eines Bildschirmnamens aufzufordern.
+	# Anschließend werden die aus der TEXTDATEI gelesenen Paketnamen angezeigt, und der Benutzer kann die Installation bestätigen.
+	# Wenn Dialog nicht installiert ist, werden die Pakete ohne Dialogfenster installiert.
 	#? Parameter:
 	#   - TEXTDATEI: Der Pfad zur Textdatei, die die Paketnamen enthält.
-	#
 	#? Hinweis: Die Ausführung dieses Befehls erfordert Root-Berechtigungen.
-	#
 	#? Beispiel:
-	#   finstall paketliste.txt
-	#   Liest die Paketnamen aus der Datei "paketliste.txt" und installiert sie, wenn sie nicht bereits installiert sind.
-##
-function finstall2() {
-	# Letzte Bearbeitung 26.09.2023
-    # Überprüfen, ob genau ein Argument übergeben wurde
-    if [ $# -ne 1 ]; then
-        echo "Fehler: Diese Funktion erwartet genau ein Argument (TEXTDATEI)."
-        return 1
-    fi
-
-    TEXTDATEI="$1"
-
-    # Überprüfen, ob die Funktion mit Root-Berechtigungen ausgeführt wird
-    if [ "$EUID" -ne 0 ]; then
-        echo "Fehler: Diese Funktion erfordert Root-Berechtigungen. Bitte führen Sie sie mit 'sudo' aus."
-        return 1
-    fi
-
-    # Überprüfen, ob die angegebene Textdatei existiert
-    if [ ! -f "$TEXTDATEI" ]; then
-        echo "Fehler: Die angegebene Textdatei existiert nicht."
-        return 1
-    fi
-
-    echo "Beginne mit der Installation der Pakete aus '$TEXTDATEI'..."
-
-    while read -r txtline; do
-        if dpkg-query -s "$txtline" 2>/dev/null | grep -q installed; then
-            log rohtext "$txtline ist bereits installiert!"
-        else
-            log rohtext "Ich installiere jetzt: $txtline"
-            sudo apt-get -y install "$txtline"
-        fi
-    done < "$TEXTDATEI"
-
-    echo "Die Installation der Pakete aus '$TEXTDATEI' ist abgeschlossen."
-}
-
-##
-	#* menufinstall.
-	# Neue Menue installationsroutine aus Datei.
-	# 
-	#? @param keine.
-	#? @return nichts wird zurueckgegeben.
+	#   menufinstall paketliste.txt
+	#   Liest die Paketnamen aus der Datei "paketliste.txt" und installiert sie mithilfe des Dialog-Tools (falls verfügbar).
 	# todo: nichts.
 ##
 function menufinstall() {
+	# Letzte Bearbeitung 26.09.2023
 	TXTLISTE=$1
-	# zuerst schauen ob dialog installiert ist
+	# Überprüfen, ob Dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
 		# Alle Aktionen mit dialog
 		boxtitel="opensimMULTITOOL Eingabe"
@@ -1959,73 +1746,22 @@ function menufinstall() {
 		done <"$TXTLISTE"
 	fi
 }
+
 ##
-	#* menufinstall - Diese Funktion installiert Pakete aus einer Textdatei unter Verwendung des Dialog-Tools (wenn verfügbar).
-	#? Verwendung: menufinstall TEXTDATEI
-	#   - TEXTDATEI: Der Pfad zur Textdatei, die die Namen der zu installierenden Pakete enthält, jeweils in einer Zeile.
-	#
-	# Diese Funktion überprüft zunächst, ob das Dialog-Tool auf dem System installiert ist.
-	# Wenn Dialog installiert ist, wird ein Dialogfeld angezeigt, um den Benutzer zur Eingabe eines Bildschirmnamens aufzufordern.
-	# Anschließend werden die aus der TEXTDATEI gelesenen Paketnamen angezeigt, und der Benutzer kann die Installation bestätigen.
-	# Wenn Dialog nicht installiert ist, werden die Pakete ohne Dialogfenster installiert.
-	#
-	#? Parameter:
-	#   - TEXTDATEI: Der Pfad zur Textdatei, die die Paketnamen enthält.
-	#
-	#? Hinweis: Die Ausführung dieses Befehls erfordert Root-Berechtigungen.
-	#
+	#* uncompress - Ermittelt den richtigen Entpackungsbefehl basierend auf dem Dateiformat.
+	# Diese Funktion analysiert eine gegebene Datei und ermittelt, welches Kompressionsformat
+	# verwendet wurde. Anschließend wird der entsprechende Entpackungsbefehl erzeugt und zurückgegeben.
+	#? @param $datei - Die zu entpackende Datei oder Dateien im Raum getrennt.
+	# @return $uncompress - Der erzeugte Entpackungsbefehl oder ein leerer String, wenn das Dateiformat
+	# nicht erkannt wurde.
 	#? Beispiel:
-	#   menufinstall paketliste.txt
-	#   Liest die Paketnamen aus der Datei "paketliste.txt" und installiert sie mithilfe des Dialog-Tools (falls verfügbar).
-##
-function menufinstall2() {
-	# Letzte Bearbeitung 26.09.2023
-    # Überprüfen, ob genau ein Argument übergeben wurde
-    if [ $# -ne 1 ]; then
-        echo "Fehler: Diese Funktion erwartet genau ein Argument (TEXTDATEI)."
-        return 1
-    fi
-
-    TEXTDATEI="$1"
-
-    # Überprüfen, ob die Funktion mit Root-Berechtigungen ausgeführt wird
-    if [ "$EUID" -ne 0 ]; then
-        echo "Fehler: Diese Funktion erfordert Root-Berechtigungen. Bitte führen Sie sie mit 'sudo' aus."
-        return 1
-    fi
-
-    # Überprüfen, ob Dialog installiert ist
-    if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
-        boxtitel="opensimMULTITOOL Eingabe"
-        boxtext="Screen Name:"
-        TXTLISTE=$(dialog --backtitle "opensimMULTITOOL $VERSION" --title "$boxtitel" --inputbox "$boxtext" 8 40 3>&1 1>&2 2>&3 3>&-)
-        dialogclear
-        ScreenLog
-    fi
-
-    echo "Beginne mit der Installation der Pakete aus '$TEXTDATEI'..."
-
-    while read -r line; do
-        if dpkg-query -s "$line" 2>/dev/null | grep -q installed; then
-            log rohtext "$line ist bereits installiert!"
-        else
-            log rohtext "Ich installiere jetzt: $line"
-            sudo apt-get -y install "$line"
-        fi
-    done < "$TEXTDATEI"
-
-    echo "Die Installation der Pakete aus '$TEXTDATEI' ist abgeschlossen."
-}
-
-##
- #* uncompress.
- # ermittelt welcher Kompressor eingesetzt wurde und gibt den entpack Befehl zurueck.
- # 
- #? @param $datei.
- #? @return $uncompress.
- # todo: nichts.
+	#   uncompress datei.tar.gz    # Gibt "tar -xf" zurück.
+	#   uncompress datei.zip       # Gibt "unzip -p" zurück.
+	#   uncompress datei.txt       # Gibt einen leeren String zurück, da ASCII-Dateien nicht entpackt werden müssen.
+	# todo: nichts.
 ##
 function uncompress() {
+	# Letzte Bearbeitung 27.09.2023
     datei=$1
 
     for file in $datei; do
@@ -2045,72 +1781,148 @@ function uncompress() {
 
     return $uncompress;
 }
+##
+	#* uncompress2 - Eine Funktion zum automatischen Entpacken von komprimierten Dateien.
+	#? Verwendung: uncompress <Datei(en)>
+	# Die Funktion erkennt den Dateityp und verwendet das entsprechende Entpackungswerkzeug.
+	# Unterstützte Dateitypen: gzip, zip, 7z, rar, tar.gz, tar.bz2, tar.xz, bz2, xz
+	#? Beispiel:
+	# uncompress2 datei.zip        # Entpackt eine Zip-Datei
+	# uncompress2 datei.tar.gz     # Entpackt eine tar.gz-Datei
+	# uncompress2 datei.7z         # Entpackt eine 7z-Datei
+	#? Beispielaufruf
+	# uncompress2 datei.zip
+##
+function uncompress2() {
+	# Letzte Bearbeitung 27.09.2023
+
+    for datei in "$@"; do
+        case $(file "$datei") in
+            *ASCII*)    ;;
+            *gzip*)     gunzip "$datei" ;;
+            *zip*)      unzip -p "$datei" ;;
+            *7z*)       7z e "$datei" ;;
+            *rar*)      unrar e "$datei" ;;
+            *tar.gz*)   tar -xf "$datei" ;;
+            *tar.bz2*)  tar -xjf "$datei" ;;
+            *tar.xz*)   tar -xJf "$datei" ;;
+            *bz2*)      bunzip2 "$datei" ;;
+            *xz*)       unxz "$datei" ;;
+            *)          echo "Nicht unterstütztes Dateiformat für '$datei'" ;;
+        esac
+    done
+}
 
 ##
- #* makeverzeichnisliste.
- # Erstellen eines Arrays aus einer Textdatei - Verzeichnisse.
- # 
- #? @param keine.
- #? @return $ANZAHLVERZEICHNISSLISTE.
- # todo: nichts.
+	#* makeverzeichnisliste - Eine Funktion zum Erstellen einer Liste von Verzeichnissen aus einer Datei.
+	#? Verwendung: makeverzeichnisliste
+	# Diese Funktion liest Zeilen aus der angegebenen SIMDATEI im STARTVERZEICHNIS und erstellt eine
+	# Liste von Verzeichnissen. Die Liste wird in der globalen Variable VERZEICHNISSLISTE gespeichert.
+	# Die Anzahl der Einträge in der Liste wird in der globalen Variable ANZAHLVERZEICHNISSLISTE gespeichert.
+	#? Argumente:
+	#   STARTVERZEICHNIS - Das Verzeichnis, in dem sich die SIMDATEI befindet.
+	#   SIMDATEI - Die Datei, aus der die Verzeichnisse gelesen werden sollen.
+	#? Beispielaufruf
+	# makeverzeichnisliste
 ##
 function makeverzeichnisliste() {
+	# Letzte Bearbeitung 27.09.2023
+
+    # Initialisieren der Verzeichnisliste
 	VERZEICHNISSLISTE=()
+
+	 # Schleife zum Lesen der Zeilen aus der SIMDATEI und Hinzufügen zum Array
 	while IFS= read -r line; do
 		VERZEICHNISSLISTE+=("$line")
 	done </$STARTVERZEICHNIS/$SIMDATEI
-	# Anzahl der Eintraege.
+
+	# Anzahl der Einträge in der Verzeichnisliste
 	ANZAHLVERZEICHNISSLISTE=${#VERZEICHNISSLISTE[*]}
+
+	# Erfolgreiche Ausführung
 	return 0
 }
 
 ##
- #* makeregionsliste 
- # Erstellen eines Arrays aus einer Textdatei.
- # 
- #? @param keine.
- #? @return REGIONSLISTE.
- #? @return ANZAHLREGIONSLISTE.
- # todo: nichts.
+	#* makeregionsliste - Eine Funktion zum Erstellen einer Liste von Regionen aus einer Datei.
+	#? Verwendung: makeregionsliste
+	# Diese Funktion liest Zeilen aus der angegebenen REGIONSDATEI im STARTVERZEICHNIS und erstellt eine
+	# Liste von Regionen. Die Liste wird in der globalen Variable REGIONSLISTE gespeichert.
+	# Die Anzahl der Einträge in der Liste wird in der globalen Variable ANZAHLREGIONSLISTE gespeichert.
+	#
+	#? Argumente:
+	#   STARTVERZEICHNIS - Das Verzeichnis, in dem sich die REGIONSDATEI befindet.
+	#   REGIONSDATEI - Die Datei, aus der die Regionen gelesen werden sollen.
+	#
+	#? Beispiel:
+	# makeregionsliste
 ##
 function makeregionsliste() {
+	# Letzte Bearbeitung 27.09.2023
+
+    # Initialisieren der Regionenliste
 	REGIONSLISTE=()
+
+	# Schleife zum Lesen der Zeilen aus der REGIONSDATEI und Hinzufügen zum Array
 	while IFS= read -r line; do
 		REGIONSLISTE+=("$line")
 	done </$STARTVERZEICHNIS/$REGIONSDATEI
+
+	# Anzahl der Einträge in der Regionenliste
 	ANZAHLREGIONSLISTE=${#REGIONSLISTE[*]} # Anzahl der Eintraege.
+
+	# Erfolgreiche Ausführung
 	return 0
 }
 
 ##
- #* mysqlrest Funktion zum abfragen von mySQL Datensaetzen.
- # mymysql "username" "password" "databasename" "mysqlcommand".
- # 
- #? @param "username" "password" "databasename" "mysqlcommand".
- #? @return result_mysqlrest.
- # todo: nichts.
+	#* mysqlrest - Eine Funktion zum Ausführen von MySQL-Befehlen und Erfassen des Ergebnisses.
+	#? Verwendung: mysqlrest <Benutzername> <Passwort> <Datenbankname> <MySQL-Befehl>
+	# Diese Funktion führt den angegebenen MySQL-Befehl in der angegebenen Datenbank aus und erfasst das Ergebnis.
+	# Das Ergebnis wird in der globalen Variable result_mysqlrest gespeichert.
+	#? Argumente:
+	#   Benutzername - Der MySQL-Benutzername für die Datenbankverbindung.
+	#   Passwort - Das Passwort für die Datenbankverbindung.
+	#   Datenbankname - Der Name der Datenbank, in der der Befehl ausgeführt werden soll.
+	#   MySQL-Befehl - Der zu auszuführende MySQL-Befehl.
+	#? Beispiel:
+	# mysqlrest myuser mypassword mydb "SELECT * FROM mytable"
 ##
 function mysqlrest() {
-	username=$1
-	password=$2
-	databasename=$3
-	mysqlcommand=$4
+	# Letzte Bearbeitung 27.09.2023
+    # Übergeben der Argumente an Variablen
+    username="$1"
+    password="$2"
+    databasename="$3"
+    mysqlcommand="$4"
+
+    # Ausführen des MySQL-Befehls und Erfassen des Ergebnisses
 	result_mysqlrest=$(echo "$mysqlcommand;" | MYSQL_PWD=$password mysql -u"$username" "$databasename" -N) 2>/dev/null
+    # result_mysqlrest=$(echo "$mysqlcommand;" | MYSQL_PWD="$password" mysql -u"$username" "$databasename" -N 2>/dev/null)  ### NEU testen
 }
 
 ##
- #* mysqlrestnodb.
- # Funktion mySQL Datensaetzen: mymysql "username" "password" "mysqlcommand".
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+	#* mysqlrestnodb - Eine Funktion zum Ausführen von MySQL-Befehlen ohne Angabe einer Datenbank.
+	#? Verwendung: mysqlrestnodb <Benutzername> <Passwort> <MySQL-Befehl>
+	# Diese Funktion führt den angegebenen MySQL-Befehl ohne Angabe einer Datenbank aus und erfasst das Ergebnis.
+	# Das Ergebnis wird in der globalen Variable result_mysqlrestnodb gespeichert.
+	#? Argumente:
+	#   Benutzername - Der MySQL-Benutzername für die Verbindung.
+	#   Passwort - Das Passwort für die Verbindung.
+	#   MySQL-Befehl - Der zu auszuführende MySQL-Befehl.
+	#? Beispiel:
+	# mysqlrestnodb myuser mypassword "SHOW DATABASES"
 ##
 function mysqlrestnodb() {
-	username=$1
-	password=$2
-	mysqlcommand=$3
+	# Letzte Bearbeitung 27.09.2023
+    # Übergeben der Argumente an Variablen
+    username="$1"
+    password="$2"
+    mysqlcommand="$3"
+
+    # Ausführen des MySQL-Befehls und Erfassen des Ergebnisses
 	result_mysqlrestnodb=$(echo "$mysqlcommand" | MYSQL_PWD=$password mysql -u"$username")
+    # result_mysqlrestnodb=$(echo "$mysqlcommand" | MYSQL_PWD="$password" mysql -u"$username" 2>/dev/null)  ### NEU testen
 }
 
 ###########################################################################
@@ -2118,51 +1930,79 @@ function mysqlrestnodb() {
 ###########################################################################
 
 ##
- #* instdialog.
- # installation von dialog.
- # 
- #? @param keine.
- #? @return keine.
- # todo: nichts.
+	#* instdialog - Installiert das Dialog-Programm für interaktive Shell-Dialoge.
+	#? Dokumentation:
+	# Diese Funktion installiert das Dialog-Programm, das zur Erstellung interaktiver
+	# Dialoge in der Shell verwendet wird. Sie führt zuerst ein Systemupdate und ein
+	# Upgrade durch, um sicherzustellen, dass das System auf dem neuesten Stand ist.
+	# Falls bei der Installation des Dialog-Programms Abhängigkeiten fehlen, werden
+	# diese nachinstalliert. Schließlich wird Dialog installiert.
+	#? @param keine.
+	#
+	#? Beispiel:
+	#   instdialog
 ##
-# install dialog
 function instdialog() {
-	log rohtext "Ich installiere jetzt dialog"
-	sudo apt-get -y update
-	sudo apt-get -y upgrade
-	sudo apt-get -y install dialog
+	# Letzte Bearbeitung 27.09.2023
+    log rohtext "Ich installiere jetzt dialog"
+    
+    # Systemupdate und Upgrade ausführen.
+    sudo apt-get -y update
+    sudo apt-get -y upgrade
+    
+    # Dialog-Programm installieren (erster Versuch).
+    sudo apt-get -y install dialog
+
 	# Warscheinlich ist die Installation fehlgeschlagen da abhängigkeiten fehlen.
-	sudo apt-get -f install # abhängiketen nachinstallieren
-	sudo apt-get -y install dialog # erneute installation
-	#dialog --title 'Dialog Nachricht' --msgbox '. . . . Dialog wurde Installiert!' 6 50
-	dialog --title 'Die erste Dialog Nachricht' --calendar 'Dialog wurde Installiert am:' 0 0
-	tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
+	log rohtext "Die Installation von dialog ist wahrscheinlich fehlgeschlagen, da Abhängigkeiten fehlen."
+	
+	# Abhängigkeiten nachinstallieren und erneut versuchen.
+	sudo apt-get -f install
+	sudo apt-get -y install dialog
+
+    # Nachricht über die erfolgreiche Installation von Dialog anzeigen.
+    dialog --title 'Die erste Dialog Nachricht' --calendar 'Dialog wurde installiert am:' 0 0
+    
+    # Bildschirmausgabe löschen, inklusive dem Scrollbereich, sonst verwirrt es die meisten Menschen.
+    tput reset
 }
 
 ##
- #* oswriteconfig.
- # Konfiguration lesen.
- # 
- #? @param $SETSIMULATOR.
- #? @return $CONFIGWRITE.
- # todo: nichts.
+	#* oswriteconfig - Schreibt eine Konfiguration für eine Anwendung in einem GNU Screen-Fenster.
+	#? Dokumentation:
+	# Diese Funktion generiert einen Befehl zum Speichern einer Konfiguration und sendet ihn an ein
+	# GNU Screen-Fenster, das der Anwendung zugeordnet ist. Dies ermöglicht das Aktualisieren oder
+	# Speichern von Konfigurationsdaten in Echtzeit, ohne die Anwendung neu zu starten.
+	#? @param $SETSIMULATOR - Der Name oder das Kennzeichen des GNU Screen-Fensters, in dem die  Konfiguration gespeichert werden soll.
+	#
+	# todo: nichts.
 ##
 function oswriteconfig() {
-	SETSIMULATOR=$1
-	CONFIGWRITE="config save /$STARTVERZEICHNIS/$SETSIMULATOR.ini"
-	screen -S "$SETSIMULATOR" -p 0 -X eval "stuff '$CONFIGWRITE'^M"
+	# Letzte Bearbeitung 27.09.2023
+    SETSIMULATOR=$1
+    CONFIGWRITE="config save /$STARTVERZEICHNIS/$SETSIMULATOR.ini"
+
+    # Senden des Konfigurationsbefehls an das angegebene GNU Screen-Fenster
+    screen -S "$SETSIMULATOR" -p 0 -X eval "stuff '$CONFIGWRITE'^M"
+
+    # Den erzeugten Befehl zur späteren Verwendung zurückgeben
+    #echo "$CONFIGWRITE"
 }
 
 ##
- #* menuoswriteconfig.
- # Konfiguration lesen.
- # 
- #? @param dialog.
- #? @return dialog.
- # todo: nichts.
+	#* menuoswriteconfig - Schreibt eine Konfiguration für eine Anwendung in einem GNU Screen-Fenster.
+	#? Dokumentation:
+	# Diese Funktion generiert einen Befehl zum Speichern einer Konfiguration und sendet ihn an ein
+	# GNU Screen-Fenster, das der Anwendung zugeordnet ist. Dies ermöglicht das Aktualisieren oder
+	# Speichern von Konfigurationsdaten in Echtzeit, ohne die Anwendung neu zu starten.
+	#? @param $SETSIMULATOR - Der Name oder das Kennzeichen des GNU Screen-Fensters, in dem die  Konfiguration gespeichert werden soll.
+	#
+	# todo: nichts.
 ##
 function menuoswriteconfig() {
-	SETSIMULATOR=$1 # OpenSimulator, Verzeichnis und Screen Name
+	# Letzte Bearbeitung 27.09.2023
+	# OpenSimulator, Verzeichnis und Screen Name
+	SETSIMULATOR=$1 
 
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
@@ -2174,33 +2014,29 @@ function menuoswriteconfig() {
 		ScreenLog
 
 		if ! screen -list | grep -q "$SETSIMULATOR"; then
-			# es laeuft nicht - not work
+			# es laeuft nicht
 			dialog --backtitle "opensimMULTITOOL $VERSION" --msgbox "OpenSimulator $SETSIMULATOR OFFLINE!" 5 40
 			dialogclear
 			ScreenLog
 		else
-			# es laeuft - work
-			# Konfig schreiben
+			# es laeuft Konfig schreiben
 			CONFIGWRITE="config save /$STARTVERZEICHNIS/$SETSIMULATOR.ini"			
 			screen -S "$SETSIMULATOR" -p 0 -X eval "stuff '$CONFIGWRITE'^M"
 			sleep 1
 			CONFIGREAD=$(sed '' "$SETSIMULATOR.ini")
 			# # Konfig lesen
 			dialog --backtitle "opensimMULTITOOL $VERSION" --msgbox "$CONFIGREAD" 0 0
-			#dialog --editbox "$CONFIGREAD" 0 0
-			#dialog --textbox "$CONFIGREAD" 0 0
 			dialogclear
 			ScreenLog
 		fi
 	else
 		# Alle Aktionen ohne dialog
 		if ! screen -list | grep -q "$SETSIMULATOR"; then
-			# es laeuft nicht - not work
+			# es laeuft nicht
 			log info "WORKS: $SETSIMULATOR OFFLINE!"
 			return 1
 		else
-			# es laeuft - work
-			# Konfig schreiben
+			# es laeuft Konfig schreiben
 			CONFIGWRITE="config save /$STARTVERZEICHNIS/$SETSIMULATOR.ini"
 			screen -S "$SETSIMULATOR" -p 0 -X eval "stuff '$CONFIGWRITE'^M"
 			return 0
@@ -2210,29 +2046,44 @@ function menuoswriteconfig() {
 }
 
 ##
- #* osstarteintrag.
- # Fuegt der osmsimlist.ini einen Region Simulator hinzu und sortiert diese.
- # 
- #? @param $OSEINTRAG.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+	#* osstarteintrag
+	#? Dokumentation:
+	# Diese Funktion fügt einen OpenSimulator-Eintrag zur Datei osmsimlist.ini hinzu
+	# und sortiert die Datei anschließend. Sie erwartet einen Parameter: den OSEINTRAG,
+	# der aus Verzeichnis und Screen Name besteht. Stellen Sie sicher, dass Sie den
+	# Pfad zum Verzeichnis, in dem sich die Datei osmsimlist.ini befindet, in der
+	# Variablen STARTVERZEICHNIS aktualisieren. Wenn die Datei oder der OSEINTRAG
+	# nicht gefunden wird, gibt die Funktion einen Fehler aus.
+	# Verwenden Sie die Funktion, indem Sie sie aufrufen und den OSEINTRAG als Argument übergeben.
+	#? @param $1 OSEINTRAG - Der OpenSimulator-Eintrag (Verzeichnis und Screen Name).
+	#? @return nichts wird zurueckgegeben.
+	# todo: nichts.
 ##
 function osstarteintrag() {
+	# Letzte Bearbeitung 27.09.2023
 	OSEINTRAG=$1 # OpenSimulator, Verzeichnis und Screen Name
 	log info "OpenSimulator $OSEINTRAG wird der Datei $SIMDATEI hinzugefuegt!"
+
 	sed -i '1s/.*$/'"$OSEINTRAG"'\n&/g' /"$STARTVERZEICHNIS"/$SIMDATEI
 	sort /"$STARTVERZEICHNIS"/$SIMDATEI -o /"$STARTVERZEICHNIS"/$SIMDATEI
 }
 
 ##
- #* menuosstarteintrag.
- # Fuegt der osmsimlist.ini einen Region Simulator hinzu und sortiert diese.
- # 
- #? @param dialog.
- #? @return dialog.
- # todo: nichts.
+	#* menuosstarteintrag
+	#? Dokumentation:
+	# Diese Funktion fügt einen OpenSimulator-Eintrag zur Datei osmsimlist.ini hinzu
+	# und sortiert die Datei anschließend. Sie erwartet einen Parameter: den OSEINTRAG,
+	# der aus Verzeichnis und Screen Name besteht. Stellen Sie sicher, dass Sie den
+	# Pfad zum Verzeichnis, in dem sich die Datei osmsimlist.ini befindet, in der
+	# Variablen STARTVERZEICHNIS aktualisieren. Wenn die Datei oder der OSEINTRAG
+	# nicht gefunden wird, gibt die Funktion einen Fehler aus.
+	# Verwenden Sie die Funktion, indem Sie sie aufrufen und den OSEINTRAG als Argument übergeben.
+	#? @param $1 OSEINTRAG - Der OpenSimulator-Eintrag (Verzeichnis und Screen Name).
+	#? @return nichts wird zurueckgegeben.
+	# todo: nichts.
 ##
 function menuosstarteintrag() {
+	# Letzte Bearbeitung 27.09.2023
 	MENUOSEINTRAG=$(
 		dialog --backtitle "opensimMULTITOOL $VERSION" --title "opensimMULTITOOL Eingabe" \
 			--inputbox "Simulator:" 8 40 \
@@ -2242,6 +2093,7 @@ function menuosstarteintrag() {
 	ScreenLog
 
 	log info "OpenSimulator $MENUOSEINTRAG wird der Datei $SIMDATEI hinzugefuegt!"
+
 	sed -i '1s/.*$/'"$MENUOSEINTRAG"'\n&/g' /"$STARTVERZEICHNIS"/$SIMDATEI
 	sort /"$STARTVERZEICHNIS"/$SIMDATEI -o /"$STARTVERZEICHNIS"/$SIMDATEI
 
@@ -2249,34 +2101,56 @@ function menuosstarteintrag() {
 }
 
 ##
- #* osstarteintragdel.
- # entfernt einen Region Simulator aus  der osmsimlist.ini und sortiert diese.
- # 
- #? @param $OSEINTRAGDEL.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+	#* osstarteintragdel
+	#? Dokumentation:
+	# Diese Funktion ermöglicht das Entfernen eines OpenSimulator-Eintrags aus der Datei osmsimlist.ini und
+	# die anschließende Sortierung der Datei. Der zu löschende Eintrag, bestehend aus Verzeichnis und
+	# Screen Name, muss als Parameter an die Funktion übergeben werden.
+	#
+	#? Beispiel:
+	# osstarteintragdel "Pfad/zum/OpenSimulator ScreenName"
+	#
+	# Die Funktion führt verschiedene Überprüfungen durch, um sicherzustellen, dass der übergebene
+	# Eintrag und die Datei osmsimlist.ini vorhanden sind. Wenn eines davon fehlt, wird ein Fehler
+	# ausgegeben. Andernfalls wird der Eintrag aus der Datei entfernt, und die Datei wird sortiert.
+	# Stellen Sie sicher, dass Sie den tatsächlichen Pfad zur Datei osmsimlist.ini in der Variable
+	# SIMDATEI angeben.
+	# todo: nichts.
 ##
 function osstarteintragdel() {
+	# Letzte Bearbeitung 27.09.2023
 	OSEINTRAGDEL=$1 # OpenSimulator, Verzeichnis und Screen Name
 	log info "OpenSimulator $OSEINTRAGDEL wird aus der Datei $SIMDATEI entfernt!"
+
 	sed -i '/'"$OSEINTRAGDEL"'/d' /"$STARTVERZEICHNIS"/$SIMDATEI
 	sort /"$STARTVERZEICHNIS"/$SIMDATEI -o /"$STARTVERZEICHNIS"/$SIMDATEI
 }
 
 ##
- #* menuosstarteintragdel.
- # entfernt einen Region Simulator aus  der osmsimlist.ini und sortiert diese.
- # 
- #? @param dialog.
- #? @return dialog.
- # todo: nichts.
+	#* menuosstarteintragdel
+	#? Dokumentation:
+	# Diese Funktion ermöglicht das Entfernen eines OpenSimulator-Eintrags aus der Datei osmsimlist.ini und
+	# die anschließende Sortierung der Datei. Der zu löschende Eintrag, bestehend aus Verzeichnis und
+	# Screen Name, muss als Parameter an die Funktion übergeben werden.
+	#
+	#? Beispiel:
+	# osstarteintragdel "Pfad/zum/OpenSimulator ScreenName"
+	#
+	# Die Funktion führt verschiedene Überprüfungen durch, um sicherzustellen, dass der übergebene
+	# Eintrag und die Datei osmsimlist.ini vorhanden sind. Wenn eines davon fehlt, wird ein Fehler
+	# ausgegeben. Andernfalls wird der Eintrag aus der Datei entfernt, und die Datei wird sortiert.
+	# Stellen Sie sicher, dass Sie den tatsächlichen Pfad zur Datei osmsimlist.ini in der Variable
+	# SIMDATEI angeben.
+	# todo: nichts.
 ##
 function menuosstarteintragdel() {
+	# Letzte Bearbeitung 27.09.2023
 	MENUOSEINTRAGDEL=$(
 		dialog --backtitle "opensimMULTITOOL $VERSION" --title "opensimMULTITOOL Eingabe" \
 			--inputbox "Simulator:" 8 40 \
 			3>&1 1>&2 2>&3 3>&-
 	)
+
 	dialogclear
 	ScreenLog
 
@@ -2288,41 +2162,59 @@ function menuosstarteintragdel() {
 }
 
 ##
- #* osdauerstop.
- # stoppt Region Server und aus der Startliste loeschen. 
- # Beispiel-Example: bash osmtool.sh osdauerstop sim1
- # 
- #? @param $OSDAUERSTOPSCREEN.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+	#* osdauerstop - Stoppt einen OpenSimulator-Server und entfernt ihn aus der Startliste.
+	# Diese Funktion stoppt einen OpenSimulator-Server, der in einem GNU Screen-Prozess
+	# läuft, und entfernt ihn aus der Liste der gestarteten Server. Der Name des Screens
+	# wird als Argument übergeben.
+	#? Parameter:
+	#   $1 - Der Name des Screens, in dem der OpenSimulator-Server läuft.
+	#? Rückgabewerte:
+	#   0 - Erfolgreich beendet.
+	#   1 - Der Screen wurde nicht gefunden.
+	#? Beispiel:
+	#   osdauerstop myopensim
+	# todo: nichts.
 ##
 function osdauerstop() {
-	OSDAUERSTOPSCREEN=$1 # OpenSimulator, Verzeichnis und Screen Name
+	# Letzte Bearbeitung 27.09.2023
+	OSDAUERSTOPSCREEN=$1
+	# Überprüfen, ob der Screen existiert
 	if screen -list | grep -q "$OSDAUERSTOPSCREEN"; then
 		log warn "OpenSimulator $OSDAUERSTOPSCREEN Beenden und aus der Startliste loeschen!"
 		osstarteintrag "$OSDAUERSTOPSCREEN"
 
+		# Senden des Befehls zum Herunterfahren des OpenSimulator-Servers
 		screen -S "$OSDAUERSTOPSCREEN" -p 0 -X eval "stuff 'shutdown'^M"
 		sleep 10
+
 		return 0
 	else
 		log error "OpenSimulator $OSDAUERSTOPSCREEN nicht vorhanden"
 		osstarteintrag "$OSDAUERSTOPSCREEN"
+
 		return 1
 	fi
 
+	# Optional: Starten des Hauptmenüs, wenn das Dialog-Paket installiert ist.
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then hauptmenu; fi
 }
 
 ##
- #* menuosdauerstop.
- # stoppt Region Server und aus der Startliste loeschen.
- # 
- #? @param dialog.
- #? @return dialog.
- # todo: nichts.
+	#* menuosdauerstop - Stoppt einen OpenSimulator-Server und entfernt ihn aus der Startliste.
+	# Diese Funktion stoppt einen OpenSimulator-Server, der in einem GNU Screen-Prozess
+	# läuft, und entfernt ihn aus der Liste der gestarteten Server. Der Name des Screens
+	# wird als Argument übergeben.
+	#? Parameter:
+	#   $1 - Der Name des Screens, in dem der OpenSimulator-Server läuft.
+	#? Rückgabewerte:
+	#   0 - Erfolgreich beendet.
+	#   1 - Der Screen wurde nicht gefunden.
+	#? Beispiel:
+	#   osdauerstop myopensim
+	# todo: nichts.
 ##
 function menuosdauerstop() {
+	# Letzte Bearbeitung 27.09.2023
 	IOSDAUERSTOPSCREEN=$(
 		dialog --backtitle "opensimMULTITOOL $VERSION" --title "opensimMULTITOOL Eingabe" \
 			--inputbox "Simulator:" 8 40 \
