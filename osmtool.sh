@@ -20,7 +20,7 @@
 # ! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 # ! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-# * Status 27.09.2023 419 Funktionen.
+# * Status 29.09.2023 419 Funktionen.
 
 	# # Installieren sie bitte: #* Visual Studio Code
 	#* dazu die Plugins:
@@ -35,7 +35,7 @@
 ###########################################################################
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.984" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.1006" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 ##
@@ -2248,15 +2248,18 @@ function menuosdauerstop() {
 }
 
 ##
- #* osdauerstart.
- # startet Region Server und setzt ihn in die Startkonfiguration.
- # Beispiel-Example: bash osmtool.sh osdauerstart sim1
- # 
- #? @param $OSDAUERSTARTSCREEN.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+	#* osdauerstart.
+	# Diese Funktion startet den OpenSimulator, wenn er nicht bereits läuft.
+	#? Argumente:
+	# $1: Der Name des OpenSimulator-Verzeichnisses und des Screens
+	#? Rückgabewerte:
+	# 0: Erfolgreich gestartet
+	# 1: Fehler beim Start oder Verzeichnis nicht gefunden
+	#? Beispielaufruf:
+	# osdauerstart "MyOpenSim"
 ##
 function osdauerstart() {
+	# Letzte Bearbeitung 28.09.2023
 	OSDAUERSTARTSCREEN=$1 # OpenSimulator, Verzeichnis und Screen Name
 	osstarteintrag "$OSDAUERSTARTSCREEN"
 
@@ -2290,14 +2293,18 @@ function osdauerstart() {
 }
 
 ##
- #* menuosdauerstart.
- # startet Region Server und setzt ihn in die Startkonfiguration.
- # 
- #? @param dialog.
- #? @return dialog.
- # todo: nichts.
+	#* menuosdauerstart.
+	# Diese Funktion zeigt ein Dialogfeld an, um den OpenSimulator mit benutzerdefinierten Einstellungen zu starten.
+	# Sie erfasst den Namen des Simulators und startet diesen, sofern er nicht bereits läuft.
+	#? Argumente: Keine
+	#? Rückgabewerte:
+	# 0: Erfolgreich gestartet
+	# 1: Fehler beim Start oder Verzeichnis nicht gefunden
+	#? Beispielaufruf:
+	# menuosdauerstart
 ##
 function menuosdauerstart() {
+	# Letzte Bearbeitung 28.09.2023
 	IOSDAUERSTARTSCREEN=$(
 		dialog --backtitle "opensimMULTITOOL $VERSION" --title "opensimMULTITOOL Eingabe" \
 			--inputbox "Simulator:" 8 40 \
@@ -2364,14 +2371,16 @@ function menuosdauerstart() {
 }
 
 ##
- #* ossettings.
- # stellt den Linux Server fuer OpenSim ein.
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+	#* ossettings.
+	# Diese Funktion konfiguriert verschiedene Einstellungen für die Ausführung des OpenSimulators.
+	#? Argumente: Keine
+	#? Rückgabewerte:
+	# 0: Erfolgreich abgeschlossen
+	#? Beispielaufruf:
+	# ossettings
 ##
 function ossettings() {
+	# Letzte Bearbeitung 28.09.2023
 	log line
 	# Hier kommen alle gewuenschten Einstellungen rein.
 	# ulimit
@@ -2411,14 +2420,16 @@ function ossettings() {
 ###########################################################################
 
 ##
- #* ScreenLog.
- # Bildschirmausgabe reduzieren.
- # 
- #? @param ScreenLogLevel.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+	#* ScreenLog.
+	# Diese Funktion steuert die Darstellung und das Löschen der Bildschirmausgabe basierend auf dem Wert von ScreenLogLevel.
+	#? Argumente: Keine
+	#? Rückgabewerte:
+	# 0: Erfolgreich abgeschlossen
+	#? Beispielaufruf:
+	# ScreenLog
 ##
 function ScreenLog() {
+	# Letzte Bearbeitung 28.09.2023
 	if (( ScreenLogLevel == 1 )); then
 		clear # Bildschirmausgabe loeschen Scrollbereich bleibt zum ueberpruefen.
 	fi	
@@ -2440,43 +2451,55 @@ function ScreenLog() {
 }
 
 ##
- #* dialogclear.
- # Dialog Intern loeschen.
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+	#* dialogclear.
+	# Diese Funktion löscht das aktuelle Dialogfeld im Terminal, um eine saubere Oberfläche für weitere Dialoge oder Ausgaben zu ermöglichen.
+	#? Argumente: Keine
+	#? Rückgabewerte:
+	# 0: Erfolgreich abgeschlossen
+	#? Beispielaufruf:
+	# dialogclear
 ##
 function dialogclear() {
+	# Letzte Bearbeitung 28.09.2023
 	dialog --clear
 	return 0
 }
 
 ##
- #* clearuserlist.
- # Alle Besucherlisten loeschen.
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+	#* clearuserlist.
+	# Diese Funktion löscht die Besucherlisten-Protokolldateien im angegebenen Verzeichnis.
+	#
+	#? Argumente: Keine
+	#
+	#? Rückgabewerte: Keine
+	#
+	#? Beispielaufruf:
+	# clearuserlist
 ##
 function clearuserlist() {
-	log rohtext "Lösche Besucherlisten log"
-	rm -r /$STARTVERZEICHNIS/*_osmvisitorlist.log
-	log rohtext "Lösche Besucherlisten txt"
-	rm -r /$STARTVERZEICHNIS/*_osmvisitorlist.txt
+    # Letzte Bearbeitung 28.09.2023
+    log rohtext "Lösche Besucherlisten log"
+    
+    # Lösche alle Dateien, die mit "_osmvisitorlist.log" enden, im angegebenen Verzeichnis.
+    rm -r "/$STARTVERZEICHNIS"/*_osmvisitorlist.log
+
+    log rohtext "Lösche Besucherlisten txt"
+
+    # Lösche alle Dateien, die mit "_osmvisitorlist.txt" enden, im angegebenen Verzeichnis.
+    rm -r "/$STARTVERZEICHNIS"/*_osmvisitorlist.txt
 }
 
 ##
- #* historylogclear.
- # Log Dateien von Ubuntu loeschen Beispiel: historylogclear "history".
- # das loeschen von history, apache2error, mysqlerror und mysqlmariadb.
- #
- #? @param history, apache2error, mysqlerror und mysqlmariadb.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+	#* historylogclear.
+	# Diese Funktion löscht Log-Dateien oder die Verlaufshistorie basierend auf dem übergebenen Argument.
+	#? Argumente:
+	# $1: Der Name des zu löschenden Logs oder der Verlaufshistorie (z. B. "history", "apache2error", "mysqlerror", "mysqlmariadb").
+	#? Rückgabewerte: Keine
+	#? Beispielaufruf:
+	# historylogclear "history"
 ##
 function historylogclear() {
+	# Letzte Bearbeitung 28.09.2023
 	hlclear=$1
 	case $hlclear in
 		history) 
@@ -2503,49 +2526,58 @@ function historylogclear() {
 ###########################################################################
 
 ##
- #* lastrebootdatum.
- # Letzter reboot des Servers.
- # 
- #? @param keine.
- #? @return $datediff.
- # todo: nichts.
+	#* lastrebootdatum.
+	# Diese Funktion ermittelt das Datum des letzten Server-Neustarts und berechnet die Anzahl der Tage seit dem letzten Neustart.
+	#? Argumente: Keine
+	#? Rückgabewerte:
+	# 0: Erfolgreich abgeschlossen, gibt die Anzahl der Tage seit dem letzten Neustart zurück
+	#? Beispielaufruf:
+	# lastrebootdatum
 ##
 function lastrebootdatum() {
-	HEUTEDATUM=$(date +%Y-%m-%d) # Heute
+	# Letzte Bearbeitung 28.09.2023
+    HEUTEDATUM=$(date +%Y-%m-%d) # Aktuelles Datum
 
-	# Parsen: system boot  2021-11-30 14:26
-	LETZTERREBOOT=$(who -b | awk -F' ' '{print $3}' | xargs) # Letzter Reboot
+    # Parsen: system boot  2021-11-30 14:26
+    LETZTERREBOOT=$(who -b | awk -F' ' '{print $3}' | xargs) # Datum des letzten Neustarts
 
-	# Tolles Datum Script
-	first_date=$(date -d "$HEUTEDATUM" "+%s")
-	second_date=$(date -d "$LETZTERREBOOT" "+%s")
-	EINST="-d" # Manuelle auswahl umgehen.
-	case "$EINST" in
-	"--seconds" | "-s") period=1 ;;
-	"--minutes" | "-m") period=60 ;;
-	"--hours" | "-h") period=$((60 * 60)) ;;
-	"--days" | "-d" | "") period=$((60 * 60 * 24)) ;;
-	esac
-	datediff=$(( ("$first_date" - "$second_date") / ("$period") ))
-	lastrebootdatuminfo="Sie haben vor $datediff Tag(en) ihren Server neu gestartet"
-	if (( $(echo "${datediff} >= 30") )); then
-		log warn "$lastrebootdatuminfo"
-	else
-		log info "$lastrebootdatuminfo"
-	fi
-	return $datediff
+    # Berechnung der Differenz in Tagen zwischen heute und dem letzten Neustart
+    first_date=$(date -d "$HEUTEDATUM" "+%s")
+    second_date=$(date -d "$LETZTERREBOOT" "+%s")
+    EINST="-d" # Manuelle Auswahl umgehen.
+    case "$EINST" in
+        "--seconds" | "-s") period=1 ;;
+        "--minutes" | "-m") period=60 ;;
+        "--hours" | "-h") period=$((60 * 60)) ;;
+        "--days" | "-d" | "") period=$((60 * 60 * 24)) ;;
+    esac
+    datediff=$((("$first_date" - "$second_date") / "$period"))
+
+    # Erstellen einer Meldung basierend auf der Anzahl der Tage seit dem letzten Neustart
+    lastrebootdatuminfo="Sie haben vor $datediff Tag(en) Ihren Server neu gestartet"
+
+    # Log-Meldung ausgeben, je nachdem, ob der letzte Neustart länger als 30 Tage her ist oder nicht
+    if (( $(echo "${datediff} >= 30") )); then
+        log warn "$lastrebootdatuminfo"
+    else
+        log info "$lastrebootdatuminfo"
+    fi
+
+    return $datediff
 }
 
+
 ##
- #* schreibeinfo.
- # Kopfzeile erstellen.
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+	#* schreibeinfo.
+	# Diese Funktion erstellt eine Informationsausgabe mit verschiedenen Systeminformationen und schreibt sie in eine Log-Datei, wenn die Log-Funktion aktiviert ist.
+	#? Argumente: Keine
+	#? Rückgabewerte: Keine
+	#? Beispielaufruf:
+	# schreibeinfo
 ##
 function schreibeinfo() {
-	# *Wenn die Log Datei nicht existiert muss sie erstellt werden sonst gibt es eine Fehlermeldung.
+	# Letzte Bearbeitung 28.09.2023
+	# Wenn die Log Datei nicht existiert muss sie erstellt werden sonst gibt es eine Fehlermeldung.
 	if [ "$LOGWRITE" = "yes" ]; then
 		if [ -f /$STARTVERZEICHNIS/"$DATEIDATUM""$logfilename".log ]; then
 			# echo "/$STARTVERZEICHNIS/$DATEIDATUM$logfilename.log ist vorhanden!"
@@ -2585,13 +2617,6 @@ function schreibeinfo() {
 		log rohtext "  $DATUM $(date +%H:%M:%S) INFO: $trimmvar"
 		log rohtext "  $DATUM $(date +%H:%M:%S) INFO: $SQLVERSION"
 		lastrebootdatum
-		# Nachfolgendes hab ich rausgenommen weil die opensimulator.org so laggt.
-		# osdate=$(date --utc --date "$1" +%F)
-		# if curl -s "http://opensimulator.org/viewgit/?a=shortlog&p=opensim"  |  grep -q "$osdate"; then
-		# 	echo "  $DATUM $(date +%H:%M:%S) INFO:$(tput setaf 2) Eine neue OpenSimulator Master Version ist da.$(tput sgr 0)"
-		# else
-		# 	echo "  $DATUM $(date +%H:%M:%S) INFO:$(tput setaf 1) Es ist keine neue OpenSimulator Master Version da.$(tput sgr 0)"
-		# fi
 		log line
 		echo " "
 	return 0
@@ -2601,14 +2626,16 @@ function schreibeinfo() {
 schreibeinfo
 
 ##
- #* rebootdatum .
- # letzter reboot des Servers.
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+	#* rebootdatum .
+	# letzter reboot des Servers.
+	# Die Funktion `rebootdatum()` ermittelt das Datum des letzten Systemneustarts
+	# und informiert den Benutzer über die vergangene Zeit seit dem letzten Neustart.
+	#? @param keine.
+	#? @return nichts wird zurueckgegeben.
+	# todo: nichts.
 ##
 function rebootdatum() {
+	# Letzte Bearbeitung 28.09.2023
 	HEUTEDATUM=$(date +%Y-%m-%d) # Heute
 
 	# Parsen: system boot  2021-11-30 14:26
@@ -2649,250 +2676,406 @@ function rebootdatum() {
 }
 
 ##
- #* reboot.
- # Reboot des Servers.
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+#* Funktion: reboot
+# Beschreibung: Startet den Server neu.
+#
+#? Parameter: Keine.
+#
+#? Rückgabewert: Es wird nichts zurückgegeben.
+#
+#? Aufgaben: 
+# 1. Loggt eine Meldung, dass der Server heruntergefahren und neu gestartet wird.
+# 2. Führt die Funktion 'autostop' aus, falls vorhanden.
+# 3. Führt den Befehl 'shutdown -r now' aus, um den Server neu zu starten.
 ##
 function reboot() {
-	log rohtext "Server wird jetzt heruntergefahren und neu gestartet!"
-		autostop
-		shutdown -r now
+	# Letzte Bearbeitung 29.09.2023
+    log rohtext "Server wird jetzt heruntergefahren und neu gestartet!"
+    
+    # Überprüfe, ob die Funktion 'autostop' vorhanden ist und führe sie aus.
+    autostop
+
+    # Starte den Server neu.
+    shutdown -r now
 }
 
 ##
- #* warnbox.
- # warnbox Meldung anzeigen.
- # 
- #? @param $1.
- #? @return dialog Textanzeige.
- # todo: nichts.
+#* Funktion: warnbox
+# Beschreibung: Zeigt eine Warnmeldung in einem Dialogfeld an.
+#
+#? Parameter:
+#   $1 (Erforderlich) - Die Warnmeldung, die im Dialogfeld angezeigt werden soll.
+#
+#? Rückgabewert: Es wird nichts zurückgegeben.
+#
+#? Aufgaben:
+# 1. Zeigt eine Warnmeldung im Dialogfeld an, die durch den übergebenen Parameter definiert ist.
+# 2. Die Parameter "0 0" werden verwendet, um die Größe des Dialogfelds automatisch anzupassen.
+# 3. Löscht den Dialogbildschirm, nachdem das Dialogfeld geschlossen wurde.
+# 4. Ruft die Funktion 'ScreenLog' auf, um die Bildschirmausgabe zu protokollieren.
+# 5. Ruft die Funktion 'hauptmenu' auf, um zum Hauptmenü zurückzukehren.
 ##
 function warnbox() {
-	dialog --msgbox "$1" 0 0
-	dialogclear
-	ScreenLog
-	hauptmenu
+	# Letzte Bearbeitung 29.09.2023
+    # Zeigt eine Warnmeldung im Dialogfeld an.
+    dialog --msgbox "$1" 0 0
+
+    # Löscht den Dialogbildschirm.
+    dialogclear
+
+    # Protokolliert die Bildschirmausgabe.
+    ScreenLog
+
+    # Ruft die Hauptmenü-Funktion auf.
+    hauptmenu
 }
 
 ##
- #* edittextbox.
- # Text in einer Box editieren.
- # 
- #? @param $1.
- #? @return dialog Textanzeige.
- # todo: nichts.
+#* Funktion: edittextbox
+# Beschreibung: Öffnet eine Textdatei in einem Editor und ermöglicht deren Bearbeitung.
+#
+# Parameter:
+#   $1 (Erforderlich) - Der Pfad zur Textdatei, die bearbeitet werden soll.
+#
+# Rückgabewert: Es wird nichts zurückgegeben.
+#
+# Aufgaben:
+# 1. Öffnet die angegebene Textdatei in einem Editor-Dialogfeld zur Bearbeitung.
+# 2. Die Parameter "0 0" werden verwendet, um die Größe des Dialogfelds automatisch anzupassen.
+# 3. Löscht den Dialogbildschirm, nachdem der Editor geschlossen wurde.
+# 4. Protokolliert die Bildschirmausgabe mithilfe der Funktion 'ScreenLog'.
+# 5. Ruft die Hauptmenü-Funktion 'hauptmenu' auf, um zum Hauptmenü zurückzukehren.
 ##
 function edittextbox() {
-	#--editbox 	DATEI HOEHE BREITE
-	dialog --editbox "$1" 0 0
-	#NEWTEXT=$(dialog --editbox "$1" 0 0)
-	dialogclear
-	ScreenLog
-	#echo "$NEWTEXT"
-	hauptmenu
+	# Letzte Bearbeitung 29.09.2023
+    # Öffnet die angegebene Textdatei in einem Editor-Dialogfeld zur Bearbeitung.
+    dialog --editbox "$1" 0 0
+
+    # Löscht den Dialogbildschirm.
+    dialogclear
+
+    # Protokolliert die Bildschirmausgabe.
+    ScreenLog
+
+    # Ruft die Hauptmenü-Funktion auf.
+    hauptmenu
 }
 
+
 ##
- #* textbox.
- # Text Meldung anzeigen.
- # 
- #? @param $1.
- #? @return dialog Textanzeige.
- # todo: nichts.
+#* Funktion: textbox
+# Beschreibung: Zeigt den Inhalt einer Textdatei in einem Dialogfeld an.
+#
+#? Parameter:
+#   $1 (Erforderlich) - Der Pfad zur Textdatei, deren Inhalt angezeigt werden soll.
+#
+#? Rückgabewert: Es wird nichts zurückgegeben.
+#
+#? Aufgaben:
+# 1. Öffnet ein Dialogfeld, um den Inhalt der angegebenen Textdatei anzuzeigen.
+# 2. Die Parameter "0 0" werden verwendet, um die Größe des Dialogfelds automatisch anzupassen.
+# 3. Löscht den Dialogbildschirm, nachdem das Dialogfeld geschlossen wurde.
+# 4. Ruft die Funktion 'ScreenLog' auf, um die Bildschirmausgabe zu protokollieren.
+# 5. Ruft die Funktion 'hauptmenu' auf, um zum Hauptmenü zurückzukehren.
 ##
 function textbox() {
-	#--editbox 	DATEI HOEHE BREITE
-	dialog --textbox "$1" 0 0
-	dialogclear
-	ScreenLog
-	hauptmenu
+	# Letzte Bearbeitung 29.09.2023
+    # Öffnet ein Dialogfeld, um den Inhalt der angegebenen Textdatei anzuzeigen.
+    dialog --textbox "$1" 0 0
+
+    # Löscht den Dialogbildschirm.
+    dialogclear
+
+    # Protokolliert die Bildschirmausgabe.
+    ScreenLog
+
+    # Ruft die Hauptmenü-Funktion auf.
+    hauptmenu
 }
 
 ##
- #* nachrichtbox.
- # Eine Nachrichtbox Meldung anzeigen.
- # 
- #? @param $1 $result.
- #? @return dialog Textanzeige.
- # todo: nichts.
+# Funktion: nachrichtbox
+# Beschreibung: Zeigt eine Benachrichtigungsnachricht in einem Dialogfeld an.
+#
+# Parameter:
+#   $1 (Erforderlich) - Der Titel für das Benachrichtigungsfenster.
+#   $result (Erforderlich) - Der Text der Benachrichtigungsnachricht.
+#
+# Rückgabewert: Es wird nichts zurückgegeben.
+#
+# Aufgaben:
+# 1. Öffnet ein Dialogfeld mit dem angegebenen Titel und zeigt die Benachrichtigungsnachricht an.
+# 2. Verwendet die Parameter "0 0", um die Größe des Dialogfelds automatisch anzupassen und ein Kollabieren zu verhindern.
+# 3. Ruft die Hauptmenü-Funktion 'hauptmenu' auf, um zum Hauptmenü zurückzukehren.
 ##
 function nachrichtbox() {
-	dialog --title "$1" --no-collapse --msgbox "$result" 0 0
-	hauptmenu
+	# Letzte Bearbeitung 29.09.2023
+    # Öffnet ein Dialogfeld mit dem angegebenen Titel und zeigt die Benachrichtigungsnachricht an.
+    dialog --title "$1" --no-collapse --msgbox "$result" 0 0
+
+    # Ruft die Hauptmenü-Funktion auf.
+    hauptmenu
 }
 
 ##
- #* apacheerror.
- # php log Datei anzeigen.
- # 
- #? @param $apache2errorlog.
- #? @return dialog Textanzeige.
- # todo: nichts.
+# Funktion: apacheerror
+# Beschreibung: Zeigt den Inhalt der Apache2-Fehlerprotokolldatei an, falls vorhanden.
+#
+# Parameter: Keine.
+#
+# Rückgabewert: Es wird nichts zurückgegeben.
+#
+# Aufgaben:
+# 1. Überprüft, ob die Apache2-Fehlerprotokolldatei ($apache2errorlog) vorhanden ist.
+# 2. Falls die Datei existiert, öffnet sie in einem Textbearbeitungsdialog mit der Funktion 'textbox'.
+# 3. Falls die Datei nicht gefunden wird, wird eine Warnmeldung mit 'warnbox' angezeigt.
 ##
 function apacheerror() {
-	# $apache2errorlog steht in der Konfigurationsdatei.
-	if [ -f "$apache2errorlog" ]; then
-		textbox "$apache2errorlog"
-	else
-		warnbox "$apache2errorlog File not found!"
-	fi
+	# Letzte Bearbeitung 29.09.2023
+    # Überprüft, ob die Apache2-Fehlerprotokolldatei ($apache2errorlog) vorhanden ist.
+    if [ -f "$apache2errorlog" ]; then
+        # Öffnet die Fehlerprotokolldatei in einem Textbearbeitungsdialog.
+        textbox "$apache2errorlog"
+    else
+        # Zeigt eine Warnung an, wenn die Datei nicht gefunden wurde.
+        warnbox "$apache2errorlog Datei nicht gefunden!"
+    fi
 }
 
 ##
- #* mysqldberror.
- # mysql log Datei anzeigen.
- # 
- #? @param $mysqlerrorlog.
- #? @return dialog Textanzeige.
- # todo: nichts.
+# Funktion: mysqldberror
+# Beschreibung: Zeigt den Inhalt der MySQL-Datenbankfehlerprotokolldatei an, falls vorhanden.
+#
+# Parameter: Keine.
+#
+# Rückgabewert: Es wird nichts zurückgegeben.
+#
+# Aufgaben:
+# 1. Überprüft, ob die MySQL-Datenbankfehlerprotokolldatei ($mysqlerrorlog) vorhanden ist.
+# 2. Falls die Datei existiert, öffnet sie in einem Textbearbeitungsdialog mit der Funktion 'textbox'.
+# 3. Falls die Datei nicht gefunden wird, wird eine Warnmeldung mit 'warnbox' angezeigt.
 ##
 function mysqldberror() {
-	# $mysqlerrorlog steht in der Konfigurationsdatei.
-	if [ -f "$mysqlerrorlog" ]; then
-		textbox "$mysqlerrorlog"
-	else
-		warnbox "$mysqlerrorlog File not found!"
-	fi
+	# Letzte Bearbeitung 29.09.2023
+    # Überprüft, ob die MySQL-Datenbankfehlerprotokolldatei ($mysqlerrorlog) vorhanden ist.
+    if [ -f "$mysqlerrorlog" ]; then
+        # Öffnet die Datenbankfehlerprotokolldatei in einem Textbearbeitungsdialog.
+        textbox "$mysqlerrorlog"
+    else
+        # Zeigt eine Warnung an, wenn die Datei nicht gefunden wurde.
+        warnbox "$mysqlerrorlog Datei nicht gefunden!"
+    fi
 }
 
 ##
- #* mariadberror.
- # mariadb error Datei anzeigen.
- # 
- #? @param $mysqlmariadberor.
- #? @return dialog Textanzeige.
- # todo: nichts.
+# Funktion: mariadberror
+# Beschreibung: Zeigt den Inhalt der MariaDB-/MySQL-Datenbankfehlerprotokolldatei an, falls vorhanden.
+#
+# Parameter: Keine.
+#
+# Rückgabewert: Es wird nichts zurückgegeben.
+#
+# Aufgaben:
+# 1. Überprüft, ob die MariaDB-/MySQL-Datenbankfehlerprotokolldatei ($mysqlmariadberor) vorhanden ist.
+# 2. Falls die Datei existiert, öffnet sie in einem Textbearbeitungsdialog mit der Funktion 'textbox'.
+# 3. Falls die Datei nicht gefunden wird, wird eine Warnmeldung mit 'warnbox' angezeigt.
 ##
 function mariadberror() {
-	# $mysqlmariadberor steht in der Konfigurationsdatei.
-	if [ -f "$mysqlmariadberor" ]; then
-		textbox "$mysqlmariadberor"
-	else
-		warnbox "$mysqlmariadberor File not found!"
-	fi
+	# Letzte Bearbeitung 29.09.2023
+    # Überprüft, ob die MariaDB-/MySQL-Datenbankfehlerprotokolldatei ($mysqlmariadberor) vorhanden ist.
+    if [ -f "$mysqlmariadberor" ]; then
+        # Öffnet die MariaDB-/MySQL-Datenbankfehlerprotokolldatei in einem Textbearbeitungsdialog.
+        textbox "$mysqlmariadberor"
+    else
+        # Zeigt eine Warnung an, wenn die Datei nicht gefunden wurde.
+        warnbox "$mysqlmariadberor Datei nicht gefunden!"
+    fi
 }
 
+
+
 ##
- #* ufwlog.
- # ufw log Datei anzeigen.
- # 
- #? @param $ufwlog.
- #? @return dialog Textanzeige.
- # todo: nichts.
+# Funktion: ufwlog
+# Beschreibung: Zeigt den Inhalt der UFW-Protokolldatei an, falls vorhanden.
+#
+# Parameter: Keine.
+#
+# Rückgabewert: Es wird nichts zurückgegeben.
+#
+# Aufgaben:
+# 1. Überprüft, ob die UFW-Protokolldatei ($ufwlog) vorhanden ist.
+# 2. Falls die Datei existiert, öffnet sie in einem Textbearbeitungsdialog mit der Funktion 'textbox'.
+# 3. Falls die Datei nicht gefunden wird, wird eine Warnmeldung mit 'warnbox' angezeigt.
 ##
 function ufwlog() {
-	# $ufwlog steht in der Konfigurationsdatei.
-	if [ -f "$ufwlog" ]; then
-		textbox "$ufwlog"
-	else
-		warnbox "$ufwlog File not found!"
-	fi
+	# Letzte Bearbeitung 29.09.2023
+    # Überprüft, ob die UFW-Protokolldatei ($ufwlog) vorhanden ist.
+    if [ -f "$ufwlog" ]; then
+        # Öffnet die UFW-Protokolldatei in einem Textbearbeitungsdialog.
+        textbox "$ufwlog"
+    else
+        # Zeigt eine Warnung an, wenn die Datei nicht gefunden wurde.
+        warnbox "$ufwlog Datei nicht gefunden!"
+    fi
 }
 
 ##
- #* authlog.
- # auth log Datei anzeigen.
- # 
- #? @param $authlog.
- #? @return dialog Textanzeige.
- # todo: nichts.
+# Funktion: authlog
+# Beschreibung: Zeigt den Inhalt der Authentifizierungs-Protokolldatei an, falls vorhanden.
+#
+# Parameter: Keine.
+#
+# Rückgabewert: Es wird nichts zurückgegeben.
+#
+# Aufgaben:
+# 1. Überprüft, ob die Authentifizierungs-Protokolldatei ($authlog) vorhanden ist.
+# 2. Falls die Datei existiert, öffnet sie in einem Textbearbeitungsdialog mit der Funktion 'textbox'.
+# 3. Falls die Datei nicht gefunden wird, wird eine Warnmeldung mit 'warnbox' angezeigt.
 ##
 function authlog() {
-	# $authlog steht in der Konfigurationsdatei.
-	if [ -f "$authlog" ]; then
-		textbox "$authlog"
-	else
-		warnbox "$authlog File not found!"
-	fi
+	# Letzte Bearbeitung 29.09.2023
+    # Überprüft, ob die Authentifizierungs-Protokolldatei ($authlog) vorhanden ist.
+    if [ -f "$authlog" ]; then
+        # Öffnet die Authentifizierungs-Protokolldatei in einem Textbearbeitungsdialog.
+        textbox "$authlog"
+    else
+        # Zeigt eine Warnung an, wenn die Datei nicht gefunden wurde.
+        warnbox "$authlog Datei nicht gefunden!"
+    fi
 }
 
 ##
- #* accesslog.
- # access log Datei anzeigen.
- # 
- #? @param $apache2accesslog.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+# Funktion: accesslog
+# Beschreibung: Zeigt den Inhalt des Apache2-Zugriffsprotokolls an, falls vorhanden.
+#
+# Parameter: Keine.
+#
+# Rückgabewert: Es wird nichts zurückgegeben.
+#
+# Aufgaben:
+# 1. Überprüft, ob das Apache2-Zugriffsprotokoll ($apache2accesslog) vorhanden ist.
+# 2. Falls die Datei existiert, öffnet sie in einem Textbearbeitungsdialog mit der Funktion 'textbox'.
+# 3. Falls die Datei nicht gefunden wird, wird eine Warnmeldung mit 'warnbox' angezeigt.
 ##
 function accesslog() {
-	## $apache2accesslog steht in der Konfigurationsdatei.
-	if [ -f "$apache2accesslog" ]; then
-		textbox "$apache2accesslog"
-	else
-		warnbox "$apache2accesslog File not found!"
-	fi
+	# Letzte Bearbeitung 29.09.2023
+    # Überprüft, ob das Apache2-Zugriffsprotokoll ($apache2accesslog) vorhanden ist.
+    if [ -f "$apache2accesslog" ]; then
+        # Öffnet das Apache2-Zugriffsprotokoll in einem Textbearbeitungsdialog.
+        textbox "$apache2accesslog"
+    else
+        # Zeigt eine Warnung an, wenn die Datei nicht gefunden wurde.
+        warnbox "$apache2accesslog Datei nicht gefunden!"
+    fi
 }
 
 ##
- #* fpspeicher.
- # Festplattenspeicher anzeigen.
- # 
- #? @param keine.
- #? @return result.
- # todo: nichts.
+# Funktion: fpspeicher
+# Beschreibung: Ermittelt den verfügbaren Speicherplatz auf dem Dateisystem und zeigt ihn in einer Nachrichtenbox an.
+#
+# Parameter: Keine.
+#
+# Rückgabewert: Es wird nichts zurückgegeben.
+#
+# Aufgaben:
+# 1. Verwendet den Befehl 'df -h', um Informationen über den verfügbaren Speicherplatz abzurufen.
+# 2. Speichert das Ergebnis in der Variablen 'result'.
+# 3. Öffnet eine Nachrichtenbox mit dem Titel "Freier Speicher" und zeigt den gespeicherten Speicherplatz in 'result' an.
 ##
 function fpspeicher() {
-	result=$(df -h)
-	nachrichtbox "Freier Speicher"
+	# Letzte Bearbeitung 29.09.2023
+    result=$(df -h)
+    nachrichtbox "Freier Speicher"
 }
 
 ##
- #* screenlist.
- # Laufende Screens auflisten.
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+# Funktion: screenlist
+# Beschreibung: Zeigt eine Liste aller laufenden Screen-Sitzungen an, entweder mit oder ohne die Verwendung von 'dialog'.
+#
+# Parameter: Keine.
+#
+# Rückgabewert: Es wird nichts zurückgegeben.
+#
+# Aufgaben:
+# 1. Protokolliert eine Informationsmeldung über das Anzeigen aller laufenden Screen-Sitzungen.
+# 2. Überprüft, ob 'dialog' installiert ist.
+# 3. Wenn 'dialog' installiert ist, wird 'screen -ls' verwendet, um die Sitzungen abzurufen, und das Ergebnis wird in 'txtscreenlist' gespeichert.
+#    Danach wird eine Warnmeldung mit 'txtscreenlist' angezeigt.
+# 4. Wenn 'dialog' nicht installiert ist, wird 'screen -ls' verwendet, um die Sitzungen abzurufen, und das Ergebnis wird in 'mynewlist' gespeichert.
+#    Danach wird das Ergebnis protokolliert.
+# 5. Die Funktion kehrt zum Hauptmenü ('hauptmenu') zurück.
 ##
 function screenlist() {
-	log line
-	log info "Alle laufende Screens anzeigen!"
-	# zuerst schauen ob dialog installiert ist
-	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
-		# Alle Aktionen mit dialog
-		txtscreenlist=$(screen -ls)
-		warnbox "$txtscreenlist"
-		hauptmenu
-	else
-		# Alle Aktionen ohne dialog
-		mynewlist=$(screen -ls)
-		log text "$mynewlist"
-		return 0
-	fi
+	# Letzte Bearbeitung 29.09.2023
+    log line
+    log info "Alle laufenden Screens anzeigen!"
+    
+    # Überprüft, ob 'dialog' installiert ist.
+    if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
+        # Alle Aktionen mit 'dialog'.
+        txtscreenlist=$(screen -ls)
+        warnbox "$txtscreenlist"
+        hauptmenu
+    else
+        # Alle Aktionen ohne 'dialog'.
+        mynewlist=$(screen -ls)
+        log text "$mynewlist"
+        return 0
+    fi
 }
 
 ##
- #* screenlistrestart.
- # Alle laufende Screens anzeigen.
- # 
- #? @param keine.
- #? @return $mynewlist.
- # todo: nichts.
+# Funktion: screenlistrestart
+# Beschreibung: Zeigt eine Liste aller laufenden Screen-Sitzungen und protokolliert sie.
+#
+# Parameter: Keine.
+#
+# Rückgabewert: Es wird nichts zurückgegeben.
+#
+# Aufgaben:
+# 1. Protokolliert eine Informationsmeldung über das Anzeigen aller laufenden Screen-Sitzungen.
+# 2. Verwendet 'screen -ls', um die Sitzungen abzurufen, und speichert das Ergebnis in 'mynewlist'.
+# 3. Protokolliert 'mynewlist'.
+# 4. Die Funktion gibt 0 als Rückgabewert zurück.
 ##
 function screenlistrestart() {
-	log line
-	log info "Alle laufende Screens anzeigen!"
-	mynewlist=$(screen -ls)
-	log text "$mynewlist"
-	return 0
+	# Letzte Bearbeitung 29.09.2023
+    log line
+    log info "Alle laufenden Screens anzeigen!"
+    
+    # Verwendet 'screen -ls', um die Sitzungen abzurufen, und speichert das Ergebnis in 'mynewlist'.
+    mynewlist=$(screen -ls)
+    
+    # Protokolliert 'mynewlist'.
+    log text "$mynewlist"
+    
+    # Gibt 0 als Rückgabewert zurück.
+    return 0
 }
+
 
 ###########################################################################
 #* Downloads Funktionsgruppe
 ###########################################################################
 
 ##
- #* downloados.
- # Opensim download.
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+# Funktion: downloados
+# Beschreibung: Ermöglicht das Herunterladen von Betriebssystem-Dateien über einen Menüdialog.
+#
+# Parameter: Keine.
+#
+# Rückgabewert: Es wird nichts zurückgegeben.
+#
+# Aufgaben:
+# 1. Öffnet einen Menüdialog mit dem Titel "Downloads" und zeigt eine Liste von Download-Optionen an.
+# 2. Die Optionen enthalten die Bezeichnung "DownloadX" gefolgt von einem Link (z.B., "Download1: " gefolgt von "$LINK01").
+# 3. Der Benutzer kann eine Option auswählen, um den gewünschten Link zum Herunterladen auszuwählen.
+# 4. Der ausgewählte Link wird mit 'wget' heruntergeladen.
+# 5. Die Funktion kehrt nach dem Herunterladen zum Hauptmenü ('hauptmenu') zurück.
 ##
 function downloados() {
+	# Letzte Bearbeitung 29.09.2023
+	# Öffnet einen Menüdialog und speichert die ausgewählte Option in 'ASSETDELBOXERGEBNIS'.
 	ASSETDELBOXERGEBNIS=$(dialog --menu "Downloads" 30 80 25 \
 		"Download1: " "$LINK01" \
 		"Download2: " "$LINK02" \
@@ -2923,6 +3106,7 @@ function downloados() {
 
 	dialogclear
 
+	# Extrahiert die erste ausgewählte Option (z.B., "Download1: ").
 	DownloadAntwort=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '1p')
 
 	if [[ $DownloadAntwort = "Download1: " ]]; then wget "$LINK01"; fi
@@ -2953,18 +3137,29 @@ function downloados() {
 	if [[ $DownloadAntwort = "Download24: " ]]; then wget "$LINK24"; fi
 	if [[ $DownloadAntwort = "Download25: " ]]; then wget "$LINK25"; fi
 
+	# Kehrt zum Hauptmenü ('hauptmenu') zurück.
 	hauptmenu
 }
 
 ##
- #* radiolist.
- # Radioliste-Linkliste erstellen aus Webseitenlinks.
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+# Funktion: radiolist
+# Beschreibung: Erstellt eine Liste von Internetradio-Streams basierend auf Musikgenres.
+#
+# Parameter: Keine.
+#
+# Rückgabewert: Es wird nichts zurückgegeben.
+#
+# Aufgaben:
+# 1. Löscht die temporäre Datei '/tmp/radio.tmp', falls sie bereits existiert.
+# 2. Erstellt das Verzeichnis '/STARTVERZEICHNIS/radiolist', falls es nicht existiert.
+# 3. Durchläuft eine Liste von Musikgenres, die in der Variable 'listVar' gespeichert sind.
+# 4. Ruft eine Liste von Internetradio-Streams für jedes Genre von 'https://dir.xiph.org/genres/' ab.
+# 5. Filtert unnötige Zeilen aus der abgerufenen Liste.
+# 6. Erstellt eine Textdatei pro Genre im Verzeichnis '/STARTVERZEICHNIS/radiolist' und speichert die Stream-Informationen darin.
+# 7. Protokolliert die Erstellung jeder Liste.
 ##
 function radiolist() {
+	# Letzte Bearbeitung 29.09.2023
     rm /tmp/radio.tmp
     mkdir -p /"$STARTVERZEICHNIS"/radiolist
     for genre in $listVar; do        
@@ -3010,16 +3205,26 @@ done
 }
 
 ##
- #* mysqlbackup.
- # Funktion zum sichern von mySQL Datensaetzen: 
- # mysqlbackup "username" "password" "databasename"
- # 
- #? @param username password databasename.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+# Funktion: mysqlbackup
+# Beschreibung: Erstellt ein Backup einer MySQL-Datenbank und kann optional das Backup komprimieren.
+#
+# Parameter:
+#   1. username: Der MySQL-Benutzername für die Datenbank.
+#   2. password: Das MySQL-Passwort für den angegebenen Benutzer.
+#   3. databasename: Der Name der zu sichernden MySQL-Datenbank.
+#   4. dbcompress: Optional, ein Flag zum Aktivieren der Komprimierung (-c) des Backups.
+#
+# Rückgabewert: Die Funktion gibt keinen expliziten Rückgabewert zurück.
+#
+# Aufgaben:
+# 1. Erstellt das Verzeichnis '/$STARTVERZEICHNIS/backup', falls es nicht existiert, oder gibt eine Meldung aus, wenn es bereits vorhanden ist.
+# 2. Wechselt in das Verzeichnis '/$STARTVERZEICHNIS/backup' oder gibt einen Fehler zurück, wenn dies nicht möglich ist.
+# 3. Überprüft, ob die Option '-c' (Komprimierung) angegeben wurde.
+# 4. Falls keine Komprimierung angefordert ist, führt die Funktion 'mysqldump' aus, um ein MySQL-Datenbankbackup zu erstellen und speichert es in einer .sql-Datei.
+# 5. Falls die Komprimierung angefordert ist, führt die Funktion 'mysqldump' aus, leitet die Ausgabe an 'zip' weiter und erstellt eine .zip-Datei für das Backup.
 ##
 function mysqlbackup() {
-	# bearbeitung noetig!
+	# bearbeitung noetig! # Letzte Bearbeitung 29.09.2023
 	username=$1
 	password=$2
 	databasename=$3
@@ -3040,32 +3245,51 @@ function mysqlbackup() {
 ###########################################################################
 
 ##
- #* passgen.
- # Passwortgenerator.
- # passgen Passwortlaenge.
- #
- #? @param $PASSWORTLAENGE.
- #? @return $NEWPASSWD.
- # todo: nichts.
+# Funktion: passgen
+# Beschreibung: Generiert ein zufälliges Passwort mit der angegebenen Länge und gibt es auf der Standardausgabe aus.
+#
+# Parameter:
+#   1. PASSWORTLAENGE: Die gewünschte Länge des generierten Passworts.
+#
+# Rückgabewert: Das generierte Passwort wird auf der Standardausgabe ausgegeben.
+#
+# Aufgaben:
+# 1. Extrahiert die gewünschte Passwortlänge aus dem ersten Parameter 'PASSWORTLAENGE'.
+# 2. Verwendet '/dev/urandom' und den Befehl 'tr' zusammen mit einer Zeichenklasse, um zufällige Zeichen zu generieren.
+# 3. Begrenzt die Anzahl der generierten Zeichen auf die angegebene Passwortlänge.
+# 4. Gibt das generierte Passwort auf der Standardausgabe aus.
 ##
 function passgen() {
-		# Alle Aktionen ohne dialog
+	# Letzte Bearbeitung 29.09.2023
+    # Extrahiert die gewünschte Passwortlänge aus dem ersten Parameter 'PASSWORTLAENGE'.
 		PASSWORTLAENGE=$1
+		# Verwendet '/dev/urandom' und den Befehl 'tr' zusammen mit einer Zeichenklasse, um zufällige Zeichen zu generieren.
 		NEWPASSWD=$(tr -dc 'A-Za-z0-9!"#$%&'\''()*+,-./:;<=>?@[\]^_`{|}~' </dev/urandom | head -c "$PASSWORTLAENGE")
+		# Gibt das generierte Passwort auf der Standardausgabe aus.
 		echo "$NEWPASSWD"
-		#unset PASSWD
-		return $NEWPASSWD;
 }
 
 ##
- #* passwdgenerator.
- # Passwortgenerator mit dialog.
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+# Funktion: passwdgenerator
+# Beschreibung: Generiert ein zufälliges Passwort mit der angegebenen Stärke und gibt es auf der Standardausgabe aus.
+#
+# Parameter:
+#   - Mit 'dialog' (falls verfügbar):
+#     - STARK: Die gewünschte Stärke des generierten Passworts (Länge).
+#   - Ohne 'dialog':
+#     - 1. STARK: Die gewünschte Stärke des generierten Passworts (Länge).
+#
+# Rückgabewert: Das generierte Passwort wird auf der Standardausgabe ausgegeben.
+#
+# Aufgaben:
+# 1. Überprüft, ob das Dialog-Tool 'dialog' installiert ist. Wenn ja, wird die Passwortstärke mithilfe eines Dialogs abgefragt.
+# 2. Falls 'dialog' nicht verfügbar ist oder die Passwortstärke als Argument übergeben wurde, wird die Stärke des Passworts in 'STARK' gespeichert.
+# 3. Verwendet '/dev/urandom' und den Befehl 'tr' zusammen mit einer Zeichenklasse, um zufällige Zeichen zu generieren.
+# 4. Begrenzt die Anzahl der generierten Zeichen auf die angegebene Passwortstärke.
+# 5. Gibt das generierte Passwort auf der Standardausgabe aus.
 ##
 function passwdgenerator() {
+	# Letzte Bearbeitung 29.09.2023
 	### dialog Aktionen
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
@@ -3095,59 +3319,91 @@ function passwdgenerator() {
 ###########################################################################
 
 ##
- #* dalaiinstallinfos
- # Versionsnummern benötigter Programme anzeigen.
- # 
- #? @param keine.
- #? @return Versionsnummern.
- # todo: nichts.
+# Funktion: dalaiinstallinfos
+# Beschreibung: Gibt Informationen zu den installierten Versionen von Python, JRE (Java Runtime Environment) und Node.js aus.
+#
+# Parameter: Keine.
+#
+# Rückgabewert: Es wird nichts zurückgegeben.
+#
+# Aufgaben:
+# 1. Gibt die installierte Python-Version mithilfe von 'python3 -V' aus.
+# 2. Gibt die installierte JRE-Version (Java Runtime Environment) mithilfe von 'java -version' aus.
+# 3. Gibt die installierte Node.js-Version mithilfe von 'node -v' aus.
 ##
 function dalaiinstallinfos() {
+	# Letzte Bearbeitung 29.09.2023
+    # Gibt die installierte Python-Version aus.
     echo "Python Version:"
     python3 -V
 
-    echo "jre Version:"
+    # Gibt die installierte JRE-Version (Java Runtime Environment) aus.
+    echo "JRE Version:"
     java -version
-    
-    echo "Node Version:"
+
+    # Gibt die installierte Node.js-Version aus.
+    echo "Node.js Version:"
     node -v
 }
 
 ##
- #* dalaiserverinstall
- # Benötigte Programme installieren.
- # 
- #? @param keine.
- #? @return nichts.
- # todo: nichts.
+# Funktion: dalaiserverinstall
+# Beschreibung: Installiert erforderliche Softwarekomponenten für den Dalai-Server.
+#
+# Parameter: Keine.
+#
+# Rückgabewert: Es wird nichts zurückgegeben.
+#
+# Aufgaben:
+# 1. Installiert Python 3.10 mithilfe von 'sudo apt install python3.10'.
+# 2. Installiert das Java Runtime Environment (JRE) mithilfe von 'sudo apt install default-jre'.
+# 3. Installiert Node.js 18 mithilfe von 'curl' und 'sudo apt-get install'.
+# 4. Führt 'apt update' aus, um die Paketdatenbank zu aktualisieren.
+# 5. Führt 'apt upgrade' aus, um alle installierten Pakete zu aktualisieren.
 ##
 function dalaiserverinstall() {
-    # Python 3.10 installieren
+	# Letzte Bearbeitung 29.09.2023
+    # Installiert Python 3.10.
     echo "Python 3.10 installieren"
     sudo apt install python3.10
 
-    # Ohne jre lässt sich kein npm installieren.
-    echo "Ohne jre lässt sich kein npm installieren"
+    # Installiert das Java Runtime Environment (JRE), das für 'npm' erforderlich ist.
+    echo "Ohne JRE lässt sich kein npm installieren"
     sudo apt install default-jre
 
-    # nodejs 18 installieren (19 funktioniert nicht)
-    echo "Nodejs installieren"
+    # Installiert Node.js 18.
+    echo "Node.js installieren"
     curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash - &&\
     sudo apt-get install -y nodejs
 
+    # Aktualisiert die Paketdatenbank.
     apt update
+
+    # Aktualisiert alle installierten Pakete.
     apt upgrade
 }
 
 ##
- #* dalaimodelinstall
- # Installation von Modellen für llama.
- # 
- #? @param keine.
- #? @return Versionsnummern.
- # todo: nichts.
+# Funktion: dalaimodelinstall
+# Beschreibung: Installiert ein Modell für Dalai basierend auf der angegebenen Modellversion (MKIVERSION).
+#
+# Parameter:
+#   1. MKIVERSION (optional): Die Modellversion, die installiert werden soll. Standardmäßig wird "7B" verwendet, wenn keine Version angegeben wird.
+#
+# Rückgabewert: Es wird nichts zurückgegeben.
+#
+# Aufgaben:
+# 1. Extrahiert die Modellversion aus dem ersten Parameter 'MKIVERSION' oder verwendet "7B" als Standardwert.
+# 2. Überprüft, ob das Verzeichnis '/$mdalaihome/' bereits existiert. Falls nicht, wird es erstellt.
+# 3. Je nach ausgewählter Modellversion werden die entsprechenden Dateien für das Modell heruntergeladen und in das entsprechende Verzeichnis unter '/$mdalaihome/' abgelegt.
+#
+# Verfügbare Modellversionen:
+# - 30B: https://huggingface.co/guy1267/alpaca30B/tree/main
+# - 13B: https://huggingface.co/guy1267/alpaca13B/tree/main
+# - 7B: https://huggingface.co/guy1267/alpaca7B/tree/main
 ##
 function dalaimodelinstall() {
+	# Letzte Bearbeitung 29.09.2023
     MKIVERSION=$1
 	mdalaihome="home/models/llama/models"
 	mdalaimodells="dalai/llama"
@@ -3188,14 +3444,21 @@ function dalaimodelinstall() {
 }
 
 ##
- #* dalaiinstall
- # Dalai und Modell installieren default ist 7B.
- # 
- #? @param keine.
- #? @return nichts.
- # todo: nichts.
+# Funktion: dalaiinstall
+# Beschreibung: Installiert den Dalai-Server mit der angegebenen Modellversion (KIVERSION) und legt das Dalai-Modellverzeichnis fest.
+#
+# Parameter:
+#   1. KIVERSION (optional): Die Modellversion, die für Dalai verwendet werden soll. Standardmäßig wird "7B" verwendet, wenn keine Version angegeben wird.
+#
+# Rückgabewert: Es wird nichts zurückgegeben.
+#
+# Aufgaben:
+# 1. Extrahiert die Modellversion aus dem ersten Parameter 'KIVERSION' oder verwendet "7B" als Standardwert.
+# 2. Überprüft, ob das Verzeichnis '/$dalaihome/$dalaimodells/' bereits existiert. Falls nicht, wird es erstellt.
+# 3. Führt die Installation des Dalai-Servers mit der ausgewählten Modellversion und dem Modellverzeichnis '/home/dalai' durch.
 ##
 function dalaiinstall() {
+	# Letzte Bearbeitung 29.09.2023
     KIVERSION=$1
 	dalaihome="home"
 	dalaimodells="dalai"
@@ -3213,114 +3476,145 @@ function dalaiinstall() {
 	fi
 
 	echo "Dalai installieren"
-    # --home - neues Modellverzeichnis setzen.
-	### llama
-	#npx dalai llama install "$KIVERSION" --home /$dalaihome/$dalaimodells
-	# npx dalai llama install 13B --home /home/models
 
-	### alpaca
+	# Führt die Installation des Dalai-Servers mit der ausgewählten Modellversion und dem Modellverzeichnis '/home/dalai' durch.
 	npx dalai alpaca install 7B --home /home/dalai
-
-
 }
 
 ##
- #* dalaisearch
- # wo sind die installationen.
- # 
- #? @param keine.
- #? @return nichts.
- # todo: nichts.
+# Funktion: dalaisearch
+# Beschreibung: Sucht nach der Verfügbarkeit von Node.js und npm sowie dem Dalai-Tool im System.
+#
+# Parameter: Keine.
+#
+# Rückgabewert: Es wird nichts zurückgegeben.
+#
+# Aufgaben:
+# 1. Verwendet den Befehl 'which' zum Suchen nach der Verfügbarkeit von 'node' im System und gibt den Pfad aus, falls gefunden.
+# 2. Verwendet den Befehl 'which' zum Suchen nach der Verfügbarkeit von 'nodejs' im System und gibt den Pfad aus, falls gefunden.
+# 3. Verwendet den Befehl 'which' zum Suchen nach der Verfügbarkeit von 'npm' im System und gibt den Pfad aus, falls gefunden.
+# 4. Verwendet den Befehl 'which' zum Suchen nach der Verfügbarkeit von 'dalai' im System und gibt den Pfad aus, falls gefunden.
 ##
 function dalaisearch() {
-	which node
-	#/usr/bin/node
+	# Letzte Bearbeitung 29.09.2023
+    # Sucht nach der Verfügbarkeit von 'node' im System und gibt den Pfad aus, falls gefunden.
+    which node
 
-	which nodejs
-	#
+    # Sucht nach der Verfügbarkeit von 'nodejs' im System und gibt den Pfad aus, falls gefunden.
+    which nodejs
 
-	which npm
-	#/usr/bin/npm
+    # Sucht nach der Verfügbarkeit von 'npm' im System und gibt den Pfad aus, falls gefunden.
+    which npm
 
-	which dalai
-	#
-
+    # Sucht nach der Verfügbarkeit von 'dalai' im System und gibt den Pfad aus, falls gefunden.
+    which dalai
 }
 
 ##
- #* dalaiuninstall
- # Dalai und Modell installieren default ist 7B.
- # 
- #? @param keine.
- #? @return nichts.
- # todo: nichts.
+# Funktion: dalaiuninstall
+# Beschreibung: Deinstalliert Dalai-Modelle für die angegebenen Modellversionen.
+#
+# Parameter: Keine.
+#
+# Rückgabewert: Es wird nichts zurückgegeben.
+#
+# Aufgaben:
+# 1. Verwendet 'npx dalai llama uninstall' zum Deinstallieren der Dalai-Modelle der Modellversionen 7B, 13B und 30B für Llama.
+# 2. Verwendet 'npx dalai alpaca uninstall' zum Deinstallieren der Dalai-Modelle der Modellversionen 7B, 13B und 30B für Alpaca.
 ##
 function dalaiuninstall() {
-	#npm uninstall package-name
-	npx dalai llama uninstall 7B 13B 30B
-	npx dalai alpaca uninstall 7B 13B 30B
+	# Letzte Bearbeitung 29.09.2023
+    # Deinstalliert Dalai-Modelle für die angegebenen Modellversionen (7B, 13B, 30B) für Llama.
+    npx dalai llama uninstall 7B 13B 30B
+
+    # Deinstalliert Dalai-Modelle für die angegebenen Modellversionen (7B, 13B, 30B) für Alpaca.
+    npx dalai alpaca uninstall 7B 13B 30B
 }
 
 ##
- #* dalaistart
- # Der eigentliche start von Dalai Server.
- # 
- #? @param keine.
- #? @return nichts.
- # todo: nichts.
+# Funktion: dalaistart
+# Beschreibung: Startet den Dalai-Server und gibt die Serveradresse aus.
+#
+# Parameter: Keine.
+#
+# Rückgabewert: Es wird nichts zurückgegeben.
+#
+# Aufgaben:
+# 1. Legt die Variablen 'dalaihome' und 'dalaimodells' fest, die auf die Pfade für das Dalai-Modellverzeichnis verweisen.
+# 2. Gibt eine Meldung aus, dass die Künstliche Intelligenz (KI) gestartet wird.
+# 3. Startet den Dalai-Server mithilfe von 'npx dalai serve' im Hintergrund unter Verwendung des Modellverzeichnisses '/home/models'.
+# 4. Verwendet 'screen' zur Hintergrundausführung, um den Serverprozess laufen zu lassen.
+# 5. Listet die aktiven 'screen'-Sitzungen auf, um sicherzustellen, dass der Server gestartet wurde.
+# 6. Gibt die Serveradresse aus, auf der der Dalai-Server läuft (normalerweise auf Port 3000).
 ##
 function dalaistart() {
-	dalaihome="home"
-	dalaimodells="models"
+	# Letzte Bearbeitung 29.09.2023
+    dalaihome="home"
+    dalaimodells="models"
 
     echo "KI starten"
-    #Der eigentliche start: npx dalai serve
-    # --home - Modellverzeichnis muss beim start mit angegeben werden.
-	screen -fa -S "KI" -d -U -m npx dalai serve --home /home/models
-	# ohne screen: npx dalai serve --home /home/models
-	screen -ls
-	echo " Der Dalai Server läuft auf der Adresse: ${AKTUELLEIP}:3000"
+    
+    # Startet den Dalai-Server im Hintergrund unter Verwendung des Modellverzeichnisses '/home/models'.
+    screen -fa -S "KI" -d -U -m npx dalai serve --home /home/models
+    
+    # Listet die aktiven 'screen'-Sitzungen auf, um sicherzustellen, dass der Server gestartet wurde.
+    screen -ls
+    
+    # Gibt die Serveradresse aus, auf der der Dalai-Server läuft (normalerweise auf Port 3000).
+    echo "Der Dalai Server läuft auf der Adresse: ${AKTUELLEIP}:3000"
 }
 
 ##
- #* dalaistop
- # Dalai killen.
- # 
- #? @param keine.
- #? @return nichts.
- # todo: nichts.
+# Funktion: dalaistop
+# Beschreibung: Stoppt den laufenden Dalai-Server und zeigt die aktiven 'screen'-Sitzungen an.
+#
+# Parameter: Keine.
+#
+# Rückgabewert: Es wird nichts zurückgegeben.
+#
+# Aufgaben:
+# 1. Gibt eine Meldung aus, dass die Künstliche Intelligenz (KI) gestoppt wird.
+# 2. Verwendet 'screen' zum Beenden der laufenden 'KI'-Sitzung, die den Dalai-Server ausführt.
+# 3. Listet die aktiven 'screen'-Sitzungen auf, um zu überprüfen, ob die KI-Sitzung erfolgreich gestoppt wurde.
 ##
 function dalaistop() {
+	# Letzte Bearbeitung 29.09.2023
     echo "KI stoppen"
-	screen -X -S KI kill
-	screen -ls
+    
+    # Verwendet 'screen' zum Beenden der laufenden 'KI'-Sitzung, die den Dalai-Server ausführt.
+    screen -X -S KI kill
+    
+    # Listet die aktiven 'screen'-Sitzungen auf, um zu überprüfen, ob die KI-Sitzung erfolgreich gestoppt wurde.
+    screen -ls
 }
 
 ##
- #* dalaiupgrade
- # Dalai aktualisieren.
- # 
- #? @param keine.
- #? @return nichts.
- # todo: Schauen ob es ein upgrade gibt und automatisch diese Nummer verwenden.
+# Funktion: dalaiupgrade
+# Beschreibung: Aktualisiert den Dalai-Server auf die angegebene Version oder die Standardversion.
+#
+# Parameter:
+#   1. dalaiversion (optional): Die Version von Dalai, die installiert werden soll. Standardmäßig wird "0.3.1" verwendet, wenn keine Version angegeben wird.
+#
+# Rückgabewert: Es wird nichts zurückgegeben.
+#
+# Aufgaben:
+# 1. Überprüft, ob ein Upgrade für Dalai verfügbar ist, indem die Website https://www.npmjs.com/package/dalai überprüft wird.
+# 2. Legt die Standardversion von Dalai auf "0.3.1" fest, falls keine Version im Parameter angegeben wurde.
+# 3. Führt die Aktualisierung von Dalai auf die angegebene Version oder die Standardversion durch, indem 'npx dalai@$dalaiversion setup' ausgeführt wird.
 ##
 function dalaiupgrade() {
+	# Letzte Bearbeitung 29.09.2023
+    # Überprüft, ob ein Upgrade für Dalai verfügbar ist, indem die Website https://www.npmjs.com/package/dalai überprüft wird.
 
-	# Schauen ob es ein upgrade gibt.
-	# https://www.npmjs.com/package/dalai
-
-	# Dalai Server Version 0.3.1
-	# License MIT
-
+    # Standardversion von Dalai (falls keine Version im Parameter angegeben wurde).
 	dalaiversion=$1
 
 	if [ "$dalaiversion" = "" ]; then dalaiversion="0.3.1"; fi
 	
     echo "Dalai aktualisieren"
+	# Führt die Aktualisierung von Dalai auf die angegebene Version oder die Standardversion durch.
 	npx dalai@$dalaiversion setup
 }
-
-
 
 ###########################################################################
 #* OpenSimulator Kommandos-Funktionen Funktionsgruppe
