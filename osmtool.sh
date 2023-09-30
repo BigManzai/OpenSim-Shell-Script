@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ###########################################################################
-#* Informationen Funktionsgruppe
+#* Informationen
 ###########################################################################
 
 # ? opensimMULTITOOL Copyright (c) 2021 2023 BigManzai Manfred Zainhofer
@@ -20,7 +20,7 @@
 # ! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 # ! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-# * Status 29.09.2023 419 Funktionen.
+# * Status 30.09.2023 419 Funktionen.
 
 	# # Installieren sie bitte: #* Visual Studio Code
 	#* dazu die Plugins:
@@ -31,7 +31,7 @@
 	# todo: eine Menge warten wir´s ab.
 
 ###########################################################################
-#* Einstellungen Funktionsgruppe
+#* Einstellungen
 ###########################################################################
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
@@ -39,18 +39,26 @@ VERSION="V0.9.3.0.1006" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 ##
-	#* Funktion: isroot - Überprüft, ob der Benutzer root-Rechte hat.
-	# Diese Funktion überprüft den effektiven Benutzer (EUID) und gibt eine entsprechende Meldung aus.
+	#* Funktion: isroot
 	# 
-	#? @param Keine Parameter erforderlich.
-	#? @return - 0: Wenn der Benutzer root-Rechte hat.
-	#? @return - 1: Wenn der Benutzer keine root-Rechte hat.
-	# todo: nichts.
+	#? Beschreibung:
+	# Diese Funktion überprüft, ob der aktuelle Benutzer root-Rechte (Administratorrechte) hat.
+	# Sie vergleicht den effektiven Benutzer (EUID) mit 0, wobei 0 normalerweise auf den root-Benutzer hinweist.
+	# Wenn der Benutzer keine root-Rechte hat, wird eine Meldung ausgegeben und die Funktion gibt den Wert 1 zurück.
+	# Andernfalls wird eine Bestätigungsmeldung ausgegeben und die Funktion gibt den Wert 0 zurück.
+	#
+	#? Parameter:
+	# Diese Funktion erwartet keine Parameter.
+	#
+	#? Rückgabewert:
+	# - Erfolgreich: Wenn der Benutzer root-Rechte hat, gibt die Funktion den Wert 0 zurück.
+	# - Fehler: Wenn der Benutzer keine root-Rechte hat, gibt die Funktion den Wert 1 zurück.
+	#
+	#? Beispielaufruf:
+	# isroot
 ##
 function isroot() {
-	# Letzte Bearbeitung 26.09.2023
-	# Überprüft, ob der Benutzer root ist.
-	# Checks whether the user is root.
+	# Letzte Bearbeitung 30.09.2023
 	if [ "$EUID" -ne 0 ]; then
 		echo "Sie haben keine root Rechte!" >&2
 		return 1
@@ -67,7 +75,6 @@ function isroot() {
 	# Anmeldebenutzernamen übereinstimmt. Wenn die Bedingungen erfüllt sind,
 	# wird eine Erfolgsmeldung angezeigt, andernfalls wird eine Fehlermeldung
 	# ausgegeben, und das Skript wird beendet.
-	# 
 	#? @param Keine Parameter erforderlich.
 	#? @return    0 - Erfolg: Der aktuelle Benutzer stimmt mit dem angegebenen Benutzernamen
 	#? @return        überein, und der Anmeldebenutzername stimmt ebenfalls überein.
@@ -98,7 +105,6 @@ function benutzer() {
 	# Diese Funktion überprüft, ob das OpenSim-Shell-Skript auf GitHub aktualisiert wurde
 	# und lädt es bei Bedarf herunter. Sie vergleicht die aktuelle installierte Version
 	# mit der neuesten verfügbaren Version in einem GitHub-Repository.
-	# 
 	#? @param keine.
 	#? @return nichts wird zurueckgegeben.
 	# todo: nichts.
@@ -230,15 +236,23 @@ SCRIPTPATH=$(cd "$(dirname "$0")" && pwd)
 ###
 
 ##
-	#* osmtranslateinstall
-	# osmtranslateinstall - Diese Funktion installiert das Tool 'translate-shell' auf Ihrem Ubuntu-System.
-	# 
-	#? @param keine.
-	#? @return nichts wird zurueckgegeben.
-	# todo: nichts.
+	#* Funktion: osmtranslateinstall
+	#? Beschreibung:
+	# Diese Funktion installiert das Tool 'translate-shell', das für Übersetzungen in der Befehlszeile verwendet wird.
+	# Sie überprüft zunächst, ob der Benutzer Root-Rechte hat, um 'apt' auszuführen. Wenn nicht, gibt sie eine Fehlermeldung aus und gibt den Wert 1 zurück.
+	# Dann überprüft sie, ob 'translate-shell' bereits installiert ist, und gibt eine entsprechende Nachricht aus.
+	# Wenn 'translate-shell' nicht installiert ist, führt die Funktion 'apt update' und 'apt install' aus, um 'translate-shell' zu installieren.
+	# Sie überprüft den Erfolg der Installation und gibt eine entsprechende Nachricht aus.
+	#? Parameter:
+	# Diese Funktion erwartet keine Parameter.
+	#? Rückgabewert:
+	# - Erfolgreich: Wenn 'translate-shell' erfolgreich installiert wurde, gibt die Funktion den Wert 0 zurück.
+	# - Fehler: Wenn der Benutzer keine Root-Rechte hat, 'translate-shell' bereits installiert ist oder die Installation fehlschlägt, gibt die Funktion den Wert 1 zurück.
+	#? Beispielaufruf:
+	# osmtranslateinstall
 ##
 function osmtranslateinstall() {
-	# Letzte Bearbeitung 26.09.2023
+	# Letzte Bearbeitung 30.09.2023
     echo "Ich installiere nun das Tool translate-shell."
 
     # Prüfen Sie, ob der Benutzer Root-Rechte hat, um 'apt' auszuführen.
@@ -272,7 +286,6 @@ function osmtranslateinstall() {
 	# Diese Funktion verwendet den OSM Translator, um Text aus einer
 	# beliebigen Quellsprache in die Zielsprache zu übersetzen. Der OSM Translator-Dienst
 	# muss für die Verwendung aktiviert sein.
-	# 
 	#? @param Parameter:
 	#? @param   "Text zum Übersetzen" - Der Text, der übersetzt werden soll.
 	#? @param Um den OSM Translator-Dienst zu aktivieren, setzen Sie die Umgebungsvariable OSMTRANSLATOR auf "ON".
@@ -324,12 +337,10 @@ function osmtranslate2() {
 	#* osmtranslatedirekt - Übersetzt Text direkt mithilfe des OSM Translator-Dienstes
 	# Diese Funktion verwendet den OSM Translator, um Text aus einer beliebigen Quellsprache in eine 
 	# Zielsprache zu übersetzen. Der OSM Translator-Dienst muss für die Verwendung aktiviert sein.
-	#
 	#? @param Parameter:
 	#? @param   "Text zum Übersetzen" - Der Text, der übersetzt werden soll.
 	# Um den OSM Translator-Dienst zu aktivieren, setzen Sie die Umgebungsvariable OSMTRANSLATOR auf "ON".
 	# Wenn OSMTRANSLATOR auf "OFF" gesetzt ist, wird der Text nicht übersetzt.
-	#
 	# Beispielaufruf:
 	#   OSMTRANSLATOR="ON"  # Aktiviert den OSM Translator-Dienst
 	#   osmtranslatedirekt "Hello, world!"  # Übersetzt den Text ins Ziel
@@ -373,10 +384,8 @@ function osmtranslatedirekt2() {
 	# deaktiviert ist (OSMTRANSLATOR auf "OFF" gesetzt), wird der Text unverändert kopiert.
 	#? @param Parameter:
 	#? @param   "Text zum Kopieren" - Der Text, der kopiert werden soll.
-	#
 	# Um den OSM Translator-Dienst zu aktivieren, setzen Sie die Umgebungsvariable OSMTRANSLATOR auf "ON".
 	# Wenn OSMTRANSLATOR auf "OFF" gesetzt ist, wird der Text nicht übersetzt und direkt kopiert.
-	#
 	# Beispielaufruf:
 	#   OSMTRANSLATOR="ON"  # Aktiviert den OSM Translator-Dienst
 	#   osmnotranslate "Hello, world!"  # Kopiert den Text
@@ -420,16 +429,13 @@ function janein() {
 	# Diese Funktion akzeptiert zwei Parameter:
 	# 1. logtype: Der Typ des Log-Eintrags (line, rohtext, text, debug, info, warn, error).
 	# 2. text: Der Text, der geloggt werden soll.
-	#
 	#? Beispielaufrufe:
 	# log text "Das ist eine Protokollmeldung."
 	# log error "Ein Fehler ist aufgetreten!"
-	#
 	#? Optionale Umgebungsvariablen:
 	# - LOGWRITE: Wenn LOGWRITE auf "yes" gesetzt ist, wird der Log-Eintrag in eine Log-Datei geschrieben.
 	# - STARTVERZEICHNIS: Das Verzeichnis, in dem die Log-Datei erstellt werden soll.
 	# - logfilename: Der Name der Log-Datei.
-	#
 	# Hinweise:
 	# - Die Farben für die Log-Ausgabe werden mit tput festgelegt, um die Anzeige zu verbessern.
 	# - Das Datum und die Uhrzeit werden zu jedem Log-Eintrag hinzugefügt.
@@ -488,7 +494,6 @@ function log() {
 	# Die Konfiguration enthält Pfade zu verschiedenen Verzeichnissen für die OpenSim-Installation,
 	# Einstellungen für Skript-Quellen und Übersetzungsmodi.
 	# Sie können diese Konfigurationsdatei später verwenden, um opensimTOOL einzurichten.
-	#
 	#? Beispiele:
 	#   osmtoolconfig "/opensim/start" "/opensim/robust" "/opensim/money" "/opensim/main" "/opensim/config" "/opensim/osconfig.ini"
 	#   osmtoolconfig help
@@ -711,13 +716,11 @@ function osmtoolconfig() {
 	# Diese Funktion führt eine Benutzerabfrage durch, um Einstellungen für die opensimTOOL-Konfiguration zu sammeln.
 	# Anschließend wird die Konfigurationsdatei erstellt.
 	# Usage: osmtoolconfigabfrage
-	#
 	#? Diese Funktion erfasst die folgenden Einstellungen:
 	# - Aktivierung der automatischen Übersetzung (ON oder OFF)
 	# - Auswahl der Sprache (zum Beispiel: de)
 	# - Verzeichnisse für Start, Robust, Money, OpenSim und Konfiguration
 	# - Verwendung von dotnet 6 (yes oder no)
-	#
 	#? Beispielaufruf:
 	# osmtoolconfigabfrage
 ##
@@ -897,7 +900,6 @@ KOMMANDO=$1
 	#* dummyvar, shellcheck disable=SC2034 umgehen.
 	# Shell-Check ueberlisten wegen der Konfigurationsdatei, 
 	# hat sonst keinerlei Funktion und wird auch nicht aufgerufen.
-	# 
 	#? @param keine.
 	#? @return nichts wird zurueckgegeben.
 	# todo: nichts.
@@ -972,19 +974,14 @@ function xhelp2() {
 ##
 	#* skriptversion - Zeigt die Versionsnummer des opensimMULTITOOL-Skripts an.
 	# Diese Funktion gibt die Versionsnummer des opensimMULTITOOL-Skripts aus.
-	#
 	#? Verwendung:
 	#   skriptversion
-	#
 	#? Argumente:
 	#   Keine.
-	#
 	#? Optionen:
 	#   -h, --help: Zeigt die Hilfe für die Funktion an.
-	#
 	#? Beispiele:
 	#   skriptversion  # Zeigt die Versionsnummer des opensimMULTITOOL-Skripts an.
-	#
 	#? Rückgabewerte:
 	#   0 - Die Funktion wurde erfolgreich ausgeführt.
 	#   1 - Die Funktion wurde mit ungültigen Argumenten aufgerufen.
@@ -1393,7 +1390,7 @@ function letterdel() {
 	#? Parameter:
 	# $1 - Die Zeichenkette, aus der Zeichen oder Muster entfernt werden sollen.
 	# $2 - Das Zeichen oder Muster, das aus der Zeichenkette entfernt werden soll.
-	# Rückgabewert:
+	#? Rückgabewert:
 	# Die bereinigte Zeichenkette wird auf die Standardausgabe ausgegeben.
 	#? Beispielaufruf:
 	# letterdel "Hallo, Welt!" "[aAbBcCdD]"
@@ -1495,13 +1492,11 @@ function vartest2() {
 
 ##
 	#* laeuftos - Diese Funktion überprüft, ob ein Prozess mit dem angegebenen Namen läuft.
-	#
 	#? Verwendung: laeuftos PROZESSNAME
 	#   - PROZESSNAME: Der Name des Prozesses, der überprüft werden soll.
 	#
 	# Diese Funktion überprüft, ob ein Prozess mit dem angegebenen PROZESSNAME bereits läuft.
 	# Es wird sowohl nach einem Prozess mit .dotnet 6 als auch mit .NET 4.8 gesucht.
-	#
 	#? Rückgabewerte:
 	#   - "info": Der Prozess läuft bereits (mit .dotnet 6 oder .NET 4.8).
 	#   - "warn": Der Prozess läuft nicht (mit .dotnet 6 oder .NET 4.8).
@@ -1527,13 +1522,10 @@ function laeuftos() {
 
 ##
 	#* trim_all - Diese Funktion entfernt führende und nachfolgende Leerzeichen aus allen Argumenten und gibt das bereinigte Ergebnis zurück.
-	#
 	#? Verwendung: trim_all [ARGUMENT1] [ARGUMENT2] ...
 	#   - ARGUMENT1, ARGUMENT2, ...: Die Argumente, aus denen führende und nachfolgende Leerzeichen entfernt werden sollen.
-	#
 	# Diese Funktion entfernt führende und nachfolgende Leerzeichen aus allen angegebenen Argumenten und gibt die bereinigten Ergebnisse zurück,
 	# wobei jedes bereinigte Argument in einer separaten Zeile ausgegeben wird.
-	#
 	#? Beispiel:
 	#   trim_all "   Hallo  " "  Welt  "
 	#? Ausgabe:
@@ -1558,16 +1550,12 @@ trim_all() {
 
 ##
 	#* iinstall - Diese Funktion überprüft, ob ein Paket bereits installiert ist, und installiert es andernfalls.
-	#
 	#? Verwendung: iinstall PAKETNAME
 	#   - PAKETNAME: Der Name des Pakets, das installiert werden soll.
-	#
 	# Diese Funktion überprüft, ob das angegebene PAKETNAME bereits installiert ist. Wenn es bereits installiert ist, wird eine Meldung ausgegeben.
 	# Andernfalls wird versucht, das Paket mit sudo apt-get zu installieren.
-	#
 	#? Parameter:
 	#   - PAKETNAME: Der Name des Pakets, das installiert werden soll.
-	#
 	#? Beispiel:
 	#   iinstall "firefox"
 	#   Überprüft, ob das Paket "firefox" installiert ist, und installiert es andernfalls.
@@ -1585,16 +1573,12 @@ function iinstall() {
 
 ##
 	#* iinstall2 - Diese Funktion überprüft, ob ein Paket bereits installiert ist, und installiert es andernfalls.
-	#
 	#? Verwendung: iinstall2 PAKETNAME
 	#   - PAKETNAME: Der Name des Pakets, das installiert werden soll.
-	#
 	# Diese Funktion überprüft, ob das angegebene PAKETNAME bereits installiert ist. Wenn es bereits installiert ist, wird eine Meldung ausgegeben.
 	# Andernfalls wird versucht, das Paket mit sudo apt install zu installieren.
-	#
 	#? Parameter:
 	#   - PAKETNAME: Der Name des Pakets, das installiert werden soll.
-	#
 	#? Beispiel:
 	#   iinstall2 "firefox"
 	#   Überprüft, ob das Paket "firefox" installiert ist, und installiert es andernfalls.
@@ -1611,14 +1595,10 @@ function iinstall2() {
 
 ##
 	#* linuxupgrade - Diese Funktion führt ein Systemupdate und ein System-Upgrade auf Ubuntu durch.
-	#
 	#? Verwendung: linuxupgrade
-	#
 	# Diese Funktion führt die Befehle "apt update" und "apt upgrade" aus, um das System zu aktualisieren.
 	# Zuerst werden die Paketlisten aktualisiert, und dann werden verfügbare Aktualisierungen installiert.
-	#
 	#? Hinweis: Die Ausführung dieses Befehls erfordert Root-Berechtigungen.
-	#
 	#? Beispiel:
 	#   linuxupgrade
 	#   Führt ein Systemupdate und System-Upgrade auf dem Ubuntu-System aus.
@@ -1644,15 +1624,12 @@ function linuxupgrade() {
 
 ##
 	#* deladvantagetools - Diese Funktion entfernt das Paket "ubuntu-advantage-tools" von Ihrem Ubuntu-System.
-	#
 	#? Verwendung: deladvantagetools
 	#
 	# Diese Funktion führt den Befehl "sudo apt remove ubuntu-advantage-tools" aus, um das Paket
 	# "ubuntu-advantage-tools" von Ihrem System zu entfernen. Dieses Paket ist ein kommerzielles
 	# Dienstprogramm zur Systemverwaltung und kann bei Bedarf deinstalliert werden.
-	#
 	#? Hinweis: Die Ausführung dieses Befehls erfordert Root-Berechtigungen.
-	#
 	#? Beispiel:
 	#   deladvantagetools
 	#   Entfernt das Paket "ubuntu-advantage-tools" von Ihrem Ubuntu-System.
@@ -1679,7 +1656,6 @@ function deladvantagetools() {
 	# mithilfe von 'apt-get' installiert.
 	#? @return Diese Funktion gibt nichts zurück, sondern installiert die angegebenen Pakete aus der
 	# Textdatei, sofern sie nicht bereits installiert sind.
-	#
 	#? Beispiel:
 	#   finstall paketliste.txt
 	# todo: nichts.
@@ -1849,11 +1825,9 @@ function makeverzeichnisliste() {
 	# Diese Funktion liest Zeilen aus der angegebenen REGIONSDATEI im STARTVERZEICHNIS und erstellt eine
 	# Liste von Regionen. Die Liste wird in der globalen Variable REGIONSLISTE gespeichert.
 	# Die Anzahl der Einträge in der Liste wird in der globalen Variable ANZAHLREGIONSLISTE gespeichert.
-	#
 	#? Argumente:
 	#   STARTVERZEICHNIS - Das Verzeichnis, in dem sich die REGIONSDATEI befindet.
 	#   REGIONSDATEI - Die Datei, aus der die Regionen gelesen werden sollen.
-	#
 	#? Beispiel:
 	# makeregionsliste
 ##
@@ -1938,7 +1912,6 @@ function mysqlrestnodb() {
 	# Falls bei der Installation des Dialog-Programms Abhängigkeiten fehlen, werden
 	# diese nachinstalliert. Schließlich wird Dialog installiert.
 	#? @param keine.
-	#
 	#? Beispiel:
 	#   instdialog
 ##
@@ -1974,7 +1947,6 @@ function instdialog() {
 	# GNU Screen-Fenster, das der Anwendung zugeordnet ist. Dies ermöglicht das Aktualisieren oder
 	# Speichern von Konfigurationsdaten in Echtzeit, ohne die Anwendung neu zu starten.
 	#? @param $SETSIMULATOR - Der Name oder das Kennzeichen des GNU Screen-Fensters, in dem die  Konfiguration gespeichert werden soll.
-	#
 	# todo: nichts.
 ##
 function oswriteconfig() {
@@ -1996,7 +1968,6 @@ function oswriteconfig() {
 	# GNU Screen-Fenster, das der Anwendung zugeordnet ist. Dies ermöglicht das Aktualisieren oder
 	# Speichern von Konfigurationsdaten in Echtzeit, ohne die Anwendung neu zu starten.
 	#? @param $SETSIMULATOR - Der Name oder das Kennzeichen des GNU Screen-Fensters, in dem die  Konfiguration gespeichert werden soll.
-	#
 	# todo: nichts.
 ##
 function menuoswriteconfig() {
@@ -2106,11 +2077,9 @@ function menuosstarteintrag() {
 	# Diese Funktion ermöglicht das Entfernen eines OpenSimulator-Eintrags aus der Datei osmsimlist.ini und
 	# die anschließende Sortierung der Datei. Der zu löschende Eintrag, bestehend aus Verzeichnis und
 	# Screen Name, muss als Parameter an die Funktion übergeben werden.
-	#
 	#? Beispiel:
 	# osstarteintragdel "Pfad/zum/OpenSimulator ScreenName"
-	#
-	# Die Funktion führt verschiedene Überprüfungen durch, um sicherzustellen, dass der übergebene
+	#? Die Funktion führt verschiedene Überprüfungen durch, um sicherzustellen, dass der übergebene
 	# Eintrag und die Datei osmsimlist.ini vorhanden sind. Wenn eines davon fehlt, wird ein Fehler
 	# ausgegeben. Andernfalls wird der Eintrag aus der Datei entfernt, und die Datei wird sortiert.
 	# Stellen Sie sicher, dass Sie den tatsächlichen Pfad zur Datei osmsimlist.ini in der Variable
@@ -2132,11 +2101,9 @@ function osstarteintragdel() {
 	# Diese Funktion ermöglicht das Entfernen eines OpenSimulator-Eintrags aus der Datei osmsimlist.ini und
 	# die anschließende Sortierung der Datei. Der zu löschende Eintrag, bestehend aus Verzeichnis und
 	# Screen Name, muss als Parameter an die Funktion übergeben werden.
-	#
 	#? Beispiel:
 	# osstarteintragdel "Pfad/zum/OpenSimulator ScreenName"
-	#
-	# Die Funktion führt verschiedene Überprüfungen durch, um sicherzustellen, dass der übergebene
+	#? Die Funktion führt verschiedene Überprüfungen durch, um sicherzustellen, dass der übergebene
 	# Eintrag und die Datei osmsimlist.ini vorhanden sind. Wenn eines davon fehlt, wird ein Fehler
 	# ausgegeben. Andernfalls wird der Eintrag aus der Datei entfernt, und die Datei wird sortiert.
 	# Stellen Sie sicher, dass Sie den tatsächlichen Pfad zur Datei osmsimlist.ini in der Variable
@@ -2676,17 +2643,14 @@ function rebootdatum() {
 }
 
 ##
-#* Funktion: reboot
-# Beschreibung: Startet den Server neu.
-#
-#? Parameter: Keine.
-#
-#? Rückgabewert: Es wird nichts zurückgegeben.
-#
-#? Aufgaben: 
-# 1. Loggt eine Meldung, dass der Server heruntergefahren und neu gestartet wird.
-# 2. Führt die Funktion 'autostop' aus, falls vorhanden.
-# 3. Führt den Befehl 'shutdown -r now' aus, um den Server neu zu starten.
+	#* Funktion: reboot
+	# Beschreibung: Startet den Server neu.
+	#? Parameter: Keine.
+	#? Rückgabewert: Es wird nichts zurückgegeben.
+	#? Aufgaben: 
+	# 1. Loggt eine Meldung, dass der Server heruntergefahren und neu gestartet wird.
+	# 2. Führt die Funktion 'autostop' aus, falls vorhanden.
+	# 3. Führt den Befehl 'shutdown -r now' aus, um den Server neu zu starten.
 ##
 function reboot() {
 	# Letzte Bearbeitung 29.09.2023
@@ -2700,20 +2664,17 @@ function reboot() {
 }
 
 ##
-#* Funktion: warnbox
-# Beschreibung: Zeigt eine Warnmeldung in einem Dialogfeld an.
-#
-#? Parameter:
-#   $1 (Erforderlich) - Die Warnmeldung, die im Dialogfeld angezeigt werden soll.
-#
-#? Rückgabewert: Es wird nichts zurückgegeben.
-#
-#? Aufgaben:
-# 1. Zeigt eine Warnmeldung im Dialogfeld an, die durch den übergebenen Parameter definiert ist.
-# 2. Die Parameter "0 0" werden verwendet, um die Größe des Dialogfelds automatisch anzupassen.
-# 3. Löscht den Dialogbildschirm, nachdem das Dialogfeld geschlossen wurde.
-# 4. Ruft die Funktion 'ScreenLog' auf, um die Bildschirmausgabe zu protokollieren.
-# 5. Ruft die Funktion 'hauptmenu' auf, um zum Hauptmenü zurückzukehren.
+	#* Funktion: warnbox
+	# Beschreibung: Zeigt eine Warnmeldung in einem Dialogfeld an.
+	#? Parameter:
+	#   $1 (Erforderlich) - Die Warnmeldung, die im Dialogfeld angezeigt werden soll.
+	#? Rückgabewert: Es wird nichts zurückgegeben.
+	#? Aufgaben:
+	# 1. Zeigt eine Warnmeldung im Dialogfeld an, die durch den übergebenen Parameter definiert ist.
+	# 2. Die Parameter "0 0" werden verwendet, um die Größe des Dialogfelds automatisch anzupassen.
+	# 3. Löscht den Dialogbildschirm, nachdem das Dialogfeld geschlossen wurde.
+	# 4. Ruft die Funktion 'ScreenLog' auf, um die Bildschirmausgabe zu protokollieren.
+	# 5. Ruft die Funktion 'hauptmenu' auf, um zum Hauptmenü zurückzukehren.
 ##
 function warnbox() {
 	# Letzte Bearbeitung 29.09.2023
@@ -2731,20 +2692,17 @@ function warnbox() {
 }
 
 ##
-#* Funktion: edittextbox
-# Beschreibung: Öffnet eine Textdatei in einem Editor und ermöglicht deren Bearbeitung.
-#
-# Parameter:
-#   $1 (Erforderlich) - Der Pfad zur Textdatei, die bearbeitet werden soll.
-#
-# Rückgabewert: Es wird nichts zurückgegeben.
-#
-# Aufgaben:
-# 1. Öffnet die angegebene Textdatei in einem Editor-Dialogfeld zur Bearbeitung.
-# 2. Die Parameter "0 0" werden verwendet, um die Größe des Dialogfelds automatisch anzupassen.
-# 3. Löscht den Dialogbildschirm, nachdem der Editor geschlossen wurde.
-# 4. Protokolliert die Bildschirmausgabe mithilfe der Funktion 'ScreenLog'.
-# 5. Ruft die Hauptmenü-Funktion 'hauptmenu' auf, um zum Hauptmenü zurückzukehren.
+	#* Funktion: edittextbox
+	# Beschreibung: Öffnet eine Textdatei in einem Editor und ermöglicht deren Bearbeitung.
+	#? Parameter:
+	#   $1 (Erforderlich) - Der Pfad zur Textdatei, die bearbeitet werden soll.
+	#? Rückgabewert: Es wird nichts zurückgegeben.
+	#? Aufgaben:
+	# 1. Öffnet die angegebene Textdatei in einem Editor-Dialogfeld zur Bearbeitung.
+	# 2. Die Parameter "0 0" werden verwendet, um die Größe des Dialogfelds automatisch anzupassen.
+	# 3. Löscht den Dialogbildschirm, nachdem der Editor geschlossen wurde.
+	# 4. Protokolliert die Bildschirmausgabe mithilfe der Funktion 'ScreenLog'.
+	# 5. Ruft die Hauptmenü-Funktion 'hauptmenu' auf, um zum Hauptmenü zurückzukehren.
 ##
 function edittextbox() {
 	# Letzte Bearbeitung 29.09.2023
@@ -2763,20 +2721,17 @@ function edittextbox() {
 
 
 ##
-#* Funktion: textbox
-# Beschreibung: Zeigt den Inhalt einer Textdatei in einem Dialogfeld an.
-#
-#? Parameter:
-#   $1 (Erforderlich) - Der Pfad zur Textdatei, deren Inhalt angezeigt werden soll.
-#
-#? Rückgabewert: Es wird nichts zurückgegeben.
-#
-#? Aufgaben:
-# 1. Öffnet ein Dialogfeld, um den Inhalt der angegebenen Textdatei anzuzeigen.
-# 2. Die Parameter "0 0" werden verwendet, um die Größe des Dialogfelds automatisch anzupassen.
-# 3. Löscht den Dialogbildschirm, nachdem das Dialogfeld geschlossen wurde.
-# 4. Ruft die Funktion 'ScreenLog' auf, um die Bildschirmausgabe zu protokollieren.
-# 5. Ruft die Funktion 'hauptmenu' auf, um zum Hauptmenü zurückzukehren.
+	#* Funktion: textbox
+	# Beschreibung: Zeigt den Inhalt einer Textdatei in einem Dialogfeld an.
+	#? Parameter:
+	#   $1 (Erforderlich) - Der Pfad zur Textdatei, deren Inhalt angezeigt werden soll.
+	#? Rückgabewert: Es wird nichts zurückgegeben.
+	#? Aufgaben:
+	# 1. Öffnet ein Dialogfeld, um den Inhalt der angegebenen Textdatei anzuzeigen.
+	# 2. Die Parameter "0 0" werden verwendet, um die Größe des Dialogfelds automatisch anzupassen.
+	# 3. Löscht den Dialogbildschirm, nachdem das Dialogfeld geschlossen wurde.
+	# 4. Ruft die Funktion 'ScreenLog' auf, um die Bildschirmausgabe zu protokollieren.
+	# 5. Ruft die Funktion 'hauptmenu' auf, um zum Hauptmenü zurückzukehren.
 ##
 function textbox() {
 	# Letzte Bearbeitung 29.09.2023
@@ -2794,19 +2749,16 @@ function textbox() {
 }
 
 ##
-# Funktion: nachrichtbox
-# Beschreibung: Zeigt eine Benachrichtigungsnachricht in einem Dialogfeld an.
-#
-# Parameter:
-#   $1 (Erforderlich) - Der Titel für das Benachrichtigungsfenster.
-#   $result (Erforderlich) - Der Text der Benachrichtigungsnachricht.
-#
-# Rückgabewert: Es wird nichts zurückgegeben.
-#
-# Aufgaben:
-# 1. Öffnet ein Dialogfeld mit dem angegebenen Titel und zeigt die Benachrichtigungsnachricht an.
-# 2. Verwendet die Parameter "0 0", um die Größe des Dialogfelds automatisch anzupassen und ein Kollabieren zu verhindern.
-# 3. Ruft die Hauptmenü-Funktion 'hauptmenu' auf, um zum Hauptmenü zurückzukehren.
+	#* Funktion: nachrichtbox
+	# Beschreibung: Zeigt eine Benachrichtigungsnachricht in einem Dialogfeld an.
+	#? Parameter:
+	#   $1 (Erforderlich) - Der Titel für das Benachrichtigungsfenster.
+	#   $result (Erforderlich) - Der Text der Benachrichtigungsnachricht.
+	#? Rückgabewert: Es wird nichts zurückgegeben.
+	#? Aufgaben:
+	# 1. Öffnet ein Dialogfeld mit dem angegebenen Titel und zeigt die Benachrichtigungsnachricht an.
+	# 2. Verwendet die Parameter "0 0", um die Größe des Dialogfelds automatisch anzupassen und ein Kollabieren zu verhindern.
+	# 3. Ruft die Hauptmenü-Funktion 'hauptmenu' auf, um zum Hauptmenü zurückzukehren.
 ##
 function nachrichtbox() {
 	# Letzte Bearbeitung 29.09.2023
@@ -2818,17 +2770,14 @@ function nachrichtbox() {
 }
 
 ##
-# Funktion: apacheerror
-# Beschreibung: Zeigt den Inhalt der Apache2-Fehlerprotokolldatei an, falls vorhanden.
-#
-# Parameter: Keine.
-#
-# Rückgabewert: Es wird nichts zurückgegeben.
-#
-# Aufgaben:
-# 1. Überprüft, ob die Apache2-Fehlerprotokolldatei ($apache2errorlog) vorhanden ist.
-# 2. Falls die Datei existiert, öffnet sie in einem Textbearbeitungsdialog mit der Funktion 'textbox'.
-# 3. Falls die Datei nicht gefunden wird, wird eine Warnmeldung mit 'warnbox' angezeigt.
+	#* Funktion: apacheerror
+	# Beschreibung: Zeigt den Inhalt der Apache2-Fehlerprotokolldatei an, falls vorhanden.
+	#? Parameter: Keine.
+	#? Rückgabewert: Es wird nichts zurückgegeben.
+	#? Aufgaben:
+	# 1. Überprüft, ob die Apache2-Fehlerprotokolldatei ($apache2errorlog) vorhanden ist.
+	# 2. Falls die Datei existiert, öffnet sie in einem Textbearbeitungsdialog mit der Funktion 'textbox'.
+	# 3. Falls die Datei nicht gefunden wird, wird eine Warnmeldung mit 'warnbox' angezeigt.
 ##
 function apacheerror() {
 	# Letzte Bearbeitung 29.09.2023
@@ -2843,17 +2792,14 @@ function apacheerror() {
 }
 
 ##
-# Funktion: mysqldberror
-# Beschreibung: Zeigt den Inhalt der MySQL-Datenbankfehlerprotokolldatei an, falls vorhanden.
-#
-# Parameter: Keine.
-#
-# Rückgabewert: Es wird nichts zurückgegeben.
-#
-# Aufgaben:
-# 1. Überprüft, ob die MySQL-Datenbankfehlerprotokolldatei ($mysqlerrorlog) vorhanden ist.
-# 2. Falls die Datei existiert, öffnet sie in einem Textbearbeitungsdialog mit der Funktion 'textbox'.
-# 3. Falls die Datei nicht gefunden wird, wird eine Warnmeldung mit 'warnbox' angezeigt.
+	#* Funktion: mysqldberror
+	# Beschreibung: Zeigt den Inhalt der MySQL-Datenbankfehlerprotokolldatei an, falls vorhanden.
+	#? Parameter: Keine.
+	#? Rückgabewert: Es wird nichts zurückgegeben.
+	#? Aufgaben:
+	# 1. Überprüft, ob die MySQL-Datenbankfehlerprotokolldatei ($mysqlerrorlog) vorhanden ist.
+	# 2. Falls die Datei existiert, öffnet sie in einem Textbearbeitungsdialog mit der Funktion 'textbox'.
+	# 3. Falls die Datei nicht gefunden wird, wird eine Warnmeldung mit 'warnbox' angezeigt.
 ##
 function mysqldberror() {
 	# Letzte Bearbeitung 29.09.2023
@@ -2868,17 +2814,14 @@ function mysqldberror() {
 }
 
 ##
-# Funktion: mariadberror
-# Beschreibung: Zeigt den Inhalt der MariaDB-/MySQL-Datenbankfehlerprotokolldatei an, falls vorhanden.
-#
-# Parameter: Keine.
-#
-# Rückgabewert: Es wird nichts zurückgegeben.
-#
-# Aufgaben:
-# 1. Überprüft, ob die MariaDB-/MySQL-Datenbankfehlerprotokolldatei ($mysqlmariadberor) vorhanden ist.
-# 2. Falls die Datei existiert, öffnet sie in einem Textbearbeitungsdialog mit der Funktion 'textbox'.
-# 3. Falls die Datei nicht gefunden wird, wird eine Warnmeldung mit 'warnbox' angezeigt.
+	#* Funktion: mariadberror
+	# Beschreibung: Zeigt den Inhalt der MariaDB-/MySQL-Datenbankfehlerprotokolldatei an, falls vorhanden.
+	#? Parameter: Keine.
+	#? Rückgabewert: Es wird nichts zurückgegeben.
+	#? Aufgaben:
+	# 1. Überprüft, ob die MariaDB-/MySQL-Datenbankfehlerprotokolldatei ($mysqlmariadberor) vorhanden ist.
+	# 2. Falls die Datei existiert, öffnet sie in einem Textbearbeitungsdialog mit der Funktion 'textbox'.
+	# 3. Falls die Datei nicht gefunden wird, wird eine Warnmeldung mit 'warnbox' angezeigt.
 ##
 function mariadberror() {
 	# Letzte Bearbeitung 29.09.2023
@@ -2895,17 +2838,14 @@ function mariadberror() {
 
 
 ##
-# Funktion: ufwlog
-# Beschreibung: Zeigt den Inhalt der UFW-Protokolldatei an, falls vorhanden.
-#
-# Parameter: Keine.
-#
-# Rückgabewert: Es wird nichts zurückgegeben.
-#
-# Aufgaben:
-# 1. Überprüft, ob die UFW-Protokolldatei ($ufwlog) vorhanden ist.
-# 2. Falls die Datei existiert, öffnet sie in einem Textbearbeitungsdialog mit der Funktion 'textbox'.
-# 3. Falls die Datei nicht gefunden wird, wird eine Warnmeldung mit 'warnbox' angezeigt.
+	#* Funktion: ufwlog
+	# Beschreibung: Zeigt den Inhalt der UFW-Protokolldatei an, falls vorhanden.
+	#? Parameter: Keine.
+	#? Rückgabewert: Es wird nichts zurückgegeben.
+	#? Aufgaben:
+	# 1. Überprüft, ob die UFW-Protokolldatei ($ufwlog) vorhanden ist.
+	# 2. Falls die Datei existiert, öffnet sie in einem Textbearbeitungsdialog mit der Funktion 'textbox'.
+	# 3. Falls die Datei nicht gefunden wird, wird eine Warnmeldung mit 'warnbox' angezeigt.
 ##
 function ufwlog() {
 	# Letzte Bearbeitung 29.09.2023
@@ -2920,17 +2860,14 @@ function ufwlog() {
 }
 
 ##
-# Funktion: authlog
-# Beschreibung: Zeigt den Inhalt der Authentifizierungs-Protokolldatei an, falls vorhanden.
-#
-# Parameter: Keine.
-#
-# Rückgabewert: Es wird nichts zurückgegeben.
-#
-# Aufgaben:
-# 1. Überprüft, ob die Authentifizierungs-Protokolldatei ($authlog) vorhanden ist.
-# 2. Falls die Datei existiert, öffnet sie in einem Textbearbeitungsdialog mit der Funktion 'textbox'.
-# 3. Falls die Datei nicht gefunden wird, wird eine Warnmeldung mit 'warnbox' angezeigt.
+	#* Funktion: authlog
+	# Beschreibung: Zeigt den Inhalt der Authentifizierungs-Protokolldatei an, falls vorhanden.
+	#? Parameter: Keine.
+	#? Rückgabewert: Es wird nichts zurückgegeben.
+	#? Aufgaben:
+	# 1. Überprüft, ob die Authentifizierungs-Protokolldatei ($authlog) vorhanden ist.
+	# 2. Falls die Datei existiert, öffnet sie in einem Textbearbeitungsdialog mit der Funktion 'textbox'.
+	# 3. Falls die Datei nicht gefunden wird, wird eine Warnmeldung mit 'warnbox' angezeigt.
 ##
 function authlog() {
 	# Letzte Bearbeitung 29.09.2023
@@ -2945,17 +2882,14 @@ function authlog() {
 }
 
 ##
-# Funktion: accesslog
-# Beschreibung: Zeigt den Inhalt des Apache2-Zugriffsprotokolls an, falls vorhanden.
-#
-# Parameter: Keine.
-#
-# Rückgabewert: Es wird nichts zurückgegeben.
-#
-# Aufgaben:
-# 1. Überprüft, ob das Apache2-Zugriffsprotokoll ($apache2accesslog) vorhanden ist.
-# 2. Falls die Datei existiert, öffnet sie in einem Textbearbeitungsdialog mit der Funktion 'textbox'.
-# 3. Falls die Datei nicht gefunden wird, wird eine Warnmeldung mit 'warnbox' angezeigt.
+	#* Funktion: accesslog
+	# Beschreibung: Zeigt den Inhalt des Apache2-Zugriffsprotokolls an, falls vorhanden.
+	#? Parameter: Keine.
+	#? Rückgabewert: Es wird nichts zurückgegeben.
+	#? Aufgaben:
+	# 1. Überprüft, ob das Apache2-Zugriffsprotokoll ($apache2accesslog) vorhanden ist.
+	# 2. Falls die Datei existiert, öffnet sie in einem Textbearbeitungsdialog mit der Funktion 'textbox'.
+	# 3. Falls die Datei nicht gefunden wird, wird eine Warnmeldung mit 'warnbox' angezeigt.
 ##
 function accesslog() {
 	# Letzte Bearbeitung 29.09.2023
@@ -2970,17 +2904,14 @@ function accesslog() {
 }
 
 ##
-# Funktion: fpspeicher
-# Beschreibung: Ermittelt den verfügbaren Speicherplatz auf dem Dateisystem und zeigt ihn in einer Nachrichtenbox an.
-#
-# Parameter: Keine.
-#
-# Rückgabewert: Es wird nichts zurückgegeben.
-#
-# Aufgaben:
-# 1. Verwendet den Befehl 'df -h', um Informationen über den verfügbaren Speicherplatz abzurufen.
-# 2. Speichert das Ergebnis in der Variablen 'result'.
-# 3. Öffnet eine Nachrichtenbox mit dem Titel "Freier Speicher" und zeigt den gespeicherten Speicherplatz in 'result' an.
+	#* Funktion: fpspeicher
+	# Beschreibung: Ermittelt den verfügbaren Speicherplatz auf dem Dateisystem und zeigt ihn in einer Nachrichtenbox an.
+	#? Parameter: Keine.
+	#? Rückgabewert: Es wird nichts zurückgegeben.
+	#? Aufgaben:
+	# 1. Verwendet den Befehl 'df -h', um Informationen über den verfügbaren Speicherplatz abzurufen.
+	# 2. Speichert das Ergebnis in der Variablen 'result'.
+	# 3. Öffnet eine Nachrichtenbox mit dem Titel "Freier Speicher" und zeigt den gespeicherten Speicherplatz in 'result' an.
 ##
 function fpspeicher() {
 	# Letzte Bearbeitung 29.09.2023
@@ -2989,21 +2920,18 @@ function fpspeicher() {
 }
 
 ##
-# Funktion: screenlist
-# Beschreibung: Zeigt eine Liste aller laufenden Screen-Sitzungen an, entweder mit oder ohne die Verwendung von 'dialog'.
-#
-# Parameter: Keine.
-#
-# Rückgabewert: Es wird nichts zurückgegeben.
-#
-# Aufgaben:
-# 1. Protokolliert eine Informationsmeldung über das Anzeigen aller laufenden Screen-Sitzungen.
-# 2. Überprüft, ob 'dialog' installiert ist.
-# 3. Wenn 'dialog' installiert ist, wird 'screen -ls' verwendet, um die Sitzungen abzurufen, und das Ergebnis wird in 'txtscreenlist' gespeichert.
-#    Danach wird eine Warnmeldung mit 'txtscreenlist' angezeigt.
-# 4. Wenn 'dialog' nicht installiert ist, wird 'screen -ls' verwendet, um die Sitzungen abzurufen, und das Ergebnis wird in 'mynewlist' gespeichert.
-#    Danach wird das Ergebnis protokolliert.
-# 5. Die Funktion kehrt zum Hauptmenü ('hauptmenu') zurück.
+	#* Funktion: screenlist
+	# Beschreibung: Zeigt eine Liste aller laufenden Screen-Sitzungen an, entweder mit oder ohne die Verwendung von 'dialog'.
+	#? Parameter: Keine.
+	#? Rückgabewert: Es wird nichts zurückgegeben.
+	#? Aufgaben:
+	# 1. Protokolliert eine Informationsmeldung über das Anzeigen aller laufenden Screen-Sitzungen.
+	# 2. Überprüft, ob 'dialog' installiert ist.
+	# 3. Wenn 'dialog' installiert ist, wird 'screen -ls' verwendet, um die Sitzungen abzurufen, und das Ergebnis wird in 'txtscreenlist' gespeichert.
+	#    Danach wird eine Warnmeldung mit 'txtscreenlist' angezeigt.
+	# 4. Wenn 'dialog' nicht installiert ist, wird 'screen -ls' verwendet, um die Sitzungen abzurufen, und das Ergebnis wird in 'mynewlist' gespeichert.
+	#    Danach wird das Ergebnis protokolliert.
+	# 5. Die Funktion kehrt zum Hauptmenü ('hauptmenu') zurück.
 ##
 function screenlist() {
 	# Letzte Bearbeitung 29.09.2023
@@ -3025,18 +2953,15 @@ function screenlist() {
 }
 
 ##
-# Funktion: screenlistrestart
-# Beschreibung: Zeigt eine Liste aller laufenden Screen-Sitzungen und protokolliert sie.
-#
-# Parameter: Keine.
-#
-# Rückgabewert: Es wird nichts zurückgegeben.
-#
-# Aufgaben:
-# 1. Protokolliert eine Informationsmeldung über das Anzeigen aller laufenden Screen-Sitzungen.
-# 2. Verwendet 'screen -ls', um die Sitzungen abzurufen, und speichert das Ergebnis in 'mynewlist'.
-# 3. Protokolliert 'mynewlist'.
-# 4. Die Funktion gibt 0 als Rückgabewert zurück.
+	#* Funktion: screenlistrestart
+	# Beschreibung: Zeigt eine Liste aller laufenden Screen-Sitzungen und protokolliert sie.
+	#? Parameter: Keine.
+	#? Rückgabewert: Es wird nichts zurückgegeben.
+	#? Aufgaben:
+	# 1. Protokolliert eine Informationsmeldung über das Anzeigen aller laufenden Screen-Sitzungen.
+	# 2. Verwendet 'screen -ls', um die Sitzungen abzurufen, und speichert das Ergebnis in 'mynewlist'.
+	# 3. Protokolliert 'mynewlist'.
+	# 4. Die Funktion gibt 0 als Rückgabewert zurück.
 ##
 function screenlistrestart() {
 	# Letzte Bearbeitung 29.09.2023
@@ -3059,19 +2984,16 @@ function screenlistrestart() {
 ###########################################################################
 
 ##
-# Funktion: downloados
-# Beschreibung: Ermöglicht das Herunterladen von Betriebssystem-Dateien über einen Menüdialog.
-#
-# Parameter: Keine.
-#
-# Rückgabewert: Es wird nichts zurückgegeben.
-#
-# Aufgaben:
-# 1. Öffnet einen Menüdialog mit dem Titel "Downloads" und zeigt eine Liste von Download-Optionen an.
-# 2. Die Optionen enthalten die Bezeichnung "DownloadX" gefolgt von einem Link (z.B., "Download1: " gefolgt von "$LINK01").
-# 3. Der Benutzer kann eine Option auswählen, um den gewünschten Link zum Herunterladen auszuwählen.
-# 4. Der ausgewählte Link wird mit 'wget' heruntergeladen.
-# 5. Die Funktion kehrt nach dem Herunterladen zum Hauptmenü ('hauptmenu') zurück.
+	#* Funktion: downloados
+	# Beschreibung: Ermöglicht das Herunterladen von Betriebssystem-Dateien über einen Menüdialog.
+	#? Parameter: Keine.
+	#? Rückgabewert: Es wird nichts zurückgegeben.
+	#? Aufgaben:
+	# 1. Öffnet einen Menüdialog mit dem Titel "Downloads" und zeigt eine Liste von Download-Optionen an.
+	# 2. Die Optionen enthalten die Bezeichnung "DownloadX" gefolgt von einem Link (z.B., "Download1: " gefolgt von "$LINK01").
+	# 3. Der Benutzer kann eine Option auswählen, um den gewünschten Link zum Herunterladen auszuwählen.
+	# 4. Der ausgewählte Link wird mit 'wget' heruntergeladen.
+	# 5. Die Funktion kehrt nach dem Herunterladen zum Hauptmenü ('hauptmenu') zurück.
 ##
 function downloados() {
 	# Letzte Bearbeitung 29.09.2023
@@ -3142,21 +3064,18 @@ function downloados() {
 }
 
 ##
-# Funktion: radiolist
-# Beschreibung: Erstellt eine Liste von Internetradio-Streams basierend auf Musikgenres.
-#
-# Parameter: Keine.
-#
-# Rückgabewert: Es wird nichts zurückgegeben.
-#
-# Aufgaben:
-# 1. Löscht die temporäre Datei '/tmp/radio.tmp', falls sie bereits existiert.
-# 2. Erstellt das Verzeichnis '/STARTVERZEICHNIS/radiolist', falls es nicht existiert.
-# 3. Durchläuft eine Liste von Musikgenres, die in der Variable 'listVar' gespeichert sind.
-# 4. Ruft eine Liste von Internetradio-Streams für jedes Genre von 'https://dir.xiph.org/genres/' ab.
-# 5. Filtert unnötige Zeilen aus der abgerufenen Liste.
-# 6. Erstellt eine Textdatei pro Genre im Verzeichnis '/STARTVERZEICHNIS/radiolist' und speichert die Stream-Informationen darin.
-# 7. Protokolliert die Erstellung jeder Liste.
+	#* Funktion: radiolist
+	# Beschreibung: Erstellt eine Liste von Internetradio-Streams basierend auf Musikgenres.
+	#? Parameter: Keine.
+	#? Rückgabewert: Es wird nichts zurückgegeben.
+	#? Aufgaben:
+	# 1. Löscht die temporäre Datei '/tmp/radio.tmp', falls sie bereits existiert.
+	# 2. Erstellt das Verzeichnis '/STARTVERZEICHNIS/radiolist', falls es nicht existiert.
+	# 3. Durchläuft eine Liste von Musikgenres, die in der Variable 'listVar' gespeichert sind.
+	# 4. Ruft eine Liste von Internetradio-Streams für jedes Genre von 'https://dir.xiph.org/genres/' ab.
+	# 5. Filtert unnötige Zeilen aus der abgerufenen Liste.
+	# 6. Erstellt eine Textdatei pro Genre im Verzeichnis '/STARTVERZEICHNIS/radiolist' und speichert die Stream-Informationen darin.
+	# 7. Protokolliert die Erstellung jeder Liste.
 ##
 function radiolist() {
 	# Letzte Bearbeitung 29.09.2023
@@ -3205,23 +3124,20 @@ done
 }
 
 ##
-# Funktion: mysqlbackup
-# Beschreibung: Erstellt ein Backup einer MySQL-Datenbank und kann optional das Backup komprimieren.
-#
-# Parameter:
-#   1. username: Der MySQL-Benutzername für die Datenbank.
-#   2. password: Das MySQL-Passwort für den angegebenen Benutzer.
-#   3. databasename: Der Name der zu sichernden MySQL-Datenbank.
-#   4. dbcompress: Optional, ein Flag zum Aktivieren der Komprimierung (-c) des Backups.
-#
-# Rückgabewert: Die Funktion gibt keinen expliziten Rückgabewert zurück.
-#
-# Aufgaben:
-# 1. Erstellt das Verzeichnis '/$STARTVERZEICHNIS/backup', falls es nicht existiert, oder gibt eine Meldung aus, wenn es bereits vorhanden ist.
-# 2. Wechselt in das Verzeichnis '/$STARTVERZEICHNIS/backup' oder gibt einen Fehler zurück, wenn dies nicht möglich ist.
-# 3. Überprüft, ob die Option '-c' (Komprimierung) angegeben wurde.
-# 4. Falls keine Komprimierung angefordert ist, führt die Funktion 'mysqldump' aus, um ein MySQL-Datenbankbackup zu erstellen und speichert es in einer .sql-Datei.
-# 5. Falls die Komprimierung angefordert ist, führt die Funktion 'mysqldump' aus, leitet die Ausgabe an 'zip' weiter und erstellt eine .zip-Datei für das Backup.
+	#* Funktion: mysqlbackup
+	# Beschreibung: Erstellt ein Backup einer MySQL-Datenbank und kann optional das Backup komprimieren.
+	#? Parameter:
+	#   1. username: Der MySQL-Benutzername für die Datenbank.
+	#   2. password: Das MySQL-Passwort für den angegebenen Benutzer.
+	#   3. databasename: Der Name der zu sichernden MySQL-Datenbank.
+	#   4. dbcompress: Optional, ein Flag zum Aktivieren der Komprimierung (-c) des Backups.
+	#? Rückgabewert: Die Funktion gibt keinen expliziten Rückgabewert zurück.
+	#? Aufgaben:
+	# 1. Erstellt das Verzeichnis '/$STARTVERZEICHNIS/backup', falls es nicht existiert, oder gibt eine Meldung aus, wenn es bereits vorhanden ist.
+	# 2. Wechselt in das Verzeichnis '/$STARTVERZEICHNIS/backup' oder gibt einen Fehler zurück, wenn dies nicht möglich ist.
+	# 3. Überprüft, ob die Option '-c' (Komprimierung) angegeben wurde.
+	# 4. Falls keine Komprimierung angefordert ist, führt die Funktion 'mysqldump' aus, um ein MySQL-Datenbankbackup zu erstellen und speichert es in einer .sql-Datei.
+	# 5. Falls die Komprimierung angefordert ist, führt die Funktion 'mysqldump' aus, leitet die Ausgabe an 'zip' weiter und erstellt eine .zip-Datei für das Backup.
 ##
 function mysqlbackup() {
 	# bearbeitung noetig! # Letzte Bearbeitung 29.09.2023
@@ -3245,19 +3161,16 @@ function mysqlbackup() {
 ###########################################################################
 
 ##
-# Funktion: passgen
-# Beschreibung: Generiert ein zufälliges Passwort mit der angegebenen Länge und gibt es auf der Standardausgabe aus.
-#
-# Parameter:
-#   1. PASSWORTLAENGE: Die gewünschte Länge des generierten Passworts.
-#
-# Rückgabewert: Das generierte Passwort wird auf der Standardausgabe ausgegeben.
-#
-# Aufgaben:
-# 1. Extrahiert die gewünschte Passwortlänge aus dem ersten Parameter 'PASSWORTLAENGE'.
-# 2. Verwendet '/dev/urandom' und den Befehl 'tr' zusammen mit einer Zeichenklasse, um zufällige Zeichen zu generieren.
-# 3. Begrenzt die Anzahl der generierten Zeichen auf die angegebene Passwortlänge.
-# 4. Gibt das generierte Passwort auf der Standardausgabe aus.
+	#* Funktion: passgen
+	# Beschreibung: Generiert ein zufälliges Passwort mit der angegebenen Länge und gibt es auf der Standardausgabe aus.
+	#? Parameter:
+	#   1. PASSWORTLAENGE: Die gewünschte Länge des generierten Passworts.
+	#? Rückgabewert: Das generierte Passwort wird auf der Standardausgabe ausgegeben.
+	#? Aufgaben:
+	# 1. Extrahiert die gewünschte Passwortlänge aus dem ersten Parameter 'PASSWORTLAENGE'.
+	# 2. Verwendet '/dev/urandom' und den Befehl 'tr' zusammen mit einer Zeichenklasse, um zufällige Zeichen zu generieren.
+	# 3. Begrenzt die Anzahl der generierten Zeichen auf die angegebene Passwortlänge.
+	# 4. Gibt das generierte Passwort auf der Standardausgabe aus.
 ##
 function passgen() {
 	# Letzte Bearbeitung 29.09.2023
@@ -3270,23 +3183,20 @@ function passgen() {
 }
 
 ##
-# Funktion: passwdgenerator
-# Beschreibung: Generiert ein zufälliges Passwort mit der angegebenen Stärke und gibt es auf der Standardausgabe aus.
-#
-# Parameter:
-#   - Mit 'dialog' (falls verfügbar):
-#     - STARK: Die gewünschte Stärke des generierten Passworts (Länge).
-#   - Ohne 'dialog':
-#     - 1. STARK: Die gewünschte Stärke des generierten Passworts (Länge).
-#
-# Rückgabewert: Das generierte Passwort wird auf der Standardausgabe ausgegeben.
-#
-# Aufgaben:
-# 1. Überprüft, ob das Dialog-Tool 'dialog' installiert ist. Wenn ja, wird die Passwortstärke mithilfe eines Dialogs abgefragt.
-# 2. Falls 'dialog' nicht verfügbar ist oder die Passwortstärke als Argument übergeben wurde, wird die Stärke des Passworts in 'STARK' gespeichert.
-# 3. Verwendet '/dev/urandom' und den Befehl 'tr' zusammen mit einer Zeichenklasse, um zufällige Zeichen zu generieren.
-# 4. Begrenzt die Anzahl der generierten Zeichen auf die angegebene Passwortstärke.
-# 5. Gibt das generierte Passwort auf der Standardausgabe aus.
+	#* Funktion: passwdgenerator
+	# Beschreibung: Generiert ein zufälliges Passwort mit der angegebenen Stärke und gibt es auf der Standardausgabe aus.
+	#? Parameter:
+	#   - Mit 'dialog' (falls verfügbar):
+	#     - STARK: Die gewünschte Stärke des generierten Passworts (Länge).
+	#   - Ohne 'dialog':
+	#     - 1. STARK: Die gewünschte Stärke des generierten Passworts (Länge).
+	#? Rückgabewert: Das generierte Passwort wird auf der Standardausgabe ausgegeben.
+	#? Aufgaben:
+	# 1. Überprüft, ob das Dialog-Tool 'dialog' installiert ist. Wenn ja, wird die Passwortstärke mithilfe eines Dialogs abgefragt.
+	# 2. Falls 'dialog' nicht verfügbar ist oder die Passwortstärke als Argument übergeben wurde, wird die Stärke des Passworts in 'STARK' gespeichert.
+	# 3. Verwendet '/dev/urandom' und den Befehl 'tr' zusammen mit einer Zeichenklasse, um zufällige Zeichen zu generieren.
+	# 4. Begrenzt die Anzahl der generierten Zeichen auf die angegebene Passwortstärke.
+	# 5. Gibt das generierte Passwort auf der Standardausgabe aus.
 ##
 function passwdgenerator() {
 	# Letzte Bearbeitung 29.09.2023
@@ -3319,17 +3229,14 @@ function passwdgenerator() {
 ###########################################################################
 
 ##
-# Funktion: dalaiinstallinfos
-# Beschreibung: Gibt Informationen zu den installierten Versionen von Python, JRE (Java Runtime Environment) und Node.js aus.
-#
-# Parameter: Keine.
-#
-# Rückgabewert: Es wird nichts zurückgegeben.
-#
-# Aufgaben:
-# 1. Gibt die installierte Python-Version mithilfe von 'python3 -V' aus.
-# 2. Gibt die installierte JRE-Version (Java Runtime Environment) mithilfe von 'java -version' aus.
-# 3. Gibt die installierte Node.js-Version mithilfe von 'node -v' aus.
+	#* Funktion: dalaiinstallinfos
+	# Beschreibung: Gibt Informationen zu den installierten Versionen von Python, JRE (Java Runtime Environment) und Node.js aus.
+	#? Parameter: Keine.
+	#? Rückgabewert: Es wird nichts zurückgegeben.
+	#? Aufgaben:
+	# 1. Gibt die installierte Python-Version mithilfe von 'python3 -V' aus.
+	# 2. Gibt die installierte JRE-Version (Java Runtime Environment) mithilfe von 'java -version' aus.
+	# 3. Gibt die installierte Node.js-Version mithilfe von 'node -v' aus.
 ##
 function dalaiinstallinfos() {
 	# Letzte Bearbeitung 29.09.2023
@@ -3347,19 +3254,16 @@ function dalaiinstallinfos() {
 }
 
 ##
-# Funktion: dalaiserverinstall
-# Beschreibung: Installiert erforderliche Softwarekomponenten für den Dalai-Server.
-#
-# Parameter: Keine.
-#
-# Rückgabewert: Es wird nichts zurückgegeben.
-#
-# Aufgaben:
-# 1. Installiert Python 3.10 mithilfe von 'sudo apt install python3.10'.
-# 2. Installiert das Java Runtime Environment (JRE) mithilfe von 'sudo apt install default-jre'.
-# 3. Installiert Node.js 18 mithilfe von 'curl' und 'sudo apt-get install'.
-# 4. Führt 'apt update' aus, um die Paketdatenbank zu aktualisieren.
-# 5. Führt 'apt upgrade' aus, um alle installierten Pakete zu aktualisieren.
+	#* Funktion: dalaiserverinstall
+	# Beschreibung: Installiert erforderliche Softwarekomponenten für den Dalai-Server.
+	#? Parameter: Keine.
+	#? Rückgabewert: Es wird nichts zurückgegeben.
+	#? Aufgaben:
+	# 1. Installiert Python 3.10 mithilfe von 'sudo apt install python3.10'.
+	# 2. Installiert das Java Runtime Environment (JRE) mithilfe von 'sudo apt install default-jre'.
+	# 3. Installiert Node.js 18 mithilfe von 'curl' und 'sudo apt-get install'.
+	# 4. Führt 'apt update' aus, um die Paketdatenbank zu aktualisieren.
+	# 5. Führt 'apt upgrade' aus, um alle installierten Pakete zu aktualisieren.
 ##
 function dalaiserverinstall() {
 	# Letzte Bearbeitung 29.09.2023
@@ -3384,23 +3288,20 @@ function dalaiserverinstall() {
 }
 
 ##
-# Funktion: dalaimodelinstall
-# Beschreibung: Installiert ein Modell für Dalai basierend auf der angegebenen Modellversion (MKIVERSION).
-#
-# Parameter:
-#   1. MKIVERSION (optional): Die Modellversion, die installiert werden soll. Standardmäßig wird "7B" verwendet, wenn keine Version angegeben wird.
-#
-# Rückgabewert: Es wird nichts zurückgegeben.
-#
-# Aufgaben:
-# 1. Extrahiert die Modellversion aus dem ersten Parameter 'MKIVERSION' oder verwendet "7B" als Standardwert.
-# 2. Überprüft, ob das Verzeichnis '/$mdalaihome/' bereits existiert. Falls nicht, wird es erstellt.
-# 3. Je nach ausgewählter Modellversion werden die entsprechenden Dateien für das Modell heruntergeladen und in das entsprechende Verzeichnis unter '/$mdalaihome/' abgelegt.
-#
-# Verfügbare Modellversionen:
-# - 30B: https://huggingface.co/guy1267/alpaca30B/tree/main
-# - 13B: https://huggingface.co/guy1267/alpaca13B/tree/main
-# - 7B: https://huggingface.co/guy1267/alpaca7B/tree/main
+	#* Funktion: dalaimodelinstall
+	# Beschreibung: Installiert ein Modell für Dalai basierend auf der angegebenen Modellversion (MKIVERSION).
+	#? Parameter:
+	#   1. MKIVERSION (optional): Die Modellversion, die installiert werden soll. Standardmäßig wird "7B" verwendet, wenn keine Version angegeben wird.
+	#? Rückgabewert: Es wird nichts zurückgegeben.
+	#? Aufgaben:
+	# 1. Extrahiert die Modellversion aus dem ersten Parameter 'MKIVERSION' oder verwendet "7B" als Standardwert.
+	# 2. Überprüft, ob das Verzeichnis '/$mdalaihome/' bereits existiert. Falls nicht, wird es erstellt.
+	# 3. Je nach ausgewählter Modellversion werden die entsprechenden Dateien für das Modell heruntergeladen und in das entsprechende Verzeichnis unter '/$mdalaihome/' abgelegt.
+	#
+	# Verfügbare Modellversionen:
+	# - 30B: https://huggingface.co/guy1267/alpaca30B/tree/main
+	# - 13B: https://huggingface.co/guy1267/alpaca13B/tree/main
+	# - 7B: https://huggingface.co/guy1267/alpaca7B/tree/main
 ##
 function dalaimodelinstall() {
 	# Letzte Bearbeitung 29.09.2023
@@ -3444,18 +3345,15 @@ function dalaimodelinstall() {
 }
 
 ##
-# Funktion: dalaiinstall
-# Beschreibung: Installiert den Dalai-Server mit der angegebenen Modellversion (KIVERSION) und legt das Dalai-Modellverzeichnis fest.
-#
-# Parameter:
-#   1. KIVERSION (optional): Die Modellversion, die für Dalai verwendet werden soll. Standardmäßig wird "7B" verwendet, wenn keine Version angegeben wird.
-#
-# Rückgabewert: Es wird nichts zurückgegeben.
-#
-# Aufgaben:
-# 1. Extrahiert die Modellversion aus dem ersten Parameter 'KIVERSION' oder verwendet "7B" als Standardwert.
-# 2. Überprüft, ob das Verzeichnis '/$dalaihome/$dalaimodells/' bereits existiert. Falls nicht, wird es erstellt.
-# 3. Führt die Installation des Dalai-Servers mit der ausgewählten Modellversion und dem Modellverzeichnis '/home/dalai' durch.
+	#* Funktion: dalaiinstall
+	# Beschreibung: Installiert den Dalai-Server mit der angegebenen Modellversion (KIVERSION) und legt das Dalai-Modellverzeichnis fest.
+	#? Parameter:
+	#   1. KIVERSION (optional): Die Modellversion, die für Dalai verwendet werden soll. Standardmäßig wird "7B" verwendet, wenn keine Version angegeben wird.
+	#? Rückgabewert: Es wird nichts zurückgegeben.
+	#? Aufgaben:
+	# 1. Extrahiert die Modellversion aus dem ersten Parameter 'KIVERSION' oder verwendet "7B" als Standardwert.
+	# 2. Überprüft, ob das Verzeichnis '/$dalaihome/$dalaimodells/' bereits existiert. Falls nicht, wird es erstellt.
+	# 3. Führt die Installation des Dalai-Servers mit der ausgewählten Modellversion und dem Modellverzeichnis '/home/dalai' durch.
 ##
 function dalaiinstall() {
 	# Letzte Bearbeitung 29.09.2023
@@ -3482,18 +3380,15 @@ function dalaiinstall() {
 }
 
 ##
-# Funktion: dalaisearch
-# Beschreibung: Sucht nach der Verfügbarkeit von Node.js und npm sowie dem Dalai-Tool im System.
-#
-# Parameter: Keine.
-#
-# Rückgabewert: Es wird nichts zurückgegeben.
-#
-# Aufgaben:
-# 1. Verwendet den Befehl 'which' zum Suchen nach der Verfügbarkeit von 'node' im System und gibt den Pfad aus, falls gefunden.
-# 2. Verwendet den Befehl 'which' zum Suchen nach der Verfügbarkeit von 'nodejs' im System und gibt den Pfad aus, falls gefunden.
-# 3. Verwendet den Befehl 'which' zum Suchen nach der Verfügbarkeit von 'npm' im System und gibt den Pfad aus, falls gefunden.
-# 4. Verwendet den Befehl 'which' zum Suchen nach der Verfügbarkeit von 'dalai' im System und gibt den Pfad aus, falls gefunden.
+	#* Funktion: dalaisearch
+	# Beschreibung: Sucht nach der Verfügbarkeit von Node.js und npm sowie dem Dalai-Tool im System.
+	#? Parameter: Keine.
+	#? Rückgabewert: Es wird nichts zurückgegeben.
+	#? Aufgaben:
+	# 1. Verwendet den Befehl 'which' zum Suchen nach der Verfügbarkeit von 'node' im System und gibt den Pfad aus, falls gefunden.
+	# 2. Verwendet den Befehl 'which' zum Suchen nach der Verfügbarkeit von 'nodejs' im System und gibt den Pfad aus, falls gefunden.
+	# 3. Verwendet den Befehl 'which' zum Suchen nach der Verfügbarkeit von 'npm' im System und gibt den Pfad aus, falls gefunden.
+	# 4. Verwendet den Befehl 'which' zum Suchen nach der Verfügbarkeit von 'dalai' im System und gibt den Pfad aus, falls gefunden.
 ##
 function dalaisearch() {
 	# Letzte Bearbeitung 29.09.2023
@@ -3511,16 +3406,13 @@ function dalaisearch() {
 }
 
 ##
-# Funktion: dalaiuninstall
-# Beschreibung: Deinstalliert Dalai-Modelle für die angegebenen Modellversionen.
-#
-# Parameter: Keine.
-#
-# Rückgabewert: Es wird nichts zurückgegeben.
-#
-# Aufgaben:
-# 1. Verwendet 'npx dalai llama uninstall' zum Deinstallieren der Dalai-Modelle der Modellversionen 7B, 13B und 30B für Llama.
-# 2. Verwendet 'npx dalai alpaca uninstall' zum Deinstallieren der Dalai-Modelle der Modellversionen 7B, 13B und 30B für Alpaca.
+	#* Funktion: dalaiuninstall
+	# Beschreibung: Deinstalliert Dalai-Modelle für die angegebenen Modellversionen.
+	#? Parameter: Keine.
+	#? Rückgabewert: Es wird nichts zurückgegeben.
+	#? Aufgaben:
+	# 1. Verwendet 'npx dalai llama uninstall' zum Deinstallieren der Dalai-Modelle der Modellversionen 7B, 13B und 30B für Llama.
+	# 2. Verwendet 'npx dalai alpaca uninstall' zum Deinstallieren der Dalai-Modelle der Modellversionen 7B, 13B und 30B für Alpaca.
 ##
 function dalaiuninstall() {
 	# Letzte Bearbeitung 29.09.2023
@@ -3532,20 +3424,17 @@ function dalaiuninstall() {
 }
 
 ##
-# Funktion: dalaistart
-# Beschreibung: Startet den Dalai-Server und gibt die Serveradresse aus.
-#
-# Parameter: Keine.
-#
-# Rückgabewert: Es wird nichts zurückgegeben.
-#
-# Aufgaben:
-# 1. Legt die Variablen 'dalaihome' und 'dalaimodells' fest, die auf die Pfade für das Dalai-Modellverzeichnis verweisen.
-# 2. Gibt eine Meldung aus, dass die Künstliche Intelligenz (KI) gestartet wird.
-# 3. Startet den Dalai-Server mithilfe von 'npx dalai serve' im Hintergrund unter Verwendung des Modellverzeichnisses '/home/models'.
-# 4. Verwendet 'screen' zur Hintergrundausführung, um den Serverprozess laufen zu lassen.
-# 5. Listet die aktiven 'screen'-Sitzungen auf, um sicherzustellen, dass der Server gestartet wurde.
-# 6. Gibt die Serveradresse aus, auf der der Dalai-Server läuft (normalerweise auf Port 3000).
+	#* Funktion: dalaistart
+	# Beschreibung: Startet den Dalai-Server und gibt die Serveradresse aus.
+	#? Parameter: Keine.
+	#? Rückgabewert: Es wird nichts zurückgegeben.
+	#? Aufgaben:
+	# 1. Legt die Variablen 'dalaihome' und 'dalaimodells' fest, die auf die Pfade für das Dalai-Modellverzeichnis verweisen.
+	# 2. Gibt eine Meldung aus, dass die Künstliche Intelligenz (KI) gestartet wird.
+	# 3. Startet den Dalai-Server mithilfe von 'npx dalai serve' im Hintergrund unter Verwendung des Modellverzeichnisses '/home/models'.
+	# 4. Verwendet 'screen' zur Hintergrundausführung, um den Serverprozess laufen zu lassen.
+	# 5. Listet die aktiven 'screen'-Sitzungen auf, um sicherzustellen, dass der Server gestartet wurde.
+	# 6. Gibt die Serveradresse aus, auf der der Dalai-Server läuft (normalerweise auf Port 3000).
 ##
 function dalaistart() {
 	# Letzte Bearbeitung 29.09.2023
@@ -3565,17 +3454,14 @@ function dalaistart() {
 }
 
 ##
-# Funktion: dalaistop
-# Beschreibung: Stoppt den laufenden Dalai-Server und zeigt die aktiven 'screen'-Sitzungen an.
-#
-# Parameter: Keine.
-#
-# Rückgabewert: Es wird nichts zurückgegeben.
-#
-# Aufgaben:
-# 1. Gibt eine Meldung aus, dass die Künstliche Intelligenz (KI) gestoppt wird.
-# 2. Verwendet 'screen' zum Beenden der laufenden 'KI'-Sitzung, die den Dalai-Server ausführt.
-# 3. Listet die aktiven 'screen'-Sitzungen auf, um zu überprüfen, ob die KI-Sitzung erfolgreich gestoppt wurde.
+	#* Funktion: dalaistop
+	# Beschreibung: Stoppt den laufenden Dalai-Server und zeigt die aktiven 'screen'-Sitzungen an.
+	#? Parameter: Keine.
+	#? Rückgabewert: Es wird nichts zurückgegeben.
+	#? Aufgaben:
+	# 1. Gibt eine Meldung aus, dass die Künstliche Intelligenz (KI) gestoppt wird.
+	# 2. Verwendet 'screen' zum Beenden der laufenden 'KI'-Sitzung, die den Dalai-Server ausführt.
+	# 3. Listet die aktiven 'screen'-Sitzungen auf, um zu überprüfen, ob die KI-Sitzung erfolgreich gestoppt wurde.
 ##
 function dalaistop() {
 	# Letzte Bearbeitung 29.09.2023
@@ -3589,18 +3475,15 @@ function dalaistop() {
 }
 
 ##
-# Funktion: dalaiupgrade
-# Beschreibung: Aktualisiert den Dalai-Server auf die angegebene Version oder die Standardversion.
-#
-# Parameter:
-#   1. dalaiversion (optional): Die Version von Dalai, die installiert werden soll. Standardmäßig wird "0.3.1" verwendet, wenn keine Version angegeben wird.
-#
-# Rückgabewert: Es wird nichts zurückgegeben.
-#
-# Aufgaben:
-# 1. Überprüft, ob ein Upgrade für Dalai verfügbar ist, indem die Website https://www.npmjs.com/package/dalai überprüft wird.
-# 2. Legt die Standardversion von Dalai auf "0.3.1" fest, falls keine Version im Parameter angegeben wurde.
-# 3. Führt die Aktualisierung von Dalai auf die angegebene Version oder die Standardversion durch, indem 'npx dalai@$dalaiversion setup' ausgeführt wird.
+	#* Funktion: dalaiupgrade
+	# Beschreibung: Aktualisiert den Dalai-Server auf die angegebene Version oder die Standardversion.
+	#? Parameter:
+	#   1. dalaiversion (optional): Die Version von Dalai, die installiert werden soll. Standardmäßig wird "0.3.1" verwendet, wenn keine Version angegeben wird.
+	#? Rückgabewert: Es wird nichts zurückgegeben.
+	#? Aufgaben:
+	# 1. Überprüft, ob ein Upgrade für Dalai verfügbar ist, indem die Website https://www.npmjs.com/package/dalai überprüft wird.
+	# 2. Legt die Standardversion von Dalai auf "0.3.1" fest, falls keine Version im Parameter angegeben wurde.
+	# 3. Führt die Aktualisierung von Dalai auf die angegebene Version oder die Standardversion durch, indem 'npx dalai@$dalaiversion setup' ausgeführt wird.
 ##
 function dalaiupgrade() {
 	# Letzte Bearbeitung 29.09.2023
@@ -3621,22 +3504,31 @@ function dalaiupgrade() {
 ###########################################################################
 
 ##
- #* oscommand.
- # OpenSim Command direkt in den screen senden. # Aufruf: oscommand Screen Region Befehl Parameter.
- # Beispiel: bash osmtool.sh oscommand sim1 Welcome "alert Hallo liebe Leute dies ist eine Nachricht"
- # Beispiel: bash osmtool.sh oscommand sim1 Welcome "alert-user John Doe Hallo John Doe"
- # 
- #? @param Screen Region Befehl Parameter.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+	#* Funktion: oscommand
+	#? Beschreibung:
+	# Diese Funktion sendet ein OpenSimulator-Befehl an einen laufenden 'screen'-Prozess, der mit dem OpenSimulator assoziiert ist.
+	# Sie ermöglicht die Fernsteuerung des OpenSimulators durch das Senden von Befehlen an den 'screen'-Prozess.
+	#? Parameter:
+	# - $1: Der Name des 'screen'-Prozesses, an den der Befehl gesendet werden soll (z. B., der Name des OpenSimulator-Screens).
+	# - $2: Die Region, auf die sich der Befehl bezieht.
+	# - $3: Der auszuführende OpenSimulator-Befehl.
+	#? Rückgabewert:
+	# Diese Funktion gibt immer den Wert 0 zurück, da keine Fehlerbehandlung implementiert ist.
+	#? Abhängigkeiten:
+	# - Die Funktion verwendet die Befehle 'screen', 'log' und 'grep'.
+	#? Beispielaufruf:
+	# oscommand opensim-screen myregion "say Hello, World!"
 ##
 function oscommand() {
+	# Letzte Bearbeitung 30.09.2023
 	OSCOMMANDSCREEN=$1
 	REGION=$2
 	COMMAND=$3
 	if screen -list | grep -q "$OSCOMMANDSCREEN"; then
 		log info "OSCOMMAND: $COMMAND an $OSCOMMANDSCREEN senden"
-		screen -S "$OSCOMMANDSCREEN" -p 0 -X eval "stuff 'change region ""$REGION""'^M" # Region wechseln
+		# Befehl zum Region wechseln senden
+		screen -S "$OSCOMMANDSCREEN" -p 0 -X eval "stuff 'change region ""$REGION""'^M"
+		# OpenSimulator-Befehl senden
 		screen -S "$OSCOMMANDSCREEN" -p 0 -X eval "stuff '$COMMAND'^M"
 	else
 		log error "OSCOMMAND: Der Screen $OSCOMMANDSCREEN existiert nicht"
@@ -3645,14 +3537,23 @@ function oscommand() {
 }
 
 ##
- #* menuoscommand.
- # OpenSim Command direkt in den screen senden.
- # 
- #? @param dialog.
- #? @return dialog.
- # todo: nichts.
+	#* Funktion: oscommand
+	#? Beschreibung:
+	# Diese Funktion sendet ein OpenSimulator-Befehl an einen laufenden 'screen'-Prozess, der mit dem OpenSimulator assoziiert ist.
+	# Sie ermöglicht die Fernsteuerung des OpenSimulators durch das Senden von Befehlen an den 'screen'-Prozess.
+	#? Parameter:
+	# - $1: Der Name des 'screen'-Prozesses, an den der Befehl gesendet werden soll (z. B., der Name des OpenSimulator-Screens).
+	# - $2: Die Region, auf die sich der Befehl bezieht.
+	# - $3: Der auszuführende OpenSimulator-Befehl.
+	#? Rückgabewert:
+	# Diese Funktion gibt immer den Wert 0 zurück, da keine Fehlerbehandlung implementiert ist.
+	#? Abhängigkeiten:
+	# - Die Funktion verwendet die Befehle 'screen', 'log' und 'grep'.
+	#? Beispielaufruf:
+	# oscommand opensim-screen myregion "say Hello, World!"
 ##
 function menuoscommand() {
+	# Letzte Bearbeitung 30.09.2023
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
 
@@ -3698,14 +3599,24 @@ function menuoscommand() {
 }
 
 ##
- #* assetdel.
- # Asset von der Region loeschen. Aufruf: assetdel screen_name Regionsname Objektname.
- # 
- #? @param screen_name Regionsname Objektname.
- #? @return Text.
- # todo: nichts.
+	#* Funktion: assetdel
+	#? Beschreibung:
+	# Diese Funktion sendet einen Befehl an einen laufenden 'screen'-Prozess, der mit einem OpenSimulator assoziiert ist, um ein Objekt aus einer Region zu löschen.
+	# Sie überprüft zunächst, ob der angegebene 'screen'-Prozess und die Region existieren, und führt dann die erforderlichen Schritte zum Löschen des Objekts aus.
+	#? Parameter:
+	# - $1: Der Name des 'screen'-Prozesses, an den der Befehl gesendet werden soll (z. B., der Name des OpenSimulator-Screens).
+	# - $2: Die Region, aus der das Objekt gelöscht werden soll.
+	# - $3: Der Name oder die ID des zu löschenden Objekts.
+	#? Rückgabewert:
+	# - Erfolgreich: Diese Funktion gibt den Wert 0 zurück, um anzuzeigen, dass das Löschen des Objekts erfolgreich war.
+	# - Fehler: Wenn der 'screen'-Prozess oder die Region nicht gefunden wird, gibt die Funktion den Wert 1 zurück, um anzuzeigen, dass das Löschen fehlgeschlagen ist.
+	#? Abhängigkeiten:
+	# - Die Funktion verwendet die Befehle 'screen', 'log' und 'grep'.
+	#? Beispielaufruf:
+	# assetdel opensim-screen myregion MyObject
 ##
 function assetdel() {
+	# Letzte Bearbeitung 30.09.2023
 	ASSDELSCREEN=$1
 	REGION=$2
 	OBJEKT=$3
@@ -3724,14 +3635,22 @@ function assetdel() {
 }
 
 ##
- #* menuassetdel.
- # Asset mit dialog von der Region loeschen.
- # 
- #? @param dialog.
- #? @return dialog.
- # todo: nichts.
+	#* Funktion: menuassetdel
+	#? Beschreibung:
+	# Diese Funktion stellt eine dialogbasierte Benutzeroberfläche bereit, um den Benutzer nach den erforderlichen Informationen für das Löschen eines Objekts aus einer Region zu fragen.
+	# Sie verwendet das 'dialog'-Tool, um die Benutzereingabe zu erleichtern, und führt dann den Löschvorgang aus, falls der 'screen'-Prozess und die Region vorhanden sind.
+	#? Parameter:
+	# Diese Funktion erwartet keine Parameter.
+	#? Rückgabewert:
+	# - Erfolgreich: Diese Funktion gibt den Wert 0 zurück, um anzuzeigen, dass das Löschen des Objekts erfolgreich war.
+	# - Fehler: Wenn der 'screen'-Prozess oder die Region nicht gefunden wird oder 'dialog' nicht installiert ist, gibt die Funktion den Wert 1 zurück, um anzuzeigen, dass das Löschen fehlgeschlagen ist.
+	#? Abhängigkeiten:
+	# - Die Funktion verwendet die Befehle 'dpkg-query', 'dialog', 'screen', 'log' und 'grep'.
+	#? Beispielaufruf:
+	# menuassetdel
 ##
 function menuassetdel() {
+	# Letzte Bearbeitung 30.09.2023
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
 
@@ -3777,14 +3696,23 @@ function menuassetdel() {
 }
 
 ##
- #* landclear.
- # Land clear - Loescht alle Parzellen auf dem Land. # Aufruf: landclear screen_name Regionsname
- # 
- #? @param screen_name Regionsname.
- #? @return Text.
- # todo: nichts.
+	#* Funktion: landclear
+	#? Beschreibung:
+	# Diese Funktion sendet einen Befehl an einen laufenden 'screen'-Prozess, der mit einem OpenSimulator assoziiert ist, um alle Parzellen in einer Region zu löschen.
+	# Sie überprüft zunächst, ob der angegebene 'screen'-Prozess und die Region existieren, und führt dann den Löschvorgang aus.
+	#? Parameter:
+	# - $1: Der Name des 'screen'-Prozesses, an den der Befehl gesendet werden soll (z. B., der Name des OpenSimulator-Screens).
+	# - $2: Die Region, aus der alle Parzellen gelöscht werden sollen.
+	#? Rückgabewert:
+	# - Erfolgreich: Diese Funktion gibt den Wert 0 zurück, um anzuzeigen, dass das Löschen der Parzellen erfolgreich war.
+	# - Fehler: Wenn der 'screen'-Prozess oder die Region nicht gefunden wird, gibt die Funktion den Wert 1 zurück, um anzuzeigen, dass das Löschen fehlgeschlagen ist.
+	#? Abhängigkeiten:
+	# - Die Funktion verwendet die Befehle 'screen', 'log' und 'grep'.
+	#? Beispielaufruf:
+	# landclear opensim-screen myregion
 ##
 function landclear() {
+	# Letzte Bearbeitung 30.09.2023
 	LANDCLEARSCREEN=$1
 	REGION=$2
 	# Nachschauen ob der Screen und die Region existiert.
@@ -3803,14 +3731,23 @@ function landclear() {
 }
 
 ##
- #* menulandclear.
- # Land clear - Loescht alle Parzellen auf dem Land, dialog ein- ausgabe.
- # 
- #? @param dialog.
- #? @return dialog.
- # todo: nichts.
+	#* Funktion: menulandclear
+	#? Beschreibung:
+	# Diese Funktion sendet einen Befehl an einen laufenden 'screen'-Prozess, der mit einem OpenSimulator assoziiert ist, um alle Parzellen in einer Region zu löschen.
+	# Sie überprüft zunächst, ob der angegebene 'screen'-Prozess und die Region existieren, und führt dann den Löschvorgang aus.
+	#? Parameter:
+	# - $1: Der Name des 'screen'-Prozesses, an den der Befehl gesendet werden soll (z. B., der Name des OpenSimulator-Screens).
+	# - $2: Die Region, aus der alle Parzellen gelöscht werden sollen.
+	#? Rückgabewert:
+	# - Erfolgreich: Diese Funktion gibt den Wert 0 zurück, um anzuzeigen, dass das Löschen der Parzellen erfolgreich war.
+	# - Fehler: Wenn der 'screen'-Prozess oder die Region nicht gefunden wird, gibt die Funktion den Wert 1 zurück, um anzuzeigen, dass das Löschen fehlgeschlagen ist.
+	#? Abhängigkeiten:
+	# - Die Funktion verwendet die Befehle 'screen', 'log' und 'grep'.
+	#? Beispielaufruf:
+	# landclear opensim-screen myregion
 ##
 function menulandclear() {
+	# Letzte Bearbeitung 30.09.2023
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
 
@@ -3854,19 +3791,31 @@ function menulandclear() {
 }
 
 ##
- #* loadinventar.
- # load iar inventar "NAME" "VERZEICHNIS" "PASSWORD" "DATEImitPFAD".
- # 
- #? @param "NAME" "VERZEICHNIS" "PASSWORD" "DATEImitPFAD".
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+	#* Funktion: loadinventar
+	#? Beschreibung:
+	# Diese Funktion sendet einen Befehl an einen laufenden 'screen'-Prozess, der mit einem OpenSimulator assoziiert ist, um ein Inventar-Archiv (IAR) in den OpenSimulator zu laden.
+	# Sie überprüft zunächst, ob der angegebene 'screen'-Prozess vorhanden ist, und führt dann den Befehl zum Laden des IAR aus.
+	#? Parameter:
+	# - $1: Der Name des IAR (Inventar-Archivs), das geladen werden soll.
+	# - $2: Das Verzeichnis, in das das IAR geladen werden soll.
+	# - $3: Das Passwort für das IAR (optional).
+	# - $4: Der Dateiname des IAR.
+	#? Rückgabewert:
+	# - Erfolgreich: Diese Funktion gibt den Wert 0 zurück, um anzuzeigen, dass das Laden des IAR erfolgreich war.
+	# - Fehler: Wenn der 'screen'-Prozess nicht gefunden wird, gibt die Funktion den Wert 1 zurück, um anzuzeigen, dass das Laden fehlgeschlagen ist.
+	#? Abhängigkeiten:
+	# - Die Funktion verwendet die Befehle 'screen' und 'log'.
+	#? Beispielaufruf:
+	# loadinventar MyInventory mydirectory mypassword myinventory.iar
 ##
 function loadinventar() {
+	# Letzte Bearbeitung 30.09.2023
 	LOADINVSCREEN="sim1"
 	NAME=$1
 	VERZEICHNIS=$2
 	PASSWORD=$3
 	DATEI=$4
+	# Überprüfen, ob der 'screen'-Prozess existiert.
 	if screen -list | grep -q "$LOADINVSCREEN"; then
 		log info "OSCOMMAND: load iar $NAME $VERZEICHNIS ***** $DATEI"
 		screen -S "$LOADINVSCREEN" -p 0 -X eval "stuff 'load iar $NAME $VERZEICHNIS $PASSWORD $DATEI'^M"
@@ -3878,18 +3827,26 @@ function loadinventar() {
 }
 
 ##
- #* menuloadinventar.
- # Lade Inventar mit dialog Menue in den OpenSimulator.
- # 
- #? @param dialog.
- #? @return dialog.
- # todo: nichts.
+	#* Funktion: menuloadinventar
+	#? Beschreibung:
+	# Diese Funktion stellt eine dialogbasierte Benutzeroberfläche bereit, um den Benutzer nach den erforderlichen Informationen zum Laden eines Inventarverzeichnisses (IAR) in den OpenSimulator zu fragen.
+	# Sie verwendet das 'dialog'-Tool, um die Benutzereingabe zu erleichtern, und führt dann den Befehl zum Laden des IAR aus, wenn der 'screen'-Prozess vorhanden ist.
+	#? Parameter:
+	# Diese Funktion erwartet keine Parameter.
+	#? Rückgabewert:
+	# - Erfolgreich: Diese Funktion gibt den Wert 0 zurück, um anzuzeigen, dass das Laden des IAR erfolgreich war.
+	# - Fehler: Wenn der 'screen'-Prozess nicht gefunden wird oder 'dialog' nicht installiert ist, gibt die Funktion den Wert 1 zurück, um anzuzeigen, dass das Laden fehlgeschlagen ist.
+	#? Abhängigkeiten:
+	# - Die Funktion verwendet die Befehle 'dpkg-query', 'dialog', 'screen', 'log' und 'grep'.
+	#? Beispielaufruf:
+	# menuloadinventar
 ##
 function menuloadinventar() {
-	# zuerst schauen ob dialog installiert ist
+	# Letzte Bearbeitung 30.09.2023
+	# Zuerst überprüfen, ob 'dialog' installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
 
-		# Einstellungen
+		# Einstellungen für das Dialog-Fenster
 		boxbacktitel="opensimMULTITOOL"
 		boxtitel="opensimMULTITOOL Eingabe"
 		formtitle="Inventarverzeichnis laden"
@@ -3902,22 +3859,22 @@ function menuloadinventar() {
 		lable4="DATEI:"
 		lablename4="/$STARTVERZEICHNIS/texture.iar"
 
-		# Abfrage
+		# Benutzerabfrage mit 'dialog'
 		loadinventarBOXERGEBNIS=$(dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 "$lable4" 4 1 "$lablename4" 4 25 25 30 3>&1 1>&2 2>&3 3>&-)
 
-		# Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
+		# Die Zeilen aus der Benutzereingabe in verschiedene Variablen schreiben.
 		NAME=$(echo "$loadinventarBOXERGEBNIS" | sed -n '1p')
 		VERZEICHNIS=$(echo "$loadinventarBOXERGEBNIS" | sed -n '2p')
 		PASSWORD=$(echo "$loadinventarBOXERGEBNIS" | sed -n '3p')
 		DATEI=$(echo "$loadinventarBOXERGEBNIS" | sed -n '4p')
 
-		# Alles loeschen.
+		# Dialog-Bildschirm löschen und Log aktivieren
 		dialogclear
 		ScreenLog
 	else
-		# Alle Aktionen ohne dialog
+		# 'dialog' ist nicht installiert - Keine Benutzeroberfläche verfügbar
 		log rohtext "Keine Menuelose Funktion" | exit
-	fi # dialog Aktionen Ende
+	fi # Dialog-Aktionen Ende
 
 	LOADINVSCREEN="sim1"
 	if screen -list | grep -q "$LOADINVSCREEN"; then
@@ -3938,15 +3895,22 @@ function menuloadinventar() {
 ###########################################################################
 
 ##
- #* osstart.
- # startet Region Server. 
- # Beispiel-Example: bash osmtool.sh osstart sim1
- # 
- #? @param $OSSTARTSCREEN.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+	#* Funktion: osstart
+	#? Beschreibung:
+	# Diese Funktion startet den OpenSimulator in einem 'screen'-Prozess. Sie überprüft zunächst, ob der angegebene 'screen'-Prozess bereits läuft.
+	# Wenn der Prozess nicht läuft, wird überprüft, ob das Verzeichnis des OpenSimulators existiert.
+	# Wenn das Verzeichnis existiert, wird der 'screen'-Prozess beendet (falls vorhanden) und der OpenSimulator gestartet.
+	# Die Funktion unterstützt den Start sowohl im DOTNET- als auch im MONO-Modus, abhängig von der Konfiguration.
+	#? Parameter:
+	# - OSSTARTSCREEN: Der Name des 'screen'-Prozesses und das Verzeichnis des OpenSimulators.
+	#? Rückgabewert:
+	# - Erfolgreich: Wenn der OpenSimulator erfolgreich gestartet wurde oder bereits lief, gibt die Funktion den Wert 0 zurück.
+	# - Fehler: Wenn der 'screen'-Prozess nicht gefunden wird, das Verzeichnis des OpenSimulators nicht existiert oder der Start fehlschlägt, gibt die Funktion den Wert 1 zurück.
+	#? Beispielaufruf:
+	# osstart "sim1"
 ##
 function osstart() {
+	# Letzte Bearbeitung 30.09.2023
 	OSSTARTSCREEN=$1 # OpenSimulator, Verzeichnis und Screen Name
 
 	log info "OpenSimulator $OSSTARTSCREEN Starten"
@@ -3983,15 +3947,22 @@ function osstart() {
 }
 
 ##
- #* osstop.
- # stoppt Region Server. 
- # Beispiel-Example: bash osmtool.sh osstop sim1
- # 
- #? @param $OSSTOPSCREEN.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+	#* Funktion: osstop
+	#? Beschreibung:
+	# Diese Funktion beendet den OpenSimulator in einem 'screen'-Prozess. Sie überprüft zunächst, ob der angegebene 'screen'-Prozess existiert.
+	# Wenn der Prozess gefunden wird, sendet sie den Befehl "shutdown" an den 'screen'-Prozess, um den OpenSimulator zu beenden.
+	# Anschließend wird eine Wartezeit abgewartet (STOPWARTEZEIT) und der 'screen'-Prozess wird gekillt.
+	# Die Funktion unterstützt die Beendigung des OpenSimulators in einem 'screen'-Prozess.
+	#? Parameter:
+	# - OSSTOPSCREEN: Der Name des 'screen'-Prozesses und das Verzeichnis des OpenSimulators.
+	#? Rückgabewert:
+	# - Erfolgreich: Wenn der OpenSimulator erfolgreich beendet wurde oder der 'screen'-Prozess nicht gefunden wird, gibt die Funktion den Wert 0 zurück.
+	# - Fehler: Wenn der 'screen'-Prozess nicht gefunden wird oder ein anderer Fehler auftritt, gibt die Funktion den Wert 1 zurück.
+	#? Beispielaufruf:
+	# osstop "sim1"
 ##
 function osstop() {
+	# Letzte Bearbeitung 30.09.2023
 	OSSTOPSCREEN=$1 # OpenSimulator, Verzeichnis und Screen Name
 	
 	if screen -list | grep -q "$OSSTOPSCREEN"; then
@@ -4010,14 +3981,19 @@ function osstop() {
 }
 
 ##
- #* menuosstart.
- # startet Region Server.
- # 
- #? @param dialog.
- #? @return dialog.
- # todo: nichts.
+	#* Funktion: menuosstart
+	#? Beschreibung:
+	# Diese Funktion ermöglicht es dem Benutzer, den OpenSimulator in einem 'screen'-Prozess zu starten. Sie zeigt ein Dialogfeld an, in dem der Benutzer den Namen des Simulators eingeben kann.
+	# Die Funktion überprüft zunächst, ob der angegebene 'screen'-Prozess bereits läuft. Wenn der Prozess nicht läuft und das Verzeichnis des Simulators existiert, wird der OpenSimulator gestartet.
+	# Die Funktion unterstützt den Start sowohl im DOTNET- als auch im MONO-Modus, abhängig von der Konfiguration.
+	#? Parameter: Keine.
+	#? Rückgabewert:
+	# - Erfolgreich: Die Funktion kehrt zur Hauptmenü-Ansicht zurück, nachdem der OpenSimulator gestartet wurde oder bereits lief.
+	#? Beispielaufruf:
+	# menuosstart
 ##
 function menuosstart() {
+	# Letzte Bearbeitung 30.09.2023
 	IOSSTARTSCREEN=$(
 		dialog --backtitle "opensimMULTITOOL $VERSION" --title "opensimMULTITOOL Eingabe" \
 			--inputbox "Simulator:" 8 40 \
@@ -4067,22 +4043,20 @@ function menuosstart() {
 }
 
 ##
- #* menuosstop.
- # stoppt Region Server.
- # 
- #? @param dialog.
- #? @return dialog.
- # todo: nichts.
+	#* Funktion: menuosstop
+	#? Beschreibung:
+	# Diese Funktion ermöglicht es dem Benutzer, den OpenSimulator in einem 'screen'-Prozess zu stoppen. Sie zeigt ein Dialogfeld an, in dem der Benutzer den Namen des Simulators eingeben kann.
+	# Die Funktion überprüft zunächst, ob der angegebene 'screen'-Prozess läuft. Wenn der Prozess gefunden wird, wird der Befehl "shutdown" an den 'screen'-Prozess gesendet, um den OpenSimulator zu beenden.
+	# Anschließend wird eine Wartezeit abgewartet (STOPWARTEZEIT), und der 'screen'-Prozess wird gekillt.
+	#? Parameter: Keine.
+	#? Rückgabewert:
+	# - Erfolgreich: Die Funktion kehrt zur Hauptmenü-Ansicht zurück, nachdem der OpenSimulator gestoppt wurde.
+	# - Fehler: Die Funktion kehrt zur Hauptmenü-Ansicht zurück, wenn der 'screen'-Prozess nicht gefunden wurde.
+	#? Beispielaufruf:
+	# menuosstop
 ##
-##
- #* Wozu ist diese Funktion gedacht.
- # Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
- # 
- #? @param name Erklaerung.
- #? @return name was wird zurueckgegeben.
- # todo: nichts.
-##  menuosstop() ist die dialog Version von osstop()
 function menuosstop() {
+	# Letzte Bearbeitung 30.09.2023
 	IOSSTOPSCREEN=$(
 		dialog --backtitle "opensimMULTITOOL $VERSION" --title "opensimMULTITOOL Eingabe" \
 			--inputbox "Simulator:" 8 40 \
@@ -4112,14 +4086,18 @@ function menuosstop() {
 }
 
 ##
- #* rostart.
- # Robust Server starten.
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+	#* Funktion: rostart
+	#? Beschreibung:
+	# Diese Funktion dient dazu, den Robust-Server zu starten. Sie wechselt in das Verzeichnis, in dem sich die Robust-Server-Anwendung befindet, und startet den Robust-Server entweder im DOTNET- oder MONO-Modus, abhängig von der Konfiguration (DOTNETMODUS). Anschließend wird eine Wartezeit (ROBUSTWARTEZEIT) abgewartet.
+	#? Parameter: Keine.
+	#? Rückgabewert:
+	# - Erfolgreich: Die Funktion gibt eine Erfolgsmeldung aus und kehrt mit einem Rückgabewert 0 zurück.
+	# - Fehler: Die Funktion gibt eine Fehlermeldung aus und kehrt mit einem Rückgabewert 1 zurück, wenn das Starten des Robust-Servers fehlschlägt.
+	#? Beispielaufruf:
+	# rostart
 ##
 function rostart() {
+	# Letzte Bearbeitung 30.09.2023
 	log line
 	log info "Robust wird gestartet..."
 	cd /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin || return 1	
@@ -4141,15 +4119,18 @@ function rostart() {
 }
 
 ##
- #* menurostart.
- # Robust Server starten.
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+	#* Funktion: menurostart
+	#? Beschreibung:
+	# Diese Funktion startet den Robust-Server basierend auf der Konfiguration (DOTNETMODUS oder MONO). Sie wechselt in das Verzeichnis, in dem sich die Robust-Server-Anwendung befindet, startet den Robust-Server und wartet anschließend eine definierte Wartezeit (ROBUSTWARTEZEIT).
+	#? Parameter: Keine.
+	#? Rückgabewert:
+	# - Erfolgreich: Die Funktion gibt eine Erfolgsmeldung aus und kehrt mit einem Rückgabewert 0 zurück.
+	# - Fehler: Die Funktion gibt eine Fehlermeldung aus und kehrt mit einem Rückgabewert 1 zurück, wenn das Starten des Robust-Servers fehlschlägt.
+	#? Beispielaufruf:
+	# menurostart
 ##
 function menurostart() {
-
+	# Letzte Bearbeitung 30.09.2023
 	log info "Robust wird gestartet..."
 	cd /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin || return 1	
 
@@ -4170,14 +4151,18 @@ function menurostart() {
 }
 
 ##
- #* rostop.
- # Robust herunterfahren.
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+	#* Funktion: rostop
+	#? Beschreibung:
+	# Diese Funktion dient dazu, den Robust-Server zu beenden. Sie überprüft, ob ein Screen mit dem Namen "RO" existiert. Falls ja, sendet sie das Shutdown-Kommando an den Robust-Server und wartet eine definierte Wartezeit (WARTEZEIT). Wenn der Robust-Server erfolgreich beendet wurde, gibt die Funktion eine Warnmeldung aus und kehrt mit einem Rückgabewert 0 zurück. Andernfalls gibt sie eine Fehlermeldung aus und kehrt mit einem Rückgabewert 1 zurück.
+	#? Parameter: Keine.
+	#? Rückgabewert:
+	# - Erfolgreich: Die Funktion gibt eine Warnmeldung aus und kehrt mit einem Rückgabewert 0 zurück, wenn der Robust-Server erfolgreich beendet wurde.
+	# - Fehler: Die Funktion gibt eine Fehlermeldung aus und kehrt mit einem Rückgabewert 1 zurück, wenn der Robust-Server nicht vorhanden ist.
+	#? Beispielaufruf:
+	# rostop
 ##
 function rostop() {
+	# Letzte Bearbeitung 30.09.2023
 	if screen -list | grep -q "RO"; then
 		screen -S RO -p 0 -X eval "stuff 'shutdown'^M"
 		log warn "Robust Beenden"
@@ -4190,14 +4175,18 @@ function rostop() {
 }
 
 ##
- #* menurostop.
- # Robust herunterfahren.
- # 
- #? @param dialog.
- #? @return dialog.
- # todo: nichts.
+	#* Funktion: menurostop
+	#? Beschreibung:
+	# Diese Funktion dient dazu, den Robust-Server zu beenden. Sie überprüft, ob ein Screen mit dem Namen "RO" existiert. Falls ja, sendet sie das Shutdown-Kommando an den Robust-Server und wartet eine definierte Wartezeit (WARTEZEIT). Wenn der Robust-Server erfolgreich beendet wurde, gibt die Funktion eine Warnmeldung aus und kehrt mit einem Rückgabewert 0 zurück. Andernfalls gibt sie eine Fehlermeldung aus und kehrt mit einem Rückgabewert 1 zurück.
+	#? Parameter: Keine.
+	#? Rückgabewert:
+	# - Erfolgreich: Die Funktion gibt eine Warnmeldung aus und kehrt mit einem Rückgabewert 0 zurück, wenn der Robust-Server erfolgreich beendet wurde.
+	# - Fehler: Die Funktion gibt eine Fehlermeldung aus und kehrt mit einem Rückgabewert 1 zurück, wenn der Robust-Server nicht vorhanden ist.
+	#? Beispielaufruf:
+	# menurostop
 ##
 function menurostop() {
+	# Letzte Bearbeitung 30.09.2023
 	if screen -list | grep -q "RO"; then
 		screen -S RO -p 0 -X eval "stuff 'shutdown'^M"
 		log warn "Robust Beenden"
@@ -4208,14 +4197,17 @@ function menurostop() {
 }
 
 ##
- #* mostart.
- # Money Server starten.
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+	#* Funktion: mostart
+	#? Beschreibung:
+	# Diese Funktion dient dazu, den MoneyServer zu starten. Sie wechselt in das Verzeichnis, in dem sich die ausführbare Datei des MoneyServers befindet, und startet den Server im Hintergrund. Die Wahl zwischen der Ausführung mit "dotnet" oder "mono" wird anhand des Wertes der Umgebungsvariable DOTNETMODUS getroffen. Nach dem Start wird eine definierte Wartezeit (MONEYWARTEZEIT) eingehalten, um sicherzustellen, dass der Server vollständig gestartet ist. Die Funktion gibt eine Informationsmeldung aus und kehrt mit einem Rückgabewert 0 zurück.
+	#? Parameter: Keine.
+	#? Rückgabewert:
+	# - Erfolgreich: Die Funktion gibt eine Informationsmeldung aus und kehrt mit einem Rückgabewert 0 zurück, nachdem der MoneyServer gestartet wurde.
+	#? Beispielaufruf:
+	# mostart
 ##
 function mostart() {
+	# Letzte Bearbeitung 30.09.2023
 	log info "Money wird gestartet..."
 	cd /$STARTVERZEICHNIS/$MONEYVERZEICHNIS/bin || return 1
 	
@@ -4236,14 +4228,17 @@ function mostart() {
 }
 
 ##
- #* menumostart.
- # Money Server starten.
- # 
- #? @param dialog.
- #? @return dialog.
- # todo: nichts.
+	#* Funktion: menumostart
+	#? Beschreibung:
+	# Diese Funktion dient dazu, den MoneyServer zu starten. Sie wechselt in das Verzeichnis, in dem sich die ausführbare Datei des MoneyServers befindet, und startet den Server im Hintergrund. Die Wahl zwischen der Ausführung mit "dotnet" oder "mono" wird anhand des Wertes der Umgebungsvariable DOTNETMODUS getroffen. Nach dem Start wird eine definierte Wartezeit (MONEYWARTEZEIT) eingehalten, um sicherzustellen, dass der Server vollständig gestartet ist. Die Funktion gibt eine Informationsmeldung aus und kehrt mit einem Rückgabewert 0 zurück.
+	#? Parameter: Keine.
+	#? Rückgabewert:
+	# - Erfolgreich: Die Funktion gibt eine Informationsmeldung aus und kehrt mit einem Rückgabewert 0 zurück, nachdem der MoneyServer gestartet wurde.
+	#? Beispielaufruf:
+	# menumostart
 ##
 function menumostart() {
+	# Letzte Bearbeitung 30.09.2023
 	log info "Money wird gestartet..."
 	cd /$STARTVERZEICHNIS/$MONEYVERZEICHNIS/bin || return 1
 	
@@ -4263,14 +4258,22 @@ function menumostart() {
 }
 
 ##
- #* mostop.
- # Money Server herunterfahren.
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+	#* Funktion: mostop
+	# 
+	#? Beschreibung:
+	# Diese Funktion dient dazu, den MoneyServer zu beenden. Sie überprüft zunächst, ob ein Bildschirm (Screen) mit dem Namen "MO" vorhanden ist, was auf einen laufenden MoneyServer hinweisen würde. Wenn der MoneyServer gefunden wird, sendet die Funktion einen Befehl zum Herunterfahren an den Bildschirm. Anschließend wird eine definierte Wartezeit (MONEYWARTEZEIT) eingehalten, um sicherzustellen, dass der Server ordnungsgemäß beendet wurde. Die Funktion gibt eine Warnmeldung aus und kehrt mit einem Rückgabewert 0 zurück, wenn der MoneyServer erfolgreich beendet wurde. Andernfalls wird eine Fehlermeldung ausgegeben, und die Funktion gibt einen Rückgabewert 1 zurück.
+	#
+	#? Parameter: Keine.
+	#
+	#? Rückgabewert:
+	# - Erfolgreich: Die Funktion gibt eine Warnmeldung aus und kehrt mit einem Rückgabewert 0 zurück, nachdem der MoneyServer erfolgreich beendet wurde.
+	# - Fehlerhaft: Die Funktion gibt eine Fehlermeldung aus und kehrt mit einem Rückgabewert 1 zurück, wenn der MoneyServer nicht gefunden wurde.
+	#
+	#? Beispielaufruf:
+	# mostop
 ##
 function mostop() {
+	# Letzte Bearbeitung 30.09.2023
 	if screen -list | grep -q "MO"; then
 		screen -S MO -p 0 -X eval "stuff 'shutdown'^M"
 		log warn "Money Beenden"
@@ -4283,13 +4286,22 @@ function mostop() {
 }
 
 ##
- #* menumostop.
- # Money Server herunterfahren.
- # 
- #? @param dialog.
- #? @return dialog.
- # todo: nichts.
+	#* Funktion: menumostop
+	# 
+	#? Beschreibung:
+	# Diese Funktion dient dazu, den MoneyServer zu beenden. Sie überprüft zunächst, ob ein Bildschirm (Screen) mit dem Namen "MO" vorhanden ist, was auf einen laufenden MoneyServer hinweisen würde. Wenn der MoneyServer gefunden wird, sendet die Funktion einen Befehl zum Herunterfahren an den Bildschirm. Anschließend wird eine definierte Wartezeit (MONEYWARTEZEIT) eingehalten, um sicherzustellen, dass der Server ordnungsgemäß beendet wurde. Die Funktion gibt eine Warnmeldung aus und kehrt mit einem Rückgabewert 0 zurück, wenn der MoneyServer erfolgreich beendet wurde. Andernfalls wird eine Fehlermeldung ausgegeben, und die Funktion gibt einen Rückgabewert 1 zurück.
+	#
+	#? Parameter: Keine.
+	#
+	#? Rückgabewert:
+	# - Erfolgreich: Die Funktion gibt eine Warnmeldung aus und kehrt mit einem Rückgabewert 0 zurück, nachdem der MoneyServer erfolgreich beendet wurde.
+	# - Fehlerhaft: Die Funktion gibt eine Fehlermeldung aus und kehrt mit einem Rückgabewert 1 zurück, wenn der MoneyServer nicht gefunden wurde.
+	#
+	#? Beispielaufruf:
+	# menumostop
+##
 function menumostop() {
+	# Letzte Bearbeitung 30.09.2023
 	if screen -list | grep -q "MO"; then
 		screen -S MO -p 0 -X eval "stuff 'shutdown'^M"
 		log warn "Money Beenden"
@@ -4302,15 +4314,23 @@ function menumostop() {
 }
 
 ##
- #* osscreenstop.
- # beendet ein Screeen. 
- # Beispiel-Example: osscreenstop sim1
- # 
- #? @param $SCREENSTOPSCREEN.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+	#* Funktion: osscreenstop
+	# 
+	#? Beschreibung:
+	# Diese Funktion dient dazu, einen bestimmten Screen (Bildschirm) zu beenden. Sie akzeptiert einen Parameter, der den Namen des zu beendenden Screens angibt (SCREENSTOPSCREEN). Die Funktion überprüft zunächst, ob der angegebene Screen existiert, indem sie die Liste der aktiven Screens durchsucht. Wenn der Screen gefunden wird, wird er durch den Befehl "screen -S SCREENSTOPSCREEN -X quit" beendet. Die Funktion gibt eine Erfolgsmeldung aus und kehrt mit einem Rückgabewert 0 zurück, wenn der Screen erfolgreich beendet wurde. Andernfalls wird eine Fehlermeldung ausgegeben, und die Funktion gibt einen Rückgabewert 1 zurück.
+	#
+	#? Parameter:
+	# - SCREENSTOPSCREEN: Der Name des zu beendenden Screens.
+	#
+	#? Rückgabewert:
+	# - Erfolgreich: Die Funktion gibt eine Erfolgsmeldung aus und kehrt mit einem Rückgabewert 0 zurück, nachdem der Screen erfolgreich beendet wurde.
+	# - Fehlerhaft: Die Funktion gibt eine Fehlermeldung aus und kehrt mit einem Rückgabewert 1 zurück, wenn der angegebene Screen nicht gefunden wurde.
+	#
+	#? Beispielaufruf:
+	# osscreenstop "mein_screen"
 ##
 function osscreenstop() {
+	# Letzte Bearbeitung 30.09.2023
 	SCREENSTOPSCREEN=$1
 	if screen -list | grep -q "$SCREENSTOPSCREEN"; then
 		log text "Screeen $SCREENSTOPSCREEN Beenden"
@@ -4324,14 +4344,23 @@ function osscreenstop() {
 }
 
 ##
- #* gridstart.
- # startet erst Robust und dann Money.
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+	#* Funktion: gridstart
+	#
+	#? Beschreibung:
+	# Die Funktion `gridstart` dient dazu, die verschiedenen Komponenten eines OpenSimulator-Grids (Robust und Money) zu starten. Zunächst werden die Einstellungen für den OpenSimulator über die Funktion `ossettings` konfiguriert. Anschließend überprüft die Funktion, ob die Screens für Robust und Money bereits laufen. Wenn eines oder beide der Screens nicht aktiv sind, werden sie gestartet, indem die Funktionen `rostart` und `mostart` aufgerufen werden. Diese Funktion ist hilfreich, um sicherzustellen, dass alle erforderlichen Komponenten des Grids aktiv sind.
+	#
+	#? Parameter:
+	# Diese Funktion akzeptiert keine Parameter.
+	#
+	#? Rückgabewert:
+	# - Erfolgreich: Die Funktion gibt einen Rückgabewert 0 zurück, nachdem sie die erforderlichen Komponenten gestartet hat.
+	# - Fehlerhaft: Die Funktion gibt keine Fehlermeldungen aus, sondern protokolliert nur, wenn Robust oder Money bereits laufen. Sie gibt einen Rückgabewert 0 zurück, wenn alle Komponenten gestartet wurden.
+	#
+	#? Beispielaufruf:
+	# gridstart
 ##
 function gridstart() {
+	# Letzte Bearbeitung 30.09.2023
 	ossettings
 	if screen -list | grep -q RO; then
 		log error "Robust laeuft bereits"
@@ -4347,14 +4376,23 @@ function gridstart() {
 }
 
 ##
- #* menugridstart.
- # startet erst Robust und dann Money.
- # 
- #? @param dialog.
- #? @return dialog.
- # todo: nichts.
+	#* Funktion: menugridstart
+	#
+	#? Beschreibung:
+	# Die Funktion `menugridstart` dient dazu, die verschiedenen Komponenten eines OpenSimulator-Grids (Robust und Money) zu starten. Zunächst werden die Einstellungen für den OpenSimulator über die Funktion `ossettings` konfiguriert. Anschließend überprüft die Funktion, ob die Screens für Robust und Money bereits laufen. Wenn eines oder beide der Screens nicht aktiv sind, werden sie gestartet, indem die Funktionen `rostart` und `mostart` aufgerufen werden. Diese Funktion ist hilfreich, um sicherzustellen, dass alle erforderlichen Komponenten des Grids aktiv sind.
+	#
+	#? Parameter:
+	# Diese Funktion akzeptiert keine Parameter.
+	#
+	#? Rückgabewert:
+	# - Erfolgreich: Die Funktion gibt einen Rückgabewert 0 zurück, nachdem sie die erforderlichen Komponenten gestartet hat.
+	# - Fehlerhaft: Die Funktion gibt keine Fehlermeldungen aus, sondern protokolliert nur, wenn Robust oder Money bereits laufen. Sie gibt einen Rückgabewert 0 zurück, wenn alle Komponenten gestartet wurden.
+	#
+	#? Beispielaufruf:
+	# menugridstart
 ##
 function menugridstart() {
+	# Letzte Bearbeitung 30.09.2023
 	ossettings
 	log line
 	if screen -list | grep -q RO; then
@@ -4370,52 +4408,92 @@ function menugridstart() {
 }
 
 ##
- #* icecaststart.
- # startet icecast2.
- # 
- #? @param dialog.
- #? @return dialog.
- # todo: nichts.
+	#* Funktion: icecaststart
+	#
+	#? Beschreibung:
+	# Die Funktion `icecaststart` dient dazu, den Icecast-Streaming-Server zu starten. Der Icecast-Server wird über das init.d-Systemdienstskript gestartet. Diese Funktion ermöglicht es, den Icecast-Server auf einfache Weise zu aktivieren, um Streaming-Dienste bereitzustellen.
+	#
+	#? Parameter:
+	# Diese Funktion akzeptiert keine Parameter.
+	#
+	#? Rückgabewert:
+	# - Erfolgreich: Wenn der Icecast-Server erfolgreich gestartet wurde, gibt die Funktion keinen expliziten Rückgabewert zurück.
+	# - Fehlerhaft: Wenn ein Fehler beim Starten des Icecast-Servers auftritt, wird dies in der Regel von den Meldungen des init.d-Scripts gemeldet. Die Funktion gibt keinen eigenen Rückgabewert zurück.
+	#
+	#? Beispielaufruf:
+	# icecaststart
 ##
 function icecaststart() {
+	# Letzte Bearbeitung 30.09.2023
+	# Starte den Icecast-Streaming-Server mit dem init.d-Systemdienstskript
 	sudo /etc/init.d/icecast2 start
 }
 
 ##
- #* icecaststop.
- # startet icecast2.
- # 
- #? @param dialog.
- #? @return dialog.
- # todo: nichts.
+	#* Funktion: icecaststop
+	#
+	#? Beschreibung:
+	# Die Funktion `icecaststop` dient dazu, den Icecast-Streaming-Server zu stoppen. Der Icecast-Server wird über das init.d-Systemdienstskript gestoppt. Diese Funktion ermöglicht es, den Icecast-Server auf einfache Weise zu deaktivieren.
+	#
+	#? Parameter:
+	# Diese Funktion akzeptiert keine Parameter.
+	#
+	#? Rückgabewert:
+	# - Erfolgreich: Wenn der Icecast-Server erfolgreich gestoppt wurde, gibt die Funktion keinen expliziten Rückgabewert zurück.
+	# - Fehlerhaft: Wenn ein Fehler beim Stoppen des Icecast-Servers auftritt, wird dies in der Regel von den Meldungen des init.d-Scripts gemeldet. Die Funktion gibt keinen eigenen Rückgabewert zurück.
+	#
+	#? Beispielaufruf:
+	# icecaststop
 ##
 function icecaststop() {
+	# Letzte Bearbeitung 30.09.2023
+	# Stoppe den Icecast-Streaming-Server mit dem init.d-Systemdienstskript
 	sudo /etc/init.d/icecast2 stop
 }
 
 ##
- #* icecastrestart.
- # startet icecast2.
- # 
- #? @param dialog.
- #? @return dialog.
- # todo: nichts.
+	#* Funktion: icecastrestart
+	#
+	#? Beschreibung:
+	# Die Funktion `icecastrestart` dient dazu, den Icecast-Streaming-Server neu zu starten. Der Icecast-Server wird über das init.d-Systemdienstskript neu gestartet. Diese Funktion ermöglicht es, den Icecast-Server nach Änderungen in der Konfiguration neu zu laden oder nach einem Fehlerzustand neu zu starten.
+	#
+	#? Parameter:
+	# Diese Funktion akzeptiert keine Parameter.
+	#
+	#? Rückgabewert:
+	# - Erfolgreich: Wenn der Icecast-Server erfolgreich neu gestartet wurde, gibt die Funktion keinen expliziten Rückgabewert zurück.
+	# - Fehlerhaft: Wenn ein Fehler beim Neustarten des Icecast-Servers auftritt, wird dies in der Regel von den Meldungen des init.d-Scripts gemeldet. Die Funktion gibt keinen eigenen Rückgabewert zurück.
+	#
+	#? Beispielaufruf:
+	# icecastrestart
 ##
 function icecastrestart() {
+	# Letzte Bearbeitung 30.09.2023
+	# Starte den Icecast-Streaming-Server neu mit dem init.d-Systemdienstskript
 	sudo /etc/init.d/icecast2 restart
 }
 
 ##
- #* icecastversion.
- # startet icecast2.
- # 
- #? @param dialog.
- #? @return dialog.
- # todo: nichts.
+	#* Funktion: icecastversion
+	#
+	#? Beschreibung:
+	# Die Funktion `icecastversion` gibt die Version des Icecast-Streaming-Servers aus. Sie ruft das Icecast-Programm mit der Option "-v" auf, um die Version anzuzeigen, und gibt die Ausgabe auf dem Bildschirm aus.
+	#
+	#? Parameter:
+	# Diese Funktion akzeptiert keine Parameter.
+	#
+	#? Rückgabewert:
+	# Die Funktion gibt die Version des Icecast-Servers auf dem Bildschirm aus.
+	#
+	#? Beispielaufruf:
+# icecastversion
 ##
 function icecastversion() {
+	# Letzte Bearbeitung 30.09.2023
+	# Gibt die Version des Icecast-Servers aus
 	/usr/bin/icecast2 -v
 }
+
 
 ###########################################################################
 #* Dateifunktionen Funktionsgruppe
@@ -7823,12 +7901,25 @@ function serverinstall22() {
 }
 
 ##
- #* serverinstall.
- # Auswahl der zu installierenden Pakete (Dies ist meinem Geschmack angepasst).
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+#* Funktion: serverinstall
+# 
+#? Beschreibung:
+# Diese Funktion überprüft, ob das Paket 'dialog' auf dem System installiert ist, um eine interaktive Installation zu ermöglichen.
+# Wenn 'dialog' installiert ist, wird der Benutzer gefragt, ob er alle erforderlichen Ubuntu-Pakete installieren möchte. 
+# Falls ja, werden verschiedene Installationsfunktionen aufgerufen, andernfalls wird zum Hauptmenü zurückgekehrt.
+# Wenn 'dialog' nicht installiert ist, wird der Benutzer einfach nach der Installation der Ubuntu-Pakete gefragt, ohne eine grafische Oberfläche zu verwenden.
+#
+#? Parameter:
+# Diese Funktion erwartet keine Parameter.
+#
+#? Rückgabewert:
+# Diese Funktion gibt keinen expliziten Rückgabewert zurück.
+#
+#? Abhängigkeiten:
+# - Die Funktion verwendet die Befehle 'dpkg-query', 'dialog', 'dialogclear', 'serverupgrade', 'installopensimulator', 'monoinstall18', 'installfinish', 'log', 'ScreenLog' und 'hauptmenu'.
+#
+#? Beispielaufruf:
+# serverinstall
 ##
 function serverinstall() {
 	# zuerst schauen ob dialog installiert ist
@@ -7867,12 +7958,23 @@ function serverinstall() {
 }
 
 ##
- #* installationen.
- # installationen, Was habe ich alles Installiert? sortiert auflisten.
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+	#* Funktion: installationen
+	# 
+	#? Beschreibung:
+	# Diese Funktion listet alle unter Linux installierten Pakete auf und speichert die Liste in einer Log-Datei.
+	#
+	#? Parameter:
+	# Diese Funktion erwartet keine Parameter.
+	#
+	#? Rückgabewert:
+	# Diese Funktion gibt immer den Wert 0 zurück, da keine Fehlerbehandlung implementiert ist.
+	#
+	#? Abhängigkeiten:
+	# - Die Funktion verwendet die Befehle 'log' und 'dpkg-query'.
+	# - Die Funktion verwendet die Umgebungsvariablen '$STARTVERZEICHNIS', '$DATEIDATUM' und '$logfilename'.
+	#
+	#? Beispielaufruf:
+	# installationen
 ##
 function installationen() {
 	log info "Liste aller Installierten Pakete unter Linux:"
@@ -7882,12 +7984,24 @@ function installationen() {
 }
 
 ##
- #* checkupgrade93
- # Wenn es ein Upgrade gibt, dann baut dies automatisch einen neuen OpenSimulator mit den eingestellten Plugins.
- # 
- #? @param keine.
- #? @return Already up to date.
- # todo: nichts.
+	#* Funktion: checkupgrade93
+	# 
+	#? Beschreibung:
+	# Diese Funktion überprüft, ob ein OpenSimulator-Upgrade verfügbar ist und bietet die Möglichkeit an, das Upgrade durchzuführen.
+	#
+	#? Parameter:
+	# Diese Funktion erwartet keine Parameter.
+	#
+	#? Rückgabewert:
+	# Diese Funktion gibt keinen expliziten Rückgabewert zurück.
+	#
+	#? Abhängigkeiten:
+	# - Die Funktion geht davon aus, dass das Arbeitsverzeichnis auf das OpenSimulator-Verzeichnis gesetzt ist.
+	# - Die Funktion verwendet die Befehle 'git pull', 'log' und 'osbuildingupgrade93'.
+	# - Die Funktion verwendet die Umgebungsvariable '$STARTVERZEICHNIS'.
+	#
+	#? Beispielaufruf:
+	# checkupgrade93
 ##
 function checkupgrade93() {
 	cd /$STARTVERZEICHNIS/opensim || exit
@@ -7895,7 +8009,7 @@ function checkupgrade93() {
 
 	# Already up to date?
     if [ "$CHECKERGEBNIS" = "Already up to date." ]; then 
-        log info "Der OpenSimulator ist Tagesaktuell.";
+        log info "Der Upgrade-Check ergab, ihr OpenSimuator ist Tagesaktuell.";
     else
 		log info "Es gibt einen neuen OpenSimulator.";
 
@@ -7912,25 +8026,50 @@ function checkupgrade93() {
 }
 
 ##
- #* pull
- # Upgrade check.
- # 
- #? @param keine.
- #? @return Already up to date.
- # todo: nichts.
+	#* Funktion: pull
+	# 
+	#? Beschreibung:
+	# Diese Funktion führt den Befehl 'git pull' aus, um Aktualisierungen aus dem Remote-Git-Repository in das lokale Repository zu ziehen.
+	#
+	#? Parameter:
+	# Diese Funktion erwartet keine Parameter.
+	#
+	#? Rückgabewert:
+	# Diese Funktion gibt keinen expliziten Rückgabewert zurück.
+	#
+	#? Abhängigkeiten:
+	# - Die Funktion verwendet den Befehl 'git pull'.
+	#
+	#? Beispielaufruf:
+	# pull
 ##
 function pull() {
+	# Führt den Befehl 'git pull' aus, um Aktualisierungen aus dem Remote-Git-Repository zu ziehen
 	git pull
 }
 
 ##
- #* osbuilding93.
- # Baut automatisch einen neuen OpenSimulator mit den eingestellten Plugins.
- # Beispiel Datei: opensim-0.9.2.2Dev-1187-gcf0b1b1.zip
- # bash osmtool.sh osbuilding 1187
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+	#* Funktion: osbuilding93
+	# 
+	#? Beschreibung:
+	# Diese Funktion führt den Prozess zum Aktualisieren und Kompilieren des OpenSimulator-Projekts durch.
+	# Je nach Verfügbarkeit von 'dialog' wird der Benutzer nach der Versionsnummer gefragt oder die Versionsnummer wird als Parameter erwartet.
+	# Dann wird der alte OpenSimulator gesichert, der neue aus dem Git-Repository geholt, vorbereitet und kompiliert.
+	#
+	#? Parameter:
+	# - $1 (optional): Die Versionsnummer des neuen OpenSimulator-Branches.
+	#
+	#? Rückgabewert:
+	# Diese Funktion gibt immer den Wert 0 zurück, da keine Fehlerbehandlung implementiert ist.
+	#
+	#? Abhängigkeiten:
+	# - Die Funktion verwendet die Befehle 'dpkg-query', 'dialog', 'cd', 'log', 'osdelete', 'git clone', 'git checkout', 'runprebuild.sh', 'dotnet build', 'osupgrade93', 'ScreenLog' und 'hilfemenu'.
+	# - Die Funktion verwendet die Umgebungsvariablen '$STARTVERZEICHNIS' und '$VERSION'.
+	#
+	#? Beispielaufruf:
+	# osbuilding93 0.9.2.2Dev-4-g5e9b3b4
+	# Oder (mit dialog):
+	# osbuilding93
 ##
 function osbuilding93() {
 	## dialog Aktionen
@@ -7980,13 +8119,24 @@ function osbuilding93() {
 }
 
 ##
- #* osbuildingupgrade93.
- # Upgradet automatisch den OpenSimulator 0.9.3.0 .
- # bash osmtool.sh osbuildingupgrade93
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: Test.
+	#* Funktion: osbuildingupgrade93
+	# 
+	#? Beschreibung:
+	# Diese Funktion sichert den aktuellen OpenSimulator, löscht ihn, lädt einen neuen OpenSimulator vom GitHub herunter,
+	# führt verschiedene Konfigurationsschritte aus und kompiliert den OpenSimulator.
+	#
+	#? Parameter:
+	# - $1 (optional): Die Versionsnummer des neuen OpenSimulator-Branches.
+	#
+	#? Rückgabewert:
+	# Diese Funktion gibt immer den Wert 0 zurück, da keine Fehlerbehandlung implementiert ist.
+	#
+	#? Abhängigkeiten:
+	# - Die Funktion verwendet die Befehle 'rm', 'mv', 'log', 'opensimgitcopy93', 'cd', 'git checkout', 'setversion93', 'runprebuild.sh', 'dotnet build', 'moneycopy93', 'scriptcopy', 'osupgrade93'.
+	# - Die Funktion verwendet die Umgebungsvariablen '$STARTVERZEICHNIS', '$MONEYVERZEICHNIS' und '$SETOSVERSION'.
+	#
+	#? Beispielaufruf:
+	# osbuildingupgrade93 09052023
 ##
 function osbuildingupgrade93() {
 	SETOSVERSION=$1
@@ -8036,11 +8186,6 @@ function osbuildingupgrade93() {
 	log line
 	log info "osupgrade93 startet!"
     osupgrade93
-
-	# log line
-    # log info "Ich warte 300 Sekunden und starte dann Produktiv neu!"
-    # sleep 300
-    # autorestart93
 
 	return 0
 }
