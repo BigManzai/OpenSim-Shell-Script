@@ -1,8 +1,8 @@
 #!/bin/bash
 
-###########################################################################
+#**************************************************************************
 #* Informationen
-###########################################################################
+#**************************************************************************
 
 # ? opensimMULTITOOL Copyright (c) 2021 2023 BigManzai Manfred Zainhofer
 # osmtool.sh Basiert auf meinen Einzelscripten, für den OpenSimulator (OpenSim) von http://opensimulator.org an denen ich bereits 7 Jahre Arbeite und verbessere.
@@ -20,7 +20,7 @@
 # ! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 # ! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-# * Status 30.09.2023 419 Funktionen.
+# * Status 01.10.2023 419 Funktionen.
 
 	# # Installieren sie bitte: #* Visual Studio Code
 	#* dazu die Plugins:
@@ -30,12 +30,12 @@
 	# outline map #? Navigationsleiste für Funktionen.
 	# todo: eine Menge warten wir´s ab.
 
-###########################################################################
+#**************************************************************************
 #* Einstellungen
-###########################################################################
+#**************************************************************************
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.1006" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.1027" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 ##
@@ -199,7 +199,7 @@ function vardelall() {
     done
 }
 
-### osmtoolconfigvariablen
+#** osmtoolconfigvariablen
 # Letzte Bearbeitung 26.09.2023
 # Beschreibung: Dies dient dazu, wichtige Konfigurationsinformationen für das OSM-Tool zu initialisieren.
 
@@ -233,7 +233,7 @@ SQLVERSION=$(echo "${SQLVERSIONVOLL:0:45}")
 
 # Den Pfad des osmtool.sh Skriptes herausfinden
 SCRIPTPATH=$(cd "$(dirname "$0")" && pwd)
-###
+#****************************************************************
 
 ##
 	#* Funktion: osmtranslateinstall
@@ -309,29 +309,29 @@ function osmtranslate() {
 		return 0
 	fi
 }
-function osmtranslate2() {
-	# Letzte Bearbeitung 26.09.2023
-    OSMTRANSTEXT="$1"
+# function osmtranslate2() {
+# 	# Letzte Bearbeitung 26.09.2023
+#     OSMTRANSTEXT="$1"
     
-    if [ "$OSMTRANSLATOR" = "OFF" ]; then
-        text="$OSMTRANSTEXT"
-        return 0
-    fi
+#     if [ "$OSMTRANSLATOR" = "OFF" ]; then
+#         text="$OSMTRANSTEXT"
+#         return 0
+#     fi
 
-    if [ "$OSMTRANSLATOR" = "ON" ]; then
-        # Nutzen Sie "trans" mit Optionen zur Übersetzung
-        text=$(trans -brief -no-warn "$OSMTRANS" "$OSMTRANSTEXT")
+#     if [ "$OSMTRANSLATOR" = "ON" ]; then
+#         # Nutzen Sie "trans" mit Optionen zur Übersetzung
+#         text=$(trans -brief -no-warn "$OSMTRANS" "$OSMTRANSTEXT")
 
-        # Überprüfen Sie, ob die Übersetzung erfolgreich war
-        if [ $? -ne 0 ]; then
-            echo "Fehler beim Übersetzen des Textes."
-            return 1
-        fi
-    else
-        text="$OSMTRANSTEXT"
-        return 0
-    fi
-}
+#         # Überprüfen Sie, ob die Übersetzung erfolgreich war
+#         if [ $? -ne 0 ]; then
+#             echo "Fehler beim Übersetzen des Textes."
+#             return 1
+#         fi
+#     else
+#         text="$OSMTRANSTEXT"
+#         return 0
+#     fi
+# }
 
 ##
 	#* osmtranslatedirekt - Übersetzt Text direkt mithilfe des OSM Translator-Dienstes
@@ -353,30 +353,30 @@ function osmtranslatedirekt() {
     #trans -show-original n -show-original-phonetics n -show-translation Y -show-translation-phonetics n -show-prompt-message n -show-languages n -show-original-dictionary N -show-dictionary n -show-alternatives n -no-warn $OSMTRANS "$OSMTRANSTEXT"
 	trans -brief $OSMTRANS "$OSMTRANSTEXT"
 }
-function osmtranslatedirekt2() {
-	# Letzte Bearbeitung 26.09.2023
-    OSMTRANSTEXT="$1"
+# function osmtranslatedirekt2() {
+# 	# Letzte Bearbeitung 26.09.2023
+#     OSMTRANSTEXT="$1"
 
-    if [ "$OSMTRANSLATOR" = "OFF" ]; then
-        text="$OSMTRANSTEXT"
-        return 0
-    fi
+#     if [ "$OSMTRANSLATOR" = "OFF" ]; then
+#         text="$OSMTRANSTEXT"
+#         return 0
+#     fi
 
-    if [ "$OSMTRANS" = ":de" ]; then
-        OSMTRANSLATOR="OFF"
-        echo "Es funktioniert nicht von derselben Sprache in dieselbe zu übersetzen."
-        return 1
-    fi
+#     if [ "$OSMTRANS" = ":de" ]; then
+#         OSMTRANSLATOR="OFF"
+#         echo "Es funktioniert nicht von derselben Sprache in dieselbe zu übersetzen."
+#         return 1
+#     fi
 
-    # Nutzen Sie "trans" mit Optionen zur Übersetzung
-    text=$(trans -brief "$OSMTRANS" "$OSMTRANSTEXT")
+#     # Nutzen Sie "trans" mit Optionen zur Übersetzung
+#     text=$(trans -brief "$OSMTRANS" "$OSMTRANSTEXT")
 
-    # Überprüfen Sie, ob die Übersetzung erfolgreich war
-    if [ $? -ne 0 ]; then
-        echo "Fehler beim Übersetzen des Textes."
-        return 1
-    fi
-}
+#     # Überprüfen Sie, ob die Übersetzung erfolgreich war
+#     if [ $? -ne 0 ]; then
+#         echo "Fehler beim Übersetzen des Textes."
+#         return 1
+#     fi
+# }
 
 ##
 	#* osmnotranslate - Kopiert den Text, ohne Übersetzung durchzuführen
@@ -443,18 +443,16 @@ function janein() {
 function log() {
 	local text
 	local logtype
-	#local datetime	
 	logtype="$1"
 
-	### Translate
-	#text="$2"
+	# Translate
 	rohtext="$2"
 	OSMTRANSTEXT="$2"
     osmtranslate "$rohtext"
 	
 	#datetime=$(date +'%F %H:%M:%S')
 	DATEIDATUM=$(date +%d_%m_%Y)
-	lline="#####################################################################################"
+	lline="*************************************************************************************"
 
 	if [ "$LOGWRITE" = "yes" ]; then
 		case $logtype in
@@ -502,9 +500,9 @@ function osmtoolconfig() {
 	# Letzte Bearbeitung 26.09.2023
 	STARTVERZEICHNIS=$1; ROBUSTVERZEICHNIS=$2; MONEYVERZEICHNIS=$3; OPENSIMVERZEICHNIS=$4; CONFIGPFAD=$5; OSTOOLINI=$6	
     {		
-		echo "### Einstellungen $SCRIPTNAME $VERSION"
+		echo "#** Einstellungen $SCRIPTNAME $VERSION"
 		echo "     "
-		echo "## Das Startverzeichnis home oder opt zum Beispiel."
+		echo "#* Das Startverzeichnis home oder opt zum Beispiel."
 		echo "    STARTVERZEICHNIS=\"$STARTVERZEICHNIS\""
 		echo "    MONEYVERZEICHNIS=\"$MONEYVERZEICHNIS\""
 		echo "    ROBUSTVERZEICHNIS=\"$ROBUSTVERZEICHNIS\""
@@ -536,7 +534,7 @@ function osmtoolconfig() {
 		echo "     "
 		echo "    DOTNETMODUS=\"$DOTNETMODUS\""
 		echo "     "
-		echo "## Translate Konfigurationsbereich."
+		echo "#* Translate Konfigurationsbereich."
 		echo "   OSMTRANSLATOR=\"$OSMTRANSLATOR\" # ON/OFF"
 		echo "   OSMTRANS=\"$OSMTRANS\" # Sprache in der übersetzt werdn soll."
 		echo "#     OSMTRANS=":fr" # Sprache in der übersetzt werdn soll."
@@ -591,8 +589,8 @@ function osmtoolconfig() {
 		echo "#     │ Hawaiian       -  haw │ Polish         -   pl │                       │"
 		echo "#     └───────────────────────┴───────────────────────┴───────────────────────┘"
 		echo "     "
-		echo "## Schrift- und Hintergrundfarben"
-		echo "##  0 – Black, 1 – Red, 2 – Green, 3 – Yellow, 4 – Blue, 5 – Magenta, 6 – Cyan, 7 – White"
+		echo "#* Schrift- und Hintergrundfarben"
+		echo "#*  0 – Black, 1 – Red, 2 – Green, 3 – Yellow, 4 – Blue, 5 – Magenta, 6 – Cyan, 7 – White"
 		echo "    # font color;       background color;"
 		echo "    textfontcolor=7;    textbaggroundcolor=0;"
 		echo "    debugfontcolor=4;   debugbaggroundcolor=0;"
@@ -604,9 +602,9 @@ function osmtoolconfig() {
 		echo "    ScreenLogLevel=0; # ScreenLogLevel=0 nichts machen, bis ScreenLogLevel=5 Funktionsnamen ausgeben."
 		echo '    LOGWRITE="yes" # yes/no'
 		echo '    logfilename="_multitool"'
-		echo '    line="############################################################";'
+		echo '    line="************************************************************";'
 		echo "     "
-		echo "## Dateien"
+		echo "#* Dateien"
 		echo '    REGIONSDATEI="osmregionlist.ini"'
 		echo '    SIMDATEI="osmsimlist.ini"'
 		echo '    OPENSIMDOWNLOAD="http://opensimulator.org/dist/"'
@@ -619,7 +617,7 @@ function osmtoolconfig() {
 		echo '    LOGDELETE="yes" # yes/no'
 		echo '    VISITORLIST="yes" # yes/no - schreibt vor dem loeschen alle Besucher samt mac in eine log Datei.'
 		echo "     "
-		echo "## Inklusive"
+		echo "#* Inklusive"
 		echo '    SCRIPTCOPY="yes"'
 		echo '    MONEYCOPY="yes"'
 		echo '    MUTELISTCOPY="yes"'
@@ -630,7 +628,7 @@ function osmtoolconfig() {
 		echo '    AUTOCONFIG="no"'
 		echo '    OSSEARCHCOPY="no"'
 		echo "     "
-		echo "## Die unterschiedlichen wartezeiten bis die Aktion ausgefuehrt wurde."
+		echo "#* Die unterschiedlichen wartezeiten bis die Aktion ausgefuehrt wurde."
 		echo "    WARTEZEIT=60 # Ist eine allgemeine Wartezeit."
 		echo "    STARTWARTEZEIT=10 # Startwartezeit ist eine Pause, damit nicht alle Simulatoren gleichzeitig starten."
 		echo "    STOPWARTEZEIT=30 # Stopwartezeit ist eine Pause, damit nicht alle Simulatoren gleichzeitig herunterfahren."
@@ -639,18 +637,18 @@ function osmtoolconfig() {
 		echo "    BACKUPWARTEZEIT=180 # Backupwartezeit ist eine Pause, damit der Server nicht ueberlastet wird."
 		echo "    AUTOSTOPZEIT=60 # Autostopzeit ist eine Pause, um den Simulatoren zeit zum herunterfahren gegeben wird, bevor haengende Simulatoren gekillt werden."
 		echo "     "
-		echo "## Linux Einstellungen"
+		echo "#* Linux Einstellungen"
 		echo '    SETMONOTHREADSON="yes"'
 		echo "    SETMONOTHREADS=1024"
 		echo '    SETULIMITON="yes"'
 		echo '    SETMONOGCPARAMSON1="no"'
 		echo '    SETMONOGCPARAMSON2="yes"'
 		echo "     "
-		echo "## Mono Version fuer Build Vorgang Visual Studio 2019 oder 2022 - Zweite Zahl net/mono framework."
+		echo "#* Mono Version fuer Build Vorgang Visual Studio 2019 oder 2022 - Zweite Zahl net/mono framework."
 		echo "    # 1948, 1950, 1960, 1970 - 2248, 2250, 2260, 2270"
 		echo '    netversion="2248"'
 		echo "     "
-		echo "## Divers"
+		echo "#* Divers"
 		echo '    SETOSCOMPION="no" # Mit oder ohne log Datei kompilieren. yes oder no.'
 		echo '    SETAOTON="no"'
 		echo "    # opensim-0.9.2.2Dev-4-g5e9b3b4.zip"
@@ -658,7 +656,7 @@ function osmtoolconfig() {
 		echo '    # OSVERSION="opensim-0.9.3.0Dev-"'
 		echo '    insterweitert="yes"'
 		echo "     "
-		echo "## Bereinigungen"
+		echo "#* Bereinigungen"
 		echo '    AUTOCLEANALL="yes"'
 		echo '    GRIDCACHECLEAR="yes"'
 		echo '    SCRIPTCLEAR="no"'
@@ -667,7 +665,7 @@ function osmtoolconfig() {
 		echo '    RMAPTILESCLEAR="yes"'
 		echo '    RBAKESCLEAR="no"'
 		echo "     "
-		echo "## OpenSim Downloads"
+		echo "#* OpenSim Downloads"
 		echo '    LINK01="http://opensimulator.org/dist/OpenSim-LastAutoBuild.zip"'
 		echo '    LINK02="http://opensimulator.org/dist/opensim-0.8.2.1-source.tar.gz"'
 		echo '    LINK03="http://opensimulator.org/dist/opensim-0.8.2.1-source.zip"'
@@ -695,7 +693,7 @@ function osmtoolconfig() {
 		echo '    LINK25="http://opensimulator.org/dist/opensim-0.9.2.0.zip"'
 		echo '    LINK26="http://opensimulator.org/dist/opensim-0.9.2.1.zip"'
 		echo "     "
-		echo "## Log Dateien"
+		echo "#* Log Dateien"
 		echo '    apache2errorlog="/var/log/apache2/error.log"'
 		echo '    apache2accesslog="/var/log/apache2/access.log"'
 		echo '    authlog="/var/log/auth.log"'
@@ -703,12 +701,12 @@ function osmtoolconfig() {
 		echo '    mysqlmariadberor="/var/log/mysql/mariadb.err"'
 		echo '    mysqlerrorlog="/var/log/mysql/error.log"'
 		echo "     "
-		echo "## Liste der zu verwendende Musiklisten."
+		echo "#* Liste der zu verwendende Musiklisten."
 		echo '    listVar="50s 60s 70s 80s 90s Alternative Blues Classic Club Country Dance Disco EDM Easy Electronic Folk Funk Gothic Heavy Hits House Indie Jazz Metal Misc Oldies Party Pop Reggae Rock Schlager Soul Techno Top Trance industrial pop"'
     } > "$OSTOOLINI"
 
-	echo "### Ihre neuen Konfigurationsdateien wurden geschrieben! ###"
-	echo "#####################  FERTIG  #############################"
+	echo "** Ihre neuen Konfigurationsdateien wurden geschrieben! **#"
+	echo "#*******************  FERTIG  ****************************#"
 }
 
 ##
@@ -734,60 +732,60 @@ function osmtoolconfigabfrage() {
 	read -r OSMTRANSLATOR
 	if [ "$OSMTRANSLATOR" = "" ]; then OSMTRANSLATOR="OFF"; fi
 	log rohtext "your selection: $OSMTRANSLATOR"
-	log rohtext "##################################################################"
+	log rohtext "*******************************************************************"
 
 	log rohtext "Please select your language: [:de]"
 	read -r OSMTRANS
 	if [ "$OSMTRANS" = "" ]; then OSMTRANS=":de"; fi
 	log rohtext "Your language $OSMTRANS"
-	log rohtext "##################################################################"
+	log rohtext "*******************************************************************"
 
 	log rohtext " "
-	log rohtext "##################################################################"
-	log rohtext "########### ABBRUCH MIT DER TASTENKOMBINATION ####################"
-	log rohtext "####################  CTRL/STRG + C  #############################"
-	log rohtext "##################################################################"
-	log rohtext "##     Die Werte in den [Klammern] sind vorschläge              ##"
-	log rohtext "##     und können mit Enter übernommen werden.                  ##"
-	log rohtext "##################################################################"
-	log rohtext "##   Daten stehen gegeben falls auch in der alten opensim.cnf   ##"
-	log rohtext "##################################################################"
+	log rohtext "*******************************************************************"
+	log rohtext "********** ABBRUCH MIT DER TASTENKOMBINATION ********************"
+	log rohtext "********************  CTRL/STRG + C  *****************************"
+	log rohtext "*******************************************************************"
+	log rohtext #**     Die Werte in den [Klammern] sind vorschläge              *#"
+	log rohtext #**     und können mit Enter übernommen werden.                  *#"
+	log rohtext "*******************************************************************"
+	log rohtext #**   Daten stehen gegeben falls auch in der alten opensim.cnf   *#"
+	log rohtext "*******************************************************************"
 	log rohtext " "
 	log rohtext "Das Verzeichnis wo sich ihr Grid befindet oder befinden soll ["${VSTARTVERZEICHNIS//\//}"]"
 	read -r STARTVERZEICHNIS
 	if [ "$STARTVERZEICHNIS" = "" ]; then STARTVERZEICHNIS=""${VSTARTVERZEICHNIS//\//}""; fi
 	log rohtext "Ihr Gridverzeichnis ist $STARTVERZEICHNIS"
-	log rohtext "##################################################################"
+	log rohtext "*******************************************************************"
 
 	log rohtext "Das Verzeichnis wo sich ihr Robust befindet [robust]"
 	read -r ROBUSTVERZEICHNIS
 	if [ "$ROBUSTVERZEICHNIS" = "" ]; then ROBUSTVERZEICHNIS="robust"; fi
 	log rohtext "Ihr Robustverzeichnis ist $ROBUSTVERZEICHNIS"
-	log rohtext "##################################################################"
+	log rohtext "*******************************************************************"
 
 	log rohtext "Das Verzeichnis wo sich ihr Moneyverzeichnis befindet [robust]"
 	read -r MONEYVERZEICHNIS
 	if [ "$MONEYVERZEICHNIS" = "" ]; then MONEYVERZEICHNIS="robust"; fi
 	log rohtext "Ihr Moneyverzeichnis ist $MONEYVERZEICHNIS"
-	log rohtext "##################################################################"
+	log rohtext "*******************************************************************"
 
 	log rohtext "Das Verzeichnis wo sich ihr OpenSimverzeichnis befindet [opensim]"
 	read -r OPENSIMVERZEICHNIS
 	if [ "$OPENSIMVERZEICHNIS" = "" ]; then OPENSIMVERZEICHNIS="opensim"; fi
 	log rohtext "Ihr OpenSimverzeichnis ist $OPENSIMVERZEICHNIS"
-	log rohtext "##################################################################"
+	log rohtext "*******************************************************************"
 
 	log rohtext "Das Verzeichnis wo sich ihre Konfigurationsdateien befindet [OpenSimConfig]"
 	read -r CONFIGPFAD
 	if [ "$CONFIGPFAD" = "" ]; then CONFIGPFAD="OpenSimConfig"; fi
 	log rohtext "Ihr Konfigurationsdateienverzeichnis ist $CONFIGPFAD"
-	log rohtext "##################################################################"
+	log rohtext "*******************************************************************"
 
 	log rohtext "Soll dotnet 6 benutzt werden [yes] no"
 	read -r DOTNETMODUS
 	if [ "$DOTNETMODUS" = "" ]; then DOTNETMODUS="yes"; fi
 	log rohtext "Ihre dotnet 6 auswahl ist DOTNETMODUS=$DOTNETMODUS"
-	log rohtext "##################################################################"
+	log rohtext "*******************************************************************"
 
     # Fertig und abfragen
     #osmtoolconfig "/$STARTVERZEICHNIS/osmtoolconfig.ini"
@@ -804,25 +802,25 @@ function osmtoolconfigabfrage2() {
     read -r OSMTRANSLATOR
     if [ "$OSMTRANSLATOR" = "" ]; then OSMTRANSLATOR="OFF"; fi
     log rohtext "Your selection: $OSMTRANSLATOR"
-    log rohtext "##################################################################"
+    log rohtext "*******************************************************************"
 
     # Benutzereingabe für Sprachauswahl
     log rohtext "Please select your language: [:de]"
     read -r OSMTRANS
     if [ "$OSMTRANS" = "" ]; then OSMTRANS=":de"; fi
     log rohtext "Your language: $OSMTRANS"
-    log rohtext "##################################################################"
+    log rohtext "*******************************************************************"
 
     log rohtext " "
-    log rohtext "##################################################################"
-    log rohtext "########### CANCEL WITH KEY COMBINATION ###########################"
-    log rohtext "####################  CTRL/STRG + C  #############################"
-    log rohtext "##################################################################"
-    log rohtext "## Values in brackets [] are default suggestions                 ##"
-    log rohtext "## and can be accepted with Enter.                                ##"
-    log rohtext "##################################################################"
-    log rohtext "## Data may also be available in the old opensim.cnf file.       ##"
-    log rohtext "##################################################################"
+    log rohtext "*******************************************************************"
+    log rohtext "*********** CANCEL WITH KEY COMBINATION ***************************"
+    log rohtext "*********************  CTRL/STRG + C  *****************************"
+    log rohtext "*******************************************************************"
+    log rohtext #** Values in brackets [] are default suggestions                 *#"
+    log rohtext #** and can be accepted with Enter.                                *#"
+    log rohtext "*******************************************************************"
+    log rohtext #** Data may also be available in the old opensim.cnf file.       *#"
+    log rohtext "*******************************************************************"
     log rohtext " "
 
     # Benutzereingabe für Startverzeichnis
@@ -830,50 +828,50 @@ function osmtoolconfigabfrage2() {
     read -r STARTVERZEICHNIS
     if [ "$STARTVERZEICHNIS" = "" ]; then STARTVERZEICHNIS="${VSTARTVERZEICHNIS//\//}"; fi
     log rohtext "Your grid directory is: $STARTVERZEICHNIS"
-    log rohtext "##################################################################"
+    log rohtext "*******************************************************************"
 
     # Benutzereingabe für Robust-Verzeichnis
     log rohtext "Directory where your Robust is located [robust]"
     read -r ROBUSTVERZEICHNIS
     if [ "$ROBUSTVERZEICHNIS" = "" ]; then ROBUSTVERZEICHNIS="robust"; fi
     log rohtext "Your Robust directory is: $ROBUSTVERZEICHNIS"
-    log rohtext "##################################################################"
+    log rohtext "*******************************************************************"
 
     # Benutzereingabe für Money-Verzeichnis
     log rohtext "Directory where your Money directory is located [robust]"
     read -r MONEYVERZEICHNIS
     if [ "$MONEYVERZEICHNIS" = "" ]; then MONEYVERZEICHNIS="robust"; fi
     log rohtext "Your Money directory is: $MONEYVERZEICHNIS"
-    log rohtext "##################################################################"
+    log rohtext "*******************************************************************"
 
     # Benutzereingabe für OpenSim-Verzeichnis
     log rohtext "Directory where your OpenSim directory is located [opensim]"
     read -r OPENSIMVERZEICHNIS
     if [ "$OPENSIMVERZEICHNIS" = "" ]; then OPENSIMVERZEICHNIS="opensim"; fi
     log rohtext "Your OpenSim directory is: $OPENSIMVERZEICHNIS"
-    log rohtext "##################################################################"
+    log rohtext "*******************************************************************"
 
     # Benutzereingabe für Konfigurationsverzeichnis
     log rohtext "Directory where your configuration files are located [OpenSimConfig]"
     read -r CONFIGPFAD
     if [ "$CONFIGPFAD" = "" ]; then CONFIGPFAD="OpenSimConfig"; fi
     log rohtext "Your configuration files directory is: $CONFIGPFAD"
-    log rohtext "##################################################################"
+    log rohtext "*******************************************************************"
 
     # Benutzereingabe für dotnet 6 Modus
     log rohtext "Should dotnet 6 be used [yes] no"
     read -r DOTNETMODUS
     if [ "$DOTNETMODUS" = "" ]; then DOTNETMODUS="yes"; fi
     log rohtext "Your dotnet 6 selection is: DOTNETMODUS=$DOTNETMODUS"
-    log rohtext "##################################################################"
+    log rohtext "*******************************************************************"
 
     # Erstellen der opensimTOOL-Konfigurationsdatei
     osmtoolconfig "$STARTVERZEICHNIS" "$ROBUSTVERZEICHNIS" "$MONEYVERZEICHNIS" "$OPENSIMVERZEICHNIS" "$CONFIGPFAD" "/$SCRIPTPATH/osmtoolconfig.ini"
 }
 
-###########################################################################
+#**************************************************************************
 #* Konfiguration opensimMULTITOOL # Letzte Bearbeitung 26.09.2023
-###########################################################################
+#**************************************************************************
 # Nutzer mit Konfigurationsfragen quaelen
 # Abfrage Konfig Einstellungen
 if ! [ -f "/$SCRIPTPATH/osmtoolconfig.ini" ]; then osmtoolconfigabfrage; fi
@@ -892,9 +890,9 @@ sleep 1
 # Eingabeauswertung fuer Funktionen ohne dialog.
 KOMMANDO=$1
 
-###########################################################################
+#**************************************************************************
 #* Hilfsfunktionen Funktionsgruppe
-###########################################################################
+#**************************************************************************
 
 ##
 	#* dummyvar, shellcheck disable=SC2034 umgehen.
@@ -1191,62 +1189,44 @@ function remarklist() {
 	ergebnisflist=$(grep -B9 -i -r "$suche " $file) # B8 Acht Zeilen vor dem Funktionsnamen.
 	echo "$ergebnisflist" >/$STARTVERZEICHNIS/osmRemarklist"$DATEIDATUM".txt
 }
+
 ##
-	#* Funktion: remarklist
-	#
+	#* Funktion: createmanual
 	#? Beschreibung:
-	# Diese Funktion sucht nach Kommentaren, die Funktionen in einer angegebenen Shell-Datei
-	# vorangehen, und speichert die gefundenen Kommentare in einer Ausgabedatei im
-	# angegebenen Verzeichnis. Die Anzahl der Zeilen vor dem Funktionsnamen, die in
-	# den Ausgabekommentaren enthalten sein sollen, kann angepasst werden.
+	# Diese Funktion erstellt eine Markdown-Datei, die die Dokumentation für den Code enthält.
 	#? Parameter:
-	# $1 - Die Pfadangabe zur Shell-Datei, in der nach Kommentaren gesucht werden soll.
-	# $2 - Die Ausgabedatei, in der die gefundenen Kommentare gespeichert werden sollen.
-	# $3 - Die Anzahl der Zeilen vor dem Funktionsnamen, die in den Ausgabekommentaren enthalten sein sollen.
-	#? Beispielaufruf:
-	# remarklist "/Pfad/zur/Shell-Datei.sh" "/Ausgabeverzeichnis/ergebnis.txt" 8
+	# Keine
+	#? Verwendungsbeispiel:
+	# createmanual
+	#? Abhängigkeiten:
+	# Diese Funktion verwendet die Umgebungsvariable STARTVERZEICHNIS und DATEIDATUM.
+	#? Ausgabe:
+	# Die Funktion erstellt eine Markdown-Datei mit dem Namen "Manual_YYYYMMDD.md" im STARTVERZEICHNIS.
+	#? Exit-Status:
+	# 0 - Die Funktion wurde erfolgreich ausgeführt.
+	# 1 - Ein Fehler ist aufgetreten.
 ##
-function remarklist2() {
-	# Letzte Bearbeitung 26.09.2023
-    # Prüfen, ob die erforderlichen Parameter vorhanden sind
-    if [ $# -ne 3 ]; then
-        echo "Verwendung: remarklist <Shell-Datei> <Ausgabedatei> <Anzahl der Zeilen vor dem Funktionsnamen>"
+function createmanual() {
+    local file="/$STARTVERZEICHNIS/osmtool.sh"
+    
+    # Extrahiere den dokumentierten Code-Abschnitt zwischen den Markierungen '##' und '()' aus der Datei.
+	#ergebnisflist=$(sed -ne '/##/,/()/p' $file)
+	ergebnisflist=$(sed -ne '/##/,/()/ {/{/,/}/p}' $file)
+	ergebnisflist=$(echo "$ergebnisflist" | sed '/^function /d')
+    
+    # Erzeuge die Ausgabedatei im STARTVERZEICHNIS mit dem aktuellen Datum als Teil des Dateinamens.
+    echo "$ergebnisflist" >/$STARTVERZEICHNIS/Manual_"$DATEIDATUM".md
+    
+    # Prüfe den Erfolg der Ausführung und gebe entsprechenden Exit-Status zurück.
+    if [ $? -eq 0 ]; then
+        echo "Dokumentation erfolgreich erstellt."
+        return 0
+    else
+        echo "Fehler beim Erstellen der Dokumentation."
         return 1
     fi
-
-    local file="$1"
-    local output_file="$2"
-    local lines_before_function="$3"
-    local search="function"
-
-    # Überprüfen, ob die angegebene Datei existiert
-    if [ ! -f "$file" ]; then
-        echo "Die angegebene Shell-Datei existiert nicht."
-        return 1
-    fi
-
-    # Suchen nach Kommentaren vor Funktionen in der Datei und in die Ausgabedatei schreiben
-    grep -B"$lines_before_function" -i -r "$search " "$file" > "$output_file"
-
-    echo "Die gefundenen Kommentare wurden in $output_file gespeichert."
 }
 
-##
- #* trimm.
- # Leerzeichen korrigieren, trimm "   Beispiel   Text    "
- # oder trimm $variable, rueckgabe in Variable: $trimmvar.
- #
- #? @param $variable.
- #? @return $trimmvar.
- # todo: nichts.
-##
-function trimm() {
-	set -f
-	# shellcheck disable=SC2086,SC2048
-	set -- $*
-	trimmvar=$(printf '%s\n' "$*")
-	set +f
-}
 ##
 	#* Funktion: trimm
 	#
@@ -1260,30 +1240,12 @@ function trimm() {
 	#? Beispielaufruf:
 	# trimm "   Hallo, Welt!   " "   Guten Tag   "
 ##
-function trimm2() {
-	# Letzte Bearbeitung 26.09.2023
-    # Prüfen, ob mindestens ein Parameter übergeben wurde
-    if [ $# -eq 0 ]; then
-        echo "Verwendung: trimm <Zeichenkette1> <Zeichenkette2> ..."
-        return 1
-    fi
-
-    local trimmvar=""  # Initialisiere die Ergebnisvariable
-
-    # Schleife durch alle übergebenen Zeichenketten
-    for arg in "$@"; do
-        # Entferne führende und abschließende Leerzeichen
-        trimmed_arg="${arg#"${arg%%[![:space:]]*}"}"
-        trimmed_arg="${trimmed_arg%"${trimmed_arg##*[![:space:]]}"}"
-
-        # Füge das bereinigte Argument zur Ergebnisvariable hinzu
-        trimmvar="$trimmvar$trimmed_arg "
-    done
-
-    # Entferne eventuelles letztes Leerzeichen aus der Ergebnisvariable
-    trimmvar="${trimmvar%"${trimmvar##*[![:space:]]}"}"
-
-    echo "$trimmvar"
+function trimm() {
+	set -f
+	# shellcheck disable=SC2086,SC2048
+	set -- $*
+	trimmvar=$(printf '%s\n' "$*")
+	set +f
 }
 
 ##
@@ -1532,7 +1494,7 @@ function laeuftos() {
 	#   "Hallo"
 	#   "Welt"
 ##
-trim_all() {
+function trim_all() {
 	# Letzte Bearbeitung 26.09.2023
 
     # Aktiviert Optionen zum Splitten von Argumenten
@@ -1872,7 +1834,7 @@ function mysqlrest() {
 
     # Ausführen des MySQL-Befehls und Erfassen des Ergebnisses
 	result_mysqlrest=$(echo "$mysqlcommand;" | MYSQL_PWD=$password mysql -u"$username" "$databasename" -N) 2>/dev/null
-    # result_mysqlrest=$(echo "$mysqlcommand;" | MYSQL_PWD="$password" mysql -u"$username" "$databasename" -N 2>/dev/null)  ### NEU testen
+    # result_mysqlrest=$(echo "$mysqlcommand;" | MYSQL_PWD="$password" mysql -u"$username" "$databasename" -N 2>/dev/null)  #** NEU testen
 }
 
 ##
@@ -1896,12 +1858,12 @@ function mysqlrestnodb() {
 
     # Ausführen des MySQL-Befehls und Erfassen des Ergebnisses
 	result_mysqlrestnodb=$(echo "$mysqlcommand" | MYSQL_PWD=$password mysql -u"$username")
-    # result_mysqlrestnodb=$(echo "$mysqlcommand" | MYSQL_PWD="$password" mysql -u"$username" 2>/dev/null)  ### NEU testen
+    # result_mysqlrestnodb=$(echo "$mysqlcommand" | MYSQL_PWD="$password" mysql -u"$username" 2>/dev/null)  #** NEU testen
 }
 
-###########################################################################
+#**************************************************************************
 #* Konfigurationen Funktionsgruppe
-###########################################################################
+#**************************************************************************
 
 ##
 	#* instdialog - Installiert das Dialog-Programm für interaktive Shell-Dialoge.
@@ -2382,9 +2344,9 @@ function ossettings() {
 	return 0
 }
 
-###########################################################################
+#**************************************************************************
 #* Log und Cache Dateien Funktionsgruppe
-###########################################################################
+#**************************************************************************
 
 ##
 	#* ScreenLog.
@@ -2488,9 +2450,9 @@ function historylogclear() {
 	esac
 }
 
-###########################################################################
+#**************************************************************************
 #* Bildschirmausgaben Funktionsgruppe
-###########################################################################
+#**************************************************************************
 
 ##
 	#* lastrebootdatum.
@@ -2979,9 +2941,9 @@ function screenlistrestart() {
 }
 
 
-###########################################################################
+#**************************************************************************
 #* Downloads Funktionsgruppe
-###########################################################################
+#**************************************************************************
 
 ##
 	#* Funktion: downloados
@@ -3156,9 +3118,9 @@ function mysqlbackup() {
 	fi
 }
 
-###########################################################################
+#**************************************************************************
 #* Sicherheitsfunktionen Funktionsgruppe
-###########################################################################
+#**************************************************************************
 
 ##
 	#* Funktion: passgen
@@ -3200,7 +3162,7 @@ function passgen() {
 ##
 function passwdgenerator() {
 	# Letzte Bearbeitung 29.09.2023
-	### dialog Aktionen
+	#** dialog Aktionen
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
 		# Alle Aktionen mit dialog
@@ -3224,9 +3186,9 @@ function passwdgenerator() {
 	return 0
 }
 
-###########################################################################
+#**************************************************************************
 #* KI AI Funktionsgruppe
-###########################################################################
+#**************************************************************************
 
 ##
 	#* Funktion: dalaiinstallinfos
@@ -3499,9 +3461,9 @@ function dalaiupgrade() {
 	npx dalai@$dalaiversion setup
 }
 
-###########################################################################
+#**************************************************************************
 #* OpenSimulator Kommandos-Funktionen Funktionsgruppe
-###########################################################################
+#**************************************************************************
 
 ##
 	#* Funktion: oscommand
@@ -3890,9 +3852,9 @@ function menuloadinventar() {
 	unset LOADINVSCREEN NAME VERZEICHNIS PASSWORD DATEI
 }
 
-###########################################################################
+#**************************************************************************
 #* Starten und Stoppen Funktionsgruppe
-###########################################################################
+#**************************************************************************
 
 ##
 	#* Funktion: osstart
@@ -4495,9 +4457,9 @@ function icecastversion() {
 }
 
 
-###########################################################################
+#**************************************************************************
 #* Dateifunktionen Funktionsgruppe
-###########################################################################
+#**************************************************************************
 
 ##
  #* saveinventar.
@@ -4802,7 +4764,7 @@ function rologdel() {
  # todo: nichts.
 ##
 function menumapdel() {
-	### dialog Aktionen
+	#** dialog Aktionen
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
 		# Alle Aktionen mit dialog
@@ -4837,7 +4799,7 @@ function menumapdel() {
  # todo: nichts.
 ##
 function menulogdel() {
-	### dialog Aktionen
+	#** dialog Aktionen
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
 		# Alle Aktionen mit dialog
@@ -4904,9 +4866,9 @@ function autoassetcachedel() {
 	return 0
 }
 
-###########################################################################
+#**************************************************************************
 #* Starten und Stoppen Funktionsgruppe
-###########################################################################
+#**************************************************************************
 
 ##
  #* menugridstop.
@@ -6143,7 +6105,7 @@ function moneydelete() {
 function osgitholen() {
 	if [ -d /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/ ]; then
 		log rohtext "Kopieren der Entwicklungsversion des OpenSimulator aus dem Git."
-		log info "##############################"
+		log info "*****************************#"
 		cd /$STARTVERZEICHNIS || return 1
 		rm -r /$STARTVERZEICHNIS/opensim1
 		mv /$STARTVERZEICHNIS/opensim /$STARTVERZEICHNIS/opensim1
@@ -6151,7 +6113,7 @@ function osgitholen() {
 		log info "OPENSIMHOLEN: Git klonen"
 	else
 		log rohtext "Kopieren der Entwicklungsversion des OpenSimulator aus dem Git."
-		log info "##############################"
+		log info "*****************************#"
 		log info "Kopieren der Entwicklungsversion des OpenSimulator aus dem Git"
 		git clone git://opensimulator.org/git/opensim opensim
 	fi
@@ -6168,7 +6130,7 @@ function osgitholen() {
 ##
 function osgitholen93() {
 	log rohtext "Kopieren der Entwicklungsversion des OpenSimulator aus dem Git."
-	log info "##############################"
+	log info "*****************************#"
 	cd /$STARTVERZEICHNIS || return 1
 	rm -r /$STARTVERZEICHNIS/opensim1
 	mv /$STARTVERZEICHNIS/opensim /$STARTVERZEICHNIS/opensim1
@@ -7137,7 +7099,7 @@ function gridstop() {
  # todo: nichts.
 ##
 function autostop() {
-	log warn "### Stoppe das Grid! ###"
+	log warn "#** Stoppe das Grid! **#"
 	# schauen ob screens laufen wenn ja beenden.
 	# shellcheck disable=SC2022
 	if ! screen -list | grep -q 'sim'; then
@@ -7195,7 +7157,7 @@ function menuautostart() {
  # todo: nichts.
 ##
 function menuautostop() {
-	log warn "### Stoppe das Grid! ###"
+	log warn "#** Stoppe das Grid! **#"
 	# schauen ob screens laufen wenn ja beenden.
 	if screen -list | grep -q 'sim'; then log info "Bitte warten..."; menuautosimstop; fi
 	if screen -list | grep -q "RO"; then log info "Bitte warten..."; menugridstop; fi
@@ -7699,7 +7661,7 @@ findtime = 600" >/etc/fail2ban/jail.local
  # todo: Das ganze muss automatisch nach ports in den Konfigs suchen und diese einstellen. Es darf nicht zuviel geoeffnet werden wie hier.
 ##
 function ufwset() {
-	### Uncomplicated Firewall
+	#** Uncomplicated Firewall
 	#sudo ufw app list
 
 	# Now we will enable Apache Full.
@@ -7727,7 +7689,7 @@ function ufwset() {
 	# Um eine Regel zu löschen, verwenden Sie delete:
 	# sudo ufw delete deny 22
 
-	#######################################
+	#*************************************************
 
 	#Nach robust Konfigurationen suchen und die eingestellten Ports mit ufw freischalten.
 	# Ist im Vereichnis robust/bin irgendeine ini Datei wo etwas mit Port steht und nicht mit ; ausdokumentiert ist.
@@ -7751,9 +7713,9 @@ function ufwset() {
 	# XmlRpcPort
 	# InternalPort
 
-	#######################################
+	#******************************************************
 
-	### Nachfolgende Einstellungen sind nur, damit es irgendwie laeuft.
+	#** Nachfolgende Einstellungen sind nur, damit es irgendwie laeuft.
 	# Port oeffnen robust
 	sudo ufw allow 8000/tcp
 	sudo ufw allow 8001/tcp
@@ -7841,7 +7803,7 @@ function ufwblock() {
  # todo: nichts.
 ##
 function installphpmyadmin() {
-	### Installieren von PhpMyAdmin
+	#** Installieren von PhpMyAdmin
 	sudo apt install phpmyadmin
 }
 
@@ -7872,7 +7834,7 @@ function installfinish() {
 function installationhttps22() {
 	httpsemail=$1
 	httpsdomain=$2
-	### HTTPS installieren
+	#** HTTPS installieren
 	sudo apt install python3-certbot-apache
 
 	# Jetzt haben wir Certbot von Let’s Encrypt fuer Ubuntu 22.04 installiert,
@@ -8050,29 +8012,24 @@ function pull() {
 
 ##
 	#* Funktion: osbuilding93
-	# 
 	#? Beschreibung:
 	# Diese Funktion führt den Prozess zum Aktualisieren und Kompilieren des OpenSimulator-Projekts durch.
 	# Je nach Verfügbarkeit von 'dialog' wird der Benutzer nach der Versionsnummer gefragt oder die Versionsnummer wird als Parameter erwartet.
 	# Dann wird der alte OpenSimulator gesichert, der neue aus dem Git-Repository geholt, vorbereitet und kompiliert.
-	#
 	#? Parameter:
 	# - $1 (optional): Die Versionsnummer des neuen OpenSimulator-Branches.
-	#
 	#? Rückgabewert:
 	# Diese Funktion gibt immer den Wert 0 zurück, da keine Fehlerbehandlung implementiert ist.
-	#
 	#? Abhängigkeiten:
 	# - Die Funktion verwendet die Befehle 'dpkg-query', 'dialog', 'cd', 'log', 'osdelete', 'git clone', 'git checkout', 'runprebuild.sh', 'dotnet build', 'osupgrade93', 'ScreenLog' und 'hilfemenu'.
 	# - Die Funktion verwendet die Umgebungsvariablen '$STARTVERZEICHNIS' und '$VERSION'.
-	#
 	#? Beispielaufruf:
 	# osbuilding93 0.9.2.2Dev-4-g5e9b3b4
 	# Oder (mit dialog):
 	# osbuilding93
 ##
 function osbuilding93() {
-	## dialog Aktionen
+	# dialog Aktionen
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
 		# Alle Aktionen mit dialog
@@ -8201,7 +8158,7 @@ function osbuildingupgrade93() {
  # todo: nichts.
 ##
 function osbuilding() {
-	## dialog Aktionen
+	# dialog Aktionen
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
 		# Alle Aktionen mit dialog
@@ -9227,8 +9184,7 @@ function mysql_neustart() {
 	return 0
 }
 
-############################################################################################################################################
-############################################################################################################################################
+#**************************************************************************
 # Externe Zugriffe auf MySQL-Server erlauben
 
 # Um den Netzwerkzugriff auf eine MySQL-Datenbank zu ermöglichen, 
@@ -9269,8 +9225,7 @@ function mysql_neustart() {
 #     mysql> update user set Host='123.123.123.123' where user='yourdatabaseUsername'; 
 
 # Verlassen Sie die MySQl-Shell mit dem Befehl Exit.
-############################################################################################################################################
-############################################################################################################################################
+#**************************************************************************
 
 ##
  #* db_backup.
@@ -12053,8 +12008,6 @@ function ramspeicher() {
 	return 0
 }
 
-###############################    Konfigurationen ########################
-
 ##
  #* mysqleinstellen.
  # Ermitteln wieviel RAM Speicher vorhanden ist und anschliessend mySQL Einstellen.
@@ -12081,7 +12034,7 @@ function mysqleinstellen() {
 	#Fuegen Sie die folgende Zeile hinzu:
 	# echo "lower_case_table_names = 1" # testen
 
-	### Zeichensatz testen
+	#** Zeichensatz testen
 	# echo "[client]"
 	# echo "default-character-set=utf8mb4"
 	# echo "[mysqld]"
@@ -12658,7 +12611,7 @@ function osconfigstruktur() {
         # Restliche Dateien kopieren
         
 	done
-    echo "##################################################################"
+    echo "*******************************************************************"
 	return 0
 }
 
@@ -12671,7 +12624,7 @@ function osconfigstruktur() {
  # todo: nichts.
 ##
 function configabfrage() {
-	### Eintragungen uebersicht!
+	#** Eintragungen uebersicht!
 	# BaseHostname = "MyGrid.com"
 	# BaseURL = http://${Const|BaseHostname}
 	# PublicPort = "8002"
@@ -12690,48 +12643,48 @@ function configabfrage() {
 	echo "$SCRIPTNAME Version $VERSION"
 	log rohtext "Ihre aktuelle externe IP ist $AKTUELLEIP"
 	echo " "
-	echo "##################################################################"
-	log rohtext "########### ABBRUCH MIT DER TASTENKOMBINATION ####################"
-	log rohtext "####################  CTRL/STRG + C  #############################"
-	echo "##################################################################"
-	log rohtext "##     Die Werte in den [Klammern] sind vorschläge              ##"
-	log rohtext "##     und können mit Enter übernommen werden.                  ##"
-	echo "##################################################################"
+	echo "*******************************************************************"
+	log rohtext "********** ABBRUCH MIT DER TASTENKOMBINATION ********************"
+	log rohtext "********************  CTRL/STRG + C  *****************************"
+	echo "*******************************************************************"
+	log rohtext #**     Die Werte in den [Klammern] sind vorschläge              *#"
+	log rohtext #**     und können mit Enter übernommen werden.                  *#"
+	echo "*******************************************************************"
 	echo " "
 	log rohtext "Wieviele Konfigurationen darf ich ihnen schreiben? [5]"
 	read -r CONFIGANZAHL
 	if [ "$CONFIGANZAHL" = "" ]; then CONFIGANZAHL="5"; fi
 	log rohtext "Ihre Anzahl ist $CONFIGANZAHL"
-	echo "##################################################################"
+	echo "*******************************************************************"
 
 	log rohtext "Wohin darf ich diese schreiben? [$STARTVERZEICHNIS]"
 	read -r VERZEICHNISABFRAGE
 	if [ "$VERZEICHNISABFRAGE" = "" ]; then log rohtext "Ihr Konfigurationsordner ist $STARTVERZEICHNIS"; else STARTVERZEICHNIS="$VERZEICHNISABFRAGE";fi
-	echo "##################################################################"
+	echo "*******************************************************************"
 
 	log rohtext "Ihre Server Adresse? [$AKTUELLEIP]"
 	read -r BASEHOSTNAME
 	if [ "$BASEHOSTNAME" = "" ]; then BASEHOSTNAME="$AKTUELLEIP"; fi
 	log rohtext "Ihre Server Adresse ist $BASEHOSTNAME"
-	echo "##################################################################"
+	echo "*******************************************************************"
 
 	log rohtext "Ihr SimulatorPort startet bei: [9010]"
 	read -r SIMULATORPORT
 	if [ "$SIMULATORPORT" = "" ]; then SIMULATORPORT="9010"; fi
 	log rohtext "Ihr SimulatorPort startet bei: $SIMULATORPORT"
-	echo "##################################################################"
+	echo "*******************************************************************"
 
 	log rohtext "Bitte geben sie den mySQL/mariaDB Benutzernamen ihrer Datenbank an [opensim]:"
 	read -r MYSQLUSER
 	if [ "$MYSQLUSER" = "" ]; then MYSQLUSER="opensim"; fi
 	log rohtext "Ihr Datenbank Benutzername lautet: $MYSQLUSER"
-	echo "##################################################################"
+	echo "*******************************************************************"
 
 	log rohtext "Bitte geben sie das Passwort ihrer mySQL/mariaDB Datenbank an [opensim]:"
 	read -r MYSQLPASSWORD
 	if [ "$MYSQLPASSWORD" = "" ]; then MYSQLPASSWORD="opensim"; fi
 	log rohtext "Ihr Passwort ihrer Datenbank lautet: $MYSQLPASSWORD"
-	echo "##################################################################"
+	echo "*******************************************************************"
 
 	log rohtext "Datenbanken jetzt direkt anlegen [nein]:"
 	read -r CREATEDATABASE
@@ -12743,16 +12696,16 @@ function configabfrage() {
 		if [ "$MYSQLDATABASE" = "" ]; then MYSQLDATABASE="opensim"; fi
 		log rohtext "Ihr Datenbanknamen lautet: $MYSQLDATABASE"
 		CREATEROBUSTDATABASENAME="$MYSQLDATABASE"
-		echo "##################################################################"
+		echo "*******************************************************************"
 	fi
 
 	if [ "$CREATEDATABASE" = "ja" ]; then
-		### OpenSim Datenbanken
+		#** OpenSim Datenbanken
 		log rohtext "Name der Datenbanken [sim]:"
 		read -r CREATEDATABASENAME	
 		if [ "$CREATEDATABASENAME" = "" ]; then CREATEDATABASENAME="sim"; fi
 
-		### Robust Datenbank
+		#** Robust Datenbank
 		log rohtext "Robust Datenbank anlegen [nein]:"
 		read -r CREATEROBUSTDATABASE
 		if [ "$CREATEROBUSTDATABASE" = "" ]; then CREATEROBUSTDATABASE="nein"; fi
@@ -12764,7 +12717,7 @@ function configabfrage() {
 			createdatabase $CREATEROBUSTDATABASENAME $MYSQLUSER $MYSQLPASSWORD
 		fi
 	fi
-	echo "##################################################################"
+	echo "*******************************************************************"
 
 	# Der Grid Master Avatar
 
@@ -12772,38 +12725,38 @@ function configabfrage() {
 	read -r FIRSTNAMEMASTER
 	if [ "$FIRSTNAMEMASTER" = "" ]; then FIRSTNAMEMASTER="John"; fi
 	log rohtext "Der Vornamen ihres Grid Besitzer/Master Avatar lautet: $FIRSTNAMEMASTER"
-	echo "##################################################################"
+	echo "*******************************************************************"
 
 	log rohtext "Bitte geben sie den Nachnamen ihres Grid Besitzer/Master Avatar an [Doe]:"
 	read -r LASTNAMEMASTER
 	if [ "$LASTNAMEMASTER" = "" ]; then LASTNAMEMASTER="Doe"; fi
 	log rohtext "Der Nachnamen ihres Grid Besitzer/Master Avatar lautet: $LASTNAMEMASTER"
-	echo "##################################################################"
+	echo "*******************************************************************"
 
 	log rohtext "Bitte geben sie das Passwort ihres Grid Besitzer/Master Avatar an [opensim]:"
 	read -r PASSWDNAMEMASTER
 	if [ "$PASSWDNAMEMASTER" = "" ]; then PASSWDNAMEMASTER="opensim"; fi
 	log rohtext "Das Passwort ihres Grid Besitzer/Master Avatar lautet: $PASSWDNAMEMASTER"
-	echo "##################################################################"
+	echo "*******************************************************************"
 
 	log rohtext "Bitte geben sie die E-Mail ihres Grid Besitzer/Master Avatar an [john@doe.com]:"
 	read -r EMAILNAMEMASTER
 	if [ "$EMAILNAMEMASTER" = "" ]; then EMAILNAMEMASTER="john@doe.com"; fi
 	log rohtext "Die E-Mail ihres Grid Besitzer/Master Avatar lautet: $EMAILNAMEMASTER"
-	echo "##################################################################"
+	echo "*******************************************************************"
 
 	UUIDNAMEMASTER=$(uuidgen)
 	log rohtext "Bitte geben sie die UUID ihres Grid Besitzer/Master Avatar an [$UUIDNAMEMASTER]:"
 	read -r UUIDNAMEMASTER
 	if [ "$UUIDNAMEMASTER" = "" ]; then UUIDNAMEMASTER="$UUIDNAMEMASTER"; fi
 	log rohtext "Die UUID ihres Grid Besitzer/Master Avatar lautet: $UUIDNAMEMASTER"
-	echo "##################################################################"
+	echo "*******************************************************************"
 
 	log rohtext "Bitte geben sie das Estate ihres Grid Besitzer/Master Avatar an [MyGrid Estate]:"
 	read -r ESTATENAMEMASTER
 	if [ "$ESTATENAMEMASTER" = "" ]; then ESTATENAMEMASTER="MyGrid Estate"; fi
 	log rohtext "Das Estate ihres Grid Besitzer/Master Avatar lautet: $ESTATENAMEMASTER"
-	echo "##################################################################"
+	echo "*******************************************************************"
 
 	MODELNAMEMASTER=""
 
@@ -12818,37 +12771,37 @@ function configabfrage() {
 	#bash osmtool.sh oscommand sim1 Welcome "$LASTNAMEMASTER"
 	#bash osmtool.sh oscommand sim1 Welcome "$ESTATENAMEMASTER"
 
-	#echo "##################################################################"
+	#echo "*******************************************************************"
 
 	log rohtext "Bitte geben sie den Namen ihrer Startregion an [Welcome]:"
 	read -r STARTREGION
 	if [ "$STARTREGION" = "" ]; then STARTREGION="Welcome"; fi
 	log rohtext "Der Name ihrer Startregion lautet: $STARTREGION"
-	echo "##################################################################"
+	echo "*******************************************************************"
 
 	log rohtext "Bitte geben sie den Namen ihres Grids an [MyGrid]:"
 	read -r SIMULATORGRIDNAME
 	if [ "$SIMULATORGRIDNAME" = "" ]; then SIMULATORGRIDNAME="MyGrid"; fi
 	log rohtext "Der Name ihrers Grids lautet: $SIMULATORGRIDNAME"
-	echo "##################################################################"
+	echo "*******************************************************************"
 
 	log rohtext "Bitte geben sie den Grid-Nickname an [MG]:"
 	read -r SIMULATORGRIDNICK
 	if [ "$SIMULATORGRIDNICK" = "" ]; then SIMULATORGRIDNICK="MG"; fi
 	log rohtext "Der Grid-Nickname lautet: $SIMULATORGRIDNICK"
-	echo "##################################################################"
+	echo "*******************************************************************"
 
 	log rohtext "Möchten sie die Regionskonfigurationen direkt Aktivieren ja/nein [nein]:"
 	read -r REGIONAKTIV
 	if [ "$REGIONAKTIV" = "" ]; then REGIONAKTIV="nein"; fi
 	log rohtext "Sie haben ausgewählt: $REGIONAKTIV"
-	echo "##################################################################"
+	echo "*******************************************************************"
 
 	log rohtext "Möchten sie die Skriptkonfigurationen Aktivieren ja/nein [nein]:"
 	read -r SKRIPTAKTIV
 	if [ "$SKRIPTAKTIV" = "" ]; then SKRIPTAKTIV="nein"; fi
 	log rohtext "Sie haben ausgewählt: $SKRIPTAKTIV"
-	echo "##################################################################"
+	echo "*******************************************************************"
 
 	# Weitere Auswertungen
 	if [ "$PRIVURL" = "" ]; then PRIVURL="\${Const|BaseURL}"; fi
@@ -12919,9 +12872,9 @@ function createregionavatar() {
 	return 0
 }
 
-###########################################################################
+#**************************************************************************
 #* Build Funktionen Funktionsgruppe
-###########################################################################
+#**************************************************************************
 
 ##
  #* compilieren.
@@ -13000,18 +12953,18 @@ function compilieren() {
  # todo: nichts.
 ##  
 function osgridcopy() {
-	log text " #############################"
+	log text " *****************************"
 	log text "Steht hier:"
 	log text " "
 	log info "Build succeeded."
 	log text "    0 Warning(s)"
 	log text "    0 Error(s)"
 	log text " "
-	log info "Dann ist alles gut gegangen.
-	log text " #############################"
+	log info "Dann ist alles gut gegangen."
+	log text " *****************************"
 	log warn " !!!      BEI FEHLER      !!! "
 	log warn " !!! ABBRUCH MIT STRG + C !!! "
-	log text " #############################"
+	log text " *****************************"
 
 	log info "Das Grid wird jetzt kopiert/aktualisiert"
 	log line
@@ -13037,10 +12990,10 @@ function osgridcopy() {
  # todo: nichts.
 ##  
 function osupgrade93() {
-	log text " #############################"
+	log text " *****************************"
 	log text " !!!      BEI FEHLER      !!! "
 	log text " !!! ABBRUCH MIT STRG + C !!! "
-	log text " #############################"
+	log text " *****************************"
 
 	log info "Das Grid wird jetzt upgegradet"
 	autostop
@@ -13071,10 +13024,10 @@ function osupgrade93() {
  # todo: nichts.
 ##  
 function osupgrade() {
-	log text " #############################"
+	log text " *****************************"
 	log text " !!!      BEI FEHLER      !!! "
 	log text " !!! ABBRUCH MIT STRG + C !!! "
-	log text " #############################"
+	log text " *****************************"
 
 	log info "Das Grid wird jetzt upgegradet"
 	autostop
@@ -13103,10 +13056,10 @@ function osupgrade() {
  # todo: nichts.
 ## 
 function osdowngrade() {
-	log text " #############################"
+	log text " *****************************"
 	log text " !!!      BEI FEHLER      !!! "
 	log text " !!! ABBRUCH MIT STRG + C !!! "
-	log text " #############################"
+	log text " *****************************"
 
 	log info "Das Grid wird jetzt zurückgesetzt, auf die vorherige Version."
 	autostop
@@ -13139,7 +13092,7 @@ function osdowngrade() {
  # todo: nichts.
 ##  
 function oszipupgrade() {
-	### dialog Aktionen
+	#** dialog Aktionen
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
 		# Alle Aktionen mit dialog
@@ -13179,9 +13132,9 @@ function oszipupgrade() {
 	return 0
 }
 
-###########################################################################
+#**************************************************************************
 #* Automatische Konfigurationen Prototype Funktionsgruppe
-###########################################################################
+#**************************************************************************
 
 ##
  #* ConfigSet.
@@ -13451,9 +13404,9 @@ function osslEnableConfigSet() {
     sed -i -e s/\'/\"/g "$GridCommondatei"
 }
 
-###########################################################################
+#**************************************************************************
 #* Hilfen und Info Funktionsgruppe
-###########################################################################
+#**************************************************************************
 
 ##
  #* show_info.
@@ -13707,7 +13660,7 @@ function backupdatum() {
 
 ##
  #* senddata.
- # Daten zu einem neuen Server senden ### Ungetestet ###
+ # Daten zu einem neuen Server senden #** Ungetestet #**
  # senddata USERNAMEN SENDEVERZEICHNIS SERVERADRESS 
  # 
  #? @param name Erklaerung.
@@ -14799,9 +14752,9 @@ OpenSimCommands
 MoneyServerCommands
 }
 
-###########################################################################
+#**************************************************************************
 #* Menu Menue Funktionsgruppe
-###########################################################################
+#**************************************************************************
 
 ##
  #* menutrans
@@ -15701,9 +15654,9 @@ function newhelp2() {
 	log rohtext "# Beispiel: bash osmtool.sh oscommand sim1 Welcome \"alert-user John Doe Hallo John Doe\" "
 }
 
-###########################################################################
+#**************************************************************************
 #* Tests Funktionsgruppe
-###########################################################################
+#**************************************************************************
 
 ##
  #* ostimestamp Test
@@ -15731,9 +15684,9 @@ echo "$UNIX_TIMESTAMP_TO_DATE" timestamp zu date ausgabe
 
 
 
-###########################################################################
+#**************************************************************************
 #* Eingabeauswertung Konsolenmenue Funktionsgruppe
-###########################################################################
+#**************************************************************************
 case $KOMMANDO in
 	AutoInstall) AutoInstall ;;
 	ConfigSet) ConfigSet "$2" ;;
@@ -16071,6 +16024,7 @@ case $KOMMANDO in
 	benutzer) benutzer ;;
 	pull) pull ;;
 	laeuftos) laeuftos "$2" ;;
+	createmanual) createmanual ;;
 	hda | hilfedirektaufruf | hilfemenudirektaufrufe) hilfemenudirektaufrufe ;;
 	h) newhelp ;;
 	V | v) echo "$SCRIPTNAME $VERSION" ;;
