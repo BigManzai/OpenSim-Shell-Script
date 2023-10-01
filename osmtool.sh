@@ -20,7 +20,7 @@
 # ! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 # ! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-# * Status 01.10.2023 419 Funktionen.
+# * Status 01.10.2023 420 Funktionen.
 
 	# # Installieren sie bitte: #* Visual Studio Code
 	#* dazu die Plugins:
@@ -218,14 +218,14 @@ DATEIDATUM=$(date +%d_%m_%Y)
 UHRZEIT=$(date +%H:%M:%S)
 
 # Informationen zur Ubuntu-Version
-myDescription=$(lsb_release -d) # Beispiel: Description: Ubuntu 22.04 LTS
-myRelease=$(lsb_release -r)     # Beispiel: Release: 22.04
-myCodename=$(lsb_release -sc)   # Beispiel: jammy
+myDescription=$(lsb_release -d) #? Beispiel: Description: Ubuntu 22.04 LTS
+myRelease=$(lsb_release -r)     #? Beispiel: Release: 22.04
+myCodename=$(lsb_release -sc)   #? Beispiel: jammy
 
 # Extrahieren von Ubuntu-spezifischen Informationen
-ubuntuDescription=$(cut -f2 <<<"$myDescription") # Beispiel: Ubuntu 22.04 LTS
-ubuntuRelease=$(cut -f2 <<<"$myRelease")         # Beispiel: 22.04
-ubuntuCodename=$(cut -f2 <<<"$myCodename")       # Beispiel: jammy
+ubuntuDescription=$(cut -f2 <<<"$myDescription") #? Beispiel: Ubuntu 22.04 LTS
+ubuntuRelease=$(cut -f2 <<<"$myRelease")         #? Beispiel: 22.04
+ubuntuCodename=$(cut -f2 <<<"$myCodename")       #? Beispiel: jammy
 
 # Informationen zur MySQL-Version
 SQLVERSIONVOLL=$(mysqld --version)
@@ -4456,14 +4456,14 @@ function saveinventar() {
 }
 
 ##
-	# Funktion: menusaveinventar
+	#* Funktion: menusaveinventar
 	#
 	# Beschreibung:
 	# Diese Funktion ermöglicht es dem Benutzer, Eingaben über das Dialog-Programm vorzunehmen, um Informationen für das Speichern eines Inventars einzugeben. Die eingegebenen Informationen werden dann an den Icecast-Server gesendet, um das Inventar zu speichern.
 	#
 	# Letzte Bearbeitung: 01.10.2023
 	#
-	# Parameter:
+	#? Parameter:
 	# Keine Parameter, da die Funktion Benutzereingaben über das Dialog-Programm verarbeitet.
 	#
 	# Abhängigkeiten:
@@ -4527,12 +4527,12 @@ function menusaveinventar() {
 }
 
 ##
-	# Funktion: menuworks
+	#* Funktion: menuworks
 	#
 	# Beschreibung:
 	# Die Funktion `menuworks` überprüft den Status eines OpenSimulator-Screens und gibt entsprechende Meldungen aus, ob der Screen online oder offline ist. Sie kann sowohl mit als auch ohne das Dialog-Programm verwendet werden, abhängig von dessen Verfügbarkeit auf dem System.
 	#
-	# Parameter:
+	#? Parameter:
 	# $1 - Der Name des OpenSimulator-Screens, dessen Status überprüft werden soll.
 	#
 	# Abhängigkeiten:
@@ -4586,12 +4586,12 @@ function menuworks() {
 }
 
 ##
-	# Funktion: works
+	#* Funktion: works
 	#
 	# Beschreibung:
 	# Die Funktion `works` überprüft den Status eines OpenSimulator-Screens und gibt entsprechende Log-Meldungen aus, ob der Screen online oder offline ist.
 	#
-	# Parameter:
+	#? Parameter:
 	# $1 - Der Name des OpenSimulator-Screens, dessen Status überprüft werden soll.
 	#
 	# Abhängigkeiten:
@@ -4621,12 +4621,12 @@ function works() {
 }
 
 ##
-	# Funktion: waslauft
+	#* Funktion: waslauft
 	#
 	# Beschreibung:
 	# Die Funktion `waslauft` zeigt eine Liste der aktiven Screens an, die mithilfe des `screen`-Befehls ausgeführt werden. Sie bereinigt die Ausgabe und gibt eine formatierte Liste von Screen-Namen zurück.
 	#
-	# Parameter:
+	#? Parameter:
 	# Diese Funktion akzeptiert keine Parameter.
 	#
 	# Abhängigkeiten:
@@ -4649,12 +4649,12 @@ function waslauft() {
 }
 
 ##
-	# Funktion: menuwaslauft
+	#* Funktion: menuwaslauft
 	#
 	# Beschreibung:
 	# Die Funktion `menuwaslauft` zeigt eine Liste der aktiven Screens an, die mithilfe des `screen`-Befehls ausgeführt werden. Sie bereinigt die Ausgabe und zeigt die formatierte Liste der Screen-Namen in einem Dialogfeld an.
 	#
-	# Parameter:
+	#? Parameter:
 	# Diese Funktion akzeptiert keine Parameter.
 	#
 	# Abhängigkeiten:
@@ -4682,12 +4682,12 @@ function menuwaslauft() {
 }
 
 ##
-	# Funktion: checkfile
+	#* Funktion: checkfile
 	#
 	# Beschreibung:
 	# Die Funktion `checkfile` überprüft, ob eine angegebene Datei existiert. Sie gibt den Exit-Status 0 zurück, wenn die Datei existiert, andernfalls gibt sie einen anderen Exit-Status zurück.
 	#
-	# Parameter:
+	#? Parameter:
 	# $1 - Der vollständige Pfad zur zu überprüfenden Datei.
 	#
 	# Abhängigkeiten:
@@ -4709,12 +4709,12 @@ function checkfile() {
 }
 
 ##
-	# Funktion: mapdel
+	#* Funktion: mapdel
 	#
 	# Beschreibung:
 	# Die Funktion `mapdel` löscht die Kartenkacheln (maptiles) eines OpenSimulator-Verzeichnisses, sofern das Verzeichnis existiert. Sie überprüft zuerst, ob das Verzeichnis existiert, und löscht dann den Inhalt des "maptiles"-Verzeichnisses.
 	#
-	# Parameter:
+	#? Parameter:
 	# $1 - Das Verzeichnis, dessen Kartenkacheln gelöscht werden sollen.
 	#
 	# Abhängigkeiten:
@@ -4743,12 +4743,12 @@ function mapdel() {
 }
 
 ##
-	# Funktion: logdel
+	#* Funktion: logdel
 	#
 	# Beschreibung:
 	# Die Funktion `logdel` löscht Log-Dateien aus einem angegebenen Verzeichnis, sofern das Verzeichnis existiert. Sie überprüft zuerst, ob das Verzeichnis existiert, und löscht dann alle Dateien mit der Erweiterung ".log" aus dem Verzeichnis.
 	#
-	# Parameter:
+	#? Parameter:
 	# $1 - Das Verzeichnis, dessen Log-Dateien gelöscht werden sollen.
 	#
 	# Abhängigkeiten:
@@ -4776,12 +4776,12 @@ function logdel() {
 }
 
 ##
-	# Funktion: rologdel
+	#* Funktion: rologdel
 	#
 	# Beschreibung:
 	# Die Funktion `rologdel` löscht bestimmte Log-Dateien und erstellt eine Besucherliste, sofern die entsprechenden Verzeichnisse existieren. Sie überprüft zuerst, ob die Verzeichnisse vorhanden sind, und löscht dann bestimmte Log-Dateien. Wenn die `VISITORLIST`-Variable auf "yes" gesetzt ist, werden Besucherinformationen aus der Robust-Log-Datei extrahiert und in eine separate Datei geschrieben.
 	#
-	# Parameter:
+	#? Parameter:
 	# Keine Parameter werden von dieser Funktion akzeptiert.
 	#
 	# Abhängigkeiten:
@@ -4839,12 +4839,12 @@ function rologdel() {
 }
 
 ##
-	# Funktion: menumapdel
+	#* Funktion: menumapdel
 	#
 	# Beschreibung:
 	# Die Funktion `menumapdel` ermöglicht das Löschen von Kartenkacheln (maptiles) eines OpenSimulator-Verzeichnisses. Sie kann entweder im Dialog-Modus oder im Standard-Modus (ohne Dialog) ausgeführt werden. Im Dialog-Modus wird der Benutzer nach dem zu löschenden Verzeichnis gefragt, während im Standard-Modus das Verzeichnis als Parameter übergeben wird.
 	#
-	# Parameter:
+	#? Parameter:
 	# $1 (Optional) - Das Verzeichnis, dessen Kartenkacheln gelöscht werden sollen, wenn der Standard-Modus verwendet wird.
 	#
 	# Abhängigkeiten:
@@ -4887,12 +4887,12 @@ function menumapdel() {
 }
 
 ##
-	# Funktion: menulogdel
+	#* Funktion: menulogdel
 	#
 	# Beschreibung:
 	# Die Funktion `menulogdel` ermöglicht das Löschen von Log-Dateien aus einem OpenSimulator-Verzeichnis. Sie kann entweder im Dialog-Modus oder im Standard-Modus (ohne Dialog) ausgeführt werden. Im Dialog-Modus wird der Benutzer nach dem zu löschenden Verzeichnis gefragt, während im Standard-Modus das Verzeichnis als Parameter übergeben wird.
 	#
-	# Parameter:
+	#? Parameter:
 	# $1 (Optional) - Das Verzeichnis, dessen Log-Dateien gelöscht werden sollen, wenn der Standard-Modus verwendet wird.
 	#
 	# Abhängigkeiten:
@@ -4942,12 +4942,12 @@ function menulogdel() {
 }
 
 ##
-	# Funktion: assetcachedel
+	#* Funktion: assetcachedel
 	#
 	# Beschreibung:
 	# Die Funktion `assetcachedel` ermöglicht das Löschen des "assetcache"-Verzeichnisses aus einem OpenSimulator-Verzeichnis. Das Verzeichnis wird anhand des übergebenen Parameters `VERZEICHNIS` gelöscht.
 	#
-	# Parameter:
+	#? Parameter:
 	# $1 - Das Verzeichnis, dessen "assetcache"-Verzeichnis gelöscht werden soll.
 	#
 	# Abhängigkeiten:
@@ -4980,17 +4980,17 @@ function assetcachedel() {
 }
 
 ##
-	# Funktion: autoassetcachedel
+	#* Funktion: autoassetcachedel
 	#
 	# Diese Funktion löscht Assetcache-Verzeichnisse in den in der "VERZEICHNISSLISTE" definierten Verzeichnissen.
 	#
-	# Parameter:
+	#? Parameter:
 	# Keine
 	#
-	# Rückgabewert:
+	#? Rückgabewert:
 	# Die Funktion gibt immer 0 zurück.
 	#
-	# Beispiel:
+	#? Beispiel:
 	# autoassetcachedel
 ##
 function autoassetcachedel() {
@@ -5011,17 +5011,17 @@ function autoassetcachedel() {
 #**************************************************************************
 
 ##
-	# Funktion: menugridstop
+	#* Funktion: menugridstop
 	#
 	# Diese Funktion überprüft, ob bestimmte Screens mit den Namen "MO" oder "RO" aktiv sind und stoppt diese, wenn sie aktiv sind.
 	#
-	# Parameter:
+	#? Parameter:
 	# Keine
 	#
-	# Rückgabewert:
+	#? Rückgabewert:
 	# Die Funktion gibt immer 0 zurück.
 	#
-	# Beispiel:
+	#? Beispiel:
 	# menugridstop
 ##
 function menugridstop() {
@@ -5037,17 +5037,17 @@ function menugridstop() {
 }
 
 ##
-	# Funktion: scstart
+	#* Funktion: scstart
 	#
 	# Diese Funktion startet einen OpenSimulator in einem Screen mit dem angegebenen Namen und verwendet den entsprechenden Ausführungsmodus (Dotnet oder Mono) basierend auf der Konfiguration.
 	#
-	# Parameter:
+	#? Parameter:
 	# $1 - Der Name des Screens, in dem der OpenSimulator gestartet werden soll.
 	#
-	# Rückgabewert:
+	#? Rückgabewert:
 	# Die Funktion gibt keinen expliziten Rückgabewert zurück, kann jedoch fehlschlagen und gibt in diesem Fall 1 zurück.
 	#
-	# Beispiel:
+	#? Beispiel:
 	# scstart "MeinOpenSim"
 ##
 function scstart() {
@@ -5066,17 +5066,17 @@ function scstart() {
 }
 
 ##
-	# Funktion: scstop
+	#* Funktion: scstop
 	#
 	# Diese Funktion stoppt einen OpenSimulator in einem Screen mit dem angegebenen Namen, indem sie den Befehl "shutdown" an den Screen sendet.
 	#
-	# Parameter:
+	#? Parameter:
 	# $1 - Der Name des Screens, in dem der OpenSimulator gestoppt werden soll.
 	#
-	# Rückgabewert:
+	#? Rückgabewert:
 	# Die Funktion gibt keinen expliziten Rückgabewert zurück.
 	#
-	# Beispiel:
+	#? Beispiel:
 	# scstop "MeinOpenSim"
 ##
 function scstop() {
@@ -5086,17 +5086,17 @@ function scstop() {
 }
 
 ##
-	# Funktion: sckill
+	#* Funktion: sckill
 	#
 	# Diese Funktion beendet einen Screen mit dem angegebenen Namen.
 	#
-	# Parameter:
+	#? Parameter:
 	# $1 - Der Name des Screens, der beendet werden soll.
 	#
-	# Rückgabewert:
+	#? Rückgabewert:
 	# Die Funktion gibt keinen expliziten Rückgabewert zurück.
 	#
-	# Beispiel:
+	#? Beispiel:
 	# sckill "MeinOpenSim"
 ##
 function sckill() {
@@ -5106,17 +5106,17 @@ function sckill() {
 }
 
 ##
-	# Funktion: simstats
+	#* Funktion: simstats
 	#
 	# Diese Funktion zeigt die Statistiken eines OpenSimulator-Servers in einem Screen an.
 	#
-	# Parameter:
+	#? Parameter:
 	# $1 - Der Name des Screens, in dem der OpenSimulator läuft.
 	#
-	# Rückgabewert:
+	#? Rückgabewert:
 	# Die Funktion gibt immer 0 zurück.
 	#
-	# Beispiel:
+	#? Beispiel:
 	# simstats "MeinOpenSim"
 ##
 function simstats() {
@@ -5137,17 +5137,17 @@ function simstats() {
 }
 
 ##
-	# Funktion: terminator
+	#* Funktion: terminator
 	#
 	# Diese Funktion beendet alle aktiven Screen-Sitzungen und gibt Protokollmeldungen aus.
 	#
-	# Parameter:
+	#? Parameter:
 	# Keine
 	#
-	# Rückgabewert:
+	#? Rückgabewert:
 	# Die Funktion gibt immer 0 zurück.
 	#
-	# Beispiel:
+	#? Beispiel:
 	# terminator
 ##
 function terminator() {
@@ -5160,17 +5160,17 @@ function terminator() {
 }
 
 ##
-	# Funktion: oscompi93
+	#* Funktion: oscompi93
 	#
 	# Diese Funktion kompiliert OpenSimulator Version 0.9.3 von Git und führt einige spezifische Schritte im Kompilierungsprozess aus.
 	#
-	# Parameter:
+	#? Parameter:
 	# Keine
 	#
-	# Rückgabewert:
+	#? Rückgabewert:
 	# Die Funktion gibt immer 0 zurück.
 	#
-	# Beispiel:
+	#? Beispiel:
 	# oscompi93
 ##
 function oscompi93() {
@@ -5188,17 +5188,17 @@ function oscompi93() {
 }
 
 ##
-	# Funktion: oscompi
+	#* Funktion: oscompi
 	#
 	# Diese Funktion führt die Kompilierung von OpenSimulator mit verschiedenen Konfigurationen und Optionen durch.
 	#
-	# Parameter:
+	#? Parameter:
 	# Keine
 	#
-	# Rückgabewert:
+	#? Rückgabewert:
 	# Die Funktion gibt 0 zurück, wenn die Kompilierung erfolgreich war, andernfalls gibt sie 1 zurück.
 	#
-	# Beispiel:
+	#? Beispiel:
 	# oscompi
 	#
 	# Diese Funktion führt verschiedene Kompilierungsaktionen aus, je nach den übergebenen Umgebungsvariablen und Parametern. 
@@ -5335,17 +5335,17 @@ function oscompi() {
 }
 
 ##
-	# Funktion: opensimgitcopy93
+	#* Funktion: opensimgitcopy93
 	#
 	# Diese Funktion kopiert OpenSimulator-Dateien aus einem Git-Repository in das angegebene Verzeichnis, wenn $MONEYCOPY auf "yes" gesetzt ist.
 	#
-	# Parameter:
+	#? Parameter:
 	# Keine
 	#
-	# Rückgabewert:
+	#? Rückgabewert:
 	# Die Funktion gibt immer 0 zurück.
 	#
-	# Beispiel:
+	#? Beispiel:
 	# opensimgitcopy93
 ##
 function opensimgitcopy93() {
@@ -5362,18 +5362,18 @@ function opensimgitcopy93() {
 }
 
 ##
-	# Funktion: moneygitcopy93
+	#* Funktion: moneygitcopy93
 	#
 	# Diese Funktion kopiert den MoneyServer und die Skripte aus einem Git-Repository in das angegebene Verzeichnis,
 	# wenn $MONEYCOPY auf "yes" gesetzt ist.
 	#
-	# Parameter:
+	#? Parameter:
 	# Keine
 	#
-	# Rückgabewert:
+	#? Rückgabewert:
 	# Die Funktion gibt immer 0 zurück.
 	#
-	# Beispiel:
+	#? Beispiel:
 	# moneygitcopy93
 ##
 function moneygitcopy93() {
@@ -5390,18 +5390,18 @@ function moneygitcopy93() {
 }
 
 ##
-	# Funktion: moneygitcopy
+	#* Funktion: moneygitcopy
 	#
 	# Diese Funktion kopiert den MoneyServer und die Skripte aus einem Git-Repository in das angegebene Verzeichnis,
 	# wenn $MONEYCOPY auf "yes" gesetzt ist.
 	#
-	# Parameter:
+	#? Parameter:
 	# Keine
 	#
-	# Rückgabewert:
+	#? Rückgabewert:
 	# Die Funktion gibt immer 0 zurück.
 	#
-	# Beispiel:
+	#? Beispiel:
 	# moneygitcopy
 ##
 function moneygitcopy() {
@@ -5418,18 +5418,18 @@ function moneygitcopy() {
 }
 
 ##
-	# Funktion: divagitcopy
+	#* Funktion: divagitcopy
 	#
 	# Diese Funktion kopiert DIVA und die zugehörigen Skripte aus einem Git-Repository in das angegebene Verzeichnis,
 	# wenn $DIVACOPY auf "yes" gesetzt ist.
 	#
-	# Parameter:
+	#? Parameter:
 	# Keine
 	#
-	# Rückgabewert:
+	#? Rückgabewert:
 	# Die Funktion gibt immer 0 zurück.
 	#
-	# Beispiel:
+	#? Beispiel:
 	# divagitcopy
 ##
 function divagitcopy() {
@@ -5445,17 +5445,17 @@ function divagitcopy() {
 	return 0
 }
 ##
-	# Funktion: divacopy
+	#* Funktion: divacopy
 	#
 	# Diese Funktion kopiert DIVA-Dateien und Add-On-Module in das OpenSimulator-Verzeichnis, wenn $DIVACOPY auf "yes" gesetzt ist.
 	#
-	# Parameter:
+	#? Parameter:
 	# Keine
 	#
-	# Rückgabewert:
+	#? Rückgabewert:
 	# Die Funktion gibt immer 0 zurück.
 	#
-	# Beispiel:
+	#? Beispiel:
 	# divacopy
 ##
 function divacopy() {
@@ -5481,18 +5481,18 @@ function divacopy() {
 }
 
 ##
-	# Funktion: scriptgitcopy
+	#* Funktion: scriptgitcopy
 	#
 	# Diese Funktion kopiert Skript-Assets aus einem Git-Repository in das angegebene Verzeichnis,
 	# wenn $SCRIPTCOPY auf "yes" gesetzt ist.
 	#
-	# Parameter:
+	#? Parameter:
 	# Keine
 	#
-	# Rückgabewert:
+	#? Rückgabewert:
 	# Die Funktion gibt immer 0 zurück.
 	#
-	# Beispiel:
+	#? Beispiel:
 	# scriptgitcopy
 ##
 function scriptgitcopy() {
@@ -5508,18 +5508,18 @@ function scriptgitcopy() {
 }
 
 ##
-	# Funktion: scriptcopy
+	#* Funktion: scriptcopy
 	#
 	# Diese Funktion kopiert Skript-Assets in das OpenSimulator-Verzeichnis,
 	# wenn $SCRIPTCOPY auf "yes" gesetzt ist.
 	#
-	# Parameter:
+	#? Parameter:
 	# Keine
 	#
-	# Rückgabewert:
+	#? Rückgabewert:
 	# Die Funktion gibt immer 0 zurück.
 	#
-	# Beispiel:
+	#? Beispiel:
 	# scriptcopy
 ##
 function scriptcopy() {
@@ -5546,18 +5546,18 @@ function scriptcopy() {
 }
 
 ##
-	# Funktion: moneycopy93
+	#* Funktion: moneycopy93
 	#
 	# Diese Funktion kopiert den MoneyServer (Währungsserver) und die Add-On-Module in das OpenSimulator-Verzeichnis,
 	# wenn $MONEYCOPY auf "yes" gesetzt ist.
 	#
-	# Parameter:
+	#? Parameter:
 	# Keine
 	#
-	# Rückgabewert:
+	#? Rückgabewert:
 	# Die Funktion gibt immer 0 zurück.
 	#
-	# Beispiel:
+	#? Beispiel:
 	# moneycopy93
 ##
 function moneycopy93() {
@@ -5584,18 +5584,18 @@ function moneycopy93() {
 }
 
 ##
-	# Funktion: moneycopy
+	#* Funktion: moneycopy
 	#
 	# Diese Funktion kopiert den MoneyServer (Währungsserver) und die Add-On-Module in das OpenSimulator-Verzeichnis,
 	# wenn $MONEYCOPY auf "yes" gesetzt ist.
 	#
-	# Parameter:
+	#? Parameter:
 	# Keine
 	#
-	# Rückgabewert:
+	#? Rückgabewert:
 	# Die Funktion gibt immer 0 zurück.
 	#
-	# Beispiel:
+	#? Beispiel:
 	# moneycopy
 ##
 function moneycopy() {
@@ -5621,18 +5621,18 @@ function moneycopy() {
 }
 
 ##
-	# Funktion: mutelistcopy
+	#* Funktion: mutelistcopy
 	#
 	# Diese Funktion kopiert die Mute List (Stummschaltungsliste) und Add-On-Module in das OpenSimulator-Verzeichnis,
 	# wenn $MUTELISTCOPY auf "yes" gesetzt ist.
 	#
-	# Parameter:
+	#? Parameter:
 	# Keine
 	#
-	# Rückgabewert:
+	#? Rückgabewert:
 	# Die Funktion gibt immer 0 zurück.
 	#
-	# Beispiel:
+	#? Beispiel:
 	# mutelistcopy
 ##
 function mutelistcopy() {
@@ -5658,18 +5658,18 @@ function mutelistcopy() {
 }
 
 ##
-	# Funktion: searchcopy
+	#* Funktion: searchcopy
 	#
 	# Diese Funktion kopiert den OpenSimSearch-Server und die Add-On-Module in das OpenSimulator-Verzeichnis,
 	# wenn $OSSEARCHCOPY auf "yes" gesetzt ist.
 	#
-	# Parameter:
+	#? Parameter:
 	# Keine
 	#
-	# Rückgabewert:
+	#? Rückgabewert:
 	# Die Funktion gibt immer 0 zurück.
 	#
-	# Beispiel:
+	#? Beispiel:
 	# searchcopy
 ##
 function searchcopy() {
@@ -5695,17 +5695,17 @@ function searchcopy() {
 }
 
 ##
-	# Funktion: makeaot
+	#* Funktion: makeaot
 	#
 	# Diese Funktion führt Ahead-of-Time (AOT)-Kompilierung für bestimmte DLL-Dateien und ausführbare Dateien in einem Verzeichnis durch.
 	#
-	# Parameter:
+	#? Parameter:
 	# Keine
 	#
-	# Rückgabewert:
+	#? Rückgabewert:
 	# Die Funktion gibt immer 0 zurück.
 	#
-	# Beispiel:
+	#? Beispiel:
 	# makeaot
 ##
 function makeaot() {
@@ -5733,17 +5733,17 @@ function makeaot() {
 }
 
 ##
-	# Funktion: cleanaot
+	#* Funktion: cleanaot
 	#
 	# Diese Funktion entfernt die zuvor erstellten AOT-Kompilierungsdateien (".so"-Dateien) für bestimmte DLLs und ausführbare Dateien in einem Verzeichnis.
 	#
-	# Parameter:
+	#? Parameter:
 	# Keine
 	#
-	# Rückgabewert:
+	#? Rückgabewert:
 	# Die Funktion gibt immer 0 zurück.
 	#
-	# Beispiel:
+	#? Beispiel:
 	# cleanaot
 ##
 function cleanaot() {
@@ -5773,17 +5773,17 @@ function cleanaot() {
 }
 
 ##
-	# Funktion: setversion
+	#* Funktion: setversion
 	#
 	# Diese Funktion ändert die Version von OpenSim und stellt das Release auf die angegebene Nummer ein.
 	#
-	# Parameter:
+	#? Parameter:
 	# $1 (NUMMER): Die gewünschte Versionsnummer, auf die das Release eingestellt werden soll.
 	#
-	# Rückgabewert:
+	#? Rückgabewert:
 	# Die Funktion gibt immer 0 zurück.
 	#
-	# Beispiel:
+	#? Beispiel:
 	# setversion 1.0.0
 ##
 function setversion() {
@@ -5801,17 +5801,17 @@ function setversion() {
 }
 
 ##
-	# Funktion: versionsausgabe93
+	#* Funktion: versionsausgabe93
 	#
 	# Diese Funktion gibt Informationen zur Version und zum Git-Status eines OpenSimulator-Repositorys aus.
 	#
-	# Parameter:
+	#? Parameter:
 	# Keine
 	#
-	# Rückgabewert:
+	#? Rückgabewert:
 	# Die Funktion gibt die Informationen zur Version und zum Git-Status aus, gibt aber keinen expliziten Rückgabewert zurück.
 	#
-	# Beispiel:
+	#? Beispiel:
 	# versionsausgabe93
 ##
 function versionsausgabe93() {
@@ -5822,21 +5822,21 @@ function versionsausgabe93() {
 }
 
 ##
-	# Funktion: setversion93
+	#* Funktion: setversion93
 	#
 	# Diese Funktion ändert die Versionsnummer in der Datei "VersionInfo.cs" im OpenSimulator-Repository.
 	#
-	# Parameter:
+	#? Parameter:
 	# $1 (NUMMER): Die gewünschte Versionsnummer oder eine spezielle Kennzeichnung, um die Versionsnummer festzulegen.
 	#               - Wenn NUMMER "d" ist, wird das aktuelle Datum (TTMMJJJJ) als Versionsnummer verwendet.
 	#               - Wenn NUMMER "p" ist, wird das aktuelle Datum mit Punkten (TT.MM.JJJJ) als Versionsnummer verwendet.
 	#               - Wenn NUMMER "z" ist, wird die Versionsnummer aus Git verwendet.
 	#               - Andernfalls wird NUMMER als feste Versionsnummer verwendet.
 	#
-	# Rückgabewert:
+	#? Rückgabewert:
 	# Die Funktion gibt immer 0 zurück.
 	#
-	# Beispiel:
+	#? Beispiel:
 	# setversion93 1.0.0
 	# setversion93 d
 	# setversion93 p
@@ -5884,17 +5884,17 @@ function setversion93() {
 }
 
 ##
-	# Funktion: osstruktur
+	#* Funktion: osstruktur
 	#
 	# Diese Funktion erstellt Verzeichnisstrukturen für OpenSimulator-Simulationen basierend auf den übergebenen Parametern.
 	#
-	# Parameter:
+	#? Parameter:
 	#   $1: Startnummer (z.B., sim1)
 	#   $2: Endnummer (z.B., sim10)
 	#
-	# Rückgabewert: Die Funktion gibt immer 0 zurück.
+	#? Rückgabewert: Die Funktion gibt immer 0 zurück.
 	#
-	# Beispiel: osstruktur 1 10
+	#? Beispiel: osstruktur 1 10
 	# Diese Funktion ermöglicht es Ihnen, Verzeichnisstrukturen für OpenSimulator-Simulationen zu erstellen, 
 	# indem Sie die Start- und Endnummer der Simulationen übergeben. 
 	# Die Verzeichnisse sim1 bis simN werden erstellt, und ihre Namen sowie die Informationen werden in eine Datei geschrieben. 
@@ -5920,15 +5920,15 @@ function osstruktur() {
 }
 
 ##
-	# Funktion: menuosstruktur
+	#* Funktion: menuosstruktur
 	#
 	# Diese Funktion erstellt Verzeichnisstrukturen für OpenSimulator-Simulationen basierend auf Benutzereingaben.
 	#
-	# Parameter: Keine
+	#? Parameter: Keine
 	#
-	# Rückgabewert: Die Funktion gibt immer 0 zurück.
+	#? Rückgabewert: Die Funktion gibt immer 0 zurück.
 	#
-	# Beispiel: menuosstruktur
+	#? Beispiel: menuosstruktur
 	#
 	# Diese Funktion ermöglicht es dem Benutzer, Verzeichnisstrukturen für OpenSimulator-Simulationen zu erstellen, 
 	# indem er den Bereich von sim1 bis simN eingibt. 
@@ -5982,14 +5982,24 @@ function menuosstruktur() {
 }
 
 ##
-	#* osdelete.
-	# altes opensim loeschen und letztes opensim als Backup umbenennen.
-	# 
-	#? @param keine.
-	#? @return nichts wird zurueckgegeben.
-	# todo: nichts.
+	#* osdelete() - Funktion zum Löschen eines OpenSim-Verzeichnisses und zur Sicherung des alten Verzeichnisses.
+	#
+	# Diese Funktion überprüft zunächst, ob das angegebene Verzeichnis vorhanden ist.
+	# Wenn es existiert, wird es gelöscht und das alte Verzeichnis wird umbenannt, um es zu sichern.
+	# Wenn das Verzeichnis nicht existiert, wird ein Fehler protokolliert.
+	#
+	#? Parameter:
+	#   - Keine
+	#
+	#? Rückgabewert:
+	#   - 0: Erfolgreiche Ausführung der Funktion
+	#   - 1: Fehler beim Löschen des Verzeichnisses oder beim Umbenennen des alten Verzeichnisses
+	#
+	#? Verwendungsbeispiel:
+	#   osdelete
 ##
 function osdelete() {
+	# Letzte Bearbeitung 01.10.2023
 	if [ -d /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/ ]; then
 		log info "Loesche altes opensim1 Verzeichnis"
 		cd /$STARTVERZEICHNIS || return 1
@@ -6005,15 +6015,24 @@ function osdelete() {
 }
 
 ##
-	#* oscopyrobust.
-	# Robust Daten kopieren.
-	# bash osmtools.sh oscopyrobust
-	# 
-	#? @param keine.
-	#? @return nichts wird zurueckgegeben.
-	# todo: nichts.
+	#* oscopyrobust() - Funktion zum Kopieren des Robust-Verzeichnisses in das Money-Verzeichnis.
+	#
+	# Diese Funktion wechselt in das Hauptverzeichnis ($STARTVERZEICHNIS) und überprüft, ob das
+	# Robust-Verzeichnis ($ROBUSTVERZEICHNIS) vorhanden ist. Wenn es existiert, wird der Inhalt des
+	# OpenSim-Verzeichnisses ($OPENSIMVERZEICHNIS/bin) in das Robust-Verzeichnis kopiert.
+	#
+	#? Parameter:
+	#   - Keine
+	#
+	#? Rückgabewert:
+	#   - 0: Erfolgreiche Ausführung der Funktion
+	#   - 1: Fehler beim Wechseln des Verzeichnisses, beim Überprüfen des Robust-Verzeichnisses oder beim Kopieren der Dateien
+	#
+	#? Verwendungsbeispiel:
+	#   oscopyrobust
 ##
 function oscopyrobust() {
+	# Letzte Bearbeitung 01.10.2023
 	cd /$STARTVERZEICHNIS || return 1
 	if [ -d /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/ ]; then
 		log line
@@ -6030,15 +6049,26 @@ function oscopyrobust() {
 }
 
 ##
-	#* oscopysim.
-	# Simulatoren kopieren aus dem Verzeichnis opensim.
-	# bash osmtools.sh oscopysim
-	# 
-	#? @param keine.
-	#? @return nichts wird zurueckgegeben.
-	# todo: nichts.
+	#* oscopysim() - Funktion zum Kopieren von OpenSimulator-Instanzen in verschiedene Verzeichnisse.
+	#
+	# Diese Funktion wechselt in das Hauptverzeichnis ($STARTVERZEICHNIS) und ruft die Funktion
+	# `makeverzeichnisliste` auf, um eine Liste von Verzeichnissen zu erstellen, in die die
+	# OpenSimulator-Instanzen kopiert werden sollen. Anschließend wird in einer Schleife durch die
+	# Verzeichnisliste iteriert und für jede Instanz das OpenSim-Verzeichnis ($OPENSIMVERZEICHNIS/bin)
+	# in das entsprechende Zielverzeichnis kopiert.
+	#
+	#? Parameter:
+	#   - Keine
+	#
+	#? Rückgabewert:
+	#   - 0: Erfolgreiche Ausführung der Funktion
+	#   - 1: Fehler beim Wechseln des Verzeichnisses, beim Erstellen der Verzeichnisliste oder beim Kopieren der Dateien
+	#
+	#? Verwendungsbeispiel:
+	#   oscopysim
 ##
 function oscopysim() {
+	# Letzte Bearbeitung 01.10.2023
 	cd /$STARTVERZEICHNIS || return 1 # Prüfen ob Verzeichnis vorhanden ist.
 	makeverzeichnisliste
 	#log info "Kopiere Simulatoren!"
@@ -6054,15 +6084,24 @@ function oscopysim() {
 }
 
 ##
-	#* oscopy.
-	# Simulator kopieren aus dem Verzeichnis opensim.
-	# bash osmtools.sh oscopy sim1
-	# 
-	#? @param keine.
-	#? @return nichts wird zurueckgegeben.
-	# todo: nichts.
+	#* oscopy() - Funktion zum Kopieren eines OpenSimulator-Verzeichnisses in ein Zielverzeichnis.
+	#
+	# Diese Funktion nimmt den Namen eines OpenSimulator-Verzeichnisses als Argument ($VERZEICHNIS)
+	# entgegen. Sie wechselt in das Hauptverzeichnis ($STARTVERZEICHNIS) und kopiert den Inhalt des
+	# OpenSim-Verzeichnisses ($OPENSIMVERZEICHNIS/bin) in das angegebene Zielverzeichnis ($VERZEICHNIS).
+	#
+	#? Parameter:
+	#   - $1: Der Name des OpenSimulator-Verzeichnisses, das kopiert werden soll.
+	#
+	#? Rückgabewert:
+	#   - 0: Erfolgreiche Ausführung der Funktion
+	#   - 1: Fehler beim Wechseln des Verzeichnisses, beim Überprüfen des Verzeichnisses oder beim Kopieren der Dateien
+	#
+	#? Verwendungsbeispiel:
+	#   oscopy "MeinOpenSimVerzeichnis"
 ##
 function oscopy() {
+	# Letzte Bearbeitung 01.10.2023
 	cd /$STARTVERZEICHNIS || return 1
 	VERZEICHNIS=$1
 	log info "Kopiere Simulator $VERZEICHNIS "
@@ -6072,15 +6111,23 @@ function oscopy() {
 }
 
 ##
-	#* configlesen.
-	# Regionskonfigurationen lesen. 
-	# Beispiel: configlesen sim1
-	# 
-	#? @param keine.
-	#? @return nichts wird zurueckgegeben.
-	# todo: nichts.
+	#* configlesen() - Funktion zum Lesen von Regionskonfigurationen aus einem Verzeichnis.
+	#
+	# Diese Funktion nimmt den Namen eines Verzeichnisses als Argument ($CONFIGLESENSCREEN) entgegen und
+	# liest die Regionskonfigurationen aus den INI-Dateien in diesem Verzeichnis. Die gelesenen
+	# Konfigurationen werden in der Variable $KONFIGLESEN gespeichert und protokolliert.
+	#
+	#? Parameter:
+	#   - $1: Der Name des Verzeichnisses, aus dem die Regionskonfigurationen gelesen werden sollen.
+	#
+	#? Rückgabewert:
+	#   - 0: Erfolgreiche Ausführung der Funktion
+	#
+	#? Verwendungsbeispiel:
+	#   configlesen "MeinRegionsVerzeichnis"
 ##
 function configlesen() {
+	# Letzte Bearbeitung 01.10.2023
 	log info "CONFIGLESEN: Regionskonfigurationen von $CONFIGLESENSCREEN"
 	CONFIGLESENSCREEN=$1
 	KONFIGLESEN=$(awk -F":" '// {print $0 }' /$STARTVERZEICHNIS/"$CONFIGLESENSCREEN"/bin/Regions/*.ini) # Regionskonfigurationen aus einem Verzeichnis lesen.
@@ -6089,15 +6136,26 @@ function configlesen() {
 }
 
 ##
-	#* ini_get.
-	# Konfigurationsbereich lesen.
-	# Verwendung: ini_get Dateiname SECTION KEY
-	# 
-	#? @param keine.
-	#? @return nichts wird zurueckgegeben.
-	# todo: nichts.
+	#* ini_get() - Funktion zum Lesen eines Werts aus einer INI-Datei für eine bestimmte Sektion und einen bestimmten Schlüssel.
+	#
+	# Diese Funktion nimmt drei Argumente entgegen: den Dateinamen der INI-Datei ($KONFIGDATEI), den Namen der Sektion ($SECTION)
+	# und den Namen des Schlüssels ($KEY), dessen Wert gelesen werden soll. Die Funktion durchsucht die INI-Datei nach der
+	# angegebenen Sektion und dem Schlüssel und gibt den entsprechenden Wert zurück.
+	#
+	#? Parameter:
+	#   - $1: Der Dateiname der INI-Datei.
+	#   - $2: Der Name der Sektion, aus der der Wert gelesen werden soll.
+	#   - $3: Der Name des Schlüssels, dessen Wert gelesen werden soll.
+	#
+	#? Rückgabewert:
+	#   - Der Wert des angegebenen Schlüssels in der INI-Datei.
+	#   - Wenn die Sektion oder der Schlüssel nicht gefunden werden, wird nichts zurückgegeben.
+	#
+	#? Verwendungsbeispiel:
+	#   ini_get "meine.ini" "Sektion1" "Schluessel1"
 ##
 function ini_get() {
+	# Letzte Bearbeitung 01.10.2023
     local KONFIGDATEI=$1
     local SECTION=$2
     local KEY=$3
@@ -6113,15 +6171,26 @@ function ini_get() {
 }
 
 ##
-	#* ini_set.
-	# Konfigurationsbereich schreiben. 
-	# Verwendung: ini_set Dateiname SECTION KEY WERT
-	# 
-	#? @param keine.
-	#? @return nichts wird zurueckgegeben.
-	# todo: Testen, schreibt nicht.
+	#* ini_set() - Funktion zum Setzen eines Werts in einer INI-Datei für eine bestimmte Sektion und einen bestimmten Schlüssel.
+	#
+	# Diese Funktion nimmt vier Argumente entgegen: den Dateinamen der INI-Datei ($KONFIGDATEI), den Namen der Sektion ($SECTION),
+	# den Namen des Schlüssels ($KEY) und den Wert ($WERT), der in der INI-Datei gespeichert werden soll. Die Funktion sucht
+	# nach der angegebenen Sektion und dem Schlüssel in der INI-Datei und setzt den Wert entsprechend.
+	#
+	#? Parameter:
+	#   - $1: Der Dateiname der INI-Datei.
+	#   - $2: Der Name der Sektion, in der der Wert gespeichert werden soll.
+	#   - $3: Der Name des Schlüssels, dessen Wert gespeichert werden soll.
+	#   - $4: Der Wert, der in der INI-Datei gespeichert werden soll.
+	#
+	#? Rückgabewert:
+	#   - 0: Erfolgreiche Ausführung der Funktion
+	#
+	#? Verwendungsbeispiel:
+	#   ini_set "meine.ini" "Sektion1" "Schluessel1" "Wert1"
 ##
 function ini_set() {
+	# Letzte Bearbeitung 01.10.2023
     local KONFIGDATEI=$1
     local SECTION=$2
     local KEY=$3
@@ -6141,15 +6210,25 @@ function ini_set() {
 }
 
 ##
-	#* regionsconfigdateiliste.
-	# schreibt Dateinamen mit Pfad in eine Datei.
-	# regionsconfigdateiliste -b(Bildschirm) -d(Datei)  Vereichnis
-	# 
-	#? @param keine.
-	#? @return nichts wird zurueckgegeben.
-	# todo: nichts.
+	#* regionsconfigdateiliste() - Funktion zum Erstellen einer Liste von Regionskonfigurationsdateien in einem Verzeichnis.
+	#
+	# Diese Funktion nimmt zwei Argumente entgegen: den Namen des Verzeichnisses ($VERZEICHNIS), in dem nach
+	# Regionskonfigurationsdateien gesucht werden soll, und optional eine Option ($2) zum Steuern des Ausgabeverhaltens.
+	# Wenn die Option "-d" übergeben wird, werden die Dateinamen in eine Datei namens "RegionsDateiliste.txt" geschrieben.
+	# Andernfalls werden die Dateinamen auf der Standardausgabe ausgegeben.
+	#
+	#? Parameter:
+	#   - $1: Der Name des Verzeichnisses, in dem nach Regionskonfigurationsdateien gesucht werden soll.
+	#   - $2 (optional): Eine Option zur Steuerung des Ausgabeverhaltens. Wenn "-d" übergeben wird, werden die Dateinamen in eine Datei geschrieben.
+	#
+	#? Rückgabewert:
+	#   - 0: Erfolgreiche Ausführung der Funktion
+	#
+	#? Verwendungsbeispiel:
+	#   regionsconfigdateiliste "MeinRegionsVerzeichnis" [-d]
 ##
 function regionsconfigdateiliste() {
+	# Letzte Bearbeitung 01.10.2023
 	VERZEICHNIS=$1
 	declare -A Dateien # Array erstellen
 	# shellcheck disable=SC2178
@@ -6162,14 +6241,23 @@ function regionsconfigdateiliste() {
 }
 
 ##
-	#* meineregionen.
-	# listet alle Regionen aus den Konfigurationen auf.
-	# 
-	#? @param keine.
-	#? @return nichts wird zurueckgegeben.
-	# todo: nichts.
+# Letzte Bearbeitung 01.10.2023
+	# meineregionen() - Funktion zum Anzeigen der Regionsnamen aus Regionskonfigurationsdateien.
+	#
+	# Diese Funktion ruft zuerst die Funktion `makeverzeichnisliste` auf, um eine Liste von Verzeichnissen zu erstellen,
+	# und gibt dann die Regionsnamen aus den Regionskonfigurationsdateien in jedem Verzeichnis aus. Die Ausgabe wird protokolliert.
+	#
+	#? Parameter:
+	#   - Keine
+	#
+	#? Rückgabewert:
+	#   - 0: Erfolgreiche Ausführung der Funktion
+	#
+	#? Verwendungsbeispiel:
+	#   meineregionen
 ##
 function meineregionen() {
+	# Letzte Bearbeitung 01.10.2023
 	makeverzeichnisliste
 	log info "MEINEREGIONEN: Regionsliste"
 	sleep 1
@@ -6184,14 +6272,23 @@ function meineregionen() {
 }
 
 ##
-	#* regionsinisuchen.
-	# sucht alle Regionen.
-	# 
-	#? @param keine.
-	#? @return nichts wird zurueckgegeben.
-	# todo: nichts.
+	#* regionsinisuchen() - Funktion zum Suchen und Anzeigen von Regionskonfigurationsdateien (Regions.ini) in Verzeichnissen.
+	#
+	# Diese Funktion ruft zuerst die Funktion `makeverzeichnisliste` auf, um eine Liste von Verzeichnissen zu erstellen,
+	# und sucht dann nach der Datei "Regions.ini" in jedem Verzeichnis. Die gefundenen Dateien werden analysiert, und die
+	# Namen der darin enthaltenen Regionskonfigurationen werden ausgegeben.
+	#
+	#? Parameter:
+	#   - Keine
+	#
+	#? Rückgabewert:
+	#   - 0: Erfolgreiche Ausführung der Funktion
+	#
+	#? Verwendungsbeispiel:
+	#   regionsinisuchen
 ##
 function regionsinisuchen() {
+	# Letzte Bearbeitung 01.10.2023
 	makeverzeichnisliste
 	sleep 1
 
@@ -6209,14 +6306,23 @@ function regionsinisuchen() {
 }
 
 ##
-	#* get_regionsarray.
-	# gibt ein Array aller Regionsabschnitte zurueck.
-	# 
-	#? @param keine.
-	#? @return nichts wird zurueckgegeben.
-	# todo: nichts.
+	#* get_regionsarray() - Funktion zum Extrahieren der Regionsnamen aus einer INI-Datei und Erstellen eines Arrays.
+	#
+	# Diese Funktion nimmt den Dateinamen einer INI-Datei ($DATEI) entgegen und extrahiert die Regionsnamen
+	# aus den Sektionsüberschriften in der Datei. Die extrahierten Regionsnamen werden in einem Array gespeichert
+	# und als Ergebnis zurückgegeben.
+	#
+	#? Parameter:
+	#   - $1: Der Dateiname der INI-Datei, aus der die Regionsnamen extrahiert werden sollen.
+	#
+	#? Rückgabewert:
+	#   - Ein Array, das die extrahierten Regionsnamen enthält.
+	#
+	#? Verwendungsbeispiel:
+	#   regionsarray=($(get_regionsarray "MeineRegions.ini"))
 ##
 function get_regionsarray() {
+	# Letzte Bearbeitung 01.10.2023
 	# Es fehlt eine pruefung ob Datei vorhanden ist.
 	DATEI=$1
 	# shellcheck disable=SC2207
@@ -6234,15 +6340,25 @@ function get_regionsarray() {
 }
 
 ##
-	#* get_value_from_Region_key.
-	# gibt den Wert eines bestimmten Schluessels im angegebenen Abschnitt zurueck.
-	# $1 - Datei - $2 - Schluessel - $3 - Sektion
-	# 
-	#? @param keine.
-	#? @return nichts wird zurueckgegeben.
-	# todo: nichts.
+	#* get_value_from_Region_key() - Funktion zum Extrahieren eines Werts aus einer INI-Datei für eine bestimmte Sektion und einen bestimmten Schlüssel.
+	#
+	# Diese Funktion nimmt drei Argumente entgegen: den Dateinamen der INI-Datei ($RKDATEI), den Namen der Sektion ($RKSCHLUESSEL)
+	# und den Namen des Schlüssels ($RKSEKTION), dessen Wert extrahiert werden soll. Die Funktion sucht nach der angegebenen
+	# Sektion und dem Schlüssel in der INI-Datei und gibt den entsprechenden Wert zurück.
+	#
+	#? Parameter:
+	#   - $1: Der Dateiname der INI-Datei.
+	#   - $2: Der Name der Sektion, in der der Wert gefunden werden soll.
+	#   - $3: Der Name des Schlüssels, dessen Wert gefunden werden soll.
+	#
+	#? Rückgabewert:
+	#   - Der extrahierte Wert aus der INI-Datei.
+	#
+	#? Verwendungsbeispiel:
+	#   wert=$(get_value_from_Region_key "meine.ini" "Sektion1" "Schluessel1")
 ##
 function get_value_from_Region_key() {
+	# Letzte Bearbeitung 01.10.2023
 	# RKDATEI=$1; RKSCHLUESSEL=$2; RKSEKTION=$3;
 	# Es fehlt eine pruefung ob Datei vorhanden ist.
 	# shellcheck disable=SC2005
@@ -6252,15 +6368,26 @@ function get_value_from_Region_key() {
 }
 
 ##
-	#* regionsiniteilen.
-	# holt aus der Regions.ini eine Region heraus und speichert sie mit ihrem Regionsnamen.
-	# Aufruf: regionsiniteilen Verzeichnis Regionsname
-	# 
-	#? @param keine.
-	#? @return nichts wird zurueckgegeben.
-	# todo: nichts.
+	#* regionsiniteilen() - Funktion zum Schreiben von Regionskonfigurationswerten in eine separate INI-Datei.
+	#
+	# Diese Funktion nimmt drei Argumente entgegen: das Verzeichnis, aus dem die Werte gelesen werden sollen ($INIVERZEICHNIS),
+	# den Namen der Region, für die die Werte gespeichert werden sollen ($RTREGIONSNAME), und den Pfad zur Haupt-Regions.ini-Datei
+	# ($INI_FILE). Die Funktion überprüft, ob die Haupt-Regions.ini-Datei vorhanden ist, und wenn nicht, werden die Werte für die
+	# angegebene Region in eine separate INI-Datei geschrieben.
+	#
+	#? Parameter:
+	#   - $1: Das Verzeichnis, aus dem die Werte gelesen werden sollen.
+	#   - $2: Der Name der Region, für die die Werte gespeichert werden sollen.
+	#   - $3: Der Pfad zur Haupt-Regions.ini-Datei.
+	#
+	#? Rückgabewert:
+	#   - 0: Erfolgreiche Ausführung der Funktion
+	#
+	#? Verwendungsbeispiel:
+	#   regionsiniteilen "MeinVerzeichnis" "MeineRegion" "/MeinVerzeichnis/bin/Regions/Regions.ini"
 ##
 function regionsiniteilen() {
+	# Letzte Bearbeitung 01.10.2023
 	INIVERZEICHNIS=$1                                                     # Auszulesendes Verzeichnis
 	RTREGIONSNAME=$2                                                      # Auszulesende Region
 	INI_FILE="/$STARTVERZEICHNIS/$INIVERZEICHNIS/bin/Regions/Regions.ini" # Auszulesende Datei
@@ -6303,15 +6430,24 @@ function regionsiniteilen() {
 }
 
 ##
-	#* autoregionsiniteilen.
-	# Die gemeinschaftsdatei Regions.ini in einzelne Regionen teilen.
-	# diese dann unter dem Regionsnamen speichern, danach die Alte Regions.ini umbenennen in Regions.ini.old.
-	# 
-	#? @param keine.
-	#? @return nichts wird zurueckgegeben.
-	# todo: nichts.
+	#* autoregionsiniteilen() - Funktion zum Aufteilen und Umbenennen von Regionskonfigurationen in mehreren Verzeichnissen.
+	#
+	# Diese Funktion ruft zuerst die Funktion `makeverzeichnisliste` auf, um eine Liste von Verzeichnissen zu erstellen,
+	# und iteriert dann über jedes Verzeichnis in der Liste. Für jedes Verzeichnis wird die Regions.ini-Datei in mehrere
+	# separate INI-Dateien aufgeteilt, eine für jede Region, und die einzelnen Regionsdateien werden umbenannt. Falls die
+	# Regions.ini-Datei in einem Verzeichnis nicht vorhanden ist, wird sie nicht umbenannt.
+	#
+	#? Parameter:
+	#   - Keine
+	#
+	#? Rückgabewert:
+	#   - 0: Erfolgreiche Ausführung der Funktion
+	#
+	#? Verwendungsbeispiel:
+	#   autoregionsiniteilen
 ##
 function autoregionsiniteilen() {
+	# Letzte Bearbeitung 01.10.2023
 	makeverzeichnisliste
 	sleep 1
 	for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
@@ -6339,14 +6475,23 @@ function autoregionsiniteilen() {
 }
 
 ##
-	#* regionliste.
-	# Die RegionListe ermitteln und mit dem Verzeichnisnamen in die osmregionlist.ini schreiben.
-	# 
-	#? @param name Erklaerung.
-	#? @return name was wird zurueckgegeben.
-	# todo: nichts.
+	#* regionliste() - Funktion zum Erstellen einer Liste von Regionsnamen aus INI-Dateien und Speichern in osmregionlist.ini.
+	#
+	# Diese Funktion erstellt eine Liste von Regionsnamen aus den INI-Dateien in den angegebenen Verzeichnissen und speichert
+	# sie in der Datei osmregionlist.ini. Zuvor wird die vorhandene osmregionlist.ini-Datei (falls vorhanden) gesichert und in
+	# osmregionlist.ini.old umbenannt.
+	#
+	#? Parameter:
+	#   - Keine
+	#
+	#? Rückgabewert:
+	#   - 0: Erfolgreiche Ausführung der Funktion
+	#
+	#? Verwendungsbeispiel:
+	#   regionliste
 ##  
 function regionliste() {
+	# Letzte Bearbeitung 01.10.2023
 	# Alte osmregionlist.ini sichern und in osmregionlist.ini.old umbenennen.
 	if [ -f "/$STARTVERZEICHNIS/osmregionlist.ini" ]; then
 		if [ -f "/$STARTVERZEICHNIS/osmregionlist.ini.old" ]; then
@@ -6385,14 +6530,22 @@ function regionliste() {
 }
 
 ##
-	#* makewebmaps.
-	# Kopiere Maptile aus dem Robust nach html fuer Webanzeige.
-	# 
-	#? @param keine.
-	#? @return nichts wird zurueckgegeben.
-	# todo: Nur Bilder kopieren, wenn sie nicht vorhanden sind, oder aelter als bla bla sind.
+	#* makewebmaps() - Funktion zum Kopieren von Maptiles in ein Webverzeichnis.
+	#
+	# Diese Funktion kopiert Maptiles aus dem angegebenen Verzeichnis in ein Webverzeichnis, damit sie über das Web verfügbar sind.
+	# Das Webverzeichnis wird zuerst erstellt, wenn es nicht bereits vorhanden ist. Die Maptiles werden dann kopiert.
+	#
+	#? Parameter:
+	#   - Keine
+	#
+	#? Rückgabewert:
+	#   - 0: Erfolgreiche Ausführung der Funktion
+	#
+	#? Verwendungsbeispiel:
+	#   makewebmaps
 ##
 function makewebmaps() {
+	# Letzte Bearbeitung 01.10.2023
 	MAPTILEVERZEICHNIS="maptiles"
 	log info "MAKEWEBMAPS: Kopiere Maptile"
 	# Verzeichnis erstellen wenn es noch nicht vorhanden ist.
@@ -6403,14 +6556,22 @@ function makewebmaps() {
 }
 
 ##
-	#* moneydelete.
-	# loescht den MoneyServer ohne die OpenSim Config zu veraendern.
-	# 
-	#? @param keine.
-	#? @return nichts wird zurueckgegeben.
-	# todo: nichts.
+	#* moneydelete() - Funktion zum Entfernen von MoneyServer-Komponenten aus OpenSimulator-Verzeichnissen.
+	#
+	# Diese Funktion entfernt MoneyServer-Komponenten aus den OpenSimulator-Verzeichnissen und Robust-Verzeichnis, wenn es vorhanden ist.
+	# Die zu löschenden Dateien und Verzeichnisse werden spezifiziert.
+	#
+	#? Parameter:
+	#   - Keine
+	#
+	#? Rückgabewert:
+	#   - 0: Erfolgreiche Ausführung der Funktion
+	#
+	#? Verwendungsbeispiel:
+	#   moneydelete
 ##
 function moneydelete() {
+	# Letzte Bearbeitung 01.10.2023
 	makeverzeichnisliste
 	sleep 1
 	# MoneyServer aus den sims entfernen
@@ -6436,14 +6597,22 @@ function moneydelete() {
 }
 
 ##
-	#* osgitholen.
-	# kopiert eine Entwicklerversion in das opensim Verzeichnis.
-	# 
-	#? @param keine.
-	#? @return nichts wird zurueckgegeben.
-	# todo: nichts.
+	#* osgitholen() - Funktion zum Klonen der Entwicklungsversion des OpenSimulator aus dem Git-Repository.
+	#
+	# Diese Funktion klont die Entwicklungsversion des OpenSimulator aus dem Git-Repository und speichert sie im angegebenen Verzeichnis.
+	# Wenn das Verzeichnis bereits vorhanden ist, wird es zuerst umbenannt, um es als Sicherung zu behalten.
+	#
+	#? Parameter:
+	#   - Keine
+	#
+	#? Rückgabewert:
+	#   - 0: Erfolgreiche Ausführung der Funktion
+	#
+	#? Verwendungsbeispiel:
+	#   osgitholen
 ##
 function osgitholen() {
+	# Letzte Bearbeitung 01.10.2023
 	if [ -d /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/ ]; then
 		log rohtext "Kopieren der Entwicklungsversion des OpenSimulator aus dem Git."
 		log info "*****************************#"
@@ -6462,14 +6631,23 @@ function osgitholen() {
 }
 
 ##
-	#* osgitholen93.
-	# kopiert eine Entwicklerversion in das opensim Verzeichnis.
-	# 
-	#? @param keine.
-	#? @return nichts wird zurueckgegeben.
-	# todo: nichts.
+	#* osgitholen93() - Funktion zum Klonen der Entwicklungsversion des OpenSimulator aus dem Git-Repository und Aktualisieren.
+	#
+	# Diese Funktion klonet die Entwicklungsversion des OpenSimulator aus dem Git-Repository und speichert sie im angegebenen Verzeichnis.
+	# Wenn das Verzeichnis bereits vorhanden ist, wird es zuerst umbenannt, um es als Sicherung zu behalten. Dann wird die aktuelle Version
+	# aus dem Git-Repository geklont und aktualisiert.
+	#
+	#? Parameter:
+	#   - Keine
+	#
+	#? Rückgabewert:
+	#   - 0: Erfolgreiche Ausführung der Funktion
+	#
+	#? Verwendungsbeispiel:
+	#   osgitholen93
 ##
 function osgitholen93() {
+	# Letzte Bearbeitung 01.10.2023
 	log rohtext "Kopieren der Entwicklungsversion des OpenSimulator aus dem Git."
 	log info "*****************************#"
 	cd /$STARTVERZEICHNIS || return 1
@@ -6488,14 +6666,23 @@ function osgitholen93() {
 }
 
 ##
-	#* osbauen93
-	# Baut einen neuen OpenSimulator mit dotnet 6.
-	# 
-	#? @param keine.
-	#? @return nichts wird zurueckgegeben.
-	# todo: nichts.
+	#* osbauen93() - Funktion zum Bauen der OpenSimulator-Entwicklungsversion unter Verwendung von .NET Core.
+	#
+	# Diese Funktion wechselt zum OpenSimulator-Verzeichnis, stellt sicher, dass der branch 'dotnet6' ausgewählt ist, führt die notwendigen 
+	# Vorverarbeitungsschritte aus, und baut das OpenSimulator-Projekt mit .NET Core. Das Ergebnis ist die Erstellung der OpenSimulator-
+	# Anwendung, die mit 'dotnet OpenSim.dll' gestartet werden kann.
+	#
+	#? Parameter:
+	#   - Keine
+	#
+	#? Rückgabewert:
+	#   - 0: Erfolgreiche Ausführung der Funktion
+	#
+	#? Verwendungsbeispiel:
+	#   osbauen93
 ##
 function osbauen93() {
+	# Letzte Bearbeitung 01.10.2023
 	# Bauen
     cd /$STARTVERZEICHNIS/opensim || exit
     git checkout dotnet6
@@ -6505,14 +6692,23 @@ function osbauen93() {
 }
 
 ##
-	#* opensimholen.
-	# holt den OpenSimulator in das Arbeitsverzeichnis.
-	# 
-	#? @param keine.
-	#? @return nichts wird zurueckgegeben.
-	# todo: nichts.
+	#* opensimholen() - Funktion zum Herunterladen und Aktualisieren des OpenSimulator aus einem externen Quellen-Link.
+	#
+	# Diese Funktion sichert zuerst die vorhandene OpenSimulator-Installation im Verzeichnis 'opensim1' (falls vorhanden) und lädt dann die 
+	# neue Version des OpenSimulator aus einem externen Quellen-Link herunter. Nach dem Herunterladen wird die neue Version entpackt und 
+	# im Verzeichnis 'opensim' abgelegt.
+	#
+	#? Parameter:
+	#   - Keine
+	#
+	#? Rückgabewert:
+	#   - 0: Erfolgreiche Ausführung der Funktion
+	#
+	#? Verwendungsbeispiel:
+	#   opensimholen
 ##
 function opensimholen() {
+	# Letzte Bearbeitung 01.10.2023
 	if [ -d /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/ ]; then
 		log info "OpenSimulator im Verzeichnis opensim1 sichern und neuen OpenSimulator herunterladen."
 		cd /$STARTVERZEICHNIS || return 1
@@ -6541,14 +6737,22 @@ function opensimholen() {
 }
 
 ##
-	#* install_mysqltuner.
-	# Installation von mysqltuner.
-	# 
-	#? @param keine.
-	#? @return nichts wird zurueckgegeben.
-	# todo: nichts.
+	#* install_mysqltuner() - Funktion zum Herunterladen und Einrichten des MySQLTuner-Skripts.
+	#
+	# Diese Funktion lädt das MySQLTuner-Skript und verwandte Dateien von ihren jeweiligen Quellen herunter und speichert sie im aktuellen 
+	# Verzeichnis. Anschließend wird die Funktion 'mySQLmenu' aufgerufen, um den MySQLTuner zu konfigurieren und auszuführen.
+	#
+	#? Parameter:
+	#   - Keine
+	#
+	#? Rückgabewert:
+	#   - 0: Erfolgreiche Ausführung der Funktion
+	#
+	#? Verwendungsbeispiel:
+	#   install_mysqltuner
 ##
 function install_mysqltuner() {
+	# Letzte Bearbeitung 01.10.2023
 	cd /$STARTVERZEICHNIS || return 1
 	log info "mySQL Tuner Download"
 	wget http://mysqltuner.pl/ -O mysqltuner.pl 2>/dev/null
@@ -6559,15 +6763,23 @@ function install_mysqltuner() {
 }
 
 ##
-	#* regionbackup.
-	# backup einer Region.
-	# regionbackup Screenname "Der Regionsname"
-	# 
-	#? @param BACKUPVERZEICHNISSCREENNAME REGIONSNAME.
-	#? @return nichts wird zurueckgegeben.
-	# todo: nichts.
+	#* regionbackup() - Funktion zum Sichern einer OpenSimulator-Region.
+	#
+	# Diese Funktion erstellt ein Backup für eine OpenSimulator-Region, indem sie OAR- und Terrain-Daten sowie Konfigurationsdateien speichert.
+	# Die Region wird in den Offline-Modus versetzt, wenn sie nicht bereits offline ist, bevor das Backup erstellt wird.
+	#
+	#? Parameter:
+	#   1. BACKUPVERZEICHNISSCREENNAME: Der Name des Bildschirms (Screen) für das Backup.
+	#   2. REGIONSNAME: Der Name der Region, die gesichert werden soll.
+	#
+	#? Rückgabewert:
+	#   - 0: Erfolgreiche Ausführung der Funktion
+	#
+	#? Verwendungsbeispiel:
+	#   regionbackup "BackupScreen" "MyRegion"
 ##
 function regionbackup() {
+	# Letzte Bearbeitung 01.10.2023
 	# regionbackup "$BACKUPSCREEN" "$BACKUPREGION"
 	log rohtext "Empfange: $BACKUPSCREEN $BACKUPREGION"
 
@@ -6628,14 +6840,22 @@ function regionbackup() {
 }
 
 ##
-	#* menuregionbackup.
-	# ist die dialog Version von regionbackup().
-	# 
-	#? @param dialog.
-	#? @return dialog.
-	# todo: nichts.
+	#* menuregionbackup() - Funktion zur interaktiven Erstellung eines Backups einer OpenSimulator-Region.
+	#
+	# Diese Funktion verwendet das Dialog-Tool zur Benutzereingabe, um den Bildschirmnamen und den Regionsnamen abzurufen und dann ein Backup der angegebenen Region zu erstellen.
+	# Das Backup enthält OAR- und Terrain-Daten sowie Konfigurationsdateien der Region.
+	#
+	#? Parameter:
+	#   Keine
+	#
+	#? Rückgabewert:
+	#   - 0: Erfolgreiche Ausführung der Funktion
+	#
+	#? Verwendungsbeispiel:
+	#   menuregionbackup
 ##
 function menuregionbackup() {
+	# Letzte Bearbeitung 01.10.2023
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
 
@@ -6694,16 +6914,22 @@ function menuregionbackup() {
 }
 
 ##
-	#* regionrestore.
-	# hochladen einer Region.
-	# regionrestore Screenname "Der Regionsname"
-	# Ich kann nicht pruefen ob die Region im OpenSimulator vorhanden ist. Sollte sie nicht vorhanden sein wird root (Alle) oder die letzte ausgewaehlte Region wiederhergestellt. 
-	# Dies zerstoert eventuell vorhandene Regionen.
-	#? @param keine.
-	#? @return nichts wird zurueckgegeben.
-	# todo: nichts.
+	#* regionrestore() - Funktion zum Wiederherstellen einer OpenSimulator-Region aus einem Backup.
+	#
+	# Diese Funktion stellt eine zuvor gesicherte OpenSimulator-Region aus einem OAR-Backup wieder her.
+	#
+	#? Parameter:
+	#   1. RESTOREVERZEICHNISSCREENNAME: Der Name des Bildschirms (Screen) für die Wiederherstellung.
+	#   2. REGIONSNAME: Der Name der Region, die wiederhergestellt werden soll.
+	#
+	#? Rückgabewert:
+	#   - 0: Erfolgreiche Ausführung der Funktion
+	#
+	#? Verwendungsbeispiel:
+	#   regionrestore "RestoreScreen" "MyRegion"
 ##
 function regionrestore() {
+	# Letzte Bearbeitung 01.10.2023
 	RESTOREVERZEICHNISSCREENNAME=$1
 	REGIONSNAME=$2
 	DATEINAME=${REGIONSNAME//\"/}
@@ -6722,15 +6948,20 @@ function regionrestore() {
 }
 
 ##
-	#* menuregionrestore.
-	# Eine erklaerung, wie man Funktionen nach den Programierrichtlinien richtig kommentiert.
-	# Ich kann nicht pruefen ob die Region im OpenSimulator vorhanden ist. Sollte sie nicht vorhanden sein wird root (Alle) oder die letzte ausgewaehlte Region wiederhergestellt. 
-	# Dies zerstoert eventuell vorhandene Regionen.
-	#? @param dialog.
-	#? @return dialog.
-	# todo: nichts.
+	#* menuregionrestore() - Funktion zur Benutzerinteraktion für die Wiederherstellung einer OpenSimulator-Region aus einem Backup.
+	#
+	# Diese Funktion verwendet das Dialog-Programm, um Benutzereingaben zu erhalten und die Wiederherstellung einer OpenSimulator-Region aus einem OAR-Backup durchzuführen.
+	#
+	#? Parameter: Keine
+	#
+	#? Rückgabewert:
+	#   - 0: Erfolgreiche Ausführung der Funktion
+	#
+	#? Verwendungsbeispiel:
+	#   menuregionrestore
 ##
 function menuregionrestore() {
+	# Letzte Bearbeitung 01.10.2023
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
 
@@ -6774,14 +7005,22 @@ function menuregionrestore() {
 }
 
 ##
-	#* autosimstart.
-	# automatischer sim start ohne Robust und Money.
-	# 
-	#? @param keine.
-	#? @return nichts wird zurueckgegeben.
-	# todo: nichts.
+	#* autosimstart() - Funktion zum automatischen Starten von OpenSimulator-Regionen.
+	#
+	# Diese Funktion startet OpenSimulator-Regionen automatisch, sofern sie nicht bereits gestartet sind.
+	# Sie überprüft, ob bereits ein Bildschirm mit dem Namen 'sim' ausgeführt wird. Wenn nicht, wird jede Region aus der Verzeichnisliste gestartet.
+	# Die Funktion verwendet die in den Konfigurationsvariablen festgelegten Einstellungen, wie z. B. den Regionsanzeigemodus und den AOT-Modus.
+	#
+	#? Parameter: Keine
+	#
+	#? Rückgabewert:
+	#   - 0: Erfolgreiche Ausführung der Funktion
+	#
+	#? Verwendungsbeispiel:
+	#   autosimstart
 ##
 function autosimstart() {
+	# Letzte Bearbeitung 01.10.2023
 	if ! screen -list | grep -q 'sim'; then
 		# es laeuft kein Simulator - not work
 		makeverzeichnisliste
@@ -6823,14 +7062,20 @@ function autosimstart() {
 }
 
 ##
-	#* autosimstop.
-	# Stoppen aller laufenden Simulatoren.
-	# 
-	#? @param keine.
-	#? @return nichts wird zurueckgegeben.
-	# todo: nichts.
+	#* autosimstop() - Funktion zum automatischen Beenden von OpenSimulator-Regionen.
+	#
+	# Diese Funktion stoppt automatisch laufende OpenSimulator-Regionen. Sie überprüft, ob für jede Region ein Bildschirmprozess ausgeführt wird, und sendet das Befehl "shutdown" an jeden aktiven Bildschirm, um die Region zu beenden. Es gibt eine Wartezeit zwischen den Befehlen, um sicherzustellen, dass die Regionen ordnungsgemäß heruntergefahren werden können.
+	#
+	#? Parameter: Keine
+	#
+	#? Rückgabewert:
+	#   - Kein expliziter Rückgabewert
+	#
+	#? Verwendungsbeispiel:
+	#   autosimstop
 ##
 function autosimstop() {
+	# Letzte Bearbeitung 01.10.2023
 	makeverzeichnisliste
 	sleep 1
 	for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
@@ -6846,14 +7091,22 @@ function autosimstop() {
 }
 
 ##
-	#* menuautosimstart.
-	# Starten aller Simulatoren.
-	# 
-	#? @param dialog.
-	#? @return dialog.
-	# todo: nichts.
+	#* menuautosimstart() - Funktion zum automatischen Starten von OpenSimulator-Regionen mit Benutzereingabe.
+	#
+	# Diese Funktion startet OpenSimulator-Regionen automatisch, basierend auf Benutzereingaben über ein Dialogfeld, wenn kein Simulator aktiv ist.
+	# Sie überprüft, ob bereits ein Bildschirm mit dem Namen 'sim' ausgeführt wird. Wenn nicht, wird ein Dialogfeld angezeigt, in dem der Benutzer die gewünschten Regionen auswählen kann.
+	# Dann werden die ausgewählten Regionen gestartet, unter Verwendung der in den Konfigurationsvariablen festgelegten Einstellungen, wie z. B. dem Regionsanzeigemodus und dem AOT-Modus.
+	#
+	#? Parameter: Keine
+	#
+	#? Rückgabewert:
+	#   - Kein expliziter Rückgabewert
+	#
+	#? Verwendungsbeispiel:
+	#   menuautosimstart
 ##
 function menuautosimstart() {
+	# Letzte Bearbeitung 01.10.2023
 	if ! screen -list | grep -q 'sim'; then
 		# es laeuft kein Simulator - not work
 		makeverzeichnisliste
@@ -6897,14 +7150,20 @@ function menuautosimstart() {
 }
 
 ##
-	#* menuautosimstop.
-	# Stoppen aller laufenden Simulatoren.
-	# 
-	#? @param dialog.
-	#? @return dialog.
-	# todo: nichts.
+	#* menuautosimstop() - Funktion zum automatischen Beenden von OpenSimulator-Regionen mit Fortschrittsanzeige.
+	#
+	# Diese Funktion stoppt automatisch laufende OpenSimulator-Regionen und zeigt einen Fortschrittsbalken während des Vorgangs an. Sie überprüft, ob für jede Region ein Bildschirmprozess ausgeführt wird, und sendet das Befehl "shutdown" an jeden aktiven Bildschirm, um die Region zu beenden. Es gibt eine Wartezeit zwischen den Befehlen, um sicherzustellen, dass die Regionen ordnungsgemäß heruntergefahren werden können. Während des Vorgangs wird ein Fortschrittsbalken angezeigt.
+	#
+	#? Parameter: Keine
+	#
+	#? Rückgabewert:
+	#   - Kein expliziter Rückgabewert
+	#
+	#? Verwendungsbeispiel:
+	#   menuautosimstop
 ##
 function menuautosimstop() {
+	# Letzte Bearbeitung 01.10.2023
 	makeverzeichnisliste
 	sleep 1
 	for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
@@ -6929,15 +7188,20 @@ function menuautosimstop() {
 }
 
 ##
-	#* autologdel.
-	# automatisches loeschen aller log Dateien.
-	# 
-	#? @param keine.
-	#? @return nichts wird zurueckgegeben.
-	# todo: nichts.
+	#* autologdel() - Funktion zum Löschen von Log-Dateien für OpenSimulator-Regionen.
+	#
+	# Diese Funktion löscht Log-Dateien für OpenSimulator-Regionen. Sie durchläuft alle Verzeichnisse in der Verzeichnisliste und löscht die Log-Dateien im Verzeichnis "/$STARTVERZEICHNIS/VERZEICHNISSLISTE/bin/". Wenn eine Log-Datei nicht vorhanden ist, wird eine Warnung protokolliert. Nach dem Löschen der Regionen-Log-Dateien wird die Funktion "rologdel()" aufgerufen, um Root-Log-Dateien zu löschen.
+	#
+	#? Parameter: Keine
+	#
+	#? Rückgabewert:
+	#   - Kein expliziter Rückgabewert
+	#
+	#? Verwendungsbeispiel:
+	#   autologdel
 ##
-# Die Dateien samt neuer Daten werden beim naechsten start des opensimulator neu geschrieben.
 function autologdel() {
+	# Letzte Bearbeitung 01.10.2023
 	log line
 	makeverzeichnisliste
 	sleep 1
@@ -6953,14 +7217,20 @@ function autologdel() {
 }
 
 ##
-	#* menuautologdel.
-	# automatisches loeschen aller log Dateien.
-	# 
-	#? @param dialog.
-	#? @return dialog.
-	# todo: nichts.
+	#* menuautologdel() - Funktion zum Löschen von Log-Dateien für OpenSimulator-Regionen.
+	#
+	# Diese Funktion löscht Log-Dateien für OpenSimulator-Regionen. Sie durchläuft alle Verzeichnisse in der Verzeichnisliste und löscht die Log-Dateien im Verzeichnis "/$STARTVERZEICHNIS/VERZEICHNISSLISTE/bin/". Nach dem Löschen der Regionen-Log-Dateien wird die Funktion "rologdel()" aufgerufen, um Root-Log-Dateien zu löschen.
+	#
+	#? Parameter: Keine
+	#
+	#? Rückgabewert:
+	#   - Kein expliziter Rückgabewert
+	#
+	#? Verwendungsbeispiel:
+	#   menuautologdel
 ##
 function menuautologdel() {
+	# Letzte Bearbeitung 01.10.2023
 	log line
 	makeverzeichnisliste
 	sleep 1
@@ -6977,15 +7247,20 @@ function menuautologdel() {
 }
 
 ##
-	#* automapdel.
-	# utomatisches loeschen aller Map/Karten Dateien.
-	# 
-	#? @param keine.
-	#? @return nichts wird zurueckgegeben.
-	# todo: nichts.
+	#* automapdel() - Funktion zum Löschen von Kartenkacheln für OpenSimulator-Regionen.
+	#
+	# Diese Funktion löscht Kartenkacheln (maptiles) für OpenSimulator-Regionen. Sie durchläuft alle Verzeichnisse in der Verzeichnisliste und löscht den Inhalt des Verzeichnisses "maptiles" im Verzeichnis "/$STARTVERZEICHNIS/VERZEICHNISSLISTE/bin/". Nach dem Löschen der Kartenkacheln für die Regionen wird die Funktion "autorobustmapdel()" aufgerufen, um auch die Kartenkacheln für die Robust-Instanz zu löschen.
+	#
+	#? Parameter: Keine
+	#
+	#? Rückgabewert:
+	#   - Kein expliziter Rückgabewert
+	#
+	#? Verwendungsbeispiel:
+	#   automapdel
 ##
-# Die Dateien samt neuer Daten werden beim naechsten start des opensimulator neu geschrieben.
 function automapdel() {
+	# Letzte Bearbeitung 01.10.2023
 	makeverzeichnisliste
 	sleep 1
 	for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
@@ -6999,15 +7274,20 @@ function automapdel() {
 }
 
 ##
-	#* autorobustmapdel.
-	# automatisches loeschen aller Map/Karten Dateien in Robust.
-	# Die Dateien samt neuer Daten werden beim naechsten start des opensimulator neu geschrieben.
-	# 
-	#? @param keine.
-	#? @return nichts wird zurueckgegeben.
-	# todo: nichts.
+	#* autorobustmapdel() - Funktion zum Löschen von Kartenkacheln für die Robust-Instanz von OpenSimulator.
+	#
+	# Diese Funktion löscht die Kartenkacheln (maptiles) für die Robust-Instanz von OpenSimulator. Sie navigiert zum Verzeichnis der Robust-Instanz und löscht den Inhalt des Verzeichnisses "maptiles" im Verzeichnis "/$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/".
+	#
+	#? Parameter: Keine
+	#
+	#? Rückgabewert:
+	#   - Kein expliziter Rückgabewert
+	#
+	#? Verwendungsbeispiel:
+	#   autorobustmapdel
 ##
 function autorobustmapdel() {
+	# Letzte Bearbeitung 01.10.2023
 	cd /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin || return 1
 	rm -r maptiles/* || log line
 	log warn "OpenSimulator maptile aus $ROBUSTVERZEICHNIS geloescht"
@@ -7015,14 +7295,21 @@ function autorobustmapdel() {
 }
 
 ##
-	#* cleaninstall.
-	# loeschen aller externen addon Module.
-	# 
-	#? @param keine.
-	#? @return nichts wird zurueckgegeben.
-	# todo: nichts.
+	#* cleaninstall() - Funktion zum Löschen des Inhalts des Verzeichnisses /addon-modules/.
+	#
+	# Diese Funktion löscht den Inhalt des Verzeichnisses /addon-modules/ im OpenSimulator-Verzeichnis,
+	# sofern dieses Verzeichnis existiert.
+	#
+	#? Parameter: Keine
+	#
+	#? Rückgabewert:
+	#   - Kein expliziter Rückgabewert
+	#
+	#? Verwendungsbeispiel:
+	#   cleaninstall
 ##
 function cleaninstall() {
+	# Letzte Bearbeitung 01.10.2023
 
 	if [ ! -f "/$STARTVERZEICHNIS/opensim/addon-modules/" ]; then
 		rm -r $STARTVERZEICHNIS/opensim/addon-modules/*
@@ -7033,14 +7320,21 @@ function cleaninstall() {
 }
 
 ##
- #* cleanprebuild.
- # loeschen aller Prebuild Dateien, da sie von OpenSim Prebuild clean nicht geloescht werden.
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+	#* cleanprebuild() - Funktion zum Löschen bestimmter Dateien und Verzeichnisse in /addon-modules/.
+	#
+	# Diese Funktion löscht bestimmte Dateien und Verzeichnisse im Verzeichnis /addon-modules/
+	# im OpenSimulator-Verzeichnis, sofern dieses Verzeichnis existiert.
+	#
+	#? Parameter: Keine
+	#
+	#? Rückgabewert:
+	#   - Kein expliziter Rückgabewert
+	#
+	#? Verwendungsbeispiel:
+	#   cleanprebuild
 ##
 function cleanprebuild() {
+	# Letzte Bearbeitung 01.10.2023
 	# Die if schleife prueft nur ob das Verzeichnis vorhanden ist.
 	if [ ! -f "/$STARTVERZEICHNIS/opensim/addon-modules/" ]; then
 		# Verzeichnis wo geloescht werden soll.
@@ -7057,15 +7351,21 @@ function cleanprebuild() {
 }
 
 ##
- #* allclean.
- # loescht Log, dll, so, exe, aot Dateien fuer einen saubere neue installation, ohne Robust.
- # Hierbei werden keine Datenbanken oder Konfigurationen geloescht aber opensim ist anschliessend nicht mehr startbereit.
- # Um opensim wieder Funktionsbereit zu machen muss ein Upgrade oder ein oscopy vorgang ausgefuehrt werden.
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+	#* allclean() - Funktion zum Löschen bestimmter Dateien mit Erweiterungen in einem Verzeichnis.
+	#
+	# Diese Funktion löscht bestimmte Dateien mit den angegebenen Erweiterungen in einem angegebenen Verzeichnis.
+	#
+	#? Parameter:
+	#   $1: Das Verzeichnis, in dem die Dateien gelöscht werden sollen.
+	#
+	#? Rückgabewert:
+	#   - Kein expliziter Rückgabewert
+	#
+	#? Verwendungsbeispiel:
+	#   allclean "/pfad/zum/verzeichnis"
 ##
 function allclean() {
+	# Letzte Bearbeitung 01.10.2023
 	ALLCLEANVERZEICHNIS=$1
 
 	if [ -d "$ALLCLEANVERZEICHNIS" ]; then
@@ -7089,14 +7389,22 @@ function allclean() {
 }
 
 ##
- #* getcachesinglegroesse.
- # Zeigt Cache Dateien und die größe aus einem einzelnen Simulator an.
- # du steht für disk usage.
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+	#* getcachesinglegroesse() - Funktion zum Anzeigen der Größe von Cache-Dateien in einem Verzeichnis.
+	#
+	# Diese Funktion zeigt die Größe der Cache-Dateien (assetcache, maptiles, ScriptEngines, MeshCache, j2kDecodeCache)
+	# in einem angegebenen Verzeichnis an.
+	#
+	#? Parameter:
+	#   $1: Das Verzeichnis, in dem die Cache-Dateien angezeigt werden sollen.
+	#
+	#? Rückgabewert:
+	#   - Kein expliziter Rückgabewert
+	#
+	#? Verwendungsbeispiel:
+	#   getcachesinglegroesse "/pfad/zum/verzeichnis"
 ##
 function getcachesinglegroesse() {
+	# Letzte Bearbeitung 01.10.2023
 	GROESSENVERZEICHNIS=$1
 
 	log info "Zeigt Cache Dateien und die größe aus dem Simulator $GROESSENVERZEICHNIS an!"
@@ -7114,17 +7422,22 @@ function getcachesinglegroesse() {
 }
 
 ##
- #* getcachegroesse.
- # Zeigt Cache Dateien und die größe aus dem gesamten Grid an.
- # du steht für disk usage.
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+	#* getcachegroesse() - Funktion zum Anzeigen der Größe von Cache-Dateien im gesamten Grid.
+	#
+	# Diese Funktion zeigt die Größe der Cache-Dateien (assetcache, maptiles, ScriptEngines, MeshCache, j2kDecodeCache)
+	# in allen Simulatoren und im Robust Server-Verzeichnis an.
+	#
+	#? Parameter:
+	#   Keine Parameter erforderlich.
+	#
+	#? Rückgabewert:
+	#   - Kein expliziter Rückgabewert
+	#
+	#? Verwendungsbeispiel:
+	#   getcachegroesse
 ##
 function getcachegroesse() {
-	# du -sh /opt/sim1/bin/verzeichnisname
-	# Fehlermeldung ins Nirwana schicken:   2> /dev/null
-	#log line
+	# Letzte Bearbeitung 01.10.2023
 	log info "Zeige Cache Dateien und die größe aus dem gesamten Grid an!"
 	makeverzeichnisliste
 	#sleep 1
@@ -7149,27 +7462,40 @@ function getcachegroesse() {
 }
 
 ##
- #* tastaturcachedelete
- # history des Terminals löschen.
- # 
- #? @param keine.
- #? @return nichts.
- # todo: nichts.
+	#* tastaturcachedelete() - Funktion zum Löschen der lokalen Befehlshistorie in der aktuellen Shell-Sitzung.
+	#
+	# Diese Funktion löscht die lokale Befehlshistorie in der aktuellen Shell-Sitzung, wodurch alle zuvor eingegebenen Befehle gelöscht werden.
+	#
+	#? Parameter:
+	#   Keine Parameter erforderlich.
+	#
+	#? Rückgabewert:
+	#   - Kein expliziter Rückgabewert
+	#
+	#? Verwendungsbeispiel:
+	#   tastaturcachedelete
 ##
 function tastaturcachedelete() {
+	# Letzte Bearbeitung 01.10.2023
 	history -cw
 }
 
 ##
- #* gridcachedelete.
- # loescht alle Cache Dateien die sich im laufe der Zeit angesammelt haben.
- # GRIDCACHECLEAR="yes"; ASSETCACHECLEAR="yes"; MAPTILESCLEAR="yes"; SCRIPTCLEAR="yes"; RMAPTILESCLEAR="yes"; RBAKESCLEAR="yes";
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+	#* gridcachedelete() - Funktion zum Löschen von Cache-Verzeichnissen im gesamten Grid.
+	#
+	# Diese Funktion löscht bestimmte Cache-Verzeichnisse aus dem Grid, basierend auf den festgelegten Konfigurationen.
+	#
+	#? Parameter:
+	#   Keine Parameter erforderlich.
+	#
+	#? Rückgabewert:
+	#   - Kein expliziter Rückgabewert
+	#
+	#? Verwendungsbeispiel:
+	#   gridcachedelete
 ##
 function gridcachedelete() {
+	# Letzte Bearbeitung 01.10.2023
 	log line
 	log warn "Lösche Cache Dateien aus dem gesamten Grid!"
 	makeverzeichnisliste
@@ -7198,6 +7524,7 @@ function gridcachedelete() {
  # todo: nichts.
 ##
 function autoallclean() {
+	# Letzte Bearbeitung 01.10.2023
 	makeverzeichnisliste
 	sleep 1
 	for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
@@ -7284,15 +7611,22 @@ function autoallclean() {
 }
 
 ##
- #* autoregionbackup.
- # automatischer Backup aller Regionen die in der Regionsliste eingetragen sind.
-  #* Zuerst muss aber einmalig eine Regionliste erstellt werden mit "osmtool.sh regionliste". Die RegionListe ermitteln und mit dem Verzeichnisnamen in die osmregionlist.ini schreiben.
- # 
- #? @param keine.
- #? @return regionbackup BACKUPSCREEN BACKUPREGION.
- # todo: Uebergabe Parameter Fehler. Bug Modus mit extra ausgaben. Ist keine osmregionlist.ini vorhanden muss sie erstellt werden.
+	#* autoregionbackup() - Funktion zum automatischen Backup von Regionen im Grid.
+	#
+	# Diese Funktion durchläuft die Regionen in Ihrem OpenSimulator-Grid und erstellt automatische Backups.
+	#
+	#? Parameter:
+	#   Keine Parameter erforderlich.
+	#
+	#? Rückgabewert:
+	#   - Kein expliziter Rückgabewert
+	#
+	#? Verwendungsbeispiel:
+	#   autoregionbackup
+	# todo: Uebergabe Parameter Fehler. Bug Modus mit extra ausgaben. Ist keine osmregionlist.ini vorhanden muss sie erstellt werden.
 ##
 function autoregionbackup() {
+	# Letzte Bearbeitung 01.10.2023
 	log info "Automatisches Backup wird gestartet."
 
     # Ist die osmregionlist.ini vorhanden?
@@ -7321,14 +7655,21 @@ function autoregionbackup() {
 }
 
 ##
- #* autoscreenstop.
- # beendet alle laufenden simX screens.
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+	#* autoscreenstop() - Funktion zum automatischen Stoppen von Screens für Simulatoren, Money Server und Robust Server.
+	#
+	# Diese Funktion stoppt die Screens für Simulatoren, Money Server und Robust Server, wenn sie ausgeführt werden.
+	#
+	#? Parameter:
+	#   Keine Parameter erforderlich.
+	#
+	#? Rückgabewert:
+	#   - Kein expliziter Rückgabewert
+	#
+	#? Verwendungsbeispiel:
+	#   autoscreenstop
 ##
 function autoscreenstop() {
+	# Letzte Bearbeitung 01.10.2023
 	makeverzeichnisliste
 	sleep 1
 
@@ -7356,14 +7697,21 @@ function autoscreenstop() {
 }
 
 ##
- #* menuautoscreenstop.
- # beendet alle laufenden simX screens.
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+	#* menuautoscreenstop() - Funktion zum Anzeigen eines Menüs zum Stoppen von Screens für Simulatoren, Money Server und Robust Server.
+	#
+	# Diese Funktion zeigt ein Menü an, das es dem Benutzer ermöglicht, Screens für Simulatoren, Money Server und Robust Server zu stoppen.
+	#
+	#? Parameter:
+	#   Keine Parameter erforderlich.
+	#
+	#? Rückgabewert:
+	#   - Kein expliziter Rückgabewert
+	#
+	#? Verwendungsbeispiel:
+	#   menuautoscreenstop
 ##
 function menuautoscreenstop() {
+	# Letzte Bearbeitung 01.10.2023
 	makeverzeichnisliste
 	sleep 1
 
@@ -7391,14 +7739,21 @@ function menuautoscreenstop() {
 }
 
 ##
- #* autostart.
- # startet das komplette Grid mit allen sims.
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+	#* autostart() - Funktion zum automatischen Starten des Grids.
+	#
+	# Diese Funktion startet das Grid, indem sie zuerst den Robust Server und dann die Simulatoren startet.
+	#
+	#? Parameter:
+	#   Keine Parameter erforderlich.
+	#
+	#? Rückgabewert:
+	#   - Kein expliziter Rückgabewert
+	#
+	#? Verwendungsbeispiel:
+	#   autostart
 ##
 function autostart() {
+	# Letzte Bearbeitung 01.10.2023
 	#log line
 	#log info "Starte das Grid!"
 	if [[ $ROBUSTVERZEICHNIS == "robust" ]]; then
@@ -7413,14 +7768,21 @@ function autostart() {
 }
 
 ##
- #*  gridstop.
- # Stoppt erst Money dann Robust.
- # 
- #? @param name Erklaerung.
- #? @return name was wird zurueckgegeben.
- # todo: nichts.
+# gridstop() - Function to stop components of the OpenSimulator grid.
+#
+# This function stops the Money Server (MO) and the Robust Server (RO) if they are running.
+#
+# Parameters:
+#   None
+#
+# Return:
+#   - No explicit return value
+#
+# Example usage:
+#   gridstop
 ##  
 function gridstop() {
+	# Letzte Bearbeitung 01.10.2023
 	if screen -list | grep -q MO; then
 		mostop
 	fi
@@ -7432,14 +7794,23 @@ function gridstop() {
 }
 
 ##
- #* autostop.
- # stoppt das komplette Grid mit allen sims.
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+# autostop() - Function to gracefully stop components of the OpenSimulator grid.
+#
+# This function attempts to gracefully stop the OpenSimulator regions (SIMs), the Robust Server (RO),
+# and any other related components. It first tries to stop the SIMs and the RO, and if they don't stop
+# within a specified time (AUTOSTOPZEIT), it forcibly stops them.
+#
+# Parameters:
+#   None
+#
+# Return:
+#   - No explicit return value
+#
+# Example usage:
+#   autostop
 ##
 function autostop() {
+	# Letzte Bearbeitung 01.10.2023
 	log warn "#** Stoppe das Grid! **#"
 	# schauen ob screens laufen wenn ja beenden.
 	# shellcheck disable=SC2022
@@ -7470,14 +7841,22 @@ function autostop() {
 }
 
 ##
- #* menuautostart.
- # startet das komplette Grid mit allen sims.
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+# menuautostart() - Menu-driven function for starting components of the OpenSimulator grid.
+#
+# This function provides a menu for starting components of the OpenSimulator grid,
+# including the Robust Server (if configured) and the SIMs (regions).
+#
+# Parameters:
+#   None
+#
+# Return:
+#   - No explicit return value
+#
+# Example usage:
+#   menuautostart
 ##
 function menuautostart() {
+	# Letzte Bearbeitung 01.10.2023
 	echo ""
 	if [[ $ROBUSTVERZEICHNIS == "robust" ]]; then
 		log info "Bitte warten..."
@@ -7490,14 +7869,31 @@ function menuautostart() {
 }
 
 ##
- #* menuautostop.
- # stoppt das komplette Grid mit allen sims.
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+	#* Funktion: menuautostop()
+	#
+	# Diese Funktion wird aufgerufen, um das Grid zu stoppen.
+	#
+	#? Parameter: Keine
+	#
+	#? Rückgabewert: Keiner
+	#
+	# Funktionsweise:
+	# 1. Loggt eine Warnmeldung, um den Beginn des Stoppprozesses anzukündigen.
+	# 2. Überprüft, ob Screens mit dem Namen 'sim' laufen. Wenn ja, ruft die Funktion 'menuautosimstop' auf, um sie zu beenden.
+	# 3. Überprüft, ob Screens mit dem Namen 'RO' laufen. Wenn ja, ruft die Funktion 'menugridstop' auf, um sie zu beenden.
+	# 4. Überprüft erneut, ob Screens mit dem Namen 'sim' laufen. Wenn ja, wartet für die angegebene Zeit (AUTOSTOPZEIT) und beendet dann alle Screens.
+	# 5. Ruft die Funktion 'menuautoscreenstop' auf, um weitere Screens zu beenden.
+	# 6. Ruft die Funktion 'hauptmenu' auf, um zum Hauptmenü zurückzukehren.
+	#
+	# Hinweise:
+	# - Diese Funktion geht davon aus, dass die Funktionen 'menuautosimstop', 'menugridstop', 'menuautoscreenstop' und 'hauptmenu' in Ihrem Code definiert sind.
+	# - Die Verwendung von log-Meldungen dient der Protokollierung und ermöglicht es, den Fortschritt des Stoppprozesses nachzuvollziehen.
+	#
+	# Beispielaufruf:
+	# menuautostop
 ##
 function menuautostop() {
+	# Letzte Bearbeitung 01.10.2023
 	log warn "#** Stoppe das Grid! **#"
 	# schauen ob screens laufen wenn ja beenden.
 	if screen -list | grep -q 'sim'; then log info "Bitte warten..."; menuautosimstop; fi
@@ -7510,14 +7906,33 @@ function menuautostop() {
 }
 
 ##
- #* autorestart.
- # startet das gesamte Grid neu und loescht die log Dateien.
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+	#* Funktion: autorestart()
+	#
+	# Diese Funktion führt einen automatischen Neustart des Systems durch.
+	#
+	#? Parameter: Keine
+	#
+	#? Rückgabewert: Gibt immer den Wert 0 zurück.
+	#
+	# Funktionsweise:
+	# 1. Protokolliert eine Nachricht, um den Beginn des automatischen Neustarts anzukündigen.
+	# 2. Ruft die Funktion 'autostop' auf, um alle aktiven Prozesse zu stoppen.
+	# 3. Überprüft, ob das Löschen von Log-Dateien (LOGDELETE) aktiviert ist und ruft gegebenenfalls 'autologdel' auf, um Log-Dateien zu löschen.
+	# 4. (Auskommentiert) Überprüft, ob das Löschen von Regionen (DELREGIONS) aktiviert ist und ruft gegebenenfalls 'deleteregionfromdatabase' auf, um Regionen aus der Datenbank zu löschen.
+	# 5. Ruft 'gridstart' auf, um das Grid neu zu starten.
+	# 6. Ruft 'autosimstart' auf, um Simulationen automatisch neu zu starten.
+	# 7. Ruft 'screenlistrestart' auf, um die Screenliste neu zu starten.
+	# 8. Protokolliert eine Nachricht, um den erfolgreichen Abschluss des automatischen Neustarts anzuzeigen.
+	# 9. Gibt den Wert 0 zurück, um den erfolgreichen Abschluss anzuzeigen.
+	#
+	# Hinweise:
+	# - Diese Funktion geht davon aus, dass die in den Kommentaren erwähnten Funktionen ('autostop', 'autologdel', 'deleteregionfromdatabase', 'gridstart', 'autosimstart' und 'screenlistrestart') in Ihrem Code definiert sind.
+	#
+	# Beispielaufruf:
+	# autorestart
 ##
 function autorestart() {
+	# Letzte Bearbeitung 01.10.2023
 	log rohtext " Automatischer Restart wird ausgeführt!"
 	# Alles stoppen.
 	autostop
@@ -7533,14 +7948,32 @@ function autorestart() {
 }
 
 ##
- #* menuautorestart.
- # startet das gesamte Grid neu und loescht die log Dateien.
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+	#* Funktion: menuautorestart()
+	#
+	# Diese Funktion führt einen automatischen Neustart des Systems aus dem Menü heraus durch.
+	#
+	#? Parameter: Keine
+	#
+	#? Rückgabewert: Keiner
+	#
+	# Funktionsweise:
+	# 1. Protokolliert eine Nachricht, um den Beginn des automatischen Neustarts anzukündigen.
+	# 2. Ruft die Funktion 'autostop' auf, um alle aktiven Prozesse zu stoppen.
+	# 3. Überprüft, ob das Löschen von Log-Dateien (LOGDELETE) aktiviert ist und ruft gegebenenfalls 'autologdel' auf, um Log-Dateien zu löschen.
+	# 4. (Auskommentiert) Überprüft, ob das Löschen von Regionen (DELREGIONS) aktiviert ist und ruft gegebenenfalls 'deleteregionfromdatabase' auf, um Regionen aus der Datenbank zu löschen.
+	# 5. Ruft 'gridstart' auf, um das Grid neu zu starten.
+	# 6. Ruft 'autosimstart' auf, um Simulationen automatisch neu zu starten.
+	# 7. Ruft 'screenlistrestart' auf, um die Screenliste neu zu starten.
+	# 8. Ruft die Funktion 'menuinfo' auf, um Informationen über den automatischen Neustart im Menü anzuzeigen.
+	#
+	# Hinweise:
+	# - Diese Funktion geht davon aus, dass die in den Kommentaren erwähnten Funktionen ('autostop', 'autologdel', 'deleteregionfromdatabase', 'gridstart', 'autosimstart' und 'screenlistrestart') in Ihrem Code definiert sind.
+	#
+	# Beispielaufruf:
+	# menuautorestart
 ##
 function menuautorestart() {
+	# Letzte Bearbeitung 01.10.2023
 	log rohtext " Automatischer Restart wird ausgeführt!"
 	autostop
 	if [ "$LOGDELETE" = "yes" ]; then autologdel; fi
@@ -7554,14 +7987,27 @@ function menuautorestart() {
 }
 
 ##
- #* serverupgrade.
- # Linux Server Updaten und Upgraden.
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+	#* Funktion: serverupgrade()
+	#
+	# Diese Funktion führt ein Systemupgrade auf einem Linux-Server durch.
+	#
+	#? Parameter: Keine
+	#
+	#? Rückgabewert: Keiner
+	#
+	# Funktionsweise:
+	# 1. Führt 'sudo apt-get update' aus, um die Paketlisten zu aktualisieren und Informationen über verfügbare Updates abzurufen.
+	# 2. Führt 'sudo apt-get upgrade' aus, um alle verfügbaren Paketaktualisierungen auf dem System zu installieren.
+	#
+	# Hinweise:
+	# - Diese Funktion erfordert Root-Berechtigungen, da die Aktualisierung von Paketen in der Regel Root-Rechte erfordert.
+	# - Stellen Sie sicher, dass Ihr Server über eine Internetverbindung verfügt, um die Aktualisierung durchzuführen.
+	#
+	# Beispielaufruf:
+	# serverupgrade
 ##
 function serverupgrade() {
+	# Letzte Bearbeitung 01.10.2023
 	sudo apt-get update
 	sudo apt-get upgrade
 }
@@ -12873,7 +13319,7 @@ function moneyconfig() {
 ##
  #* osconfigstruktur.
  # Legt die Verzeichnisstruktur fuer OpenSim an. # Aufruf: osmtool.sh osstruktur ersteSIM letzteSIM
- # Beispiel: ./osmtool.sh osstruktur 1 10 - erstellt ein Grid Verzeichnis fuer 10 Simulatoren inklusive der $SIMDATEI.
+ #? Beispiel: ./osmtool.sh osstruktur 1 10 - erstellt ein Grid Verzeichnis fuer 10 Simulatoren inklusive der $SIMDATEI.
  # 
  #? @param name Erklaerung.
  #? @return name was wird zurueckgegeben.
@@ -14013,7 +14459,7 @@ function senddata() {
 	SENDEVERZEICHNIS=$2	
 	SERVERADRESS=$3
 	
-	# Beispiel:
+	#? Beispiel:
 	# SENDEVERZEICHNIS="/$STARTVERZEICHNIS/backup"
 	# USERNAMEN="root"
 	# SERVERADRESS="192.168.2.100"
@@ -15962,8 +16408,8 @@ function newhelp() {
 	echo "hda                     $(tput setaf 2)Dialog Menue direktaufrufe.$(tput sgr 0)"
 	echo " "
 	echo " Der Kommando aufruf:"
-	echo "$(tput setaf $FARBE1) $(tput setab $FARBE2)# Beispiel: bash osmtool.sh oscommand sim1 Welcome \"alert Hallo Welt\" $(tput sgr 0)"
-	echo "$(tput setaf $FARBE1) $(tput setab $FARBE2)# Beispiel: bash osmtool.sh oscommand sim1 Welcome \"alert-user John Doe Hallo John Doe\" $(tput sgr 0)"
+	echo "$(tput setaf $FARBE1) $(tput setab $FARBE2)#? Beispiel: bash osmtool.sh oscommand sim1 Welcome \"alert Hallo Welt\" $(tput sgr 0)"
+	echo "$(tput setaf $FARBE1) $(tput setab $FARBE2)#? Beispiel: bash osmtool.sh oscommand sim1 Welcome \"alert-user John Doe Hallo John Doe\" $(tput sgr 0)"
 }
 
 ##
@@ -15991,8 +16437,8 @@ function newhelp2() {
 	log info "hda                     Dialog Menue direktaufrufe."
 	echo " "
 	log rohtext " Der Kommando aufruf:"
-	log rohtext "# Beispiel: bash osmtool.sh oscommand sim1 Welcome \"alert Hallo Welt\" "
-	log rohtext "# Beispiel: bash osmtool.sh oscommand sim1 Welcome \"alert-user John Doe Hallo John Doe\" "
+	log rohtext "#? Beispiel: bash osmtool.sh oscommand sim1 Welcome \"alert Hallo Welt\" "
+	log rohtext "#? Beispiel: bash osmtool.sh oscommand sim1 Welcome \"alert-user John Doe Hallo John Doe\" "
 }
 
 #**************************************************************************
