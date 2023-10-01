@@ -35,7 +35,7 @@
 #**************************************************************************
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.1027" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.1187" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 ##
@@ -8013,14 +8013,23 @@ function serverupgrade() {
 }
 
 ##
- #* installmariadb18.
- # Installation oder Migration von MariaDB 10.8.3 oder hoeher fuer Ubuntu 18.
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+	# installmariadb18 - Installiert oder migriert MariaDB 10.8.3 oder höher auf Ubuntu 18.
+	#
+	# Diese Funktion führt die Installation oder Migration von MariaDB auf einem Ubuntu 18-System durch.
+	# Nach Abschluss des Vorgangs werden Sie aufgefordert, alle erforderlichen Dienste neu zu starten, um sicherzustellen,
+	# dass die Änderungen wirksam werden.
+	#
+	# Parameter:
+	#   Keine.
+	#
+	# Rückgabewert:
+	#   Keiner (void).
+	#
+	# Todos:
+	#   Keine.
 ##
 function installmariadb18() {
+	# Letzte Bearbeitung 01.10.2023
 
 	log info "Installation oder Migration von MariaDB 10.8.3 oder hoeher fuer Ubuntu 18"
 	log info "Nach der Installation werden Fehler in den OpenSim log Dateien angezeigt bitte dann alles neustarten!"
@@ -8039,14 +8048,22 @@ function installmariadb18() {
 }
 
 ##
- #* installmariadb22.
- # Installation oder Migration von MariaDB fuer Ubuntu 22.
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+	# installmariadb22 - Installiert MariaDB 10.8.3 oder höher auf Ubuntu 22.
+	#
+	# Diese Funktion führt die Installation von MariaDB auf einem Ubuntu 22-System durch.
+	# Falls der MySQL-Dienst bereits läuft, wird er zuerst gestoppt, um Konflikte zu vermeiden.
+	#
+	# Parameter:
+	#   Keine.
+	#
+	# Rückgabewert:
+	#   Keiner (void).
+	#
+	# Todos:
+	#   Keine.
 ##
 function installmariadb22() {
+	# Letzte Bearbeitung 01.10.2023
 	# MySQL stoppen wenn es laeuft:
 	sudo service mysql stop
 
@@ -8058,14 +8075,21 @@ function installmariadb22() {
 }
 
 ##
- #* monoinstall.
- # mono 6.x installieren.
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+	# monoinstall - Installiert Mono 6.x auf Ubuntu 18, falls es nicht bereits installiert ist.
+	#
+	# Diese Funktion überprüft, ob Mono bereits auf dem System installiert ist. Wenn nicht, installiert sie Mono 6.x auf einem Ubuntu 18-System.
+	#
+	# Parameter:
+	#   Keine.
+	#
+	# Rückgabewert:
+	#   0 - Erfolgreiche Ausführung der Funktion.
+	#
+	# Todos:
+	#   Keine.
 ##
 function monoinstall() {
+	# Letzte Bearbeitung 01.10.2023
 	if dpkg-query -s mono-complete 2>/dev/null | grep -q installed; then
 		log info "mono-complete ist installiert."
 	else
@@ -8085,14 +8109,22 @@ function monoinstall() {
 }
 
 ##
- #* monoinstall18.
- # mono installation auf Ubuntu 18.
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+	# monoinstall18 - Installiert Mono 6.x auf Ubuntu 18, falls es nicht bereits installiert ist.
+	#
+	# Diese Funktion überprüft, ob Mono (mono-complete) bereits auf dem System installiert ist. 
+	# Wenn nicht, wird Mono 6.x auf einem Ubuntu 18-System installiert.
+	#
+	# Parameter:
+	#   Keine.
+	#
+	# Rückgabewert:
+	#   Keiner (void).
+	#
+	# Todos:
+	#   Keine.
 ##
 function monoinstall18() {
+	# Letzte Bearbeitung 01.10.2023
 	if dpkg-query -s mono-complete 2>/dev/null | grep -q installed; then
 		log rohtext "mono-complete ist bereits installiert."
 	else
@@ -8110,14 +8142,22 @@ function monoinstall18() {
 }
 
 ##
- #* monoinstall20.
- # mono installation auf Ubuntu 20.
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+	# monoinstall20 - Installiert Mono 6.x auf Ubuntu 20, falls es nicht bereits installiert ist.
+	#
+	# Diese Funktion überprüft, ob Mono (mono-complete) bereits auf dem System installiert ist. 
+	# Wenn nicht, wird Mono 6.x auf einem Ubuntu 20-System installiert.
+	#
+	# Parameter:
+	#   Keine.
+	#
+	# Rückgabewert:
+	#   Keiner (void).
+	#
+	# Todos:
+	#   Keine.
 ##
 function monoinstall20() {
+	# Letzte Bearbeitung 01.10.2023
 	if dpkg-query -s mono-complete 2>/dev/null | grep -q installed; then
 		log rohtext "mono-complete ist bereits installiert."
 	else
@@ -8135,26 +8175,42 @@ function monoinstall20() {
 }
 
 ##
- #* monoinstall22.
- # mono installation auf Ubuntu 22.
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+	# monoinstall22 - Installiert Mono auf Ubuntu 22.
+	#
+	# Diese Funktion installiert Mono und zugehörige Pakete auf einem Ubuntu 22-System.
+	#
+	# Parameter:
+	#   Keine.
+	#
+	# Rückgabewert:
+	#   Keiner (void).
+	#
+	# Todos:
+	#   Keine.
 ##
 function monoinstall22() {
+	# Letzte Bearbeitung 01.10.2023
 	sudo apt install mono-roslyn mono-complete mono-dbg mono-xbuild -y
 }
 
 ##
- #* icecastinstall.
- # icecast installieren.
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+	# icecastinstall - Installiert und konfiguriert Icecast2 auf dem System.
+	#
+	# Diese Funktion führt die Installation und grundlegende Konfiguration von Icecast2 durch.
+	# Sie generiert zufällige Passwörter für die Benutzer 'source', 'relay' und 'admin' und gibt diese aus.
+	# Der Benutzer muss diese Passwörter für die Icecast2-Installation bereithalten.
+	#
+	# Parameter:
+	#   Keine.
+	#
+	# Rückgabewert:
+	#   Keiner (void).
+	#
+	# Todos:
+	#   Der Port für Icecast2 sollte noch konfiguriert werden, um sicherzustellen, dass er nicht mit anderen Diensten kollidiert.
 ##
 function icecastinstall() {
+	# Letzte Bearbeitung 01.10.2023
 	passwortsource=$(tr -dc 'A-Za-z0-9' </dev/urandom | head -c 12)
 	passwortrelay=$(tr -dc 'A-Za-z0-9' </dev/urandom | head -c 14)
 	passwortadmin=$(tr -dc 'A-Za-z0-9' </dev/urandom | head -c 18)
@@ -8172,28 +8228,44 @@ function icecastinstall() {
 }
 
 ##
- #* icecastconfig.
- # icecast konfigurieren.
- # Der Port muss noch von 8000, auf irgend etwas, was noch nicht vom OpenSimulator benutzt wird, umgestellt werden.
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+	# icecastconfig - Konfiguriert den Port für Icecast2.
+	#
+	# Diese Funktion ändert die Konfiguration von Icecast2, um den Standardport von 8000 auf 8999 zu setzen.
+	# Nach der Ausführung dieser Funktion sollte Icecast2 auf Port 8999 erreichbar sein.
+	#
+	# Parameter:
+	#   Keine.
+	#
+	# Rückgabewert:
+	#   Keiner (void).
+	#
+	# Todos:
+	#   Keine.
 ##
 function icecastconfig() {
+	# Letzte Bearbeitung 01.10.2023
 	log rohtext "Icecast2 von Port 8000 auf Port 8999 setzen"
 	sudo sed -i 's|8000|8999|' /etc/icecast2/icecast.xml
 	log rohtext "Aufrufbeispiel: $AKTUELLEIP:8999"
 }
 
 ##
- #* sourcelist18.
- # Sourcelist fuer Ubuntu bionic anzeigen.
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+	# sourcelist18 - Gibt Ubuntu 18.04 Paketquellen für APT aus.
+	#
+	# Diese Funktion gibt die Ubuntu 18.04 (Bionic Beaver) Paketquellen für APT aus.
+	# Die Zeilen, die mit '#' beginnen, sind auskommentiert und können bei Bedarf aktiviert werden.
+	#
+	# Parameter:
+	#   Keine.
+	#
+	# Rückgabewert:
+	#   Keiner (void).
+	#
+	# Todos:
+	#   Keine.
 ##
 function sourcelist18() {
+	# Letzte Bearbeitung 01.10.2023
 	echo "deb http://de.archive.ubuntu.com/ubuntu bionic main restricted universe multiverse"
 	echo "#deb-src http://de.archive.ubuntu.com/ubuntu bionic main restricted universe multiverse"
 
@@ -8211,14 +8283,22 @@ function sourcelist18() {
 }
 
 ##
- #* sourcelist22.
- # Sourcelist fuer Ubuntu jammy anzeigen.
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+	# sourcelist22 - Gibt Ubuntu 22.04 Paketquellen für APT aus.
+	#
+	# Diese Funktion gibt die Ubuntu 22.04 (Jammy Jellyfish) Paketquellen für APT aus.
+	# Die Zeilen, die mit '#' beginnen, sind auskommentiert und können bei Bedarf aktiviert werden.
+	#
+	# Parameter:
+	#   Keine.
+	#
+	# Rückgabewert:
+	#   Keiner (void).
+	#
+	# Todos:
+	#   Keine.
 ##
 function sourcelist22() {
+	# Letzte Bearbeitung 01.10.2023
 	echo "deb http://de.archive.ubuntu.com/ubuntu jammy main restricted universe multiverse"
 	echo "#deb-src http://de.archive.ubuntu.com/ubuntu impish main restricted universe multiverse"
 
@@ -8236,14 +8316,21 @@ function sourcelist22() {
 }
 
 ##
- #* installwordpress.
- # Installiert oder Upgradet alles was für WordPress benötigt wird.
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+	# installwordpress - Installiert die erforderlichen Pakete für WordPress auf einem Ubuntu-System.
+	#
+	# Diese Funktion führt die Installation von Paketen durch, die für die Installation und den Betrieb von WordPress benötigt werden.
+	#
+	# Parameter:
+	#   Keine.
+	#
+	# Rückgabewert:
+	#   Keiner (void).
+	#
+	# Todos:
+	#   Keine.
 ##
 function installwordpress() {
+	# Letzte Bearbeitung 01.10.2023
 	#Installationen die fuer Wordpress benoetigt werden
 	iinstall apache2
 	iinstall ghostscript
@@ -8262,14 +8349,21 @@ function installwordpress() {
 }
 
 ##
- #* installopensimulator.
- # Installiert alles fuer den OpenSimulator ausser mono.
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+	# installopensimulator - Installiert die erforderlichen Pakete für OpenSimulator auf einem Ubuntu-System.
+	#
+	# Diese Funktion führt die Installation von Paketen durch, die für die Installation und den Betrieb von OpenSimulator benötigt werden.
+	#
+	# Parameter:
+	#   Keine.
+	#
+	# Rückgabewert:
+	#   Keiner (void).
+	#
+	# Todos:
+	#   - Sicherheitseinstellungen für fail2ban konfigurieren.
 ##
 function installopensimulator() {
+	# Letzte Bearbeitung 01.10.2023
 	#Alles fuer den OpenSimulator ausser mono
 	iinstall apache2
 	iinstall libapache2-mod-php
@@ -8312,14 +8406,22 @@ function installopensimulator() {
 }
 
 ##
- #* installubuntu22.
- # Installiert alles fuer den OpenSimulator ausser mono.
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+	# installubuntu22 - Installiert die erforderlichen Pakete für OpenSimulator auf einem Ubuntu 22.04-System.
+	#
+	# Diese Funktion führt die Installation von Paketen durch, die für die Installation und den Betrieb von OpenSimulator auf einem Ubuntu 22.04-System benötigt werden.
+	#
+	# Parameter:
+	#   Keine.
+	#
+	# Rückgabewert:
+	#   Keiner (void).
+	#
+	# Todos:
+	#   - Sicherheitseinstellungen für fail2ban konfigurieren.
+	#   - Optionale erweiterte Pakete installieren, wenn $insterweitert = "yes".
 ##
 function installubuntu22() {
+	# Letzte Bearbeitung 01.10.2023
 	#Alles fuer den OpenSimulator ausser mono
 	iinstall2 screen
 	iinstall2 git
@@ -8397,14 +8499,22 @@ function installubuntu22() {
 }
 
 ##
- #* iptablesset
- # IP sperren.
- # 
- #? @param ipsperradresse.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+	# iptablesset - Sperrt eine bestimmte IP-Adresse in der iptables-Firewall.
+	#
+	# Diese Funktion sperrt eine angegebene IP-Adresse sowohl für eingehende als auch für ausgehende Datenpakete in der iptables-Firewall.
+	# Anschließend werden alle IP-Adressen zusammen mit den Zeilennummern angezeigt, die momentan in den iptables gesperrt sind.
+	#
+	# Parameter:
+	#   $1 - Die IP-Adresse, die gesperrt werden soll.
+	#
+	# Rückgabewert:
+	#   Keiner (void).
+	#
+	# Todos:
+	#   Keine.
 ##
 function iptablesset() {
+	# Letzte Bearbeitung 01.10.2023
 	ipsperradresse=$1
 	# Eine IP-Adresse für eingehende Datenpakete sperren
 	iptables -A INPUT -s $ipsperradresse -j DROP
@@ -8417,14 +8527,23 @@ function iptablesset() {
 }
 
 ##
- #* fail2banset.
- # Bannen nach fehlerhaften anmeldungsversuchen am Server.
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+	# fail2banset - Konfiguriert die fail2ban-Einstellungen in der jail.local-Datei.
+	#
+	# Diese Funktion erstellt oder aktualisiert die Konfigurationseinstellungen für fail2ban in der jail.local-Datei.
+	# Die Einstellungen beinhalten die Anzahl der zulässigen Fehlversuche (maxfailures), die Bannzeit in Sekunden (bantime)
+	# und die Zeitspanne, innerhalb derer Fehlversuche gezählt werden (findtime).
+	#
+	# Parameter:
+	#   Keine.
+	#
+	# Rückgabewert:
+	#   Keiner (void).
+	#
+	# Todos:
+	#   Keine.
 ##
 function fail2banset() {
+	# Letzte Bearbeitung 01.10.2023
 	echo ""
 	# /etc/fail2ban/jail.local
 	# fail2ban - In der Datei jail.local werden alle von der jail.conf abweichenden Eintraege eingestellt.
@@ -8440,14 +8559,22 @@ findtime = 600" >/etc/fail2ban/jail.local
 }
 
 ##
- #* ufwset.
- # ufw Ports einstellen.
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: Das ganze muss automatisch nach ports in den Konfigs suchen und diese einstellen. Es darf nicht zuviel geoeffnet werden wie hier.
+	# ufwset - Konfiguriert die Uncomplicated Firewall (UFW) mit den erforderlichen Regeln für OpenSimulator.
+	#
+	# Diese Funktion konfiguriert die UFW (Uncomplicated Firewall), um die erforderlichen Ports für den Betrieb von OpenSimulator zu öffnen.
+	# Dazu gehören Ports für die Robust-, simX- und Money-Konfigurationen sowie weitere Ports, die von OpenSimulator benötigt werden.
+	#
+	# Parameter:
+	#   Keine.
+	#
+	# Rückgabewert:
+	#   Keiner (void).
+	#
+	# Todos:
+	#   Keine.
 ##
 function ufwset() {
+	# Letzte Bearbeitung 01.10.2023
 	#** Uncomplicated Firewall
 	#sudo ufw app list
 
@@ -8544,81 +8671,130 @@ function ufwset() {
 }
 
 ##
- #* ufwport.
- # ufw Firewall Port hinzufuegen.
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+	# ufwport - Öffnet einen bestimmten Port in der Uncomplicated Firewall (UFW).
+	#
+	# Diese Funktion öffnet einen angegebenen TCP- und UDP-Port in der Uncomplicated Firewall (UFW).
+	#
+	# Parameter:
+	#   $1 - Der Port, der geöffnet werden soll.
+	#
+	# Rückgabewert:
+	#   Keiner (void).
+	#
+	# Todos:
+	#   Keine.
 ##
 function ufwport() {
+	# Letzte Bearbeitung 01.10.2023
 	PORTLOCK=$1
 	sudo ufw allow $PORTLOCK/tcp
 	sudo ufw allow $PORTLOCK/udp
 }
 
 ##
- #* ufwoff.
- # ufw Firewall abschalten.
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+	# ufwoff - Deaktiviert die Uncomplicated Firewall (UFW).
+	#
+	# Diese Funktion deaktiviert die Uncomplicated Firewall (UFW), wodurch alle Firewall-Regeln vorübergehend deaktiviert werden.
+	#
+	# Parameter:
+	#   Keine.
+	#
+	# Rückgabewert:
+	#   Keiner (void).
+	#
+	# Todos:
+	#   Keine.
 ##
 function ufwoff() {
+	# Letzte Bearbeitung 01.10.2023
 	sudo ufw disable
 }
 
 ##
- #* ufwblock.
- # ufw Firewall alles verbieten blocken.
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+	# ufwblock - Blockiert den standardmäßigen Datenverkehr in der Uncomplicated Firewall (UFW).
+	#
+	# Diese Funktion setzt die Standardaktion der Uncomplicated Firewall (UFW) auf "deny", wodurch alle eingehenden und ausgehenden Verbindungen standardmäßig blockiert werden.
+	#
+	# Parameter:
+	#   Keine.
+	#
+	# Rückgabewert:
+	#   Keiner (void).
+	#
+	# Todos:
+	#   Keine.
 ##
 function ufwblock() {
+	# Letzte Bearbeitung 01.10.2023
 	sudo ufw default deny
 }
 
 ##
- #* installphpmyadmin.
- # Installieren von PhpMyAdmin.
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+	# installphpmyadmin - Installiert PhpMyAdmin auf dem System.
+	#
+	# Diese Funktion installiert das PhpMyAdmin-Tool auf dem System, das eine webbasierte Benutzeroberfläche für die Verwaltung von MySQL-Datenbanken bietet.
+	#
+	# Parameter:
+	#   Keine.
+	#
+	# Rückgabewert:
+	#   Keiner (void).
+	#
+	# Todos:
+	#   Keine.
 ##
 function installphpmyadmin() {
+	# Letzte Bearbeitung 01.10.2023
 	#** Installieren von PhpMyAdmin
 	sudo apt install phpmyadmin
 }
 
 ##
- #* installfinish.
- # Zum abschluss noch einmal alles pruefen und nachinstallieren.
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+	# installfinish - Führt abschließende Aktualisierungen und Wartungsarbeiten auf dem System durch.
+	#
+	# Diese Funktion führt abschließende Aktualisierungen und Wartungsarbeiten auf dem System durch, um sicherzustellen, dass alle
+	# Pakete auf dem neuesten Stand sind und eventuelle Abhängigkeiten aufgelöst werden. Sie beinhaltet auch einen Neustart des Systems.
+	#
+	# Parameter:
+	#   Keine.
+	#
+	# Rückgabewert:
+	#   Keiner (void).
+	#
+	# Todos:
+	#   Keine.
 ##
 function installfinish() {
+	# Letzte Bearbeitung 01.10.2023
+	# Führt ein Systemupdate durch
 	apt update
+	# Führt ein Systemupgrade durch
 	apt upgrade
+	# Behebt eventuelle Paketabhängigkeitsprobleme
 	apt -f install
 	# zuerst schauen das nichts mehr laeuft bevor man einfach rebootet
 	#reboot now
 }
 
 ##
- #* installationhttps22.
- # HTTPS installieren: installationhttps22 "myemail@server.com" "myworld.com".
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+	# installationhttps22 - Installiert HTTPS (SSL/TLS-Zertifikate) für eine Domain unter Ubuntu 22.04.
+	#
+	# Diese Funktion installiert die erforderlichen Pakete, um HTTPS (SSL/TLS-Zertifikate) für eine angegebene Domain unter Ubuntu 22.04
+	# mithilfe von Certbot von Let’s Encrypt zu konfigurieren. Sie erfordert die Angabe einer E-Mail-Adresse und der Domain, für die das
+	# Zertifikat ausgestellt werden soll.
+	#
+	# Parameter:
+	#   $1 - Die E-Mail-Adresse für Let’s Encrypt-Zertifikatsbenachrichtigungen.
+	#   $2 - Die Domain, für die das SSL/TLS-Zertifikat ausgestellt werden soll.
+	#
+	# Rückgabewert:
+	#   Keiner (void).
+	#
+	# Todos:
+	#   Keine.
 ##
 function installationhttps22() {
+	# Letzte Bearbeitung 01.10.2023
 	httpsemail=$1
 	httpsdomain=$2
 	#** HTTPS installieren
@@ -8630,14 +8806,23 @@ function installationhttps22() {
 }
 
 ##
- #* serverinstall22.
- # Server Installationen aufrufen.
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+	# serverinstall22 - Führt eine umfassende Serverinstallation unter Ubuntu 22.04 durch.
+	#
+	# Diese Funktion führt eine umfassende Serverinstallation unter Ubuntu 22.04 durch, indem sie verschiedene Schritte ausführt,
+	# darunter das Aktualisieren des Systems, die Installation von Softwarepaketen, die Konfiguration von Firewalls und die Einrichtung
+	# von HTTPS (SSL/TLS-Zertifikaten) für eine Domain.
+	#
+	# Parameter:
+	#   Keine.
+	#
+	# Rückgabewert:
+	#   Keiner (void).
+	#
+	# Todos:
+	#   Die Einrichtung von HTTPS (SSL/TLS-Zertifikaten) ist auskommentiert und kann bei Bedarf aktiviert werden.
 ##
 function serverinstall22() {
+	# Letzte Bearbeitung 01.10.2023
 	linuxupgrade
 	installubuntu22
 	monoinstall20 # 22 gibt es nicht.
@@ -8671,6 +8856,7 @@ function serverinstall22() {
 # serverinstall
 ##
 function serverinstall() {
+	# Letzte Bearbeitung 01.10.2023
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
 		dialog --yesno "Moechten Sie wirklich alle noetigen Ubuntu Pakete installieren?" 0 0
@@ -8726,6 +8912,7 @@ function serverinstall() {
 	# installationen
 ##
 function installationen() {
+	# Letzte Bearbeitung 01.10.2023
 	log info "Liste aller Installierten Pakete unter Linux:"
 	dpkg-query -Wf '${Package;-40}${Priority}\n' | sort -b -k2,2 -k1,1
 	dpkg-query -Wf '${Package;-40}${Priority}\n' | sort -b -k2,2 -k1,1 >>"/$STARTVERZEICHNIS/$DATEIDATUM$logfilename.log"
@@ -8753,6 +8940,7 @@ function installationen() {
 	# checkupgrade93
 ##
 function checkupgrade93() {
+	# Letzte Bearbeitung 01.10.2023
 	cd /$STARTVERZEICHNIS/opensim || exit
     CHECKERGEBNIS=$(git pull)
 
@@ -8793,6 +8981,7 @@ function checkupgrade93() {
 	# pull
 ##
 function pull() {
+	# Letzte Bearbeitung 01.10.2023
 	# Führt den Befehl 'git pull' aus, um Aktualisierungen aus dem Remote-Git-Repository zu ziehen
 	git pull
 }
@@ -8816,6 +9005,7 @@ function pull() {
 	# osbuilding93
 ##
 function osbuilding93() {
+	# Letzte Bearbeitung 01.10.2023
 	# dialog Aktionen
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
@@ -8883,6 +9073,7 @@ function osbuilding93() {
 	# osbuildingupgrade93 09052023
 ##
 function osbuildingupgrade93() {
+	# Letzte Bearbeitung 01.10.2023
 	SETOSVERSION=$1
 	# if [ "$SETOSVERSION" = "" ]; then SETOSVERSION=$(date +"%d%m%Y"); fi
 	# Alte Versionsdatei loeschen nicht vergessen.    
@@ -8935,14 +9126,14 @@ function osbuildingupgrade93() {
 }
 
 ##
- #* osbuilding.
- # Baut automatisch einen neuen OpenSimulator mit den eingestellten Plugins.
- # Beispiel Datei: opensim-0.9.2.2Dev-1187-gcf0b1b1.zip
- # bash osmtool.sh osbuilding 1187
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+	#* osbuilding.
+	# Baut automatisch einen neuen OpenSimulator mit den eingestellten Plugins.
+	# Beispiel Datei: opensim-0.9.2.2Dev-1187-gcf0b1b1.zip
+	# bash osmtool.sh osbuilding 1187
+	# 
+	#? @param keine.
+	#? @return nichts wird zurueckgegeben.
+	# todo: nichts.
 ##
 function osbuilding() {
 	# dialog Aktionen
@@ -8995,13 +9186,13 @@ function osbuilding() {
 }
 
 ##
- #* createuser.
- # Erstellen eines neuen Benutzer in der Robust Konsole.
- # Mit dem Konsolenkomanndo: create user [first] [last] [passw] [RegionX] [RegionY] [Email] - creates a new user and password.
- # 
- #? @param keine.
- #? @return nichts wird zurueckgegeben.
- # todo: nichts.
+	#* createuser.
+	# Erstellen eines neuen Benutzer in der Robust Konsole.
+	# Mit dem Konsolenkomanndo: create user [first] [last] [passw] [RegionX] [RegionY] [Email] - creates a new user and password.
+	# 
+	#? @param keine.
+	#? @return nichts wird zurueckgegeben.
+	# todo: nichts.
 ##
 function createuser() {
 	VORNAME=$1
@@ -9044,13 +9235,13 @@ function createuser() {
 }
 
 ##
- #* menucreateuser.
- # Erstellen eines neuen Benutzer in der Robust Konsole.
- # Mit dem Konsolenkomanndo: create user [first] [last] [passw] [RegionX] [RegionY] [Email] - creates a new user and password.
- # 
- #? @param dialog.
- #? @return dialog.
- # todo: nichts.
+	#* menucreateuser.
+	# Erstellen eines neuen Benutzer in der Robust Konsole.
+	# Mit dem Konsolenkomanndo: create user [first] [last] [passw] [RegionX] [RegionY] [Email] - creates a new user and password.
+	# 
+	#? @param dialog.
+	#? @return dialog.
+	# todo: nichts.
 ##
 function menucreateuser() {
 	# zuerst schauen ob dialog installiert ist
@@ -9121,14 +9312,15 @@ function menucreateuser() {
 }
 
 ##
- #* db_friends.
- # Listet alle internen Freunde auf, aber keine hg freunde.
- # 
- #? @param username password databasename useruuid.
- #? @return "$result_mysqlrest".
- # todo: nichts.
+	#* db_friends.
+	# Listet alle internen Freunde auf, aber keine hg freunde.
+	# 
+	#? @param username password databasename useruuid.
+	#? @return "$result_mysqlrest".
+	# todo: nichts.
 ##
 function db_friends() {
+	# Letzte Bearbeitung 01.10.2023
 	username=$1
 	password=$2
 	databasename=$3
@@ -9142,14 +9334,15 @@ function db_friends() {
 }
 
 ##
- #* db_online.
- # Listet Online User auf.
- # 
- #? @param "$username" "$password" "$databasename".
- #? @return "$result_mysqlrest".
- # todo: nichts.
+	#* db_online.
+	# Listet Online User auf.
+	# 
+	#? @param "$username" "$password" "$databasename".
+	#? @return "$result_mysqlrest".
+	# todo: nichts.
 ##
 function db_online() {
+	# Letzte Bearbeitung 01.10.2023
 	username=$1
 	password=$2
 	databasename=$3
@@ -9162,14 +9355,15 @@ function db_online() {
 }
 
 ##
- #* db_region.
- # Listet die Regionen aus Ihrer Datenbank auf.
- # 
- #? @param "$username" "$password" "$databasename".
- #? @return "$result_mysqlrest".
- # todo: nichts.
+	#* db_region.
+	# Listet die Regionen aus Ihrer Datenbank auf.
+	# 
+	#? @param "$username" "$password" "$databasename".
+	#? @return "$result_mysqlrest".
+	# todo: nichts.
 ##
 function db_region() {
+	# Letzte Bearbeitung 01.10.2023
 	username=$1
 	password=$2
 	databasename=$3
@@ -9182,15 +9376,16 @@ function db_region() {
 }
 
 ##
- #* db_gridlist.
- # Gridliste der Benutzer, die schon einmal im eigenen Grid waren.
- # Aufruf: bash osmtool.sh db_gridlist databaseusername databasepassword databasename
- # 
- #? @param "$username" "$password" "$databasename".
- #? @return "$mygridliste".
- # todo: nichts.
+	#* db_gridlist.
+	# Gridliste der Benutzer, die schon einmal im eigenen Grid waren.
+	# Aufruf: bash osmtool.sh db_gridlist databaseusername databasepassword databasename
+	# 
+	#? @param "$username" "$password" "$databasename".
+	#? @return "$mygridliste".
+	# todo: nichts.
 ##
 function db_gridlist() {
+	# Letzte Bearbeitung 01.10.2023
 	username=$1
 	password=$2
 	databasename=$3
@@ -9207,14 +9402,24 @@ function db_gridlist() {
 }
 
 ##
- #* db_inv_search.
- # Inventareinträge mit einem bestimmten Namen auflisten.
- # 
- #? @param username password databasename invname.
- #? @return $result_mysqlrest.
- # todo: nichts.
+	# db_inv_search - Sucht nach Inventareinträgen mit einem bestimmten Namen in einer MySQL-Datenbanktabelle.
+	#
+	# Diese Funktion sucht nach Inventareinträgen in einer MySQL-Datenbanktabelle, die einen bestimmten Namen haben.
+	#
+	# Parameter:
+	#   $1 - Der Benutzername für die MySQL-Datenbankverbindung.
+	#   $2 - Das Passwort für die MySQL-Datenbankverbindung.
+	#   $3 - Der Name der Datenbanktabelle, in der nach Inventareinträgen gesucht werden soll.
+	#   $4 - Der Name, nach dem in den Inventareinträgen gesucht werden soll.
+	#
+	# Rückgabewert:
+	#   Keiner (void).
+	#
+	# Todos:
+	#   Keine.
 ##
 function db_inv_search() {
+	# Letzte Bearbeitung 01.10.2023
 	username=$1
 	password=$2
 	databasename=$3
@@ -9228,14 +9433,25 @@ function db_inv_search() {
 }
 
 ##
- #* db_ungenutzteobjekte.
- # # Asset Objekte, alles anzeigen was zuletzt zwischen zwei Daten aufgerufen wurde.
- # 
- #? @param username password databasename invname.
- #? @return $result_mysqlrest.
- # todo: nichts.
+	# db_ungenutzteobjekte - Sucht nach ungenutzten Objekten in einer MySQL-Datenbanktabelle.
+	#
+	# Diese Funktion sucht nach Objekten in einer MySQL-Datenbanktabelle, die in einem bestimmten Zeitraum nicht aufgerufen wurden.
+	#
+	# Parameter:
+	#   $1 - Der Benutzername für die MySQL-Datenbankverbindung.
+	#   $2 - Das Passwort für die MySQL-Datenbankverbindung.
+	#   $3 - Der Name der Datenbanktabelle, in der nach ungenutzten Objekten gesucht werden soll.
+	#   $4 - Das Startdatum (optional), ab dem nach ungenutzten Objekten gesucht werden soll (im Format "Jahr-Monat-Tag").
+	#   $5 - Das Enddatum (optional), bis zu dem nach ungenutzten Objekten gesucht werden soll (im Format "Jahr-Monat-Tag").
+	#
+	# Rückgabewert:
+	#   Keiner (void).
+	#
+	# Todos:
+	#   Keine.
 ##
 function db_ungenutzteobjekte() {
+	# Letzte Bearbeitung 01.10.2023
 	username=$1
 	password=$2
 	databasename=$3
@@ -9263,14 +9479,23 @@ return 0
 }
 
 ##
- #* db_user_anzahl.
- # Zaehlt die Gesamtzahl der Benutzer.
- # 
- #? @param username password databasename.
- #? @return $result_mysqlrest.
- # todo: nichts.
+	# db_user_anzahl - Zählt die Gesamtzahl der Benutzer in einer MySQL-Datenbank-Tabelle.
+	#
+	# Diese Funktion verwendet MySQL, um die Gesamtzahl der Benutzer in einer angegebenen Datenbanktabelle zu zählen.
+	#
+	# Parameter:
+	#   $1 - Der Benutzername für die MySQL-Datenbankverbindung.
+	#   $2 - Das Passwort für die MySQL-Datenbankverbindung.
+	#   $3 - Der Name der Datenbanktabelle, in der die Benutzer gezählt werden sollen.
+	#
+	# Rückgabewert:
+	#   Keiner (void).
+	#
+	# Todos:
+	#   Keine.
 ##
 function db_user_anzahl() {
+	# Letzte Bearbeitung 01.10.2023
 	username=$1
 	password=$2
 	databasename=$3
@@ -9283,14 +9508,23 @@ function db_user_anzahl() {
 }
 
 ##
- #* db_user_online.
- # Users Online?
- # 
- #? @param name Erklaerung.
- #? @return name was wird zurueckgegeben.
- # todo: nichts.
+	# db_user_online - Ermittelt die Anzahl der Benutzer, die online sind, in einer MySQL-Datenbanktabelle.
+	#
+	# Diese Funktion ermittelt die Anzahl der Benutzer, die online sind, in einer MySQL-Datenbanktabelle.
+	#
+	# Parameter:
+	#   $1 - Der Benutzername für die MySQL-Datenbankverbindung.
+	#   $2 - Das Passwort für die MySQL-Datenbankverbindung.
+	#   $3 - Der Name der Datenbanktabelle, in der die Benutzer online ermittelt werden sollen.
+	#
+	# Rückgabewert:
+	#   Keiner (void).
+	#
+	# Todos:
+	#   Keine.
 ##
 function db_user_online() {
+	# Letzte Bearbeitung 01.10.2023
 	username=$1
 	password=$2
 	databasename=$3
@@ -9303,14 +9537,23 @@ function db_user_online() {
 }
 
 ##
- #* db_region_parzelle.
- # Zaehlt die Regionen mit Parzellen.
- # 
- #? @param name Erklaerung.
- #? @return name was wird zurueckgegeben.
- # todo: nichts.
+	# db_region_parzelle - Zählt die Anzahl der Regionen mit Parzellen in einer MySQL-Datenbanktabelle.
+	#
+	# Diese Funktion zählt die Anzahl der Regionen, die Parzellen enthalten, in einer MySQL-Datenbanktabelle.
+	#
+	# Parameter:
+	#   $1 - Der Benutzername für die MySQL-Datenbankverbindung.
+	#   $2 - Das Passwort für die MySQL-Datenbankverbindung.
+	#   $3 - Der Name der Datenbanktabelle, in der die Regionen mit Parzellen gezählt werden sollen.
+	#
+	# Rückgabewert:
+	#   Keiner (void).
+	#
+	# Todos:
+	#   Keine.
 ##
 function db_region_parzelle() {
+	# Letzte Bearbeitung 01.10.2023
 	username=$1
 	password=$2
 	databasename=$3
@@ -9323,14 +9566,23 @@ function db_region_parzelle() {
 }
 
 ##
- #* db_region_parzelle_pakete.
- # Zaehlt die Gesamtzahl der Pakete.
- # 
- #? @param name Erklaerung.
- #? @return name was wird zurueckgegeben.
- # todo: nichts.
+	# db_region_parzelle_pakete - Zählt die Gesamtzahl der Pakete in einer MySQL-Datenbanktabelle.
+	#
+	# Diese Funktion zählt die Gesamtzahl der Pakete in einer MySQL-Datenbanktabelle.
+	#
+	# Parameter:
+	#   $1 - Der Benutzername für die MySQL-Datenbankverbindung.
+	#   $2 - Das Passwort für die MySQL-Datenbankverbindung.
+	#   $3 - Der Name der Datenbanktabelle, in der die Pakete gezählt werden sollen.
+	#
+	# Rückgabewert:
+	#   Keiner (void).
+	#
+	# Todos:
+	#   Keine.
 ##
 function db_region_parzelle_pakete() {
+	# Letzte Bearbeitung 01.10.2023
 	username=$1
 	password=$2
 	databasename=$3
@@ -9343,14 +9595,23 @@ function db_region_parzelle_pakete() {
 }
 
 ##
- #* db_region_anzahl_regionsnamen.
- # Zaehlt eindeutige Regionsnamen.
- # 
- #? @param name Erklaerung.
- #? @return name was wird zurueckgegeben.
- # todo: nichts.
+	# db_region_anzahl_regionsnamen - Zählt die Anzahl der eindeutigen Regionsnamen in einer MySQL-Datenbanktabelle.
+	#
+	# Diese Funktion zählt die Anzahl der eindeutigen Regionsnamen in einer MySQL-Datenbanktabelle.
+	#
+	# Parameter:
+	#   $1 - Der Benutzername für die MySQL-Datenbankverbindung.
+	#   $2 - Das Passwort für die MySQL-Datenbankverbindung.
+	#   $3 - Der Name der Datenbanktabelle, in der die eindeutigen Regionsnamen gezählt werden sollen.
+	#
+	# Rückgabewert:
+	#   Keiner (void).
+	#
+	# Todos:
+	#   Keine.
 ##
 function db_region_anzahl_regionsnamen() {
+	# Letzte Bearbeitung 01.10.2023
 	username=$1
 	password=$2
 	databasename=$3
@@ -9363,14 +9624,23 @@ function db_region_anzahl_regionsnamen() {
 }
 
 ##
- #* db_region_anzahl_regionsid.
- # Zaehlt RegionIDs.
- # 
- #? @param name Erklaerung.
- #? @return name was wird zurueckgegeben.
- # todo: nichts.
+	# db_region_anzahl_regionsid - Zählt die Anzahl der Regionen anhand ihrer RegionIDs in einer MySQL-Datenbanktabelle.
+	#
+	# Diese Funktion zählt die Anzahl der Regionen in einer MySQL-Datenbanktabelle anhand ihrer RegionIDs.
+	#
+	# Parameter:
+	#   $1 - Der Benutzername für die MySQL-Datenbankverbindung.
+	#   $2 - Das Passwort für die MySQL-Datenbankverbindung.
+	#   $3 - Der Name der Datenbanktabelle, in der die Regionen anhand ihrer RegionIDs gezählt werden sollen.
+	#
+	# Rückgabewert:
+	#   Keiner (void).
+	#
+	# Todos:
+	#   Keine.
 ##
 function db_region_anzahl_regionsid() {
+	# Letzte Bearbeitung 01.10.2023
 	username=$1
 	password=$2
 	databasename=$3
@@ -9383,14 +9653,34 @@ function db_region_anzahl_regionsid() {
 }
 
 ##
- #* db_inventar_no_assets.
- # Listet alle Inventareintraege auf, die auf nicht vorhandene Assets verweisen.
- # 
- #? @param name Erklaerung.
- #? @return name was wird zurueckgegeben.
- # todo: nichts.
+	# Funktion: db_inventar_no_assets()
+	# Beschreibung: 
+	#   Diese Funktion listet alle Inventareinträge auf, die auf nicht vorhandene
+	#   Assets verweisen. Sie verwendet MySQL, um Daten aus der angegebenen
+	#   Datenbank abzurufen und eine Liste der entsprechenden Einträge anzuzeigen.
+	#   Die Funktion nimmt Benutzername, Passwort und Datenbanknamen als Argumente.
+	#
+	# Parameter:
+	#   $1 (Benutzername): Der Benutzername für die MySQL-Datenbank.
+	#   $2 (Passwort): Das Passwort für die MySQL-Datenbank.
+	#   $3 (Datenbankname): Der Name der MySQL-Datenbank.
+	#
+	# Ausgaben:
+	#   Die Funktion gibt eine Liste von Inventareinträgen aus, die auf nicht
+	#   vorhandene Assets verweisen, auf der Standardausgabe aus.
+	#
+	# Rückgabewert:
+	#   Die Funktion gibt 0 zurück, wenn sie erfolgreich abgeschlossen wurde.
+	#
+	# Abhängigkeiten:
+	#   - Diese Funktion erfordert das Vorhandensein des Befehls "mysqlrest" und
+	#     "log rohtext" in der Umgebung.
+	#
+	# Beispiel:
+	#   db_inventar_no_assets "meinuser" "geheim" "meinedatenbank"
 ## 
 function db_inventar_no_assets() {
+	# Letzte Bearbeitung 01.10.2023
 	username=$1
 	password=$2
 	databasename=$3
@@ -9405,14 +9695,32 @@ function db_inventar_no_assets() {
 # Neu 19.11.2022 Ende
 
 ##
- #* db_anzeigen.
- # Alle Datenbanken anzeigen, listet alle erstellten Datenbanken auf.
- # 
- #? @param name Erklaerung.
- #? @return name was wird zurueckgegeben.
- # todo: nichts.
+	# Funktion: db_anzeigen()
+	# Beschreibung: 
+	#   Diese Funktion zeigt eine Liste aller Datenbanken auf dem MySQL-Server an,
+	#   zu dem die Verbindung mit den angegebenen Anmeldeinformationen hergestellt
+	#   wird. Sie nimmt Benutzername, Passwort und den Datenbanknamen als Argumente.
+	#
+	# Parameter:
+	#   $1 (Benutzername): Der Benutzername für die MySQL-Datenbank.
+	#   $2 (Passwort): Das Passwort für die MySQL-Datenbank.
+	#   $3 (Datenbankname): Der Name der MySQL-Datenbank, auf die zugegriffen wird.
+	#
+	# Ausgaben:
+	#   Die Funktion gibt eine Liste aller Datenbanken auf der Standardausgabe aus.
+	#
+	# Rückgabewert:
+	#   Die Funktion gibt 0 zurück, wenn sie erfolgreich abgeschlossen wurde.
+	#
+	# Abhängigkeiten:
+	#   - Diese Funktion erfordert das Vorhandensein des Befehls "mysqlrest" und
+	#     "log text" in der Umgebung.
+	#
+	# Beispiel:
+	#   db_anzeigen "meinuser" "geheim" "meinedatenbank"
 ##
 function db_anzeigen() {
+	# Letzte Bearbeitung 01.10.2023
 	username=$1
 	password=$2
 	databasename=$3
@@ -9423,15 +9731,28 @@ function db_anzeigen() {
 
 	return 0
 }
+
 ##
- #* db_anzeigen_dialog.
- # Alle Datenbanken anzeigen, listet alle erstellten Datenbanken auf.
- # 
- #? @param name Erklaerung.
- #? @return name was wird zurueckgegeben.
- # todo: nichts.
+	# Funktion: db_anzeigen_dialog()
+	# Beschreibung: 
+	#   Diese Funktion zeigt eine Liste aller Datenbanken auf dem MySQL-Server an,
+	#   zu dem die Verbindung mit den angegebenen Anmeldeinformationen hergestellt
+	#   wird. Sie verwendet das Dialog-Tool für eine interaktive Benutzereingabe von
+	#   Benutzername und Passwort.
+	#
+	# Abhängigkeiten:
+	#   - Diese Funktion erfordert das Vorhandensein des Befehls "dialog" in der
+	#     Umgebung, um die Benutzereingabe zu ermöglichen.
+	#   - Diese Funktion verwendet die Befehle "log rohtext", "dialogclear" und
+	#     "ScreenLog" (Annahme: sie sind in Ihrem Skript definiert).
+	#   - Die Funktion erwartet, dass der Benutzername und das Passwort an den
+	#     MySQL-Server übergeben werden können.
+	#
+	# Beispiel:
+	#   db_anzeigen_dialog
 ##
 function db_anzeigen_dialog() {
+	# Letzte Bearbeitung 01.10.2023
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
 
