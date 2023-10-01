@@ -95,6 +95,14 @@ Server Installation Ubuntu 22 mit mariaDB
 		all                     Alle OpenSimulator Konsolenkommandos.
 		hda                     Dialog Menue direktaufrufe.
 
+## Dokumentation erstellen
+(Alpha Test)
+
+Der Aufruf: bash osmtool.sh createmanual
+
+erstellt eine Dokumentation des gesamten opensimMULTITOOL
+
+siehe Testdatei Manual_DATUM.md
 
 ## Der Kommando aufruf:
  
