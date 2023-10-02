@@ -35,7 +35,7 @@
 #**************************************************************************
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.1286" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.1287" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 ##
@@ -3029,18 +3029,18 @@ function downloados() {
 }
 
 ##
-#* Funktion: delete_emty_mark
-# Datum: 02.10.2023
-#? Beschreibung:
-# Diese Funktion durchsucht eine Eingabedatei nach Zeilen, die nur aus einem Tabulator gefolgt von einem Rautenzeichen bestehen,
-# und löscht diese Zeilen. Die verbleibenden Zeilen werden in eine Ausgabedatei geschrieben.
-#? Parameter:
-# $1 (EINGABE_DATEI): Der Name der Eingabedatei, die durchsucht werden soll.
-# $2 (AUSGABE_DATEI): Der Name der Ausgabedatei, in die die verbleibenden Zeilen geschrieben werden sollen.
-#? Rückgabewert:
-# Diese Funktion gibt keine direkten Rückgabewerte zurück, gibt jedoch eine Erfolgsmeldung aus, wenn der Vorgang abgeschlossen ist.
-#? Beispielverwendung:
-# delete_emty_mark "eingabe.txt" "ausgabe.txt"
+	#* Funktion: delete_emty_mark
+	# Datum: 02.10.2023
+	#? Beschreibung:
+	# Diese Funktion durchsucht eine Eingabedatei nach Zeilen, die nur aus einem Tabulator gefolgt von einem Rautenzeichen bestehen,
+	# und löscht diese Zeilen. Die verbleibenden Zeilen werden in eine Ausgabedatei geschrieben.
+	#? Parameter:
+	# $1 (EINGABE_DATEI): Der Name der Eingabedatei, die durchsucht werden soll.
+	# $2 (AUSGABE_DATEI): Der Name der Ausgabedatei, in die die verbleibenden Zeilen geschrieben werden sollen.
+	#? Rückgabewert:
+	# Diese Funktion gibt keine direkten Rückgabewerte zurück, gibt jedoch eine Erfolgsmeldung aus, wenn der Vorgang abgeschlossen ist.
+	#? Beispielverwendung:
+	# delete_emty_mark "eingabe.txt" "ausgabe.txt"
 ##
 function delete_emty_mark() {
 	# Name des Eingabedatei
