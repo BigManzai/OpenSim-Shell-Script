@@ -46,11 +46,14 @@ tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 	# Sie vergleicht den effektiven Benutzer (EUID) mit 0, wobei 0 normalerweise auf den root-Benutzer hinweist.
 	# Wenn der Benutzer keine root-Rechte hat, wird eine Meldung ausgegeben und die Funktion gibt den Wert 1 zurück.
 	# Andernfalls wird eine Bestätigungsmeldung ausgegeben und die Funktion gibt den Wert 0 zurück.
+	#
 	#? Parameter:
 	# Diese Funktion erwartet keine Parameter.
+	#
 	#? Rückgabewert:
 	# - Erfolgreich: Wenn der Benutzer root-Rechte hat, gibt die Funktion den Wert 0 zurück.
 	# - Fehler: Wenn der Benutzer keine root-Rechte hat, gibt die Funktion den Wert 1 zurück.
+	#
 	#? Beispielaufruf:
 	# isroot
 ##
@@ -1245,11 +1248,14 @@ function createmanual() {
 
 ##
 	#* Funktion: trimm
+	#
 	#? Beschreibung:
 	# Diese Funktion entfernt führende und abschließende Leerzeichen aus den übergebenen
 	# Zeichenketten und speichert das bereinigte Ergebnis in einer Variablen.
+	#
 	#? Parameter:
 	# $@ - Die Zeichenketten, die bereinigt werden sollen.
+	#
 	#? Beispielaufruf:
 	# trimm "   Hallo, Welt!   " "   Guten Tag   "
 ##
@@ -1264,6 +1270,7 @@ function trimm() {
 ##
 	#* osgitstatus.
 	# opensim quellcode status und upgraden.
+	#
 	#? @param $variable.
 	#? @return $trimmvar.
 	# todo: nichts.
@@ -1392,6 +1399,7 @@ function letterdel2() {
 	#* trim_string.
 	# Zeichen entfernen.
 	# Usage: trim_string "   example   string    "
+	#
 	#? @param keine.
 	#? @return nichts wird zurueckgegeben.
 	# todo: nichts.
@@ -1403,13 +1411,17 @@ function trim_string() {
 }
 ##
 	#* Funktion: trim_string
+	#
 	#? Beschreibung:
 	# Diese Funktion entfernt führende und abschließende Leerzeichen aus einer
 	# Zeichenkette und gibt das bereinigte Ergebnis aus.
+	#
 	#? Parameter:
 	# $1 - Die Zeichenkette, aus der die Leerzeichen entfernt werden sollen.
+	#
 	#? Rückgabewert:
 	# Die bereinigte Zeichenkette wird auf die Standardausgabe ausgegeben.
+	#
 	#? Beispielaufruf:
 	# trimmed_text=$(trim_string "   Hallo, Welt!   ")
 	# Ergebnis: "Hallo, Welt!"
@@ -1464,6 +1476,7 @@ function vartest2() {
 	#* laeuftos - Diese Funktion überprüft, ob ein Prozess mit dem angegebenen Namen läuft.
 	#? Verwendung: laeuftos PROZESSNAME
 	#   - PROZESSNAME: Der Name des Prozesses, der überprüft werden soll.
+	#
 	# Diese Funktion überprüft, ob ein Prozess mit dem angegebenen PROZESSNAME bereits läuft.
 	# Es wird sowohl nach einem Prozess mit .dotnet 6 als auch mit .NET 4.8 gesucht.
 	#? Rückgabewerte:
@@ -1594,6 +1607,7 @@ function linuxupgrade() {
 ##
 	#* deladvantagetools - Diese Funktion entfernt das Paket "ubuntu-advantage-tools" von Ihrem Ubuntu-System.
 	#? Verwendung: deladvantagetools
+	#
 	# Diese Funktion führt den Befehl "sudo apt remove ubuntu-advantage-tools" aus, um das Paket
 	# "ubuntu-advantage-tools" von Ihrem System zu entfernen. Dieses Paket ist ein kommerzielles
 	# Dienstprogramm zur Systemverwaltung und kann bei Bedarf deinstalliert werden.
@@ -2403,8 +2417,11 @@ function dialogclear() {
 ##
 	#* clearuserlist.
 	# Diese Funktion löscht die Besucherlisten-Protokolldateien im angegebenen Verzeichnis.
+	#
 	#? Argumente: Keine
+	#
 	#? Rückgabewerte: Keine
+	#
 	#? Beispielaufruf:
 	# clearuserlist
 ##
@@ -3029,46 +3046,7 @@ function downloados() {
 }
 
 ##
-#* Funktion: delete_emty_mark
-# Datum: 02.10.2023
-#? Beschreibung:
-# Diese Funktion durchsucht eine Eingabedatei nach Zeilen, die nur aus einem Tabulator gefolgt von einem Rautenzeichen bestehen,
-# und löscht diese Zeilen. Die verbleibenden Zeilen werden in eine Ausgabedatei geschrieben.
-#? Parameter:
-# $1 (EINGABE_DATEI): Der Name der Eingabedatei, die durchsucht werden soll.
-# $2 (AUSGABE_DATEI): Der Name der Ausgabedatei, in die die verbleibenden Zeilen geschrieben werden sollen.
-#? Rückgabewert:
-# Diese Funktion gibt keine direkten Rückgabewerte zurück, gibt jedoch eine Erfolgsmeldung aus, wenn der Vorgang abgeschlossen ist.
-#? Beispielverwendung:
-# delete_emty_mark "eingabe.txt" "ausgabe.txt"
-##
-function delete_emty_mark() {
-	# Name des Eingabedatei
-	EINGABE_DATEI=$1
-
-	# Name des Ausgabedatei
-	AUSGABE_DATEI=$2
-
-	# Schleife durch die Zeilen der Eingabedatei
-	while IFS= read -r zeile
-	do
-		# Überprüfen, ob die Zeile nur aus einem Tabulator gefolgt von einem Rautenzeichen besteht
-		if [[ "$zeile" == "	#" ]]; then
-			# Wenn ja, die Zeile überspringen (löschen)
-			continue
-		else
-			# Wenn nicht, die Zeile zur Ausgabedatei hinzufügen
-			echo "$zeile" >> "$AUSGABE_DATEI"
-		fi
-	done < "$EINGABE_DATEI"
-
-	echo "Fertig."
-}
-
-
-##
 	#* Funktion: radiolist
-	# Datum: 02.10.2023
 	#? Beschreibung: Erstellt eine Liste von Internetradio-Streams basierend auf Musikgenres.
 	#? Parameter: Keine.
 	#? Rückgabewert: Es wird nichts zurückgegeben.
@@ -3301,6 +3279,7 @@ function dalaiserverinstall() {
 	# 1. Extrahiert die Modellversion aus dem ersten Parameter 'MKIVERSION' oder verwendet "7B" als Standardwert.
 	# 2. Überprüft, ob das Verzeichnis '/$mdalaihome/' bereits existiert. Falls nicht, wird es erstellt.
 	# 3. Je nach ausgewählter Modellversion werden die entsprechenden Dateien für das Modell heruntergeladen und in das entsprechende Verzeichnis unter '/$mdalaihome/' abgelegt.
+	#
 	# Verfügbare Modellversionen:
 	# - 30B: https://huggingface.co/guy1267/alpaca30B/tree/main
 	# - 13B: https://huggingface.co/guy1267/alpaca13B/tree/main
@@ -4497,16 +4476,22 @@ function saveinventar() {
 
 ##
 	#* Funktion: menusaveinventar
+	#
 	#? Beschreibung:
 	# Diese Funktion ermöglicht es dem Benutzer, Eingaben über das Dialog-Programm vorzunehmen, um Informationen für das Speichern eines Inventars einzugeben. Die eingegebenen Informationen werden dann an den Icecast-Server gesendet, um das Inventar zu speichern.
+	#
 	# Letzte Bearbeitung: 01.10.2023
+	#
 	#? Parameter:
 	# Keine Parameter, da die Funktion Benutzereingaben über das Dialog-Programm verarbeitet.
+	#
 	# Abhängigkeiten:
 	# - Das Dialog-Programm muss auf dem System installiert sein, da es für die Benutzereingabe verwendet wird.
 	# - ScreenLog: Eine externe Funktion oder ein externes Tool zur Protokollierung von Informationen.
+	#
 	# Ausgabe:
 	# Die Funktion gibt Erfolgsmeldungen oder Fehlermeldungen aus, je nachdem, ob der Bildschirm existiert und das Inventar erfolgreich gespeichert wurde.
+	#
 	# Exit-Status:
 	# 0 - Das Inventar wurde erfolgreich gespeichert.
 	# 1 - Ein Fehler ist aufgetreten (z. B. der Bildschirm existiert nicht oder Benutzereingaben wurden abgebrochen).
@@ -4562,15 +4547,20 @@ function menusaveinventar() {
 
 ##
 	#* Funktion: menuworks
+	#
 	#? Beschreibung:
 	# Die Funktion `menuworks` überprüft den Status eines OpenSimulator-Screens und gibt entsprechende Meldungen aus, ob der Screen online oder offline ist. Sie kann sowohl mit als auch ohne das Dialog-Programm verwendet werden, abhängig von dessen Verfügbarkeit auf dem System.
+	#
 	#? Parameter:
 	# $1 - Der Name des OpenSimulator-Screens, dessen Status überprüft werden soll.
+	#
 	# Abhängigkeiten:
 	# - Das Dialog-Programm (optional) für Benutzereingabe und -ausgabe.
 	# - ScreenLog: Eine externe Funktion oder ein externes Tool zur Protokollierung von Informationen.
+	#
 	# Ausgabe:
 	# Je nach Status des OpenSimulator-Screens gibt die Funktion Dialog-Meldungen oder Log-Meldungen aus.
+	#
 	# Exit-Status:
 	# 0 - Der Screen ist online.
 	# 1 - Der Screen ist offline oder es gab Probleme bei der Überprüfung.
@@ -4616,14 +4606,19 @@ function menuworks() {
 
 ##
 	#* Funktion: works
+	#
 	#? Beschreibung:
 	# Die Funktion `works` überprüft den Status eines OpenSimulator-Screens und gibt entsprechende Log-Meldungen aus, ob der Screen online oder offline ist.
+	#
 	#? Parameter:
 	# $1 - Der Name des OpenSimulator-Screens, dessen Status überprüft werden soll.
+	#
 	# Abhängigkeiten:
 	# Keine speziellen Abhängigkeiten, da diese Funktion keine Benutzereingabe und -ausgabe über das Dialog-Programm verwendet.
+	#
 	# Ausgabe:
 	# Je nach Status des OpenSimulator-Screens gibt die Funktion Log-Meldungen aus.
+	#
 	# Exit-Status:
 	# 0 - Der Screen ist online.
 	# 1 - Der Screen ist offline oder es gab Probleme bei der Überprüfung.
@@ -4646,14 +4641,19 @@ function works() {
 
 ##
 	#* Funktion: waslauft
+	#
 	#? Beschreibung:
 	# Die Funktion `waslauft` zeigt eine Liste der aktiven Screens an, die mithilfe des `screen`-Befehls ausgeführt werden. Sie bereinigt die Ausgabe und gibt eine formatierte Liste von Screen-Namen zurück.
+	#
 	#? Parameter:
 	# Diese Funktion akzeptiert keine Parameter.
+	#
 	# Abhängigkeiten:
 	# Keine speziellen Abhängigkeiten, da diese Funktion nur den `screen`-Befehl verwendet, um die Liste der aktiven Screens abzurufen.
+	#
 	# Ausgabe:
 	# Die Funktion gibt eine formatierte Liste von Screen-Namen auf dem Bildschirm aus.
+	#
 	# Exit-Status:
 	# Die Funktion gibt immer den Exit-Status 0 zurück, da keine fehlerhaften Zustände erwartet werden.
 ##
@@ -4669,15 +4669,20 @@ function waslauft() {
 
 ##
 	#* Funktion: menuwaslauft
+	#
 	#? Beschreibung:
 	# Die Funktion `menuwaslauft` zeigt eine Liste der aktiven Screens an, die mithilfe des `screen`-Befehls ausgeführt werden. Sie bereinigt die Ausgabe und zeigt die formatierte Liste der Screen-Namen in einem Dialogfeld an.
+	#
 	#? Parameter:
 	# Diese Funktion akzeptiert keine Parameter.
+	#
 	# Abhängigkeiten:
 	# - Das Dialog-Programm muss auf dem System installiert sein, um das Dialogfeld anzuzeigen.
 	# - dialogclear: Eine Funktion oder ein externes Tool zum Löschen des Dialog-Inhalts.
+	#
 	# Ausgabe:
 	# Die Funktion zeigt eine formatierte Liste von Screen-Namen in einem Dialogfeld an.
+	#
 	# Exit-Status:
 	# Die Funktion gibt immer den Exit-Status 0 zurück, da keine fehlerhaften Zustände erwartet werden.
 ##
@@ -4697,14 +4702,19 @@ function menuwaslauft() {
 
 ##
 	#* Funktion: checkfile
+	#
 	#? Beschreibung:
 	# Die Funktion `checkfile` überprüft, ob eine angegebene Datei existiert. Sie gibt den Exit-Status 0 zurück, wenn die Datei existiert, andernfalls gibt sie einen anderen Exit-Status zurück.
+	#
 	#? Parameter:
 	# $1 - Der vollständige Pfad zur zu überprüfenden Datei.
+	#
 	# Abhängigkeiten:
 	# Keine speziellen Abhängigkeiten, da diese Funktion nur die Dateiexistenz überprüft.
+	#
 	# Ausgabe:
 	# Diese Funktion gibt keine Ausgabe auf dem Bildschirm aus, sondern verwendet den Exit-Status, um das Ergebnis der Dateiüberprüfung anzuzeigen.
+	#
 	# Exit-Status:
 	# 0 - Die Datei existiert.
 	# Anderer Wert (normalerweise 1) - Die Datei existiert nicht oder es gab Probleme bei der Überprüfung.
@@ -4719,15 +4729,20 @@ function checkfile() {
 
 ##
 	#* Funktion: mapdel
+	#
 	#? Beschreibung:
 	# Die Funktion `mapdel` löscht die Kartenkacheln (maptiles) eines OpenSimulator-Verzeichnisses, sofern das Verzeichnis existiert. Sie überprüft zuerst, ob das Verzeichnis existiert, und löscht dann den Inhalt des "maptiles"-Verzeichnisses.
+	#
 	#? Parameter:
 	# $1 - Das Verzeichnis, dessen Kartenkacheln gelöscht werden sollen.
+	#
 	# Abhängigkeiten:
 	# - Das Verzeichnis, dessen Kartenkacheln gelöscht werden sollen, sollte bereits vorhanden sein.
 	# - Log-Funktion: Eine Funktion oder ein externes Tool zum Protokollieren von Informationen.
+	#
 	# Ausgabe:
 	# Die Funktion gibt Log-Meldungen aus, um den Status des Löschvorgangs anzuzeigen.
+	#
 	# Exit-Status:
 	# 0 - Die Kartenkacheln wurden erfolgreich gelöscht oder das Verzeichnis existiert nicht.
 	# 1 - Es gab Probleme beim Löschen der Kartenkacheln oder das Verzeichnis existiert nicht.
@@ -4748,15 +4763,20 @@ function mapdel() {
 
 ##
 	#* Funktion: logdel
+	#
 	#? Beschreibung:
 	# Die Funktion `logdel` löscht Log-Dateien aus einem angegebenen Verzeichnis, sofern das Verzeichnis existiert. Sie überprüft zuerst, ob das Verzeichnis existiert, und löscht dann alle Dateien mit der Erweiterung ".log" aus dem Verzeichnis.
+	#
 	#? Parameter:
 	# $1 - Das Verzeichnis, dessen Log-Dateien gelöscht werden sollen.
+	#
 	# Abhängigkeiten:
 	# - Das Verzeichnis, dessen Log-Dateien gelöscht werden sollen, sollte bereits vorhanden sein.
 	# - Log-Funktion: Eine Funktion oder ein externes Tool zum Protokollieren von Informationen.
+	#
 	# Ausgabe:
 	# Die Funktion gibt Log-Meldungen aus, um den Status des Löschvorgangs anzuzeigen.
+	#
 	# Exit-Status:
 	# 0 - Die Log-Dateien wurden erfolgreich gelöscht oder das Verzeichnis existiert nicht.
 	# 1 - Es gab Probleme beim Löschen der Log-Dateien oder das Verzeichnis existiert nicht.
@@ -4776,18 +4796,24 @@ function logdel() {
 
 ##
 	#* Funktion: rologdel
+	#
 	#? Beschreibung:
 	# Die Funktion `rologdel` löscht bestimmte Log-Dateien und erstellt eine Besucherliste, sofern die entsprechenden Verzeichnisse existieren. Sie überprüft zuerst, ob die Verzeichnisse vorhanden sind, und löscht dann bestimmte Log-Dateien. Wenn die `VISITORLIST`-Variable auf "yes" gesetzt ist, werden Besucherinformationen aus der Robust-Log-Datei extrahiert und in eine separate Datei geschrieben.
+	#
 	#? Parameter:
 	# Keine Parameter werden von dieser Funktion akzeptiert.
+	#
 	# Abhängigkeiten:
 	# - Die Verzeichnisse, deren Log-Dateien gelöscht werden sollen, sollten bereits vorhanden sein.
 	# - Log-Funktion: Eine Funktion oder ein externes Tool zum Protokollieren von Informationen.
+	#
 	# Ausgabe:
 	# Die Funktion gibt Log-Meldungen aus, um den Status des Löschvorgangs und das Erstellen der Besucherliste anzuzeigen.
+	#
 	# Exit-Status:
 	# 0 - Die Log-Dateien wurden erfolgreich gelöscht oder die Verzeichnisse existieren nicht.
 	# Anderer Wert (normalerweise 1) - Es gab Probleme beim Löschen der Log-Dateien oder die Verzeichnisse existieren nicht.
+	#
 	#? Hinweise:
 	# - Die Funktion überprüft zuerst, ob die Verzeichnisse existieren (`-d`-Test) und gibt entsprechende Log-Meldungen aus.
 	# - Wenn die `VISITORLIST`-Variable auf "yes" gesetzt ist, werden Besucherinformationen aus der Robust-Log-Datei extrahiert und in eine separate Datei geschrieben.
@@ -4833,15 +4859,20 @@ function rologdel() {
 
 ##
 	#* Funktion: menumapdel
+	#
 	#? Beschreibung:
 	# Die Funktion `menumapdel` ermöglicht das Löschen von Kartenkacheln (maptiles) eines OpenSimulator-Verzeichnisses. Sie kann entweder im Dialog-Modus oder im Standard-Modus (ohne Dialog) ausgeführt werden. Im Dialog-Modus wird der Benutzer nach dem zu löschenden Verzeichnis gefragt, während im Standard-Modus das Verzeichnis als Parameter übergeben wird.
+	#
 	#? Parameter:
 	# $1 (Optional) - Das Verzeichnis, dessen Kartenkacheln gelöscht werden sollen, wenn der Standard-Modus verwendet wird.
+	#
 	# Abhängigkeiten:
 	# - Das Verzeichnis, dessen Kartenkacheln gelöscht werden sollen, sollte bereits vorhanden sein.
 	# - Log-Funktion: Eine Funktion oder ein externes Tool zum Protokollieren von Informationen.
+	#
 	# Ausgabe:
 	# Die Funktion gibt Log-Meldungen aus, um den Status des Löschvorgangs anzuzeigen.
+	#
 	# Exit-Status:
 	# 0 - Die Kartenkacheln wurden erfolgreich gelöscht oder das Verzeichnis existiert nicht.
 	# 1 - Es gab Probleme beim Löschen der Kartenkacheln oder das Verzeichnis existiert nicht.
@@ -4876,18 +4907,24 @@ function menumapdel() {
 
 ##
 	#* Funktion: menulogdel
+	#
 	#? Beschreibung:
 	# Die Funktion `menulogdel` ermöglicht das Löschen von Log-Dateien aus einem OpenSimulator-Verzeichnis. Sie kann entweder im Dialog-Modus oder im Standard-Modus (ohne Dialog) ausgeführt werden. Im Dialog-Modus wird der Benutzer nach dem zu löschenden Verzeichnis gefragt, während im Standard-Modus das Verzeichnis als Parameter übergeben wird.
+	#
 	#? Parameter:
 	# $1 (Optional) - Das Verzeichnis, dessen Log-Dateien gelöscht werden sollen, wenn der Standard-Modus verwendet wird.
+	#
 	# Abhängigkeiten:
 	# - Das Verzeichnis, dessen Log-Dateien gelöscht werden sollen, sollte bereits vorhanden sein.
 	# - Log-Funktion: Eine Funktion oder ein externes Tool zum Protokollieren von Informationen.
+	#
 	# Ausgabe:
 	# Die Funktion gibt Log-Meldungen aus, um den Status des Löschvorgangs anzuzeigen.
+	#
 	# Exit-Status:
 	# 0 - Die Log-Dateien wurden erfolgreich gelöscht oder das Verzeichnis existiert nicht.
 	# 1 - Es gab Probleme beim Löschen der Log-Dateien oder das Verzeichnis existiert nicht.
+	#
 	#? Hinweise:
 	# - Die Funktion kann im Dialog-Modus oder im Standard-Modus verwendet werden, je nachdem, ob Dialog installiert ist.
 	# - Im Dialog-Modus wird der Benutzer nach dem zu löschenden Verzeichnis gefragt, während im Standard-Modus das Verzeichnis als Parameter übergeben wird.
@@ -4925,18 +4962,24 @@ function menulogdel() {
 
 ##
 	#* Funktion: assetcachedel
+	#
 	#? Beschreibung:
 	# Die Funktion `assetcachedel` ermöglicht das Löschen des "assetcache"-Verzeichnisses aus einem OpenSimulator-Verzeichnis. Das Verzeichnis wird anhand des übergebenen Parameters `VERZEICHNIS` gelöscht.
+	#
 	#? Parameter:
 	# $1 - Das Verzeichnis, dessen "assetcache"-Verzeichnis gelöscht werden soll.
+	#
 	# Abhängigkeiten:
 	# - Das Verzeichnis, dessen "assetcache"-Verzeichnis gelöscht werden soll, sollte bereits vorhanden sein.
 	# - Log-Funktion: Eine Funktion oder ein externes Tool zum Protokollieren von Informationen.
+	#
 	# Ausgabe:
 	# Die Funktion gibt Log-Meldungen aus, um den Status des Löschvorgangs anzuzeigen.
+	#
 	# Exit-Status:
 	# 0 - Das "assetcache"-Verzeichnis wurde erfolgreich gelöscht oder das Verzeichnis existiert nicht.
 	# 1 - Es gab Probleme beim Löschen des "assetcache"-Verzeichnisses oder das Verzeichnis existiert nicht.
+	#
 	#? Hinweise:
 	# - Die Funktion überprüft zuerst, ob das Verzeichnis existiert (`-d`-Test) und gibt entsprechende Log-Meldungen aus.
 	# - Wenn das Verzeichnis existiert, wird das "assetcache"-Verzeichnis rekursiv gelöscht (`rm -r /$STARTVERZEICHNIS/"$VERZEICHNIS"/bin/assetcache`).
@@ -4957,11 +5000,15 @@ function assetcachedel() {
 
 ##
 	#* Funktion: autoassetcachedel
+	#
 	# Diese Funktion löscht Assetcache-Verzeichnisse in den in der "VERZEICHNISSLISTE" definierten Verzeichnissen.
+	#
 	#? Parameter:
 	# Keine
+	#
 	#? Rückgabewert:
 	# Die Funktion gibt immer 0 zurück.
+	#
 	#? Beispiel:
 	# autoassetcachedel
 ##
@@ -4984,11 +5031,15 @@ function autoassetcachedel() {
 
 ##
 	#* Funktion: menugridstop
+	#
 	# Diese Funktion überprüft, ob bestimmte Screens mit den Namen "MO" oder "RO" aktiv sind und stoppt diese, wenn sie aktiv sind.
+	#
 	#? Parameter:
 	# Keine
+	#
 	#? Rückgabewert:
 	# Die Funktion gibt immer 0 zurück.
+	#
 	#? Beispiel:
 	# menugridstop
 ##
@@ -5006,11 +5057,15 @@ function menugridstop() {
 
 ##
 	#* Funktion: scstart
+	#
 	# Diese Funktion startet einen OpenSimulator in einem Screen mit dem angegebenen Namen und verwendet den entsprechenden Ausführungsmodus (Dotnet oder Mono) basierend auf der Konfiguration.
+	#
 	#? Parameter:
 	# $1 - Der Name des Screens, in dem der OpenSimulator gestartet werden soll.
+	#
 	#? Rückgabewert:
 	# Die Funktion gibt keinen expliziten Rückgabewert zurück, kann jedoch fehlschlagen und gibt in diesem Fall 1 zurück.
+	#
 	#? Beispiel:
 	# scstart "MeinOpenSim"
 ##
@@ -5031,11 +5086,15 @@ function scstart() {
 
 ##
 	#* Funktion: scstop
+	#
 	# Diese Funktion stoppt einen OpenSimulator in einem Screen mit dem angegebenen Namen, indem sie den Befehl "shutdown" an den Screen sendet.
+	#
 	#? Parameter:
 	# $1 - Der Name des Screens, in dem der OpenSimulator gestoppt werden soll.
+	#
 	#? Rückgabewert:
 	# Die Funktion gibt keinen expliziten Rückgabewert zurück.
+	#
 	#? Beispiel:
 	# scstop "MeinOpenSim"
 ##
@@ -5047,11 +5106,15 @@ function scstop() {
 
 ##
 	#* Funktion: sckill
+	#
 	# Diese Funktion beendet einen Screen mit dem angegebenen Namen.
+	#
 	#? Parameter:
 	# $1 - Der Name des Screens, der beendet werden soll.
+	#
 	#? Rückgabewert:
 	# Die Funktion gibt keinen expliziten Rückgabewert zurück.
+	#
 	#? Beispiel:
 	# sckill "MeinOpenSim"
 ##
@@ -5063,11 +5126,15 @@ function sckill() {
 
 ##
 	#* Funktion: simstats
+	#
 	# Diese Funktion zeigt die Statistiken eines OpenSimulator-Servers in einem Screen an.
+	#
 	#? Parameter:
 	# $1 - Der Name des Screens, in dem der OpenSimulator läuft.
+	#
 	#? Rückgabewert:
 	# Die Funktion gibt immer 0 zurück.
+	#
 	#? Beispiel:
 	# simstats "MeinOpenSim"
 ##
@@ -5090,11 +5157,15 @@ function simstats() {
 
 ##
 	#* Funktion: terminator
+	#
 	# Diese Funktion beendet alle aktiven Screen-Sitzungen und gibt Protokollmeldungen aus.
+	#
 	#? Parameter:
 	# Keine
+	#
 	#? Rückgabewert:
 	# Die Funktion gibt immer 0 zurück.
+	#
 	#? Beispiel:
 	# terminator
 ##
@@ -5109,11 +5180,15 @@ function terminator() {
 
 ##
 	#* Funktion: oscompi93
+	#
 	# Diese Funktion kompiliert OpenSimulator Version 0.9.3 von Git und führt einige spezifische Schritte im Kompilierungsprozess aus.
+	#
 	#? Parameter:
 	# Keine
+	#
 	#? Rückgabewert:
 	# Die Funktion gibt immer 0 zurück.
+	#
 	#? Beispiel:
 	# oscompi93
 ##
@@ -5133,13 +5208,18 @@ function oscompi93() {
 
 ##
 	#* Funktion: oscompi
+	#
 	# Diese Funktion führt die Kompilierung von OpenSimulator mit verschiedenen Konfigurationen und Optionen durch.
+	#
 	#? Parameter:
 	# Keine
+	#
 	#? Rückgabewert:
 	# Die Funktion gibt 0 zurück, wenn die Kompilierung erfolgreich war, andernfalls gibt sie 1 zurück.
+	#
 	#? Beispiel:
 	# oscompi
+	#
 	# Diese Funktion führt verschiedene Kompilierungsaktionen aus, je nach den übergebenen Umgebungsvariablen und Parametern. 
 	# Sie umfasst das Auswählen der richtigen Konfiguration, das Kopieren von Dateien, das Ausführen von Prebuild-Skripten, 
 	# das Kompilieren von OpenSimulator und das Aktivieren oder Deaktivieren von AOT (Ahead-of-Time) Kompilierungsoptionen. 
@@ -5275,11 +5355,15 @@ function oscompi() {
 
 ##
 	#* Funktion: opensimgitcopy93
+	#
 	# Diese Funktion kopiert OpenSimulator-Dateien aus einem Git-Repository in das angegebene Verzeichnis, wenn $MONEYCOPY auf "yes" gesetzt ist.
+	#
 	#? Parameter:
 	# Keine
+	#
 	#? Rückgabewert:
 	# Die Funktion gibt immer 0 zurück.
+	#
 	#? Beispiel:
 	# opensimgitcopy93
 ##
@@ -5298,12 +5382,16 @@ function opensimgitcopy93() {
 
 ##
 	#* Funktion: moneygitcopy93
+	#
 	# Diese Funktion kopiert den MoneyServer und die Skripte aus einem Git-Repository in das angegebene Verzeichnis,
 	# wenn $MONEYCOPY auf "yes" gesetzt ist.
+	#
 	#? Parameter:
 	# Keine
+	#
 	#? Rückgabewert:
 	# Die Funktion gibt immer 0 zurück.
+	#
 	#? Beispiel:
 	# moneygitcopy93
 ##
@@ -5322,12 +5410,16 @@ function moneygitcopy93() {
 
 ##
 	#* Funktion: moneygitcopy
+	#
 	# Diese Funktion kopiert den MoneyServer und die Skripte aus einem Git-Repository in das angegebene Verzeichnis,
 	# wenn $MONEYCOPY auf "yes" gesetzt ist.
+	#
 	#? Parameter:
 	# Keine
+	#
 	#? Rückgabewert:
 	# Die Funktion gibt immer 0 zurück.
+	#
 	#? Beispiel:
 	# moneygitcopy
 ##
@@ -5346,12 +5438,16 @@ function moneygitcopy() {
 
 ##
 	#* Funktion: divagitcopy
+	#
 	# Diese Funktion kopiert DIVA und die zugehörigen Skripte aus einem Git-Repository in das angegebene Verzeichnis,
 	# wenn $DIVACOPY auf "yes" gesetzt ist.
+	#
 	#? Parameter:
 	# Keine
+	#
 	#? Rückgabewert:
 	# Die Funktion gibt immer 0 zurück.
+	#
 	#? Beispiel:
 	# divagitcopy
 ##
@@ -5369,11 +5465,15 @@ function divagitcopy() {
 }
 ##
 	#* Funktion: divacopy
+	#
 	# Diese Funktion kopiert DIVA-Dateien und Add-On-Module in das OpenSimulator-Verzeichnis, wenn $DIVACOPY auf "yes" gesetzt ist.
+	#
 	#? Parameter:
 	# Keine
+	#
 	#? Rückgabewert:
 	# Die Funktion gibt immer 0 zurück.
+	#
 	#? Beispiel:
 	# divacopy
 ##
@@ -5401,12 +5501,16 @@ function divacopy() {
 
 ##
 	#* Funktion: scriptgitcopy
+	#
 	# Diese Funktion kopiert Skript-Assets aus einem Git-Repository in das angegebene Verzeichnis,
 	# wenn $SCRIPTCOPY auf "yes" gesetzt ist.
+	#
 	#? Parameter:
 	# Keine
+	#
 	#? Rückgabewert:
 	# Die Funktion gibt immer 0 zurück.
+	#
 	#? Beispiel:
 	# scriptgitcopy
 ##
@@ -5424,12 +5528,16 @@ function scriptgitcopy() {
 
 ##
 	#* Funktion: scriptcopy
+	#
 	# Diese Funktion kopiert Skript-Assets in das OpenSimulator-Verzeichnis,
 	# wenn $SCRIPTCOPY auf "yes" gesetzt ist.
+	#
 	#? Parameter:
 	# Keine
+	#
 	#? Rückgabewert:
 	# Die Funktion gibt immer 0 zurück.
+	#
 	#? Beispiel:
 	# scriptcopy
 ##
@@ -5458,12 +5566,16 @@ function scriptcopy() {
 
 ##
 	#* Funktion: moneycopy93
+	#
 	# Diese Funktion kopiert den MoneyServer (Währungsserver) und die Add-On-Module in das OpenSimulator-Verzeichnis,
 	# wenn $MONEYCOPY auf "yes" gesetzt ist.
+	#
 	#? Parameter:
 	# Keine
+	#
 	#? Rückgabewert:
 	# Die Funktion gibt immer 0 zurück.
+	#
 	#? Beispiel:
 	# moneycopy93
 ##
@@ -5492,12 +5604,16 @@ function moneycopy93() {
 
 ##
 	#* Funktion: moneycopy
+	#
 	# Diese Funktion kopiert den MoneyServer (Währungsserver) und die Add-On-Module in das OpenSimulator-Verzeichnis,
 	# wenn $MONEYCOPY auf "yes" gesetzt ist.
+	#
 	#? Parameter:
 	# Keine
+	#
 	#? Rückgabewert:
 	# Die Funktion gibt immer 0 zurück.
+	#
 	#? Beispiel:
 	# moneycopy
 ##
@@ -5525,12 +5641,16 @@ function moneycopy() {
 
 ##
 	#* Funktion: mutelistcopy
+	#
 	# Diese Funktion kopiert die Mute List (Stummschaltungsliste) und Add-On-Module in das OpenSimulator-Verzeichnis,
 	# wenn $MUTELISTCOPY auf "yes" gesetzt ist.
+	#
 	#? Parameter:
 	# Keine
+	#
 	#? Rückgabewert:
 	# Die Funktion gibt immer 0 zurück.
+	#
 	#? Beispiel:
 	# mutelistcopy
 ##
@@ -5558,12 +5678,16 @@ function mutelistcopy() {
 
 ##
 	#* Funktion: searchcopy
+	#
 	# Diese Funktion kopiert den OpenSimSearch-Server und die Add-On-Module in das OpenSimulator-Verzeichnis,
 	# wenn $OSSEARCHCOPY auf "yes" gesetzt ist.
+	#
 	#? Parameter:
 	# Keine
+	#
 	#? Rückgabewert:
 	# Die Funktion gibt immer 0 zurück.
+	#
 	#? Beispiel:
 	# searchcopy
 ##
@@ -5591,11 +5715,15 @@ function searchcopy() {
 
 ##
 	#* Funktion: makeaot
+	#
 	# Diese Funktion führt Ahead-of-Time (AOT)-Kompilierung für bestimmte DLL-Dateien und ausführbare Dateien in einem Verzeichnis durch.
+	#
 	#? Parameter:
 	# Keine
+	#
 	#? Rückgabewert:
 	# Die Funktion gibt immer 0 zurück.
+	#
 	#? Beispiel:
 	# makeaot
 ##
@@ -5625,11 +5753,15 @@ function makeaot() {
 
 ##
 	#* Funktion: cleanaot
+	#
 	# Diese Funktion entfernt die zuvor erstellten AOT-Kompilierungsdateien (".so"-Dateien) für bestimmte DLLs und ausführbare Dateien in einem Verzeichnis.
+	#
 	#? Parameter:
 	# Keine
+	#
 	#? Rückgabewert:
 	# Die Funktion gibt immer 0 zurück.
+	#
 	#? Beispiel:
 	# cleanaot
 ##
@@ -5661,11 +5793,15 @@ function cleanaot() {
 
 ##
 	#* Funktion: setversion
+	#
 	# Diese Funktion ändert die Version von OpenSim und stellt das Release auf die angegebene Nummer ein.
+	#
 	#? Parameter:
 	# $1 (NUMMER): Die gewünschte Versionsnummer, auf die das Release eingestellt werden soll.
+	#
 	#? Rückgabewert:
 	# Die Funktion gibt immer 0 zurück.
+	#
 	#? Beispiel:
 	# setversion 1.0.0
 ##
@@ -5685,11 +5821,15 @@ function setversion() {
 
 ##
 	#* Funktion: versionsausgabe93
+	#
 	# Diese Funktion gibt Informationen zur Version und zum Git-Status eines OpenSimulator-Repositorys aus.
+	#
 	#? Parameter:
 	# Keine
+	#
 	#? Rückgabewert:
 	# Die Funktion gibt die Informationen zur Version und zum Git-Status aus, gibt aber keinen expliziten Rückgabewert zurück.
+	#
 	#? Beispiel:
 	# versionsausgabe93
 ##
@@ -5702,15 +5842,19 @@ function versionsausgabe93() {
 
 ##
 	#* Funktion: setversion93
+	#
 	# Diese Funktion ändert die Versionsnummer in der Datei "VersionInfo.cs" im OpenSimulator-Repository.
+	#
 	#? Parameter:
 	# $1 (NUMMER): Die gewünschte Versionsnummer oder eine spezielle Kennzeichnung, um die Versionsnummer festzulegen.
 	#               - Wenn NUMMER "d" ist, wird das aktuelle Datum (TTMMJJJJ) als Versionsnummer verwendet.
 	#               - Wenn NUMMER "p" ist, wird das aktuelle Datum mit Punkten (TT.MM.JJJJ) als Versionsnummer verwendet.
 	#               - Wenn NUMMER "z" ist, wird die Versionsnummer aus Git verwendet.
 	#               - Andernfalls wird NUMMER als feste Versionsnummer verwendet.
+	#
 	#? Rückgabewert:
 	# Die Funktion gibt immer 0 zurück.
+	#
 	#? Beispiel:
 	# setversion93 1.0.0
 	# setversion93 d
@@ -5760,11 +5904,15 @@ function setversion93() {
 
 ##
 	#* Funktion: osstruktur
+	#
 	# Diese Funktion erstellt Verzeichnisstrukturen für OpenSimulator-Simulationen basierend auf den übergebenen Parametern.
+	#
 	#? Parameter:
 	#   $1: Startnummer (z.B., sim1)
 	#   $2: Endnummer (z.B., sim10)
+	#
 	#? Rückgabewert: Die Funktion gibt immer 0 zurück.
+	#
 	#? Beispiel: osstruktur 1 10
 	# Diese Funktion ermöglicht es Ihnen, Verzeichnisstrukturen für OpenSimulator-Simulationen zu erstellen, 
 	# indem Sie die Start- und Endnummer der Simulationen übergeben. 
@@ -5792,10 +5940,15 @@ function osstruktur() {
 
 ##
 	#* Funktion: menuosstruktur
+	#
 	# Diese Funktion erstellt Verzeichnisstrukturen für OpenSimulator-Simulationen basierend auf Benutzereingaben.
+	#
 	#? Parameter: Keine
+	#
 	#? Rückgabewert: Die Funktion gibt immer 0 zurück.
+	#
 	#? Beispiel: menuosstruktur
+	#
 	# Diese Funktion ermöglicht es dem Benutzer, Verzeichnisstrukturen für OpenSimulator-Simulationen zu erstellen, 
 	# indem er den Bereich von sim1 bis simN eingibt. 
 	# Beachten Sie, dass Sie Dialog auf dem System installiert haben müssen, um die Dialog-Funktion verwenden zu können. 
@@ -5849,14 +6002,18 @@ function menuosstruktur() {
 
 ##
 	#* osdelete
+	#
 	# Diese Funktion überprüft zunächst, ob das angegebene Verzeichnis vorhanden ist.
 	# Wenn es existiert, wird es gelöscht und das alte Verzeichnis wird umbenannt, um es zu sichern.
 	# Wenn das Verzeichnis nicht existiert, wird ein Fehler protokolliert.
+	#
 	#? Parameter:
 	#   - Keine
+	#
 	#? Rückgabewert:
 	#   - 0: Erfolgreiche Ausführung der Funktion
 	#   - 1: Fehler beim Löschen des Verzeichnisses oder beim Umbenennen des alten Verzeichnisses
+	#
 	#? Verwendungsbeispiel:
 	#   osdelete
 ##
@@ -5878,14 +6035,18 @@ function osdelete() {
 
 ##
 	#* oscopyrobust
+	#
 	# Diese Funktion wechselt in das Hauptverzeichnis ($STARTVERZEICHNIS) und überprüft, ob das
 	# Robust-Verzeichnis ($ROBUSTVERZEICHNIS) vorhanden ist. Wenn es existiert, wird der Inhalt des
 	# OpenSim-Verzeichnisses ($OPENSIMVERZEICHNIS/bin) in das Robust-Verzeichnis kopiert.
+	#
 	#? Parameter:
 	#   - Keine
+	#
 	#? Rückgabewert:
 	#   - 0: Erfolgreiche Ausführung der Funktion
 	#   - 1: Fehler beim Wechseln des Verzeichnisses, beim Überprüfen des Robust-Verzeichnisses oder beim Kopieren der Dateien
+	#
 	#? Verwendungsbeispiel:
 	#   oscopyrobust
 ##
@@ -5908,16 +6069,20 @@ function oscopyrobust() {
 
 ##
 	#* oscopysim
+	#
 	# Diese Funktion wechselt in das Hauptverzeichnis ($STARTVERZEICHNIS) und ruft die Funktion
 	# `makeverzeichnisliste` auf, um eine Liste von Verzeichnissen zu erstellen, in die die
 	# OpenSimulator-Instanzen kopiert werden sollen. Anschließend wird in einer Schleife durch die
 	# Verzeichnisliste iteriert und für jede Instanz das OpenSim-Verzeichnis ($OPENSIMVERZEICHNIS/bin)
 	# in das entsprechende Zielverzeichnis kopiert.
+	#
 	#? Parameter:
 	#   - Keine
+	#
 	#? Rückgabewert:
 	#   - 0: Erfolgreiche Ausführung der Funktion
 	#   - 1: Fehler beim Wechseln des Verzeichnisses, beim Erstellen der Verzeichnisliste oder beim Kopieren der Dateien
+	#
 	#? Verwendungsbeispiel:
 	#   oscopysim
 ##
@@ -5939,14 +6104,18 @@ function oscopysim() {
 
 ##
 	#* oscopy
+	#
 	# Diese Funktion nimmt den Namen eines OpenSimulator-Verzeichnisses als Argument ($VERZEICHNIS)
 	# entgegen. Sie wechselt in das Hauptverzeichnis ($STARTVERZEICHNIS) und kopiert den Inhalt des
 	# OpenSim-Verzeichnisses ($OPENSIMVERZEICHNIS/bin) in das angegebene Zielverzeichnis ($VERZEICHNIS).
+	#
 	#? Parameter:
 	#   - $1: Der Name des OpenSimulator-Verzeichnisses, das kopiert werden soll.
+	#
 	#? Rückgabewert:
 	#   - 0: Erfolgreiche Ausführung der Funktion
 	#   - 1: Fehler beim Wechseln des Verzeichnisses, beim Überprüfen des Verzeichnisses oder beim Kopieren der Dateien
+	#
 	#? Verwendungsbeispiel:
 	#   oscopy "MeinOpenSimVerzeichnis"
 ##
@@ -5962,13 +6131,17 @@ function oscopy() {
 
 ##
 	#* configlesen
+	#
 	# Diese Funktion nimmt den Namen eines Verzeichnisses als Argument ($CONFIGLESENSCREEN) entgegen und
 	# liest die Regionskonfigurationen aus den INI-Dateien in diesem Verzeichnis. Die gelesenen
 	# Konfigurationen werden in der Variable $KONFIGLESEN gespeichert und protokolliert.
+	#
 	#? Parameter:
 	#   - $1: Der Name des Verzeichnisses, aus dem die Regionskonfigurationen gelesen werden sollen.
+	#
 	#? Rückgabewert:
 	#   - 0: Erfolgreiche Ausführung der Funktion
+	#
 	#? Verwendungsbeispiel:
 	#   configlesen "MeinRegionsVerzeichnis"
 ##
@@ -5983,16 +6156,20 @@ function configlesen() {
 
 ##
 	#* ini_get
+	#
 	# Diese Funktion nimmt drei Argumente entgegen: den Dateinamen der INI-Datei ($KONFIGDATEI), den Namen der Sektion ($SECTION)
 	# und den Namen des Schlüssels ($KEY), dessen Wert gelesen werden soll. Die Funktion durchsucht die INI-Datei nach der
 	# angegebenen Sektion und dem Schlüssel und gibt den entsprechenden Wert zurück.
+	#
 	#? Parameter:
 	#   - $1: Der Dateiname der INI-Datei.
 	#   - $2: Der Name der Sektion, aus der der Wert gelesen werden soll.
 	#   - $3: Der Name des Schlüssels, dessen Wert gelesen werden soll.
+	#
 	#? Rückgabewert:
 	#   - Der Wert des angegebenen Schlüssels in der INI-Datei.
 	#   - Wenn die Sektion oder der Schlüssel nicht gefunden werden, wird nichts zurückgegeben.
+	#
 	#? Verwendungsbeispiel:
 	#   ini_get "meine.ini" "Sektion1" "Schluessel1"
 ##
@@ -6014,16 +6191,20 @@ function ini_get() {
 
 ##
 	#* ini_set
+	#
 	# Diese Funktion nimmt vier Argumente entgegen: den Dateinamen der INI-Datei ($KONFIGDATEI), den Namen der Sektion ($SECTION),
 	# den Namen des Schlüssels ($KEY) und den Wert ($WERT), der in der INI-Datei gespeichert werden soll. Die Funktion sucht
 	# nach der angegebenen Sektion und dem Schlüssel in der INI-Datei und setzt den Wert entsprechend.
+	#
 	#? Parameter:
 	#   - $1: Der Dateiname der INI-Datei.
 	#   - $2: Der Name der Sektion, in der der Wert gespeichert werden soll.
 	#   - $3: Der Name des Schlüssels, dessen Wert gespeichert werden soll.
 	#   - $4: Der Wert, der in der INI-Datei gespeichert werden soll.
+	#
 	#? Rückgabewert:
 	#   - 0: Erfolgreiche Ausführung der Funktion
+	#
 	#? Verwendungsbeispiel:
 	#   ini_set "meine.ini" "Sektion1" "Schluessel1" "Wert1"
 ##
@@ -6049,15 +6230,19 @@ function ini_set() {
 
 ##
 	#* regionsconfigdateiliste
+	#
 	# Diese Funktion nimmt zwei Argumente entgegen: den Namen des Verzeichnisses ($VERZEICHNIS), in dem nach
 	# Regionskonfigurationsdateien gesucht werden soll, und optional eine Option ($2) zum Steuern des Ausgabeverhaltens.
 	# Wenn die Option "-d" übergeben wird, werden die Dateinamen in eine Datei namens "RegionsDateiliste.txt" geschrieben.
 	# Andernfalls werden die Dateinamen auf der Standardausgabe ausgegeben.
+	#
 	#? Parameter:
 	#   - $1: Der Name des Verzeichnisses, in dem nach Regionskonfigurationsdateien gesucht werden soll.
 	#   - $2 (optional): Eine Option zur Steuerung des Ausgabeverhaltens. Wenn "-d" übergeben wird, werden die Dateinamen in eine Datei geschrieben.
+	#
 	#? Rückgabewert:
 	#   - 0: Erfolgreiche Ausführung der Funktion
+	#
 	#? Verwendungsbeispiel:
 	#   regionsconfigdateiliste "MeinRegionsVerzeichnis" [-d]
 ##
@@ -6076,12 +6261,16 @@ function regionsconfigdateiliste() {
 
 ##	
 	# meineregionen
+	#
 	# Diese Funktion ruft zuerst die Funktion `makeverzeichnisliste` auf, um eine Liste von Verzeichnissen zu erstellen,
 	# und gibt dann die Regionsnamen aus den Regionskonfigurationsdateien in jedem Verzeichnis aus. Die Ausgabe wird protokolliert.
+	#
 	#? Parameter:
 	#   - Keine
+	#
 	#? Rückgabewert:
 	#   - 0: Erfolgreiche Ausführung der Funktion
+	#
 	#? Verwendungsbeispiel:
 	#   meineregionen
 ##
@@ -6102,13 +6291,17 @@ function meineregionen() {
 
 ##
 	#* regionsinisuchen
+	#
 	# Diese Funktion ruft zuerst die Funktion `makeverzeichnisliste` auf, um eine Liste von Verzeichnissen zu erstellen,
 	# und sucht dann nach der Datei "Regions.ini" in jedem Verzeichnis. Die gefundenen Dateien werden analysiert, und die
 	# Namen der darin enthaltenen Regionskonfigurationen werden ausgegeben.
+	#
 	#? Parameter:
 	#   - Keine
+	#
 	#? Rückgabewert:
 	#   - 0: Erfolgreiche Ausführung der Funktion
+	#
 	#? Verwendungsbeispiel:
 	#   regionsinisuchen
 ##
@@ -6132,13 +6325,17 @@ function regionsinisuchen() {
 
 ##
 	#* get_regionsarray
+	#
 	# Diese Funktion nimmt den Dateinamen einer INI-Datei ($DATEI) entgegen und extrahiert die Regionsnamen
 	# aus den Sektionsüberschriften in der Datei. Die extrahierten Regionsnamen werden in einem Array gespeichert
 	# und als Ergebnis zurückgegeben.
+	#
 	#? Parameter:
 	#   - $1: Der Dateiname der INI-Datei, aus der die Regionsnamen extrahiert werden sollen.
+	#
 	#? Rückgabewert:
 	#   - Ein Array, das die extrahierten Regionsnamen enthält.
+	#
 	#? Verwendungsbeispiel:
 	#   regionsarray=($(get_regionsarray "MeineRegions.ini"))
 ##
@@ -6162,15 +6359,19 @@ function get_regionsarray() {
 
 ##
 	#* get_value_from_Region_key
+	#
 	# Diese Funktion nimmt drei Argumente entgegen: den Dateinamen der INI-Datei ($RKDATEI), den Namen der Sektion ($RKSCHLUESSEL)
 	# und den Namen des Schlüssels ($RKSEKTION), dessen Wert extrahiert werden soll. Die Funktion sucht nach der angegebenen
 	# Sektion und dem Schlüssel in der INI-Datei und gibt den entsprechenden Wert zurück.
+	#
 	#? Parameter:
 	#   - $1: Der Dateiname der INI-Datei.
 	#   - $2: Der Name der Sektion, in der der Wert gefunden werden soll.
 	#   - $3: Der Name des Schlüssels, dessen Wert gefunden werden soll.
+	#
 	#? Rückgabewert:
 	#   - Der extrahierte Wert aus der INI-Datei.
+	#
 	#? Verwendungsbeispiel:
 	#   wert=$(get_value_from_Region_key "meine.ini" "Sektion1" "Schluessel1")
 ##
@@ -6186,16 +6387,20 @@ function get_value_from_Region_key() {
 
 ##
 	#* regionsiniteilen
+	#
 	# Diese Funktion nimmt drei Argumente entgegen: das Verzeichnis, aus dem die Werte gelesen werden sollen ($INIVERZEICHNIS),
 	# den Namen der Region, für die die Werte gespeichert werden sollen ($RTREGIONSNAME), und den Pfad zur Haupt-Regions.ini-Datei
 	# ($INI_FILE). Die Funktion überprüft, ob die Haupt-Regions.ini-Datei vorhanden ist, und wenn nicht, werden die Werte für die
 	# angegebene Region in eine separate INI-Datei geschrieben.
+	#
 	#? Parameter:
 	#   - $1: Das Verzeichnis, aus dem die Werte gelesen werden sollen.
 	#   - $2: Der Name der Region, für die die Werte gespeichert werden sollen.
 	#   - $3: Der Pfad zur Haupt-Regions.ini-Datei.
+	#
 	#? Rückgabewert:
 	#   - 0: Erfolgreiche Ausführung der Funktion
+	#
 	#? Verwendungsbeispiel:
 	#   regionsiniteilen "MeinVerzeichnis" "MeineRegion" "/MeinVerzeichnis/bin/Regions/Regions.ini"
 ##
@@ -6244,14 +6449,18 @@ function regionsiniteilen() {
 
 ##
 	#* autoregionsiniteilen
+	#
 	# Diese Funktion ruft zuerst die Funktion `makeverzeichnisliste` auf, um eine Liste von Verzeichnissen zu erstellen,
 	# und iteriert dann über jedes Verzeichnis in der Liste. Für jedes Verzeichnis wird die Regions.ini-Datei in mehrere
 	# separate INI-Dateien aufgeteilt, eine für jede Region, und die einzelnen Regionsdateien werden umbenannt. Falls die
 	# Regions.ini-Datei in einem Verzeichnis nicht vorhanden ist, wird sie nicht umbenannt.
+	#
 	#? Parameter:
 	#   - Keine
+	#
 	#? Rückgabewert:
 	#   - 0: Erfolgreiche Ausführung der Funktion
+	#
 	#? Verwendungsbeispiel:
 	#   autoregionsiniteilen
 ##
@@ -6285,13 +6494,17 @@ function autoregionsiniteilen() {
 
 ##
 	#* regionliste
+	#
 	# Diese Funktion erstellt eine Liste von Regionsnamen aus den INI-Dateien in den angegebenen Verzeichnissen und speichert
 	# sie in der Datei osmregionlist.ini. Zuvor wird die vorhandene osmregionlist.ini-Datei (falls vorhanden) gesichert und in
 	# osmregionlist.ini.old umbenannt.
+	#
 	#? Parameter:
 	#   - Keine
+	#
 	#? Rückgabewert:
 	#   - 0: Erfolgreiche Ausführung der Funktion
+	#
 	#? Verwendungsbeispiel:
 	#   regionliste
 ##  
@@ -6336,12 +6549,16 @@ function regionliste() {
 
 ##
 	#* makewebmaps
+	#
 	# Diese Funktion kopiert Maptiles aus dem angegebenen Verzeichnis in ein Webverzeichnis, damit sie über das Web verfügbar sind.
 	# Das Webverzeichnis wird zuerst erstellt, wenn es nicht bereits vorhanden ist. Die Maptiles werden dann kopiert.
+	#
 	#? Parameter:
 	#   - Keine
+	#
 	#? Rückgabewert:
 	#   - 0: Erfolgreiche Ausführung der Funktion
+	#
 	#? Verwendungsbeispiel:
 	#   makewebmaps
 ##
@@ -6358,12 +6575,16 @@ function makewebmaps() {
 
 ##
 	#* moneydelete
+	#
 	# Diese Funktion entfernt MoneyServer-Komponenten aus den OpenSimulator-Verzeichnissen und Robust-Verzeichnis, wenn es vorhanden ist.
 	# Die zu löschenden Dateien und Verzeichnisse werden spezifiziert.
+	#
 	#? Parameter:
 	#   - Keine
+	#
 	#? Rückgabewert:
 	#   - 0: Erfolgreiche Ausführung der Funktion
+	#
 	#? Verwendungsbeispiel:
 	#   moneydelete
 ##
@@ -6395,12 +6616,16 @@ function moneydelete() {
 
 ##
 	#* osgitholen
+	#
 	# Diese Funktion klont die Entwicklungsversion des OpenSimulator aus dem Git-Repository und speichert sie im angegebenen Verzeichnis.
 	# Wenn das Verzeichnis bereits vorhanden ist, wird es zuerst umbenannt, um es als Sicherung zu behalten.
+	#
 	#? Parameter:
 	#   - Keine
+	#
 	#? Rückgabewert:
 	#   - 0: Erfolgreiche Ausführung der Funktion
+	#
 	#? Verwendungsbeispiel:
 	#   osgitholen
 ##
@@ -6425,13 +6650,17 @@ function osgitholen() {
 
 ##
 	#* osgitholen93
+	#
 	# Diese Funktion klonet die Entwicklungsversion des OpenSimulator aus dem Git-Repository und speichert sie im angegebenen Verzeichnis.
 	# Wenn das Verzeichnis bereits vorhanden ist, wird es zuerst umbenannt, um es als Sicherung zu behalten. Dann wird die aktuelle Version
 	# aus dem Git-Repository geklont und aktualisiert.
+	#
 	#? Parameter:
 	#   - Keine
+	#
 	#? Rückgabewert:
 	#   - 0: Erfolgreiche Ausführung der Funktion
+	#
 	#? Verwendungsbeispiel:
 	#   osgitholen93
 ##
@@ -6456,13 +6685,17 @@ function osgitholen93() {
 
 ##
 	#* osbauen93
+	#
 	# Diese Funktion wechselt zum OpenSimulator-Verzeichnis, stellt sicher, dass der branch 'dotnet6' ausgewählt ist, führt die notwendigen 
 	# Vorverarbeitungsschritte aus, und baut das OpenSimulator-Projekt mit .NET Core. Das Ergebnis ist die Erstellung der OpenSimulator-
 	# Anwendung, die mit 'dotnet OpenSim.dll' gestartet werden kann.
+	#
 	#? Parameter:
 	#   - Keine
+	#
 	#? Rückgabewert:
 	#   - 0: Erfolgreiche Ausführung der Funktion
+	#
 	#? Verwendungsbeispiel:
 	#   osbauen93
 ##
@@ -6478,13 +6711,17 @@ function osbauen93() {
 
 ##
 	#* opensimholen
+	#
 	# Diese Funktion sichert zuerst die vorhandene OpenSimulator-Installation im Verzeichnis 'opensim1' (falls vorhanden) und lädt dann die 
 	# neue Version des OpenSimulator aus einem externen Quellen-Link herunter. Nach dem Herunterladen wird die neue Version entpackt und 
 	# im Verzeichnis 'opensim' abgelegt.
+	#
 	#? Parameter:
 	#   - Keine
+	#
 	#? Rückgabewert:
 	#   - 0: Erfolgreiche Ausführung der Funktion
+	#
 	#? Verwendungsbeispiel:
 	#   opensimholen
 ##
@@ -6519,12 +6756,16 @@ function opensimholen() {
 
 ##
 	#* install_mysqltuner
+	#
 	# Diese Funktion lädt das MySQLTuner-Skript und verwandte Dateien von ihren jeweiligen Quellen herunter und speichert sie im aktuellen 
 	# Verzeichnis. Anschließend wird die Funktion 'mySQLmenu' aufgerufen, um den MySQLTuner zu konfigurieren und auszuführen.
+	#
 	#? Parameter:
 	#   - Keine
+	#
 	#? Rückgabewert:
 	#   - 0: Erfolgreiche Ausführung der Funktion
+	#
 	#? Verwendungsbeispiel:
 	#   install_mysqltuner
 ##
@@ -6541,13 +6782,17 @@ function install_mysqltuner() {
 
 ##
 	#* regionbackup
+	#
 	# Diese Funktion erstellt ein Backup für eine OpenSimulator-Region, indem sie OAR- und Terrain-Daten sowie Konfigurationsdateien speichert.
 	# Die Region wird in den Offline-Modus versetzt, wenn sie nicht bereits offline ist, bevor das Backup erstellt wird.
+	#
 	#? Parameter:
 	#   1. BACKUPVERZEICHNISSCREENNAME: Der Name des Bildschirms (Screen) für das Backup.
 	#   2. REGIONSNAME: Der Name der Region, die gesichert werden soll.
+	#
 	#? Rückgabewert:
 	#   - 0: Erfolgreiche Ausführung der Funktion
+	#
 	#? Verwendungsbeispiel:
 	#   regionbackup "BackupScreen" "MyRegion"
 ##
@@ -6614,12 +6859,16 @@ function regionbackup() {
 
 ##
 	#* menuregionbackup
+	#
 	# Diese Funktion verwendet das Dialog-Tool zur Benutzereingabe, um den Bildschirmnamen und den Regionsnamen abzurufen und dann ein Backup der angegebenen Region zu erstellen.
 	# Das Backup enthält OAR- und Terrain-Daten sowie Konfigurationsdateien der Region.
+	#
 	#? Parameter:
 	#   Keine
+	#
 	#? Rückgabewert:
 	#   - 0: Erfolgreiche Ausführung der Funktion
+	#
 	#? Verwendungsbeispiel:
 	#   menuregionbackup
 ##
@@ -6684,12 +6933,16 @@ function menuregionbackup() {
 
 ##
 	#* regionrestore
+	#
 	# Diese Funktion stellt eine zuvor gesicherte OpenSimulator-Region aus einem OAR-Backup wieder her.
+	#
 	#? Parameter:
 	#   1. RESTOREVERZEICHNISSCREENNAME: Der Name des Bildschirms (Screen) für die Wiederherstellung.
 	#   2. REGIONSNAME: Der Name der Region, die wiederhergestellt werden soll.
+	#
 	#? Rückgabewert:
 	#   - 0: Erfolgreiche Ausführung der Funktion
+	#
 	#? Verwendungsbeispiel:
 	#   regionrestore "RestoreScreen" "MyRegion"
 ##
@@ -6714,10 +6967,14 @@ function regionrestore() {
 
 ##
 	#* menuregionrestore
+	#
 	# Diese Funktion verwendet das Dialog-Programm, um Benutzereingaben zu erhalten und die Wiederherstellung einer OpenSimulator-Region aus einem OAR-Backup durchzuführen.
+	#
 	#? Parameter: Keine
+	#
 	#? Rückgabewert:
 	#   - 0: Erfolgreiche Ausführung der Funktion
+	#
 	#? Verwendungsbeispiel:
 	#   menuregionrestore
 ##
@@ -6767,12 +7024,16 @@ function menuregionrestore() {
 
 ##
 	#* autosimstart
+	#
 	# Diese Funktion startet OpenSimulator-Regionen automatisch, sofern sie nicht bereits gestartet sind.
 	# Sie überprüft, ob bereits ein Bildschirm mit dem Namen 'sim' ausgeführt wird. Wenn nicht, wird jede Region aus der Verzeichnisliste gestartet.
 	# Die Funktion verwendet die in den Konfigurationsvariablen festgelegten Einstellungen, wie z. B. den Regionsanzeigemodus und den AOT-Modus.
+	#
 	#? Parameter: Keine
+	#
 	#? Rückgabewert:
 	#   - 0: Erfolgreiche Ausführung der Funktion
+	#
 	#? Verwendungsbeispiel:
 	#   autosimstart
 ##
@@ -6820,10 +7081,14 @@ function autosimstart() {
 
 ##
 	#* autosimstop
+	#
 	# Diese Funktion stoppt automatisch laufende OpenSimulator-Regionen. Sie überprüft, ob für jede Region ein Bildschirmprozess ausgeführt wird, und sendet das Befehl "shutdown" an jeden aktiven Bildschirm, um die Region zu beenden. Es gibt eine Wartezeit zwischen den Befehlen, um sicherzustellen, dass die Regionen ordnungsgemäß heruntergefahren werden können.
+	#
 	#? Parameter: Keine
+	#
 	#? Rückgabewert:
 	#   - Kein expliziter Rückgabewert
+	#
 	#? Verwendungsbeispiel:
 	#   autosimstop
 ##
@@ -6845,12 +7110,16 @@ function autosimstop() {
 
 ##
 	#* menuautosimstart
+	#
 	# Diese Funktion startet OpenSimulator-Regionen automatisch, basierend auf Benutzereingaben über ein Dialogfeld, wenn kein Simulator aktiv ist.
 	# Sie überprüft, ob bereits ein Bildschirm mit dem Namen 'sim' ausgeführt wird. Wenn nicht, wird ein Dialogfeld angezeigt, in dem der Benutzer die gewünschten Regionen auswählen kann.
 	# Dann werden die ausgewählten Regionen gestartet, unter Verwendung der in den Konfigurationsvariablen festgelegten Einstellungen, wie z. B. dem Regionsanzeigemodus und dem AOT-Modus.
+	#
 	#? Parameter: Keine
+	#
 	#? Rückgabewert:
 	#   - Kein expliziter Rückgabewert
+	#
 	#? Verwendungsbeispiel:
 	#   menuautosimstart
 ##
@@ -6900,10 +7169,14 @@ function menuautosimstart() {
 
 ##
 	#* menuautosimstop
+	#
 	# Diese Funktion stoppt automatisch laufende OpenSimulator-Regionen und zeigt einen Fortschrittsbalken während des Vorgangs an. Sie überprüft, ob für jede Region ein Bildschirmprozess ausgeführt wird, und sendet das Befehl "shutdown" an jeden aktiven Bildschirm, um die Region zu beenden. Es gibt eine Wartezeit zwischen den Befehlen, um sicherzustellen, dass die Regionen ordnungsgemäß heruntergefahren werden können. Während des Vorgangs wird ein Fortschrittsbalken angezeigt.
+	#
 	#? Parameter: Keine
+	#
 	#? Rückgabewert:
 	#   - Kein expliziter Rückgabewert
+	#
 	#? Verwendungsbeispiel:
 	#   menuautosimstop
 ##
@@ -6934,10 +7207,14 @@ function menuautosimstop() {
 
 ##
 	#* autologdel
+	#
 	# Diese Funktion löscht Log-Dateien für OpenSimulator-Regionen. Sie durchläuft alle Verzeichnisse in der Verzeichnisliste und löscht die Log-Dateien im Verzeichnis "/$STARTVERZEICHNIS/VERZEICHNISSLISTE/bin/". Wenn eine Log-Datei nicht vorhanden ist, wird eine Warnung protokolliert. Nach dem Löschen der Regionen-Log-Dateien wird die Funktion "rologdel()" aufgerufen, um Root-Log-Dateien zu löschen.
+	#
 	#? Parameter: Keine
+	#
 	#? Rückgabewert:
 	#   - Kein expliziter Rückgabewert
+	#
 	#? Verwendungsbeispiel:
 	#   autologdel
 ##
@@ -6959,10 +7236,14 @@ function autologdel() {
 
 ##
 	#* menuautologdel
+	#
 	# Diese Funktion löscht Log-Dateien für OpenSimulator-Regionen. Sie durchläuft alle Verzeichnisse in der Verzeichnisliste und löscht die Log-Dateien im Verzeichnis "/$STARTVERZEICHNIS/VERZEICHNISSLISTE/bin/". Nach dem Löschen der Regionen-Log-Dateien wird die Funktion "rologdel()" aufgerufen, um Root-Log-Dateien zu löschen.
+	#
 	#? Parameter: Keine
+	#
 	#? Rückgabewert:
 	#   - Kein expliziter Rückgabewert
+	#
 	#? Verwendungsbeispiel:
 	#   menuautologdel
 ##
@@ -6985,10 +7266,14 @@ function menuautologdel() {
 
 ##
 	#* automapdel
+	#
 	# Diese Funktion löscht Kartenkacheln (maptiles) für OpenSimulator-Regionen. Sie durchläuft alle Verzeichnisse in der Verzeichnisliste und löscht den Inhalt des Verzeichnisses "maptiles" im Verzeichnis "/$STARTVERZEICHNIS/VERZEICHNISSLISTE/bin/". Nach dem Löschen der Kartenkacheln für die Regionen wird die Funktion "autorobustmapdel()" aufgerufen, um auch die Kartenkacheln für die Robust-Instanz zu löschen.
+	#
 	#? Parameter: Keine
+	#
 	#? Rückgabewert:
 	#   - Kein expliziter Rückgabewert
+	#
 	#? Verwendungsbeispiel:
 	#   automapdel
 ##
@@ -7008,10 +7293,14 @@ function automapdel() {
 
 ##
 	#* autorobustmapdel
+	#
 	# Diese Funktion löscht die Kartenkacheln (maptiles) für die Robust-Instanz von OpenSimulator. Sie navigiert zum Verzeichnis der Robust-Instanz und löscht den Inhalt des Verzeichnisses "maptiles" im Verzeichnis "/$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/".
+	#
 	#? Parameter: Keine
+	#
 	#? Rückgabewert:
 	#   - Kein expliziter Rückgabewert
+	#
 	#? Verwendungsbeispiel:
 	#   autorobustmapdel
 ##
@@ -7025,11 +7314,15 @@ function autorobustmapdel() {
 
 ##
 	#* cleaninstall
+	#
 	# Diese Funktion löscht den Inhalt des Verzeichnisses /addon-modules/ im OpenSimulator-Verzeichnis,
 	# sofern dieses Verzeichnis existiert.
+	#
 	#? Parameter: Keine
+	#
 	#? Rückgabewert:
 	#   - Kein expliziter Rückgabewert
+	#
 	#? Verwendungsbeispiel:
 	#   cleaninstall
 ##
@@ -7046,11 +7339,15 @@ function cleaninstall() {
 
 ##
 	#* cleanprebuild
+	#
 	# Diese Funktion löscht bestimmte Dateien und Verzeichnisse im Verzeichnis /addon-modules/
 	# im OpenSimulator-Verzeichnis, sofern dieses Verzeichnis existiert.
+	#
 	#? Parameter: Keine
+	#
 	#? Rückgabewert:
 	#   - Kein expliziter Rückgabewert
+	#
 	#? Verwendungsbeispiel:
 	#   cleanprebuild
 ##
@@ -7073,11 +7370,15 @@ function cleanprebuild() {
 
 ##
 	#* allclean
+	#
 	# Diese Funktion löscht bestimmte Dateien mit den angegebenen Erweiterungen in einem angegebenen Verzeichnis.
+	#
 	#? Parameter:
 	#   $1: Das Verzeichnis, in dem die Dateien gelöscht werden sollen.
+	#
 	#? Rückgabewert:
 	#   - Kein expliziter Rückgabewert
+	#
 	#? Verwendungsbeispiel:
 	#   allclean "/pfad/zum/verzeichnis"
 ##
@@ -7107,12 +7408,16 @@ function allclean() {
 
 ##
 	#* getcachesinglegroesse
+	#
 	# Diese Funktion zeigt die Größe der Cache-Dateien (assetcache, maptiles, ScriptEngines, MeshCache, j2kDecodeCache)
 	# in einem angegebenen Verzeichnis an.
+	#
 	#? Parameter:
 	#   $1: Das Verzeichnis, in dem die Cache-Dateien angezeigt werden sollen.
+	#
 	#? Rückgabewert:
 	#   - Kein expliziter Rückgabewert
+	#
 	#? Verwendungsbeispiel:
 	#   getcachesinglegroesse "/pfad/zum/verzeichnis"
 ##
@@ -7136,12 +7441,16 @@ function getcachesinglegroesse() {
 
 ##
 	#* getcachegroesse
+	#
 	# Diese Funktion zeigt die Größe der Cache-Dateien (assetcache, maptiles, ScriptEngines, MeshCache, j2kDecodeCache)
 	# in allen Simulatoren und im Robust Server-Verzeichnis an.
+	#
 	#? Parameter:
 	#   Keine Parameter erforderlich.
+	#
 	#? Rückgabewert:
 	#   - Kein expliziter Rückgabewert
+	#
 	#? Verwendungsbeispiel:
 	#   getcachegroesse
 ##
@@ -7172,11 +7481,15 @@ function getcachegroesse() {
 
 ##
 	#* tastaturcachedelete
+	#
 	# Diese Funktion löscht die lokale Befehlshistorie in der aktuellen Shell-Sitzung, wodurch alle zuvor eingegebenen Befehle gelöscht werden.
+	#
 	#? Parameter:
 	#   Keine Parameter erforderlich.
+	#
 	#? Rückgabewert:
 	#   - Kein expliziter Rückgabewert
+	#
 	#? Verwendungsbeispiel:
 	#   tastaturcachedelete
 ##
@@ -7187,11 +7500,15 @@ function tastaturcachedelete() {
 
 ##
 	#* gridcachedelete
+	#
 	# Diese Funktion löscht bestimmte Cache-Verzeichnisse aus dem Grid, basierend auf den festgelegten Konfigurationen.
+	#
 	#? Parameter:
 	#   Keine Parameter erforderlich.
+	#
 	#? Rückgabewert:
 	#   - Kein expliziter Rückgabewert
+	#
 	#? Verwendungsbeispiel:
 	#   gridcachedelete
 ##
@@ -7313,11 +7630,15 @@ function autoallclean() {
 
 ##
 	#* autoregionbackup
+	#
 	# Diese Funktion durchläuft die Regionen in Ihrem OpenSimulator-Grid und erstellt automatische Backups.
+	#
 	#? Parameter:
 	#   Keine Parameter erforderlich.
+	#
 	#? Rückgabewert:
 	#   - Kein expliziter Rückgabewert
+	#
 	#? Verwendungsbeispiel:
 	#   autoregionbackup
 	# todo: Uebergabe Parameter Fehler. Bug Modus mit extra ausgaben. Ist keine osmregionlist.ini vorhanden muss sie erstellt werden.
@@ -7353,11 +7674,15 @@ function autoregionbackup() {
 
 ##
 	#* autoscreenstop
+	#
 	# Diese Funktion stoppt die Screens für Simulatoren, Money Server und Robust Server, wenn sie ausgeführt werden.
+	#
 	#? Parameter:
 	#   Keine Parameter erforderlich.
+	#
 	#? Rückgabewert:
 	#   - Kein expliziter Rückgabewert
+	#
 	#? Verwendungsbeispiel:
 	#   autoscreenstop
 ##
@@ -7391,11 +7716,15 @@ function autoscreenstop() {
 
 ##
 	#* menuautoscreenstop
+	#
 	# Diese Funktion zeigt ein Menü an, das es dem Benutzer ermöglicht, Screens für Simulatoren, Money Server und Robust Server zu stoppen.
+	#
 	#? Parameter:
 	#   Keine Parameter erforderlich.
+	#
 	#? Rückgabewert:
 	#   - Kein expliziter Rückgabewert
+	#
 	#? Verwendungsbeispiel:
 	#   menuautoscreenstop
 ##
@@ -7429,11 +7758,15 @@ function menuautoscreenstop() {
 
 ##
 	#* autostart
+	#
 	# Diese Funktion startet das Grid, indem sie zuerst den Robust Server und dann die Simulatoren startet.
+	#
 	#? Parameter:
 	#   Keine Parameter erforderlich.
+	#
 	#? Rückgabewert:
 	#   - Kein expliziter Rückgabewert
+	#
 	#? Verwendungsbeispiel:
 	#   autostart
 ##
@@ -7454,11 +7787,15 @@ function autostart() {
 
 ##
 	# gridstop
+	#
 	# This function stops the Money Server (MO) and the Robust Server (RO) if they are running.
+	#
 	# Parameters:
 	#   None
+	#
 	# Return:
 	#   - No explicit return value
+	#
 	# Example usage:
 	#   gridstop
 ##  
@@ -7476,13 +7813,17 @@ function gridstop() {
 
 ##
 	# autostop
+	#
 	# This function attempts to gracefully stop the OpenSimulator regions (SIMs), the Robust Server (RO),
 	# and any other related components. It first tries to stop the SIMs and the RO, and if they don't stop
 	# within a specified time (AUTOSTOPZEIT), it forcibly stops them.
+	#
 	# Parameters:
 	#   None
+	#
 	# Return:
 	#   - No explicit return value
+	#
 	# Example usage:
 	#   autostop
 ##
@@ -7519,12 +7860,16 @@ function autostop() {
 
 ##
 	# menuautostart
+	#
 	# This function provides a menu for starting components of the OpenSimulator grid,
 	# including the Robust Server (if configured) and the SIMs (regions).
+	#
 	# Parameters:
 	#   None
+	#
 	# Return:
 	#   - No explicit return value
+	#
 	# Example usage:
 	#   menuautostart
 ##
@@ -7543,9 +7888,13 @@ function menuautostart() {
 
 ##
 	#* Funktion: menuautostop
+	#
 	# Diese Funktion wird aufgerufen, um das Grid zu stoppen.
+	#
 	#? Parameter: Keine
+	#
 	#? Rückgabewert: Keiner
+	#
 	# Funktionsweise:
 	# 1. Loggt eine Warnmeldung, um den Beginn des Stoppprozesses anzukündigen.
 	# 2. Überprüft, ob Screens mit dem Namen 'sim' laufen. Wenn ja, ruft die Funktion 'menuautosimstop' auf, um sie zu beenden.
@@ -7553,9 +7902,11 @@ function menuautostart() {
 	# 4. Überprüft erneut, ob Screens mit dem Namen 'sim' laufen. Wenn ja, wartet für die angegebene Zeit (AUTOSTOPZEIT) und beendet dann alle Screens.
 	# 5. Ruft die Funktion 'menuautoscreenstop' auf, um weitere Screens zu beenden.
 	# 6. Ruft die Funktion 'hauptmenu' auf, um zum Hauptmenü zurückzukehren.
+	#
 	#? Hinweise:
 	# - Diese Funktion geht davon aus, dass die Funktionen 'menuautosimstop', 'menugridstop', 'menuautoscreenstop' und 'hauptmenu' in Ihrem Code definiert sind.
 	# - Die Verwendung von log-Meldungen dient der Protokollierung und ermöglicht es, den Fortschritt des Stoppprozesses nachzuvollziehen.
+	#
 	#? Beispielaufruf:
 	# menuautostop
 ##
@@ -7574,9 +7925,13 @@ function menuautostop() {
 
 ##
 	#* Funktion: autorestart
+	#
 	# Diese Funktion führt einen automatischen Neustart des Systems durch.
+	#
 	#? Parameter: Keine
+	#
 	#? Rückgabewert: Gibt immer den Wert 0 zurück.
+	#
 	# Funktionsweise:
 	# 1. Protokolliert eine Nachricht, um den Beginn des automatischen Neustarts anzukündigen.
 	# 2. Ruft die Funktion 'autostop' auf, um alle aktiven Prozesse zu stoppen.
@@ -7587,8 +7942,10 @@ function menuautostop() {
 	# 7. Ruft 'screenlistrestart' auf, um die Screenliste neu zu starten.
 	# 8. Protokolliert eine Nachricht, um den erfolgreichen Abschluss des automatischen Neustarts anzuzeigen.
 	# 9. Gibt den Wert 0 zurück, um den erfolgreichen Abschluss anzuzeigen.
+	#
 	#? Hinweise:
 	# - Diese Funktion geht davon aus, dass die in den Kommentaren erwähnten Funktionen ('autostop', 'autologdel', 'deleteregionfromdatabase', 'gridstart', 'autosimstart' und 'screenlistrestart') in Ihrem Code definiert sind.
+	#
 	#? Beispielaufruf:
 	# autorestart
 ##
@@ -7610,9 +7967,13 @@ function autorestart() {
 
 ##
 	#* Funktion: menuautorestart
+	#
 	# Diese Funktion führt einen automatischen Neustart des Systems aus dem Menü heraus durch.
+	#
 	#? Parameter: Keine
+	#
 	#? Rückgabewert: Keiner
+	#
 	# Funktionsweise:
 	# 1. Protokolliert eine Nachricht, um den Beginn des automatischen Neustarts anzukündigen.
 	# 2. Ruft die Funktion 'autostop' auf, um alle aktiven Prozesse zu stoppen.
@@ -7622,8 +7983,10 @@ function autorestart() {
 	# 6. Ruft 'autosimstart' auf, um Simulationen automatisch neu zu starten.
 	# 7. Ruft 'screenlistrestart' auf, um die Screenliste neu zu starten.
 	# 8. Ruft die Funktion 'menuinfo' auf, um Informationen über den automatischen Neustart im Menü anzuzeigen.
+	#
 	#? Hinweise:
 	# - Diese Funktion geht davon aus, dass die in den Kommentaren erwähnten Funktionen ('autostop', 'autologdel', 'deleteregionfromdatabase', 'gridstart', 'autosimstart' und 'screenlistrestart') in Ihrem Code definiert sind.
+	#
 	#? Beispielaufruf:
 	# menuautorestart
 ##
@@ -7643,15 +8006,21 @@ function menuautorestart() {
 
 ##
 	#* Funktion: serverupgrade
+	#
 	# Diese Funktion führt ein Systemupgrade auf einem Linux-Server durch.
+	#
 	#? Parameter: Keine
+	#
 	#? Rückgabewert: Keiner
+	#
 	# Funktionsweise:
 	# 1. Führt 'sudo apt-get update' aus, um die Paketlisten zu aktualisieren und Informationen über verfügbare Updates abzurufen.
 	# 2. Führt 'sudo apt-get upgrade' aus, um alle verfügbaren Paketaktualisierungen auf dem System zu installieren.
+	#
 	#? Hinweise:
 	# - Diese Funktion erfordert Root-Berechtigungen, da die Aktualisierung von Paketen in der Regel Root-Rechte erfordert.
 	# - Stellen Sie sicher, dass Ihr Server über eine Internetverbindung verfügt, um die Aktualisierung durchzuführen.
+	#
 	#? Beispielaufruf:
 	# serverupgrade
 ##
@@ -7663,13 +8032,17 @@ function serverupgrade() {
 
 ##
 	#* installmariadb18
+	#
 	# Diese Funktion führt die Installation oder Migration von MariaDB auf einem Ubuntu 18-System durch.
 	# Nach Abschluss des Vorgangs werden Sie aufgefordert, alle erforderlichen Dienste neu zu starten, um sicherzustellen,
 	# dass die Änderungen wirksam werden.
+	#
 	#? Parameter:
 	#   Keine.
+	#
 	#? Rückgabewert:
 	#   Keiner (void).
+	#
 	# Todos:
 	#   Keine.
 ##
@@ -7694,12 +8067,16 @@ function installmariadb18() {
 
 ##
 	#* installmariadb22
+	#
 	# Diese Funktion führt die Installation von MariaDB auf einem Ubuntu 22-System durch.
 	# Falls der MySQL-Dienst bereits läuft, wird er zuerst gestoppt, um Konflikte zu vermeiden.
+	#
 	#? Parameter:
 	#   Keine.
+	#
 	#? Rückgabewert:
 	#   Keiner (void).
+	#
 	# Todos:
 	#   Keine.
 ##
@@ -7717,11 +8094,15 @@ function installmariadb22() {
 
 ##
 	#* monoinstall
+	#
 	# Diese Funktion überprüft, ob Mono bereits auf dem System installiert ist. Wenn nicht, installiert sie Mono 6.x auf einem Ubuntu 18-System.
+	#
 	#? Parameter:
 	#   Keine.
+	#
 	#? Rückgabewert:
 	#   0 - Erfolgreiche Ausführung der Funktion.
+	#
 	# Todos:
 	#   Keine.
 ##
@@ -7747,12 +8128,16 @@ function monoinstall() {
 
 ##
 	#* monoinstall18
+	#
 	# Diese Funktion überprüft, ob Mono (mono-complete) bereits auf dem System installiert ist. 
 	# Wenn nicht, wird Mono 6.x auf einem Ubuntu 18-System installiert.
+	#
 	#? Parameter:
 	#   Keine.
+	#
 	#? Rückgabewert:
 	#   Keiner (void).
+	#
 	# Todos:
 	#   Keine.
 ##
@@ -7776,12 +8161,16 @@ function monoinstall18() {
 
 ##
 	#* monoinstall20
+	#
 	# Diese Funktion überprüft, ob Mono (mono-complete) bereits auf dem System installiert ist. 
 	# Wenn nicht, wird Mono 6.x auf einem Ubuntu 20-System installiert.
+	#
 	#? Parameter:
 	#   Keine.
+	#
 	#? Rückgabewert:
 	#   Keiner (void).
+	#
 	# Todos:
 	#   Keine.
 ##
@@ -7805,11 +8194,15 @@ function monoinstall20() {
 
 ##
 	#* monoinstall22
+	#
 	# Diese Funktion installiert Mono und zugehörige Pakete auf einem Ubuntu 22-System.
+	#
 	#? Parameter:
 	#   Keine.
+	#
 	#? Rückgabewert:
 	#   Keiner (void).
+	#
 	# Todos:
 	#   Keine.
 ##
@@ -7820,13 +8213,17 @@ function monoinstall22() {
 
 ##
 	#* icecastinstall
+	#
 	# Diese Funktion führt die Installation und grundlegende Konfiguration von Icecast2 durch.
 	# Sie generiert zufällige Passwörter für die Benutzer 'source', 'relay' und 'admin' und gibt diese aus.
 	# Der Benutzer muss diese Passwörter für die Icecast2-Installation bereithalten.
+	#
 	#? Parameter:
 	#   Keine.
+	#
 	#? Rückgabewert:
 	#   Keiner (void).
+	#
 	# Todos:
 	#   Der Port für Icecast2 sollte noch konfiguriert werden, um sicherzustellen, dass er nicht mit anderen Diensten kollidiert.
 ##
@@ -7850,12 +8247,16 @@ function icecastinstall() {
 
 ##
 	#* icecastconfig
+	#
 	# Diese Funktion ändert die Konfiguration von Icecast2, um den Standardport von 8000 auf 8999 zu setzen.
 	# Nach der Ausführung dieser Funktion sollte Icecast2 auf Port 8999 erreichbar sein.
+	#
 	#? Parameter:
 	#   Keine.
+	#
 	#? Rückgabewert:
 	#   Keiner (void).
+	#
 	# Todos:
 	#   Keine.
 ##
@@ -7868,12 +8269,16 @@ function icecastconfig() {
 
 ##
 	#* sourcelist18
+	#
 	# Diese Funktion gibt die Ubuntu 18.04 (Bionic Beaver) Paketquellen für APT aus.
 	# Die Zeilen, die mit '#' beginnen, sind auskommentiert und können bei Bedarf aktiviert werden.
+	#
 	#? Parameter:
 	#   Keine.
+	#
 	#? Rückgabewert:
 	#   Keiner (void).
+	#
 	# Todos:
 	#   Keine.
 ##
@@ -7897,12 +8302,16 @@ function sourcelist18() {
 
 ##
 	#* sourcelist22
+	#
 	# Diese Funktion gibt die Ubuntu 22.04 (Jammy Jellyfish) Paketquellen für APT aus.
 	# Die Zeilen, die mit '#' beginnen, sind auskommentiert und können bei Bedarf aktiviert werden.
+	#
 	#? Parameter:
 	#   Keine.
+	#
 	#? Rückgabewert:
 	#   Keiner (void).
+	#
 	# Todos:
 	#   Keine.
 ##
@@ -7926,11 +8335,15 @@ function sourcelist22() {
 
 ##
 	#* installwordpress
+	#
 	# Diese Funktion führt die Installation von Paketen durch, die für die Installation und den Betrieb von WordPress benötigt werden.
+	#
 	#? Parameter:
 	#   Keine.
+	#
 	#? Rückgabewert:
 	#   Keiner (void).
+	#
 	# Todos:
 	#   Keine.
 ##
@@ -7955,11 +8368,15 @@ function installwordpress() {
 
 ##
 	#* installopensimulator
+	#
 	# Diese Funktion führt die Installation von Paketen durch, die für die Installation und den Betrieb von OpenSimulator benötigt werden.
+	#
 	#? Parameter:
 	#   Keine.
+	#
 	#? Rückgabewert:
 	#   Keiner (void).
+	#
 	# Todos:
 	#   - Sicherheitseinstellungen für fail2ban konfigurieren.
 ##
@@ -8008,11 +8425,15 @@ function installopensimulator() {
 
 ##
 	#* installubuntu22
+	#
 	# Diese Funktion führt die Installation von Paketen durch, die für die Installation und den Betrieb von OpenSimulator auf einem Ubuntu 22.04-System benötigt werden.
+	#
 	#? Parameter:
 	#   Keine.
+	#
 	#? Rückgabewert:
 	#   Keiner (void).
+	#
 	# Todos:
 	#   - Sicherheitseinstellungen für fail2ban konfigurieren.
 	#   - Optionale erweiterte Pakete installieren, wenn $insterweitert = "yes".
@@ -8097,12 +8518,16 @@ function installubuntu22() {
 
 ##
 	#* iptablesset
+	#
 	# Diese Funktion sperrt eine angegebene IP-Adresse sowohl für eingehende als auch für ausgehende Datenpakete in der iptables-Firewall.
 	# Anschließend werden alle IP-Adressen zusammen mit den Zeilennummern angezeigt, die momentan in den iptables gesperrt sind.
+	#
 	#? Parameter:
 	#   $1 - Die IP-Adresse, die gesperrt werden soll.
+	#
 	#? Rückgabewert:
 	#   Keiner (void).
+	#
 	# Todos:
 	#   Keine.
 ##
@@ -8121,13 +8546,17 @@ function iptablesset() {
 
 ##
 	#* fail2banset
+	#
 	# Diese Funktion erstellt oder aktualisiert die Konfigurationseinstellungen für fail2ban in der jail.local-Datei.
 	# Die Einstellungen beinhalten die Anzahl der zulässigen Fehlversuche (maxfailures), die Bannzeit in Sekunden (bantime)
 	# und die Zeitspanne, innerhalb derer Fehlversuche gezählt werden (findtime).
+	#
 	#? Parameter:
 	#   Keine.
+	#
 	#? Rückgabewert:
 	#   Keiner (void).
+	#
 	# Todos:
 	#   Keine.
 ##
@@ -8149,12 +8578,16 @@ findtime = 600" >/etc/fail2ban/jail.local
 
 ##
 	#* ufwset
+	#
 	# Diese Funktion konfiguriert die UFW (Uncomplicated Firewall), um die erforderlichen Ports für den Betrieb von OpenSimulator zu öffnen.
 	# Dazu gehören Ports für die Robust-, simX- und Money-Konfigurationen sowie weitere Ports, die von OpenSimulator benötigt werden.
+	#
 	#? Parameter:
 	#   Keine.
+	#
 	#? Rückgabewert:
 	#   Keiner (void).
+	#
 	# Todos:
 	#   Keine.
 ##
@@ -8257,11 +8690,15 @@ function ufwset() {
 
 ##
 	#* ufwport
+	#
 	# Diese Funktion öffnet einen angegebenen TCP- und UDP-Port in der Uncomplicated Firewall (UFW).
+	#
 	#? Parameter:
 	#   $1 - Der Port, der geöffnet werden soll.
+	#
 	#? Rückgabewert:
 	#   Keiner (void).
+	#
 	# Todos:
 	#   Keine.
 ##
@@ -8274,11 +8711,15 @@ function ufwport() {
 
 ##
 	#* ufwoff
+	#
 	# Diese Funktion deaktiviert die Uncomplicated Firewall (UFW), wodurch alle Firewall-Regeln vorübergehend deaktiviert werden.
+	#
 	#? Parameter:
 	#   Keine.
+	#
 	#? Rückgabewert:
 	#   Keiner (void).
+	#
 	# Todos:
 	#   Keine.
 ##
@@ -8289,11 +8730,15 @@ function ufwoff() {
 
 ##
 	#* ufwblock
+	#
 	# Diese Funktion setzt die Standardaktion der Uncomplicated Firewall (UFW) auf "deny", wodurch alle eingehenden und ausgehenden Verbindungen standardmäßig blockiert werden.
+	#
 	#? Parameter:
 	#   Keine.
+	#
 	#? Rückgabewert:
 	#   Keiner (void).
+	#
 	# Todos:
 	#   Keine.
 ##
@@ -8304,11 +8749,15 @@ function ufwblock() {
 
 ##
 	#* installphpmyadmin
+	#
 	# Diese Funktion installiert das PhpMyAdmin-Tool auf dem System, das eine webbasierte Benutzeroberfläche für die Verwaltung von MySQL-Datenbanken bietet.
+	#
 	#? Parameter:
 	#   Keine.
+	#
 	#? Rückgabewert:
 	#   Keiner (void).
+	#
 	# Todos:
 	#   Keine.
 ##
@@ -8320,12 +8769,16 @@ function installphpmyadmin() {
 
 ##
 	# installfinish
+	#
 	# Diese Funktion führt abschließende Aktualisierungen und Wartungsarbeiten auf dem System durch, um sicherzustellen, dass alle
 	# Pakete auf dem neuesten Stand sind und eventuelle Abhängigkeiten aufgelöst werden. Sie beinhaltet auch einen Neustart des Systems.
+	#
 	#? Parameter:
 	#   Keine.
+	#
 	#? Rückgabewert:
 	#   Keiner (void).
+	#
 	# Todos:
 	#   Keine.
 ##
@@ -8343,14 +8796,18 @@ function installfinish() {
 
 ##
 	#* installationhttps22
+	#
 	# Diese Funktion installiert die erforderlichen Pakete, um HTTPS (SSL/TLS-Zertifikate) für eine angegebene Domain unter Ubuntu 22.04
 	# mithilfe von Certbot von Let’s Encrypt zu konfigurieren. Sie erfordert die Angabe einer E-Mail-Adresse und der Domain, für die das
 	# Zertifikat ausgestellt werden soll.
+	#
 	#? Parameter:
 	#   $1 - Die E-Mail-Adresse für Let’s Encrypt-Zertifikatsbenachrichtigungen.
 	#   $2 - Die Domain, für die das SSL/TLS-Zertifikat ausgestellt werden soll.
+	#
 	#? Rückgabewert:
 	#   Keiner (void).
+	#
 	# Todos:
 	#   Keine.
 ##
@@ -8368,13 +8825,17 @@ function installationhttps22() {
 
 ##
 	# serverinstall22
+	#
 	# Diese Funktion führt eine umfassende Serverinstallation unter Ubuntu 22.04 durch, indem sie verschiedene Schritte ausführt,
 	# darunter das Aktualisieren des Systems, die Installation von Softwarepaketen, die Konfiguration von Firewalls und die Einrichtung
 	# von HTTPS (SSL/TLS-Zertifikaten) für eine Domain.
+	#
 	#? Parameter:
 	#   Keine.
+	#
 	#? Rückgabewert:
 	#   Keiner (void).
+	#
 	# Todos:
 	#   Die Einrichtung von HTTPS (SSL/TLS-Zertifikaten) ist auskommentiert und kann bei Bedarf aktiviert werden.
 ##
@@ -8399,12 +8860,16 @@ function serverinstall22() {
 	# Wenn 'dialog' installiert ist, wird der Benutzer gefragt, ob er alle erforderlichen Ubuntu-Pakete installieren möchte. 
 	# Falls ja, werden verschiedene Installationsfunktionen aufgerufen, andernfalls wird zum Hauptmenü zurückgekehrt.
 	# Wenn 'dialog' nicht installiert ist, wird der Benutzer einfach nach der Installation der Ubuntu-Pakete gefragt, ohne eine grafische Oberfläche zu verwenden.
+	#
 	#? Parameter:
 	# Diese Funktion erwartet keine Parameter.
+	#
 	#? Rückgabewert:
 	# Diese Funktion gibt keinen expliziten Rückgabewert zurück.
+	#
 	#? Abhängigkeiten:
 	# - Die Funktion verwendet die Befehle 'dpkg-query', 'dialog', 'dialogclear', 'serverupgrade', 'installopensimulator', 'monoinstall18', 'installfinish', 'log', 'ScreenLog' und 'hauptmenu'.
+	#
 	#? Beispielaufruf:
 	# serverinstall
 ##
@@ -8450,13 +8915,17 @@ function serverinstall() {
 	# 
 	#? Beschreibung:
 	# Diese Funktion listet alle unter Linux installierten Pakete auf und speichert die Liste in einer Log-Datei.
+	#
 	#? Parameter:
 	# Diese Funktion erwartet keine Parameter.
+	#
 	#? Rückgabewert:
 	# Diese Funktion gibt immer den Wert 0 zurück, da keine Fehlerbehandlung implementiert ist.
+	#
 	#? Abhängigkeiten:
 	# - Die Funktion verwendet die Befehle 'log' und 'dpkg-query'.
 	# - Die Funktion verwendet die Umgebungsvariablen '$STARTVERZEICHNIS', '$DATEIDATUM' und '$logfilename'.
+	#
 	#? Beispielaufruf:
 	# installationen
 ##
@@ -8473,14 +8942,18 @@ function installationen() {
 	# 
 	#? Beschreibung:
 	# Diese Funktion überprüft, ob ein OpenSimulator-Upgrade verfügbar ist und bietet die Möglichkeit an, das Upgrade durchzuführen.
+	#
 	#? Parameter:
 	# Diese Funktion erwartet keine Parameter.
+	#
 	#? Rückgabewert:
 	# Diese Funktion gibt keinen expliziten Rückgabewert zurück.
+	#
 	#? Abhängigkeiten:
 	# - Die Funktion geht davon aus, dass das Arbeitsverzeichnis auf das OpenSimulator-Verzeichnis gesetzt ist.
 	# - Die Funktion verwendet die Befehle 'git pull', 'log' und 'osbuildingupgrade93'.
 	# - Die Funktion verwendet die Umgebungsvariable '$STARTVERZEICHNIS'.
+	#
 	#? Beispielaufruf:
 	# checkupgrade93
 ##
@@ -8512,12 +8985,16 @@ function checkupgrade93() {
 	# 
 	#? Beschreibung:
 	# Diese Funktion führt den Befehl 'git pull' aus, um Aktualisierungen aus dem Remote-Git-Repository in das lokale Repository zu ziehen.
+	#
 	#? Parameter:
 	# Diese Funktion erwartet keine Parameter.
+	#
 	#? Rückgabewert:
 	# Diese Funktion gibt keinen expliziten Rückgabewert zurück.
+	#
 	#? Abhängigkeiten:
 	# - Die Funktion verwendet den Befehl 'git pull'.
+	#
 	#? Beispielaufruf:
 	# pull
 ##
@@ -8599,13 +9076,17 @@ function osbuilding93() {
 	#? Beschreibung:
 	# Diese Funktion sichert den aktuellen OpenSimulator, löscht ihn, lädt einen neuen OpenSimulator vom GitHub herunter,
 	# führt verschiedene Konfigurationsschritte aus und kompiliert den OpenSimulator.
+	#
 	#? Parameter:
 	# - $1 (optional): Die Versionsnummer des neuen OpenSimulator-Branches.
+	#
 	#? Rückgabewert:
 	# Diese Funktion gibt immer den Wert 0 zurück, da keine Fehlerbehandlung implementiert ist.
+	#
 	#? Abhängigkeiten:
 	# - Die Funktion verwendet die Befehle 'rm', 'mv', 'log', 'opensimgitcopy93', 'cd', 'git checkout', 'setversion93', 'runprebuild.sh', 'dotnet build', 'moneycopy93', 'scriptcopy', 'osupgrade93'.
 	# - Die Funktion verwendet die Umgebungsvariablen '$STARTVERZEICHNIS', '$MONEYVERZEICHNIS' und '$SETOSVERSION'.
+	#
 	#? Beispielaufruf:
 	# osbuildingupgrade93 09052023
 ##
@@ -8940,14 +9421,18 @@ function db_gridlist() {
 
 ##
 	# db_inv_search - Sucht nach Inventareinträgen mit einem bestimmten Namen in einer MySQL-Datenbanktabelle.
+	#
 	# Diese Funktion sucht nach Inventareinträgen in einer MySQL-Datenbanktabelle, die einen bestimmten Namen haben.
+	#
 	#? Parameter:
 	#   $1 - Der Benutzername für die MySQL-Datenbankverbindung.
 	#   $2 - Das Passwort für die MySQL-Datenbankverbindung.
 	#   $3 - Der Name der Datenbanktabelle, in der nach Inventareinträgen gesucht werden soll.
 	#   $4 - Der Name, nach dem in den Inventareinträgen gesucht werden soll.
+	#
 	#? Rückgabewert:
 	#   Keiner (void).
+	#
 	# Todos:
 	#   Keine.
 ##
@@ -8967,15 +9452,19 @@ function db_inv_search() {
 
 ##
 	# db_ungenutzteobjekte - Sucht nach ungenutzten Objekten in einer MySQL-Datenbanktabelle.
+	#
 	# Diese Funktion sucht nach Objekten in einer MySQL-Datenbanktabelle, die in einem bestimmten Zeitraum nicht aufgerufen wurden.
+	#
 	#? Parameter:
 	#   $1 - Der Benutzername für die MySQL-Datenbankverbindung.
 	#   $2 - Das Passwort für die MySQL-Datenbankverbindung.
 	#   $3 - Der Name der Datenbanktabelle, in der nach ungenutzten Objekten gesucht werden soll.
 	#   $4 - Das Startdatum (optional), ab dem nach ungenutzten Objekten gesucht werden soll (im Format "Jahr-Monat-Tag").
 	#   $5 - Das Enddatum (optional), bis zu dem nach ungenutzten Objekten gesucht werden soll (im Format "Jahr-Monat-Tag").
+	#
 	#? Rückgabewert:
 	#   Keiner (void).
+	#
 	# Todos:
 	#   Keine.
 ##
@@ -9009,13 +9498,17 @@ return 0
 
 ##
 	# db_user_anzahl - Zählt die Gesamtzahl der Benutzer in einer MySQL-Datenbank-Tabelle.
+	#
 	# Diese Funktion verwendet MySQL, um die Gesamtzahl der Benutzer in einer angegebenen Datenbanktabelle zu zählen.
+	#
 	#? Parameter:
 	#   $1 - Der Benutzername für die MySQL-Datenbankverbindung.
 	#   $2 - Das Passwort für die MySQL-Datenbankverbindung.
 	#   $3 - Der Name der Datenbanktabelle, in der die Benutzer gezählt werden sollen.
+	#
 	#? Rückgabewert:
 	#   Keiner (void).
+	#
 	# Todos:
 	#   Keine.
 ##
@@ -9034,13 +9527,17 @@ function db_user_anzahl() {
 
 ##
 	# db_user_online - Ermittelt die Anzahl der Benutzer, die online sind, in einer MySQL-Datenbanktabelle.
+	#
 	# Diese Funktion ermittelt die Anzahl der Benutzer, die online sind, in einer MySQL-Datenbanktabelle.
+	#
 	#? Parameter:
 	#   $1 - Der Benutzername für die MySQL-Datenbankverbindung.
 	#   $2 - Das Passwort für die MySQL-Datenbankverbindung.
 	#   $3 - Der Name der Datenbanktabelle, in der die Benutzer online ermittelt werden sollen.
+	#
 	#? Rückgabewert:
 	#   Keiner (void).
+	#
 	# Todos:
 	#   Keine.
 ##
@@ -9059,13 +9556,17 @@ function db_user_online() {
 
 ##
 	# db_region_parzelle - Zählt die Anzahl der Regionen mit Parzellen in einer MySQL-Datenbanktabelle.
+	#
 	# Diese Funktion zählt die Anzahl der Regionen, die Parzellen enthalten, in einer MySQL-Datenbanktabelle.
+	#
 	#? Parameter:
 	#   $1 - Der Benutzername für die MySQL-Datenbankverbindung.
 	#   $2 - Das Passwort für die MySQL-Datenbankverbindung.
 	#   $3 - Der Name der Datenbanktabelle, in der die Regionen mit Parzellen gezählt werden sollen.
+	#
 	#? Rückgabewert:
 	#   Keiner (void).
+	#
 	# Todos:
 	#   Keine.
 ##
@@ -9084,13 +9585,17 @@ function db_region_parzelle() {
 
 ##
 	# db_region_parzelle_pakete - Zählt die Gesamtzahl der Pakete in einer MySQL-Datenbanktabelle.
+	#
 	# Diese Funktion zählt die Gesamtzahl der Pakete in einer MySQL-Datenbanktabelle.
+	#
 	#? Parameter:
 	#   $1 - Der Benutzername für die MySQL-Datenbankverbindung.
 	#   $2 - Das Passwort für die MySQL-Datenbankverbindung.
 	#   $3 - Der Name der Datenbanktabelle, in der die Pakete gezählt werden sollen.
+	#
 	#? Rückgabewert:
 	#   Keiner (void).
+	#
 	# Todos:
 	#   Keine.
 ##
@@ -9109,13 +9614,17 @@ function db_region_parzelle_pakete() {
 
 ##
 	# db_region_anzahl_regionsnamen - Zählt die Anzahl der eindeutigen Regionsnamen in einer MySQL-Datenbanktabelle.
+	#
 	# Diese Funktion zählt die Anzahl der eindeutigen Regionsnamen in einer MySQL-Datenbanktabelle.
+	#
 	#? Parameter:
 	#   $1 - Der Benutzername für die MySQL-Datenbankverbindung.
 	#   $2 - Das Passwort für die MySQL-Datenbankverbindung.
 	#   $3 - Der Name der Datenbanktabelle, in der die eindeutigen Regionsnamen gezählt werden sollen.
+	#
 	#? Rückgabewert:
 	#   Keiner (void).
+	#
 	# Todos:
 	#   Keine.
 ##
@@ -9134,13 +9643,17 @@ function db_region_anzahl_regionsnamen() {
 
 ##
 	# db_region_anzahl_regionsid - Zählt die Anzahl der Regionen anhand ihrer RegionIDs in einer MySQL-Datenbanktabelle.
+	#
 	# Diese Funktion zählt die Anzahl der Regionen in einer MySQL-Datenbanktabelle anhand ihrer RegionIDs.
+	#
 	#? Parameter:
 	#   $1 - Der Benutzername für die MySQL-Datenbankverbindung.
 	#   $2 - Das Passwort für die MySQL-Datenbankverbindung.
 	#   $3 - Der Name der Datenbanktabelle, in der die Regionen anhand ihrer RegionIDs gezählt werden sollen.
+	#
 	#? Rückgabewert:
 	#   Keiner (void).
+	#
 	# Todos:
 	#   Keine.
 ##
@@ -9173,6 +9686,7 @@ function db_region_anzahl_regionsid() {
 	#   vorhandene Assets verweisen, auf der Standardausgabe aus.
 	#? Rückgabewert:
 	#   Die Funktion gibt 0 zurück, wenn sie erfolgreich abgeschlossen wurde.
+	#
 	# Abhängigkeiten:
 	#   - Diese Funktion erfordert das Vorhandensein des Befehls "mysqlrest" und
 	#     "log rohtext" in der Umgebung.
@@ -11350,10 +11864,14 @@ function db_user_infos() {
 	# Diese Funktion ermöglicht die Suche nach bestimmten Benutzerdaten in einer MySQL-Datenbank basierend auf Vor- und Nachnamen.
 	# Der Benutzer wird aufgefordert, den Benutzernamen, das Passwort, den Datenbanknamen, den Vornamen und den Nachnamen einzugeben.
 	# Anschließend werden die UUID, Vorname, Nachname und E-Mail-Adresse des gefundenen Benutzers aus der Tabelle "UserAccounts" angezeigt.
+	#
 	#? Parameter: Keine
+	#
 	#? Beispielaufruf:
 	# Die Funktion wird direkt vom Benutzer aufgerufen und verwendet ein Dialogfeld für die Eingabe der erforderlichen Informationen.
+	#
 	#? Rückgabewert: Keiner (Die Funktion zeigt die Benutzerdaten an.)
+	#
 	#? Hinweise:
 	# - Stellen Sie sicher, dass die Tabelle "UserAccounts" in der angegebenen Datenbank vorhanden ist.
 	# - Die Funktion verwendet das Dialog-Tool zur Benutzerinteraktion. Stellen Sie sicher, dass Dialog installiert ist.
@@ -11439,10 +11957,14 @@ function db_user_uuid() {
 	# Der Benutzer wird aufgefordert, den Benutzernamen, das Passwort, den Datenbanknamen, den Vornamen und den Nachnamen einzugeben.
 	# Anschließend wird die UUID des gefundenen Benutzers aus der Tabelle "UserAccounts" angezeigt.
 	# Diese Funktion verwendet das Dialog-Tool zur Benutzerinteraktion und ist für den Dialog-basierten Betrieb vorgesehen.
+	#
 	#? Parameter: Keine
+	#
 	#? Beispielaufruf:
 	# Die Funktion wird direkt vom Benutzer aufgerufen und verwendet ein Dialogfeld für die Eingabe der erforderlichen Informationen.
+	#
 	#? Rückgabewert: Keiner (Die Funktion zeigt die UUID des Benutzers an.)
+	#
 	#? Hinweise:
 	# - Stellen Sie sicher, dass die Tabelle "UserAccounts" in der angegebenen Datenbank vorhanden ist.
 	# - Die Funktion verwendet das Dialog-Tool zur Benutzerinteraktion. Stellen Sie sicher, dass Dialog installiert ist.
@@ -11498,6 +12020,7 @@ function db_user_uuid_dialog() {
 	# Diese Funktion ermöglicht das Abrufen von Inventarordnern eines Benutzers in einer MySQL-Datenbank basierend auf dem Ordner-/Verzeichnistyp und den Benutzerinformationen (Vorname und Nachname).
 	# Der Benutzer wird aufgefordert, den Benutzernamen, das Passwort, den Datenbanknamen, den Vornamen, den Nachnamen und den gewünschten Verzeichnistyp einzugeben.
 	# Anschließend werden die passenden Ordner aus der Tabelle "inventoryfolders" abgerufen und angezeigt.
+	#
 	#? Parameter:
 	# - $1: Benutzername für die MySQL-Datenbank
 	# - $2: Passwort für die MySQL-Datenbank
@@ -11505,9 +12028,12 @@ function db_user_uuid_dialog() {
 	# - $4: Vorname des Benutzers
 	# - $5: Nachname des Benutzers
 	# - $6: Verzeichnistyp (Text oder Zahl, z. B. "Textures" oder "0")
+	#
 	#? Beispielaufruf:
 	# db_foldertyp_user "db_username" "db_password" "db_database" "John" "Doe" "Textures"
+	#
 	#? Rückgabewert: Keiner (Die Funktion zeigt die abgerufenen Inventarordner an.)
+	#
 	#? Hinweise:
 	# - Stellen Sie sicher, dass die Tabelle "inventoryfolders" in der angegebenen Datenbank vorhanden ist.
 	# - Der Verzeichnistyp kann als Text (z. B. "Textures") oder als Zahl (z. B. "0") angegeben werden. Die Funktion konvertiert den Text in die entsprechende Zahl.
@@ -11560,28 +12086,34 @@ function db_foldertyp_user() {
 	# Datum: [Aktuelles Datum]
 	#? Beschreibung:
 	# Diese Funktion ermöglicht die Suche nach bestimmten Informationen in einer MySQL-Datenbank in Bezug auf Benutzerkonten und Inventarordner. Je nach Umgebung kann sie interaktiv oder nicht-interaktiv verwendet werden.
+	#
 	#? Parameter:
 	#   - username (String): Der Benutzername für die MySQL-Datenbank.
 	#   - password (String): Das Passwort für die MySQL-Datenbank.
 	#   - databasename (String): Der Name der MySQL-Datenbank, in der die Abfragen ausgeführt werden sollen.
 	#   - firstname (String): Der Vorname des Benutzers, dessen Informationen gesucht werden sollen.
 	#   - lastname (String): Der Nachname des Benutzers, dessen Informationen gesucht werden sollen.
+	#
 	#? Funktionsverhalten:
 	#   - Wenn das Dialog-Tool (Dialog) installiert ist, wird die Funktion in einem interaktiven Modus ausgeführt. Sie zeigt ein Dialogfeld an, in dem Benutzername, Passwort, Datenbankname, Vorname und Nachname eingegeben werden können.
 	#   - Wenn das Dialog-Tool nicht installiert ist, wird die Funktion im nicht-interaktiven Modus ausgeführt. Die erforderlichen Informationen müssen als Parameter bereitgestellt werden.
 	#   - Die Funktion führt eine SQL-Abfrage in der Datenbank durch, um die PrincipalID (UUID) eines Benutzers zu finden, der den angegebenen Vor- und Nachnamen hat.
 	#   - Anschließend wird die PrincipalID verwendet, um weitere Informationen aus der Tabelle "inventoryfolders" abzurufen, wobei der Wert des Felds "type" nicht "-1" ist.
 	#   - Die Ergebnisse werden entweder in einem Dialogfeld (wenn Dialog installiert ist) oder in den Protokolldateien (log) angezeigt.
+	#
 	#? Beispielaufruf:
 	#   - Interaktiver Modus:
 	#     db_all_userfailed
 	#   - Nicht-interaktiver Modus:
 	#     db_all_userfailed "db_username" "db_password" "db_database" "John" "Doe"
+	#
 	#? Rückgabewert:
 	# Diese Funktion gibt keinen expliziten Rückgabewert zurück, sondern zeigt die abgerufenen Informationen in der Ausgabe an oder protokolliert sie.
+	#
 	#? Hinweise:
 	#   - Stellen Sie sicher, dass die Tabelle "UserAccounts" und "inventoryfolders" in der angegebenen Datenbank vorhanden ist.
 	#   - Der Dialog-Modus erfordert die Installation des Dialog-Tools. Verwenden Sie "apt-get install dialog", um es zu installieren.
+	#
 ##
 function db_all_userfailed() {
 	# zuerst schauen ob dialog installiert ist
@@ -11647,28 +12179,34 @@ function db_all_userfailed() {
 	# Je nachdem, ob das Dialog-Tool installiert ist oder nicht, kann sie interaktiv oder nicht-interaktiv verwendet werden.
 	# Der Benutzer wird aufgefordert, den Benutzernamen, das Passwort, den Datenbanknamen, den Vornamen und den Nachnamen einzugeben oder diese Informationen als Parameter bereitzustellen.
 	# Anschließend wird das Erstellungsdatum des gefundenen Benutzers aus der Tabelle "UserAccounts" abgerufen und in das deutsche Datumsformat konvertiert.
+	#
 	#? Parameter:
 	#   - username (String): Der Benutzername für die MySQL-Datenbank.
 	#   - password (String): Das Passwort für die MySQL-Datenbank.
 	#   - databasename (String): Der Name der MySQL-Datenbank, in der die Abfrage ausgeführt werden soll.
 	#   - firstname (String): Der Vorname des Benutzers, dessen Erstellungsdatum angezeigt werden soll.
 	#   - lastname (String): Der Nachname des Benutzers, dessen Erstellungsdatum angezeigt werden soll.
+	#
 	#? Funktionsverhalten:
 	#   - Wenn das Dialog-Tool (Dialog) installiert ist, wird die Funktion in einem interaktiven Modus ausgeführt. Sie zeigt ein Dialogfeld an, in dem Benutzername, Passwort, Datenbankname, Vorname und Nachname eingegeben werden können.
 	#   - Wenn das Dialog-Tool nicht installiert ist, wird die Funktion im nicht-interaktiven Modus ausgeführt. Die erforderlichen Informationen müssen als Parameter bereitgestellt werden.
 	#   - Die Funktion führt eine SQL-Abfrage in der Datenbank durch, um das Erstellungsdatum eines Benutzers zu finden, der den angegebenen Vor- und Nachnamen hat.
 	#   - Das zurückgegebene Unix-Timestamp wird in das deutsche Datumsformat (TT.MM.JJJJ) konvertiert.
 	#   - Die Ergebnisse werden entweder in einem Dialogfeld (wenn Dialog installiert ist) oder in den Protokolldateien (log) angezeigt.
+	#
 	#? Beispielaufruf:
 	#   - Interaktiver Modus:
 	#     db_userdate
 	#   - Nicht-interaktiver Modus:
 	#     db_userdate "db_username" "db_password" "db_database" "John" "Doe"
+	#
 	#? Rückgabewert:
 	# Diese Funktion gibt keinen expliziten Rückgabewert zurück, sondern zeigt das Erstellungsdatum des gefundenen Benutzers im deutschen Datumsformat in der Ausgabe an oder protokolliert es.
+	#
 	#? Hinweise:
 	#   - Stellen Sie sicher, dass die Tabelle "UserAccounts" in der angegebenen Datenbank vorhanden ist.
 	#   - Der Dialog-Modus erfordert die Installation des Dialog-Tools. Verwenden Sie "apt-get install dialog", um es zu installieren.
+	#
 ##
 function db_userdate() {
 	# zuerst schauen ob dialog installiert ist
@@ -11735,26 +12273,32 @@ function db_userdate() {
 	# Der Benutzer wird aufgefordert, den Benutzernamen, das Passwort und den Datenbanknamen einzugeben oder diese Informationen als Parameter bereitzustellen.
 	# Die Funktion sucht nach E-Mail-Adressen, die offensichtlich ungültig sind (nicht im Format "name@domain.tld") und gibt die entsprechenden Benutzerinformationen aus.
 	# Es gibt auch Ausnahmen für bestimmte Vor- und Nachnamen, die übersprungen werden.
+	#
 	#? Parameter:
 	#   - username (String): Der Benutzername für die MySQL-Datenbank.
 	#   - password (String): Das Passwort für die MySQL-Datenbank.
 	#   - databasename (String): Der Name der MySQL-Datenbank, in der die Abfrage ausgeführt werden soll.
+	#
 	#? Funktionsverhalten:
 	#   - Wenn das Dialog-Tool (Dialog) installiert ist, wird die Funktion in einem interaktiven Modus ausgeführt. Sie zeigt ein Dialogfeld an, in dem Benutzername, Passwort und Datenbankname eingegeben werden können.
 	#   - Wenn das Dialog-Tool nicht installiert ist, wird die Funktion im nicht-interaktiven Modus ausgeführt. Die erforderlichen Informationen müssen als Parameter bereitgestellt werden.
 	#   - Die Funktion führt eine SQL-Abfrage in der Datenbank durch, um Benutzerkonten mit offensichtlich falschen E-Mail-Adressen zu finden, die nicht dem Format "name@domain.tld" entsprechen.
 	#   - Es werden auch bestimmte Vor- und Nachnamen ("GRID SERVICES") ausgeschlossen.
 	#   - Die gefundenen Benutzerinformationen (PrincipalID, Vorname, Nachname und E-Mail) werden in der Ausgabe angezeigt oder protokolliert.
+	#
 	#? Beispielaufruf:
 	#   - Interaktiver Modus:
 	#     db_false_email
 	#   - Nicht-interaktiver Modus:
 	#     db_false_email "db_username" "db_password" "db_database"
+	#
 	#? Rückgabewert:
 	# Diese Funktion gibt keinen expliziten Rückgabewert zurück, sondern zeigt die gefundenen Benutzerinformationen in der Ausgabe an oder protokolliert sie.
+	#
 	#? Hinweise:
 	#   - Stellen Sie sicher, dass die Tabelle "UserAccounts" in der angegebenen Datenbank vorhanden ist.
 	#   - Der Dialog-Modus erfordert die Installation des Dialog-Tools. Verwenden Sie "apt-get install dialog", um es zu installieren.
+	#
 ##
 function db_false_email() {
 	# zuerst schauen ob dialog installiert ist
@@ -11814,6 +12358,7 @@ function db_false_email() {
 	# Sie erfordert die Bereitstellung von Benutzernamen, Passwort, Datenbankname, Vorname, Nachname und E-Mail-Adresse als Parameter.
 	# Die Funktion erstellt einen neuen Benutzer mit den angegebenen Werten in der Tabelle "UserAccounts" der Datenbank.
 	# Vor der Einfügung wird die Gültigkeit der E-Mail-Adresse anhand eines regulären Ausdrucks überprüft.
+	#
 	#? Parameter:
 	#   - username (String): Der Benutzername für die MySQL-Datenbank.
 	#   - password (String): Das Passwort für die MySQL-Datenbank.
@@ -11821,18 +12366,23 @@ function db_false_email() {
 	#   - firstname (String): Der Vorname des neuen Benutzers.
 	#   - lastname (String): Der Nachname des neuen Benutzers.
 	#   - email (String): Die E-Mail-Adresse des neuen Benutzers.
+	#
 	#? Funktionsverhalten:
 	#   - Die Funktion verwendet einen regulären Ausdruck, um die Gültigkeit der E-Mail-Adresse zu überprüfen. Wenn die E-Mail-Adresse das richtige Format aufweist, wird sie als "OK" betrachtet, andernfalls wird die Funktion mit einem Fehler beendet.
 	#   - Ein neuer UUID (PrincipalID) wird generiert.
 	#   - Andere Felder für den neuen Benutzer wie ScopeID, ServiceURLs, Created, UserLevel, UserFlags, UserTitle und active werden vordefiniert oder können angepasst werden.
 	#   - Die SQL-Abfrage zum Einfügen des neuen Benutzers mit den angegebenen Werten wird in der Datenbank ausgeführt.
+	#
 	#? Beispielaufruf:
 	#   set_empty_user "db_username" "db_password" "db_database" "John" "Doe" "john.doe@example.com"
+	#
 	#? Rückgabewert:
 	# Diese Funktion gibt keinen expliziten Rückgabewert zurück, sondern fügt den neuen Benutzer in die Datenbank ein, wenn alle Bedingungen erfüllt sind.
 	# Bei einer ungültigen E-Mail-Adresse wird die Funktion mit einem Fehler beendet.
+	#
 	#? Hinweise:
 	#   - Stellen Sie sicher, dass die Tabelle "UserAccounts" in der angegebenen Datenbank vorhanden ist.
+	#
 ##
 function set_empty_user() {
 	regex="^(([-a-zA-Z0-9\!#\$%\&\'*+/=?^_\`{\|}~]+|(\"([][,:;<>\&@a-zA-Z0-9\!#\$%\&\'*+/=?^_\`{\|}~-]|(\\\\[\\ \"]))+\"))\.)*([-a-zA-Z0-9\!#\$%\&\'*+/=?^_\`{\|}~]+|(\"([][,:;<>\&@a-zA-Z0-9\!#\$%\&\'*+/=?^_\`{\|}~-]|(\\\\[\\ \"]))+\"))@\w((-|\w)*\w)*\.(\w((-|\w)*\w)*\.)*\w{2,4}$"
@@ -11873,20 +12423,26 @@ function set_empty_user() {
 	# Sie erfordert die Bereitstellung von Benutzernamen, Passwort und Datenbankname als Parameter.
 	# Die Funktion sucht nach Benutzern mit E-Mail-Adressen, die offensichtlich ungültig sind (nicht im Format "name@domain.tld") und deaktiviert diese Benutzerkonten.
 	# Es gibt auch Ausnahmen für bestimmte Vor- und Nachnamen ("GRID SERVICES"), die übersprungen werden.
+	#
 	#? Parameter:
 	#   - username (String): Der Benutzername für die MySQL-Datenbank.
 	#   - password (String): Das Passwort für die MySQL-Datenbank.
 	#   - databasename (String): Der Name der MySQL-Datenbank, in der die Aktualisierung durchgeführt werden soll.
+	#
 	#? Funktionsverhalten:
 	#   - Die Funktion führt eine SQL-Abfrage in der Datenbank durch, um Benutzerkonten mit offensichtlich falschen E-Mail-Adressen zu finden, die nicht dem Format "name@domain.tld" entsprechen.
 	#   - Es werden auch bestimmte Vor- und Nachnamen ("GRID SERVICES") ausgeschlossen.
 	#   - Die gefundenen Benutzerkonten werden deaktiviert, indem das "active"-Feld auf -1 gesetzt wird.
+	#
 	#? Beispielaufruf:
 	#   db_email_setincorrectuseroff "db_username" "db_password" "db_database"
+	#
 	#? Rückgabewert:
 	# Diese Funktion gibt keinen expliziten Rückgabewert zurück, sondern deaktiviert die gefundenen Benutzerkonten in der Datenbank.
+	#
 	#? Hinweise:
 	#   - Stellen Sie sicher, dass die Tabelle "UserAccounts" in der angegebenen Datenbank vorhanden ist.
+	#
 ##
 function db_email_setincorrectuseroff() {
 	username=$1
@@ -11910,26 +12466,32 @@ function db_email_setincorrectuseroff() {
 	# Sie erfordert die Bereitstellung von Benutzernamen, Passwort und Datenbankname als Parameter oder kann im Dialogmodus verwendet werden, wenn das Dialog-Tool (Dialog) installiert ist.
 	# Die Funktion sucht nach Benutzern mit E-Mail-Adressen, die offensichtlich ungültig sind (nicht im Format "name@domain.tld") und deaktiviert diese Benutzerkonten.
 	# Es gibt auch Ausnahmen für bestimmte Vor- und Nachnamen ("GRID SERVICES"), die übersprungen werden.
+	#
 	#? Parameter:
 	#   - username (String): Der Benutzername für die MySQL-Datenbank.
 	#   - password (String): Das Passwort für die MySQL-Datenbank.
 	#   - databasename (String): Der Name der MySQL-Datenbank, in der die Aktualisierung durchgeführt werden soll.
+	#
 	#? Funktionsverhalten:
 	#   - Wenn das Dialog-Tool (Dialog) installiert ist, wird die Funktion in einem interaktiven Modus ausgeführt. Sie zeigt ein Dialogfeld an, in dem Benutzername, Passwort und Datenbankname eingegeben werden können.
 	#   - Wenn das Dialog-Tool nicht installiert ist, wird die Funktion im nicht-interaktiven Modus ausgeführt und zeigt eine Meldung an, dass der Dialogmodus nicht verfügbar ist.
 	#   - Die Funktion führt eine SQL-Abfrage in der Datenbank durch, um Benutzerkonten mit offensichtlich falschen E-Mail-Adressen zu finden, die nicht dem Format "name@domain.tld" entsprechen.
 	#   - Es werden auch bestimmte Vor- und Nachnamen ("GRID SERVICES") ausgeschlossen.
 	#   - Die gefundenen Benutzerkonten werden deaktiviert, indem das "active"-Feld auf -1 gesetzt wird.
+	#
 	#? Beispielaufruf:
 	#   - Interaktiver Modus (Dialog):
 	#     db_email_setincorrectuseroff_dialog
 	#   - Nicht-interaktiver Modus:
 	#     db_email_setincorrectuseroff_dialog "db_username" "db_password" "db_database"
+	#
 	#? Rückgabewert:
 	# Diese Funktion gibt keinen expliziten Rückgabewert zurück, sondern deaktiviert die gefundenen Benutzerkonten in der Datenbank oder zeigt eine Meldung an, dass der Dialogmodus nicht verfügbar ist.
+	#
 	#? Hinweise:
 	#   - Stellen Sie sicher, dass die Tabelle "UserAccounts" in der angegebenen Datenbank vorhanden ist.
 	#   - Der Dialog-Modus erfordert die Installation des Dialog-Tools. Verwenden Sie "apt-get install dialog", um es zu installieren.
+	#
 ##
 function db_email_setincorrectuseroff_dialog() {
 	# zuerst schauen ob dialog installiert ist
@@ -11978,21 +12540,27 @@ function db_email_setincorrectuseroff_dialog() {
 	#? Beschreibung:
 	# Diese Funktion deaktiviert einen Benutzer in einer MySQL-Datenbank, um ihn offline zu setzen. Sie erfordert die Bereitstellung von Benutzernamen, Passwort, Datenbankname, Vornamen und Nachnamen als Parameter.
 	# Der Benutzer mit dem angegebenen Vornamen und Nachnamen wird deaktiviert, indem das "active"-Feld auf -1 gesetzt wird.
+	#
 	#? Parameter:
 	#   - username (String): Der Benutzername für die MySQL-Datenbank.
 	#   - password (String): Das Passwort für die MySQL-Datenbank.
 	#   - databasename (String): Der Name der MySQL-Datenbank, in der die Aktualisierung durchgeführt werden soll.
 	#   - firstname (String): Der Vorname des Benutzers, der offline gesetzt werden soll.
 	#   - lastname (String): Der Nachname des Benutzers, der offline gesetzt werden soll.
+	#
 	#? Funktionsverhalten:
 	#   - Die Funktion führt eine SQL-Abfrage in der Datenbank durch, um den Benutzer mit dem angegebenen Vornamen und Nachnamen zu finden und offline zu setzen.
 	#   - Der gefundene Benutzer wird deaktiviert, indem das "active"-Feld auf -1 gesetzt wird.
+	#
 	#? Beispielaufruf:
 	#   db_setuserofline "db_username" "db_password" "db_database" "Vorname" "Nachname"
+	#
 	#? Rückgabewert:
 	# Diese Funktion gibt keinen expliziten Rückgabewert zurück, sondern deaktiviert den gefundenen Benutzer in der Datenbank und zeigt das Ergebnis der SQL-Abfrage an.
+	#
 	#? Hinweise:
 	#   - Stellen Sie sicher, dass die Tabelle "UserAccounts" in der angegebenen Datenbank vorhanden ist.
+	#
 ##
 function db_setuserofline() {
 	username=$1
@@ -12015,27 +12583,33 @@ function db_setuserofline() {
 	#? Beschreibung:
 	# Diese Funktion ermöglicht das Deaktivieren eines Benutzers in einer MySQL-Datenbank, um ihn offline zu setzen. Sie erfordert die Bereitstellung von Benutzernamen, Passwort, Datenbankname, Vornamen und Nachnamen als Parameter oder kann im Dialogmodus verwendet werden, wenn das Dialog-Tool (Dialog) installiert ist.
 	# Der Benutzer mit dem angegebenen Vornamen und Nachnamen wird deaktiviert, indem das "active"-Feld auf -1 gesetzt wird.
+	#
 	#? Parameter:
 	#   - username (String): Der Benutzername für die MySQL-Datenbank.
 	#   - password (String): Das Passwort für die MySQL-Datenbank.
 	#   - databasename (String): Der Name der MySQL-Datenbank, in der die Aktualisierung durchgeführt werden soll.
 	#   - firstname (String): Der Vorname des Benutzers, der offline gesetzt werden soll.
 	#   - lastname (String): Der Nachname des Benutzers, der offline gesetzt werden soll.
+	#
 	#? Funktionsverhalten:
 	#   - Wenn das Dialog-Tool (Dialog) installiert ist, wird die Funktion in einem interaktiven Modus ausgeführt. Sie zeigt ein Dialogfeld an, in dem Benutzername, Passwort, Datenbankname, Vorname und Nachname eingegeben werden können.
 	#   - Wenn das Dialog-Tool nicht installiert ist, wird die Funktion im nicht-interaktiven Modus ausgeführt und zeigt eine Meldung an, dass der Dialogmodus nicht verfügbar ist.
 	#   - Die Funktion führt eine SQL-Abfrage in der Datenbank durch, um den Benutzer mit dem angegebenen Vornamen und Nachnamen zu finden und offline zu setzen.
 	#   - Der gefundene Benutzer wird deaktiviert, indem das "active"-Feld auf -1 gesetzt wird.
+	#
 	#? Beispielaufruf:
 	#   - Interaktiver Modus (Dialog):
 	#     db_setuserofline_dialog
 	#   - Nicht-interaktiver Modus:
 	#     db_setuserofline_dialog "db_username" "db_password" "db_database" "Vorname" "Nachname"
+	#
 	#? Rückgabewert:
 	# Diese Funktion gibt keinen expliziten Rückgabewert zurück, sondern deaktiviert den gefundenen Benutzer in der Datenbank und zeigt eine Erfolgsmeldung an.
+	#
 	#? Hinweise:
 	#   - Stellen Sie sicher, dass die Tabelle "UserAccounts" in der angegebenen Datenbank vorhanden ist.
 	#   - Der Dialog-Modus erfordert die Installation des Dialog-Tools. Verwenden Sie "apt-get install dialog", um es zu installieren.
+	#
 ##
 function db_setuserofline_dialog() {
 	# zuerst schauen ob dialog installiert ist
@@ -12087,21 +12661,27 @@ function db_setuserofline_dialog() {
 	#? Beschreibung:
 	# Diese Funktion aktiviert einen zuvor deaktivierten Benutzer in einer MySQL-Datenbank, um ihn online zu setzen. Sie erfordert die Bereitstellung von Benutzernamen, Passwort, Datenbankname, Vornamen und Nachnamen als Parameter.
 	# Der zuvor deaktivierte Benutzer mit dem angegebenen Vornamen und Nachnamen wird aktiviert, indem das "active"-Feld auf 1 gesetzt wird.
+	#
 	#? Parameter:
 	#   - username (String): Der Benutzername für die MySQL-Datenbank.
 	#   - password (String): Das Passwort für die MySQL-Datenbank.
 	#   - databasename (String): Der Name der MySQL-Datenbank, in der die Aktualisierung durchgeführt werden soll.
 	#   - firstname (String): Der Vorname des Benutzers, der online gesetzt werden soll.
 	#   - lastname (String): Der Nachname des Benutzers, der online gesetzt werden soll.
+	#
 	#? Funktionsverhalten:
 	#   - Die Funktion führt eine SQL-Abfrage in der Datenbank durch, um den zuvor deaktivierten Benutzer mit dem angegebenen Vornamen und Nachnamen zu finden und online zu setzen.
 	#   - Der zuvor deaktivierte Benutzer wird aktiviert, indem das "active"-Feld auf 1 gesetzt wird.
+	#
 	#? Beispielaufruf:
 	#   db_setuseronline "db_username" "db_password" "db_database" "Vorname" "Nachname"
+	#
 	#? Rückgabewert:
 	# Diese Funktion gibt keinen expliziten Rückgabewert zurück, sondern aktiviert den zuvor deaktivierten Benutzer in der Datenbank und zeigt das Ergebnis der SQL-Abfrage an.
+	#
 	#? Hinweise:
 	#   - Stellen Sie sicher, dass die Tabelle "UserAccounts" in der angegebenen Datenbank vorhanden ist.
+	#
 ##
 function db_setuseronline() {
 	username=$1
@@ -12124,17 +12704,23 @@ function db_setuseronline() {
 	#? Beschreibung:
 	# Diese Funktion ermöglicht es einem Benutzer, einen zuvor deaktivierten Benutzer in einer MySQL-Datenbank online zu setzen, indem sie ein Dialogfeld für die Eingabe der erforderlichen Informationen bereitstellt. Die erforderlichen Informationen umfassen Benutzernamen, Passwort, Datenbankname, Vornamen und Nachnamen.
 	# Der zuvor deaktivierte Benutzer mit dem angegebenen Vornamen und Nachnamen wird aktiviert, indem das "active"-Feld auf 1 gesetzt wird.
+	#
 	#? Parameter: Keine
+	#
 	#? Funktionsverhalten:
 	#   - Die Funktion zeigt ein Dialogfeld an, in dem der Benutzer die erforderlichen Informationen eingeben kann.
 	#   - Nach Eingabe der Informationen führt die Funktion eine SQL-Abfrage in der Datenbank durch, um den zuvor deaktivierten Benutzer zu finden und online zu setzen.
 	#   - Der zuvor deaktivierte Benutzer wird aktiviert, indem das "active"-Feld auf 1 gesetzt wird.
+	#
 	#? Beispielaufruf:
 	#   Die Funktion wird direkt vom Benutzer aufgerufen und verwendet ein Dialogfeld für die Eingabe der erforderlichen Informationen.
+	#
 	#? Rückgabewert:
 	# Diese Funktion gibt keinen expliziten Rückgabewert zurück, sondern aktiviert den zuvor deaktivierten Benutzer in der Datenbank und zeigt eine Bestätigungsnachricht an.
+	#
 	#? Hinweise:
 	#   - Stellen Sie sicher, dass die Tabelle "UserAccounts" in der angegebenen Datenbank vorhanden ist.
+	#
 ##
 function db_setuseronline_dialog() {
 	# zuerst schauen ob dialog installiert ist
@@ -12186,21 +12772,27 @@ function db_setuseronline_dialog() {
 	#? Beschreibung:
 	# Diese Funktion ermöglicht es, eine Tabelle von einer Datenbank in eine andere zu kopieren. Sie benötigt den Namen der Quelldatenbank, den Namen der Zieldatenbank und den Namen der zu kopierenden Tabelle. Außerdem werden Benutzername und Passwort für den Datenbankzugriff benötigt.
 	# Die Funktion erstellt zunächst eine neue Tabelle in der Zieldatenbank mit derselben Struktur wie die Quelltabelle (einschließlich Spalten, Datentypen und Constraints). Anschließend werden die Daten aus der Quelltabelle in die neu erstellte Zieltabelle kopiert.
+	#
 	#? Parameter:
 	#   - vondatenbank: Name der Quelldatenbank
 	#   - nachdatenbank: Name der Zieldatenbank
 	#   - kopieretabelle: Name der zu kopierenden Tabelle
 	#   - username: Benutzername für den Datenbankzugriff
 	#   - password: Passwort für den Datenbankzugriff
+	#
 	#? Funktionsverhalten:
 	#   - Die Funktion erstellt eine neue Tabelle in der Zieldatenbank mit derselben Struktur wie die Quelltabelle.
 	#   - Anschließend werden die Daten aus der Quelltabelle in die neu erstellte Zieltabelle kopiert.
+	#
 	#? Beispielaufruf:
 	#   Die Funktion wird direkt vom Benutzer aufgerufen und erfordert die Eingabe der oben genannten Parameter.
+	#
 	#? Rückgabewert:
 	# Diese Funktion gibt keinen expliziten Rückgabewert zurück, sondern erstellt eine neue Tabelle in der Zieldatenbank und kopiert die Daten aus der Quelltabelle.
+	#
 	#? Hinweise:
 	#   - Stellen Sie sicher, dass die Quelldatenbank und die Zieldatenbank existieren und die richtigen Zugangsdaten bereitgestellt werden.
+	#
 ##
 function db_tabellencopy() {
 	# Datenbank Tabelle aus einer anderen Datenbank kopieren.
@@ -12233,6 +12825,7 @@ function db_tabellencopy() {
 	#? Beschreibung:
 	# Diese Funktion ermöglicht es, eine Tabelle von einer externen Datenbank auf einen Server zu kopieren. Sie benötigt den Namen oder die IP-Adresse des externen Servers, den Namen der Quelldatenbank, den Namen der Zieldatenbank und den Namen der zu kopierenden Tabelle. Außerdem werden Benutzername und Passwort für den Datenbankzugriff benötigt.
 	# Die Funktion erstellt zunächst eine neue Tabelle in der Zieldatenbank mit derselben Struktur wie die Quelltabelle (einschließlich Spalten, Datentypen und Constraints). Anschließend können die Daten aus der Quelltabelle in die neu erstellte Zieltabelle kopiert werden.
+	#
 	#? Parameter:
 	#   - EXTERNERSERVER: Name oder IP-Adresse des externen Servers
 	#   - vondatenbank: Name der Quelldatenbank
@@ -12240,15 +12833,20 @@ function db_tabellencopy() {
 	#   - kopieretabelle: Name der zu kopierenden Tabelle
 	#   - username: Benutzername für den Datenbankzugriff
 	#   - password: Passwort für den Datenbankzugriff
+	#
 	#? Funktionsverhalten:
 	#   - Die Funktion erstellt eine neue Tabelle in der Zieldatenbank mit derselben Struktur wie die Quelltabelle auf dem externen Server.
 	#   - Anschließend können die Daten aus der Quelltabelle auf dem externen Server in die neu erstellte Zieltabelle in der Zieldatenbank kopiert werden.
+	#
 	#? Beispielaufruf:
 	#   Die Funktion wird direkt vom Benutzer aufgerufen und erfordert die Eingabe der oben genannten Parameter.
+	#
 	#? Rückgabewert:
 	# Diese Funktion gibt keinen expliziten Rückgabewert zurück, sondern erstellt eine neue Tabelle in der Zieldatenbank und ermöglicht das Kopieren von Daten von einem externen Server in die Tabelle.
+	#
 	#? Hinweise:
 	#   - Stellen Sie sicher, dass der externe Server erreichbar ist und die Quelldatenbank sowie die Zieldatenbank existieren und die richtigen Zugangsdaten bereitgestellt werden.
+	#
 ##
 function db_tabellencopy_extern() {
 	# Datenbank Tabelle aus einer anderen Datenbank kopieren.
@@ -12284,23 +12882,29 @@ function db_tabellencopy_extern() {
 	#? Beschreibung:
 	# Diese Funktion konfiguriert und aktiviert die Verbindung zum MySQL-Master-Server. Sie ermöglicht es, den Standard-Master-Verbindungsnamen zu setzen, den Slave-Thread zu stoppen, das Master-Passwort zu ändern und den Slave-Thread wieder zu starten.
 	# Die Funktion akzeptiert optional einen Benutzernamen und ein Passwort für die MySQL-Verbindung. Wenn diese nicht angegeben werden, verwendet sie den Standardbenutzernamen "root" und ein leeres Passwort.
+	#
 	#? Parameter:
 	#   - username (optional): Benutzername für die MySQL-Verbindung (Standard: "root")
 	#   - password (optional): Passwort für die MySQL-Verbindung (Standard: Leer)
+	#
 	#? Funktionsverhalten:
 	#   - Die Funktion setzt den Standard-Master-Verbindungsnamen auf den angegebenen Benutzernamen oder auf "root", wenn kein Benutzername angegeben wurde.
 	#   - Sie stoppt den Slave-Thread auf dem MySQL-Server.
 	#   - Ändert das Master-Passwort auf das angegebene Passwort oder belässt es leer, wenn kein Passwort angegeben wurde.
 	#   - Startet den Slave-Thread erneut.
+	#
 	#? Beispielaufruf:
 	#   Die Funktion kann direkt vom Benutzer aufgerufen werden und erlaubt die Option, Benutzername und Passwort für die MySQL-Verbindung anzugeben.
 	#   Beispiel 1: default_master_connection "root" "geheimesPasswort"
 	#   Beispiel 2: default_master_connection # Benutzt den Standardbenutzernamen "root" und ein leeres Passwort.
+	#
 	#? Rückgabewert:
 	# Diese Funktion gibt keine explizite Rückgabe aus, sondern führt die Konfigurations- und Aktivierungsschritte für die MySQL-Master-Verbindung durch.
+	#
 	#? Hinweise:
 	#   - Stellen Sie sicher, dass Sie über ausreichende Berechtigungen für die MySQL-Verbindung und die Konfiguration des Master-Slave-Replikationsprozesses verfügen.
 	#   - Das Master-Passwort sollte sicher gespeichert und übertragen werden, da es Zugriff auf den MySQL-Master-Server ermöglicht.
+	#
 ##
 function default_master_connection() {
 	username=$1
@@ -12323,22 +12927,28 @@ function default_master_connection() {
 	#? Beschreibung:
 	# Diese Funktion konfiguriert und aktiviert die Verbindung zu einem spezifischen MySQL-Server anhand eines benutzerdefinierten Verbindungsnamens. Sie ermöglicht es, den Slave-Thread für diese Verbindung zu stoppen, das Master-Passwort zu ändern und den Slave-Thread wieder zu starten.
 	# Die Funktion akzeptiert optional einen Benutzernamen und ein Passwort für die MySQL-Verbindung. Wenn diese nicht angegeben werden, verwendet sie den Standardbenutzernamen "root" und ein leeres Passwort.
+	#
 	#? Parameter:
 	#   - username (optional): Benutzername für die MySQL-Verbindung (Standard: "root")
 	#   - password (optional): Passwort für die MySQL-Verbindung (Standard: Leer)
+	#
 	#? Funktionsverhalten:
 	#   - Die Funktion stoppt den Slave-Thread für die spezifische Verbindung mit dem angegebenen Verbindungsnamen.
 	#   - Ändert das Master-Passwort für diese Verbindung auf das angegebene Passwort oder belässt es leer, wenn kein Passwort angegeben wurde.
 	#   - Startet den Slave-Thread für diese Verbindung erneut.
+	#
 	#? Beispielaufruf:
 	#   Die Funktion kann direkt vom Benutzer aufgerufen werden und erlaubt die Option, Benutzername und Passwort für die MySQL-Verbindung anzugeben.
 	#   Beispiel 1: connection_name "meineverbindung" "geheimesPasswort"
 	#   Beispiel 2: connection_name "andereverbindung" # Benutzt den Standardbenutzernamen "root" und ein leeres Passwort.
+	#
 	#? Rückgabewert:
 	# Diese Funktion gibt keine explizite Rückgabe aus, sondern führt die Konfigurations- und Aktivierungsschritte für die MySQL-Verbindung mit dem spezifischen Namen durch.
+	#
 	#? Hinweise:
 	#   - Stellen Sie sicher, dass Sie über ausreichende Berechtigungen für die MySQL-Verbindung und die Konfiguration des Master-Slave-Replikationsprozesses verfügen.
 	#   - Das Master-Passwort sollte sicher gespeichert und übertragen werden, da es Zugriff auf den MySQL-Master-Server ermöglicht.
+	#
 ##
 function connection_name() {
 	username=$1
@@ -12360,22 +12970,28 @@ function connection_name() {
 	#? Beschreibung:
 	# Diese Funktion konfiguriert und aktiviert die Verbindung zum MySQL-Master-Server unter Verwendung eines benutzerdefinierten Benutzernamens und Passworts. Sie ermöglicht es, den Slave-Thread zu stoppen, den Master-Benutzernamen und das Passwort zu ändern und den Slave-Thread wieder zu starten.
 	# Die Funktion akzeptiert optional einen Benutzernamen und ein Passwort für die MySQL-Verbindung. Wenn diese nicht angegeben werden, verwendet sie den Standardbenutzernamen "root" und ein leeres Passwort.
+	#
 	#? Parameter:
 	#   - username (optional): Benutzername für die MySQL-Verbindung (Standard: "root")
 	#   - password (optional): Passwort für die MySQL-Verbindung (Standard: Leer)
+	#
 	#? Funktionsverhalten:
 	#   - Die Funktion stoppt den Slave-Thread auf dem aktuellen Server.
 	#   - Ändert den Master-Benutzernamen und das Passwort für die Replikation auf die angegebenen Werte oder belässt sie leer, wenn keine Werte angegeben wurden.
 	#   - Startet den Slave-Thread erneut, um die Replikation fortzusetzen.
+	#
 	#? Beispielaufruf:
 	#   Die Funktion kann direkt vom Benutzer aufgerufen werden und erlaubt die Option, Benutzername und Passwort für die MySQL-Verbindung anzugeben.
 	#   Beispiel 1: MASTER_USER "meinbenutzer" "geheimesPasswort"
 	#   Beispiel 2: MASTER_USER "andererbenutzer" # Benutzt den Standardbenutzernamen "root" und ein leeres Passwort.
+	#
 	#? Rückgabewert:
 	# Diese Funktion gibt keine explizite Rückgabe aus, sondern führt die Konfigurations- und Aktivierungsschritte für die MySQL-Verbindung durch.
+	#
 	#? Hinweise:
 	#   - Stellen Sie sicher, dass Sie über ausreichende Berechtigungen für die MySQL-Verbindung und die Konfiguration des Master-Slave-Replikationsprozesses verfügen.
 	#   - Das Master-Passwort und der Benutzername sollten sicher gespeichert und übertragen werden, da sie Zugriff auf den MySQL-Master-Server ermöglichen.
+	#
 ##
 function MASTER_USER() {
 	username=$1
@@ -12397,22 +13013,28 @@ function MASTER_USER() {
 	#? Beschreibung:
 	# Diese Funktion konfiguriert und aktiviert die Verbindung zum MySQL-Master-Server unter Verwendung eines benutzerdefinierten Passworts. Sie ermöglicht es, den Slave-Thread zu stoppen, das Master-Passwort zu ändern und den Slave-Thread wieder zu starten.
 	# Die Funktion akzeptiert optional einen Benutzernamen und ein Passwort für die MySQL-Verbindung. Wenn diese nicht angegeben werden, verwendet sie den Standardbenutzernamen "root" und ein leeres Passwort.
+	#
 	#? Parameter:
 	#   - username (optional): Benutzername für die MySQL-Verbindung (Standard: "root")
 	#   - password (optional): Passwort für die MySQL-Verbindung (Standard: Leer)
+	#
 	#? Funktionsverhalten:
 	#   - Die Funktion stoppt den Slave-Thread auf dem aktuellen Server.
 	#   - Ändert das Master-Passwort für die Replikation auf den angegebenen Wert oder belässt es leer, wenn kein Wert angegeben wurde.
 	#   - Startet den Slave-Thread erneut, um die Replikation fortzusetzen.
+	#
 	#? Beispielaufruf:
 	#   Die Funktion kann direkt vom Benutzer aufgerufen werden und erlaubt die Option, Benutzername und Passwort für die MySQL-Verbindung anzugeben.
 	#   Beispiel 1: MASTER_PASSWORD "meinbenutzer" "geheimesPasswort"
 	#   Beispiel 2: MASTER_PASSWORD "andererbenutzer" # Benutzt den Standardbenutzernamen "root" und ein leeres Passwort.
+	#
 	#? Rückgabewert:
 	# Diese Funktion gibt keine explizite Rückgabe aus, sondern führt die Konfigurations- und Aktivierungsschritte für die MySQL-Verbindung durch.
+	#
 	#? Hinweise:
 	#   - Stellen Sie sicher, dass Sie über ausreichende Berechtigungen für die MySQL-Verbindung und die Konfiguration des Master-Slave-Replikationsprozesses verfügen.
 	#   - Das Master-Passwort sollte sicher gespeichert und übertragen werden, da es Zugriff auf den MySQL-Master-Server ermöglicht.
+	#
 ##
 function MASTER_PASSWORD() {
 	username=$1
@@ -12434,23 +13056,29 @@ function MASTER_PASSWORD() {
 	#? Beschreibung:
 	# Diese Funktion konfiguriert und aktiviert die Verbindung zum MySQL-Master-Server unter Verwendung einer benutzerdefinierten Hostadresse, Benutzername und Passwort. Sie ermöglicht es, den Slave-Thread zu stoppen, den Host des MySQL-Master-Servers zu ändern und den Slave-Thread wieder zu starten.
 	# Die Funktion akzeptiert optional einen Benutzernamen, ein Passwort und den Host des MySQL-Master-Servers für die MySQL-Verbindung. Wenn diese nicht angegeben werden, verwendet sie den Standardbenutzernamen "root", ein leeres Passwort und die Hostadresse "127.0.0.1".
+	#
 	#? Parameter:
 	#   - username (optional): Benutzername für die MySQL-Verbindung (Standard: "root")
 	#   - password (optional): Passwort für die MySQL-Verbindung (Standard: Leer)
 	#   - MASTERHOST (optional): Hostadresse des MySQL-Master-Servers (Standard: "127.0.0.1")
+	#
 	#? Funktionsverhalten:
 	#   - Die Funktion stoppt den Slave-Thread auf dem aktuellen Server.
 	#   - Ändert den Host des MySQL-Master-Servers, den Benutzernamen und das Passwort für die Replikation auf die angegebenen Werte oder belässt sie auf den Standards, wenn keine Werte angegeben wurden.
 	#   - Startet den Slave-Thread erneut, um die Replikation fortzusetzen.
+	#
 	#? Beispielaufruf:
 	#   Die Funktion kann direkt vom Benutzer aufgerufen werden und erlaubt die Option, Benutzername, Passwort und Hostadresse für die MySQL-Verbindung anzugeben.
 	#   Beispiel 1: MASTER_HOST "meinbenutzer" "geheimesPasswort" "master.example.com"
 	#   Beispiel 2: MASTER_HOST "andererbenutzer" # Benutzt den Standardbenutzernamen "root", ein leeres Passwort und die Hostadresse "127.0.0.1".
+	#
 	#? Rückgabewert:
 	# Diese Funktion gibt keine explizite Rückgabe aus, sondern führt die Konfigurations- und Aktivierungsschritte für die MySQL-Verbindung durch.
+	#
 	#? Hinweise:
 	#   - Stellen Sie sicher, dass Sie über ausreichende Berechtigungen für die MySQL-Verbindung und die Konfiguration des Master-Slave-Replikationsprozesses verfügen.
 	#   - Die Hostadresse, der Benutzername und das Passwort sollten sicher gespeichert und übertragen werden, da sie Zugriff auf den MySQL-Master-Server ermöglichen.
+	#
 ##
 function MASTER_HOST() {
 	username=$1
@@ -12474,23 +13102,29 @@ function MASTER_HOST() {
 	#? Beschreibung:
 	# Diese Funktion konfiguriert und aktiviert die Verbindung zum MySQL-Master-Server unter Verwendung einer benutzerdefinierten Hostadresse, Benutzername und Passwort. Sie ermöglicht es, den Slave-Thread zu stoppen, den Host des MySQL-Master-Servers zu ändern und den Slave-Thread wieder zu starten.
 	# Die Funktion akzeptiert optional einen Benutzernamen, ein Passwort und den Host des MySQL-Master-Servers für die MySQL-Verbindung. Wenn diese nicht angegeben werden, verwendet sie den Standardbenutzernamen "root", ein leeres Passwort und die Hostadresse "127.0.0.1".
+	#
 	#? Parameter:
 	#   - username (optional): Benutzername für die MySQL-Verbindung (Standard: "root")
 	#   - password (optional): Passwort für die MySQL-Verbindung (Standard: Leer)
 	#   - MASTERHOST (optional): Hostadresse des MySQL-Master-Servers (Standard: "127.0.0.1")
+	#
 	#? Funktionsverhalten:
 	#   - Die Funktion stoppt den Slave-Thread auf dem aktuellen Server.
 	#   - Ändert den Host des MySQL-Master-Servers, den Benutzernamen und das Passwort für die Replikation auf die angegebenen Werte oder belässt sie auf den Standards, wenn keine Werte angegeben wurden.
 	#   - Startet den Slave-Thread erneut, um die Replikation fortzusetzen.
+	#
 	#? Beispielaufruf:
 	#   Die Funktion kann direkt vom Benutzer aufgerufen werden und erlaubt die Option, Benutzername, Passwort und Hostadresse für die MySQL-Verbindung anzugeben.
 	#   Beispiel 1: MASTER_HOST "meinbenutzer" "geheimesPasswort" "master.example.com"
 	#   Beispiel 2: MASTER_HOST "andererbenutzer" # Benutzt den Standardbenutzernamen "root", ein leeres Passwort und die Hostadresse "127.0.0.1".
+	#
 	#? Rückgabewert:
 	# Diese Funktion gibt keine explizite Rückgabe aus, sondern führt die Konfigurations- und Aktivierungsschritte für die MySQL-Verbindung durch.
+	#
 	#? Hinweise:
 	#   - Stellen Sie sicher, dass Sie über ausreichende Berechtigungen für die MySQL-Verbindung und die Konfiguration des Master-Slave-Replikationsprozesses verfügen.
 	#   - Die Hostadresse, der Benutzername und das Passwort sollten sicher gespeichert und übertragen werden, da sie Zugriff auf den MySQL-Master-Server ermöglichen.
+	#
 ##
 function MASTER_PORT() {
 	username=$1
@@ -12516,22 +13150,28 @@ function MASTER_PORT() {
 	#? Beschreibung:
 	# Diese Funktion konfiguriert und aktiviert die Verbindung zum MySQL-Master-Server unter Verwendung einer benutzerdefinierten Wiederholungsanzahl für die Verbindungsversuche. Sie ermöglicht es, den Slave-Thread zu stoppen, die Anzahl der Verbindungsversuche zum Master-Server zu ändern und den Slave-Thread wieder zu starten.
 	# Die Funktion akzeptiert optional einen Benutzernamen, ein Passwort und die Anzahl der Verbindungsversuche für die MySQL-Verbindung. Wenn diese nicht angegeben werden, verwendet sie den Standardbenutzernamen "root", ein leeres Passwort und eine Anzahl von 20 Verbindungsversuchen.
+	#
 	#? Parameter:
 	#   - username (optional): Benutzername für die MySQL-Verbindung (Standard: "root")
 	#   - password (optional): Passwort für die MySQL-Verbindung (Standard: Leer)
 	#   - MASTERCONNECTRETRY (optional): Anzahl der Verbindungsversuche zum MySQL-Master-Server (Standard: 20)
+	#
 	#? Funktionsverhalten:
 	#   - Die Funktion stoppt den Slave-Thread auf dem aktuellen Server.
 	#   - Ändert die Anzahl der Verbindungsversuche zum MySQL-Master-Server auf den angegebenen Wert oder belässt sie auf dem Standardwert.
 	#   - Startet den Slave-Thread erneut, um die Replikation fortzusetzen.
+	#
 	#? Beispielaufruf:
 	#   Die Funktion kann direkt vom Benutzer aufgerufen werden und erlaubt die Option, Benutzername, Passwort und die Anzahl der Verbindungsversuche für die MySQL-Verbindung anzugeben.
 	#   Beispiel 1: MASTER_CONNECT_RETRY "meinbenutzer" "geheimesPasswort" 30
 	#   Beispiel 2: MASTER_CONNECT_RETRY "andererbenutzer" # Benutzt den Standardbenutzernamen "root", ein leeres Passwort und 20 Verbindungsversuche.
+	#
 	#? Rückgabewert:
 	# Diese Funktion gibt keine explizite Rückgabe aus, sondern führt die Konfigurations- und Aktivierungsschritte für die MySQL-Verbindung durch.
+	#
 	#? Hinweise:
 	#   - Stellen Sie sicher, dass Sie über ausreichende Berechtigungen für die MySQL-Verbindung und die Konfiguration des Master-Slave-Replikationsprozesses verfügen.
+	#
 ##
 function MASTER_CONNECT_RETRY() {
 	username=$1
@@ -12555,22 +13195,28 @@ function MASTER_CONNECT_RETRY() {
 	#? Beschreibung:
 	# Diese Funktion konfiguriert und aktiviert die Verwendung von SSL-verschlüsselten Verbindungen zwischen dem MySQL-Server und dem Slave-Server. Sie ermöglicht es, den Slave-Thread zu stoppen, die SSL-Verbindungsoptionen zu ändern und den Slave-Thread wieder zu starten.
 	# Die Funktion akzeptiert optional einen Benutzernamen, ein Passwort und eine SSL-Verbindungsoption (1 für aktiviert oder 0 für deaktiviert). Wenn diese nicht angegeben werden, verwendet sie den Standardbenutzernamen "root", ein leeres Passwort und aktiviert SSL (MASTERSSL=1).
+	#
 	#? Parameter:
 	#   - username (optional): Benutzername für die MySQL-Verbindung (Standard: "root")
 	#   - password (optional): Passwort für die MySQL-Verbindung (Standard: Leer)
 	#   - MASTERSSL (optional): SSL-Verbindungsoption (1 für aktiviert, 0 für deaktiviert) (Standard: 1, aktiviert)
+	#
 	#? Funktionsverhalten:
 	#   - Die Funktion stoppt den Slave-Thread auf dem aktuellen Server.
 	#   - Ändert die SSL-Verbindungsoption auf den angegebenen Wert oder belässt sie auf dem Standardwert (aktiviert).
 	#   - Startet den Slave-Thread erneut, um die Replikation fortzusetzen.
+	#
 	#? Beispielaufruf:
 	#   Die Funktion kann direkt vom Benutzer aufgerufen werden und erlaubt die Option, Benutzername, Passwort und SSL-Verbindungsoption anzugeben.
 	#   Beispiel 1: MASTER_SSL "meinbenutzer" "geheimesPasswort" 0
 	#   Beispiel 2: MASTER_SSL "andererbenutzer" # Benutzt den Standardbenutzernamen "root", ein leeres Passwort und aktiviert SSL.
+	#
 	#? Rückgabewert:
 	# Diese Funktion gibt keine explizite Rückgabe aus, sondern führt die Konfigurations- und Aktivierungsschritte für die SSL-Verbindung durch.
+	#
 	#? Hinweise:
 	#   - Stellen Sie sicher, dass Sie über ausreichende Berechtigungen für die MySQL-Verbindung und die Konfiguration des Master-Slave-Replikationsprozesses verfügen.
+	#
 ##
 function MASTER_SSL() {
 	username=$1
@@ -12594,21 +13240,27 @@ function MASTER_SSL() {
 	#? Beschreibung:
 	# Diese Funktion konfiguriert und aktiviert die Verwendung von SSL-verschlüsselten Verbindungen zwischen dem MySQL-Server und dem Slave-Server unter Verwendung von SSL-Zertifikaten. Sie ermöglicht es, den Slave-Thread zu stoppen, die SSL-Verbindungsoptionen zu ändern und den Slave-Thread wieder zu starten.
 	# Die Funktion akzeptiert optional einen Benutzernamen und ein Passwort. Wenn diese nicht angegeben werden, verwendet sie den Standardbenutzernamen "root" und ein leeres Passwort. Die SSL-Zertifikatsdateien und -optionen sind in der Funktion fest codiert, können jedoch an Ihre spezifischen Konfigurationsanforderungen angepasst werden.
+	#
 	#? Parameter:
 	#   - username (optional): Benutzername für die MySQL-Verbindung (Standard: "root")
 	#   - password (optional): Passwort für die MySQL-Verbindung (Standard: Leer)
+	#
 	#? Funktionsverhalten:
 	#   - Die Funktion stoppt den Slave-Thread auf dem aktuellen Server.
 	#   - Konfiguriert die SSL-Verbindungsoptionen unter Verwendung von fest codierten Zertifikatsdateien und Optionen.
 	#   - Startet den Slave-Thread erneut, um die Replikation fortzusetzen.
+	#
 	#? Beispielaufruf:
 	#   Die Funktion kann direkt vom Benutzer aufgerufen werden und erlaubt die Option, Benutzername und Passwort anzugeben.
 	#   Beispiel: MASTER_SSL_CA "meinbenutzer" "geheimesPasswort"
+	#
 	#? Rückgabewert:
 	# Diese Funktion gibt keine explizite Rückgabe aus, sondern führt die Konfigurations- und Aktivierungsschritte für die SSL-Verbindung durch.
+	#
 	#? Hinweise:
 	#   - Stellen Sie sicher, dass Sie über ausreichende Berechtigungen für die MySQL-Verbindung und die Verwendung von SSL-Zertifikaten verfügen.
 	#   - Passen Sie die in der Funktion fest codierten SSL-Zertifikatsdateien und Optionen an Ihre spezifischen Anforderungen an.
+	#
 ##
 function MASTER_SSL_CA() {
 	username=$1
@@ -12635,22 +13287,28 @@ function MASTER_SSL_CA() {
 	#? Beschreibung:
 	# Diese Funktion konfiguriert und aktiviert die Verwendung von SSL-verschlüsselten Verbindungen zwischen dem MySQL-Server und dem Slave-Server unter Verwendung von SSL-Zertifikaten und einem Verzeichnis für Zertifikate (CA-Path). Sie ermöglicht es, den Slave-Thread zu stoppen, die SSL-Verbindungsoptionen zu ändern und den Slave-Thread wieder zu starten.
 	# Die Funktion akzeptiert optional einen Benutzernamen und ein Passwort. Wenn diese nicht angegeben werden, verwendet sie den Standardbenutzernamen "root" und ein leeres Passwort. Die SSL-Zertifikatsdateien und -optionen sind in der Funktion fest codiert, können jedoch an Ihre spezifischen Konfigurationsanforderungen angepasst werden.
+	#
 	#? Parameter:
 	#   - username (optional): Benutzername für die MySQL-Verbindung (Standard: "root")
 	#   - password (optional): Passwort für die MySQL-Verbindung (Standard: Leer)
+	#
 	#? Funktionsverhalten:
 	#   - Die Funktion stoppt den Slave-Thread auf dem aktuellen Server.
 	#   - Konfiguriert die SSL-Verbindungsoptionen unter Verwendung von fest codierten Zertifikatsdateien und Optionen sowie einem CA-Path-Verzeichnis für Zertifikate.
 	#   - Startet den Slave-Thread erneut, um die Replikation fortzusetzen.
+	#
 	#? Beispielaufruf:
 	#   Die Funktion kann direkt vom Benutzer aufgerufen werden und erlaubt die Option, Benutzername und Passwort anzugeben.
 	#   Beispiel: MASTER_SSL_CAPATH "meinbenutzer" "geheimesPasswort"
+	#
 	#? Rückgabewert:
 	# Diese Funktion gibt keine explizite Rückgabe aus, sondern führt die Konfigurations- und Aktivierungsschritte für die SSL-Verbindung durch.
+	#
 	#? Hinweise:
 	#   - Stellen Sie sicher, dass Sie über ausreichende Berechtigungen für die MySQL-Verbindung und die Verwendung von SSL-Zertifikaten verfügen.
 	#   - Passen Sie die in der Funktion fest codierten SSL-Zertifikatsdateien und Optionen an Ihre spezifischen Anforderungen an.
 	#   - Das CA-Path-Verzeichnis sollte Zertifikate im PEM-Format enthalten.
+	#
 ##
 function MASTER_SSL_CAPATH() {
 	username=$1
@@ -12677,21 +13335,27 @@ function MASTER_SSL_CAPATH() {
 	#? Beschreibung:
 	# Diese Funktion konfiguriert und aktiviert die Verwendung von SSL-verschlüsselten Verbindungen zwischen dem MySQL-Server und dem Slave-Server unter Verwendung von SSL-Zertifikaten. Sie ermöglicht es, den Slave-Thread zu stoppen, die SSL-Verbindungsoptionen zu ändern und den Slave-Thread wieder zu starten.
 	# Die Funktion akzeptiert optional einen Benutzernamen und ein Passwort. Wenn diese nicht angegeben werden, verwendet sie den Standardbenutzernamen "root" und ein leeres Passwort. Die SSL-Zertifikatsdateien und -optionen sind in der Funktion fest codiert, können jedoch an Ihre spezifischen Konfigurationsanforderungen angepasst werden.
+	#
 	#? Parameter:
 	#   - username (optional): Benutzername für die MySQL-Verbindung (Standard: "root")
 	#   - password (optional): Passwort für die MySQL-Verbindung (Standard: Leer)
+	#
 	#? Funktionsverhalten:
 	#   - Die Funktion stoppt den Slave-Thread auf dem aktuellen Server.
 	#   - Konfiguriert die SSL-Verbindungsoptionen unter Verwendung von fest codierten Zertifikatsdateien und Optionen.
 	#   - Startet den Slave-Thread erneut, um die Replikation fortzusetzen.
+	#
 	#? Beispielaufruf:
 	#   Die Funktion kann direkt vom Benutzer aufgerufen werden und erlaubt die Option, Benutzername und Passwort anzugeben.
 	#   Beispiel: MASTER_SSL_CERT "meinbenutzer" "geheimesPasswort"
+	#
 	#? Rückgabewert:
 	# Diese Funktion gibt keine explizite Rückgabe aus, sondern führt die Konfigurations- und Aktivierungsschritte für die SSL-Verbindung durch.
+	#
 	#? Hinweise:
 	#   - Stellen Sie sicher, dass Sie über ausreichende Berechtigungen für die MySQL-Verbindung und die Verwendung von SSL-Zertifikaten verfügen.
 	#   - Passen Sie die in der Funktion fest codierten SSL-Zertifikatsdateien und Optionen an Ihre spezifischen Anforderungen an.
+	#
 ##
 function MASTER_SSL_CERT() {
 	username=$1
@@ -12719,21 +13383,27 @@ function MASTER_SSL_CERT() {
 	#? Beschreibung:
 	# Diese Funktion konfiguriert und aktiviert die Verwendung von SSL-verschlüsselten Verbindungen zwischen dem MySQL-Server und dem Slave-Server unter Verwendung von SSL-Zertifikaten und einer Zertifikatsperrliste (CRL - Certificate Revocation List). Sie ermöglicht es, den Slave-Thread zu stoppen, die SSL-Verbindungsoptionen zu ändern und den Slave-Thread wieder zu starten.
 	# Die Funktion akzeptiert optional einen Benutzernamen und ein Passwort. Wenn diese nicht angegeben werden, verwendet sie den Standardbenutzernamen "root" und ein leeres Passwort. Die SSL-Zertifikatsdateien, Optionen und die CRL-Datei sind in der Funktion fest codiert und können an Ihre spezifischen Konfigurationsanforderungen angepasst werden.
+	#
 	#? Parameter:
 	#   - username (optional): Benutzername für die MySQL-Verbindung (Standard: "root")
 	#   - password (optional): Passwort für die MySQL-Verbindung (Standard: Leer)
+	#
 	#? Funktionsverhalten:
 	#   - Die Funktion stoppt den Slave-Thread auf dem aktuellen Server.
 	#   - Konfiguriert die SSL-Verbindungsoptionen unter Verwendung von fest codierten Zertifikatsdateien, Optionen und einer CRL-Datei.
 	#   - Startet den Slave-Thread erneut, um die Replikation fortzusetzen.
+	#
 	#? Beispielaufruf:
 	#   Die Funktion kann direkt vom Benutzer aufgerufen werden und erlaubt die Option, Benutzername und Passwort anzugeben.
 	#   Beispiel: MASTER_SSL_CRL "meinbenutzer" "geheimesPasswort"
+	#
 	#? Rückgabewert:
 	# Diese Funktion gibt keine explizite Rückgabe aus, sondern führt die Konfigurations- und Aktivierungsschritte für die SSL-Verbindung und CRL durch.
+	#
 	#? Hinweise:
 	#   - Stellen Sie sicher, dass Sie über ausreichende Berechtigungen für die MySQL-Verbindung und die Verwendung von SSL-Zertifikaten und CRLs verfügen.
 	#   - Passen Sie die in der Funktion fest codierten SSL-Zertifikatsdateien, Optionen und CRL-Dateipfade an Ihre spezifischen Anforderungen an.
+	#
 ##
 function MASTER_SSL_CRL() {
 	username=$1
@@ -12761,21 +13431,27 @@ function MASTER_SSL_CRL() {
 	#? Beschreibung:
 	# Diese Funktion konfiguriert und aktiviert die Verwendung von SSL-verschlüsselten Verbindungen zwischen dem MySQL-Server und dem Slave-Server unter Verwendung von SSL-Zertifikaten und einer Zertifikatsperrliste (CRL - Certificate Revocation List). Sie ermöglicht es, den Slave-Thread zu stoppen, die SSL-Verbindungsoptionen zu ändern und den Slave-Thread wieder zu starten.
 	# Die Funktion akzeptiert optional einen Benutzernamen und ein Passwort. Wenn diese nicht angegeben werden, verwendet sie den Standardbenutzernamen "root" und ein leeres Passwort. Die SSL-Zertifikatsdateien, Optionen und das Verzeichnis für die CRL-Dateien sind in der Funktion fest codiert und können an Ihre spezifischen Konfigurationsanforderungen angepasst werden.
+	#
 	#? Parameter:
 	#   - username (optional): Benutzername für die MySQL-Verbindung (Standard: "root")
 	#   - password (optional): Passwort für die MySQL-Verbindung (Standard: Leer)
+	#
 	#? Funktionsverhalten:
 	#   - Die Funktion stoppt den Slave-Thread auf dem aktuellen Server.
 	#   - Konfiguriert die SSL-Verbindungsoptionen unter Verwendung von fest codierten Zertifikatsdateien, Optionen und eines CRL-Verzeichnisses.
 	#   - Startet den Slave-Thread erneut, um die Replikation fortzusetzen.
+	#
 	#? Beispielaufruf:
 	#   Die Funktion kann direkt vom Benutzer aufgerufen werden und erlaubt die Option, Benutzername und Passwort anzugeben.
 	#   Beispiel: MASTER_SSL_CRLPATH "meinbenutzer" "geheimesPasswort"
+	#
 	#? Rückgabewert:
 	# Diese Funktion gibt keine explizite Rückgabe aus, sondern führt die Konfigurations- und Aktivierungsschritte für die SSL-Verbindung und CRL durch.
+	#
 	#? Hinweise:
 	#   - Stellen Sie sicher, dass Sie über ausreichende Berechtigungen für die MySQL-Verbindung und die Verwendung von SSL-Zertifikaten und CRLs verfügen.
 	#   - Passen Sie die in der Funktion fest codierten SSL-Zertifikatsdateien, Optionen und das Verzeichnis für die CRL-Dateien an Ihre spezifischen Anforderungen an.
+	#
 ##
 function MASTER_SSL_CRLPATH() {
 	username=$1
@@ -12803,21 +13479,27 @@ function MASTER_SSL_CRLPATH() {
 	#? Beschreibung:
 	# Diese Funktion konfiguriert und aktiviert die Verwendung von SSL-verschlüsselten Verbindungen zwischen dem MySQL-Server und dem Slave-Server unter Verwendung von SSL-Zertifikaten und einem privaten Schlüssel. Sie ermöglicht es, den Slave-Thread zu stoppen, die SSL-Verbindungsoptionen zu ändern und den Slave-Thread wieder zu starten.
 	# Die Funktion akzeptiert optional einen Benutzernamen und ein Passwort. Wenn diese nicht angegeben werden, verwendet sie den Standardbenutzernamen "root" und ein leeres Passwort. Die SSL-Zertifikatsdateien, Optionen und der Pfad zum privaten Schlüssel sind in der Funktion fest codiert und können an Ihre spezifischen Konfigurationsanforderungen angepasst werden.
+	#
 	#? Parameter:
 	#   - username (optional): Benutzername für die MySQL-Verbindung (Standard: "root")
 	#   - password (optional): Passwort für die MySQL-Verbindung (Standard: Leer)
+	#
 	#? Funktionsverhalten:
 	#   - Die Funktion stoppt den Slave-Thread auf dem aktuellen Server.
 	#   - Konfiguriert die SSL-Verbindungsoptionen unter Verwendung von fest codierten Zertifikatsdateien, Optionen und einem privaten Schlüssel.
 	#   - Startet den Slave-Thread erneut, um die Replikation fortzusetzen.
+	#
 	#? Beispielaufruf:
 	#   Die Funktion kann direkt vom Benutzer aufgerufen werden und erlaubt die Option, Benutzername und Passwort anzugeben.
 	#   Beispiel: MASTER_SSL_KEY "meinbenutzer" "geheimesPasswort"
+	#
 	#? Rückgabewert:
 	# Diese Funktion gibt keine explizite Rückgabe aus, sondern führt die Konfigurations- und Aktivierungsschritte für die SSL-Verbindung durch.
+	#
 	#? Hinweise:
 	#   - Stellen Sie sicher, dass Sie über ausreichende Berechtigungen für die MySQL-Verbindung und die Verwendung von SSL-Zertifikaten und privaten Schlüsseln verfügen.
 	#   - Passen Sie die in der Funktion fest codierten SSL-Zertifikatsdateien, Optionen und den Pfad zum privaten Schlüssel an Ihre spezifischen Anforderungen an.
+	#
 ##
 function MASTER_SSL_KEY() {
 	username=$1
@@ -12845,22 +13527,28 @@ function MASTER_SSL_KEY() {
 	#? Beschreibung:
 	# Diese Funktion konfiguriert und aktiviert die Verwendung einer bestimmten SSL-Verschlüsselung für die Kommunikation zwischen dem MySQL-Server und dem Slave-Server. Sie ermöglicht das Festlegen einer spezifischen SSL-Cipher-Suite (Verschlüsselungsmethode) für die SSL-gesicherte Verbindung.
 	# Die Funktion akzeptiert optional einen Benutzernamen und ein Passwort. Wenn diese nicht angegeben werden, verwendet sie den Standardbenutzernamen "root" und ein leeres Passwort. Die SSL-Zertifikatsdateien, Optionen und der Pfad zum privaten Schlüssel sind in der Funktion fest codiert und können an Ihre spezifischen Konfigurationsanforderungen angepasst werden.
+	#
 	#? Parameter:
 	#   - username (optional): Benutzername für die MySQL-Verbindung (Standard: "root")
 	#   - password (optional): Passwort für die MySQL-Verbindung (Standard: Leer)
+	#
 	#? Funktionsverhalten:
 	#   - Die Funktion stoppt den Slave-Thread auf dem aktuellen Server.
 	#   - Konfiguriert die SSL-Verbindungsoptionen unter Verwendung einer fest codierten SSL-Cipher-Suite (Verschlüsselungsmethode).
 	#   - Startet den Slave-Thread erneut, um die Replikation fortzusetzen.
+	#
 	#? Beispielaufruf:
 	#   Die Funktion kann direkt vom Benutzer aufgerufen werden und erlaubt die Option, Benutzername und Passwort anzugeben.
 	#   Beispiel: MASTER_SSL_CIPHER "meinbenutzer" "geheimesPasswort"
+	#
 	#? Rückgabewert:
 	# Diese Funktion gibt keine explizite Rückgabe aus, sondern führt die Konfigurations- und Aktivierungsschritte für die SSL-Cipher-Suite durch.
+	#
 	#? Hinweise:
 	#   - Stellen Sie sicher, dass Sie über ausreichende Berechtigungen für die MySQL-Verbindung und die Verwendung von SSL-Zertifikaten und privaten Schlüsseln verfügen.
 	#   - Passen Sie die in der Funktion fest codierten SSL-Zertifikatsdateien, Optionen und den Pfad zum privaten Schlüssel an Ihre spezifischen Anforderungen an.
 	#   - Die SSL-Cipher-Suite muss gemäß den Sicherheitsanforderungen Ihrer Umgebung ausgewählt werden.
+	#
 ##
 function MASTER_SSL_CIPHER() {
 	username=$1
@@ -12888,21 +13576,27 @@ function MASTER_SSL_CIPHER() {
 	#? Beschreibung:
 	# Diese Funktion konfiguriert und aktiviert die Überprüfung des Serverzertifikats (Server-Zertifikatsvalidierung) für die SSL-gesicherte Verbindung zwischen dem MySQL-Server und dem Slave-Server. Sie stellt sicher, dass der Slave-Server das Serverzertifikat des Master-Servers überprüft, um sicherzustellen, dass es gültig ist und zur Verbindung verwendet werden kann.
 	# Die Funktion akzeptiert optional einen Benutzernamen und ein Passwort. Wenn diese nicht angegeben werden, verwendet sie den Standardbenutzernamen "root" und ein leeres Passwort. Die SSL-Zertifikatsdateien, Optionen und der Pfad zum privaten Schlüssel sind in der Funktion fest codiert und können an Ihre spezifischen Konfigurationsanforderungen angepasst werden.
+	#
 	#? Parameter:
 	#   - username (optional): Benutzername für die MySQL-Verbindung (Standard: "root")
 	#   - password (optional): Passwort für die MySQL-Verbindung (Standard: Leer)
+	#
 	#? Funktionsverhalten:
 	#   - Die Funktion stoppt den Slave-Thread auf dem aktuellen Server.
 	#   - Konfiguriert die SSL-Verbindungsoptionen, um die Überprüfung des Serverzertifikats (Server-Zertifikatsvalidierung) zu aktivieren.
 	#   - Startet den Slave-Thread erneut, um die Replikation fortzusetzen.
+	#
 	#? Beispielaufruf:
 	#   Die Funktion kann direkt vom Benutzer aufgerufen werden und erlaubt die Option, Benutzername und Passwort anzugeben.
 	#   Beispiel: MASTER_SSL_VERIFY_SERVER_CERT "meinbenutzer" "geheimesPasswort"
+	#
 	#? Rückgabewert:
 	# Diese Funktion gibt keine explizite Rückgabe aus, sondern führt die Konfigurations- und Aktivierungsschritte für die Serverzertifikatsvalidierung durch.
+	#
 	#? Hinweise:
 	#   - Stellen Sie sicher, dass Sie über ausreichende Berechtigungen für die MySQL-Verbindung und die Verwendung von SSL-Zertifikaten und privaten Schlüsseln verfügen.
 	#   - Passen Sie die in der Funktion fest codierten SSL-Zertifikatsdateien, Optionen und den Pfad zum privaten Schlüssel an Ihre spezifischen Anforderungen an.
+	#
 ##
 function MASTER_SSL_VERIFY_SERVER_CERT() {
 	username=$1
@@ -12930,23 +13624,29 @@ function MASTER_SSL_VERIFY_SERVER_CERT() {
 	#? Beschreibung:
 	# Diese Funktion konfiguriert den MySQL-Server, um den gewünschten binären Protokoll-Dateinamen und die Position im binären Protokoll festzulegen, von dem die Replikation beginnen soll. Sie ermöglicht die genaue Steuerung der Replikationsquelle auf dem Slave-Server.
 	# Die Funktion akzeptiert optional einen Benutzernamen und ein Passwort. Wenn diese nicht angegeben werden, verwendet sie den Standardbenutzernamen "root" und ein leeres Passwort.
+	#
 	#? Parameter:
 	#   - username (optional): Benutzername für die MySQL-Verbindung (Standard: "root")
 	#   - password (optional): Passwort für die MySQL-Verbindung (Standard: Leer)
 	#   - MASTERLOGFILE (optional): Der Name der binären Protokoll-Datei auf dem Master-Server, von der die Replikation beginnen soll (Standard: "master2-bin.001")
 	#   - MASTERLOGPOS (optional): Die Position im binären Protokoll, von der die Replikation beginnen soll (Standard: 4)
+	#
 	#? Funktionsverhalten:
 	#   - Die Funktion stoppt den Slave-Thread auf dem aktuellen Server.
 	#   - Konfiguriert den MySQL-Server, um den gewünschten binären Protokoll-Dateinamen und die Position im binären Protokoll festzulegen.
 	#   - Startet den Slave-Thread erneut, um die Replikation von der angegebenen Position im binären Protokoll fortzusetzen.
+	#
 	#? Beispielaufruf:
 	#   Die Funktion kann direkt vom Benutzer aufgerufen werden und erlaubt die Option, Benutzername, Passwort, binären Protokoll-Dateinamen und Position anzugeben.
 	#   Beispiel: MASTER_LOG_FILE "meinbenutzer" "geheimesPasswort" "master-bin.002" 1234
+	#
 	#? Rückgabewert:
 	# Diese Funktion gibt keine explizite Rückgabe aus, sondern führt die Konfigurations- und Aktivierungsschritte für die Replikation mit den angegebenen Parametern durch.
+	#
 	#? Hinweise:
 	#   - Stellen Sie sicher, dass Sie über ausreichende Berechtigungen für die MySQL-Verbindung und die Verwendung der Replikation verfügen.
 	#   - Die Verwendung der richtigen binären Protokoll-Datei und Position ist entscheidend, um sicherzustellen, dass die Replikation korrekt funktioniert.
+	#
 ##
 function MASTER_LOG_FILE() {
 	username=$1
@@ -12973,23 +13673,29 @@ function MASTER_LOG_FILE() {
 	#? Beschreibung:
 	# Diese Funktion konfiguriert den MySQL-Server, um die gewünschte Position im binären Protokoll und den dazugehörigen binären Protokoll-Dateinamen festzulegen, von denen die Replikation auf dem Slave-Server beginnen soll. Sie ermöglicht die genaue Steuerung der Replikationsquelle auf dem Slave-Server.
 	# Die Funktion akzeptiert optional einen Benutzernamen und ein Passwort. Wenn diese nicht angegeben werden, verwendet sie den Standardbenutzernamen "root" und ein leeres Passwort.
+	#
 	#? Parameter:
 	#   - username (optional): Benutzername für die MySQL-Verbindung (Standard: "root")
 	#   - password (optional): Passwort für die MySQL-Verbindung (Standard: Leer)
 	#   - MASTERLOGPOS (optional): Die Position im binären Protokoll, von der die Replikation beginnen soll (Standard: 4)
 	#   - MASTERLOGFILE (optional): Der Name der binären Protokoll-Datei auf dem Master-Server, von der die Replikation beginnen soll (Standard: "master2-bin.001")
+	#
 	#? Funktionsverhalten:
 	#   - Die Funktion stoppt den Slave-Thread auf dem aktuellen Server.
 	#   - Konfiguriert den MySQL-Server, um die gewünschte Position im binären Protokoll und den dazugehörigen binären Protokoll-Dateinamen festzulegen.
 	#   - Startet den Slave-Thread erneut, um die Replikation von der angegebenen Position im binären Protokoll fortzusetzen.
+	#
 	#? Beispielaufruf:
 	#   Die Funktion kann direkt vom Benutzer aufgerufen werden und erlaubt die Option, Benutzername, Passwort, Position im binären Protokoll und binären Protokoll-Dateinamen anzugeben.
 	#   Beispiel: MASTER_LOG_POS "meinbenutzer" "geheimesPasswort" 1234 "master-bin.002"
+	#
 	#? Rückgabewert:
 	# Diese Funktion gibt keine explizite Rückgabe aus, sondern führt die Konfigurations- und Aktivierungsschritte für die Replikation mit den angegebenen Parametern durch.
+	#
 	#? Hinweise:
 	#   - Stellen Sie sicher, dass Sie über ausreichende Berechtigungen für die MySQL-Verbindung und die Verwendung der Replikation verfügen.
 	#   - Die Verwendung der richtigen Position im binären Protokoll und des richtigen binären Protokoll-Dateinamens ist entscheidend, um sicherzustellen, dass die Replikation korrekt funktioniert.
+	#
 ##
 function MASTER_LOG_POS() {
 	username=$1
@@ -13016,23 +13722,29 @@ function MASTER_LOG_POS() {
 	#? Beschreibung:
 	# Diese Funktion konfiguriert den MySQL-Server, um die gewünschte Position im Relay-Log und den dazugehörigen Relay-Log-Dateinamen festzulegen, von denen der SQL-Thread des Slave-Servers die Verarbeitung fortsetzen soll. Dies ermöglicht die Steuerung der Replikation auf dem Slave-Server.
 	# Die Funktion akzeptiert optional einen Benutzernamen und ein Passwort. Wenn diese nicht angegeben werden, verwendet sie den Standardbenutzernamen "root" und ein leeres Passwort.
+	#
 	#? Parameter:
 	#   - username (optional): Benutzername für die MySQL-Verbindung (Standard: "root")
 	#   - password (optional): Passwort für die MySQL-Verbindung (Standard: Leer)
 	#   - RELAYLOGPOS (optional): Die Position im Relay-Log, von der der SQL-Thread die Verarbeitung fortsetzen soll (Standard: 4025)
 	#   - RELAYLOGFILE (optional): Der Name der Relay-Log-Datei auf dem Slave-Server, von der der SQL-Thread die Verarbeitung fortsetzen soll (Standard: "slave-relay-bin.006")
+	#
 	#? Funktionsverhalten:
 	#   - Die Funktion stoppt den SQL-Thread auf dem Slave-Server.
 	#   - Konfiguriert den MySQL-Server, um die gewünschte Position im Relay-Log und den dazugehörigen Relay-Log-Dateinamen festzulegen.
 	#   - Startet den SQL-Thread erneut, um die Verarbeitung von der angegebenen Position im Relay-Log fortzusetzen.
+	#
 	#? Beispielaufruf:
 	#   Die Funktion kann direkt vom Benutzer aufgerufen werden und erlaubt die Option, Benutzername, Passwort, Position im Relay-Log und Relay-Log-Dateinamen anzugeben.
 	#   Beispiel: RELAY_LOG_FILE "meinbenutzer" "geheimesPasswort" 5000 "slave-relay-bin.007"
+	#
 	#? Rückgabewert:
 	# Diese Funktion gibt keine explizite Rückgabe aus, sondern führt die Konfigurations- und Aktivierungsschritte für die Replikation mit den angegebenen Parametern durch.
+	#
 	#? Hinweise:
 	#   - Stellen Sie sicher, dass Sie über ausreichende Berechtigungen für die MySQL-Verbindung und die Verwendung der Replikation verfügen.
 	#   - Die Verwendung der richtigen Position im Relay-Log und des richtigen Relay-Log-Dateinamens ist entscheidend, um sicherzustellen, dass die Replikation korrekt funktioniert.
+	#
 ##
 function RELAY_LOG_FILE() {
 	username=$1
@@ -13059,23 +13771,29 @@ function RELAY_LOG_FILE() {
 	#? Beschreibung:
 	# Diese Funktion konfiguriert den MySQL-Server, um die gewünschte Position im Relay-Log festzulegen, von der der SQL-Thread des Slave-Servers die Verarbeitung fortsetzen soll. Dies ermöglicht die Steuerung der Replikation auf dem Slave-Server.
 	# Die Funktion akzeptiert optional einen Benutzernamen und ein Passwort. Wenn diese nicht angegeben werden, verwendet sie den Standardbenutzernamen "root" und ein leeres Passwort.
+	#
 	#? Parameter:
 	#   - username (optional): Benutzername für die MySQL-Verbindung (Standard: "root")
 	#   - password (optional): Passwort für die MySQL-Verbindung (Standard: Leer)
 	#   - RELAYLOGPOS (optional): Die Position im Relay-Log, von der der SQL-Thread die Verarbeitung fortsetzen soll (Standard: 4025)
 	#   - RELAYLOGFILE (optional): Der Name der Relay-Log-Datei auf dem Slave-Server, von der der SQL-Thread die Verarbeitung fortsetzen soll (Standard: "slave-relay-bin.006")
+	#
 	#? Funktionsverhalten:
 	#   - Die Funktion stoppt den SQL-Thread auf dem Slave-Server.
 	#   - Konfiguriert den MySQL-Server, um die gewünschte Position im Relay-Log festzulegen.
 	#   - Startet den SQL-Thread erneut, um die Verarbeitung von der angegebenen Position im Relay-Log fortzusetzen.
+	#
 	#? Beispielaufruf:
 	#   Die Funktion kann direkt vom Benutzer aufgerufen werden und erlaubt die Option, Benutzername, Passwort, Position im Relay-Log und Relay-Log-Dateinamen anzugeben.
 	#   Beispiel: RELAY_LOG_POS "meinbenutzer" "geheimesPasswort" 5000 "slave-relay-bin.007"
+	#
 	#? Rückgabewert:
 	# Diese Funktion gibt keine explizite Rückgabe aus, sondern führt die Konfigurations- und Aktivierungsschritte für die Replikation mit den angegebenen Parametern durch.
+	#
 	#? Hinweise:
 	#   - Stellen Sie sicher, dass Sie über ausreichende Berechtigungen für die MySQL-Verbindung und die Verwendung der Replikation verfügen.
 	#   - Die Verwendung der richtigen Position im Relay-Log ist entscheidend, um sicherzustellen, dass die Replikation korrekt funktioniert.
+	#
 ##
 function RELAY_LOG_POS() {
 	username=$1
@@ -13102,20 +13820,26 @@ function RELAY_LOG_POS() {
 	#? Beschreibung:
 	# Diese Funktion konfiguriert den MySQL-Server, um das Global Transaction Identifier (GTID)-Replikationsformat zu verwenden. GTID ist eine Methode zur eindeutigen Identifizierung von Transaktionen in einer Replikationsumgebung.
 	# Die Funktion akzeptiert optional einen Benutzernamen und ein Passwort. Wenn diese nicht angegeben werden, verwendet sie den Standardbenutzernamen "root" und ein leeres Passwort.
+	#
 	#? Parameter:
 	#   - username (optional): Benutzername für die MySQL-Verbindung (Standard: "root")
 	#   - password (optional): Passwort für die MySQL-Verbindung (Standard: Leer)
+	#
 	#? Funktionsverhalten:
 	#   - Die Funktion stoppt den Slave-SQL-Thread auf dem Slave-Server.
 	#   - Konfiguriert den MySQL-Server, um das GTID-Replikationsformat zu verwenden.
 	#   - Startet den Slave-SQL-Thread erneut, um die Verarbeitung mit GTID fortzusetzen.
+	#
 	#? Beispielaufruf:
 	#   Die Funktion kann direkt vom Benutzer aufgerufen werden und erlaubt die Option, Benutzername und Passwort anzugeben.
 	#   Beispiel: MASTER_USE_GTID "meinbenutzer" "geheimesPasswort"
+	#
 	#? Rückgabewert:
 	# Diese Funktion gibt keine explizite Rückgabe aus, sondern führt die Konfigurations- und Aktivierungsschritte für die Verwendung von GTID in der Replikation durch.
+	#
 	#? Hinweise:
 	#   - Stellen Sie sicher, dass Sie über ausreichende Berechtigungen für die MySQL-Verbindung und die Verwendung von GTID verfügen.
+	#
 ##
 function MASTER_USE_GTID() {
 	username=$1
@@ -13138,20 +13862,26 @@ function MASTER_USE_GTID() {
 	#? Beschreibung:
 	# Diese Funktion konfiguriert den MySQL-Server, um das Global Transaction Identifier (GTID)-Replikationsformat zu verwenden. GTID ist eine Methode zur eindeutigen Identifizierung von Transaktionen in einer Replikationsumgebung.
 	# Die Funktion akzeptiert optional einen Benutzernamen und ein Passwort. Wenn diese nicht angegeben werden, verwendet sie den Standardbenutzernamen "root" und ein leeres Passwort.
+	#
 	#? Parameter:
 	#   - username (optional): Benutzername für die MySQL-Verbindung (Standard: "root")
 	#   - password (optional): Passwort für die MySQL-Verbindung (Standard: Leer)
+	#
 	#? Funktionsverhalten:
 	#   - Die Funktion stoppt den Slave-SQL-Thread auf dem Slave-Server.
 	#   - Konfiguriert den MySQL-Server, um das GTID-Replikationsformat zu verwenden.
 	#   - Startet den Slave-SQL-Thread erneut, um die Verarbeitung mit GTID fortzusetzen.
+	#
 	#? Beispielaufruf:
 	#   Die Funktion kann direkt vom Benutzer aufgerufen werden und erlaubt die Option, Benutzername und Passwort anzugeben.
 	#   Beispiel: MASTER_USE_GTID "meinbenutzer" "geheimesPasswort"
+	#
 	#? Rückgabewert:
 	# Diese Funktion gibt keine explizite Rückgabe aus, sondern führt die Konfigurations- und Aktivierungsschritte für die Verwendung von GTID in der Replikation durch.
+	#
 	#? Hinweise:
 	#   - Stellen Sie sicher, dass Sie über ausreichende Berechtigungen für die MySQL-Verbindung und die Verwendung von GTID verfügen.
+	#
 ## 
 function MASTER_USE_GTID2() {
 	username=$1
@@ -13177,21 +13907,27 @@ function MASTER_USE_GTID2() {
 	#? Beschreibung:
 	# Diese Funktion konfiguriert den MySQL-Server, um bestimmte Server-IDs in der Replikation zu ignorieren. Server-IDs sind ein Mechanismus zur Identifizierung von Quell- und Zielsystemen in einer Replikationsumgebung.
 	# Die Funktion akzeptiert einen Benutzernamen, ein Passwort und eine Liste von Server-IDs, die ignoriert werden sollen.
+	#
 	#? Parameter:
 	#   - username (optional): Benutzername für die MySQL-Verbindung (Standard: "root")
 	#   - password (optional): Passwort für die MySQL-Verbindung (Standard: Leer)
 	#   - ids: Eine kommaseparierte Liste von Server-IDs, die in der Replikation ignoriert werden sollen.
+	#
 	#? Funktionsverhalten:
 	#   - Die Funktion stoppt den Slave-SQL-Thread auf dem Slave-Server.
 	#   - Konfiguriert den MySQL-Server, um die angegebenen Server-IDs in der Replikation zu ignorieren.
 	#   - Startet den Slave-SQL-Thread erneut, um die Verarbeitung fortzusetzen.
+	#
 	#? Beispielaufruf:
 	#   Die Funktion kann direkt vom Benutzer aufgerufen werden und erfordert die Angabe von Benutzername, Passwort und einer Liste von Server-IDs.
 	#   Beispiel: IGNORE_SERVER_IDS "meinbenutzer" "geheimesPasswort" "2,3,5"
+	#
 	#? Rückgabewert:
 	# Diese Funktion gibt keine explizite Rückgabe aus, sondern führt die Konfigurations- und Aktivierungsschritte zur Ignorierung von Server-IDs in der Replikation durch.
+	#
 	#? Hinweise:
 	#   - Stellen Sie sicher, dass Sie über ausreichende Berechtigungen für die MySQL-Verbindung und die Konfiguration der Server-IDs verfügen.
+	#
 ##
 function IGNORE_SERVER_IDS() {
 	username=$1
@@ -13247,21 +13983,27 @@ function IGNORE_SERVER_IDS() {
 	#? Beschreibung:
 	# Diese Funktion konfiguriert den MySQL-Server, um bestimmte Domänen-IDs in der Replikation zu verarbeiten. Domänen-IDs werden verwendet, um eine Gruppe von Transaktionen zu identifizieren, die zusammengehören. Mit dieser Funktion können Sie angeben, welche Domänen-IDs in der Replikation verarbeitet werden sollen.
 	# Die Funktion akzeptiert einen Benutzernamen, ein Passwort und eine Liste von Domänen-IDs, die verarbeitet werden sollen.
+	#
 	#? Parameter:
 	#   - username (optional): Benutzername für die MySQL-Verbindung (Standard: "root")
 	#   - password (optional): Passwort für die MySQL-Verbindung (Standard: Leer)
 	#   - ids: Eine kommaseparierte Liste von Domänen-IDs, die in der Replikation verarbeitet werden sollen.
+	#
 	#? Funktionsverhalten:
 	#   - Die Funktion stoppt den Slave-SQL-Thread auf dem Slave-Server.
 	#   - Konfiguriert den MySQL-Server, um die angegebenen Domänen-IDs in der Replikation zu verarbeiten.
 	#   - Startet den Slave-SQL-Thread erneut, um die Verarbeitung fortzusetzen.
+	#
 	#? Beispielaufruf:
 	#   Die Funktion kann direkt vom Benutzer aufgerufen werden und erfordert die Angabe von Benutzername, Passwort und einer Liste von Domänen-IDs.
 	#   Beispiel: DO_DOMAIN_IDS "meinbenutzer" "geheimesPasswort" "1,2,3"
+	#
 	#? Rückgabewert:
 	# Diese Funktion gibt keine explizite Rückgabe aus, sondern führt die Konfigurations- und Aktivierungsschritte zur Verarbeitung von Domänen-IDs in der Replikation durch.
+	#
 	#? Hinweise:
 	#   - Stellen Sie sicher, dass Sie über ausreichende Berechtigungen für die MySQL-Verbindung und die Konfiguration der Domänen-IDs verfügen.
+	#
 ##
 function DO_DOMAIN_IDS() {
 	username=$1
@@ -13285,21 +14027,27 @@ function DO_DOMAIN_IDS() {
 	#? Beschreibung:
 	# Diese Funktion konfiguriert den MySQL-Server, um bestimmte Domänen-IDs in der Replikation zu verarbeiten. Domänen-IDs werden verwendet, um eine Gruppe von Transaktionen zu identifizieren, die zusammengehören. Mit dieser Funktion können Sie angeben, welche Domänen-IDs in der Replikation verarbeitet werden sollen.
 	# Die Funktion akzeptiert einen Benutzernamen, ein Passwort und eine Liste von Domänen-IDs, die verarbeitet werden sollen.
+	#
 	#? Parameter:
 	#   - username (optional): Benutzername für die MySQL-Verbindung (Standard: "root")
 	#   - password (optional): Passwort für die MySQL-Verbindung (Standard: Leer)
 	#   - ids: Eine kommaseparierte Liste von Domänen-IDs, die in der Replikation verarbeitet werden sollen.
+	#
 	#? Funktionsverhalten:
 	#   - Die Funktion stoppt den Slave-SQL-Thread auf dem Slave-Server.
 	#   - Konfiguriert den MySQL-Server, um die angegebenen Domänen-IDs in der Replikation zu verarbeiten.
 	#   - Startet den Slave-SQL-Thread erneut, um die Verarbeitung fortzusetzen.
+	#
 	#? Beispielaufruf:
 	#   Die Funktion kann direkt vom Benutzer aufgerufen werden und erfordert die Angabe von Benutzername, Passwort und einer Liste von Domänen-IDs.
 	#   Beispiel: DO_DOMAIN_IDS "meinbenutzer" "geheimesPasswort" "1,2,3"
+	#
 	#? Rückgabewert:
 	# Diese Funktion gibt keine explizite Rückgabe aus, sondern führt die Konfigurations- und Aktivierungsschritte zur Verarbeitung von Domänen-IDs in der Replikation durch.
+	#
 	#? Hinweise:
 	#   - Stellen Sie sicher, dass Sie über ausreichende Berechtigungen für die MySQL-Verbindung und die Konfiguration der Domänen-IDs verfügen.
+	#
 ## 
 function DO_DOMAIN_IDS2() {
 	username=$1
@@ -13322,21 +14070,27 @@ function DO_DOMAIN_IDS2() {
 	#? Beschreibung:
 	# Diese Funktion konfiguriert den MySQL-Server, um bestimmte Domänen-IDs in der Replikation zu ignorieren. Domänen-IDs werden verwendet, um eine Gruppe von Transaktionen zu identifizieren, die zusammengehören. Mit dieser Funktion können Sie angeben, welche Domänen-IDs in der Replikation ignoriert werden sollen.
 	# Die Funktion akzeptiert einen Benutzernamen, ein Passwort und eine Liste von Domänen-IDs, die ignoriert werden sollen.
+	#
 	#? Parameter:
 	#   - username (optional): Benutzername für die MySQL-Verbindung (Standard: "root")
 	#   - password (optional): Passwort für die MySQL-Verbindung (Standard: Leer)
 	#   - ids: Eine kommaseparierte Liste von Domänen-IDs, die in der Replikation ignoriert werden sollen.
+	#
 	#? Funktionsverhalten:
 	#   - Die Funktion stoppt den Slave-SQL-Thread auf dem Slave-Server.
 	#   - Konfiguriert den MySQL-Server, um die angegebenen Domänen-IDs in der Replikation zu ignorieren.
 	#   - Startet den Slave-SQL-Thread erneut, um die Verarbeitung fortzusetzen.
+	#
 	#? Beispielaufruf:
 	#   Die Funktion kann direkt vom Benutzer aufgerufen werden und erfordert die Angabe von Benutzername, Passwort und einer Liste von Domänen-IDs.
 	#   Beispiel: IGNORE_DOMAIN_IDS "meinbenutzer" "geheimesPasswort" "1,2,3"
+	#
 	#? Rückgabewert:
 	# Diese Funktion gibt keine explizite Rückgabe aus, sondern führt die Konfigurations- und Aktivierungsschritte zur Ignorierung von Domänen-IDs in der Replikation durch.
+	#
 	#? Hinweise:
 	#   - Stellen Sie sicher, dass Sie über ausreichende Berechtigungen für die MySQL-Verbindung und die Konfiguration der Domänen-IDs verfügen.
+	#
 ##
 function IGNORE_DOMAIN_IDS() {
 	username=$1
@@ -13360,21 +14114,27 @@ function IGNORE_DOMAIN_IDS() {
 	#? Beschreibung:
 	# Diese Funktion konfiguriert den MySQL-Server, um bestimmte Domänen-IDs in der Replikation zu ignorieren. Domänen-IDs werden verwendet, um eine Gruppe von Transaktionen zu identifizieren, die zusammengehören. Mit dieser Funktion können Sie angeben, welche Domänen-IDs in der Replikation ignoriert werden sollen.
 	# Die Funktion akzeptiert einen Benutzernamen, ein Passwort und eine Liste von Domänen-IDs, die ignoriert werden sollen.
+	#
 	#? Parameter:
 	#   - username (optional): Benutzername für die MySQL-Verbindung (Standard: "root")
 	#   - password (optional): Passwort für die MySQL-Verbindung (Standard: Leer)
 	#   - ids: Eine kommaseparierte Liste von Domänen-IDs, die in der Replikation ignoriert werden sollen.
+	#
 	#? Funktionsverhalten:
 	#   - Die Funktion stoppt den Slave-SQL-Thread auf dem Slave-Server.
 	#   - Konfiguriert den MySQL-Server, um die angegebenen Domänen-IDs in der Replikation zu ignorieren.
 	#   - Startet den Slave-SQL-Thread erneut, um die Verarbeitung fortzusetzen.
+	#
 	#? Beispielaufruf:
 	#   Die Funktion kann direkt vom Benutzer aufgerufen werden und erfordert die Angabe von Benutzername, Passwort und einer Liste von Domänen-IDs.
 	#   Beispiel: IGNORE_DOMAIN_IDS "meinbenutzer" "geheimesPasswort" "1,2,3"
+	#
 	#? Rückgabewert:
 	# Diese Funktion gibt keine explizite Rückgabe aus, sondern führt die Konfigurations- und Aktivierungsschritte zur Ignorierung von Domänen-IDs in der Replikation durch.
+	#
 	#? Hinweise:
 	#   - Stellen Sie sicher, dass Sie über ausreichende Berechtigungen für die MySQL-Verbindung und die Konfiguration der Domänen-IDs verfügen.
+	#
 ##
 function IGNORE_DOMAIN_IDS2() {
 	username=$1
@@ -13397,21 +14157,27 @@ function IGNORE_DOMAIN_IDS2() {
 	#? Beschreibung:
 	# Diese Funktion konfiguriert den MySQL-Server, um eine Verzögerung in der Replikation einzuführen. Dies kann nützlich sein, um Daten auf dem Slave-Server zeitverzögert zu replizieren, um vorübergehende Fehler oder unerwünschte Änderungen zu verhindern.
 	# Die Funktion akzeptiert einen Benutzernamen, ein Passwort und die Verzögerungszeit in Sekunden.
+	#
 	#? Parameter:
 	#   - username (optional): Benutzername für die MySQL-Verbindung (Standard: "root")
 	#   - password (optional): Passwort für die MySQL-Verbindung (Standard: Leer)
 	#   - MASTERDELAY (optional): Die Verzögerungszeit in Sekunden (Standard: 3600 Sekunden / 1 Stunde).
+	#
 	#? Funktionsverhalten:
 	#   - Die Funktion stoppt den Slave-SQL-Thread auf dem Slave-Server.
 	#   - Konfiguriert den MySQL-Server, um die angegebene Verzögerungszeit in der Replikation zu verwenden.
 	#   - Startet den Slave-SQL-Thread erneut, um die Verarbeitung fortzusetzen.
+	#
 	#? Beispielaufruf:
 	#   Die Funktion kann direkt vom Benutzer aufgerufen werden und erfordert die Angabe von Benutzername, Passwort und Verzögerungszeit in Sekunden.
 	#   Beispiel: MASTER_DELAY "meinbenutzer" "geheimesPasswort" 1800
+	#
 	#? Rückgabewert:
 	# Diese Funktion gibt keine explizite Rückgabe aus, sondern führt die Konfiguration der Verzögerung in der Replikation durch.
+	#
 	#? Hinweise:
 	#   - Stellen Sie sicher, dass Sie über ausreichende Berechtigungen für die MySQL-Verbindung und die Konfiguration der Verzögerung verfügen.
+	#
 ##
 function MASTER_DELAY() {
 	username=$1
@@ -13435,21 +14201,27 @@ function MASTER_DELAY() {
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion konfiguriert den MySQL-Server auf einem Replika (Slave) für die Durchführung eines Backup-Prozesses. Sie akzeptiert einen Benutzernamen, ein Passwort, den Namen der Master-Log-Datei (MASTERLOGFILE) und die Position in dieser Datei (MASTERLOGPOS).
+	#
 	#? Parameter:
 	#   - username (optional): Benutzername für die MySQL-Verbindung (Standard: "root").
 	#   - password (optional): Passwort für die MySQL-Verbindung (Standard: Leer).
 	#   - MASTERLOGFILE (optional): Der Name der Master-Log-Datei (Standard: "master2-bin.001").
 	#   - MASTERLOGPOS (optional): Die Position in der Master-Log-Datei (Standard: 4).
+	#
 	#? Funktionsverhalten:
 	#   - Die Funktion konfiguriert den MySQL-Server auf dem Replika (Slave) für die Verwendung der angegebenen Master-Log-Datei und Position in der Replikation.
 	#   - Startet den Slave-Thread, um die Replikation fortzusetzen und Backups durchzuführen.
+	#
 	#? Beispielaufruf:
 	#   Die Funktion kann direkt vom Benutzer aufgerufen werden und erfordert die Angabe von Benutzername, Passwort, Master-Log-Datei und Position.
 	#   Beispiel: Replica_Backup "meinbenutzer" "geheimesPasswort" "master2-bin.001" 4
+	#
 	#? Rückgabewert:
 	# Diese Funktion gibt keine explizite Rückgabe aus, sondern führt die Konfiguration für das Backup auf dem Replika durch.
+	#
 	#? Hinweise:
 	#   - Stellen Sie sicher, dass Sie über ausreichende Berechtigungen für die MySQL-Verbindung und die Konfiguration des Replikations-Backups verfügen.
+	#
 ##
 function Replica_Backup() {
 	username=$1
@@ -13474,21 +14246,27 @@ function Replica_Backup() {
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion konfiguriert den MySQL-Server auf einem Replika (Slave) für die Durchführung eines Backup-Prozesses. Sie akzeptiert einen Benutzernamen, ein Passwort, den Namen der Master-Log-Datei (MASTERLOGFILE) und die Position in dieser Datei (MASTERLOGPOS).
+	#
 	#? Parameter:
 	#   - username (optional): Benutzername für die MySQL-Verbindung (Standard: "root").
 	#   - password (optional): Passwort für die MySQL-Verbindung (Standard: Leer).
 	#   - MASTERLOGFILE (optional): Der Name der Master-Log-Datei (Standard: "master2-bin.001").
 	#   - MASTERLOGPOS (optional): Die Position in der Master-Log-Datei (Standard: 4).
+	#
 	#? Funktionsverhalten:
 	#   - Die Funktion konfiguriert den MySQL-Server auf dem Replika (Slave) für die Verwendung der angegebenen Master-Log-Datei und Position in der Replikation.
 	#   - Startet den Slave-Thread, um die Replikation fortzusetzen und Backups durchzuführen.
+	#
 	#? Beispielaufruf:
 	#   Die Funktion kann direkt vom Benutzer aufgerufen werden und erfordert die Angabe von Benutzername, Passwort, Master-Log-Datei und Position.
 	#   Beispiel: Replica_Backup "meinbenutzer" "geheimesPasswort" "master2-bin.001" 4
+	#
 	#? Rückgabewert:
 	# Diese Funktion gibt keine explizite Rückgabe aus, sondern führt die Konfiguration für das Backup auf dem Replika durch.
+	#
 	#? Hinweise:
 	#   - Stellen Sie sicher, dass Sie über ausreichende Berechtigungen für die MySQL-Verbindung und die Konfiguration des Replikations-Backups verfügen.
+	#
 ##
 function Replica_Backup2() {
 	username=$1
@@ -13512,6 +14290,7 @@ function Replica_Backup2() {
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion ändert die Koordinaten eines Replikats (Slave) in MySQL. Sie akzeptiert einen Benutzernamen, ein Passwort, die Hostadresse des primären Servers (MASTERHOST), den Port des primären Servers (MASTERPORT), den Namen der Master-Log-Datei (MASTERLOGFILE), die Position in dieser Datei (MASTERLOGPOS) und die Anzahl der Verbindungsversuche (MASTERCONNECTRETRY).
+	#
 	#? Parameter:
 	#   - username (optional): Benutzername für die MySQL-Verbindung (Standard: "root").
 	#   - password (optional): Passwort für die MySQL-Verbindung (Standard: Leer).
@@ -13520,16 +14299,21 @@ function Replica_Backup2() {
 	#   - MASTERLOGFILE (optional): Der Name der Master-Log-Datei (Standard: "master2-bin.001").
 	#   - MASTERLOGPOS (optional): Die Position in der Master-Log-Datei (Standard: 4).
 	#   - MASTERCONNECTRETRY (optional): Die Anzahl der Verbindungsversuche (Standard: 20).
+	#
 	#? Funktionsverhalten:
 	#   - Die Funktion ändert die Koordinaten des Replikats, um es so einzurichten, dass es den primären Server repliziert.
 	#   - Startet den Slave-Thread, um die Replikation zu beginnen oder fortzusetzen.
+	#
 	#? Beispielaufruf:
 	#   Die Funktion kann direkt vom Benutzer aufgerufen werden und erfordert die Angabe von Benutzername, Passwort, Hostadresse des primären Servers, Port des primären Servers, Master-Log-Datei, Position in der Datei und Anzahl der Verbindungsversuche.
 	#   Beispiel: ReplikatKoordinaten "meinbenutzer" "geheimesPasswort" "192.168.1.100" 3306 "master2-bin.001" 4 20
+	#
 	#? Rückgabewert:
 	# Diese Funktion gibt keine explizite Rückgabe aus, sondern ändert die Koordinaten des Replikats für die Replikation.
+	#
 	#? Hinweise:
 	#   - Stellen Sie sicher, dass Sie über ausreichende Berechtigungen für die MySQL-Verbindung und die Konfiguration des Replikats verfügen.
+	#
 ##
 function ReplikatKoordinaten() {
 	username=$1
@@ -13558,18 +14342,24 @@ function ReplikatKoordinaten() {
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion zerlegt eine SQL-Dump-Datei in separate SQL-Dateien für jede Tabelle und speichert sie in einem Verzeichnis mit dem Namen der Datenbank.
+	#
 	#? Parameter:
 	#   - $1: Die SQL-Dump-Datei, die zerlegt werden soll.
+	#
 	#? Funktionsverhalten:
 	#   - Die Funktion erstellt ein Verzeichnis mit dem Namen der Datenbank (ohne Dateiendung) im aktuellen Arbeitsverzeichnis.
 	#   - Sie sucht nach Tabellennamen in der SQL-Dump-Datei und erstellt für jede Tabelle eine separate SQL-Datei im erstellten Verzeichnis.
+	#
 	#? Beispielaufruf:
 	#   Die Funktion kann direkt vom Benutzer aufgerufen werden und erfordert die Angabe der SQL-Dump-Datei als Parameter.
 	#   Beispiel: db_tablesplitt "dump.sql"
+	#
 	#? Rückgabewert:
 	# Diese Funktion gibt keine explizite Rückgabe aus, sondern erstellt separate SQL-Dateien für jede Tabelle im angegebenen Verzeichnis.
+	#
 	#? Hinweise:
 	#   - Stellen Sie sicher, dass die SQL-Dump-Datei im aktuellen Verzeichnis vorhanden ist.
+	#
 ##
 function db_tablesplitt() {
 	VERZEICHNISNAME=$(basename "$1" .sql)
@@ -13595,19 +14385,25 @@ function db_tablesplitt() {
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion extrahiert die SQL-Daten einer speziellen Tabelle aus einer SQL-Dump-Datei und speichert sie in einer separaten SQL-Datei.
+	#
 	#? Parameter:
 	#   - $1: Die SQL-Dump-Datei, aus der die Daten extrahiert werden sollen.
 	#   - $2: Der Name der Tabelle, deren Daten extrahiert werden sollen.
+	#
 	#? Funktionsverhalten:
 	#   - Die Funktion erstellt ein Verzeichnis mit dem Namen der Datenbank (ohne Dateiendung) im aktuellen Arbeitsverzeichnis.
 	#   - Sie sucht nach dem angegebenen Tabellennamen in der SQL-Dump-Datei und erstellt eine separate SQL-Datei mit den Daten dieser Tabelle im erstellten Verzeichnis.
+	#
 	#? Beispielaufruf:
 	#   Die Funktion kann direkt vom Benutzer aufgerufen werden und erfordert zwei Parameter: die SQL-Dump-Datei und den Tabellennamen.
 	#   Beispiel: db_tablextract "dump.sql" "meine_tabelle"
+	#
 	#? Rückgabewert:
 	# Diese Funktion gibt keine explizite Rückgabe aus, sondern erstellt eine separate SQL-Datei für die angegebene Tabelle im angegebenen Verzeichnis.
+	#
 	#? Hinweise:
 	#   - Stellen Sie sicher, dass die SQL-Dump-Datei im aktuellen Verzeichnis vorhanden ist und der angegebene Tabellenname existiert.
+	#
 ##
 function db_tablextract() {
 	VERZEICHNISNAME=$(basename "$1" .sql)
@@ -13631,21 +14427,27 @@ function db_tablextract() {
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion extrahiert SQL-Daten von Tabellen, die einem bestimmten regulären Ausdruck in einer SQL-Dump-Datei entsprechen, und speichert sie in separaten SQL-Dateien.
+	#
 	#? Parameter:
 	#   - $1: Die SQL-Dump-Datei, aus der die Daten extrahiert werden sollen.
 	#   - $2: Der reguläre Ausdruck, um Tabellen zu filtern und zu extrahieren.
 	#   - $3: Der Name der Datenbank (optional). Wenn angegeben, werden nur Tabellen aus dieser Datenbank extrahiert.
+	#
 	#? Funktionsverhalten:
 	#   - Die Funktion erstellt ein Verzeichnis mit dem Namen der Datenbank (ohne Dateiendung) im aktuellen Arbeitsverzeichnis.
 	#   - Sie sucht nach Tabellen, deren Namen dem angegebenen regulären Ausdruck entsprechen, in der SQL-Dump-Datei und erstellt separate SQL-Dateien für diese Tabellen im erstellten Verzeichnis.
+	#
 	#? Beispielaufruf:
 	#   Die Funktion kann direkt vom Benutzer aufgerufen werden und erfordert zwei oder drei Parameter: die SQL-Dump-Datei, den regulären Ausdruck und optional den Namen der Datenbank.
 	#   Beispiel 1: db_tablextract_regex "dump.sql" "^(mytable1|mytable2)" "mydatabase"
 	#   Beispiel 2 (ohne Angabe der Datenbank): db_tablextract_regex "dump.sql" "^(mytable1|mytable2)"
+	#
 	#? Rückgabewert:
 	# Diese Funktion gibt keine explizite Rückgabe aus, sondern erstellt separate SQL-Dateien für die extrahierten Tabellen im angegebenen Verzeichnis.
+	#
 	#? Hinweise:
 	#   - Stellen Sie sicher, dass die SQL-Dump-Datei im aktuellen Verzeichnis vorhanden ist und die angegebenen Tabellen (oder der reguläre Ausdruck) in der SQL-Dump-Datei vorhanden sind.
+	#
 ##
 function db_tablextract_regex() {
 	VERZEICHNISNAME=$(basename "$1" .sql)
@@ -13670,22 +14472,28 @@ function db_tablextract_regex() {
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion ändert eine bestimmte Konfigurationseinstellung in einer Datei, indem sie den Wert von `CONF_SEARCH` durch `CONF_ERSATZ` ersetzt.
+	#
 	#? Parameter:
 	#   - $1: Der Name der Konfigurationseinstellung, die geändert werden soll (z.B., "CONF_VARIABLE").
 	#   - $2: Der neue Wert, durch den die Konfigurationseinstellung ersetzt werden soll.
 	#   - $3: Der Pfad zum Verzeichnis, in dem die Datei liegt (z.B., "/etc").
 	#   - $4: Der Name der Datei, in der die Konfigurationseinstellung geändert werden soll.
+	#
 	#? Funktionsverhalten:
 	#   - Die Funktion verwendet das `sed`-Kommando, um die Konfigurationseinstellung in der angegebenen Datei zu ändern.
 	#   - Der Wert von `CONF_SEARCH` wird in der Datei gesucht und durch `CONF_ERSATZ` ersetzt.
+	#
 	#? Beispielaufruf:
 	#   Die Funktion kann direkt vom Benutzer aufgerufen werden und erfordert vier Parameter: die Konfigurationseinstellung, den neuen Wert, den Pfad zum Verzeichnis und den Dateinamen.
 	#   Beispiel: conf_write "CONF_VARIABLE" "new_value" "/etc" "config.conf"
+	#
 	#? Rückgabewert:
 	# Diese Funktion gibt keine explizite Rückgabe aus, sondern ändert den Wert der Konfigurationseinstellung in der angegebenen Datei.
+	#
 	#? Hinweise:
 	#   - Stellen Sie sicher, dass die angegebene Datei im angegebenen Verzeichnis vorhanden ist.
 	#   - Beachten Sie, dass diese Funktion die Datei direkt ändert. Stellen Sie sicher, dass Sie eine Sicherungskopie der Datei haben, falls Sie versehentlich Änderungen vornehmen.
+	#
 ##
 function conf_write() {
 	CONF_SEARCH=$1
@@ -13702,21 +14510,27 @@ function conf_write() {
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion sucht nach einer bestimmten Konfigurationseinstellung in einer Datei und gibt die Zeile aus, die die Einstellung enthält, zurück.
+	#
 	#? Parameter:
 	#   - $1: Der Name der Konfigurationseinstellung, die gesucht werden soll (z.B., "CONF_VARIABLE").
 	#   - $2: Der Pfad zum Verzeichnis, in dem die Datei liegt (z.B., "/etc").
 	#   - $3: Der Name der Datei, in der die Konfigurationseinstellung gesucht werden soll.
+	#
 	#? Funktionsverhalten:
 	#   - Die Funktion verwendet das `sed`-Kommando mit der Option `-n`, um nur die Zeilen auszugeben, die die gesuchte Konfigurationseinstellung enthalten.
 	#   - Die gefundene Zeile wird auf dem Bildschirm ausgegeben.
+	#
 	#? Beispielaufruf:
 	#   Die Funktion kann direkt vom Benutzer aufgerufen werden und erfordert drei Parameter: die Konfigurationseinstellung, den Pfad zum Verzeichnis und den Dateinamen.
 	#   Beispiel: conf_read "CONF_VARIABLE" "/etc" "config.conf"
+	#
 	#? Rückgabewert:
 	# Diese Funktion gibt die Zeile aus der Datei zurück, die die gesuchte Konfigurationseinstellung enthält.
 	# Wenn die Konfigurationseinstellung nicht gefunden wird, wird nichts zurückgegeben.
+	#
 	#? Hinweise:
 	#   - Stellen Sie sicher, dass die angegebene Datei im angegebenen Verzeichnis vorhanden ist.
+	#
 ##
 function conf_read() {
 	CONF_SEARCH=$1
@@ -13732,21 +14546,27 @@ function conf_read() {
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion löscht eine bestimmte Konfigurationseinstellung aus einer Datei, indem sie die Zeile, die die Einstellung enthält, entfernt.
+	#
 	#? Parameter:
 	#   - $1: Der Name der Konfigurationseinstellung, die gelöscht werden soll (z.B., "CONF_VARIABLE").
 	#   - $2: Der Pfad zum Verzeichnis, in dem die Datei liegt (z.B., "/etc").
 	#   - $3: Der Name der Datei, aus der die Konfigurationseinstellung gelöscht werden soll.
+	#
 	#? Funktionsverhalten:
 	#   - Die Funktion verwendet das `sed`-Kommando, um die Zeile mit der gesuchten Konfigurationseinstellung zu löschen.
 	#   - Die Funktion überschreibt die Datei, um die Änderungen zu speichern.
+	#
 	#? Beispielaufruf:
 	#   Die Funktion kann direkt vom Benutzer aufgerufen werden und erfordert drei Parameter: die Konfigurationseinstellung, den Pfad zum Verzeichnis und den Dateinamen.
 	#   Beispiel: conf_delete "CONF_VARIABLE" "/etc" "config.conf"
+	#
 	#? Rückgabewert:
 	# Diese Funktion gibt keine Werte zurück, aber sie führt die Löschung der Konfigurationseinstellung in der Datei durch.
 	# Wenn die Konfigurationseinstellung nicht gefunden wird, hat dies keine Auswirkungen auf die Datei.
+	#
 	#? Hinweise:
 	#   - Stellen Sie sicher, dass die angegebene Datei im angegebenen Verzeichnis vorhanden ist.
+	#
 ## 
 function conf_delete() {
 	CONF_SEARCH=$1
@@ -13762,20 +14582,26 @@ function conf_delete() {
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion ermittelt die Größe des im System installierten RAM-Speichers und speichert das Ergebnis in der Variable RAMSPEICHER.
+	#
 	#? Parameter:
 	#   - Keine Parameter werden von dieser Funktion erwartet.
+	#
 	#? Funktionsverhalten:
 	#   - Die Funktion verwendet den Befehl "dmidecode" mit dem Parameter "--type 17", um Informationen über den RAM-Speicher auszulesen.
 	#   - Die Ausgabe von "dmidecode" wird in eine temporäre Datei "/tmp/raminfo.inf" geschrieben.
 	#   - Dann wird die Datei mit "awk" durchsucht, um die RAM-Größe zu extrahieren und in der Variable RAMSPEICHER zu speichern.
 	#   - Nachdem die Größe ermittelt wurde, wird die temporäre Datei gelöscht.
+	#
 	#? Beispielaufruf:
 	#   Die Funktion kann direkt vom Benutzer aufgerufen werden. Sie erwartet keine Parameter.
 	#   Beispiel: ramspeicher
+	#
 	#? Rückgabewert:
 	# Die Funktion speichert die ermittelte RAM-Größe in der Variable RAMSPEICHER. Der Wert kann später in Ihrem Skript verwendet werden.
+	#
 	#? Hinweise:
 	#   - Diese Funktion setzt voraus, dass das Befehlszeilenwerkzeug "dmidecode" auf Ihrem System verfügbar ist.
+	#
 ## 
 function ramspeicher() {
 	# RAM groesse auslesen
@@ -13793,21 +14619,27 @@ function ramspeicher() {
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion passt die Konfiguration eines MySQL-Servers basierend auf dem verfügbaren RAM-Speicher und anderen Parametern an.
+	#
 	#? Parameter:
 	#   - Keine Parameter werden von dieser Funktion erwartet.
+	#
 	#? Funktionsverhalten:
 	#   - Die Funktion ruft zunächst die Funktion "ramspeicher()" auf, um die Größe des RAM-Speichers zu ermitteln.
 	#   - Anschließend werden verschiedene MySQL-Konfigurationsparameter basierend auf dem verfügbaren RAM-Speicher und anderen Faktoren gesetzt.
 	#   - Die generierte Konfiguration wird in die Datei "/tmp/mysqld.txt" geschrieben, damit der Benutzer sie in die MySQL-Konfigurationsdatei (/etc/mysql/mysql.conf.d/mysqld.cnf) einfügen kann.
 	#   - Die Funktion gibt Hinweise und Anweisungen aus, damit der Benutzer die Konfigurationsdatei korrekt aktualisieren kann.
+	#
 	#? Beispielaufruf:
 	#   Die Funktion kann direkt vom Benutzer aufgerufen werden. Sie erwartet keine Parameter.
 	#   Beispiel: mysqleinstellen
+	#
 	#? Rückgabewert:
 	#   - Die Funktion gibt keine expliziten Rückgabewerte zurück.
+	#
 	#? Hinweise:
 	#   - Diese Funktion setzt voraus, dass die Funktion "ramspeicher()" definiert ist und ordnungsgemäß funktioniert.
 	#   - Die generierte MySQL-Konfiguration wird in die Datei "/tmp/mysqld.txt" geschrieben. Der Benutzer muss den Inhalt dieser Datei in die MySQL-Konfigurationsdatei (/etc/mysql/mysql.conf.d/mysqld.cnf) manuell einfügen und MySQL neu starten.
+	#
 ##
 function mysqleinstellen() {
 	# Ermitteln wie viel RAM Speicher der Server hat
@@ -13875,24 +14707,30 @@ function mysqleinstellen() {
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion erstellt eine Regionskonfigurationsdatei für einen Simulator.
+	#
 	#? Parameter:
 	#   - Keine Parameter werden von dieser Funktion erwartet.
+	#
 	#? Funktionsverhalten:
 	#   - Die Funktion ermittelt die aktuelle IP-Adresse über eine Suchadresse.
 	#   - Der Benutzer wird nach verschiedenen Informationen für die Regionskonfigurationsdatei gefragt, wie Regionsname, Serveradresse, Ort im Grid usw.
 	#   - Die Regionskonfigurationsdatei wird basierend auf den eingegebenen Informationen erstellt.
 	#   - Der Benutzer kann angeben, für welchen Simulator die Konfigurationsdatei erstellt werden soll (optional).
 	#   - Die erstellte Konfigurationsdatei wird in das entsprechende Verzeichnis geschrieben.
+	#
 	#? Beispielaufruf:
 	#   Die Funktion kann direkt vom Benutzer aufgerufen werden. Sie erwartet keine Parameter.
 	#   Beispiel: newregionini
+	#
 	#? Rückgabewert:
 	#   - Die Funktion gibt keine expliziten Rückgabewerte zurück.
+	#
 	#? Hinweise:
 	#   - Die Funktion erwartet, dass der Befehl "wget" verfügbar ist, um die aktuelle IP-Adresse zu ermitteln.
 	#   - Die erstellte Regionskonfigurationsdatei wird in das angegebene Verzeichnis geschrieben.
 	#   - Der Benutzer muss die Funktion interaktiv ausführen und die erforderlichen Informationen eingeben.
 	#   - Es ist ratsam, die Funktion zuerst in einer Testumgebung zu verwenden, um sicherzustellen, dass die erstellte Konfigurationsdatei korrekt ist.
+	#
 ##
 function newregionini() {
 	# Aktuelle IP ueber Suchadresse ermitteln und Ausfuehrungszeichen anhaengen.
@@ -13970,6 +14808,7 @@ function newregionini() {
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion erstellt eine Konfigurationsdatei mit verschiedenen Parametern für eine Anwendung.
+	#
 	#? Parameter:
 	#   1. BASEHOSTNAME: Basis-Hostname (z. B. example.com oder 127.0.0.1)
 	#   2. PRIVURL: Private URL (z. B. http://example.com oder http://127.0.0.1)
@@ -13982,18 +14821,23 @@ function newregionini() {
 	#   9. SIMULATORGRIDNAME: Simulator Grid Name
 	#   10. SIMULATORGRIDNICK: Simulator Grid Nick
 	#   11. CONSTINI: Pfad zur Ausgabedatei der Konfiguration
+	#
 	#? Funktionsverhalten:
 	#   - Die Funktion erstellt eine Konfigurationsdatei mit den angegebenen Parametern und speichert sie unter dem angegebenen Dateinamen.
 	#   - Die Konfigurationsdatei enthält verschiedene Sektionen und Parameter.
 	#   - Die Werte der Parameter werden aus den übergebenen Argumenten genommen und in die Datei geschrieben.
+	#
 	#? Beispielaufruf:
 	#   constconfig "example.com" "http://example.com" "8002" "9000" "mydatabase" "myuser" "mypassword" "MyRegion" "MyGrid" "NickName" "/pfad/zur/ausgabedatei.ini"
+	#
 	#? Rückgabewert:
 	#   - Die Funktion gibt keine expliziten Rückgabewerte zurück.
+	#
 	#? Hinweise:
 	#   - Die Funktion erwartet 11 Parameter, die die verschiedenen Konfigurationswerte definieren.
 	#   - Der Pfad zur Ausgabedatei der Konfiguration (CONSTINI) sollte vollständig angegeben werden, um die Datei korrekt zu speichern.
 	#   - Die Funktion erstellt die Konfigurationsdatei mit den angegebenen Parametern. Stellen Sie sicher, dass die Parameter korrekt sind, bevor Sie die Funktion aufrufen.
+	#
 ##
 function constconfig() {
 
@@ -15082,6 +15926,7 @@ function osdowngrade() {
 	#   - Entpackt den neuen OpenSimulator aus der ZIP-Datei.
 	#   - Benennt den neuen OpenSimulator um.
 	#   - Führt ein Upgrade des Grids mit osupgrade() durch.
+	#
 	#? Beispielaufruf:
 	#   oszipupgrade
 	#? Rückgabewert: Die Funktion gibt keinen expliziten Rückgabewert zurück.
@@ -15140,8 +15985,10 @@ function oszipupgrade() {
 	# Autor: [Ihr Name oder Benutzername]
 	# Beschreibung:
 	# Diese Funktion verarbeitet eine INI-Datei und wandelt die Konfiguration daraus in eine Bash-Array-Struktur um.
+	#
 	# Parameter:
 	#   $1 (String): Der Name der INI-Datei, die verarbeitet werden soll.
+	#
 	# Funktionsverhalten:
 	#   - Löscht zuerst eine eventuell vorhandene "$datei.ini.cnf"-Datei.
 	#   - Kopiert die "$datei.ini"-Datei in "$datei.ini.cnf".
@@ -15151,11 +15998,15 @@ function oszipupgrade() {
 	#   - Ersetzt alle doppelten Hochstriche ("") durch einfache Hochstriche ('') in der "$datei.ini.cnf"-Datei.
 	#   - Fügt an den Anfang und das Ende jeder Zeile in der "$datei.ini.cnf"-Datei ein doppeltes Hochstrich-Paar hinzu.
 	#   - Erstellt ein Bash-Array mit den konfigurierten Werten und weist es der Variable "$dateiConfigList" zu.
+	#
 	# Beispielaufruf:
 	#   ConfigSet "config.ini"
+	#
 	# Rückgabewert: Die Funktion ändert die Datei "$datei.ini.cnf" und erstellt ein Bash-Array "$dateiConfigList".
+	#
 	# Hinweise:
 	#   - Passen Sie die Funktionalität an die Anforderungen Ihres Skripts an.
+	#
 ##
 function ConfigSet() {
     datei=$1
@@ -15194,16 +16045,21 @@ function ConfigSet() {
 	# Autor: [Ihr Name oder Benutzername]
 	# Beschreibung:
 	# Diese Funktion führt eine Grundinstallation für einen Server durch, wobei sie speziell auf verschiedene Versionen von Ubuntu abzielt.
+	#
 	# Funktionsverhalten:
 	#   - Ermittelt die Ubuntu-Version und speichert sie in den Variablen $ubuntuDescription, $ubuntuRelease und $ubuntuCodename.
 	#   - Stellt eine Willkommensnachricht dar und fragt den Benutzer, ob er die Grundinstallation durchführen möchte.
 	#   - Führt die Grundinstallation nur dann durch, wenn der Benutzer "ja" auswählt.
 	#   - Je nach erkannter Ubuntu-Version werden unterschiedliche Installationsschritte durchgeführt.
+	#
 	# Beispielaufruf:
 	#   AutoInstall
+	#
 	# Rückgabewert: Die Funktion führt die Grundinstallation des Servers durch, abhängig von der erkannten Ubuntu-Version.
+	#
 	# Hinweise:
 	#   - Passen Sie die Funktionalität an die Anforderungen Ihres Skripts und die unterstützten Ubuntu-Versionen an.
+	#
 ##
 function AutoInstall() {
     #ramspeicher
@@ -15256,13 +16112,17 @@ function AutoInstall() {
 	# Autor: [Ihr Name oder Benutzername]
 	# Beschreibung:
 	# Diese Funktion fordert den Benutzer auf, Rechte für ein OpenSimulator-Skript zu konfigurieren.
+	#
 	# Funktionsverhalten:
 	#   - Fragt den Benutzer nach den Skriptrechten für den Grid-Betreiber mit der UUID $BenutzerUUID.
 	#   - Verarbeitet die Benutzereingabe und verwendet die eingegebenen Rechte oder die Standard-UUID $BenutzerUUID, falls keine Eingabe erfolgt.
 	#   - Ruft die Funktion osslEnableConfigSet() auf, um die Konfiguration mit den angegebenen Rechten durchzuführen.
+	#
 	# Beispielaufruf:
 	#   osslEnableConfig
+	#
 	# Rückgabewert: Die Funktion ruft osslEnableConfigSet() mit den verarbeiteten Benutzereingaben auf.
+	#
 	# Hinweise:
 	#   - Stellen Sie sicher, dass die Variablen $BenutzerUUID und osslEnableConfigSet() in Ihrem Skript definiert sind.
 	#   - Passen Sie die Funktionalität an die Anforderungen Ihres Skripts an.
@@ -15282,16 +16142,21 @@ function osslEnableConfig() {
 	# Autor: [Ihr Name oder Benutzername]
 	# Beschreibung:
 	# Diese Funktion erstellt eine Konfigurationsdatei mit OpenSimulator-Skriptberechtigungen.
+	#
 	# Funktionsverhalten:
 	#   - Definiert eine Liste von Konfigurationszeilen für die Berechtigungen von OpenSimulator-Skripten.
 	#   - Erstellt die Konfigurationsdatei $osslEnabledatei und speichert die Zeilen darin.
 	#   - Tauscht einfache Hochstriche (') gegen doppelte Hochstriche (") aus.
+	#
 	# Beispielaufruf:
 	#   osslEnableConfigSet "$Rechte"
+	#
 	# Parameter:
 	#   $Rechte - Die Skriptberechtigungen, die in der Konfigurationsdatei festgelegt werden sollen.
 	#             Dies kann eine Liste von Berechtigungen und Benutzergruppen sein.
+	#
 	# Rückgabewert: Die Funktion erstellt die Konfigurationsdatei mit den angegebenen Berechtigungen.
+	#
 	# Hinweise:
 	#   - Passen Sie die Liste der Berechtigungen an Ihre Anforderungen an.
 	#   - Stellen Sie sicher, dass die Variable $osslEnabledatei in Ihrem Skript definiert ist.
@@ -18117,7 +18982,6 @@ case $KOMMANDO in
 	pull) pull ;;
 	laeuftos) laeuftos "$2" ;;
 	createmanual) createmanual ;;
-	delete_emty_mark) delete_emty_mark "$2" "$3" ;;
 	hda | hilfedirektaufruf | hilfemenudirektaufrufe) hilfemenudirektaufrufe ;;
 	h) newhelp ;;
 	V | v) echo "$SCRIPTNAME $VERSION" ;;
