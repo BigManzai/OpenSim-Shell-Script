@@ -102,6 +102,10 @@ erstellt eine Dokumentation des gesamten opensimMULTITOOL
 
 siehe Testdatei Manual_DATUM.md
 
+oder
+
+Funktionsliste: https://github.com/BigManzai/OpenSim-Shell-Script/wiki/Funktionsliste
+
 ## Der Kommando aufruf:
  
      Beispiel: bash osmtool.sh oscommand sim1 Welcome "alert Hallo Welt"
