@@ -35,12 +35,10 @@
 #**************************************************************************
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.1287" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.1288" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
-##
-	#* Funktion: isroot
-	# 
+##	#* Funktion: isroot
 	#? Beschreibung:
 	# Diese Funktion überprüft, ob der aktuelle Benutzer root-Rechte (Administratorrechte) hat.
 	# Sie vergleicht den effektiven Benutzer (EUID) mit 0, wobei 0 normalerweise auf den root-Benutzer hinweist.
@@ -65,8 +63,7 @@ function isroot() {
 	fi
 }
 
-##
-	#* Funktion: benutzer
+##	#* Funktion: benutzer
 	# Diese Funktion überprüft, ob der aktuelle Benutzer mit dem angegebenen
 	# Benutzernamen übereinstimmt und ob der aktuelle Benutzer mit dem
 	# Anmeldebenutzernamen übereinstimmt. Wenn die Bedingungen erfüllt sind,
@@ -97,8 +94,7 @@ function benutzer() {
     fi
 }
 
-##
-	#* osmupgrade - Eine Funktion zum Aktualisieren des OpenSim-Shell-Skripts
+##	#* osmupgrade
 	# Diese Funktion überprüft, ob das OpenSim-Shell-Skript auf GitHub aktualisiert wurde
 	# und lädt es bei Bedarf herunter. Sie vergleicht die aktuelle installierte Version
 	# mit der neuesten verfügbaren Version in einem GitHub-Repository.
@@ -135,8 +131,7 @@ function osmupgrade() {
     fi
 }
 
-##
-	#* vardel - Eine Funktion zum Löschen von Umgebungsvariablen aus vorherigen Sitzungen
+##	#* vardel
 	# Diese Funktion löscht eine Reihe von Umgebungsvariablen, die möglicherweise aus
 	# vorherigen Sitzungen oder Skripten übrig geblieben sind, um sicherzustellen, dass
 	# keine alten Werte beibehalten werden.
@@ -180,8 +175,7 @@ function vardel() {
     return 0
 }
 
-##
-	#* vardelall - Eine Funktion zum Löschen aller Variablen
+##	#* vardelall
 	# Diese Funktion geht alle definierten Variablen in der aktuellen Shell durch
 	# und löscht sie mit unset.
 	#? @param keine.
@@ -232,8 +226,7 @@ SQLVERSION=$(echo "${SQLVERSIONVOLL:0:45}")
 SCRIPTPATH=$(cd "$(dirname "$0")" && pwd)
 #****************************************************************
 
-##
-	#* Funktion: osmtranslateinstall
+##	#* Funktion: osmtranslateinstall
 	#? Beschreibung:
 	# Diese Funktion installiert das Tool 'translate-shell', das für Übersetzungen in der Befehlszeile verwendet wird.
 	# Sie überprüft zunächst, ob der Benutzer Root-Rechte hat, um 'apt' auszuführen. Wenn nicht, gibt sie eine Fehlermeldung aus und gibt den Wert 1 zurück.
@@ -278,8 +271,7 @@ function osmtranslateinstall() {
     fi
 }
 
-##
-	#* osmtranslate - Übersetzt Text mithilfe des OSM Translator-Dienstes
+##	#* osmtranslate - Übersetzt Text mithilfe des OSM Translator-Dienstes
 	# Diese Funktion verwendet den OSM Translator, um Text aus einer
 	# beliebigen Quellsprache in die Zielsprache zu übersetzen. Der OSM Translator-Dienst
 	# muss für die Verwendung aktiviert sein.
@@ -306,32 +298,8 @@ function osmtranslate() {
 		return 0
 	fi
 }
-# function osmtranslate2() {
-# 	# Letzte Bearbeitung 26.09.2023
-#     OSMTRANSTEXT="$1"
-    
-#     if [ "$OSMTRANSLATOR" = "OFF" ]; then
-#         text="$OSMTRANSTEXT"
-#         return 0
-#     fi
 
-#     if [ "$OSMTRANSLATOR" = "ON" ]; then
-#         # Nutzen Sie "trans" mit Optionen zur Übersetzung
-#         text=$(trans -brief -no-warn "$OSMTRANS" "$OSMTRANSTEXT")
-
-#         # Überprüfen Sie, ob die Übersetzung erfolgreich war
-#         if [ $? -ne 0 ]; then
-#             echo "Fehler beim Übersetzen des Textes."
-#             return 1
-#         fi
-#     else
-#         text="$OSMTRANSTEXT"
-#         return 0
-#     fi
-# }
-
-##
-	#* osmtranslatedirekt - Übersetzt Text direkt mithilfe des OSM Translator-Dienstes
+##	#* osmtranslatedirekt - Übersetzt Text direkt mithilfe des OSM Translator-Dienstes
 	# Diese Funktion verwendet den OSM Translator, um Text aus einer beliebigen Quellsprache in eine 
 	# Zielsprache zu übersetzen. Der OSM Translator-Dienst muss für die Verwendung aktiviert sein.
 	#? @param Parameter:
@@ -350,33 +318,8 @@ function osmtranslatedirekt() {
     #trans -show-original n -show-original-phonetics n -show-translation Y -show-translation-phonetics n -show-prompt-message n -show-languages n -show-original-dictionary N -show-dictionary n -show-alternatives n -no-warn $OSMTRANS "$OSMTRANSTEXT"
 	trans -brief $OSMTRANS "$OSMTRANSTEXT"
 }
-# function osmtranslatedirekt2() {
-# 	# Letzte Bearbeitung 26.09.2023
-#     OSMTRANSTEXT="$1"
 
-#     if [ "$OSMTRANSLATOR" = "OFF" ]; then
-#         text="$OSMTRANSTEXT"
-#         return 0
-#     fi
-
-#     if [ "$OSMTRANS" = ":de" ]; then
-#         OSMTRANSLATOR="OFF"
-#         echo "Es funktioniert nicht von derselben Sprache in dieselbe zu übersetzen."
-#         return 1
-#     fi
-
-#     # Nutzen Sie "trans" mit Optionen zur Übersetzung
-#     text=$(trans -brief "$OSMTRANS" "$OSMTRANSTEXT")
-
-#     # Überprüfen Sie, ob die Übersetzung erfolgreich war
-#     if [ $? -ne 0 ]; then
-#         echo "Fehler beim Übersetzen des Textes."
-#         return 1
-#     fi
-# }
-
-##
-	#* osmnotranslate - Kopiert den Text, ohne Übersetzung durchzuführen
+##	#* osmnotranslate - Kopiert den Text, ohne Übersetzung durchzuführen
 	# Diese Funktion kopiert den angegebenen Text in eine Zielvariable. Wenn der OSM Translator-Dienst 
 	# deaktiviert ist (OSMTRANSLATOR auf "OFF" gesetzt), wird der Text unverändert kopiert.
 	#? @param Parameter:
@@ -394,8 +337,7 @@ function osmnotranslate() {
 	if [ "$OSMTRANSLATOR" = "OFF" ]; then text=$OSMTRANSTEXT; return 0; fi
 }
 
-##
-	#* janein - Übersetzt eine Eingabe in "ja" oder "nein"
+##	#* janein - Übersetzt eine Eingabe in "ja" oder "nein"
 	# Diese Funktion übersetzt eine Eingabe in die deutsche Sprache und gibt entweder "ja" oder "nein" zurück,
 	# basierend auf der übersetzten Eingabe. Die Eingabe wird zuerst in Kleinbuchstaben umgewandelt und
 	# falls leer, wird "nein" zurückgegeben.
@@ -421,8 +363,7 @@ function janein() {
     JNTRANSLATOR=$(echo "$JNTRANSLATOR" | tr "[:upper:]" "[:lower:]")
 }
 
-##
-	#* log - Schreibt Text in eine Log-Datei und gibt ihn auf der Konsole aus
+##	#* log - Schreibt Text in eine Log-Datei und gibt ihn auf der Konsole aus
 	# Diese Funktion akzeptiert zwei Parameter:
 	# 1. logtype: Der Typ des Log-Eintrags (line, rohtext, text, debug, info, warn, error).
 	# 2. text: Der Text, der geloggt werden soll.
@@ -479,8 +420,7 @@ function log() {
 	return 0
 }
 
-##
-	#* osmtoolconfig - Erstellt die Konfigurationsdatei für das opensimTOOL.
+##	#* osmtoolconfig - Erstellt die Konfigurationsdatei für das opensimTOOL.
 	# Usage: osmtoolconfig STARTVERZEICHNIS ROBUSTVERZEICHNIS MONEYVERZEICHNIS OPENSIMVERZEICHNIS CONFIGPFAD OSTOOLINI
 	#   STARTVERZEICHNIS: Das Verzeichnis für den Start von opensim (z.B., home oder opt).
 	#   ROBUSTVERZEICHNIS: Das Verzeichnis für die Robust-Dienste.
@@ -709,8 +649,7 @@ function osmtoolconfig() {
 	echo "#*******************  FERTIG  ****************************#"
 }
 
-##
-	#* osmtoolconfigabfrage - Führt eine Benutzerabfrage durch und erstellt die opensimTOOL Konfigurationsdatei.
+##	#* osmtoolconfigabfrage - Führt eine Benutzerabfrage durch und erstellt die opensimTOOL Konfigurationsdatei.
 	# Diese Funktion führt eine Benutzerabfrage durch, um Einstellungen für die opensimTOOL-Konfiguration zu sammeln.
 	# Anschließend wird die Konfigurationsdatei erstellt.
 	# Usage: osmtoolconfigabfrage
@@ -894,8 +833,7 @@ KOMMANDO=$1
 #* Hilfsfunktionen Funktionsgruppe
 #**************************************************************************
 
-##
-	#* dummyvar, shellcheck disable=SC2034 umgehen.
+##	#* dummyvar, shellcheck disable=SC2034 umgehen.
 	# Shell-Check ueberlisten wegen der Konfigurationsdatei, 
 	# hat sonst keinerlei Funktion und wird auch nicht aufgerufen.
 	#? @param keine.
@@ -919,8 +857,7 @@ function dummyvar() {
 	OPENSIMVERSION="opensim-0.9.2.2.zip"; OSMTRANS=":de"; OSMTRANSLATOR="OFF";
 }
 
-##
-	#* Funktion: xhelp
+##	#* Funktion: xhelp
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion dient dazu, die Hilfeanzeige für einzelne Funktionen anzuzeigen, wenn der entsprechende Parameter übergeben wird.
@@ -942,8 +879,7 @@ function xhelp() {
 	exit 0;	
 }
 
-##
-	#* Funktion: xhelp2
+##	#* Funktion: xhelp2
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion dient dazu, die Hilfeanzeige für einzelne Funktionen anzuzeigen, wenn der entsprechende Parameter übergeben wird.
@@ -985,8 +921,7 @@ function xhelp2() {
   fi
 }
 
-##
-	#* skriptversion
+##	#* skriptversion
 	# Diese Funktion gibt die Versionsnummer des opensimMULTITOOL-Skripts aus.
 	#? Verwendung:
 	#   skriptversion
@@ -1027,8 +962,7 @@ function skriptversion2() {
   return 0
 }
 
-##
-	#* meZufallsnan.
+##	#* meZufallsnan.
 	# Array aus Bezeichnungen von Deutschen Orten und Voelker (Unvollstaendig da keine umlaute funktionieren).
 	# 
 	#? @param keiner.
@@ -1087,8 +1021,7 @@ function namen() {
 	NEUERREGIONSNAME=${namensarray[$REGIONSNAMENZAHL]}
 }
 
-##
-	#* Zufallsvornamen.
+##	#* Zufallsvornamen.
 	# 
 	#? @param keiner.
 	#? @return NEUERREGIONSNAME - Es wird ein Name zurueckgegeben.
@@ -1123,8 +1056,7 @@ function vornamen() {
 	NEUERAVATARVORNAME=${firstnamensarray[$VORNAMENZAHL]}
 }
 
-##
-	#* randomname.
+##	#* randomname.
 	# 
 	#? @param keiner.
 	#? @return Es werden Name zurueckgegeben.
@@ -1139,8 +1071,7 @@ function randomname() {
 	log rohtext "Neuer Regionsname: $NEUERREGIONSNAME"
 }
 
-##
-	#* functionslist
+##	#* functionslist
 	# Funktionen eines Bash Skript auslesen und in eine Text Datei schreiben.
 	# 
 	#? @param keine.
@@ -1153,8 +1084,7 @@ function functionslist() {
 	ergebnisflist=$(grep -i -r "$suche " $file)
 	echo "$ergebnisflist" >/$STARTVERZEICHNIS/osmfunktion"$DATEIDATUM".txt
 }
-##
-	#* Funktion: functionslist
+##	#* Funktion: functionslist
 	#? Beschreibung:
 	# Diese Funktion sucht nach Funktionen in einer angegebenen Shell-Datei und speichert
 	# die gefundenen Funktionen alphabetisch aufsteigend in einer Ausgabedatei im angegebenen Verzeichnis.
@@ -1190,8 +1120,7 @@ function functionslist2() {
     echo "Die gefundenen Funktionen wurden in $output_file gespeichert."
 }
 
-##
-	#* remarklist
+##	#* remarklist
 	# Funktionen eines Bash Skript inklusive 8 remark-Zeilen auslesen und in eine Text Datei schreiben.
 	# Hilfreich fuer Handbuch und Hilfen.
 	#? @param keine.
@@ -1206,8 +1135,7 @@ function remarklist() {
 	echo "$ergebnisflist" >/$STARTVERZEICHNIS/osmRemarklist"$DATEIDATUM".txt
 }
 
-##
-	#* Funktion: createmanual
+##	#* Funktion: createmanual
 	#? Beschreibung:
 	# Diese Funktion erstellt eine Markdown-Datei, die die Dokumentation für den Code enthält.
 	#? Parameter:
@@ -1243,8 +1171,7 @@ function createmanual() {
     fi
 }
 
-##
-	#* Funktion: trimm
+##	#* Funktion: trimm
 	#? Beschreibung:
 	# Diese Funktion entfernt führende und abschließende Leerzeichen aus den übergebenen
 	# Zeichenketten und speichert das bereinigte Ergebnis in einer Variablen.
@@ -1261,8 +1188,7 @@ function trimm() {
 	set +f
 }
 
-##
-	#* osgitstatus.
+##	#* osgitstatus.
 	# opensim quellcode status und upgraden.
 	#? @param $variable.
 	#? @return $trimmvar.
@@ -1275,8 +1201,7 @@ function osgitstatus() {
 	cd /$STARTVERZEICHNIS || return 0
 }
 
-##
-	#* Funktion: osgitstatus2
+##	#* Funktion: osgitstatus2
 	#? Beschreibung:
 	# Diese Funktion aktualisiert den OpenSim-Quellcode aus einem Git-Repository,
 	# sofern verfügbar, und gibt Informationen über den Status des Upgrades aus.
@@ -1309,8 +1234,7 @@ function osgitstatus2() {
     cd "$STARTVERZEICHNIS" || { log rohtext "Fehler: Das ursprüngliche Verzeichnis '$STARTVERZEICHNIS' existiert nicht."; return 0; }
 }
 
-##
-	#* Funktion: ende
+##	#* Funktion: ende
 	#? Beschreibung:
 	# Diese Funktion beendet das aktuelle Skript und gibt die zuletzt gespeicherte
 	# Meldung aus.
@@ -1327,8 +1251,7 @@ function ende() {
     log info "$?"  # Das Skript beenden und die letzte Meldung ausgeben.
 }
 
-##
-	#* Funktion: fehler
+##	#* Funktion: fehler
 	#? Beschreibung:
 	# Diese Funktion beendet den aufrufenden Prozess und gibt die zuletzt
 	# gespeicherte Meldung aus.
@@ -1345,8 +1268,7 @@ function fehler() {
     log error "$?"  # Den aufrufenden Prozess beenden und die letzte Meldung ausgeben.
 }
 
-##
-	#* letterdel.
+##	#* letterdel.
 	# Zeichen entfernen.
 	# letterdel $variable "[aAbBcCdD]" - letterdel $variable "[[:space:]]"
 	#? @param $variable $variable
@@ -1357,8 +1279,7 @@ function letterdel() {
 	# letterdel $variable "[aAbBcCdD]" - letterdel $variable "[[:space:]]"
 	printf '%s\n' "${1//$2/}"
 }
-##
-	#* Funktion: letterdel
+##	#* Funktion: letterdel
 	#? Beschreibung:
 	# Diese Funktion entfernt bestimmte Zeichen oder Muster aus einer Zeichenkette
 	# und gibt das bereinigte Ergebnis aus.
@@ -1388,8 +1309,7 @@ function letterdel2() {
     echo "$cleaned_string"
 }
 
-##
-	#* trim_string.
+##	#* trim_string.
 	# Zeichen entfernen.
 	# Usage: trim_string "   example   string    "
 	#? @param keine.
@@ -1401,8 +1321,7 @@ function trim_string() {
     : "${_%"${_##*[![:space:]]}"}"
     printf '%s\n' "$_"
 }
-##
-	#* Funktion: trim_string
+##	#* Funktion: trim_string
 	#? Beschreibung:
 	# Diese Funktion entfernt führende und abschließende Leerzeichen aus einer
 	# Zeichenkette und gibt das bereinigte Ergebnis aus.
@@ -1433,8 +1352,7 @@ function trim_string2() {
     printf '%s\n' "$_"
 }
 
-##
-	#* vartest - Diese Funktion überprüft, ob eine Variable einen Wert hat oder leer ist.
+##	#* vartest - Diese Funktion überprüft, ob eine Variable einen Wert hat oder leer ist.
 	#? Verwendung: vartest VARIABLE
 	#   - VARIABLE: Die zu überprüfende Variable
 	#? Rückgabewert:
@@ -1460,8 +1378,7 @@ function vartest2() {
     #echo "$result"
 }
 
-##
-	#* laeuftos - Diese Funktion überprüft, ob ein Prozess mit dem angegebenen Namen läuft.
+##	#* laeuftos - Diese Funktion überprüft, ob ein Prozess mit dem angegebenen Namen läuft.
 	#? Verwendung: laeuftos PROZESSNAME
 	#   - PROZESSNAME: Der Name des Prozesses, der überprüft werden soll.
 	# Diese Funktion überprüft, ob ein Prozess mit dem angegebenen PROZESSNAME bereits läuft.
@@ -1489,8 +1406,7 @@ function laeuftos() {
     fi
 }
 
-##
-	#* trim_all - Diese Funktion entfernt führende und nachfolgende Leerzeichen aus allen Argumenten und gibt das bereinigte Ergebnis zurück.
+##	#* trim_all - Diese Funktion entfernt führende und nachfolgende Leerzeichen aus allen Argumenten und gibt das bereinigte Ergebnis zurück.
 	#? Verwendung: trim_all [ARGUMENT1] [ARGUMENT2] ...
 	#   - ARGUMENT1, ARGUMENT2, ...: Die Argumente, aus denen führende und nachfolgende Leerzeichen entfernt werden sollen.
 	# Diese Funktion entfernt führende und nachfolgende Leerzeichen aus allen angegebenen Argumenten und gibt die bereinigten Ergebnisse zurück,
@@ -1517,8 +1433,7 @@ function trim_all() {
     set +f
 }
 
-##
-	#* iinstall - Diese Funktion überprüft, ob ein Paket bereits installiert ist, und installiert es andernfalls.
+##	#* iinstall - Diese Funktion überprüft, ob ein Paket bereits installiert ist, und installiert es andernfalls.
 	#? Verwendung: iinstall PAKETNAME
 	#   - PAKETNAME: Der Name des Pakets, das installiert werden soll.
 	# Diese Funktion überprüft, ob das angegebene PAKETNAME bereits installiert ist. Wenn es bereits installiert ist, wird eine Meldung ausgegeben.
@@ -1540,8 +1455,7 @@ function iinstall() {
 	fi
 }
 
-##
-	#* iinstall2 - Diese Funktion überprüft, ob ein Paket bereits installiert ist, und installiert es andernfalls.
+##	#* iinstall2 - Diese Funktion überprüft, ob ein Paket bereits installiert ist, und installiert es andernfalls.
 	#? Verwendung: iinstall2 PAKETNAME
 	#   - PAKETNAME: Der Name des Pakets, das installiert werden soll.
 	# Diese Funktion überprüft, ob das angegebene PAKETNAME bereits installiert ist. Wenn es bereits installiert ist, wird eine Meldung ausgegeben.
@@ -1562,8 +1476,7 @@ function iinstall2() {
 	fi
 }
 
-##
-	#* linuxupgrade - Diese Funktion führt ein Systemupdate und ein System-Upgrade auf Ubuntu durch.
+##	#* linuxupgrade - Diese Funktion führt ein Systemupdate und ein System-Upgrade auf Ubuntu durch.
 	#? Verwendung: linuxupgrade
 	# Diese Funktion führt die Befehle "apt update" und "apt upgrade" aus, um das System zu aktualisieren.
 	# Zuerst werden die Paketlisten aktualisiert, und dann werden verfügbare Aktualisierungen installiert.
@@ -1591,8 +1504,7 @@ function linuxupgrade() {
     echo "Systemupdate und System-Upgrade abgeschlossen."
 }
 
-##
-	#* deladvantagetools - Diese Funktion entfernt das Paket "ubuntu-advantage-tools" von Ihrem Ubuntu-System.
+##	#* deladvantagetools - Diese Funktion entfernt das Paket "ubuntu-advantage-tools" von Ihrem Ubuntu-System.
 	#? Verwendung: deladvantagetools
 	# Diese Funktion führt den Befehl "sudo apt remove ubuntu-advantage-tools" aus, um das Paket
 	# "ubuntu-advantage-tools" von Ihrem System zu entfernen. Dieses Paket ist ein kommerzielles
@@ -1617,8 +1529,7 @@ function deladvantagetools() {
     echo "Das Paket 'ubuntu-advantage-tools' wurde entfernt."
 }
 
-##
-	#* finstall - Führt eine apt-get-Installationsroutine aus einer Textdatei durch.
+##	#* finstall - Führt eine apt-get-Installationsroutine aus einer Textdatei durch.
 	# Diese Funktion liest eine Textdatei, in der Paketnamen aufgeführt sind, und überprüft,
 	# ob die Pakete bereits installiert sind. Wenn ein Paket nicht installiert ist, wird es
 	# mithilfe von 'apt-get' installiert.
@@ -1642,8 +1553,7 @@ function finstall() {
 	done <"$TXTLISTE"
 }
 
-##
-	#* menufinstall - Diese Funktion installiert Pakete aus einer Textdatei unter Verwendung des Dialog-Tools (wenn verfügbar).
+##	#* menufinstall - Diese Funktion installiert Pakete aus einer Textdatei unter Verwendung des Dialog-Tools (wenn verfügbar).
 	#? Verwendung: menufinstall TEXTDATEI
 	#   - TEXTDATEI: Der Pfad zur Textdatei, die die Namen der zu installierenden Pakete enthält, jeweils in einer Zeile.
 	# Diese Funktion überprüft zunächst, ob das Dialog-Tool auf dem System installiert ist.
@@ -1691,8 +1601,7 @@ function menufinstall() {
 	fi
 }
 
-##
-	#* uncompress - Ermittelt den richtigen Entpackungsbefehl basierend auf dem Dateiformat.
+##	#* uncompress - Ermittelt den richtigen Entpackungsbefehl basierend auf dem Dateiformat.
 	# Diese Funktion analysiert eine gegebene Datei und ermittelt, welches Kompressionsformat
 	# verwendet wurde. Anschließend wird der entsprechende Entpackungsbefehl erzeugt und zurückgegeben.
 	#? @param $datei - Die zu entpackende Datei oder Dateien im Raum getrennt.
@@ -1725,8 +1634,7 @@ function uncompress() {
 
     return $uncompress;
 }
-##
-	#* uncompress2 - Eine Funktion zum automatischen Entpacken von komprimierten Dateien.
+##	#* uncompress2 - Eine Funktion zum automatischen Entpacken von komprimierten Dateien.
 	#? Verwendung: uncompress <Datei(en)>
 	# Die Funktion erkennt den Dateityp und verwendet das entsprechende Entpackungswerkzeug.
 	# Unterstützte Dateitypen: gzip, zip, 7z, rar, tar.gz, tar.bz2, tar.xz, bz2, xz
@@ -1757,8 +1665,7 @@ function uncompress2() {
     done
 }
 
-##
-	#* makeverzeichnisliste - Eine Funktion zum Erstellen einer Liste von Verzeichnissen aus einer Datei.
+##	#* makeverzeichnisliste - Eine Funktion zum Erstellen einer Liste von Verzeichnissen aus einer Datei.
 	#? Verwendung: makeverzeichnisliste
 	# Diese Funktion liest Zeilen aus der angegebenen SIMDATEI im STARTVERZEICHNIS und erstellt eine
 	# Liste von Verzeichnissen. Die Liste wird in der globalen Variable VERZEICHNISSLISTE gespeichert.
@@ -1787,8 +1694,7 @@ function makeverzeichnisliste() {
 	return 0
 }
 
-##
-	#* makeregionsliste - Eine Funktion zum Erstellen einer Liste von Regionen aus einer Datei.
+##	#* makeregionsliste - Eine Funktion zum Erstellen einer Liste von Regionen aus einer Datei.
 	#? Verwendung: makeregionsliste
 	# Diese Funktion liest Zeilen aus der angegebenen REGIONSDATEI im STARTVERZEICHNIS und erstellt eine
 	# Liste von Regionen. Die Liste wird in der globalen Variable REGIONSLISTE gespeichert.
@@ -1817,8 +1723,7 @@ function makeregionsliste() {
 	return 0
 }
 
-##
-	#* mysqlrest - Eine Funktion zum Ausführen von MySQL-Befehlen und Erfassen des Ergebnisses.
+##	#* mysqlrest - Eine Funktion zum Ausführen von MySQL-Befehlen und Erfassen des Ergebnisses.
 	#? Verwendung: mysqlrest <Benutzername> <Passwort> <Datenbankname> <MySQL-Befehl>
 	# Diese Funktion führt den angegebenen MySQL-Befehl in der angegebenen Datenbank aus und erfasst das Ergebnis.
 	# Das Ergebnis wird in der globalen Variable result_mysqlrest gespeichert.
@@ -1843,8 +1748,7 @@ function mysqlrest() {
     # result_mysqlrest=$(echo "$mysqlcommand;" | MYSQL_PWD="$password" mysql -u"$username" "$databasename" -N 2>/dev/null)  #** NEU testen
 }
 
-##
-	#* mysqlrestnodb - Eine Funktion zum Ausführen von MySQL-Befehlen ohne Angabe einer Datenbank.
+##	#* mysqlrestnodb - Eine Funktion zum Ausführen von MySQL-Befehlen ohne Angabe einer Datenbank.
 	#? Verwendung: mysqlrestnodb <Benutzername> <Passwort> <MySQL-Befehl>
 	# Diese Funktion führt den angegebenen MySQL-Befehl ohne Angabe einer Datenbank aus und erfasst das Ergebnis.
 	# Das Ergebnis wird in der globalen Variable result_mysqlrestnodb gespeichert.
@@ -1871,8 +1775,7 @@ function mysqlrestnodb() {
 #* Konfigurationen Funktionsgruppe
 #**************************************************************************
 
-##
-	#* instdialog - Installiert das Dialog-Programm für interaktive Shell-Dialoge.
+##	#* instdialog - Installiert das Dialog-Programm für interaktive Shell-Dialoge.
 	#? Dokumentation:
 	# Diese Funktion installiert das Dialog-Programm, das zur Erstellung interaktiver
 	# Dialoge in der Shell verwendet wird. Sie führt zuerst ein Systemupdate und ein
@@ -1908,8 +1811,7 @@ function instdialog() {
     tput reset
 }
 
-##
-	#* oswriteconfig - Schreibt eine Konfiguration für eine Anwendung in einem GNU Screen-Fenster.
+##	#* oswriteconfig - Schreibt eine Konfiguration für eine Anwendung in einem GNU Screen-Fenster.
 	#? Dokumentation:
 	# Diese Funktion generiert einen Befehl zum Speichern einer Konfiguration und sendet ihn an ein
 	# GNU Screen-Fenster, das der Anwendung zugeordnet ist. Dies ermöglicht das Aktualisieren oder
@@ -1929,8 +1831,7 @@ function oswriteconfig() {
     #echo "$CONFIGWRITE"
 }
 
-##
-	#* menuoswriteconfig - Schreibt eine Konfiguration für eine Anwendung in einem GNU Screen-Fenster.
+##	#* menuoswriteconfig - Schreibt eine Konfiguration für eine Anwendung in einem GNU Screen-Fenster.
 	#? Dokumentation:
 	# Diese Funktion generiert einen Befehl zum Speichern einer Konfiguration und sendet ihn an ein
 	# GNU Screen-Fenster, das der Anwendung zugeordnet ist. Dies ermöglicht das Aktualisieren oder
@@ -1984,8 +1885,7 @@ function menuoswriteconfig() {
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then hauptmenu; fi
 }
 
-##
-	#* osstarteintrag
+##	#* osstarteintrag
 	#? Dokumentation:
 	# Diese Funktion fügt einen OpenSimulator-Eintrag zur Datei osmsimlist.ini hinzu
 	# und sortiert die Datei anschließend. Sie erwartet einen Parameter: den OSEINTRAG,
@@ -2007,8 +1907,7 @@ function osstarteintrag() {
 	sort /"$STARTVERZEICHNIS"/$SIMDATEI -o /"$STARTVERZEICHNIS"/$SIMDATEI
 }
 
-##
-	#* menuosstarteintrag
+##	#* menuosstarteintrag
 	#? Dokumentation:
 	# Diese Funktion fügt einen OpenSimulator-Eintrag zur Datei osmsimlist.ini hinzu
 	# und sortiert die Datei anschließend. Sie erwartet einen Parameter: den OSEINTRAG,
@@ -2039,8 +1938,7 @@ function menuosstarteintrag() {
 	dateimenu
 }
 
-##
-	#* osstarteintragdel
+##	#* osstarteintragdel
 	#? Dokumentation:
 	# Diese Funktion ermöglicht das Entfernen eines OpenSimulator-Eintrags aus der Datei osmsimlist.ini und
 	# die anschließende Sortierung der Datei. Der zu löschende Eintrag, bestehend aus Verzeichnis und
@@ -2063,8 +1961,7 @@ function osstarteintragdel() {
 	sort /"$STARTVERZEICHNIS"/$SIMDATEI -o /"$STARTVERZEICHNIS"/$SIMDATEI
 }
 
-##
-	#* menuosstarteintragdel
+##	#* menuosstarteintragdel
 	#? Dokumentation:
 	# Diese Funktion ermöglicht das Entfernen eines OpenSimulator-Eintrags aus der Datei osmsimlist.ini und
 	# die anschließende Sortierung der Datei. Der zu löschende Eintrag, bestehend aus Verzeichnis und
@@ -2096,8 +1993,7 @@ function menuosstarteintragdel() {
 	dateimenu
 }
 
-##
-	#* osdauerstop - Stoppt einen OpenSimulator-Server und entfernt ihn aus der Startliste.
+##	#* osdauerstop - Stoppt einen OpenSimulator-Server und entfernt ihn aus der Startliste.
 	# Diese Funktion stoppt einen OpenSimulator-Server, der in einem GNU Screen-Prozess
 	# läuft, und entfernt ihn aus der Liste der gestarteten Server. Der Name des Screens
 	# wird als Argument übergeben.
@@ -2134,8 +2030,7 @@ function osdauerstop() {
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then hauptmenu; fi
 }
 
-##
-	#* menuosdauerstop - Stoppt einen OpenSimulator-Server und entfernt ihn aus der Startliste.
+##	#* menuosdauerstop - Stoppt einen OpenSimulator-Server und entfernt ihn aus der Startliste.
 	# Diese Funktion stoppt einen OpenSimulator-Server, der in einem GNU Screen-Prozess
 	# läuft, und entfernt ihn aus der Liste der gestarteten Server. Der Name des Screens
 	# wird als Argument übergeben.
@@ -2182,8 +2077,7 @@ function menuosdauerstop() {
 	fi
 }
 
-##
-	#* osdauerstart.
+##	#* osdauerstart.
 	# Diese Funktion startet den OpenSimulator, wenn er nicht bereits läuft.
 	#? Argumente:
 	# $1: Der Name des OpenSimulator-Verzeichnisses und des Screens
@@ -2227,8 +2121,7 @@ function osdauerstart() {
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then hauptmenu; fi
 }
 
-##
-	#* menuosdauerstart.
+##	#* menuosdauerstart.
 	# Diese Funktion zeigt ein Dialogfeld an, um den OpenSimulator mit benutzerdefinierten Einstellungen zu starten.
 	# Sie erfasst den Namen des Simulators und startet diesen, sofern er nicht bereits läuft.
 	#? Argumente: Keine
@@ -2305,8 +2198,7 @@ function menuosdauerstart() {
 
 }
 
-##
-	#* ossettings.
+##	#* ossettings.
 	# Diese Funktion konfiguriert verschiedene Einstellungen für die Ausführung des OpenSimulators.
 	#? Argumente: Keine
 	#? Rückgabewerte:
@@ -2354,8 +2246,7 @@ function ossettings() {
 #* Log und Cache Dateien Funktionsgruppe
 #**************************************************************************
 
-##
-	#* ScreenLog.
+##	#* ScreenLog.
 	# Diese Funktion steuert die Darstellung und das Löschen der Bildschirmausgabe basierend auf dem Wert von ScreenLogLevel.
 	#? Argumente: Keine
 	#? Rückgabewerte:
@@ -2385,8 +2276,7 @@ function ScreenLog() {
 	return 0
 }
 
-##
-	#* dialogclear.
+##	#* dialogclear.
 	# Diese Funktion löscht das aktuelle Dialogfeld im Terminal, um eine saubere Oberfläche für weitere Dialoge oder Ausgaben zu ermöglichen.
 	#? Argumente: Keine
 	#? Rückgabewerte:
@@ -2400,8 +2290,7 @@ function dialogclear() {
 	return 0
 }
 
-##
-	#* clearuserlist.
+##	#* clearuserlist.
 	# Diese Funktion löscht die Besucherlisten-Protokolldateien im angegebenen Verzeichnis.
 	#? Argumente: Keine
 	#? Rückgabewerte: Keine
@@ -2421,8 +2310,7 @@ function clearuserlist() {
     rm -r "/$STARTVERZEICHNIS"/*_osmvisitorlist.txt
 }
 
-##
-	#* historylogclear.
+##	#* historylogclear.
 	# Diese Funktion löscht Log-Dateien oder die Verlaufshistorie basierend auf dem übergebenen Argument.
 	#? Argumente:
 	# $1: Der Name des zu löschenden Logs oder der Verlaufshistorie (z. B. "history", "apache2error", "mysqlerror", "mysqlmariadb").
@@ -2457,8 +2345,7 @@ function historylogclear() {
 #* Bildschirmausgaben Funktionsgruppe
 #**************************************************************************
 
-##
-	#* lastrebootdatum.
+##	#* lastrebootdatum.
 	# Diese Funktion ermittelt das Datum des letzten Server-Neustarts und berechnet die Anzahl der Tage seit dem letzten Neustart.
 	#? Argumente: Keine
 	#? Rückgabewerte:
@@ -2499,8 +2386,7 @@ function lastrebootdatum() {
 }
 
 
-##
-	#* schreibeinfo.
+##	#* schreibeinfo.
 	# Diese Funktion erstellt eine Informationsausgabe mit verschiedenen Systeminformationen und schreibt sie in eine Log-Datei, wenn die Log-Funktion aktiviert ist.
 	#? Argumente: Keine
 	#? Rückgabewerte: Keine
@@ -2557,8 +2443,7 @@ function schreibeinfo() {
 # *Kopfzeile in die Log Datei schreiben.
 schreibeinfo
 
-##
-	#* rebootdatum .
+##	#* rebootdatum .
 	# letzter reboot des Servers.
 	# Die Funktion `rebootdatum()` ermittelt das Datum des letzten Systemneustarts
 	# und informiert den Benutzer über die vergangene Zeit seit dem letzten Neustart.
@@ -2607,8 +2492,7 @@ function rebootdatum() {
 	return 0
 }
 
-##
-	#* Funktion: reboot
+##	#* Funktion: reboot
 	#? Beschreibung: Startet den Server neu.
 	#? Parameter: Keine.
 	#? Rückgabewert: Es wird nichts zurückgegeben.
@@ -2628,8 +2512,7 @@ function reboot() {
     shutdown -r now
 }
 
-##
-	#* Funktion: warnbox
+##	#* Funktion: warnbox
 	#? Beschreibung: Zeigt eine Warnmeldung in einem Dialogfeld an.
 	#? Parameter:
 	#   $1 (Erforderlich) - Die Warnmeldung, die im Dialogfeld angezeigt werden soll.
@@ -2656,8 +2539,7 @@ function warnbox() {
     hauptmenu
 }
 
-##
-	#* Funktion: edittextbox
+##	#* Funktion: edittextbox
 	#? Beschreibung: Öffnet eine Textdatei in einem Editor und ermöglicht deren Bearbeitung.
 	#? Parameter:
 	#   $1 (Erforderlich) - Der Pfad zur Textdatei, die bearbeitet werden soll.
@@ -2685,8 +2567,7 @@ function edittextbox() {
 }
 
 
-##
-	#* Funktion: textbox
+##	#* Funktion: textbox
 	#? Beschreibung: Zeigt den Inhalt einer Textdatei in einem Dialogfeld an.
 	#? Parameter:
 	#   $1 (Erforderlich) - Der Pfad zur Textdatei, deren Inhalt angezeigt werden soll.
@@ -2713,8 +2594,7 @@ function textbox() {
     hauptmenu
 }
 
-##
-	#* Funktion: nachrichtbox
+##	#* Funktion: nachrichtbox
 	#? Beschreibung: Zeigt eine Benachrichtigungsnachricht in einem Dialogfeld an.
 	#? Parameter:
 	#   $1 (Erforderlich) - Der Titel für das Benachrichtigungsfenster.
@@ -2734,8 +2614,7 @@ function nachrichtbox() {
     hauptmenu
 }
 
-##
-	#* Funktion: apacheerror
+##	#* Funktion: apacheerror
 	#? Beschreibung: Zeigt den Inhalt der Apache2-Fehlerprotokolldatei an, falls vorhanden.
 	#? Parameter: Keine.
 	#? Rückgabewert: Es wird nichts zurückgegeben.
@@ -2756,8 +2635,7 @@ function apacheerror() {
     fi
 }
 
-##
-	#* Funktion: mysqldberror
+##	#* Funktion: mysqldberror
 	#? Beschreibung: Zeigt den Inhalt der MySQL-Datenbankfehlerprotokolldatei an, falls vorhanden.
 	#? Parameter: Keine.
 	#? Rückgabewert: Es wird nichts zurückgegeben.
@@ -2778,8 +2656,7 @@ function mysqldberror() {
     fi
 }
 
-##
-	#* Funktion: mariadberror
+##	#* Funktion: mariadberror
 	#? Beschreibung: Zeigt den Inhalt der MariaDB-/MySQL-Datenbankfehlerprotokolldatei an, falls vorhanden.
 	#? Parameter: Keine.
 	#? Rückgabewert: Es wird nichts zurückgegeben.
@@ -2802,8 +2679,7 @@ function mariadberror() {
 
 
 
-##
-	#* Funktion: ufwlog
+##	#* Funktion: ufwlog
 	#? Beschreibung: Zeigt den Inhalt der UFW-Protokolldatei an, falls vorhanden.
 	#? Parameter: Keine.
 	#? Rückgabewert: Es wird nichts zurückgegeben.
@@ -2824,8 +2700,7 @@ function ufwlog() {
     fi
 }
 
-##
-	#* Funktion: authlog
+##	#* Funktion: authlog
 	#? Beschreibung: Zeigt den Inhalt der Authentifizierungs-Protokolldatei an, falls vorhanden.
 	#? Parameter: Keine.
 	#? Rückgabewert: Es wird nichts zurückgegeben.
@@ -2846,8 +2721,7 @@ function authlog() {
     fi
 }
 
-##
-	#* Funktion: accesslog
+##	#* Funktion: accesslog
 	#? Beschreibung: Zeigt den Inhalt des Apache2-Zugriffsprotokolls an, falls vorhanden.
 	#? Parameter: Keine.
 	#? Rückgabewert: Es wird nichts zurückgegeben.
@@ -2868,8 +2742,7 @@ function accesslog() {
     fi
 }
 
-##
-	#* Funktion: fpspeicher
+##	#* Funktion: fpspeicher
 	#? Beschreibung: Ermittelt den verfügbaren Speicherplatz auf dem Dateisystem und zeigt ihn in einer Nachrichtenbox an.
 	#? Parameter: Keine.
 	#? Rückgabewert: Es wird nichts zurückgegeben.
@@ -2884,8 +2757,7 @@ function fpspeicher() {
     nachrichtbox "Freier Speicher"
 }
 
-##
-	#* Funktion: screenlist
+##	#* Funktion: screenlist
 	#? Beschreibung: Zeigt eine Liste aller laufenden Screen-Sitzungen an, entweder mit oder ohne die Verwendung von 'dialog'.
 	#? Parameter: Keine.
 	#? Rückgabewert: Es wird nichts zurückgegeben.
@@ -2917,8 +2789,7 @@ function screenlist() {
     fi
 }
 
-##
-	#* Funktion: screenlistrestart
+##	#* Funktion: screenlistrestart
 	#? Beschreibung: Zeigt eine Liste aller laufenden Screen-Sitzungen und protokolliert sie.
 	#? Parameter: Keine.
 	#? Rückgabewert: Es wird nichts zurückgegeben.
@@ -2948,8 +2819,7 @@ function screenlistrestart() {
 #* Downloads Funktionsgruppe
 #**************************************************************************
 
-##
-	#* Funktion: downloados
+##	#* Funktion: downloados
 	#? Beschreibung: Ermöglicht das Herunterladen von Betriebssystem-Dateien über einen Menüdialog.
 	#? Parameter: Keine.
 	#? Rückgabewert: Es wird nichts zurückgegeben.
@@ -3028,8 +2898,7 @@ function downloados() {
 	hauptmenu
 }
 
-##
-	#* Funktion: delete_emty_mark
+##	#* Funktion: delete_emty_mark
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion durchsucht eine Eingabedatei nach Zeilen, die nur aus einem Tabulator gefolgt von einem Rautenzeichen bestehen,
@@ -3066,8 +2935,7 @@ function delete_emty_mark() {
 }
 
 
-##
-	#* Funktion: radiolist
+##	#* Funktion: radiolist
 	# Datum: 02.10.2023
 	#? Beschreibung: Erstellt eine Liste von Internetradio-Streams basierend auf Musikgenres.
 	#? Parameter: Keine.
@@ -3127,8 +2995,7 @@ function radiolist() {
 done
 }
 
-##
-	#* Funktion: mysqlbackup
+##	#* Funktion: mysqlbackup
 	#? Beschreibung: Erstellt ein Backup einer MySQL-Datenbank und kann optional das Backup komprimieren.
 	#? Parameter:
 	#   1. username: Der MySQL-Benutzername für die Datenbank.
@@ -3164,8 +3031,7 @@ function mysqlbackup() {
 #* Sicherheitsfunktionen Funktionsgruppe
 #**************************************************************************
 
-##
-	#* Funktion: passgen
+##	#* Funktion: passgen
 	#? Beschreibung: Generiert ein zufälliges Passwort mit der angegebenen Länge und gibt es auf der Standardausgabe aus.
 	#? Parameter:
 	#   1. PASSWORTLAENGE: Die gewünschte Länge des generierten Passworts.
@@ -3186,8 +3052,7 @@ function passgen() {
 		echo "$NEWPASSWD"
 }
 
-##
-	#* Funktion: passwdgenerator
+##	#* Funktion: passwdgenerator
 	#? Beschreibung: Generiert ein zufälliges Passwort mit der angegebenen Stärke und gibt es auf der Standardausgabe aus.
 	#? Parameter:
 	#   - Mit 'dialog' (falls verfügbar):
@@ -3232,8 +3097,7 @@ function passwdgenerator() {
 #* KI AI Funktionsgruppe
 #**************************************************************************
 
-##
-	#* Funktion: dalaiinstallinfos
+##	#* Funktion: dalaiinstallinfos
 	#? Beschreibung: Gibt Informationen zu den installierten Versionen von Python, JRE (Java Runtime Environment) und Node.js aus.
 	#? Parameter: Keine.
 	#? Rückgabewert: Es wird nichts zurückgegeben.
@@ -3257,8 +3121,7 @@ function dalaiinstallinfos() {
     node -v
 }
 
-##
-	#* Funktion: dalaiserverinstall
+##	#* Funktion: dalaiserverinstall
 	#? Beschreibung: Installiert erforderliche Softwarekomponenten für den Dalai-Server.
 	#? Parameter: Keine.
 	#? Rückgabewert: Es wird nichts zurückgegeben.
@@ -3291,8 +3154,7 @@ function dalaiserverinstall() {
     apt upgrade
 }
 
-##
-	#* Funktion: dalaimodelinstall
+##	#* Funktion: dalaimodelinstall
 	#? Beschreibung: Installiert ein Modell für Dalai basierend auf der angegebenen Modellversion (MKIVERSION).
 	#? Parameter:
 	#   1. MKIVERSION (optional): Die Modellversion, die installiert werden soll. Standardmäßig wird "7B" verwendet, wenn keine Version angegeben wird.
@@ -3347,8 +3209,7 @@ function dalaimodelinstall() {
 	fi
 }
 
-##
-	#* Funktion: dalaiinstall
+##	#* Funktion: dalaiinstall
 	#? Beschreibung: Installiert den Dalai-Server mit der angegebenen Modellversion (KIVERSION) und legt das Dalai-Modellverzeichnis fest.
 	#? Parameter:
 	#   1. KIVERSION (optional): Die Modellversion, die für Dalai verwendet werden soll. Standardmäßig wird "7B" verwendet, wenn keine Version angegeben wird.
@@ -3382,8 +3243,7 @@ function dalaiinstall() {
 	npx dalai alpaca install 7B --home /home/dalai
 }
 
-##
-	#* Funktion: dalaisearch
+##	#* Funktion: dalaisearch
 	#? Beschreibung: Sucht nach der Verfügbarkeit von Node.js und npm sowie dem Dalai-Tool im System.
 	#? Parameter: Keine.
 	#? Rückgabewert: Es wird nichts zurückgegeben.
@@ -3408,8 +3268,7 @@ function dalaisearch() {
     which dalai
 }
 
-##
-	#* Funktion: dalaiuninstall
+##	#* Funktion: dalaiuninstall
 	#? Beschreibung: Deinstalliert Dalai-Modelle für die angegebenen Modellversionen.
 	#? Parameter: Keine.
 	#? Rückgabewert: Es wird nichts zurückgegeben.
@@ -3426,8 +3285,7 @@ function dalaiuninstall() {
     npx dalai alpaca uninstall 7B 13B 30B
 }
 
-##
-	#* Funktion: dalaistart
+##	#* Funktion: dalaistart
 	#? Beschreibung: Startet den Dalai-Server und gibt die Serveradresse aus.
 	#? Parameter: Keine.
 	#? Rückgabewert: Es wird nichts zurückgegeben.
@@ -3456,8 +3314,7 @@ function dalaistart() {
     echo "Der Dalai Server läuft auf der Adresse: ${AKTUELLEIP}:3000"
 }
 
-##
-	#* Funktion: dalaistop
+##	#* Funktion: dalaistop
 	#? Beschreibung: Stoppt den laufenden Dalai-Server und zeigt die aktiven 'screen'-Sitzungen an.
 	#? Parameter: Keine.
 	#? Rückgabewert: Es wird nichts zurückgegeben.
@@ -3477,8 +3334,7 @@ function dalaistop() {
     screen -ls
 }
 
-##
-	#* Funktion: dalaiupgrade
+##	#* Funktion: dalaiupgrade
 	#? Beschreibung: Aktualisiert den Dalai-Server auf die angegebene Version oder die Standardversion.
 	#? Parameter:
 	#   1. dalaiversion (optional): Die Version von Dalai, die installiert werden soll. Standardmäßig wird "0.3.1" verwendet, wenn keine Version angegeben wird.
@@ -3506,8 +3362,7 @@ function dalaiupgrade() {
 #* OpenSimulator Kommandos-Funktionen Funktionsgruppe
 #**************************************************************************
 
-##
-	#* Funktion: oscommand
+##	#* Funktion: oscommand
 	#? Beschreibung:
 	# Diese Funktion sendet ein OpenSimulator-Befehl an einen laufenden 'screen'-Prozess, der mit dem OpenSimulator assoziiert ist.
 	# Sie ermöglicht die Fernsteuerung des OpenSimulators durch das Senden von Befehlen an den 'screen'-Prozess.
@@ -3539,8 +3394,7 @@ function oscommand() {
 	return 0
 }
 
-##
-	#* Funktion: oscommand
+##	#* Funktion: oscommand
 	#? Beschreibung:
 	# Diese Funktion sendet ein OpenSimulator-Befehl an einen laufenden 'screen'-Prozess, der mit dem OpenSimulator assoziiert ist.
 	# Sie ermöglicht die Fernsteuerung des OpenSimulators durch das Senden von Befehlen an den 'screen'-Prozess.
@@ -3601,8 +3455,7 @@ function menuoscommand() {
 	unset OSCOMMANDSCREEN REGION COMMAND
 }
 
-##
-	#* Funktion: assetdel
+##	#* Funktion: assetdel
 	#? Beschreibung:
 	# Diese Funktion sendet einen Befehl an einen laufenden 'screen'-Prozess, der mit einem OpenSimulator assoziiert ist, um ein Objekt aus einer Region zu löschen.
 	# Sie überprüft zunächst, ob der angegebene 'screen'-Prozess und die Region existieren, und führt dann die erforderlichen Schritte zum Löschen des Objekts aus.
@@ -3637,8 +3490,7 @@ function assetdel() {
 	fi
 }
 
-##
-	#* Funktion: menuassetdel
+##	#* Funktion: menuassetdel
 	#? Beschreibung:
 	# Diese Funktion stellt eine dialogbasierte Benutzeroberfläche bereit, um den Benutzer nach den erforderlichen Informationen für das Löschen eines Objekts aus einer Region zu fragen.
 	# Sie verwendet das 'dialog'-Tool, um die Benutzereingabe zu erleichtern, und führt dann den Löschvorgang aus, falls der 'screen'-Prozess und die Region vorhanden sind.
@@ -3698,8 +3550,7 @@ function menuassetdel() {
 	fi
 }
 
-##
-	#* Funktion: landclear
+##	#* Funktion: landclear
 	#? Beschreibung:
 	# Diese Funktion sendet einen Befehl an einen laufenden 'screen'-Prozess, der mit einem OpenSimulator assoziiert ist, um alle Parzellen in einer Region zu löschen.
 	# Sie überprüft zunächst, ob der angegebene 'screen'-Prozess und die Region existieren, und führt dann den Löschvorgang aus.
@@ -3733,8 +3584,7 @@ function landclear() {
 	fi
 }
 
-##
-	#* Funktion: menulandclear
+##	#* Funktion: menulandclear
 	#? Beschreibung:
 	# Diese Funktion sendet einen Befehl an einen laufenden 'screen'-Prozess, der mit einem OpenSimulator assoziiert ist, um alle Parzellen in einer Region zu löschen.
 	# Sie überprüft zunächst, ob der angegebene 'screen'-Prozess und die Region existieren, und führt dann den Löschvorgang aus.
@@ -3793,8 +3643,7 @@ function menulandclear() {
 	fi
 }
 
-##
-	#* Funktion: loadinventar
+##	#* Funktion: loadinventar
 	#? Beschreibung:
 	# Diese Funktion sendet einen Befehl an einen laufenden 'screen'-Prozess, der mit einem OpenSimulator assoziiert ist, um ein Inventar-Archiv (IAR) in den OpenSimulator zu laden.
 	# Sie überprüft zunächst, ob der angegebene 'screen'-Prozess vorhanden ist, und führt dann den Befehl zum Laden des IAR aus.
@@ -3829,8 +3678,7 @@ function loadinventar() {
 	fi
 }
 
-##
-	#* Funktion: menuloadinventar
+##	#* Funktion: menuloadinventar
 	#? Beschreibung:
 	# Diese Funktion stellt eine dialogbasierte Benutzeroberfläche bereit, um den Benutzer nach den erforderlichen Informationen zum Laden eines Inventarverzeichnisses (IAR) in den OpenSimulator zu fragen.
 	# Sie verwendet das 'dialog'-Tool, um die Benutzereingabe zu erleichtern, und führt dann den Befehl zum Laden des IAR aus, wenn der 'screen'-Prozess vorhanden ist.
@@ -3897,8 +3745,7 @@ function menuloadinventar() {
 #* Starten und Stoppen Funktionsgruppe
 #**************************************************************************
 
-##
-	#* Funktion: osstart
+##	#* Funktion: osstart
 	#? Beschreibung:
 	# Diese Funktion startet den OpenSimulator in einem 'screen'-Prozess. Sie überprüft zunächst, ob der angegebene 'screen'-Prozess bereits läuft.
 	# Wenn der Prozess nicht läuft, wird überprüft, ob das Verzeichnis des OpenSimulators existiert.
@@ -3949,8 +3796,7 @@ function osstart() {
 	fi
 }
 
-##
-	#* Funktion: osstop
+##	#* Funktion: osstop
 	#? Beschreibung:
 	# Diese Funktion beendet den OpenSimulator in einem 'screen'-Prozess. Sie überprüft zunächst, ob der angegebene 'screen'-Prozess existiert.
 	# Wenn der Prozess gefunden wird, sendet sie den Befehl "shutdown" an den 'screen'-Prozess, um den OpenSimulator zu beenden.
@@ -3983,8 +3829,7 @@ function osstop() {
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then hauptmenu; fi
 }
 
-##
-	#* Funktion: menuosstart
+##	#* Funktion: menuosstart
 	#? Beschreibung:
 	# Diese Funktion ermöglicht es dem Benutzer, den OpenSimulator in einem 'screen'-Prozess zu starten. Sie zeigt ein Dialogfeld an, in dem der Benutzer den Namen des Simulators eingeben kann.
 	# Die Funktion überprüft zunächst, ob der angegebene 'screen'-Prozess bereits läuft. Wenn der Prozess nicht läuft und das Verzeichnis des Simulators existiert, wird der OpenSimulator gestartet.
@@ -4045,8 +3890,7 @@ function menuosstart() {
 	# hauptmenu
 }
 
-##
-	#* Funktion: menuosstop
+##	#* Funktion: menuosstop
 	#? Beschreibung:
 	# Diese Funktion ermöglicht es dem Benutzer, den OpenSimulator in einem 'screen'-Prozess zu stoppen. Sie zeigt ein Dialogfeld an, in dem der Benutzer den Namen des Simulators eingeben kann.
 	# Die Funktion überprüft zunächst, ob der angegebene 'screen'-Prozess läuft. Wenn der Prozess gefunden wird, wird der Befehl "shutdown" an den 'screen'-Prozess gesendet, um den OpenSimulator zu beenden.
@@ -4088,8 +3932,7 @@ function menuosstop() {
 	fi
 }
 
-##
-	#* Funktion: rostart
+##	#* Funktion: rostart
 	#? Beschreibung:
 	# Diese Funktion dient dazu, den Robust-Server zu starten. Sie wechselt in das Verzeichnis, in dem sich die Robust-Server-Anwendung befindet, und startet den Robust-Server entweder im DOTNET- oder MONO-Modus, abhängig von der Konfiguration (DOTNETMODUS). Anschließend wird eine Wartezeit (ROBUSTWARTEZEIT) abgewartet.
 	#? Parameter: Keine.
@@ -4121,8 +3964,7 @@ function rostart() {
 	return 0
 }
 
-##
-	#* Funktion: menurostart
+##	#* Funktion: menurostart
 	#? Beschreibung:
 	# Diese Funktion startet den Robust-Server basierend auf der Konfiguration (DOTNETMODUS oder MONO). Sie wechselt in das Verzeichnis, in dem sich die Robust-Server-Anwendung befindet, startet den Robust-Server und wartet anschließend eine definierte Wartezeit (ROBUSTWARTEZEIT).
 	#? Parameter: Keine.
@@ -4153,8 +3995,7 @@ function menurostart() {
 	return 0
 }
 
-##
-	#* Funktion: rostop
+##	#* Funktion: rostop
 	#? Beschreibung:
 	# Diese Funktion dient dazu, den Robust-Server zu beenden. Sie überprüft, ob ein Screen mit dem Namen "RO" existiert. Falls ja, sendet sie das Shutdown-Kommando an den Robust-Server und wartet eine definierte Wartezeit (WARTEZEIT). Wenn der Robust-Server erfolgreich beendet wurde, gibt die Funktion eine Warnmeldung aus und kehrt mit einem Rückgabewert 0 zurück. Andernfalls gibt sie eine Fehlermeldung aus und kehrt mit einem Rückgabewert 1 zurück.
 	#? Parameter: Keine.
@@ -4177,8 +4018,7 @@ function rostop() {
 	fi
 }
 
-##
-	#* Funktion: menurostop
+##	#* Funktion: menurostop
 	#? Beschreibung:
 	# Diese Funktion dient dazu, den Robust-Server zu beenden. Sie überprüft, ob ein Screen mit dem Namen "RO" existiert. Falls ja, sendet sie das Shutdown-Kommando an den Robust-Server und wartet eine definierte Wartezeit (WARTEZEIT). Wenn der Robust-Server erfolgreich beendet wurde, gibt die Funktion eine Warnmeldung aus und kehrt mit einem Rückgabewert 0 zurück. Andernfalls gibt sie eine Fehlermeldung aus und kehrt mit einem Rückgabewert 1 zurück.
 	#? Parameter: Keine.
@@ -4199,8 +4039,7 @@ function menurostop() {
 	fi
 }
 
-##
-	#* Funktion: mostart
+##	#* Funktion: mostart
 	#? Beschreibung:
 	# Diese Funktion dient dazu, den MoneyServer zu starten. Sie wechselt in das Verzeichnis, in dem sich die ausführbare Datei des MoneyServers befindet, und startet den Server im Hintergrund. Die Wahl zwischen der Ausführung mit "dotnet" oder "mono" wird anhand des Wertes der Umgebungsvariable DOTNETMODUS getroffen. Nach dem Start wird eine definierte Wartezeit (MONEYWARTEZEIT) eingehalten, um sicherzustellen, dass der Server vollständig gestartet ist. Die Funktion gibt eine Informationsmeldung aus und kehrt mit einem Rückgabewert 0 zurück.
 	#? Parameter: Keine.
@@ -4230,8 +4069,7 @@ function mostart() {
 	return 0
 }
 
-##
-	#* Funktion: menumostart
+##	#* Funktion: menumostart
 	#? Beschreibung:
 	# Diese Funktion dient dazu, den MoneyServer zu starten. Sie wechselt in das Verzeichnis, in dem sich die ausführbare Datei des MoneyServers befindet, und startet den Server im Hintergrund. Die Wahl zwischen der Ausführung mit "dotnet" oder "mono" wird anhand des Wertes der Umgebungsvariable DOTNETMODUS getroffen. Nach dem Start wird eine definierte Wartezeit (MONEYWARTEZEIT) eingehalten, um sicherzustellen, dass der Server vollständig gestartet ist. Die Funktion gibt eine Informationsmeldung aus und kehrt mit einem Rückgabewert 0 zurück.
 	#? Parameter: Keine.
@@ -4260,8 +4098,7 @@ function menumostart() {
 	return 0
 }
 
-##
-	#* Funktion: mostop
+##	#* Funktion: mostop
 	#? Beschreibung:
 	# Diese Funktion dient dazu, den MoneyServer zu beenden. Sie überprüft zunächst, ob ein Bildschirm (Screen) mit dem Namen "MO" vorhanden ist, was auf einen laufenden MoneyServer hinweisen würde. Wenn der MoneyServer gefunden wird, sendet die Funktion einen Befehl zum Herunterfahren an den Bildschirm. Anschließend wird eine definierte Wartezeit (MONEYWARTEZEIT) eingehalten, um sicherzustellen, dass der Server ordnungsgemäß beendet wurde. Die Funktion gibt eine Warnmeldung aus und kehrt mit einem Rückgabewert 0 zurück, wenn der MoneyServer erfolgreich beendet wurde. Andernfalls wird eine Fehlermeldung ausgegeben, und die Funktion gibt einen Rückgabewert 1 zurück.
 	#? Parameter: Keine.
@@ -4284,8 +4121,7 @@ function mostop() {
 	fi
 }
 
-##
-	#* Funktion: menumostop
+##	#* Funktion: menumostop
 	#? Beschreibung:
 	# Diese Funktion dient dazu, den MoneyServer zu beenden. Sie überprüft zunächst, ob ein Bildschirm (Screen) mit dem Namen "MO" vorhanden ist, was auf einen laufenden MoneyServer hinweisen würde. Wenn der MoneyServer gefunden wird, sendet die Funktion einen Befehl zum Herunterfahren an den Bildschirm. Anschließend wird eine definierte Wartezeit (MONEYWARTEZEIT) eingehalten, um sicherzustellen, dass der Server ordnungsgemäß beendet wurde. Die Funktion gibt eine Warnmeldung aus und kehrt mit einem Rückgabewert 0 zurück, wenn der MoneyServer erfolgreich beendet wurde. Andernfalls wird eine Fehlermeldung ausgegeben, und die Funktion gibt einen Rückgabewert 1 zurück.
 	#? Parameter: Keine.
@@ -4308,8 +4144,7 @@ function menumostop() {
 	fi
 }
 
-##
-	#* Funktion: osscreenstop
+##	#* Funktion: osscreenstop
 	#? Beschreibung:
 	# Diese Funktion dient dazu, einen bestimmten Screen (Bildschirm) zu beenden. Sie akzeptiert einen Parameter, der den Namen des zu beendenden Screens angibt (SCREENSTOPSCREEN). Die Funktion überprüft zunächst, ob der angegebene Screen existiert, indem sie die Liste der aktiven Screens durchsucht. Wenn der Screen gefunden wird, wird er durch den Befehl "screen -S SCREENSTOPSCREEN -X quit" beendet. Die Funktion gibt eine Erfolgsmeldung aus und kehrt mit einem Rückgabewert 0 zurück, wenn der Screen erfolgreich beendet wurde. Andernfalls wird eine Fehlermeldung ausgegeben, und die Funktion gibt einen Rückgabewert 1 zurück.
 	#? Parameter:
@@ -4334,8 +4169,7 @@ function osscreenstop() {
 	log text "No screen session found. Ist hier kein Fehler, sondern ein Beweis, das alles zuvor sauber heruntergefahren wurde."
 }
 
-##
-	#* Funktion: gridstart
+##	#* Funktion: gridstart
 	#? Beschreibung:
 	# Die Funktion `gridstart` dient dazu, die verschiedenen Komponenten eines OpenSimulator-Grids (Robust und Money) zu starten. Zunächst werden die Einstellungen für den OpenSimulator über die Funktion `ossettings` konfiguriert. Anschließend überprüft die Funktion, ob die Screens für Robust und Money bereits laufen. Wenn eines oder beide der Screens nicht aktiv sind, werden sie gestartet, indem die Funktionen `rostart` und `mostart` aufgerufen werden. Diese Funktion ist hilfreich, um sicherzustellen, dass alle erforderlichen Komponenten des Grids aktiv sind.
 	#? Parameter:
@@ -4362,8 +4196,7 @@ function gridstart() {
 	return 0
 }
 
-##
-	#* Funktion: menugridstart
+##	#* Funktion: menugridstart
 	#? Beschreibung:
 	# Die Funktion `menugridstart` dient dazu, die verschiedenen Komponenten eines OpenSimulator-Grids (Robust und Money) zu starten. Zunächst werden die Einstellungen für den OpenSimulator über die Funktion `ossettings` konfiguriert. Anschließend überprüft die Funktion, ob die Screens für Robust und Money bereits laufen. Wenn eines oder beide der Screens nicht aktiv sind, werden sie gestartet, indem die Funktionen `rostart` und `mostart` aufgerufen werden. Diese Funktion ist hilfreich, um sicherzustellen, dass alle erforderlichen Komponenten des Grids aktiv sind.
 	#? Parameter:
@@ -4390,8 +4223,7 @@ function menugridstart() {
 	fi
 }
 
-##
-	#* Funktion: icecaststart
+##	#* Funktion: icecaststart
 	#? Beschreibung:
 	# Die Funktion `icecaststart` dient dazu, den Icecast-Streaming-Server zu starten. Der Icecast-Server wird über das init.d-Systemdienstskript gestartet. Diese Funktion ermöglicht es, den Icecast-Server auf einfache Weise zu aktivieren, um Streaming-Dienste bereitzustellen.
 	#? Parameter:
@@ -4408,8 +4240,7 @@ function icecaststart() {
 	sudo /etc/init.d/icecast2 start
 }
 
-##
-	#* Funktion: icecaststop
+##	#* Funktion: icecaststop
 	#? Beschreibung:
 	# Die Funktion `icecaststop` dient dazu, den Icecast-Streaming-Server zu stoppen. Der Icecast-Server wird über das init.d-Systemdienstskript gestoppt. Diese Funktion ermöglicht es, den Icecast-Server auf einfache Weise zu deaktivieren.
 	#? Parameter:
@@ -4426,8 +4257,7 @@ function icecaststop() {
 	sudo /etc/init.d/icecast2 stop
 }
 
-##
-	#* Funktion: icecastrestart
+##	#* Funktion: icecastrestart
 	#? Beschreibung:
 	# Die Funktion `icecastrestart` dient dazu, den Icecast-Streaming-Server neu zu starten. Der Icecast-Server wird über das init.d-Systemdienstskript neu gestartet. Diese Funktion ermöglicht es, den Icecast-Server nach Änderungen in der Konfiguration neu zu laden oder nach einem Fehlerzustand neu zu starten.
 	#? Parameter:
@@ -4444,8 +4274,7 @@ function icecastrestart() {
 	sudo /etc/init.d/icecast2 restart
 }
 
-##
-	#* Funktion: icecastversion
+##	#* Funktion: icecastversion
 	#? Beschreibung:
 	# Die Funktion `icecastversion` gibt die Version des Icecast-Streaming-Servers aus. Sie ruft das Icecast-Programm mit der Option "-v" auf, um die Version anzuzeigen, und gibt die Ausgabe auf dem Bildschirm aus.
 	#? Parameter:
@@ -4466,8 +4295,7 @@ function icecastversion() {
 #* Dateifunktionen Funktionsgruppe
 #**************************************************************************
 
-##
-	#* Funktion: saveinventar
+##	#* Funktion: saveinventar
 	#? Beschreibung:
 	# Diese Funktion speichert ein Inventar in einem Bildschirm (Screen) mit dem angegebenen Namen und Verzeichnis.
 	#? Parameter:
@@ -4495,8 +4323,7 @@ function saveinventar() {
 	fi
 }
 
-##
-	#* Funktion: menusaveinventar
+##	#* Funktion: menusaveinventar
 	#? Beschreibung:
 	# Diese Funktion ermöglicht es dem Benutzer, Eingaben über das Dialog-Programm vorzunehmen, um Informationen für das Speichern eines Inventars einzugeben. Die eingegebenen Informationen werden dann an den Icecast-Server gesendet, um das Inventar zu speichern.
 	# Letzte Bearbeitung: 01.10.2023
@@ -4560,8 +4387,7 @@ function menusaveinventar() {
 	unset SAVEINVSCREEN NAME VERZEICHNIS PASSWORD DATEI
 }
 
-##
-	#* Funktion: menuworks
+##	#* Funktion: menuworks
 	#? Beschreibung:
 	# Die Funktion `menuworks` überprüft den Status eines OpenSimulator-Screens und gibt entsprechende Meldungen aus, ob der Screen online oder offline ist. Sie kann sowohl mit als auch ohne das Dialog-Programm verwendet werden, abhängig von dessen Verfügbarkeit auf dem System.
 	#? Parameter:
@@ -4614,8 +4440,7 @@ function menuworks() {
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then hauptmenu; fi
 }
 
-##
-	#* Funktion: works
+##	#* Funktion: works
 	#? Beschreibung:
 	# Die Funktion `works` überprüft den Status eines OpenSimulator-Screens und gibt entsprechende Log-Meldungen aus, ob der Screen online oder offline ist.
 	#? Parameter:
@@ -4644,8 +4469,7 @@ function works() {
 	fi
 }
 
-##
-	#* Funktion: waslauft
+##	#* Funktion: waslauft
 	#? Beschreibung:
 	# Die Funktion `waslauft` zeigt eine Liste der aktiven Screens an, die mithilfe des `screen`-Befehls ausgeführt werden. Sie bereinigt die Ausgabe und gibt eine formatierte Liste von Screen-Namen zurück.
 	#? Parameter:
@@ -4667,8 +4491,7 @@ function waslauft() {
 	return 0
 }
 
-##
-	#* Funktion: menuwaslauft
+##	#* Funktion: menuwaslauft
 	#? Beschreibung:
 	# Die Funktion `menuwaslauft` zeigt eine Liste der aktiven Screens an, die mithilfe des `screen`-Befehls ausgeführt werden. Sie bereinigt die Ausgabe und zeigt die formatierte Liste der Screen-Namen in einem Dialogfeld an.
 	#? Parameter:
@@ -4695,8 +4518,7 @@ function menuwaslauft() {
 	return 0
 }
 
-##
-	#* Funktion: checkfile
+##	#* Funktion: checkfile
 	#? Beschreibung:
 	# Die Funktion `checkfile` überprüft, ob eine angegebene Datei existiert. Sie gibt den Exit-Status 0 zurück, wenn die Datei existiert, andernfalls gibt sie einen anderen Exit-Status zurück.
 	#? Parameter:
@@ -4717,8 +4539,7 @@ function checkfile() {
 	return $?
 }
 
-##
-	#* Funktion: mapdel
+##	#* Funktion: mapdel
 	#? Beschreibung:
 	# Die Funktion `mapdel` löscht die Kartenkacheln (maptiles) eines OpenSimulator-Verzeichnisses, sofern das Verzeichnis existiert. Sie überprüft zuerst, ob das Verzeichnis existiert, und löscht dann den Inhalt des "maptiles"-Verzeichnisses.
 	#? Parameter:
@@ -4746,8 +4567,7 @@ function mapdel() {
 	fi
 }
 
-##
-	#* Funktion: logdel
+##	#* Funktion: logdel
 	#? Beschreibung:
 	# Die Funktion `logdel` löscht Log-Dateien aus einem angegebenen Verzeichnis, sofern das Verzeichnis existiert. Sie überprüft zuerst, ob das Verzeichnis existiert, und löscht dann alle Dateien mit der Erweiterung ".log" aus dem Verzeichnis.
 	#? Parameter:
@@ -4774,8 +4594,7 @@ function logdel() {
 	return 0
 }
 
-##
-	#* Funktion: rologdel
+##	#* Funktion: rologdel
 	#? Beschreibung:
 	# Die Funktion `rologdel` löscht bestimmte Log-Dateien und erstellt eine Besucherliste, sofern die entsprechenden Verzeichnisse existieren. Sie überprüft zuerst, ob die Verzeichnisse vorhanden sind, und löscht dann bestimmte Log-Dateien. Wenn die `VISITORLIST`-Variable auf "yes" gesetzt ist, werden Besucherinformationen aus der Robust-Log-Datei extrahiert und in eine separate Datei geschrieben.
 	#? Parameter:
@@ -4831,8 +4650,7 @@ function rologdel() {
 	return 0
 }
 
-##
-	#* Funktion: menumapdel
+##	#* Funktion: menumapdel
 	#? Beschreibung:
 	# Die Funktion `menumapdel` ermöglicht das Löschen von Kartenkacheln (maptiles) eines OpenSimulator-Verzeichnisses. Sie kann entweder im Dialog-Modus oder im Standard-Modus (ohne Dialog) ausgeführt werden. Im Dialog-Modus wird der Benutzer nach dem zu löschenden Verzeichnis gefragt, während im Standard-Modus das Verzeichnis als Parameter übergeben wird.
 	#? Parameter:
@@ -4874,8 +4692,7 @@ function menumapdel() {
 	hauptmenu
 }
 
-##
-	#* Funktion: menulogdel
+##	#* Funktion: menulogdel
 	#? Beschreibung:
 	# Die Funktion `menulogdel` ermöglicht das Löschen von Log-Dateien aus einem OpenSimulator-Verzeichnis. Sie kann entweder im Dialog-Modus oder im Standard-Modus (ohne Dialog) ausgeführt werden. Im Dialog-Modus wird der Benutzer nach dem zu löschenden Verzeichnis gefragt, während im Standard-Modus das Verzeichnis als Parameter übergeben wird.
 	#? Parameter:
@@ -4923,8 +4740,7 @@ function menulogdel() {
 	hauptmenu
 }
 
-##
-	#* Funktion: assetcachedel
+##	#* Funktion: assetcachedel
 	#? Beschreibung:
 	# Die Funktion `assetcachedel` ermöglicht das Löschen des "assetcache"-Verzeichnisses aus einem OpenSimulator-Verzeichnis. Das Verzeichnis wird anhand des übergebenen Parameters `VERZEICHNIS` gelöscht.
 	#? Parameter:
@@ -4955,8 +4771,7 @@ function assetcachedel() {
 	return 0
 }
 
-##
-	#* Funktion: autoassetcachedel
+##	#* Funktion: autoassetcachedel
 	# Diese Funktion löscht Assetcache-Verzeichnisse in den in der "VERZEICHNISSLISTE" definierten Verzeichnissen.
 	#? Parameter:
 	# Keine
@@ -4982,8 +4797,7 @@ function autoassetcachedel() {
 #* Starten und Stoppen Funktionsgruppe
 #**************************************************************************
 
-##
-	#* Funktion: menugridstop
+##	#* Funktion: menugridstop
 	# Diese Funktion überprüft, ob bestimmte Screens mit den Namen "MO" oder "RO" aktiv sind und stoppt diese, wenn sie aktiv sind.
 	#? Parameter:
 	# Keine
@@ -5004,8 +4818,7 @@ function menugridstop() {
 	return 0
 }
 
-##
-	#* Funktion: scstart
+##	#* Funktion: scstart
 	# Diese Funktion startet einen OpenSimulator in einem Screen mit dem angegebenen Namen und verwendet den entsprechenden Ausführungsmodus (Dotnet oder Mono) basierend auf der Konfiguration.
 	#? Parameter:
 	# $1 - Der Name des Screens, in dem der OpenSimulator gestartet werden soll.
@@ -5029,8 +4842,7 @@ function scstart() {
 	fi
 }
 
-##
-	#* Funktion: scstop
+##	#* Funktion: scstop
 	# Diese Funktion stoppt einen OpenSimulator in einem Screen mit dem angegebenen Namen, indem sie den Befehl "shutdown" an den Screen sendet.
 	#? Parameter:
 	# $1 - Der Name des Screens, in dem der OpenSimulator gestoppt werden soll.
@@ -5045,8 +4857,7 @@ function scstop() {
 	screen -S "$SCSTOPSCREEN" -p 0 -X eval "stuff 'shutdown'^M"
 }
 
-##
-	#* Funktion: sckill
+##	#* Funktion: sckill
 	# Diese Funktion beendet einen Screen mit dem angegebenen Namen.
 	#? Parameter:
 	# $1 - Der Name des Screens, der beendet werden soll.
@@ -5061,8 +4872,7 @@ function sckill() {
 	screen -X -S "$SCKILLSCREEN" kill
 }
 
-##
-	#* Funktion: simstats
+##	#* Funktion: simstats
 	# Diese Funktion zeigt die Statistiken eines OpenSimulator-Servers in einem Screen an.
 	#? Parameter:
 	# $1 - Der Name des Screens, in dem der OpenSimulator läuft.
@@ -5088,8 +4898,7 @@ function simstats() {
 	return 0
 }
 
-##
-	#* Funktion: terminator
+##	#* Funktion: terminator
 	# Diese Funktion beendet alle aktiven Screen-Sitzungen und gibt Protokollmeldungen aus.
 	#? Parameter:
 	# Keine
@@ -5107,8 +4916,7 @@ function terminator() {
 	return 0
 }
 
-##
-	#* Funktion: oscompi93
+##	#* Funktion: oscompi93
 	# Diese Funktion kompiliert OpenSimulator Version 0.9.3 von Git und führt einige spezifische Schritte im Kompilierungsprozess aus.
 	#? Parameter:
 	# Keine
@@ -5131,8 +4939,7 @@ function oscompi93() {
 	return 0
 }
 
-##
-	#* Funktion: oscompi
+##	#* Funktion: oscompi
 	# Diese Funktion führt die Kompilierung von OpenSimulator mit verschiedenen Konfigurationen und Optionen durch.
 	#? Parameter:
 	# Keine
@@ -5273,8 +5080,7 @@ function oscompi() {
 	return 0
 }
 
-##
-	#* Funktion: opensimgitcopy93
+##	#* Funktion: opensimgitcopy93
 	# Diese Funktion kopiert OpenSimulator-Dateien aus einem Git-Repository in das angegebene Verzeichnis, wenn $MONEYCOPY auf "yes" gesetzt ist.
 	#? Parameter:
 	# Keine
@@ -5296,8 +5102,7 @@ function opensimgitcopy93() {
 	return 0
 }
 
-##
-	#* Funktion: moneygitcopy93
+##	#* Funktion: moneygitcopy93
 	# Diese Funktion kopiert den MoneyServer und die Skripte aus einem Git-Repository in das angegebene Verzeichnis,
 	# wenn $MONEYCOPY auf "yes" gesetzt ist.
 	#? Parameter:
@@ -5320,8 +5125,7 @@ function moneygitcopy93() {
 	return 0
 }
 
-##
-	#* Funktion: moneygitcopy
+##	#* Funktion: moneygitcopy
 	# Diese Funktion kopiert den MoneyServer und die Skripte aus einem Git-Repository in das angegebene Verzeichnis,
 	# wenn $MONEYCOPY auf "yes" gesetzt ist.
 	#? Parameter:
@@ -5344,8 +5148,7 @@ function moneygitcopy() {
 	return 0
 }
 
-##
-	#* Funktion: divagitcopy
+##	#* Funktion: divagitcopy
 	# Diese Funktion kopiert DIVA und die zugehörigen Skripte aus einem Git-Repository in das angegebene Verzeichnis,
 	# wenn $DIVACOPY auf "yes" gesetzt ist.
 	#? Parameter:
@@ -5367,8 +5170,7 @@ function divagitcopy() {
 	fi
 	return 0
 }
-##
-	#* Funktion: divacopy
+##	#* Funktion: divacopy
 	# Diese Funktion kopiert DIVA-Dateien und Add-On-Module in das OpenSimulator-Verzeichnis, wenn $DIVACOPY auf "yes" gesetzt ist.
 	#? Parameter:
 	# Keine
@@ -5399,8 +5201,7 @@ function divacopy() {
 	return 0
 }
 
-##
-	#* Funktion: scriptgitcopy
+##	#* Funktion: scriptgitcopy
 	# Diese Funktion kopiert Skript-Assets aus einem Git-Repository in das angegebene Verzeichnis,
 	# wenn $SCRIPTCOPY auf "yes" gesetzt ist.
 	#? Parameter:
@@ -5422,8 +5223,7 @@ function scriptgitcopy() {
 	return 0
 }
 
-##
-	#* Funktion: scriptcopy
+##	#* Funktion: scriptcopy
 	# Diese Funktion kopiert Skript-Assets in das OpenSimulator-Verzeichnis,
 	# wenn $SCRIPTCOPY auf "yes" gesetzt ist.
 	#? Parameter:
@@ -5456,8 +5256,7 @@ function scriptcopy() {
 	return 0
 }
 
-##
-	#* Funktion: moneycopy93
+##	#* Funktion: moneycopy93
 	# Diese Funktion kopiert den MoneyServer (Währungsserver) und die Add-On-Module in das OpenSimulator-Verzeichnis,
 	# wenn $MONEYCOPY auf "yes" gesetzt ist.
 	#? Parameter:
@@ -5490,8 +5289,7 @@ function moneycopy93() {
 	return 0
 }
 
-##
-	#* Funktion: moneycopy
+##	#* Funktion: moneycopy
 	# Diese Funktion kopiert den MoneyServer (Währungsserver) und die Add-On-Module in das OpenSimulator-Verzeichnis,
 	# wenn $MONEYCOPY auf "yes" gesetzt ist.
 	#? Parameter:
@@ -5523,8 +5321,7 @@ function moneycopy() {
 	return 0
 }
 
-##
-	#* Funktion: mutelistcopy
+##	#* Funktion: mutelistcopy
 	# Diese Funktion kopiert die Mute List (Stummschaltungsliste) und Add-On-Module in das OpenSimulator-Verzeichnis,
 	# wenn $MUTELISTCOPY auf "yes" gesetzt ist.
 	#? Parameter:
@@ -5556,8 +5353,7 @@ function mutelistcopy() {
 	return 0
 }
 
-##
-	#* Funktion: searchcopy
+##	#* Funktion: searchcopy
 	# Diese Funktion kopiert den OpenSimSearch-Server und die Add-On-Module in das OpenSimulator-Verzeichnis,
 	# wenn $OSSEARCHCOPY auf "yes" gesetzt ist.
 	#? Parameter:
@@ -5589,8 +5385,7 @@ function searchcopy() {
 	return 0
 }
 
-##
-	#* Funktion: makeaot
+##	#* Funktion: makeaot
 	# Diese Funktion führt Ahead-of-Time (AOT)-Kompilierung für bestimmte DLL-Dateien und ausführbare Dateien in einem Verzeichnis durch.
 	#? Parameter:
 	# Keine
@@ -5623,8 +5418,7 @@ function makeaot() {
 	return 0
 }
 
-##
-	#* Funktion: cleanaot
+##	#* Funktion: cleanaot
 	# Diese Funktion entfernt die zuvor erstellten AOT-Kompilierungsdateien (".so"-Dateien) für bestimmte DLLs und ausführbare Dateien in einem Verzeichnis.
 	#? Parameter:
 	# Keine
@@ -5659,8 +5453,7 @@ function cleanaot() {
 	return 0
 }
 
-##
-	#* Funktion: setversion
+##	#* Funktion: setversion
 	# Diese Funktion ändert die Version von OpenSim und stellt das Release auf die angegebene Nummer ein.
 	#? Parameter:
 	# $1 (NUMMER): Die gewünschte Versionsnummer, auf die das Release eingestellt werden soll.
@@ -5683,8 +5476,7 @@ function setversion() {
 	return 0
 }
 
-##
-	#* Funktion: versionsausgabe93
+##	#* Funktion: versionsausgabe93
 	# Diese Funktion gibt Informationen zur Version und zum Git-Status eines OpenSimulator-Repositorys aus.
 	#? Parameter:
 	# Keine
@@ -5700,8 +5492,7 @@ function versionsausgabe93() {
     git describe --abbrev=7 --always  --long --match v* master
 }
 
-##
-	#* Funktion: setversion93
+##	#* Funktion: setversion93
 	# Diese Funktion ändert die Versionsnummer in der Datei "VersionInfo.cs" im OpenSimulator-Repository.
 	#? Parameter:
 	# $1 (NUMMER): Die gewünschte Versionsnummer oder eine spezielle Kennzeichnung, um die Versionsnummer festzulegen.
@@ -5758,8 +5549,7 @@ function setversion93() {
 	return 0
 }
 
-##
-	#* Funktion: osstruktur
+##	#* Funktion: osstruktur
 	# Diese Funktion erstellt Verzeichnisstrukturen für OpenSimulator-Simulationen basierend auf den übergebenen Parametern.
 	#? Parameter:
 	#   $1: Startnummer (z.B., sim1)
@@ -5790,8 +5580,7 @@ function osstruktur() {
 	return 0
 }
 
-##
-	#* Funktion: menuosstruktur
+##	#* Funktion: menuosstruktur
 	# Diese Funktion erstellt Verzeichnisstrukturen für OpenSimulator-Simulationen basierend auf Benutzereingaben.
 	#? Parameter: Keine
 	#? Rückgabewert: Die Funktion gibt immer 0 zurück.
@@ -5847,8 +5636,7 @@ function menuosstruktur() {
 	return 0
 }
 
-##
-	#* osdelete
+##	#* osdelete
 	# Diese Funktion überprüft zunächst, ob das angegebene Verzeichnis vorhanden ist.
 	# Wenn es existiert, wird es gelöscht und das alte Verzeichnis wird umbenannt, um es zu sichern.
 	# Wenn das Verzeichnis nicht existiert, wird ein Fehler protokolliert.
@@ -5876,8 +5664,7 @@ function osdelete() {
 	return 0
 }
 
-##
-	#* oscopyrobust
+##	#* oscopyrobust
 	# Diese Funktion wechselt in das Hauptverzeichnis ($STARTVERZEICHNIS) und überprüft, ob das
 	# Robust-Verzeichnis ($ROBUSTVERZEICHNIS) vorhanden ist. Wenn es existiert, wird der Inhalt des
 	# OpenSim-Verzeichnisses ($OPENSIMVERZEICHNIS/bin) in das Robust-Verzeichnis kopiert.
@@ -5906,8 +5693,7 @@ function oscopyrobust() {
 	return 0
 }
 
-##
-	#* oscopysim
+##	#* oscopysim
 	# Diese Funktion wechselt in das Hauptverzeichnis ($STARTVERZEICHNIS) und ruft die Funktion
 	# `makeverzeichnisliste` auf, um eine Liste von Verzeichnissen zu erstellen, in die die
 	# OpenSimulator-Instanzen kopiert werden sollen. Anschließend wird in einer Schleife durch die
@@ -5937,8 +5723,7 @@ function oscopysim() {
 	return 0
 }
 
-##
-	#* oscopy
+##	#* oscopy
 	# Diese Funktion nimmt den Namen eines OpenSimulator-Verzeichnisses als Argument ($VERZEICHNIS)
 	# entgegen. Sie wechselt in das Hauptverzeichnis ($STARTVERZEICHNIS) und kopiert den Inhalt des
 	# OpenSim-Verzeichnisses ($OPENSIMVERZEICHNIS/bin) in das angegebene Zielverzeichnis ($VERZEICHNIS).
@@ -5960,8 +5745,7 @@ function oscopy() {
 	return 0
 }
 
-##
-	#* configlesen
+##	#* configlesen
 	# Diese Funktion nimmt den Namen eines Verzeichnisses als Argument ($CONFIGLESENSCREEN) entgegen und
 	# liest die Regionskonfigurationen aus den INI-Dateien in diesem Verzeichnis. Die gelesenen
 	# Konfigurationen werden in der Variable $KONFIGLESEN gespeichert und protokolliert.
@@ -5981,8 +5765,7 @@ function configlesen() {
 	return 0
 }
 
-##
-	#* ini_get
+##	#* ini_get
 	# Diese Funktion nimmt drei Argumente entgegen: den Dateinamen der INI-Datei ($KONFIGDATEI), den Namen der Sektion ($SECTION)
 	# und den Namen des Schlüssels ($KEY), dessen Wert gelesen werden soll. Die Funktion durchsucht die INI-Datei nach der
 	# angegebenen Sektion und dem Schlüssel und gibt den entsprechenden Wert zurück.
@@ -6012,8 +5795,7 @@ function ini_get() {
     return $?
 }
 
-##
-	#* ini_set
+##	#* ini_set
 	# Diese Funktion nimmt vier Argumente entgegen: den Dateinamen der INI-Datei ($KONFIGDATEI), den Namen der Sektion ($SECTION),
 	# den Namen des Schlüssels ($KEY) und den Wert ($WERT), der in der INI-Datei gespeichert werden soll. Die Funktion sucht
 	# nach der angegebenen Sektion und dem Schlüssel in der INI-Datei und setzt den Wert entsprechend.
@@ -6047,8 +5829,7 @@ function ini_set() {
     return $?
 }
 
-##
-	#* regionsconfigdateiliste
+##	#* regionsconfigdateiliste
 	# Diese Funktion nimmt zwei Argumente entgegen: den Namen des Verzeichnisses ($VERZEICHNIS), in dem nach
 	# Regionskonfigurationsdateien gesucht werden soll, und optional eine Option ($2) zum Steuern des Ausgabeverhaltens.
 	# Wenn die Option "-d" übergeben wird, werden die Dateinamen in eine Datei namens "RegionsDateiliste.txt" geschrieben.
@@ -6100,8 +5881,7 @@ function meineregionen() {
 	return 0
 }
 
-##
-	#* regionsinisuchen
+##	#* regionsinisuchen
 	# Diese Funktion ruft zuerst die Funktion `makeverzeichnisliste` auf, um eine Liste von Verzeichnissen zu erstellen,
 	# und sucht dann nach der Datei "Regions.ini" in jedem Verzeichnis. Die gefundenen Dateien werden analysiert, und die
 	# Namen der darin enthaltenen Regionskonfigurationen werden ausgegeben.
@@ -6130,8 +5910,7 @@ function regionsinisuchen() {
 	return 0
 }
 
-##
-	#* get_regionsarray
+##	#* get_regionsarray
 	# Diese Funktion nimmt den Dateinamen einer INI-Datei ($DATEI) entgegen und extrahiert die Regionsnamen
 	# aus den Sektionsüberschriften in der Datei. Die extrahierten Regionsnamen werden in einem Array gespeichert
 	# und als Ergebnis zurückgegeben.
@@ -6160,8 +5939,7 @@ function get_regionsarray() {
 	return 0
 }
 
-##
-	#* get_value_from_Region_key
+##	#* get_value_from_Region_key
 	# Diese Funktion nimmt drei Argumente entgegen: den Dateinamen der INI-Datei ($RKDATEI), den Namen der Sektion ($RKSCHLUESSEL)
 	# und den Namen des Schlüssels ($RKSEKTION), dessen Wert extrahiert werden soll. Die Funktion sucht nach der angegebenen
 	# Sektion und dem Schlüssel in der INI-Datei und gibt den entsprechenden Wert zurück.
@@ -6184,8 +5962,7 @@ function get_value_from_Region_key() {
 	return 0
 }
 
-##
-	#* regionsiniteilen
+##	#* regionsiniteilen
 	# Diese Funktion nimmt drei Argumente entgegen: das Verzeichnis, aus dem die Werte gelesen werden sollen ($INIVERZEICHNIS),
 	# den Namen der Region, für die die Werte gespeichert werden sollen ($RTREGIONSNAME), und den Pfad zur Haupt-Regions.ini-Datei
 	# ($INI_FILE). Die Funktion überprüft, ob die Haupt-Regions.ini-Datei vorhanden ist, und wenn nicht, werden die Werte für die
@@ -6242,8 +6019,7 @@ function regionsiniteilen() {
 	return 0
 }
 
-##
-	#* autoregionsiniteilen
+##	#* autoregionsiniteilen
 	# Diese Funktion ruft zuerst die Funktion `makeverzeichnisliste` auf, um eine Liste von Verzeichnissen zu erstellen,
 	# und iteriert dann über jedes Verzeichnis in der Liste. Für jedes Verzeichnis wird die Regions.ini-Datei in mehrere
 	# separate INI-Dateien aufgeteilt, eine für jede Region, und die einzelnen Regionsdateien werden umbenannt. Falls die
@@ -6283,8 +6059,7 @@ function autoregionsiniteilen() {
 	return 0
 }
 
-##
-	#* regionliste
+##	#* regionliste
 	# Diese Funktion erstellt eine Liste von Regionsnamen aus den INI-Dateien in den angegebenen Verzeichnissen und speichert
 	# sie in der Datei osmregionlist.ini. Zuvor wird die vorhandene osmregionlist.ini-Datei (falls vorhanden) gesichert und in
 	# osmregionlist.ini.old umbenannt.
@@ -6334,8 +6109,7 @@ function regionliste() {
 	return 0
 }
 
-##
-	#* makewebmaps
+##	#* makewebmaps
 	# Diese Funktion kopiert Maptiles aus dem angegebenen Verzeichnis in ein Webverzeichnis, damit sie über das Web verfügbar sind.
 	# Das Webverzeichnis wird zuerst erstellt, wenn es nicht bereits vorhanden ist. Die Maptiles werden dann kopiert.
 	#? Parameter:
@@ -6356,8 +6130,7 @@ function makewebmaps() {
 	return 0
 }
 
-##
-	#* moneydelete
+##	#* moneydelete
 	# Diese Funktion entfernt MoneyServer-Komponenten aus den OpenSimulator-Verzeichnissen und Robust-Verzeichnis, wenn es vorhanden ist.
 	# Die zu löschenden Dateien und Verzeichnisse werden spezifiziert.
 	#? Parameter:
@@ -6393,8 +6166,7 @@ function moneydelete() {
 	return 0
 }
 
-##
-	#* osgitholen
+##	#* osgitholen
 	# Diese Funktion klont die Entwicklungsversion des OpenSimulator aus dem Git-Repository und speichert sie im angegebenen Verzeichnis.
 	# Wenn das Verzeichnis bereits vorhanden ist, wird es zuerst umbenannt, um es als Sicherung zu behalten.
 	#? Parameter:
@@ -6423,8 +6195,7 @@ function osgitholen() {
 	return 0
 }
 
-##
-	#* osgitholen93
+##	#* osgitholen93
 	# Diese Funktion klonet die Entwicklungsversion des OpenSimulator aus dem Git-Repository und speichert sie im angegebenen Verzeichnis.
 	# Wenn das Verzeichnis bereits vorhanden ist, wird es zuerst umbenannt, um es als Sicherung zu behalten. Dann wird die aktuelle Version
 	# aus dem Git-Repository geklont und aktualisiert.
@@ -6454,8 +6225,7 @@ function osgitholen93() {
     log rohtext "Eine Besonderheit ist, der Startvorgang hat sich geaendert, es wird nicht mehr mit mono OpenSim.exe gestartet, sondern mit dotnet OpenSim.dll."
 }
 
-##
-	#* osbauen93
+##	#* osbauen93
 	# Diese Funktion wechselt zum OpenSimulator-Verzeichnis, stellt sicher, dass der branch 'dotnet6' ausgewählt ist, führt die notwendigen 
 	# Vorverarbeitungsschritte aus, und baut das OpenSimulator-Projekt mit .NET Core. Das Ergebnis ist die Erstellung der OpenSimulator-
 	# Anwendung, die mit 'dotnet OpenSim.dll' gestartet werden kann.
@@ -6476,8 +6246,7 @@ function osbauen93() {
     log rohtext "Eine Besonderheit ist, der Startvorgang hat sich geaendert, es wird nicht mehr mit mono OpenSim.exe gestartet, sondern mit dotnet OpenSim.dll."
 }
 
-##
-	#* opensimholen
+##	#* opensimholen
 	# Diese Funktion sichert zuerst die vorhandene OpenSimulator-Installation im Verzeichnis 'opensim1' (falls vorhanden) und lädt dann die 
 	# neue Version des OpenSimulator aus einem externen Quellen-Link herunter. Nach dem Herunterladen wird die neue Version entpackt und 
 	# im Verzeichnis 'opensim' abgelegt.
@@ -6517,8 +6286,7 @@ function opensimholen() {
 	return 0
 }
 
-##
-	#* install_mysqltuner
+##	#* install_mysqltuner
 	# Diese Funktion lädt das MySQLTuner-Skript und verwandte Dateien von ihren jeweiligen Quellen herunter und speichert sie im aktuellen 
 	# Verzeichnis. Anschließend wird die Funktion 'mySQLmenu' aufgerufen, um den MySQLTuner zu konfigurieren und auszuführen.
 	#? Parameter:
@@ -6539,8 +6307,7 @@ function install_mysqltuner() {
 	return 0
 }
 
-##
-	#* regionbackup
+##	#* regionbackup
 	# Diese Funktion erstellt ein Backup für eine OpenSimulator-Region, indem sie OAR- und Terrain-Daten sowie Konfigurationsdateien speichert.
 	# Die Region wird in den Offline-Modus versetzt, wenn sie nicht bereits offline ist, bevor das Backup erstellt wird.
 	#? Parameter:
@@ -6612,8 +6379,7 @@ function regionbackup() {
 	return 0
 }
 
-##
-	#* menuregionbackup
+##	#* menuregionbackup
 	# Diese Funktion verwendet das Dialog-Tool zur Benutzereingabe, um den Bildschirmnamen und den Regionsnamen abzurufen und dann ein Backup der angegebenen Region zu erstellen.
 	# Das Backup enthält OAR- und Terrain-Daten sowie Konfigurationsdateien der Region.
 	#? Parameter:
@@ -6682,8 +6448,7 @@ function menuregionbackup() {
 	return 0
 }
 
-##
-	#* regionrestore
+##	#* regionrestore
 	# Diese Funktion stellt eine zuvor gesicherte OpenSimulator-Region aus einem OAR-Backup wieder her.
 	#? Parameter:
 	#   1. RESTOREVERZEICHNISSCREENNAME: Der Name des Bildschirms (Screen) für die Wiederherstellung.
@@ -6712,8 +6477,7 @@ function regionrestore() {
 	return 0
 }
 
-##
-	#* menuregionrestore
+##	#* menuregionrestore
 	# Diese Funktion verwendet das Dialog-Programm, um Benutzereingaben zu erhalten und die Wiederherstellung einer OpenSimulator-Region aus einem OAR-Backup durchzuführen.
 	#? Parameter: Keine
 	#? Rückgabewert:
@@ -6765,8 +6529,7 @@ function menuregionrestore() {
 	return 0
 }
 
-##
-	#* autosimstart
+##	#* autosimstart
 	# Diese Funktion startet OpenSimulator-Regionen automatisch, sofern sie nicht bereits gestartet sind.
 	# Sie überprüft, ob bereits ein Bildschirm mit dem Namen 'sim' ausgeführt wird. Wenn nicht, wird jede Region aus der Verzeichnisliste gestartet.
 	# Die Funktion verwendet die in den Konfigurationsvariablen festgelegten Einstellungen, wie z. B. den Regionsanzeigemodus und den AOT-Modus.
@@ -6818,8 +6581,7 @@ function autosimstart() {
 	return 0
 }
 
-##
-	#* autosimstop
+##	#* autosimstop
 	# Diese Funktion stoppt automatisch laufende OpenSimulator-Regionen. Sie überprüft, ob für jede Region ein Bildschirmprozess ausgeführt wird, und sendet das Befehl "shutdown" an jeden aktiven Bildschirm, um die Region zu beenden. Es gibt eine Wartezeit zwischen den Befehlen, um sicherzustellen, dass die Regionen ordnungsgemäß heruntergefahren werden können.
 	#? Parameter: Keine
 	#? Rückgabewert:
@@ -6843,8 +6605,7 @@ function autosimstop() {
 	return 0
 }
 
-##
-	#* menuautosimstart
+##	#* menuautosimstart
 	# Diese Funktion startet OpenSimulator-Regionen automatisch, basierend auf Benutzereingaben über ein Dialogfeld, wenn kein Simulator aktiv ist.
 	# Sie überprüft, ob bereits ein Bildschirm mit dem Namen 'sim' ausgeführt wird. Wenn nicht, wird ein Dialogfeld angezeigt, in dem der Benutzer die gewünschten Regionen auswählen kann.
 	# Dann werden die ausgewählten Regionen gestartet, unter Verwendung der in den Konfigurationsvariablen festgelegten Einstellungen, wie z. B. dem Regionsanzeigemodus und dem AOT-Modus.
@@ -6898,8 +6659,7 @@ function menuautosimstart() {
 	#return 0
 }
 
-##
-	#* menuautosimstop
+##	#* menuautosimstop
 	# Diese Funktion stoppt automatisch laufende OpenSimulator-Regionen und zeigt einen Fortschrittsbalken während des Vorgangs an. Sie überprüft, ob für jede Region ein Bildschirmprozess ausgeführt wird, und sendet das Befehl "shutdown" an jeden aktiven Bildschirm, um die Region zu beenden. Es gibt eine Wartezeit zwischen den Befehlen, um sicherzustellen, dass die Regionen ordnungsgemäß heruntergefahren werden können. Während des Vorgangs wird ein Fortschrittsbalken angezeigt.
 	#? Parameter: Keine
 	#? Rückgabewert:
@@ -6932,8 +6692,7 @@ function menuautosimstop() {
 	return 0
 }
 
-##
-	#* autologdel
+##	#* autologdel
 	# Diese Funktion löscht Log-Dateien für OpenSimulator-Regionen. Sie durchläuft alle Verzeichnisse in der Verzeichnisliste und löscht die Log-Dateien im Verzeichnis "/$STARTVERZEICHNIS/VERZEICHNISSLISTE/bin/". Wenn eine Log-Datei nicht vorhanden ist, wird eine Warnung protokolliert. Nach dem Löschen der Regionen-Log-Dateien wird die Funktion "rologdel()" aufgerufen, um Root-Log-Dateien zu löschen.
 	#? Parameter: Keine
 	#? Rückgabewert:
@@ -6957,8 +6716,7 @@ function autologdel() {
 	return 0
 }
 
-##
-	#* menuautologdel
+##	#* menuautologdel
 	# Diese Funktion löscht Log-Dateien für OpenSimulator-Regionen. Sie durchläuft alle Verzeichnisse in der Verzeichnisliste und löscht die Log-Dateien im Verzeichnis "/$STARTVERZEICHNIS/VERZEICHNISSLISTE/bin/". Nach dem Löschen der Regionen-Log-Dateien wird die Funktion "rologdel()" aufgerufen, um Root-Log-Dateien zu löschen.
 	#? Parameter: Keine
 	#? Rückgabewert:
@@ -6983,8 +6741,7 @@ function menuautologdel() {
 	rologdel
 }
 
-##
-	#* automapdel
+##	#* automapdel
 	# Diese Funktion löscht Kartenkacheln (maptiles) für OpenSimulator-Regionen. Sie durchläuft alle Verzeichnisse in der Verzeichnisliste und löscht den Inhalt des Verzeichnisses "maptiles" im Verzeichnis "/$STARTVERZEICHNIS/VERZEICHNISSLISTE/bin/". Nach dem Löschen der Kartenkacheln für die Regionen wird die Funktion "autorobustmapdel()" aufgerufen, um auch die Kartenkacheln für die Robust-Instanz zu löschen.
 	#? Parameter: Keine
 	#? Rückgabewert:
@@ -7006,8 +6763,7 @@ function automapdel() {
 	return 0
 }
 
-##
-	#* autorobustmapdel
+##	#* autorobustmapdel
 	# Diese Funktion löscht die Kartenkacheln (maptiles) für die Robust-Instanz von OpenSimulator. Sie navigiert zum Verzeichnis der Robust-Instanz und löscht den Inhalt des Verzeichnisses "maptiles" im Verzeichnis "/$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/".
 	#? Parameter: Keine
 	#? Rückgabewert:
@@ -7023,8 +6779,7 @@ function autorobustmapdel() {
 	return 0
 }
 
-##
-	#* cleaninstall
+##	#* cleaninstall
 	# Diese Funktion löscht den Inhalt des Verzeichnisses /addon-modules/ im OpenSimulator-Verzeichnis,
 	# sofern dieses Verzeichnis existiert.
 	#? Parameter: Keine
@@ -7044,8 +6799,7 @@ function cleaninstall() {
 	return 0
 }
 
-##
-	#* cleanprebuild
+##	#* cleanprebuild
 	# Diese Funktion löscht bestimmte Dateien und Verzeichnisse im Verzeichnis /addon-modules/
 	# im OpenSimulator-Verzeichnis, sofern dieses Verzeichnis existiert.
 	#? Parameter: Keine
@@ -7071,8 +6825,7 @@ function cleanprebuild() {
 	return 0
 }
 
-##
-	#* allclean
+##	#* allclean
 	# Diese Funktion löscht bestimmte Dateien mit den angegebenen Erweiterungen in einem angegebenen Verzeichnis.
 	#? Parameter:
 	#   $1: Das Verzeichnis, in dem die Dateien gelöscht werden sollen.
@@ -7105,8 +6858,7 @@ function allclean() {
 	return 0
 }
 
-##
-	#* getcachesinglegroesse
+##	#* getcachesinglegroesse
 	# Diese Funktion zeigt die Größe der Cache-Dateien (assetcache, maptiles, ScriptEngines, MeshCache, j2kDecodeCache)
 	# in einem angegebenen Verzeichnis an.
 	#? Parameter:
@@ -7134,8 +6886,7 @@ function getcachesinglegroesse() {
 	return 0
 }
 
-##
-	#* getcachegroesse
+##	#* getcachegroesse
 	# Diese Funktion zeigt die Größe der Cache-Dateien (assetcache, maptiles, ScriptEngines, MeshCache, j2kDecodeCache)
 	# in allen Simulatoren und im Robust Server-Verzeichnis an.
 	#? Parameter:
@@ -7170,8 +6921,7 @@ function getcachegroesse() {
 	du -sh /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/ScriptEngines 2> /dev/null
 }
 
-##
-	#* tastaturcachedelete
+##	#* tastaturcachedelete
 	# Diese Funktion löscht die lokale Befehlshistorie in der aktuellen Shell-Sitzung, wodurch alle zuvor eingegebenen Befehle gelöscht werden.
 	#? Parameter:
 	#   Keine Parameter erforderlich.
@@ -7185,8 +6935,7 @@ function tastaturcachedelete() {
 	history -cw
 }
 
-##
-	#* gridcachedelete
+##	#* gridcachedelete
 	# Diese Funktion löscht bestimmte Cache-Verzeichnisse aus dem Grid, basierend auf den festgelegten Konfigurationen.
 	#? Parameter:
 	#   Keine Parameter erforderlich.
@@ -7215,8 +6964,7 @@ function gridcachedelete() {
 	fi
 }
 
-##
-	#* autoallclean.
+##	#* autoallclean.
 	# loescht Log, dll, so, exe, aot Dateien fuer einen saubere neue installation, mit Robust.
 	# Hierbei werden keine Datenbanken oder Konfigurationen geloescht aber opensim ist anschliessend nicht mehr startbereit.
 	# Um opensim wieder Funktionsbereit zu machen muss ein Upgrade oder ein oscopy vorgang ausgefuehrt werden.
@@ -7311,8 +7059,7 @@ function autoallclean() {
 	return 0
 }
 
-##
-	#* autoregionbackup
+##	#* autoregionbackup
 	# Diese Funktion durchläuft die Regionen in Ihrem OpenSimulator-Grid und erstellt automatische Backups.
 	#? Parameter:
 	#   Keine Parameter erforderlich.
@@ -7351,8 +7098,7 @@ function autoregionbackup() {
 	return 0
 }
 
-##
-	#* autoscreenstop
+##	#* autoscreenstop
 	# Diese Funktion stoppt die Screens für Simulatoren, Money Server und Robust Server, wenn sie ausgeführt werden.
 	#? Parameter:
 	#   Keine Parameter erforderlich.
@@ -7389,8 +7135,7 @@ function autoscreenstop() {
 	return 0
 }
 
-##
-	#* menuautoscreenstop
+##	#* menuautoscreenstop
 	# Diese Funktion zeigt ein Menü an, das es dem Benutzer ermöglicht, Screens für Simulatoren, Money Server und Robust Server zu stoppen.
 	#? Parameter:
 	#   Keine Parameter erforderlich.
@@ -7427,8 +7172,7 @@ function menuautoscreenstop() {
 	return 0
 }
 
-##
-	#* autostart
+##	#* autostart
 	# Diese Funktion startet das Grid, indem sie zuerst den Robust Server und dann die Simulatoren startet.
 	#? Parameter:
 	#   Keine Parameter erforderlich.
@@ -7541,8 +7285,7 @@ function menuautostart() {
 	return 0
 }
 
-##
-	#* Funktion: menuautostop
+##	#* Funktion: menuautostop
 	# Diese Funktion wird aufgerufen, um das Grid zu stoppen.
 	#? Parameter: Keine
 	#? Rückgabewert: Keiner
@@ -7572,8 +7315,7 @@ function menuautostop() {
 	hauptmenu
 }
 
-##
-	#* Funktion: autorestart
+##	#* Funktion: autorestart
 	# Diese Funktion führt einen automatischen Neustart des Systems durch.
 	#? Parameter: Keine
 	#? Rückgabewert: Gibt immer den Wert 0 zurück.
@@ -7608,8 +7350,7 @@ function autorestart() {
 	return 0
 }
 
-##
-	#* Funktion: menuautorestart
+##	#* Funktion: menuautorestart
 	# Diese Funktion führt einen automatischen Neustart des Systems aus dem Menü heraus durch.
 	#? Parameter: Keine
 	#? Rückgabewert: Keiner
@@ -7641,8 +7382,7 @@ function menuautorestart() {
 	menuinfo
 }
 
-##
-	#* Funktion: serverupgrade
+##	#* Funktion: serverupgrade
 	# Diese Funktion führt ein Systemupgrade auf einem Linux-Server durch.
 	#? Parameter: Keine
 	#? Rückgabewert: Keiner
@@ -7661,8 +7401,7 @@ function serverupgrade() {
 	sudo apt-get upgrade
 }
 
-##
-	#* installmariadb18
+##	#* installmariadb18
 	# Diese Funktion führt die Installation oder Migration von MariaDB auf einem Ubuntu 18-System durch.
 	# Nach Abschluss des Vorgangs werden Sie aufgefordert, alle erforderlichen Dienste neu zu starten, um sicherzustellen,
 	# dass die Änderungen wirksam werden.
@@ -7692,8 +7431,7 @@ function installmariadb18() {
 	mariadb --version
 }
 
-##
-	#* installmariadb22
+##	#* installmariadb22
 	# Diese Funktion führt die Installation von MariaDB auf einem Ubuntu 22-System durch.
 	# Falls der MySQL-Dienst bereits läuft, wird er zuerst gestoppt, um Konflikte zu vermeiden.
 	#? Parameter:
@@ -7715,8 +7453,7 @@ function installmariadb22() {
 	mariadb --version
 }
 
-##
-	#* monoinstall
+##	#* monoinstall
 	# Diese Funktion überprüft, ob Mono bereits auf dem System installiert ist. Wenn nicht, installiert sie Mono 6.x auf einem Ubuntu 18-System.
 	#? Parameter:
 	#   Keine.
@@ -7745,8 +7482,7 @@ function monoinstall() {
 	return 0
 }
 
-##
-	#* monoinstall18
+##	#* monoinstall18
 	# Diese Funktion überprüft, ob Mono (mono-complete) bereits auf dem System installiert ist. 
 	# Wenn nicht, wird Mono 6.x auf einem Ubuntu 18-System installiert.
 	#? Parameter:
@@ -7774,8 +7510,7 @@ function monoinstall18() {
 	fi
 }
 
-##
-	#* monoinstall20
+##	#* monoinstall20
 	# Diese Funktion überprüft, ob Mono (mono-complete) bereits auf dem System installiert ist. 
 	# Wenn nicht, wird Mono 6.x auf einem Ubuntu 20-System installiert.
 	#? Parameter:
@@ -7803,8 +7538,7 @@ function monoinstall20() {
 	fi
 }
 
-##
-	#* monoinstall22
+##	#* monoinstall22
 	# Diese Funktion installiert Mono und zugehörige Pakete auf einem Ubuntu 22-System.
 	#? Parameter:
 	#   Keine.
@@ -7818,8 +7552,7 @@ function monoinstall22() {
 	sudo apt install mono-roslyn mono-complete mono-dbg mono-xbuild -y
 }
 
-##
-	#* icecastinstall
+##	#* icecastinstall
 	# Diese Funktion führt die Installation und grundlegende Konfiguration von Icecast2 durch.
 	# Sie generiert zufällige Passwörter für die Benutzer 'source', 'relay' und 'admin' und gibt diese aus.
 	# Der Benutzer muss diese Passwörter für die Icecast2-Installation bereithalten.
@@ -7848,8 +7581,7 @@ function icecastinstall() {
 	icecastconfig
 }
 
-##
-	#* icecastconfig
+##	#* icecastconfig
 	# Diese Funktion ändert die Konfiguration von Icecast2, um den Standardport von 8000 auf 8999 zu setzen.
 	# Nach der Ausführung dieser Funktion sollte Icecast2 auf Port 8999 erreichbar sein.
 	#? Parameter:
@@ -7866,8 +7598,7 @@ function icecastconfig() {
 	log rohtext "Aufrufbeispiel: $AKTUELLEIP:8999"
 }
 
-##
-	#* sourcelist18
+##	#* sourcelist18
 	# Diese Funktion gibt die Ubuntu 18.04 (Bionic Beaver) Paketquellen für APT aus.
 	# Die Zeilen, die mit '#' beginnen, sind auskommentiert und können bei Bedarf aktiviert werden.
 	#? Parameter:
@@ -7895,8 +7626,7 @@ function sourcelist18() {
 	echo "# deb-src http://archive.canonical.com/ubuntu bionic partner"
 }
 
-##
-	#* sourcelist22
+##	#* sourcelist22
 	# Diese Funktion gibt die Ubuntu 22.04 (Jammy Jellyfish) Paketquellen für APT aus.
 	# Die Zeilen, die mit '#' beginnen, sind auskommentiert und können bei Bedarf aktiviert werden.
 	#? Parameter:
@@ -7924,8 +7654,7 @@ function sourcelist22() {
 	echo "deb-src http://archive.canonical.com/ubuntu/ jammy partner"
 }
 
-##
-	#* installwordpress
+##	#* installwordpress
 	# Diese Funktion führt die Installation von Paketen durch, die für die Installation und den Betrieb von WordPress benötigt werden.
 	#? Parameter:
 	#   Keine.
@@ -7953,8 +7682,7 @@ function installwordpress() {
 	iinstall php-zip
 }
 
-##
-	#* installopensimulator
+##	#* installopensimulator
 	# Diese Funktion führt die Installation von Paketen durch, die für die Installation und den Betrieb von OpenSimulator benötigt werden.
 	#? Parameter:
 	#   Keine.
@@ -8006,8 +7734,7 @@ function installopensimulator() {
 
 }
 
-##
-	#* installubuntu22
+##	#* installubuntu22
 	# Diese Funktion führt die Installation von Paketen durch, die für die Installation und den Betrieb von OpenSimulator auf einem Ubuntu 22.04-System benötigt werden.
 	#? Parameter:
 	#   Keine.
@@ -8095,8 +7822,7 @@ function installubuntu22() {
 	deladvantagetools
 }
 
-##
-	#* iptablesset
+##	#* iptablesset
 	# Diese Funktion sperrt eine angegebene IP-Adresse sowohl für eingehende als auch für ausgehende Datenpakete in der iptables-Firewall.
 	# Anschließend werden alle IP-Adressen zusammen mit den Zeilennummern angezeigt, die momentan in den iptables gesperrt sind.
 	#? Parameter:
@@ -8119,8 +7845,7 @@ function iptablesset() {
 	iptables -L INPUT -n --line-numbers
 }
 
-##
-	#* fail2banset
+##	#* fail2banset
 	# Diese Funktion erstellt oder aktualisiert die Konfigurationseinstellungen für fail2ban in der jail.local-Datei.
 	# Die Einstellungen beinhalten die Anzahl der zulässigen Fehlversuche (maxfailures), die Bannzeit in Sekunden (bantime)
 	# und die Zeitspanne, innerhalb derer Fehlversuche gezählt werden (findtime).
@@ -8147,8 +7872,7 @@ bantime = 900
 findtime = 600" >/etc/fail2ban/jail.local
 }
 
-##
-	#* ufwset
+##	#* ufwset
 	# Diese Funktion konfiguriert die UFW (Uncomplicated Firewall), um die erforderlichen Ports für den Betrieb von OpenSimulator zu öffnen.
 	# Dazu gehören Ports für die Robust-, simX- und Money-Konfigurationen sowie weitere Ports, die von OpenSimulator benötigt werden.
 	#? Parameter:
@@ -8255,8 +7979,7 @@ function ufwset() {
 
 }
 
-##
-	#* ufwport
+##	#* ufwport
 	# Diese Funktion öffnet einen angegebenen TCP- und UDP-Port in der Uncomplicated Firewall (UFW).
 	#? Parameter:
 	#   $1 - Der Port, der geöffnet werden soll.
@@ -8272,8 +7995,7 @@ function ufwport() {
 	sudo ufw allow $PORTLOCK/udp
 }
 
-##
-	#* ufwoff
+##	#* ufwoff
 	# Diese Funktion deaktiviert die Uncomplicated Firewall (UFW), wodurch alle Firewall-Regeln vorübergehend deaktiviert werden.
 	#? Parameter:
 	#   Keine.
@@ -8287,8 +8009,7 @@ function ufwoff() {
 	sudo ufw disable
 }
 
-##
-	#* ufwblock
+##	#* ufwblock
 	# Diese Funktion setzt die Standardaktion der Uncomplicated Firewall (UFW) auf "deny", wodurch alle eingehenden und ausgehenden Verbindungen standardmäßig blockiert werden.
 	#? Parameter:
 	#   Keine.
@@ -8302,8 +8023,7 @@ function ufwblock() {
 	sudo ufw default deny
 }
 
-##
-	#* installphpmyadmin
+##	#* installphpmyadmin
 	# Diese Funktion installiert das PhpMyAdmin-Tool auf dem System, das eine webbasierte Benutzeroberfläche für die Verwaltung von MySQL-Datenbanken bietet.
 	#? Parameter:
 	#   Keine.
@@ -8341,8 +8061,7 @@ function installfinish() {
 	#reboot now
 }
 
-##
-	#* installationhttps22
+##	#* installationhttps22
 	# Diese Funktion installiert die erforderlichen Pakete, um HTTPS (SSL/TLS-Zertifikate) für eine angegebene Domain unter Ubuntu 22.04
 	# mithilfe von Certbot von Let’s Encrypt zu konfigurieren. Sie erfordert die Angabe einer E-Mail-Adresse und der Domain, für die das
 	# Zertifikat ausgestellt werden soll.
@@ -8391,8 +8110,7 @@ function serverinstall22() {
 	installfinish
 }
 
-##
-	#* Funktion: serverinstall
+##	#* Funktion: serverinstall
 	# 
 	#? Beschreibung:
 	# Diese Funktion überprüft, ob das Paket 'dialog' auf dem System installiert ist, um eine interaktive Installation zu ermöglichen.
@@ -8445,8 +8163,7 @@ function serverinstall() {
 	# dialog Aktionen Ende
 }
 
-##
-	#* Funktion: installationen
+##	#* Funktion: installationen
 	# 
 	#? Beschreibung:
 	# Diese Funktion listet alle unter Linux installierten Pakete auf und speichert die Liste in einer Log-Datei.
@@ -8468,8 +8185,7 @@ function installationen() {
 	return 0
 }
 
-##
-	#* Funktion: checkupgrade93
+##	#* Funktion: checkupgrade93
 	# 
 	#? Beschreibung:
 	# Diese Funktion überprüft, ob ein OpenSimulator-Upgrade verfügbar ist und bietet die Möglichkeit an, das Upgrade durchzuführen.
@@ -8507,8 +8223,7 @@ function checkupgrade93() {
     fi
 }
 
-##
-	#* Funktion: pull
+##	#* Funktion: pull
 	# 
 	#? Beschreibung:
 	# Diese Funktion führt den Befehl 'git pull' aus, um Aktualisierungen aus dem Remote-Git-Repository in das lokale Repository zu ziehen.
@@ -8527,8 +8242,7 @@ function pull() {
 	git pull
 }
 
-##
-	#* Funktion: osbuilding93
+##	#* Funktion: osbuilding93
 	#? Beschreibung:
 	# Diese Funktion führt den Prozess zum Aktualisieren und Kompilieren des OpenSimulator-Projekts durch.
 	# Je nach Verfügbarkeit von 'dialog' wird der Benutzer nach der Versionsnummer gefragt oder die Versionsnummer wird als Parameter erwartet.
@@ -8593,8 +8307,7 @@ function osbuilding93() {
 	return 0
 }
 
-##
-	#* Funktion: osbuildingupgrade93
+##	#* Funktion: osbuildingupgrade93
 	# 
 	#? Beschreibung:
 	# Diese Funktion sichert den aktuellen OpenSimulator, löscht ihn, lädt einen neuen OpenSimulator vom GitHub herunter,
@@ -8662,8 +8375,7 @@ function osbuildingupgrade93() {
 	return 0
 }
 
-##
-	#* osbuilding.
+##	#* osbuilding.
 	# Baut automatisch einen neuen OpenSimulator mit den eingestellten Plugins.
 	# Beispiel Datei: opensim-0.9.2.2Dev-1187-gcf0b1b1.zip
 	# bash osmtool.sh osbuilding 1187
@@ -8722,8 +8434,7 @@ function osbuilding() {
 	return 0
 }
 
-##
-	#* createuser.
+##	#* createuser.
 	# Erstellen eines neuen Benutzer in der Robust Konsole.
 	# Mit dem Konsolenkomanndo: create user [first] [last] [passw] [RegionX] [RegionY] [Email] - creates a new user and password.
 	# 
@@ -8771,8 +8482,7 @@ function createuser() {
 	return 0
 }
 
-##
-	#* menucreateuser.
+##	#* menucreateuser.
 	# Erstellen eines neuen Benutzer in der Robust Konsole.
 	# Mit dem Konsolenkomanndo: create user [first] [last] [passw] [RegionX] [RegionY] [Email] - creates a new user and password.
 	# 
@@ -8848,8 +8558,7 @@ function menucreateuser() {
 	hauptmenu
 }
 
-##
-	#* db_friends.
+##	#* db_friends.
 	# Listet alle internen Freunde auf, aber keine hg freunde.
 	# 
 	#? @param username password databasename useruuid.
@@ -8870,8 +8579,7 @@ function db_friends() {
 	return 0
 }
 
-##
-	#* db_online.
+##	#* db_online.
 	# Listet Online User auf.
 	# 
 	#? @param "$username" "$password" "$databasename".
@@ -8891,8 +8599,7 @@ function db_online() {
 	return 0
 }
 
-##
-	#* db_region.
+##	#* db_region.
 	# Listet die Regionen aus Ihrer Datenbank auf.
 	# 
 	#? @param "$username" "$password" "$databasename".
@@ -8912,8 +8619,7 @@ function db_region() {
 	return 0
 }
 
-##
-	#* db_gridlist.
+##	#* db_gridlist.
 	# Gridliste der Benutzer, die schon einmal im eigenen Grid waren.
 	# Aufruf: bash osmtool.sh db_gridlist databaseusername databasepassword databasename
 	# 
@@ -9157,8 +8863,7 @@ function db_region_anzahl_regionsid() {
 	return 0
 }
 
-##
-	#* Funktion: db_inventar_no_assets
+##	#* Funktion: db_inventar_no_assets
 	#? Beschreibung: 
 	#   Diese Funktion listet alle Inventareinträge auf, die auf nicht vorhandene
 	#   Assets verweisen. Sie verwendet MySQL, um Daten aus der angegebenen
@@ -9194,8 +8899,7 @@ function db_inventar_no_assets() {
 
 # Neu 19.11.2022 Ende
 
-##
-	#* Funktion: db_anzeigen
+##	#* Funktion: db_anzeigen
 	#? Beschreibung: 
 	#   Diese Funktion zeigt eine Liste aller Datenbanken auf dem MySQL-Server an,
 	#   zu dem die Verbindung mit den angegebenen Anmeldeinformationen hergestellt
@@ -9227,8 +8931,7 @@ function db_anzeigen() {
 	return 0
 }
 
-##
-	#* Funktion: db_anzeigen_dialog
+##	#* Funktion: db_anzeigen_dialog
 	#? Beschreibung: 
 	#   Diese Funktion zeigt eine Liste aller Datenbanken auf dem MySQL-Server an,
 	#   zu dem die Verbindung mit den angegebenen Anmeldeinformationen hergestellt
@@ -9281,8 +8984,7 @@ function db_anzeigen_dialog() {
 	return 0
 }
 
-##
-	#* Funktion: db_tables
+##	#* Funktion: db_tables
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion führt eine Abfrage in einer MySQL-Datenbank durch, um alle Tabellen in der Datenbank aufzulisten.
@@ -9307,8 +9009,7 @@ function db_tables() {
 	return 0
 }
 
-##
-	#* Funktion: db_tables_dialog
+##	#* Funktion: db_tables_dialog
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion ermöglicht es dem Benutzer, über das Dialog-Tool alle Tabellen in einer MySQL-Datenbank aufzulisten.
@@ -9356,8 +9057,7 @@ function db_tables_dialog() {
 	return 0
 }
 
-##
-	#* Funktion: db_benutzer_anzeigen
+##	#* Funktion: db_benutzer_anzeigen
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion ermöglicht es dem Benutzer, über das Dialog-Tool alle Benutzer in einer MySQL-Datenbank anzuzeigen.
@@ -9412,8 +9112,7 @@ function db_benutzer_anzeigen() {
 	return 0
 }
 
-##
-	#* Funktion: db_regions
+##	#* Funktion: db_regions
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion ermöglicht es dem Benutzer, über das Dialog-Tool alle Regionen in einer MySQL-Datenbank aufzulisten.
@@ -9473,8 +9172,7 @@ function db_regions() {
 	return 0
 }
 
-##
-	#* Funktion: db_regionsuri
+##	#* Funktion: db_regionsuri
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion ermöglicht es dem Benutzer, über das Dialog-Tool alle Regionen in einer MySQL-Datenbank abzurufen und nach URI zu sortieren.
@@ -9534,8 +9232,7 @@ function db_regionsuri() {
 	return 0
 }
 
-##
-	#* Funktion: db_regionsport
+##	#* Funktion: db_regionsport
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion ermöglicht es dem Benutzer, über das Dialog-Tool alle Regionen in einer MySQL-Datenbank abzurufen und nach Ports zu sortieren.
@@ -9599,8 +9296,7 @@ function db_regionsport() {
 	return 0
 }
 
-##
-	#* Funktion: create_db
+##	#* Funktion: create_db
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion ermöglicht es, eine MySQL-Datenbank zu erstellen. Sie akzeptiert Benutzername, Passwort und den Namen der zu erstellenden Datenbank als Parameter.
@@ -9636,8 +9332,7 @@ function create_db() {
 	return 0
 }
 
-##
-	#* Funktion: create_db_user
+##	#* Funktion: create_db_user
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion ermöglicht es, einen neuen Datenbankbenutzer in MySQL zu erstellen und diesem Benutzer alle Berechtigungen auf allen Datenbanken zuzuweisen.
@@ -9675,8 +9370,7 @@ function create_db_user() {
 	return 0
 }
 
-##
-	#* Funktion: delete_db
+##	#* Funktion: delete_db
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion ermöglicht es, eine MySQL-Datenbank zu löschen. Sie akzeptiert Benutzername, Passwort und den Namen der zu löschenden Datenbank als Parameter.
@@ -9709,8 +9403,7 @@ function delete_db() {
 	return 0
 }
 
-##
-	#* Funktion: db_empty
+##	#* Funktion: db_empty
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion ermöglicht es dem Benutzer, eine MySQL-Datenbank zu leeren, indem sie zuerst die Datenbank löscht und dann eine neue Datenbank mit dem gleichen Namen erstellt. 
@@ -9782,8 +9475,7 @@ function db_empty() {
 	return 0
 }
 
-##
-	#* Funktion: allrepair_db
+##	#* Funktion: allrepair_db
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion ermöglicht es dem Benutzer, alle Datenbanken auf einem MySQL-Server zu überprüfen, zu reparieren und zu optimieren. 
@@ -9855,8 +9547,7 @@ function allrepair_db() {
 	return 0
 }
 
-##
-	#* Funktion: mysql_neustart
+##	#* Funktion: mysql_neustart
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion ermöglicht es dem Benutzer, den MySQL-Dienst neu zu starten. Der MySQL-Dienst wird zuerst gestoppt und nach einer 
@@ -9921,8 +9612,7 @@ function mysql_neustart() {
 # Verlassen Sie die MySQl-Shell mit dem Befehl Exit.
 #**************************************************************************
 
-##
-	#* Funktion: db_backup
+##	#* Funktion: db_backup
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion ermöglicht es dem Benutzer, eine MySQL-Datenbank zu sichern. Die Sicherung erfolgt mithilfe des Befehls 'mysqldump',
@@ -9950,8 +9640,7 @@ function db_backup() {
 	return 0
 }
 
-##
-	#* Funktion: db_compress_backup
+##	#* Funktion: db_compress_backup
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion ermöglicht es dem Benutzer, eine MySQL-Datenbank zu sichern und die Sicherungsdatei zu komprimieren. Die Sicherung erfolgt
@@ -9979,8 +9668,7 @@ function db_compress_backup() {
 	return 0
 }
 
-##
-	#* Funktion: db_backuptabellen
+##	#* Funktion: db_backuptabellen
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion ermöglicht es dem Benutzer, alle Tabellen einer MySQL-Datenbank zu sichern und als ZIP-Archive zu speichern.
@@ -10018,8 +9706,7 @@ function db_backuptabellen() {
 	return 0
 }
 
-##
-	#* Funktion: db_backuptabelle_noassets
+##	#* Funktion: db_backuptabelle_noassets
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion ermöglicht es dem Benutzer, alle Tabellen einer MySQL-Datenbank, außer der Tabelle "assets", zu sichern und als ZIP-Archive zu speichern.
@@ -10061,8 +9748,7 @@ function db_backuptabelle_noassets() {
 	return 0
 }
 
-##
-	#* Funktion: db_backuptabellentypen
+##	#* Funktion: db_backuptabellentypen
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion ermöglicht es dem Benutzer, verschiedene Arten von Assets aus der MySQL-Datenbank "assets" zu sichern und als ZIP-Archive zu speichern.
@@ -10162,8 +9848,7 @@ function db_backuptabellentypen() {
 	return 0
 }
 
-##
-	#* Funktion: db_restorebackuptabellen
+##	#* Funktion: db_restorebackuptabellen
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion ermöglicht es dem Benutzer, zuvor gesicherte Datenbanktabellen aus ZIP-Archiven in eine neue Datenbank wiederherzustellen.
@@ -10196,8 +9881,7 @@ function db_restorebackuptabellen() {
 	return 0
 }
 
-##
-	#* Funktion: db_restorebackuptabellen2test
+##	#* Funktion: db_restorebackuptabellen2test
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion ermöglicht es dem Benutzer, zuvor gesicherte Datenbanktabellen aus verschiedenen Archivformaten in eine neue Datenbank wiederherzustellen.
@@ -10243,8 +9927,7 @@ function db_restorebackuptabellen2test() {
 	return 0
 }
 
-##
-	#* Funktion: db_restorebackuptabellen2test2
+##	#* Funktion: db_restorebackuptabellen2test2
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion ermöglicht es dem Benutzer, zuvor gesicherte Datenbanktabellen aus verschiedenen Archivformaten in eine neue Datenbank wiederherzustellen.
@@ -10300,8 +9983,7 @@ function db_restorebackuptabellen2test2() {
     return 0
 }
 
-##
-	#* Funktion: db_create
+##	#* Funktion: db_create
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion erstellt eine neue MySQL-Datenbank. Der Benutzer wird nach Benutzername, Passwort und dem Namen der neuen Datenbank gefragt.
@@ -10368,8 +10050,7 @@ function db_create() {
 	return 0
 }
 
-##
-	#* Funktion: db_dbuser
+##	#* Funktion: db_dbuser
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion zeigt alle Datenbankbenutzer in einer MySQL-Datenbank an.
@@ -10391,8 +10072,7 @@ function db_dbuser() {
 	return 0
 }
 
-##
-	#* Funktion: db_dbuserrechte
+##	#* Funktion: db_dbuserrechte
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion listet die Rechte eines bestimmten Benutzers in einer MySQL-Datenbank auf.
@@ -10449,8 +10129,7 @@ function db_dbuserrechte() {
 	return 0
 }
 
-##
-	#* Funktion: db_deldbuser
+##	#* Funktion: db_deldbuser
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion löscht einen Datenbankbenutzer in MySQL.
@@ -10516,8 +10195,7 @@ function db_deldbuser() {
 	return 0
 }
 
-##
-	#* Funktion: db_create_new_dbuser
+##	#* Funktion: db_create_new_dbuser
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion erstellt einen neuen Datenbankbenutzer in MySQL und gewährt ihm alle Berechtigungen für alle Datenbanken.
@@ -10581,8 +10259,7 @@ function db_create_new_dbuser() {
 	return 0
 }
 
-##
-	#* Funktion: createdatabase
+##	#* Funktion: createdatabase
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion erstellt eine neue MySQL-Datenbank mit den angegebenen Parametern.
@@ -10622,8 +10299,7 @@ EOF
     return 0
 }
 
-##
-	#* Funktion: createdbuser
+##	#* Funktion: createdbuser
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion erstellt einen neuen Datenbankbenutzer und gewährt ihm alle Berechtigungen.
@@ -10668,8 +10344,7 @@ EOF
     return 0
 }
 
-##
-	#* Funktion: db_delete
+##	#* Funktion: db_delete
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion löscht eine Datenbank vollständig. Sie fordert den Benutzer zur Eingabe von
@@ -10737,8 +10412,7 @@ function db_delete() {
 	return 0
 }
 
-##
-	#* Funktion: tabellenabfrage
+##	#* Funktion: tabellenabfrage
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion führt eine Abfrage aus, um alle Tabellen in einer angegebenen MySQL-Datenbank anzuzeigen.
@@ -10768,8 +10442,7 @@ MEINE_ABFRAGE_ENDE
 	return 0
 }
 
-##
-	#* Funktion: regionsabfrage
+##	#* Funktion: regionsabfrage
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion führt eine Abfrage aus, um alle Regionen (regionName) in einer angegebenen MySQL-Datenbank anzuzeigen.
@@ -10798,8 +10471,7 @@ MEIN_ABFRAGE_ENDE
 	return 0
 }
 
-##
-	#* Funktion: regionsuri
+##	#* Funktion: regionsuri
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion führt eine Abfrage aus, um die Regionen (regionName) und ihre Server-URIs (serverURI) in einer angegebenen MySQL-Datenbank abzurufen und nach serverURI zu sortieren.
@@ -10828,8 +10500,7 @@ MEIN_ABFRAGE_ENDE
 	return 0
 }
 
-##
-	#* Funktion: regionsport
+##	#* Funktion: regionsport
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion führt eine Abfrage aus, um die Regionen (regionName) und ihre Server-Ports (serverPort) in einer angegebenen MySQL-Datenbank abzurufen und nach serverPort zu sortieren.
@@ -10858,8 +10529,7 @@ MEIN_ABFRAGE_ENDE
 	return 0
 }
 
-##
-	#* Funktion: setpartner
+##	#* Funktion: setpartner
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion aktualisiert den Partner eines Avatars in einer angegebenen MySQL-Datenbank.
@@ -10897,8 +10567,7 @@ MEIN_ABFRAGE_ENDE
 	return 0
 }
 
-##
-	#* Funktion: db_setpartner
+##	#* Funktion: db_setpartner
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion aktualisiert den Partner eines Avatars in einer MySQL-Datenbank.
@@ -10933,8 +10602,7 @@ function db_setpartner() {
 	return 0
 }
 
-##
-	#* Funktion: db_deletepartner
+##	#* Funktion: db_deletepartner
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion löscht den Partner eines Avatars in einer MySQL-Datenbank, indem die Partner-UUID auf eine leere UUID gesetzt wird.
@@ -10966,8 +10634,7 @@ function db_deletepartner() {
 	return 0
 }
 
-##
-	#* Funktion: db_all_user
+##	#* Funktion: db_all_user
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion zeigt alle Benutzerdaten aus der Tabelle "UserAccounts" in einer MySQL-Datenbank an.
@@ -10995,8 +10662,7 @@ function db_all_user() {
 	return 0
 }
 
-##
-	#* Funktion: db_all_user_dialog
+##	#* Funktion: db_all_user_dialog
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion zeigt alle Benutzerdaten aus der Tabelle "UserAccounts" in einer MySQL-Datenbank an.
@@ -11051,8 +10717,7 @@ function db_all_user_dialog() {
 	return 0
 }
 
-##
-	#* Funktion: db_all_uuid
+##	#* Funktion: db_all_uuid
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion zeigt alle UUIDs (PrincipalIDs) der Benutzer aus der Tabelle "UserAccounts" in einer MySQL-Datenbank an.
@@ -11080,8 +10745,7 @@ function db_all_uuid() {
 	return 0
 }
 
-##
-	#* Funktion: db_all_uuid_dialog
+##	#* Funktion: db_all_uuid_dialog
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion zeigt alle UUIDs (PrincipalIDs) der Benutzer aus der Tabelle "UserAccounts" in einer MySQL-Datenbank an.
@@ -11135,8 +10799,7 @@ function db_all_uuid_dialog() {
 	return 0
 }
 
-##
-	#* Funktion: db_all_name
+##	#* Funktion: db_all_name
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion zeigt die Vor- und Zunamen aller Benutzer aus der Tabelle "UserAccounts" in einer MySQL-Datenbank an.
@@ -11165,8 +10828,7 @@ function db_all_name() {
 	return 0
 }
 
-##
-	#* Funktion: db_all_name_dialog
+##	#* Funktion: db_all_name_dialog
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion zeigt die Vor- und Zunamen aller Benutzer aus der Tabelle "UserAccounts" in einer MySQL-Datenbank an.
@@ -11220,8 +10882,7 @@ function db_all_name_dialog() {
 	return 0
 }
 
-##
-	#* Funktion: db_user_data
+##	#* Funktion: db_user_data
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion zeigt die Daten eines Benutzers aus der Tabelle "UserAccounts" in einer MySQL-Datenbank an,
@@ -11255,8 +10916,7 @@ function db_user_data() {
 	return 0
 }
 
-##
-	#* Funktion: db_user_data_dialog
+##	#* Funktion: db_user_data_dialog
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion ermöglicht die interaktive Suche nach Benutzerdaten in einer MySQL-Datenbank basierend auf Vor- und Nachnamen.
@@ -11314,8 +10974,7 @@ function db_user_data_dialog() {
 	return 0
 }
 
-##
-	#* Funktion: db_user_infos
+##	#* Funktion: db_user_infos
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion ermöglicht die Suche nach bestimmten Benutzerdaten in einer MySQL-Datenbank basierend auf Vor- und Nachnamen.
@@ -11343,8 +11002,7 @@ function db_user_infos() {
 	return 0
 }
 
-##
-	#* Funktion: db_user_infos_dialog
+##	#* Funktion: db_user_infos_dialog
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion ermöglicht die Suche nach bestimmten Benutzerdaten in einer MySQL-Datenbank basierend auf Vor- und Nachnamen.
@@ -11402,8 +11060,7 @@ function db_user_infos_dialog() {
 	return 0
 }
 
-##
-	#* Funktion: db_user_uuid
+##	#* Funktion: db_user_uuid
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion ermöglicht die Suche nach der UUID eines Benutzers in einer MySQL-Datenbank basierend auf Vor- und Nachnamen.
@@ -11431,8 +11088,7 @@ function db_user_uuid() {
 	return 0
 }
 
-##
-	#* Funktion: db_user_uuid_dialog
+##	#* Funktion: db_user_uuid_dialog
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion ermöglicht die Suche nach der UUID eines Benutzers in einer MySQL-Datenbank basierend auf Vor- und Nachnamen.
@@ -11491,8 +11147,7 @@ function db_user_uuid_dialog() {
 	return 0
 }
 
-##
-	#* Funktion: db_foldertyp_user
+##	#* Funktion: db_foldertyp_user
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion ermöglicht das Abrufen von Inventarordnern eines Benutzers in einer MySQL-Datenbank basierend auf dem Ordner-/Verzeichnistyp und den Benutzerinformationen (Vorname und Nachname).
@@ -11555,8 +11210,7 @@ function db_foldertyp_user() {
 	return 0
 }
 
-##
-	#* Funktion: db_all_userfailed
+##	#* Funktion: db_all_userfailed
 	# Datum: [Aktuelles Datum]
 	#? Beschreibung:
 	# Diese Funktion ermöglicht die Suche nach bestimmten Informationen in einer MySQL-Datenbank in Bezug auf Benutzerkonten und Inventarordner. Je nach Umgebung kann sie interaktiv oder nicht-interaktiv verwendet werden.
@@ -11639,8 +11293,7 @@ function db_all_userfailed() {
 	return 0
 }
 
-##
-	#* Funktion: db_userdate
+##	#* Funktion: db_userdate
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion ermöglicht das Anzeigen des Erstellungsdatums eines Benutzers in einer MySQL-Datenbank basierend auf Vor- und Nachnamen.
@@ -11726,8 +11379,7 @@ function db_userdate() {
 	return 0
 }
 
-##
-	#* Funktion: db_false_email
+##	#* Funktion: db_false_email
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion ermöglicht die Suche nach offensichtlich falschen E-Mail-Adressen in einer MySQL-Datenbank für Benutzerkonten.
@@ -11806,8 +11458,7 @@ function db_false_email() {
 	return 0
 }
 
-##
-	#* Funktion: set_empty_user
+##	#* Funktion: set_empty_user
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion ermöglicht das Hinzufügen eines neuen Benutzers zu einer MySQL-Datenbank mit leeren oder vordefinierten Werten.
@@ -11865,8 +11516,7 @@ function set_empty_user() {
 	mysqlrest "$username" "$password" "$databasename" "INSERT INTO UserAccounts (PrincipalID, ScopeID, FirstName, LastName, Email, ServiceURLs, Created, UserLevel, UserFlags, UserTitle, active) VALUES ('$newPrincipalID', '$newScopeID', '$newFirstName', '$newLastName', '$newEmail', '$newServiceURLs', '$newCreated', '$newUserLevel', '$newUserFlags', '$newUserTitle', '$newactive')"
 }
 
-##
-	#* Funktion: db_email_setincorrectuseroff
+##	#* Funktion: db_email_setincorrectuseroff
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion ermöglicht das Finden von Benutzern in einer MySQL-Datenbank mit offensichtlich falschen E-Mail-Adressen und deaktiviert diese Benutzer.
@@ -11902,8 +11552,7 @@ function db_email_setincorrectuseroff() {
 	return 0
 }
 
-##
-	#* Funktion: db_email_setincorrectuseroff_dialog
+##	#* Funktion: db_email_setincorrectuseroff_dialog
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion ermöglicht das Finden von Benutzern in einer MySQL-Datenbank mit offensichtlich falschen E-Mail-Adressen und deaktiviert diese Benutzer.
@@ -11972,8 +11621,7 @@ function db_email_setincorrectuseroff_dialog() {
 	return 0
 }
 
-##
-	#* Funktion: db_setuserofline
+##	#* Funktion: db_setuserofline
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion deaktiviert einen Benutzer in einer MySQL-Datenbank, um ihn offline zu setzen. Sie erfordert die Bereitstellung von Benutzernamen, Passwort, Datenbankname, Vornamen und Nachnamen als Parameter.
@@ -12009,8 +11657,7 @@ function db_setuserofline() {
 	return 0
 }
 
-##
-	#* Funktion: db_setuserofline_dialog
+##	#* Funktion: db_setuserofline_dialog
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion ermöglicht das Deaktivieren eines Benutzers in einer MySQL-Datenbank, um ihn offline zu setzen. Sie erfordert die Bereitstellung von Benutzernamen, Passwort, Datenbankname, Vornamen und Nachnamen als Parameter oder kann im Dialogmodus verwendet werden, wenn das Dialog-Tool (Dialog) installiert ist.
@@ -12081,8 +11728,7 @@ function db_setuserofline_dialog() {
 	return 0
 }
 
-##
-	#* Funktion: db_setuseronline
+##	#* Funktion: db_setuseronline
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion aktiviert einen zuvor deaktivierten Benutzer in einer MySQL-Datenbank, um ihn online zu setzen. Sie erfordert die Bereitstellung von Benutzernamen, Passwort, Datenbankname, Vornamen und Nachnamen als Parameter.
@@ -12118,8 +11764,7 @@ function db_setuseronline() {
 	return 0
 }
 
-##
-	#* Funktion: db_setuseronline_dialog
+##	#* Funktion: db_setuseronline_dialog
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion ermöglicht es einem Benutzer, einen zuvor deaktivierten Benutzer in einer MySQL-Datenbank online zu setzen, indem sie ein Dialogfeld für die Eingabe der erforderlichen Informationen bereitstellt. Die erforderlichen Informationen umfassen Benutzernamen, Passwort, Datenbankname, Vornamen und Nachnamen.
@@ -12180,8 +11825,7 @@ function db_setuseronline_dialog() {
 	return 0
 }
 
-##
-	#* Funktion: db_tabellencopy
+##	#* Funktion: db_tabellencopy
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion ermöglicht es, eine Tabelle von einer Datenbank in eine andere zu kopieren. Sie benötigt den Namen der Quelldatenbank, den Namen der Zieldatenbank und den Namen der zu kopierenden Tabelle. Außerdem werden Benutzername und Passwort für den Datenbankzugriff benötigt.
@@ -12227,8 +11871,7 @@ function db_tabellencopy() {
 	echo "$result_mysqlrest"
 }
 
-##
-	#* Funktion: db_tabellencopy_extern
+##	#* Funktion: db_tabellencopy_extern
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion ermöglicht es, eine Tabelle von einer externen Datenbank auf einen Server zu kopieren. Sie benötigt den Namen oder die IP-Adresse des externen Servers, den Namen der Quelldatenbank, den Namen der Zieldatenbank und den Namen der zu kopierenden Tabelle. Außerdem werden Benutzername und Passwort für den Datenbankzugriff benötigt.
@@ -12278,8 +11921,7 @@ function db_tabellencopy_extern() {
 	#echo "$result_mysqlrest"
 }
 
-##
-	#* Funktion: default_master_connection
+##	#* Funktion: default_master_connection
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion konfiguriert und aktiviert die Verbindung zum MySQL-Master-Server. Sie ermöglicht es, den Standard-Master-Verbindungsnamen zu setzen, den Slave-Thread zu stoppen, das Master-Passwort zu ändern und den Slave-Thread wieder zu starten.
@@ -12317,8 +11959,7 @@ function default_master_connection() {
 	return 0
 }
 
-##
-	#* Funktion: connection_name
+##	#* Funktion: connection_name
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion konfiguriert und aktiviert die Verbindung zu einem spezifischen MySQL-Server anhand eines benutzerdefinierten Verbindungsnamens. Sie ermöglicht es, den Slave-Thread für diese Verbindung zu stoppen, das Master-Passwort zu ändern und den Slave-Thread wieder zu starten.
@@ -12354,8 +11995,7 @@ function connection_name() {
 	return 0
 }
 
-##
-	#* Funktion: MASTER_USER
+##	#* Funktion: MASTER_USER
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion konfiguriert und aktiviert die Verbindung zum MySQL-Master-Server unter Verwendung eines benutzerdefinierten Benutzernamens und Passworts. Sie ermöglicht es, den Slave-Thread zu stoppen, den Master-Benutzernamen und das Passwort zu ändern und den Slave-Thread wieder zu starten.
@@ -12391,8 +12031,7 @@ function MASTER_USER() {
 	return 0
 }
 
-##
-	#* Funktion: MASTER_PASSWORD
+##	#* Funktion: MASTER_PASSWORD
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion konfiguriert und aktiviert die Verbindung zum MySQL-Master-Server unter Verwendung eines benutzerdefinierten Passworts. Sie ermöglicht es, den Slave-Thread zu stoppen, das Master-Passwort zu ändern und den Slave-Thread wieder zu starten.
@@ -12428,8 +12067,7 @@ function MASTER_PASSWORD() {
 	return 0
 }
 
-##
-	#* Funktion: MASTER_HOST
+##	#* Funktion: MASTER_HOST
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion konfiguriert und aktiviert die Verbindung zum MySQL-Master-Server unter Verwendung einer benutzerdefinierten Hostadresse, Benutzername und Passwort. Sie ermöglicht es, den Slave-Thread zu stoppen, den Host des MySQL-Master-Servers zu ändern und den Slave-Thread wieder zu starten.
@@ -12468,8 +12106,7 @@ function MASTER_HOST() {
 	return 0
 }
 
-##
-	#* Funktion: MASTER_HOST
+##	#* Funktion: MASTER_HOST
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion konfiguriert und aktiviert die Verbindung zum MySQL-Master-Server unter Verwendung einer benutzerdefinierten Hostadresse, Benutzername und Passwort. Sie ermöglicht es, den Slave-Thread zu stoppen, den Host des MySQL-Master-Servers zu ändern und den Slave-Thread wieder zu starten.
@@ -12510,8 +12147,7 @@ function MASTER_PORT() {
 	return 0
 }
 
-##
-	#* Funktion: MASTER_CONNECT_RETRY
+##	#* Funktion: MASTER_CONNECT_RETRY
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion konfiguriert und aktiviert die Verbindung zum MySQL-Master-Server unter Verwendung einer benutzerdefinierten Wiederholungsanzahl für die Verbindungsversuche. Sie ermöglicht es, den Slave-Thread zu stoppen, die Anzahl der Verbindungsversuche zum Master-Server zu ändern und den Slave-Thread wieder zu starten.
@@ -12549,8 +12185,7 @@ function MASTER_CONNECT_RETRY() {
 	return 0
 }
 
-##
-	#* Funktion: MASTER_SSL
+##	#* Funktion: MASTER_SSL
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion konfiguriert und aktiviert die Verwendung von SSL-verschlüsselten Verbindungen zwischen dem MySQL-Server und dem Slave-Server. Sie ermöglicht es, den Slave-Thread zu stoppen, die SSL-Verbindungsoptionen zu ändern und den Slave-Thread wieder zu starten.
@@ -12588,8 +12223,7 @@ function MASTER_SSL() {
 	return 0
 }
 
-##
-	#* Funktion: MASTER_SSL_CA
+##	#* Funktion: MASTER_SSL_CA
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion konfiguriert und aktiviert die Verwendung von SSL-verschlüsselten Verbindungen zwischen dem MySQL-Server und dem Slave-Server unter Verwendung von SSL-Zertifikaten. Sie ermöglicht es, den Slave-Thread zu stoppen, die SSL-Verbindungsoptionen zu ändern und den Slave-Thread wieder zu starten.
@@ -12629,8 +12263,7 @@ function MASTER_SSL_CA() {
 	return 0
 }
 
-##
-	#* Funktion: MASTER_SSL_CAPATH
+##	#* Funktion: MASTER_SSL_CAPATH
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion konfiguriert und aktiviert die Verwendung von SSL-verschlüsselten Verbindungen zwischen dem MySQL-Server und dem Slave-Server unter Verwendung von SSL-Zertifikaten und einem Verzeichnis für Zertifikate (CA-Path). Sie ermöglicht es, den Slave-Thread zu stoppen, die SSL-Verbindungsoptionen zu ändern und den Slave-Thread wieder zu starten.
@@ -12671,8 +12304,7 @@ function MASTER_SSL_CAPATH() {
 	return 0
 }
 
-##
-	#* Funktion: MASTER_SSL_CERT
+##	#* Funktion: MASTER_SSL_CERT
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion konfiguriert und aktiviert die Verwendung von SSL-verschlüsselten Verbindungen zwischen dem MySQL-Server und dem Slave-Server unter Verwendung von SSL-Zertifikaten. Sie ermöglicht es, den Slave-Thread zu stoppen, die SSL-Verbindungsoptionen zu ändern und den Slave-Thread wieder zu starten.
@@ -12713,8 +12345,7 @@ function MASTER_SSL_CERT() {
 	return 0
 }
 
-##
-	#* Funktion: MASTER_SSL_CRL
+##	#* Funktion: MASTER_SSL_CRL
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion konfiguriert und aktiviert die Verwendung von SSL-verschlüsselten Verbindungen zwischen dem MySQL-Server und dem Slave-Server unter Verwendung von SSL-Zertifikaten und einer Zertifikatsperrliste (CRL - Certificate Revocation List). Sie ermöglicht es, den Slave-Thread zu stoppen, die SSL-Verbindungsoptionen zu ändern und den Slave-Thread wieder zu starten.
@@ -12755,8 +12386,7 @@ function MASTER_SSL_CRL() {
 	return 0
 }
 
-##
-	#* Funktion: MASTER_SSL_CRLPATH
+##	#* Funktion: MASTER_SSL_CRLPATH
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion konfiguriert und aktiviert die Verwendung von SSL-verschlüsselten Verbindungen zwischen dem MySQL-Server und dem Slave-Server unter Verwendung von SSL-Zertifikaten und einer Zertifikatsperrliste (CRL - Certificate Revocation List). Sie ermöglicht es, den Slave-Thread zu stoppen, die SSL-Verbindungsoptionen zu ändern und den Slave-Thread wieder zu starten.
@@ -12797,8 +12427,7 @@ function MASTER_SSL_CRLPATH() {
 	return 0
 }
 
-##
-	#* Funktion: MASTER_SSL_KEY
+##	#* Funktion: MASTER_SSL_KEY
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion konfiguriert und aktiviert die Verwendung von SSL-verschlüsselten Verbindungen zwischen dem MySQL-Server und dem Slave-Server unter Verwendung von SSL-Zertifikaten und einem privaten Schlüssel. Sie ermöglicht es, den Slave-Thread zu stoppen, die SSL-Verbindungsoptionen zu ändern und den Slave-Thread wieder zu starten.
@@ -12839,8 +12468,7 @@ function MASTER_SSL_KEY() {
 	return 0
 }
 
-##
-	#* Funktion: MASTER_SSL_CIPHER
+##	#* Funktion: MASTER_SSL_CIPHER
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion konfiguriert und aktiviert die Verwendung einer bestimmten SSL-Verschlüsselung für die Kommunikation zwischen dem MySQL-Server und dem Slave-Server. Sie ermöglicht das Festlegen einer spezifischen SSL-Cipher-Suite (Verschlüsselungsmethode) für die SSL-gesicherte Verbindung.
@@ -12882,8 +12510,7 @@ function MASTER_SSL_CIPHER() {
 	return 0
 }
 
-##
-	#* Funktion: MASTER_SSL_VERIFY_SERVER_CERT
+##	#* Funktion: MASTER_SSL_VERIFY_SERVER_CERT
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion konfiguriert und aktiviert die Überprüfung des Serverzertifikats (Server-Zertifikatsvalidierung) für die SSL-gesicherte Verbindung zwischen dem MySQL-Server und dem Slave-Server. Sie stellt sicher, dass der Slave-Server das Serverzertifikat des Master-Servers überprüft, um sicherzustellen, dass es gültig ist und zur Verbindung verwendet werden kann.
@@ -12924,8 +12551,7 @@ function MASTER_SSL_VERIFY_SERVER_CERT() {
 	return 0
 }
 
-##
-	#* Funktion: MASTER_LOG_FILE
+##	#* Funktion: MASTER_LOG_FILE
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion konfiguriert den MySQL-Server, um den gewünschten binären Protokoll-Dateinamen und die Position im binären Protokoll festzulegen, von dem die Replikation beginnen soll. Sie ermöglicht die genaue Steuerung der Replikationsquelle auf dem Slave-Server.
@@ -12967,8 +12593,7 @@ function MASTER_LOG_FILE() {
 	return 0
 }
 
-##
-	#* Funktion: MASTER_LOG_POS
+##	#* Funktion: MASTER_LOG_POS
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion konfiguriert den MySQL-Server, um die gewünschte Position im binären Protokoll und den dazugehörigen binären Protokoll-Dateinamen festzulegen, von denen die Replikation auf dem Slave-Server beginnen soll. Sie ermöglicht die genaue Steuerung der Replikationsquelle auf dem Slave-Server.
@@ -13010,8 +12635,7 @@ function MASTER_LOG_POS() {
 	return 0
 }
 
-##
-	#* Funktion: RELAY_LOG_FILE
+##	#* Funktion: RELAY_LOG_FILE
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion konfiguriert den MySQL-Server, um die gewünschte Position im Relay-Log und den dazugehörigen Relay-Log-Dateinamen festzulegen, von denen der SQL-Thread des Slave-Servers die Verarbeitung fortsetzen soll. Dies ermöglicht die Steuerung der Replikation auf dem Slave-Server.
@@ -13053,8 +12677,7 @@ function RELAY_LOG_FILE() {
 	return 0
 }
 
-##
-	#* Funktion: RELAY_LOG_POS
+##	#* Funktion: RELAY_LOG_POS
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion konfiguriert den MySQL-Server, um die gewünschte Position im Relay-Log festzulegen, von der der SQL-Thread des Slave-Servers die Verarbeitung fortsetzen soll. Dies ermöglicht die Steuerung der Replikation auf dem Slave-Server.
@@ -13096,8 +12719,7 @@ function RELAY_LOG_POS() {
 	return 0
 }
 
-##
-	#* Funktion: MASTER_USE_GTID
+##	#* Funktion: MASTER_USE_GTID
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion konfiguriert den MySQL-Server, um das Global Transaction Identifier (GTID)-Replikationsformat zu verwenden. GTID ist eine Methode zur eindeutigen Identifizierung von Transaktionen in einer Replikationsumgebung.
@@ -13132,8 +12754,7 @@ function MASTER_USE_GTID() {
 	return 0
 }
 
-##
-	#* Funktion: MASTER_USE_GTID2
+##	#* Funktion: MASTER_USE_GTID2
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion konfiguriert den MySQL-Server, um das Global Transaction Identifier (GTID)-Replikationsformat zu verwenden. GTID ist eine Methode zur eindeutigen Identifizierung von Transaktionen in einer Replikationsumgebung.
@@ -13171,8 +12792,7 @@ function MASTER_USE_GTID2() {
 	return 0
 }
 
-##
-	#* Funktion: IGNORE_SERVER_IDS
+##	#* Funktion: IGNORE_SERVER_IDS
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion konfiguriert den MySQL-Server, um bestimmte Server-IDs in der Replikation zu ignorieren. Server-IDs sind ein Mechanismus zur Identifizierung von Quell- und Zielsystemen in einer Replikationsumgebung.
@@ -13241,8 +12861,7 @@ function IGNORE_SERVER_IDS() {
 #   | DO_DOMAIN_IDS = ([N,..])
 #   | IGNORE_DOMAIN_IDS = ([N,..])
 
-##
-	#* Funktion: DO_DOMAIN_IDS
+##	#* Funktion: DO_DOMAIN_IDS
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion konfiguriert den MySQL-Server, um bestimmte Domänen-IDs in der Replikation zu verarbeiten. Domänen-IDs werden verwendet, um eine Gruppe von Transaktionen zu identifizieren, die zusammengehören. Mit dieser Funktion können Sie angeben, welche Domänen-IDs in der Replikation verarbeitet werden sollen.
@@ -13279,8 +12898,7 @@ function DO_DOMAIN_IDS() {
 	return 0
 }
 
-##
-	#* Funktion: DO_DOMAIN_IDS2
+##	#* Funktion: DO_DOMAIN_IDS2
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion konfiguriert den MySQL-Server, um bestimmte Domänen-IDs in der Replikation zu verarbeiten. Domänen-IDs werden verwendet, um eine Gruppe von Transaktionen zu identifizieren, die zusammengehören. Mit dieser Funktion können Sie angeben, welche Domänen-IDs in der Replikation verarbeitet werden sollen.
@@ -13316,8 +12934,7 @@ function DO_DOMAIN_IDS2() {
 	return 0
 }
 
-##
-	#* Funktion: IGNORE_DOMAIN_IDS
+##	#* Funktion: IGNORE_DOMAIN_IDS
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion konfiguriert den MySQL-Server, um bestimmte Domänen-IDs in der Replikation zu ignorieren. Domänen-IDs werden verwendet, um eine Gruppe von Transaktionen zu identifizieren, die zusammengehören. Mit dieser Funktion können Sie angeben, welche Domänen-IDs in der Replikation ignoriert werden sollen.
@@ -13354,8 +12971,7 @@ function IGNORE_DOMAIN_IDS() {
 	return 0
 }
 
-##
-	#* Funktion: IGNORE_DOMAIN_IDS2
+##	#* Funktion: IGNORE_DOMAIN_IDS2
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion konfiguriert den MySQL-Server, um bestimmte Domänen-IDs in der Replikation zu ignorieren. Domänen-IDs werden verwendet, um eine Gruppe von Transaktionen zu identifizieren, die zusammengehören. Mit dieser Funktion können Sie angeben, welche Domänen-IDs in der Replikation ignoriert werden sollen.
@@ -13391,8 +13007,7 @@ function IGNORE_DOMAIN_IDS2() {
 	return 0
 }
 
-##
-	#* Funktion: MASTER_DELAY
+##	#* Funktion: MASTER_DELAY
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion konfiguriert den MySQL-Server, um eine Verzögerung in der Replikation einzuführen. Dies kann nützlich sein, um Daten auf dem Slave-Server zeitverzögert zu replizieren, um vorübergehende Fehler oder unerwünschte Änderungen zu verhindern.
@@ -13430,8 +13045,7 @@ function MASTER_DELAY() {
 	return 0
 }
 
-##
-	#* Funktion: Replica_Backup
+##	#* Funktion: Replica_Backup
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion konfiguriert den MySQL-Server auf einem Replika (Slave) für die Durchführung eines Backup-Prozesses. Sie akzeptiert einen Benutzernamen, ein Passwort, den Namen der Master-Log-Datei (MASTERLOGFILE) und die Position in dieser Datei (MASTERLOGPOS).
@@ -13469,8 +13083,7 @@ function Replica_Backup() {
 	return 0
 }
 
-##
-	#* Funktion: Replica_Backup2
+##	#* Funktion: Replica_Backup2
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion konfiguriert den MySQL-Server auf einem Replika (Slave) für die Durchführung eines Backup-Prozesses. Sie akzeptiert einen Benutzernamen, ein Passwort, den Namen der Master-Log-Datei (MASTERLOGFILE) und die Position in dieser Datei (MASTERLOGPOS).
@@ -13507,8 +13120,7 @@ function Replica_Backup2() {
 	return 0
 }
 
-##
-	#* Funktion: ReplikatKoordinaten
+##	#* Funktion: ReplikatKoordinaten
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion ändert die Koordinaten eines Replikats (Slave) in MySQL. Sie akzeptiert einen Benutzernamen, ein Passwort, die Hostadresse des primären Servers (MASTERHOST), den Port des primären Servers (MASTERPORT), den Namen der Master-Log-Datei (MASTERLOGFILE), die Position in dieser Datei (MASTERLOGPOS) und die Anzahl der Verbindungsversuche (MASTERCONNECTRETRY).
@@ -13553,8 +13165,7 @@ function ReplikatKoordinaten() {
 	return 0
 }
 
-##
-	#* Funktion: db_tablesplitt
+##	#* Funktion: db_tablesplitt
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion zerlegt eine SQL-Dump-Datei in separate SQL-Dateien für jede Tabelle und speichert sie in einem Verzeichnis mit dem Namen der Datenbank.
@@ -13590,8 +13201,7 @@ function db_tablesplitt() {
 	done
 }
 
-##
-	#* Funktion: db_tablextract
+##	#* Funktion: db_tablextract
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion extrahiert die SQL-Daten einer speziellen Tabelle aus einer SQL-Dump-Datei und speichert sie in einer separaten SQL-Datei.
@@ -13626,8 +13236,7 @@ function db_tablextract() {
 	done
 }
 
-##
-	#* Funktion: db_tablextract_regex
+##	#* Funktion: db_tablextract_regex
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion extrahiert SQL-Daten von Tabellen, die einem bestimmten regulären Ausdruck in einer SQL-Dump-Datei entsprechen, und speichert sie in separaten SQL-Dateien.
@@ -13665,8 +13274,7 @@ function db_tablextract_regex() {
 	done
 }
 
-##
-	#* Funktion: conf_write
+##	#* Funktion: conf_write
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion ändert eine bestimmte Konfigurationseinstellung in einer Datei, indem sie den Wert von `CONF_SEARCH` durch `CONF_ERSATZ` ersetzt.
@@ -13697,8 +13305,7 @@ function conf_write() {
 	return 0
 }
 
-##
-	#* Funktion: conf_read
+##	#* Funktion: conf_read
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion sucht nach einer bestimmten Konfigurationseinstellung in einer Datei und gibt die Zeile aus, die die Einstellung enthält, zurück.
@@ -13727,8 +13334,7 @@ function conf_read() {
 	return 0
 }
 
-##
-	#* Funktion: conf_delete
+##	#* Funktion: conf_delete
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion löscht eine bestimmte Konfigurationseinstellung aus einer Datei, indem sie die Zeile, die die Einstellung enthält, entfernt.
@@ -13757,8 +13363,7 @@ function conf_delete() {
 	return 0
 }
 
-##
-	#* Funktion: ramspeicher
+##	#* Funktion: ramspeicher
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion ermittelt die Größe des im System installierten RAM-Speichers und speichert das Ergebnis in der Variable RAMSPEICHER.
@@ -13788,8 +13393,7 @@ function ramspeicher() {
 	return 0
 }
 
-##
-	#* Funktion: mysqleinstellen
+##	#* Funktion: mysqleinstellen
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion passt die Konfiguration eines MySQL-Servers basierend auf dem verfügbaren RAM-Speicher und anderen Parametern an.
@@ -13870,8 +13474,7 @@ function mysqleinstellen() {
 	return 0
 }
 
-##
-	#* Funktion: newregionini
+##	#* Funktion: newregionini
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion erstellt eine Regionskonfigurationsdatei für einen Simulator.
@@ -13965,8 +13568,7 @@ function newregionini() {
 	return 0
 }
 
-##
-	#* Funktion: constconfig
+##	#* Funktion: constconfig
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion erstellt eine Konfigurationsdatei mit verschiedenen Parametern für eine Anwendung.
@@ -14062,8 +13664,7 @@ function constconfig() {
     } > "$CONSTINI"
 }
 
-##
-	#* Funktion: regionconfig
+##	#* Funktion: regionconfig
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion erstellt eine Konfigurationsdatei für eine Region mit verschiedenen Parametern.
@@ -14136,8 +13737,7 @@ function regionconfig() {
     } > "$REGIONSINI"
 }
 
-##
-	#* Funktion: flotsamconfig
+##	#* Funktion: flotsamconfig
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion erstellt eine Konfigurationsdatei für den Asset-Cache (Flotsam-Cache) mit verschiedenen Parametern.
@@ -14175,8 +13775,7 @@ function flotsamconfig() {
     } > "$FLOTSAMCACHEINI"
 }
 
-##
-	#* Funktion: osslEnableconfig
+##	#* Funktion: osslEnableconfig
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion erstellt eine Konfigurationsdatei für OpenSimulator (OSSL) mit erlaubten Funktionen und Bedingungen.
@@ -14327,8 +13926,7 @@ function osslEnableconfig() {
     } > "$OSSLENABLEINI"
 }
 
-##
-	#* Funktion: moneyconfig
+##	#* Funktion: moneyconfig
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion erstellt eine Konfigurationsdatei für Geldtransaktionen in OpenSimulator.
@@ -14403,8 +14001,7 @@ function moneyconfig() {
     } > "$MONEYINI"
 }
 
-##
-	#* Funktion: osconfigstruktur
+##	#* Funktion: osconfigstruktur
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion erstellt die Konfigurationsstruktur für OpenSimulator-Simulationen und erzeugt Konfigurationsdateien sowie Verzeichnisse für mehrere Simulatoren.
@@ -14501,8 +14098,7 @@ function osconfigstruktur() {
 	return 0
 }
 
-##
-	#* Funktion: configabfrage
+##	#* Funktion: configabfrage
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion führt eine umfassende Abfrage durch, um Konfigurationsparameter für OpenSimulator-Simulationen einzustellen.
@@ -14707,8 +14303,7 @@ function configabfrage() {
 	osconfigstruktur 1 "$CONFIGANZAHL"
 }
 
-##
-	#* Funktion: firstinstallation
+##	#* Funktion: firstinstallation
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion führt die Erstinstallation eines Grids oder einer OpenSimulator-Instanz durch.
@@ -14743,8 +14338,7 @@ function firstinstallation() {
 	createregionavatar
 }
 
-##
-	#* Funktion: createmasteravatar
+##	#* Funktion: createmasteravatar
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion erstellt einen Master-Avatar für Ihr Grid, indem sie bestimmte Befehle über das osmtool ausführt.
@@ -14766,8 +14360,7 @@ function createmasteravatar() {
 	bash osmtool.sh oscommand robust Welcome "create user $FIRSTNAMEMASTER $LASTNAMEMASTER $PASSWDNAMEMASTER $EMAILNAMEMASTER $UUIDNAMEMASTER $MODELNAMEMASTER"
 }
 
-##
-	#* Funktion: createregionavatar
+##	#* Funktion: createregionavatar
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion erstellt einen Avatar in jeder Region des Grids, indem sie bestimmte Befehle in den Regionsscreens ausführt.
@@ -14804,8 +14397,7 @@ function createregionavatar() {
 #* Build Funktionen Funktionsgruppe
 #**************************************************************************
 
-##
-	#* Funktion: compilieren
+##	#* Funktion: compilieren
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion überprüft das Vorhandensein von erforderlichen Dateien und Verzeichnissen für die OpenSimulator-Kompilierung und führt die Kompilierung durch, wenn sie nicht vorhanden sind.
@@ -14882,8 +14474,7 @@ function compilieren() {
 	return 0
 }
 
-##
-	#* Funktion: osgridcopy
+##	#* Funktion: osgridcopy
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion überprüft den Build-Status und aktualisiert das OpenSimulator-Grid, wenn der Build erfolgreich war. Sie stoppt das Grid, kopiert die neue Version und löscht bei Bedarf den MoneyServer.
@@ -14930,8 +14521,7 @@ function osgridcopy() {
 	return 0
 }
 
-##
-	#* Funktion: osupgrade93
+##	#* Funktion: osupgrade93
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion aktualisiert ein OpenSimulator-Grid auf Version 0.9.3. Sie stoppt das Grid, löscht ggf. den Cache, aktualisiert die Versionsdatei, kopiert die neue Version und löscht den MoneyServer (abhängig von MONEYVERZEICHNIS-Einstellungen).
@@ -14977,8 +14567,7 @@ function osupgrade93() {
 	return 0
 }
 
-##
-	#* Funktion: osupgrade
+##	#* Funktion: osupgrade
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion aktualisiert ein OpenSimulator-Grid auf Version 0.9.3. Sie stoppt das Grid, löscht ggf. den Cache, aktualisiert die Versionsdatei, kopiert die neue Version und löscht den MoneyServer (abhängig von MONEYVERZEICHNIS-Einstellungen).
@@ -15022,8 +14611,7 @@ function osupgrade() {
 	return 0
 }
 
-##
-	#* Funktion: osdowngrade
+##	#* Funktion: osdowngrade
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion setzt ein OpenSimulator-Grid auf die vorherige Version zurück. Sie stoppt das Grid, löscht ggf. den Cache, benennt die aktuelle Version um und kopiert die vorherige Version zurück.
@@ -15070,8 +14658,7 @@ function osdowngrade() {
 	return 0
 }
 
-##
-	#* Funktion: oszipupgrade
+##	#* Funktion: oszipupgrade
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion entpackt einen neuen OpenSimulator aus einer ZIP-Datei und installiert ihn. Die Funktion verwendet Dialog, um die Versionsnummer einzugeben, falls verfügbar, andernfalls erfolgt die Eingabe ohne Dialog.
@@ -15954,8 +15541,7 @@ function dbhilfe() {
 	echo "connection_name	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
 }
 
-##
-	#* hilfe.
+##	#* hilfe.
 	# Hilfe auf dem Bildschirm anzeigen.
 	# 
 	#? @param name Erklaerung.
@@ -16224,8 +15810,7 @@ function hilfe() {
 	# log info "HILFE: Hilfe wurde angefordert."
 }
 
-##
-	#* hilfemenudirektaufrufe.
+##	#* hilfemenudirektaufrufe.
 	# Hilfe auf dem Bildschirm anzeigen.
 	# 
 	#? @param name Erklaerung.
@@ -16271,8 +15856,7 @@ function hilfemenudirektaufrufe() {
 	echo "menuworks	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
 }
 
-##
-	#* konsolenhilfe.
+##	#* konsolenhilfe.
 	# Konsolenhilfe auf dem Bildschirm anzeigen.
 	# 
 	#? @param name Erklaerung.
@@ -16301,8 +15885,7 @@ function konsolenhilfe() {
 	# log info "HILFE: Konsolenhilfe wurde angefordert"
 }
 
-##
-	#* commandhelp.
+##	#* commandhelp.
 	# Help OpenSim Commands.
 	# 
 	#? @param name Erklaerung.
@@ -16484,8 +16067,7 @@ eof
 
 FARBE1=0
 FARBE2=2
-##
-	#* MoneyServerCommands.
+##	#* MoneyServerCommands.
 	# MoneyServer Commands.
 	# 
 	#? @param name Erklaerung.
@@ -16525,8 +16107,7 @@ echo "
 "
 }
 
-##
-	#* OpenSimCommands.
+##	#* OpenSimCommands.
 	# OpenSim Commands.
 	# 
 	#? @param name Erklaerung.
@@ -16724,8 +16305,7 @@ echo "
 "
 }
 
-##
-	#* RobustCommands.
+##	#* RobustCommands.
 	# Robust Commands.
 	# 
 	#? @param name Erklaerung.
@@ -16805,8 +16385,7 @@ echo "
 "
 }
 
-##
-	#* all.
+##	#* all.
 	# Ruft die Hilfen fuer Robust Commands, OpenSim Commands, Money Server Commands auf.
 	# 
 	#? @param name Erklaerung.
@@ -16823,8 +16402,7 @@ MoneyServerCommands
 #* Menu Menue Funktionsgruppe
 #**************************************************************************
 
-##
-	#* menutrans
+##	#* menutrans
 	# Versuch das Menu schneller und besser zu uebersetzen.
 	# 
 	#? @param name Erklaerung.
@@ -16837,8 +16415,7 @@ function menutrans() {
 	if [ "$OSMTRANSLATOR" = "ON" ]; then trans -brief -no-warn $OSMTRANS "$OSMTRANSTEXT"; fi
 }
 
-##
-	#* hauptmenu.
+##	#* hauptmenu.
 	# Startmenue.
 	# 
 	#? @param name Erklaerung.
@@ -16941,8 +16518,7 @@ function hauptmenu() {
 	fi
 }
 
-##
-	#* hilfemenu.
+##	#* hilfemenu.
 	# Menue der Hilfe.
 	# 
 	#? @param name Erklaerung.
@@ -17020,8 +16596,7 @@ function hilfemenu() {
 	fi
 }
 
-##
-	#* funktionenmenu.
+##	#* funktionenmenu.
 	# Menue fuer Funktionen.
 	# 
 	#? @param name Erklaerung.
@@ -17120,8 +16695,7 @@ function funktionenmenu() {
 	fi
 }
 
-##
-	#* dateimenu.
+##	#* dateimenu.
 	# Menue fuer Dateifunktionen.
 	# 
 	#? @param name Erklaerung.
@@ -17217,8 +16791,7 @@ function dateimenu() {
 	fi
 }
 
-##
-	#* mySQLmenu.
+##	#* mySQLmenu.
 	# Menue fuer SQL Funktionen.
 	# 
 	#? @param name Erklaerung.
@@ -17335,8 +16908,7 @@ function mySQLmenu() {
 	fi
 }
 
-##
-	#* avatarmenu.
+##	#* avatarmenu.
 	# Menue fuer Benutzerfunktionen.
 	# 
 	#? @param name Erklaerung.
@@ -17429,8 +17001,7 @@ function avatarmenu() {
 	fi
 }
 
-##
-	#* expertenmenu.
+##	#* expertenmenu.
 	# Menuepunkte fuer Experten.
 	# 
 	#? @param name Erklaerung.
@@ -17547,8 +17118,7 @@ function expertenmenu() {
 	fi
 }
 
-##
-	#* buildmenu.
+##	#* buildmenu.
 	# Menue zum erstellen von OpenSim Versionen.
 	# 
 	#? @param name Erklaerung.
@@ -17663,8 +17233,7 @@ function buildmenu() {
 	fi
 }
 
-##
-	#* Funktion: newhelp
+##	#* Funktion: newhelp
 	# Datum: 02.10.2023
 	#? Beschreibung:
 	# Diese Funktion zeigt eine Hilfeanzeige für das Shell-Skript "osmtool.sh" an und erläutert die verfügbaren Optionen und Verwendungszwecke.
@@ -17699,8 +17268,7 @@ function newhelp() {
 	echo "$(tput setaf $FARBE1) $(tput setab $FARBE2)#? Beispiel: bash osmtool.sh oscommand sim1 Welcome \"alert-user John Doe Hallo John Doe\" $(tput sgr 0)"
 }
 
-##
-	#* Funktion: newhelp2
+##	#* Funktion: newhelp2
 	# Datum: 02.10.2023	
 	#? Beschreibung:
 	# Diese Funktion zeigt eine Hilfeanzeige für das Shell-Skript "osmtool.sh" an und erläutert die verfügbaren Optionen und Verwendungszwecke.
@@ -17739,8 +17307,7 @@ function newhelp2() {
 #* Tests Funktionsgruppe
 #**************************************************************************
 
-##
-	#* Funktion: ostimestamp
+##	#* Funktion: ostimestamp
 	# Datum: 02.10.2023	
 	#? Beschreibung:
 	# Diese Funktion zeigt das aktuelle Datum und die Uhrzeit in verschiedenen Formaten an. Sie wandelt auch zwischen Datumsformaten und Unix-Zeitstempeln um.
