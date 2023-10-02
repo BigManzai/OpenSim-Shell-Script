@@ -96,8 +96,6 @@ Server Installation Ubuntu 22 mit mariaDB
 		hda                     Dialog Menue direktaufrufe.
 
 ## Dokumentation erstellen
-(Alpha Test)
-
 Der Aufruf: bash osmtool.sh createmanual
 
 erstellt eine Dokumentation des gesamten opensimMULTITOOL
