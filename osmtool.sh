@@ -35,7 +35,7 @@
 #**************************************************************************
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.1289" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.1290" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 ##	#* Funktion: isroot
@@ -2429,7 +2429,7 @@ function schreibeinfo() {
 		echo "  \____/ |  __/  \___||_| |_||_____/ |_||_| |_| |_| \____||_| \____| \__|\___/ |_|   "
 		echo "         | |                                                                         "
 		echo "         |_|                                                                         "
-		echo "            $SCRIPTNAME $VERSION"
+		echo "            $(tput setaf 0) $(tput setab 6)$SCRIPTNAME $VERSION $(tput sgr 0)"
 		echo " "
 		log line
 		log rohtext "  $DATUM $(date +%H:%M:%S) MULTITOOL: wurde gestartet am $(date +%d.%m.%Y) um $(date +%H:%M:%S) Uhr"
@@ -2454,6 +2454,7 @@ function schreibeinfo() {
 		log line
 		echo " "
 	return 0
+	#info) echo "$(tput setaf $infofontcolor) $(tput setab $infobaggroundcolor) $(date +'%d.%m.%Y-%H:%M:%S') INFO: $text $(tput sgr 0)" ;;
 }
 
 # *Kopfzeile in die Log Datei schreiben.
