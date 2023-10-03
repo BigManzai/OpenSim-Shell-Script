@@ -20,7 +20,7 @@
 # ! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 # ! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-# * Status 01.10.2023 420 Funktionen.
+# * Status 03.10.2023 420 Funktionen.
 
 	# # Installieren sie bitte: #* Visual Studio Code
 	#* dazu die Plugins:
@@ -35,7 +35,7 @@
 #**************************************************************************
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.1288" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.1289" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 ##	#* Funktion: isroot
@@ -390,10 +390,7 @@ function log() {
 	
 	#datetime=$(date +'%F %H:%M:%S')
 	DATEIDATUM=$(date +%d_%m_%Y)
-	lline0="*************************************************************************************"
-	lline="-------------------------------------------------------------------------------------"
-	lline2="_____________________________________________________________________________________"
-	lline3="====================================================================================="
+	lline="──────────────────────────────────────────────────────────────────────────────────────────"
 
 	if [ "$LOGWRITE" = "yes" ]; then
 		case $logtype in
@@ -962,15 +959,23 @@ function skriptversion2() {
   return 0
 }
 
-##	#* meZufallsnan.
-	# Array aus Bezeichnungen von Deutschen Orten und Voelker (Unvollstaendig da keine umlaute funktionieren).
-	# 
-	#? @param keiner.
-	#? @return NEUERREGIONSNAME - Es wird ein Name zurueckgegeben.
-	# todo: nichts.
+##
+	#* Funktion: namen
+	# Datum: 03.10.2023
+	#? Beschreibung: Diese Funktion gibt einen zufälligen Namen aus einer vordefinierten Liste von Regionennamen aus.
+	# Parameter:
+	#   $1 (optional): Wenn "help" übergeben wird, wird eine Hilfemeldung angezeigt, andernfalls wird ein zufälliger Regionsname ausgegeben.
+	#? Verwendung:
+	#   namen              # Gibt einen zufälligen Regionsnamen aus.
+	#   namen help         # Zeigt eine Hilfemeldung an.
+	#? Rückgabewert:
+	#   Keiner (void)
 ##
 function namen() {
+	# Überprüfen, ob das erste Argument $1 "help" ist, und Hilfe anzeigen.
 	if [[ $1 == "help" ]]; then	echo "Ein Zufallsname wird ausgegeben."; exit 0; fi
+
+	# Liste von vordefinierten Regionennamen.
 	namensarray=("Terwingen" "Angeron" "Vidivarier" "Usipeten" "Sibiner" "Ranier" "Sabalingier" "Aglier" "Aduatuker" \
 	"Favonen" "Sachsen" "Karpen" "Gautigoten" "Gepiden" "Mugilonen" "Bardongavenses" "Steoringun" "Guiones" "Teutonen" \
 	"Brukterer" "Omanen" "Astfalon" "Langobarden" "Frumtingas" "Eruler" "Moselfranken" "Tylangier" "Gillingas" \
@@ -1009,25 +1014,30 @@ function namen() {
 	"Vanaheimr" "Vineta" "Vingolf" "Vorbasse" "Waberlohe" "Wahlitz" "Walhall" "Werder" "Westick" "Wierde" "Wigrid" "Winternheim" \
 	"Wittemoor"	"Ermunduren" "Danduten")
 
-	# Zaehlen wie viele es sind.
+	# Anzahl der Elemente im namensarray.
 	count=${#namensarray[@]}
-	#echo $count
 
-	# Zufallszahl ermmiteln aus der anzahl von eintraegen in dem namensarray.
+	# Liste von vordefinierten Namen.
 	REGIONSNAMENZAHL=$(($RANDOM % $count))
-	#echo $REGIONSNAMENZAHL
 
-	# Regionsname ausgeben	
+	# Den ausgewählten Regionsnamen speichern.
 	NEUERREGIONSNAME=${namensarray[$REGIONSNAMENZAHL]}
 }
 
-##	#* Zufallsvornamen.
-	# 
-	#? @param keiner.
-	#? @return NEUERREGIONSNAME - Es wird ein Name zurueckgegeben.
-	# todo: nichts.
+##
+	#* Funktion: vornamen
+	# Datum: 03.10.2023
+	#? Beschreibung: Diese Funktion gibt einen zufälligen vornamen aus einer vordefinierten Liste von vornamen aus.
+	# Parameter:
+	#   $1 (optional): Wenn "help" übergeben wird, wird eine Hilfemeldung angezeigt, andernfalls wird ein zufälliger Regionsname ausgegeben.
+	#? Verwendung:
+	#   vornamen              # Gibt einen zufälligen vornamen aus.
+	#   vornamen help         # Zeigt eine Hilfemeldung an.
+	#? Rückgabewert:
+	#   Keiner (void)
 ##
 function vornamen() {
+	# Überprüfen, ob das erste Argument $1 "help" ist, und Hilfe anzeigen.
 	if [[ $1 == "help" ]]; then	echo "Ein Zufallsname wird ausgegeben."; exit 0; fi
 
 	firstnamensarray=("Peter" "Rainer" "Sergej" "Karl" "Daredevil" "Relative" "Into" "Agony" "Carbon" "Wrecking" "Crazy" "Unique" "Daydreamer" "Ed" "Nickname" "Anger" "Justin" \
@@ -1044,28 +1054,33 @@ function vornamen() {
 					"Lutz" "Frauke" "Johannes" "Annelise" "Hubert" "Susanne" "Heiko" "Meike" "Wilhelm" "Gertrud" "Paul" "Ina" "Arno" "Gunda" "Jochen" "Stephanie" "Heiner" "Gerlinde" "Niels" "Tamara" \
 					"Henning" "Liane" "Anton" "Ursel" "Edmund" "Rosa" )
 
-	# Zaehlen wie viele es sind.
+	# Anzahl der Elemente im namensarray.
 	count=${#firstnamensarray[@]}
-	#echo $count
 
-	# Zufallszahl ermmiteln aus der anzahl von eintraegen in dem firstnamensarray.
+	# Liste von vordefinierten Namen.
 	VORNAMENZAHL=$(($RANDOM % $count))
-	#echo $REGIONSNAMENZAHL
 
-	# Regionsname ausgeben	
+	# Den ausgewählten Regionsnamen speichern.
 	NEUERAVATARVORNAME=${firstnamensarray[$VORNAMENZAHL]}
 }
 
-##	#* randomname.
-	# 
-	#? @param keiner.
-	#? @return Es werden Name zurueckgegeben.
-	# todo: nichts.
+##
+	#* Funktion: randomname
+	# Datum: 03.10.2023
+	#? Beschreibung: Generiert einen zufälligen Vornamen, einen zufälligen Regionsnamen und gibt diese aus.
+	#? Verwendung:
+	#   randomname
+	#? Rückgabewert:
+	#   Keiner (void)
 ##
 function randomname() {
+	# Aufrufen der Funktion "vornamen", um einen zufälligen Vornamen zu generieren.
 	vornamen
+	# Loggt den generierten Vornamen.
 	log rohtext "Neuer Vorname: $NEUERAVATARVORNAME"
+	# Aufrufen der Funktion "namen", um einen zufälligen Regionsnamen zu generieren.
 	namen
+	# Gibt den generierten Avatar-Namen, der aus Vorname und Regionsname besteht.
 	log rohtext "Neuer Avatarname: $NEUERAVATARVORNAME $NEUERREGIONSNAME"
 	echo " "
 	log rohtext "Neuer Regionsname: $NEUERREGIONSNAME"
@@ -1084,7 +1099,8 @@ function functionslist() {
 	ergebnisflist=$(grep -i -r "$suche " $file)
 	echo "$ergebnisflist" >/$STARTVERZEICHNIS/osmfunktion"$DATEIDATUM".txt
 }
-##	#* Funktion: functionslist
+
+##	#* Funktion: functionslist2
 	#? Beschreibung:
 	# Diese Funktion sucht nach Funktionen in einer angegebenen Shell-Datei und speichert
 	# die gefundenen Funktionen alphabetisch aufsteigend in einer Ausgabedatei im angegebenen Verzeichnis.
