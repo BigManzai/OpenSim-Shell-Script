@@ -1,27 +1,27 @@
 #!/bin/bash
 
-#**************************************************************************
+#──────────────────────────────────────────────────────────────────────────────────────────
 #* Informationen
-#**************************************************************************
-
-# ? opensimMULTITOOL Copyright (c) 2021 2023 BigManzai Manfred Zainhofer
-# osmtool.sh Basiert auf meinen Einzelscripten, für den OpenSimulator (OpenSim) von http://opensimulator.org an denen ich bereits 7 Jahre Arbeite und verbessere.
-# Da Server unterschiedlich sind, kann eine einwandfreie fuunktion nicht gewaehrleistet werden, also bitte mit bedacht verwenden.
-# Die Benutzung dieses Scriptes, oder deren Bestandteile, erfolgt auf eigene Gefahr!!!
-# Erstellt und getestet ist osmtool.sh, auf verschiedenen Ubuntu 18.04, 20.04 und 22.04 Servern, unter verschiedenen Server Anbietern (Contabo, Hetzner ...).
-
-# ? Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-# ? The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-# ! THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# ! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# ! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-# * Status 03.10.2023 420 Funktionen.
-
+#──────────────────────────────────────────────────────────────────────────────────────────
+#
+	# ? opensimMULTITOOL Copyright (c) 2021 2023 BigManzai Manfred Zainhofer
+	# osmtool.sh Basiert auf meinen Einzelscripten, für den OpenSimulator (OpenSim) von http://opensimulator.org an denen ich bereits 7 Jahre Arbeite und verbessere.
+	# Da Server unterschiedlich sind, kann eine einwandfreie fuunktion nicht gewaehrleistet werden, also bitte mit bedacht verwenden.
+	# Die Benutzung dieses Scriptes, oder deren Bestandteile, erfolgt auf eigene Gefahr!!!
+	# Erstellt und getestet ist osmtool.sh, auf verschiedenen Ubuntu 18.04, 20.04 und 22.04 Servern, unter verschiedenen Server Anbietern (Contabo, Hetzner ...).
+	#
+	# ? Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal
+	# in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	# copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+	#
+	# ? The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+	#
+	# ! THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	# ! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	# ! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+	#
+	# * Status 04.10.2023 ca´ 420 Funktionen.
+	#
 	# # Installieren sie bitte: #* Visual Studio Code
 	#* dazu die Plugins:
 	# ShellCheck #! ist eine geniale Hilfe gegen Fehler.
@@ -29,14 +29,19 @@
 	# Better Comments #* Bessere Farbliche Darstellung. Standards: #! #* #? #// #todo
 	# outline map #? Navigationsleiste für Funktionen.
 	# todo: eine Menge warten wir´s ab.
+#
 
-#**************************************************************************
-#* Einstellungen
-#**************************************************************************
+#──────────────────────────────────────────────────────────────────────────────────────────
+#* Konfiguration opensimMULTITOOL # Letzte Bearbeitung 04.10.2023
+#──────────────────────────────────────────────────────────────────────────────────────────
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.1290" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.1291" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
+
+#──────────────────────────────────────────────────────────────────────────────────────────
+#* Admin Funktionen # Letzte bearbeitung 04.10.2023
+#──────────────────────────────────────────────────────────────────────────────────────────
 
 ##	#* Funktion: isroot
 	#? Beschreibung:
@@ -190,8 +195,9 @@ function vardelall() {
     done
 }
 
-#** osmtoolconfigvariablen
-# Letzte Bearbeitung 26.09.2023
+#──────────────────────────────────────────────────────────────────────────────────────────
+#* Konfiguration opensimMULTITOOL # Letzte Bearbeitung 04.10.2023
+#──────────────────────────────────────────────────────────────────────────────────────────
 #? Beschreibung: Dies dient dazu, wichtige Konfigurationsinformationen für das OSM-Tool zu initialisieren.
 
 # NEUERREGIONSNAME - Der Name der neuen Region
@@ -805,9 +811,9 @@ function osmtoolconfigabfrage2() {
     osmtoolconfig "$STARTVERZEICHNIS" "$ROBUSTVERZEICHNIS" "$MONEYVERZEICHNIS" "$OPENSIMVERZEICHNIS" "$CONFIGPFAD" "/$SCRIPTPATH/osmtoolconfig.ini"
 }
 
-#**************************************************************************
+#──────────────────────────────────────────────────────────────────────────────────────────
 #* Konfiguration opensimMULTITOOL # Letzte Bearbeitung 26.09.2023
-#**************************************************************************
+#──────────────────────────────────────────────────────────────────────────────────────────
 # Nutzer mit Konfigurationsfragen quaelen
 # Abfrage Konfig Einstellungen
 if ! [ -f "/$SCRIPTPATH/osmtoolconfig.ini" ]; then osmtoolconfigabfrage; fi
@@ -826,9 +832,9 @@ sleep 1
 # Eingabeauswertung fuer Funktionen ohne dialog.
 KOMMANDO=$1
 
-#**************************************************************************
+#──────────────────────────────────────────────────────────────────────────────────────────
 #* Hilfsfunktionen Funktionsgruppe
-#**************************************************************************
+#──────────────────────────────────────────────────────────────────────────────────────────
 
 ##	#* dummyvar, shellcheck disable=SC2034 umgehen.
 	# Shell-Check ueberlisten wegen der Konfigurationsdatei, 
@@ -1787,9 +1793,9 @@ function mysqlrestnodb() {
     # result_mysqlrestnodb=$(echo "$mysqlcommand" | MYSQL_PWD="$password" mysql -u"$username" 2>/dev/null)  #** NEU testen
 }
 
-#**************************************************************************
+#──────────────────────────────────────────────────────────────────────────────────────────
 #* Konfigurationen Funktionsgruppe
-#**************************************************************************
+#──────────────────────────────────────────────────────────────────────────────────────────
 
 ##	#* instdialog - Installiert das Dialog-Programm für interaktive Shell-Dialoge.
 	#? Dokumentation:
@@ -2258,9 +2264,9 @@ function ossettings() {
 	return 0
 }
 
-#**************************************************************************
+#──────────────────────────────────────────────────────────────────────────────────────────
 #* Log und Cache Dateien Funktionsgruppe
-#**************************************************************************
+#──────────────────────────────────────────────────────────────────────────────────────────
 
 ##	#* ScreenLog.
 	# Diese Funktion steuert die Darstellung und das Löschen der Bildschirmausgabe basierend auf dem Wert von ScreenLogLevel.
@@ -2357,9 +2363,9 @@ function historylogclear() {
 	esac
 }
 
-#**************************************************************************
+#──────────────────────────────────────────────────────────────────────────────────────────
 #* Bildschirmausgaben Funktionsgruppe
-#**************************************************************************
+#──────────────────────────────────────────────────────────────────────────────────────────
 
 ##	#* lastrebootdatum.
 	# Diese Funktion ermittelt das Datum des letzten Server-Neustarts und berechnet die Anzahl der Tage seit dem letzten Neustart.
@@ -2452,9 +2458,7 @@ function schreibeinfo() {
 		log rohtext "  $DATUM $(date +%H:%M:%S) INFO: $SQLVERSION"
 		lastrebootdatum
 		log line
-		echo " "
 	return 0
-	#info) echo "$(tput setaf $infofontcolor) $(tput setab $infobaggroundcolor) $(date +'%d.%m.%Y-%H:%M:%S') INFO: $text $(tput sgr 0)" ;;
 }
 
 # *Kopfzeile in die Log Datei schreiben.
@@ -2832,9 +2836,9 @@ function screenlistrestart() {
 }
 
 
-#**************************************************************************
+#──────────────────────────────────────────────────────────────────────────────────────────
 #* Downloads Funktionsgruppe
-#**************************************************************************
+#──────────────────────────────────────────────────────────────────────────────────────────
 
 ##	#* Funktion: downloados
 	#? Beschreibung: Ermöglicht das Herunterladen von Betriebssystem-Dateien über einen Menüdialog.
@@ -3044,9 +3048,9 @@ function mysqlbackup() {
 	fi
 }
 
-#**************************************************************************
+#──────────────────────────────────────────────────────────────────────────────────────────
 #* Sicherheitsfunktionen Funktionsgruppe
-#**************************************************************************
+#──────────────────────────────────────────────────────────────────────────────────────────
 
 ##	#* Funktion: passgen
 	#? Beschreibung: Generiert ein zufälliges Passwort mit der angegebenen Länge und gibt es auf der Standardausgabe aus.
@@ -3110,9 +3114,9 @@ function passwdgenerator() {
 	return 0
 }
 
-#**************************************************************************
+#──────────────────────────────────────────────────────────────────────────────────────────
 #* KI AI Funktionsgruppe
-#**************************************************************************
+#──────────────────────────────────────────────────────────────────────────────────────────
 
 ##	#* Funktion: dalaiinstallinfos
 	#? Beschreibung: Gibt Informationen zu den installierten Versionen von Python, JRE (Java Runtime Environment) und Node.js aus.
@@ -3375,9 +3379,9 @@ function dalaiupgrade() {
 	npx dalai@$dalaiversion setup
 }
 
-#**************************************************************************
+#──────────────────────────────────────────────────────────────────────────────────────────
 #* OpenSimulator Kommandos-Funktionen Funktionsgruppe
-#**************************************************************************
+#──────────────────────────────────────────────────────────────────────────────────────────
 
 ##	#* Funktion: oscommand
 	#? Beschreibung:
@@ -3758,9 +3762,9 @@ function menuloadinventar() {
 	unset LOADINVSCREEN NAME VERZEICHNIS PASSWORD DATEI
 }
 
-#**************************************************************************
+#──────────────────────────────────────────────────────────────────────────────────────────
 #* Starten und Stoppen Funktionsgruppe
-#**************************************************************************
+#──────────────────────────────────────────────────────────────────────────────────────────
 
 ##	#* Funktion: osstart
 	#? Beschreibung:
@@ -4308,9 +4312,9 @@ function icecastversion() {
 }
 
 
-#**************************************************************************
+#──────────────────────────────────────────────────────────────────────────────────────────
 #* Dateifunktionen Funktionsgruppe
-#**************************************************************************
+#──────────────────────────────────────────────────────────────────────────────────────────
 
 ##	#* Funktion: saveinventar
 	#? Beschreibung:
@@ -4810,9 +4814,9 @@ function autoassetcachedel() {
 	return 0
 }
 
-#**************************************************************************
+#──────────────────────────────────────────────────────────────────────────────────────────
 #* Starten und Stoppen Funktionsgruppe
-#**************************************************************************
+#──────────────────────────────────────────────────────────────────────────────────────────
 
 ##	#* Funktion: menugridstop
 	# Diese Funktion überprüft, ob bestimmte Screens mit den Namen "MO" oder "RO" aktiv sind und stoppt diese, wenn sie aktiv sind.
@@ -8914,8 +8918,6 @@ function db_inventar_no_assets() {
 	return 0
 }
 
-# Neu 19.11.2022 Ende
-
 ##	#* Funktion: db_anzeigen
 	#? Beschreibung: 
 	#   Diese Funktion zeigt eine Liste aller Datenbanken auf dem MySQL-Server an,
@@ -9585,49 +9587,6 @@ function mysql_neustart() {
 
 	return 0
 }
-
-#**************************************************************************
-# Externe Zugriffe auf MySQL-Server erlauben
-
-# Um den Netzwerkzugriff auf eine MySQL-Datenbank zu ermöglichen, 
-# passen Sie die Konfiguration des MySQL-Servers an und starten diesen erneut. 
-# Ändern der Konfiguration in der Datei /etc/my.cnf.
-
-# Melden Sie sich dazu als root auf Ihrem Server an und öffnen Sie die Datei /etc/my.cnf, zum Beispiel mit einem Editor:
-#     /etc/my.cnf
-
-# Suchen Sie die Zeile bind-address = 127.0.0.1.
-
-# Da diese die MySQL-Datenbank anweist, eingehende Netzwerkverbindungen nur vom Loopback-Interface anzunehmen, 
-# deaktivieren Sie diese mit einem Kommentarzeichen ('#'):
-#      #bind-address = 127.0.0.1 
-
-# Hinweis
-
-# In manchen Linux-Distributionen ist die o.g. Zeile nicht vorhanden. Hier lautet die Zeile, die auskommentiert wird, wie folgt:
-
-# 	#Skip Networking 
-
-# Starten Sie den Datenbankserver neu, damit sich Ihre Konfigurationsänderung auswirkt:
-#     /etc/init.d/mysql restart
-# Der MySQL-Server nimmt jetzt externe Verbindungen über den Standardport für MySQL (3306) an.
-
-# Datenbankzugriff auf bestimmte IP-Adresse einschränken
-
-# Loggen Sie sich mit folgendem Kommando in Ihre MySQL-Shell auf Ihrem Server ein, halten Sie Ihr Root-Benutzer- bzw. Admin-Passwort bereit:
-#     mysql -u admin -p
-
-# Geben Sie folgenden Befehl ein:
-#     use mysql; 
-
-# Schränken Sie mit folgenden Befehlen den Zugriff auf Ihre Datenbank auf eine bestimmte IP-Adresse ein, 
-# ersetzen Sie dabei die Beispielnamen und Ip-Adresse durch die gewünschten Daten. 
-# Achten Sie außerdem darauf, dass Sie nach jedem ; die ENTER-Taste drücken:
-#     mysql> update db set Host='123.123.123.123' where Db='yourdatabasename';
-#     mysql> update user set Host='123.123.123.123' where user='yourdatabaseUsername'; 
-
-# Verlassen Sie die MySQl-Shell mit dem Befehl Exit.
-#**************************************************************************
 
 ##	#* Funktion: db_backup
 	# Datum: 02.10.2023
@@ -12846,38 +12805,6 @@ function IGNORE_SERVER_IDS() {
 	return 0
 }
 
-# Die Begriffe „Master“ und „Slave“ wurden in der Vergangenheit bei der Replikation verwendet, 
-# aber die Begriffe „ primary“ und „replica“ werden jetzt bevorzugt. 
-# Die alten Begriffe werden immer noch in Teilen der Dokumentation und in MariaDB-Befehlen verwendet, 
-# obwohl MariaDB 10.5 mit dem Umbenennungsprozess begonnen hat. Das Dokumentationsverfahren läuft.
-
-# MASTER_BIND = 'Schnittstellenname'
-#   | MASTER_HOST = 'host_name'
-#   | MASTER_USER = 'Benutzername'
-#   | MASTER_PASSWORD = 'Passwort'
-#   | MASTER_PORT = port_num
-#   | MASTER_CONNECT_RETRY = Intervall
-#   | MASTER_HEARTBEAT_PERIOD = Intervall
-#   | MASTER_LOG_FILE = 'master_log_name'
-#   | MASTER_LOG_POS = master_log_pos
-#   | RELAY_LOG_FILE = 'relay_log_name'
-#   | RELAY_LOG_POS = relay_log_pos
-#   | MASTER_DELAY = Intervall
-#   | MASTER_SSL = {0|1}
-#   | MASTER_SSL_CA = 'ca_file_name'
-#   | MASTER_SSL_CAPATH = 'ca_directory_name'
-#   | MASTER_SSL_CERT = 'cert_file_name'
-#   | MASTER_SSL_CRL = 'crl_file_name'
-#   | MASTER_SSL_CRLPATH = 'crl_directory_name'
-#   | MASTER_SSL_KEY = 'key_file_name'
-#   | MASTER_SSL_CIPHER = 'cipher_list'
-#   | MASTER_SSL_VERIFY_SERVER_CERT = {0|1}
-#   | MASTER_USE_GTID = {aktuelle_pos|slave_pos|nein}
-#   | MASTER_DEMOTE_TO_SLAVE = bool
-#   | IGNORE_SERVER_IDS = (server_id_list)
-#   | DO_DOMAIN_IDS = ([N,..])
-#   | IGNORE_DOMAIN_IDS = ([N,..])
-
 ##	#* Funktion: DO_DOMAIN_IDS
 	# Datum: 02.10.2023
 	#? Beschreibung:
@@ -14410,9 +14337,9 @@ function createregionavatar() {
 	return 0
 }
 
-#**************************************************************************
+#──────────────────────────────────────────────────────────────────────────────────────────
 #* Build Funktionen Funktionsgruppe
-#**************************************************************************
+#──────────────────────────────────────────────────────────────────────────────────────────
 
 ##	#* Funktion: compilieren
 	# Datum: 02.10.2023
@@ -14734,9 +14661,9 @@ function oszipupgrade() {
 	return 0
 }
 
-#**************************************************************************
+#──────────────────────────────────────────────────────────────────────────────────────────
 #* Automatische Konfigurationen Prototype Funktionsgruppe
-#**************************************************************************
+#──────────────────────────────────────────────────────────────────────────────────────────
 
 ##
 	# Funktion: ConfigSet
@@ -15050,9 +14977,9 @@ function osslEnableConfigSet() {
     sed -i -e s/\'/\"/g "$GridCommondatei"
 }
 
-#**************************************************************************
+#──────────────────────────────────────────────────────────────────────────────────────────
 #* Hilfen und Info Funktionsgruppe
-#**************************************************************************
+#──────────────────────────────────────────────────────────────────────────────────────────
 
 ##
 	# Funktion: show_info
@@ -16415,9 +16342,9 @@ OpenSimCommands
 MoneyServerCommands
 }
 
-#**************************************************************************
+#──────────────────────────────────────────────────────────────────────────────────────────
 #* Menu Menue Funktionsgruppe
-#**************************************************************************
+#──────────────────────────────────────────────────────────────────────────────────────────
 
 ##	#* menutrans
 	# Versuch das Menu schneller und besser zu uebersetzen.
@@ -17320,9 +17247,9 @@ function newhelp2() {
 	log rohtext "#? Beispiel: bash osmtool.sh oscommand sim1 Welcome \"alert-user John Doe Hallo John Doe\" "
 }
 
-#**************************************************************************
+#──────────────────────────────────────────────────────────────────────────────────────────
 #* Tests Funktionsgruppe
-#**************************************************************************
+#──────────────────────────────────────────────────────────────────────────────────────────
 
 ##	#* Funktion: ostimestamp
 	# Datum: 02.10.2023	
@@ -17357,12 +17284,9 @@ function ostimestamp() {
     echo "$UNIX_TIMESTAMP_TO_DATE" Zeitstempel zu Datum Ausgabe
 }
 
-
-
-
-#**************************************************************************
+#──────────────────────────────────────────────────────────────────────────────────────────
 #* Eingabeauswertung Konsolenmenue Funktionsgruppe
-#**************************************************************************
+#──────────────────────────────────────────────────────────────────────────────────────────
 case $KOMMANDO in
 	AutoInstall) AutoInstall ;;
 	ConfigSet) ConfigSet "$2" ;;
