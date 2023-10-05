@@ -20,7 +20,7 @@
 	# ! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 	# ! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#
-	# * Status 04.10.2023 ca´ 420 Funktionen.
+	# * Status 04.10.2023 ca´ 418 Funktionen.
 	#
 	# # Installieren sie bitte: #* Visual Studio Code
 	#* dazu die Plugins:
@@ -32,11 +32,11 @@
 #
 
 #──────────────────────────────────────────────────────────────────────────────────────────
-#* Konfiguration opensimMULTITOOL # Letzte Bearbeitung 04.10.2023
+#* Konfiguration opensimMULTITOOL # Letzte Bearbeitung 06.10.2023
 #──────────────────────────────────────────────────────────────────────────────────────────
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.1291" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.1292" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 #──────────────────────────────────────────────────────────────────────────────────────────
@@ -1092,18 +1092,34 @@ function randomname() {
 	log rohtext "Neuer Regionsname: $NEUERREGIONSNAME"
 }
 
-##	#* functionslist
-	# Funktionen eines Bash Skript auslesen und in eine Text Datei schreiben.
-	# 
-	#? @param keine.
-	#? @return datediff.
-	# todo: nichts.
+##* functionslist 
+	# Durchsucht die angegebene Bash-Datei nach Funktionen und speichert die Ergebnisse in einer Datei.
+	# Dieses Skript durchsucht die Datei "$STARTVERZEICHNIS/osmtool.sh" nach Funktionen,
+	# die mit dem Suchbegriff "function" beginnen, und speichert die Ergebnisse in einer
+	# Textdatei mit dem Namen "osmfunktion<DATEIDATUM>.txt" im angegebenen Verzeichnis.
+	#? Verwendung:
+	#   $ functionslist
+	#? Abhängigkeiten:
+	#   - Das Skript erfordert eine Umgebungsvariable "$STARTVERZEICHNIS", die auf das
+	#     Verzeichnis verweist, in dem sich die zu durchsuchende Datei befindet.
+	#   - Es erfordert auch die Umgebungsvariable "$DATEIDATUM" für die Dateinamengenerierung.
+	#? Beispiel:
+	#   $ export STARTVERZEICHNIS="/pfad/zum/verzeichnis"
+	#   $ export DATEIDATUM="20231004"
+	#   $ functionslist
+	# Das Skript gibt eine Erfolgsmeldung aus und speichert die Ergebnisse in der
+	# Datei "osmfunktion20231004.txt" im angegebenen Verzeichnis.
 ##
 function functionslist() {
-	file="/$STARTVERZEICHNIS/osmtool.sh"
-	suche="function"
+	# Definieren der Variablen für die Datei, die Suche und das Ergebnisfile
+	local file="/$STARTVERZEICHNIS/osmtool.sh"
+	local suche="function"
+	local ergebnisfile="$STARTVERZEICHNIS/osmfunktionen$DATEIDATUM.txt"
+
+	# Durchführen der Suche und Speichern der Ergebnisse in "$ergebnisfile"
 	ergebnisflist=$(grep -i -r "$suche " $file)
 	echo "$ergebnisflist" >/$STARTVERZEICHNIS/osmfunktion"$DATEIDATUM".txt
+	log info "Funktionsliste erstellt."
 }
 
 ##	#* Funktion: functionslist2
@@ -17177,6 +17193,864 @@ function buildmenu() {
 	fi
 }
 
+
+##* Hauptmenü
+	# Shell-Skript-Menü mit 418 Funktionen
+	# Dieses Skript bietet ein Menü mit 418 verschiedenen Funktionen, die der Benutzer auswählen und ausführen kann.
+	#
+	#? Verwendung:
+	#   bash osmtool.sh mainMenu
+	#
+	#? Abhängigkeiten:
+	#   - Das Skript verwendet das 'dialog'-Tool, das möglicherweise installiert sein muss.
+##
+function mainMenu() {
+  while true; do
+    choice=$(dialog --menu "Hauptmenü" 0 0 0 \
+		1 "accesslog" \
+		2 "all" \
+		3 "allclean" \
+		4 "allrepair_db" \
+		5 "apacheerror" \
+		6 "assetcachedel" \
+		7 "assetdel" \
+		8 "authlog" \
+		9 "autoallclean" \
+		10 "autoassetcachedel" \
+		11 "AutoInstall" \
+		12 "autologdel" \
+		13 "automapdel" \
+		14 "autoregionbackup" \
+		15 "autoregionsiniteilen" \
+		16 "autorestart" \
+		17 "autorobustmapdel" \
+		18 "autoscreenstop" \
+		19 "autosimstart" \
+		20 "autosimstop" \
+		21 "autostart" \
+		22 "autostop" \
+		23 "avatarmenu" \
+		24 "backupdatum" \
+		25 "benutzer" \
+		26 "buildmenu" \
+		27 "checkfile" \
+		28 "checkupgrade93" \
+		29 "cleanaot" \
+		30 "cleaninstall" \
+		31 "cleanprebuild" \
+		32 "clearuserlist" \
+		33 "commandhelp" \
+		34 "compilieren" \
+		35 "configabfrage" \
+		36 "configlesen" \
+		37 "ConfigSet" \
+		38 "conf_delete" \
+		39 "conf_read" \
+		40 "conf_write" \
+		41 "connection_name" \
+		42 "constconfig" \
+		43 "createdatabase" \
+		44 "createdbuser" \
+		45 "createmanual" \
+		46 "createmasteravatar" \
+		47 "createregionavatar" \
+		48 "createuser" \
+		49 "create_db" \
+		50 "create_db_user" \
+		51 "dalaiinstall" \
+		52 "dalaiinstallinfos" \
+		53 "dalaimodelinstall" \
+		54 "dalaisearch" \
+		55 "dalaiserverinstall" \
+		56 "dalaistart" \
+		57 "dalaistop" \
+		58 "dalaiuninstall" \
+		59 "dalaiupgrade" \
+		60 "dateimenu" \
+		61 "dbhilfe" \
+		62 "db_all_name" \
+		63 "db_all_name_dialog" \
+		64 "db_all_user" \
+		65 "db_all_userfailed" \
+		66 "db_all_user_dialog" \
+		67 "db_all_uuid" \
+		68 "db_all_uuid_dialog" \
+		69 "db_anzeigen" \
+		70 "db_anzeigen_dialog" \
+		71 "db_backup" \
+		72 "db_backuptabellen" \
+		73 "db_backuptabellentypen" \
+		74 "db_backuptabelle_noassets" \
+		75 "db_benutzer_anzeigen" \
+		76 "db_compress_backup" \
+		77 "db_create" \
+		78 "db_create_new_dbuser" \
+		79 "db_dbuser" \
+		80 "db_dbuserrechte" \
+		81 "db_deldbuser" \
+		82 "db_delete" \
+		83 "db_deletepartner" \
+		84 "db_email_setincorrectuseroff" \
+		85 "db_email_setincorrectuseroff_dialog" \
+		86 "db_empty" \
+		87 "db_false_email" \
+		88 "db_foldertyp_user" \
+		89 "db_friends" \
+		90 "db_gridlist" \
+		91 "db_inventar_no_assets" \
+		92 "db_inv_search" \
+		93 "db_online" \
+		94 "db_region" \
+		95 "db_regions" \
+		96 "db_regionsport" \
+		97 "db_regionsuri" \
+		98 "db_region_anzahl_regionsid" \
+		99 "db_region_anzahl_regionsnamen" \
+		100 "db_region_parzelle" \
+		101 "db_region_parzelle_pakete" \
+		102 "db_restorebackuptabellen" \
+		103 "db_restorebackuptabellen2test" \
+		104 "db_restorebackuptabellen2test2" \
+		105 "db_setpartner" \
+		106 "db_setuserofline" \
+		107 "db_setuserofline_dialog" \
+		108 "db_setuseronline" \
+		109 "db_setuseronline_dialog" \
+		110 "db_tabellencopy" \
+		111 "db_tabellencopy_extern" \
+		112 "db_tables" \
+		113 "db_tablesplitt" \
+		114 "db_tables_dialog" \
+		115 "db_tablextract" \
+		116 "db_tablextract_regex" \
+		117 "db_ungenutzteobjekte" \
+		118 "db_userdate" \
+		119 "db_user_anzahl" \
+		120 "db_user_data" \
+		121 "db_user_data_dialog" \
+		122 "db_user_infos" \
+		123 "db_user_infos_dialog" \
+		124 "db_user_online" \
+		125 "db_user_uuid" \
+		126 "db_user_uuid_dialog" \
+		127 "default_master_connection" \
+		128 "deladvantagetools" \
+		129 "delete_db" \
+		130 "delete_emty_mark" \
+		131 "dialogclear" \
+		132 "divacopy" \
+		133 "divagitcopy" \
+		134 "dotnetinfo" \
+		135 "downloados" \
+		136 "DO_DOMAIN_IDS" \
+		137 "DO_DOMAIN_IDS2" \
+		138 "dummyvar" \
+		139 "edittextbox" \
+		140 "ende" \
+		141 "expertenmenu" \
+		142 "fail2banset" \
+		143 "fehler" \
+		144 "finstall" \
+		145 "firstinstallation" \
+		146 "flotsamconfig" \
+		147 "fortschritsanzeige" \
+		148 "fpspeicher" \
+		149 "functionslist" \
+		150 "functionslist2" \
+		151 "funktionenmenu" \
+		152 "getcachegroesse" \
+		153 "getcachesinglegroesse" \
+		154 "get_regionsarray" \
+		155 "get_value_from_Region_key" \
+		156 "gridcachedelete" \
+		157 "gridstart" \
+		158 "gridstop" \
+		159 "hauptmenu" \
+		160 "hilfe" \
+		161 "hilfemenu" \
+		162 "hilfemenudirektaufrufe" \
+		163 "historylogclear" \
+		164 "icecastconfig" \
+		165 "icecastinstall" \
+		166 "icecastrestart" \
+		167 "icecaststart" \
+		168 "icecaststop" \
+		169 "icecastversion" \
+		170 "IGNORE_DOMAIN_IDS" \
+		171 "IGNORE_DOMAIN_IDS2" \
+		172 "IGNORE_SERVER_IDS" \
+		173 "iinstall" \
+		174 "iinstall2" \
+		175 "info" \
+		176 "infodialog" \
+		177 "ini_get" \
+		178 "ini_set" \
+		179 "installationen" \
+		180 "installationhttps22" \
+		181 "installfinish" \
+		182 "installmariadb18" \
+		183 "installmariadb22" \
+		184 "installopensimulator" \
+		185 "installphpmyadmin" \
+		186 "installubuntu22" \
+		187 "installwordpress" \
+		188 "install_mysqltuner" \
+		189 "instdialog" \
+		190 "iptablesset" \
+		191 "isroot" \
+		192 "janein" \
+		193 "kalender" \
+		194 "konsolenhilfe" \
+		195 "laeuftos" \
+		196 "landclear" \
+		197 "lastrebootdatum" \
+		198 "letterdel" \
+		199 "letterdel2" \
+		200 "linuxupgrade" \
+		201 "loadinventar" \
+		202 "log" \
+		203 "logdel" \
+		204 "makeaot" \
+		205 "makeregionsliste" \
+		206 "makeverzeichnisliste" \
+		207 "makewebmaps" \
+		208 "mapdel" \
+		209 "mariadberror" \
+		210 "MASTER_CONNECT_RETRY" \
+		211 "MASTER_DELAY" \
+		212 "MASTER_HOST" \
+		213 "MASTER_LOG_FILE" \
+		214 "MASTER_LOG_POS" \
+		215 "MASTER_PASSWORD" \
+		216 "MASTER_PORT" \
+		217 "MASTER_SSL" \
+		218 "MASTER_SSL_CA" \
+		219 "MASTER_SSL_CAPATH" \
+		220 "MASTER_SSL_CERT" \
+		221 "MASTER_SSL_CIPHER" \
+		222 "MASTER_SSL_CRL" \
+		223 "MASTER_SSL_CRLPATH" \
+		224 "MASTER_SSL_KEY" \
+		225 "MASTER_SSL_VERIFY_SERVER_CERT" \
+		226 "MASTER_USER" \
+		227 "MASTER_USE_GTID" \
+		228 "MASTER_USE_GTID2" \
+		229 "meineregionen" \
+		230 "menuassetdel" \
+		231 "menuautologdel" \
+		232 "menuautorestart" \
+		233 "menuautoscreenstop" \
+		234 "menuautosimstart" \
+		235 "menuautosimstop" \
+		236 "menuautostart" \
+		237 "menuautostop" \
+		238 "menucreateuser" \
+		239 "menufinstall" \
+		240 "menugridstart" \
+		241 "menugridstop" \
+		242 "menuinfo" \
+		243 "menukonsolenhilfe" \
+		244 "menulandclear" \
+		245 "menuloadinventar" \
+		246 "menulogdel" \
+		247 "menumapdel" \
+		248 "menumostart" \
+		249 "menumostop" \
+		250 "menuoscommand" \
+		251 "menuosdauerstart" \
+		252 "menuosdauerstop" \
+		253 "menuosstart" \
+		254 "menuosstarteintrag" \
+		255 "menuosstarteintragdel" \
+		256 "menuosstop" \
+		257 "menuosstruktur" \
+		258 "menuoswriteconfig" \
+		259 "menuregionbackup" \
+		260 "menuregionrestore" \
+		261 "menurostart" \
+		262 "menurostop" \
+		263 "menusaveinventar" \
+		264 "menutrans" \
+		265 "menuwaslauft" \
+		266 "menuworks" \
+		267 "moneyconfig" \
+		268 "moneycopy" \
+		269 "moneycopy93" \
+		270 "moneydelete" \
+		271 "moneygitcopy" \
+		272 "moneygitcopy93" \
+		273 "MoneyServerCommands" \
+		274 "monoinstall" \
+		275 "monoinstall18" \
+		276 "monoinstall20" \
+		277 "monoinstall22" \
+		278 "mostart" \
+		279 "mostop" \
+		280 "mutelistcopy" \
+		281 "mysqlbackup" \
+		282 "mysqldberror" \
+		283 "mysqleinstellen" \
+		284 "mySQLmenu" \
+		285 "mysqlrest" \
+		286 "mysqlrestnodb" \
+		287 "mysql_neustart" \
+		288 "nachrichtbox" \
+		289 "namen" \
+		290 "newhelp" \
+		291 "newhelp2" \
+		292 "newregionini" \
+		293 "OpenSimCommands" \
+		294 "opensimgitcopy93" \
+		295 "opensimholen" \
+		296 "osbauen93" \
+		297 "osbuilding" \
+		298 "osbuilding93" \
+		299 "osbuildingupgrade93" \
+		300 "oscommand" \
+		301 "oscompi" \
+		302 "oscompi93" \
+		303 "osconfigstruktur" \
+		304 "oscopy" \
+		305 "oscopyrobust" \
+		306 "oscopysim" \
+		307 "osdauerstart" \
+		308 "osdauerstop" \
+		309 "osdelete" \
+		310 "osdowngrade" \
+		311 "osgitholen" \
+		312 "osgitholen93" \
+		313 "osgitstatus" \
+		314 "osgitstatus2" \
+		315 "osgridcopy" \
+		316 "osmnotranslate" \
+		317 "osmtoolconfig" \
+		318 "osmtoolconfigabfrage" \
+		319 "osmtoolconfigabfrage2" \
+		320 "osmtranslate" \
+		321 "osmtranslatedirekt" \
+		322 "osmtranslateinstall" \
+		323 "osmupgrade" \
+		324 "osscreenstop" \
+		325 "ossettings" \
+		326 "osslEnableconfig" \
+		327 "osslEnableConfig" \
+		328 "osslEnableConfigSet" \
+		329 "osstart" \
+		330 "osstarteintrag" \
+		331 "osstarteintragdel" \
+		332 "osstop" \
+		333 "osstruktur" \
+		334 "ostimestamp" \
+		335 "osupgrade" \
+		336 "osupgrade93" \
+		337 "oswriteconfig" \
+		338 "oszipupgrade" \
+		339 "passgen" \
+		340 "passwdgenerator" \
+		341 "pull" \
+		342 "radiolist" \
+		343 "ramspeicher" \
+		344 "randomname" \
+		345 "reboot" \
+		346 "rebootdatum" \
+		347 "regionbackup" \
+		348 "regionconfig" \
+		349 "regionliste" \
+		350 "regionrestore" \
+		351 "regionsabfrage" \
+		352 "regionsconfigdateiliste" \
+		353 "regionsinisuchen" \
+		354 "regionsiniteilen" \
+		355 "regionsport" \
+		356 "regionsuri" \
+		357 "RELAY_LOG_FILE" \
+		358 "RELAY_LOG_POS" \
+		359 "remarklist" \
+		360 "Replica_Backup" \
+		361 "Replica_Backup2" \
+		362 "ReplikatKoordinaten" \
+		363 "robustbackup" \
+		364 "RobustCommands" \
+		365 "rologdel" \
+		366 "rostart" \
+		367 "rostop" \
+		368 "saveinventar" \
+		369 "schreibeinfo" \
+		370 "sckill" \
+		371 "screenlist" \
+		372 "screenlistrestart" \
+		373 "ScreenLog" \
+		374 "scriptcopy" \
+		375 "scriptgitcopy" \
+		376 "scstart" \
+		377 "scstop" \
+		378 "searchcopy" \
+		379 "senddata" \
+		380 "serverinstall" \
+		381 "serverinstall22" \
+		382 "serverupgrade" \
+		383 "setpartner" \
+		384 "setversion" \
+		385 "setversion93" \
+		386 "set_empty_user" \
+		387 "show_info" \
+		388 "simstats" \
+		389 "skriptversion" \
+		390 "skriptversion2" \
+		391 "sourcelist18" \
+		392 "sourcelist22" \
+		393 "systeminformation" \
+		394 "tabellenabfrage" \
+		395 "tastaturcachedelete" \
+		396 "terminator" \
+		397 "textbox" \
+		398 "trimm" \
+		399 "trim_all" \
+		400 "trim_string" \
+		401 "trim_string2" \
+		402 "ufwblock" \
+		403 "ufwlog" \
+		404 "ufwoff" \
+		405 "ufwport" \
+		406 "ufwset" \
+		407 "uncompress" \
+		408 "uncompress2" \
+		409 "vardel" \
+		410 "vardelall" \
+		411 "vartest2" \
+		412 "versionsausgabe93" \
+		413 "vornamen" \
+		414 "warnbox" \
+		415 "waslauft" \
+		416 "works" \
+		417 "xhelp" \
+		418 "xhelp2" \
+	2>&1 >/dev/tty)
+	
+    case $choice in
+	1) accesslog;;
+	2) all;;
+	3) allclean;;
+	4) allrepair_db;;
+	5) apacheerror;;
+	6) assetcachedel;;
+	7) assetdel;;
+	8) authlog;;
+	9) autoallclean;;
+	10) autoassetcachedel;;
+	11) AutoInstall;;
+	12) autologdel;;
+	13) automapdel;;
+	14) autoregionbackup;;
+	15) autoregionsiniteilen;;
+	16) autorestart;;
+	17) autorobustmapdel;;
+	18) autoscreenstop;;
+	19) autosimstart;;
+	20) autosimstop;;
+	21) autostart;;
+	22) autostop;;
+	23) avatarmenu;;
+	24) backupdatum;;
+	25) benutzer;;
+	26) buildmenu;;
+	27) checkfile;;
+	28) checkupgrade93;;
+	29) cleanaot;;
+	30) cleaninstall;;
+	31) cleanprebuild;;
+	32) clearuserlist;;
+	33) commandhelp;;
+	34) compilieren;;
+	35) configabfrage;;
+	36) configlesen;;
+	37) ConfigSet;;
+	38) conf_delete;;
+	39) conf_read;;
+	40) conf_write;;
+	41) connection_name;;
+	42) constconfig;;
+	43) createdatabase;;
+	44) createdbuser;;
+	45) createmanual;;
+	46) createmasteravatar;;
+	47) createregionavatar;;
+	48) createuser;;
+	49) create_db;;
+	50) create_db_user;;
+	51) dalaiinstall;;
+	52) dalaiinstallinfos;;
+	53) dalaimodelinstall;;
+	54) dalaisearch;;
+	55) dalaiserverinstall;;
+	56) dalaistart;;
+	57) dalaistop;;
+	58) dalaiuninstall;;
+	59) dalaiupgrade;;
+	60) dateimenu;;
+	61) dbhilfe;;
+	62) db_all_name;;
+	63) db_all_name_dialog;;
+	64) db_all_user;;
+	65) db_all_userfailed;;
+	66) db_all_user_dialog;;
+	67) db_all_uuid;;
+	68) db_all_uuid_dialog;;
+	69) db_anzeigen;;
+	70) db_anzeigen_dialog;;
+	71) db_backup;;
+	72) db_backuptabellen;;
+	73) db_backuptabellentypen;;
+	74) db_backuptabelle_noassets;;
+	75) db_benutzer_anzeigen;;
+	76) db_compress_backup;;
+	77) db_create;;
+	78) db_create_new_dbuser;;
+	79) db_dbuser;;
+	80) db_dbuserrechte;;
+	81) db_deldbuser;;
+	82) db_delete;;
+	83) db_deletepartner;;
+	84) db_email_setincorrectuseroff;;
+	85) db_email_setincorrectuseroff_dialog;;
+	86) db_empty;;
+	87) db_false_email;;
+	88) db_foldertyp_user;;
+	89) db_friends;;
+	90) db_gridlist;;
+	91) db_inventar_no_assets;;
+	92) db_inv_search;;
+	93) db_online;;
+	94) db_region;;
+	95) db_regions;;
+	96) db_regionsport;;
+	97) db_regionsuri;;
+	98) db_region_anzahl_regionsid;;
+	99) db_region_anzahl_regionsnamen;;
+	100) db_region_parzelle;;
+	101) db_region_parzelle_pakete;;
+	102) db_restorebackuptabellen;;
+	103) db_restorebackuptabellen2test;;
+	104) db_restorebackuptabellen2test2;;
+	105) db_setpartner;;
+	106) db_setuserofline;;
+	107) db_setuserofline_dialog;;
+	108) db_setuseronline;;
+	109) db_setuseronline_dialog;;
+	110) db_tabellencopy;;
+	111) db_tabellencopy_extern;;
+	112) db_tables;;
+	113) db_tablesplitt;;
+	114) db_tables_dialog;;
+	115) db_tablextract;;
+	116) db_tablextract_regex;;
+	117) db_ungenutzteobjekte;;
+	118) db_userdate;;
+	119) db_user_anzahl;;
+	120) db_user_data;;
+	121) db_user_data_dialog;;
+	122) db_user_infos;;
+	123) db_user_infos_dialog;;
+	124) db_user_online;;
+	125) db_user_uuid;;
+	126) db_user_uuid_dialog;;
+	127) default_master_connection;;
+	128) deladvantagetools;;
+	129) delete_db;;
+	130) delete_emty_mark;;
+	131) dialogclear;;
+	132) divacopy;;
+	133) divagitcopy;;
+	134) dotnetinfo;;
+	135) downloados;;
+	136) DO_DOMAIN_IDS;;
+	137) DO_DOMAIN_IDS2;;
+	138) dummyvar;;
+	139) edittextbox;;
+	140) ende;;
+	141) expertenmenu;;
+	142) fail2banset;;
+	143) fehler;;
+	144) finstall;;
+	145) firstinstallation;;
+	146) flotsamconfig;;
+	147) fortschritsanzeige;;
+	148) fpspeicher;;
+	149) functionslist;;
+	150) functionslist2;;
+	151) funktionenmenu;;
+	152) getcachegroesse;;
+	153) getcachesinglegroesse;;
+	154) get_regionsarray;;
+	155) get_value_from_Region_key;;
+	156) gridcachedelete;;
+	157) gridstart;;
+	158) gridstop;;
+	159) hauptmenu;;
+	160) hilfe;;
+	161) hilfemenu;;
+	162) hilfemenudirektaufrufe;;
+	163) historylogclear;;
+	164) icecastconfig;;
+	165) icecastinstall;;
+	166) icecastrestart;;
+	167) icecaststart;;
+	168) icecaststop;;
+	169) icecastversion;;
+	170) IGNORE_DOMAIN_IDS;;
+	171) IGNORE_DOMAIN_IDS2;;
+	172) IGNORE_SERVER_IDS;;
+	173) iinstall;;
+	174) iinstall2;;
+	175) info;;
+	176) infodialog;;
+	177) ini_get;;
+	178) ini_set;;
+	179) installationen;;
+	180) installationhttps22;;
+	181) installfinish;;
+	182) installmariadb18;;
+	183) installmariadb22;;
+	184) installopensimulator;;
+	185) installphpmyadmin;;
+	186) installubuntu22;;
+	187) installwordpress;;
+	188) install_mysqltuner;;
+	189) instdialog;;
+	190) iptablesset;;
+	191) isroot;;
+	192) janein;;
+	193) kalender;;
+	194) konsolenhilfe;;
+	195) laeuftos;;
+	196) landclear;;
+	197) lastrebootdatum;;
+	198) letterdel;;
+	199) letterdel2;;
+	200) linuxupgrade;;
+	201) loadinventar;;
+	202) log;;
+	203) logdel;;
+	204) makeaot;;
+	205) makeregionsliste;;
+	206) makeverzeichnisliste;;
+	207) makewebmaps;;
+	208) mapdel;;
+	209) mariadberror;;
+	210) MASTER_CONNECT_RETRY;;
+	211) MASTER_DELAY;;
+	212) MASTER_HOST;;
+	213) MASTER_LOG_FILE;;
+	214) MASTER_LOG_POS;;
+	215) MASTER_PASSWORD;;
+	216) MASTER_PORT;;
+	217) MASTER_SSL;;
+	218) MASTER_SSL_CA;;
+	219) MASTER_SSL_CAPATH;;
+	220) MASTER_SSL_CERT;;
+	221) MASTER_SSL_CIPHER;;
+	222) MASTER_SSL_CRL;;
+	223) MASTER_SSL_CRLPATH;;
+	224) MASTER_SSL_KEY;;
+	225) MASTER_SSL_VERIFY_SERVER_CERT;;
+	226) MASTER_USER;;
+	227) MASTER_USE_GTID;;
+	228) MASTER_USE_GTID2;;
+	229) meineregionen;;
+	230) menuassetdel;;
+	231) menuautologdel;;
+	232) menuautorestart;;
+	233) menuautoscreenstop;;
+	234) menuautosimstart;;
+	235) menuautosimstop;;
+	236) menuautostart;;
+	237) menuautostop;;
+	238) menucreateuser;;
+	239) menufinstall;;
+	240) menugridstart;;
+	241) menugridstop;;
+	242) menuinfo;;
+	243) menukonsolenhilfe;;
+	244) menulandclear;;
+	245) menuloadinventar;;
+	246) menulogdel;;
+	247) menumapdel;;
+	248) menumostart;;
+	249) menumostop;;
+	250) menuoscommand;;
+	251) menuosdauerstart;;
+	252) menuosdauerstop;;
+	253) menuosstart;;
+	254) menuosstarteintrag;;
+	255) menuosstarteintragdel;;
+	256) menuosstop;;
+	257) menuosstruktur;;
+	258) menuoswriteconfig;;
+	259) menuregionbackup;;
+	260) menuregionrestore;;
+	261) menurostart;;
+	262) menurostop;;
+	263) menusaveinventar;;
+	264) menutrans;;
+	265) menuwaslauft;;
+	266) menuworks;;
+	267) moneyconfig;;
+	268) moneycopy;;
+	269) moneycopy93;;
+	270) moneydelete;;
+	271) moneygitcopy;;
+	272) moneygitcopy93;;
+	273) MoneyServerCommands;;
+	274) monoinstall;;
+	275) monoinstall18;;
+	276) monoinstall20;;
+	277) monoinstall22;;
+	278) mostart;;
+	279) mostop;;
+	280) mutelistcopy;;
+	281) mysqlbackup;;
+	282) mysqldberror;;
+	283) mysqleinstellen;;
+	284) mySQLmenu;;
+	285) mysqlrest;;
+	286) mysqlrestnodb;;
+	287) mysql_neustart;;
+	288) nachrichtbox;;
+	289) namen;;
+	290) newhelp;;
+	291) newhelp2;;
+	292) newregionini;;
+	293) OpenSimCommands;;
+	294) opensimgitcopy93;;
+	295) opensimholen;;
+	296) osbauen93;;
+	297) osbuilding;;
+	298) osbuilding93;;
+	299) osbuildingupgrade93;;
+	300) oscommand;;
+	301) oscompi;;
+	302) oscompi93;;
+	303) osconfigstruktur;;
+	304) oscopy;;
+	305) oscopyrobust;;
+	306) oscopysim;;
+	307) osdauerstart;;
+	308) osdauerstop;;
+	309) osdelete;;
+	310) osdowngrade;;
+	311) osgitholen;;
+	312) osgitholen93;;
+	313) osgitstatus;;
+	314) osgitstatus2;;
+	315) osgridcopy;;
+	316) osmnotranslate;;
+	317) osmtoolconfig;;
+	318) osmtoolconfigabfrage;;
+	319) osmtoolconfigabfrage2;;
+	320) osmtranslate;;
+	321) osmtranslatedirekt;;
+	322) osmtranslateinstall;;
+	323) osmupgrade;;
+	324) osscreenstop;;
+	325) ossettings;;
+	326) osslEnableconfig;;
+	327) osslEnableConfig;;
+	328) osslEnableConfigSet;;
+	329) osstart;;
+	330) osstarteintrag;;
+	331) osstarteintragdel;;
+	332) osstop;;
+	333) osstruktur;;
+	334) ostimestamp;;
+	335) osupgrade;;
+	336) osupgrade93;;
+	337) oswriteconfig;;
+	338) oszipupgrade;;
+	339) passgen;;
+	340) passwdgenerator;;
+	341) pull;;
+	342) radiolist;;
+	343) ramspeicher;;
+	344) randomname;;
+	345) reboot;;
+	346) rebootdatum;;
+	347) regionbackup;;
+	348) regionconfig;;
+	349) regionliste;;
+	350) regionrestore;;
+	351) regionsabfrage;;
+	352) regionsconfigdateiliste;;
+	353) regionsinisuchen;;
+	354) regionsiniteilen;;
+	355) regionsport;;
+	356) regionsuri;;
+	357) RELAY_LOG_FILE;;
+	358) RELAY_LOG_POS;;
+	359) remarklist;;
+	360) Replica_Backup;;
+	361) Replica_Backup2;;
+	362) ReplikatKoordinaten;;
+	363) robustbackup;;
+	364) RobustCommands;;
+	365) rologdel;;
+	366) rostart;;
+	367) rostop;;
+	368) saveinventar;;
+	369) schreibeinfo;;
+	370) sckill;;
+	371) screenlist;;
+	372) screenlistrestart;;
+	373) ScreenLog;;
+	374) scriptcopy;;
+	375) scriptgitcopy;;
+	376) scstart;;
+	377) scstop;;
+	378) searchcopy;;
+	379) senddata;;
+	380) serverinstall;;
+	381) serverinstall22;;
+	382) serverupgrade;;
+	383) setpartner;;
+	384) setversion;;
+	385) setversion93;;
+	386) set_empty_user;;
+	387) show_info;;
+	388) simstats;;
+	389) skriptversion;;
+	390) skriptversion2;;
+	391) sourcelist18;;
+	392) sourcelist22;;
+	393) systeminformation;;
+	394) tabellenabfrage;;
+	395) tastaturcachedelete;;
+	396) terminator;;
+	397) textbox;;
+	398) trimm;;
+	399) trim_all;;
+	400) trim_string;;
+	401) trim_string2;;
+	402) ufwblock;;
+	403) ufwlog;;
+	404) ufwoff;;
+	405) ufwport;;
+	406) ufwset;;
+	407) uncompress;;
+	408) uncompress2;;
+	409) vardel;;
+	410) vardelall;;
+	411) vartest2;;
+	412) versionsausgabe93;;
+	413) vornamen;;
+	414) warnbox;;
+	415) waslauft;;
+	416) works;;
+	417) xhelp;;
+	418) xhelp2;;
+	*) break;;
+	esac
+done
+}
+
 ##	#* Funktion: newhelp
 	# Datum: 02.10.2023
 	#? Beschreibung:
@@ -17626,6 +18500,7 @@ case $KOMMANDO in
 	laeuftos) laeuftos "$2" ;;
 	createmanual) createmanual ;;
 	delete_emty_mark) delete_emty_mark "$2" "$3" ;;
+	mainMenu) mainMenu ;;
 	hda | hilfedirektaufruf | hilfemenudirektaufrufe) hilfemenudirektaufrufe ;;
 	h) newhelp ;;
 	V | v) echo "$SCRIPTNAME $VERSION" ;;
