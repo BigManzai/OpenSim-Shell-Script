@@ -17196,10 +17196,10 @@ function buildmenu() {
 ##* mainMenu Test alle Funktionen
 	# Shell-Skript-Menü mit 418 Funktionen
 	# Dieses Skript bietet ein Menü mit 418 verschiedenen Funktionen, die der Benutzer auswählen und ausführen kann.
-	#
+	#! !!!!! WARNUNG !!!!! Dies darf nur von Personen die wissen was sie machen benutzt werden.
+	#! !!!!! WARNING !!!!! This should only be used by people who know what they are doing.
 	#? Verwendung:
 	#   bash osmtool.sh mainMenu
-	#
 	#? Abhängigkeiten:
 	#   - Das Skript verwendet das dialog-Tool, das installiert sein muss.
 ##
