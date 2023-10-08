@@ -36,7 +36,7 @@
 #──────────────────────────────────────────────────────────────────────────────────────────
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.1294" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.1295" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 #──────────────────────────────────────────────────────────────────────────────────────────
@@ -733,83 +733,6 @@ function osmtoolconfigabfrage() {
     #osmtoolconfig "/$STARTVERZEICHNIS/osmtoolconfig.ini"
 	osmtoolconfig $STARTVERZEICHNIS $ROBUSTVERZEICHNIS $MONEYVERZEICHNIS $OPENSIMVERZEICHNIS $CONFIGPFAD "/$SCRIPTPATH/osmtoolconfig.ini"
 }
-function osmtoolconfigabfrage2() {
-	# Letzte Bearbeitung 26.09.2023
-    VSTARTVERZEICHNIS=$(pwd) # Vorläufiges Startverzeichnis
-
-    log rohtext "$SCRIPTNAME Version $VERSION"
-
-    # Benutzereingabe für automatische Übersetzung aktivieren
-    log rohtext "Do you want to enable automatic translation? ON [OFF]"
-    read -r OSMTRANSLATOR
-    if [ "$OSMTRANSLATOR" = "" ]; then OSMTRANSLATOR="OFF"; fi
-    log rohtext "Your selection: $OSMTRANSLATOR"
-    log rohtext "*******************************************************************"
-
-    # Benutzereingabe für Sprachauswahl
-    log rohtext "Please select your language: [:de]"
-    read -r OSMTRANS
-    if [ "$OSMTRANS" = "" ]; then OSMTRANS=":de"; fi
-    log rohtext "Your language: $OSMTRANS"
-    log rohtext "*******************************************************************"
-
-    log rohtext " "
-    log rohtext "*******************************************************************"
-    log rohtext "*********** CANCEL WITH KEY COMBINATION ***************************"
-    log rohtext "*********************  CTRL/STRG + C  *****************************"
-    log rohtext "*******************************************************************"
-    log rohtext #** Values in brackets [] are default suggestions                 *#"
-    log rohtext #** and can be accepted with Enter.                                *#"
-    log rohtext "*******************************************************************"
-    log rohtext #** Data may also be available in the old opensim.cnf file.       *#"
-    log rohtext "*******************************************************************"
-    log rohtext " "
-
-    # Benutzereingabe für Startverzeichnis
-    log rohtext "Directory where your grid is located or should be located [${VSTARTVERZEICHNIS//\//}]"
-    read -r STARTVERZEICHNIS
-    if [ "$STARTVERZEICHNIS" = "" ]; then STARTVERZEICHNIS="${VSTARTVERZEICHNIS//\//}"; fi
-    log rohtext "Your grid directory is: $STARTVERZEICHNIS"
-    log rohtext "*******************************************************************"
-
-    # Benutzereingabe für Robust-Verzeichnis
-    log rohtext "Directory where your Robust is located [robust]"
-    read -r ROBUSTVERZEICHNIS
-    if [ "$ROBUSTVERZEICHNIS" = "" ]; then ROBUSTVERZEICHNIS="robust"; fi
-    log rohtext "Your Robust directory is: $ROBUSTVERZEICHNIS"
-    log rohtext "*******************************************************************"
-
-    # Benutzereingabe für Money-Verzeichnis
-    log rohtext "Directory where your Money directory is located [robust]"
-    read -r MONEYVERZEICHNIS
-    if [ "$MONEYVERZEICHNIS" = "" ]; then MONEYVERZEICHNIS="robust"; fi
-    log rohtext "Your Money directory is: $MONEYVERZEICHNIS"
-    log rohtext "*******************************************************************"
-
-    # Benutzereingabe für OpenSim-Verzeichnis
-    log rohtext "Directory where your OpenSim directory is located [opensim]"
-    read -r OPENSIMVERZEICHNIS
-    if [ "$OPENSIMVERZEICHNIS" = "" ]; then OPENSIMVERZEICHNIS="opensim"; fi
-    log rohtext "Your OpenSim directory is: $OPENSIMVERZEICHNIS"
-    log rohtext "*******************************************************************"
-
-    # Benutzereingabe für Konfigurationsverzeichnis
-    log rohtext "Directory where your configuration files are located [OpenSimConfig]"
-    read -r CONFIGPFAD
-    if [ "$CONFIGPFAD" = "" ]; then CONFIGPFAD="OpenSimConfig"; fi
-    log rohtext "Your configuration files directory is: $CONFIGPFAD"
-    log rohtext "*******************************************************************"
-
-    # Benutzereingabe für dotnet 6 Modus
-    log rohtext "Should dotnet 6 be used [yes] no"
-    read -r DOTNETMODUS
-    if [ "$DOTNETMODUS" = "" ]; then DOTNETMODUS="yes"; fi
-    log rohtext "Your dotnet 6 selection is: DOTNETMODUS=$DOTNETMODUS"
-    log rohtext "*******************************************************************"
-
-    # Erstellen der opensimTOOL-Konfigurationsdatei
-    osmtoolconfig "$STARTVERZEICHNIS" "$ROBUSTVERZEICHNIS" "$MONEYVERZEICHNIS" "$OPENSIMVERZEICHNIS" "$CONFIGPFAD" "/$SCRIPTPATH/osmtoolconfig.ini"
-}
 
 #──────────────────────────────────────────────────────────────────────────────────────────
 #* Konfiguration opensimMULTITOOL # Letzte Bearbeitung 26.09.2023
@@ -882,48 +805,6 @@ function xhelp() {
 	exit 0;	
 }
 
-##	#* Funktion: xhelp2
-	# Datum: 02.10.2023
-	#? Beschreibung:
-	# Diese Funktion dient dazu, die Hilfeanzeige für einzelne Funktionen anzuzeigen, wenn der entsprechende Parameter übergeben wird.
-	#? Parameter:
-	#   $1 (String): Der Parameter, der den Namen der Funktion enthält, für die Hilfe angezeigt werden soll.
-	#? Funktionsverhalten:
-	#   - Überprüft, ob der Parameter "help" ist.
-	#   - Wenn "help" übergeben wird, zeigt die Funktion eine Hilfeanzeige für die angegebene Funktion an.
-	#   - Beendet das Skript nach der Anzeige der Hilfe für die Funktion.
-	#? Beispielaufruf:
-	#   xhelp "help"
-	#   xhelp "andere_funktion"
-	#? Rückgabewert: Die Funktion hat keinen expliziten Rückgabewert, da sie das Skript beendet.
-	#? Hinweise:
-	#   - Passen Sie die Funktionalität an die Anforderungen Ihres Skripts an.
-##
-function xhelp2() {
-	# Letzte Bearbeitung 26.09.2023
-  if [[ $# -ne 1 ]]; then
-    echo "Fehler: Bitte geben Sie den Namen einer Funktion als Argument an."
-    echo "Verwendung: xhelp <Funktionsname>"
-    return 1
-  fi
-
-  local function_name="$1"
-
-  if [[ "$function_name" == "help" ]]; then
-    echo "Zeigt die Hilfe einzelner Funktionen an."
-    return 0
-  fi
-
-  # Prüfen, ob die angegebene Funktion existiert
-  if type -t "$function_name" &>/dev/null; then
-    # Die Dokumentation der Funktion anzeigen
-    type -t "$function_name"
-  else
-    echo "Fehler: Die Funktion '$function_name' existiert nicht."
-    return 1
-  fi
-}
-
 ##	#* skriptversion
 	# Diese Funktion gibt die Versionsnummer des opensimMULTITOOL-Skripts aus.
 	#? Verwendung:
@@ -944,32 +825,12 @@ function skriptversion() {
 	echo "$VERSION";
 	exit 0;
 }
-function skriptversion2() {
-	# Letzte Bearbeitung 26.09.2023
-  while [[ $# -gt 0 ]]; do
-    case "$1" in
-      -h|--help)
-        echo "Zeigt die Versionsnummer des opensimMULTITOOL-Skripts an."
-        return 0
-        ;;
-      *)
-        echo "Fehler: Ungültiges Argument: $1"
-        echo "Verwendung: skriptversion [-h|--help]"
-        return 1
-        ;;
-    esac
-    shift
-  done
-
-  echo "$VERSION"
-  return 0
-}
 
 ##
 	#* Funktion: namen
 	# Datum: 03.10.2023
 	#? Beschreibung: Diese Funktion gibt einen zufälligen Namen aus einer vordefinierten Liste von Regionennamen aus.
-	# Parameter:
+	#? Parameter:
 	#   $1 (optional): Wenn "help" übergeben wird, wird eine Hilfemeldung angezeigt, andernfalls wird ein zufälliger Regionsname ausgegeben.
 	#? Verwendung:
 	#   namen              # Gibt einen zufälligen Regionsnamen aus.
@@ -1034,7 +895,7 @@ function namen() {
 	#* Funktion: vornamen
 	# Datum: 03.10.2023
 	#? Beschreibung: Diese Funktion gibt einen zufälligen vornamen aus einer vordefinierten Liste von vornamen aus.
-	# Parameter:
+	#? Parameter:
 	#   $1 (optional): Wenn "help" übergeben wird, wird eine Hilfemeldung angezeigt, andernfalls wird ein zufälliger Regionsname ausgegeben.
 	#? Verwendung:
 	#   vornamen              # Gibt einen zufälligen vornamen aus.
@@ -1122,42 +983,6 @@ function functionslist() {
 	log info "Funktionsliste erstellt."
 }
 
-##	#* Funktion: functionslist2
-	#? Beschreibung:
-	# Diese Funktion sucht nach Funktionen in einer angegebenen Shell-Datei und speichert
-	# die gefundenen Funktionen alphabetisch aufsteigend in einer Ausgabedatei im angegebenen Verzeichnis.
-	#? Parameter:
-	# $1 - Die Pfadangabe zur Shell-Datei, in der nach Funktionen gesucht werden soll.
-	# $2 - Die Ausgabedatei, in der die gefundenen Funktionen alphabetisch aufsteigend gespeichert werden sollen.
-	#? Beispielaufruf:
-	# functionslist "/Pfad/zur/Shell-Datei.sh" "/Ausgabeverzeichnis/ergebnis.txt"
-##
-function functionslist2() {
-	# Letzte Bearbeitung 26.09.2023
-    # Prüfen, ob die erforderlichen Parameter vorhanden sind
-    if [ $# -ne 2 ]; then
-        echo "Verwendung: functionslist <Shell-Datei> <Ausgabedatei>"
-        return 1
-    fi
-
-    local file="$1"
-    local output_file="$2"
-    local search="function"
-
-    # Überprüfen, ob die angegebene Datei existiert
-    if [ ! -f "$file" ]; then
-        echo "Die angegebene Shell-Datei existiert nicht."
-        return 1
-    fi
-
-    # Suchen nach Funktionen in der Datei und in die Ausgabedatei schreiben
-    #grep -i -r "$search " "$file" > "$output_file"
-	# Suchen nach Funktionen in der Datei, sortieren und in die Ausgabedatei schreiben
-    grep -i -r "$search " "$file" | sort -f > "$output_file"
-
-    echo "Die gefundenen Funktionen wurden in $output_file gespeichert."
-}
-
 ##	#* remarklist
 	# Funktionen eines Bash Skript inklusive 8 remark-Zeilen auslesen und in eine Text Datei schreiben.
 	# Hilfreich fuer Handbuch und Hilfen.
@@ -1226,50 +1051,22 @@ function trimm() {
 	set +f
 }
 
-##	#* osgitstatus.
-	# opensim quellcode status und upgraden.
-	#? @param $variable.
-	#? @return $trimmvar.
-	# todo: nichts.
-##
-function osgitstatus() {
-	log info "OpenSim Sourcecode wird Upgegradet."
-	cd /$STARTVERZEICHNIS/opensim || return 1
-	log rohtext "  OpenSim ist: $(git pull)" || log rohtext "OpenSim kann nicht upgegradet werden."
-	cd /$STARTVERZEICHNIS || return 0
-}
-
-##	#* Funktion: osgitstatus2
+##	#* Funktion: osgitstatus
 	#? Beschreibung:
 	# Diese Funktion aktualisiert den OpenSim-Quellcode aus einem Git-Repository,
 	# sofern verfügbar, und gibt Informationen über den Status des Upgrades aus.
 	#? Parameter:
 	# Keine Parameter erforderlich.
 	#? Beispielaufruf:
-	# osgitstatus2
+	# osgitstatus
 ##
-function osgitstatus2() {
-	# Letzte Bearbeitung 26.09.2023
-    log info "OpenSim Sourcecode wird aktualisiert."
-
-    # Verzeichnis, in dem sich das Git-Repository für OpenSim befindet
-    opensim_dir="/$STARTVERZEICHNIS/opensim"
-
-    # Wechseln zum OpenSim-Verzeichnis oder Fehlermeldung ausgeben und die Funktion verlassen
-    cd "$opensim_dir" || { log rohtext "Fehler: Das OpenSim-Verzeichnis '$opensim_dir' existiert nicht."; return 1; }
-
-    # Aktualisieren des Git-Repositories und Speichern des Ergebnisses
-    git_result=$(git pull)
-
-    # Überprüfen, ob das Git-Update erfolgreich war
-    if [ $? -eq 0 ]; then
-        log rohtext "OpenSim wurde erfolgreich aktualisiert. Git-Ausgabe: $git_result"
-    else
-        log rohtext "Fehler: OpenSim konnte nicht aktualisiert werden. Git-Ausgabe: $git_result"
-    fi
-
-    # Zurück zum ursprünglichen Verzeichnis wechseln oder Fehlermeldung ausgeben
-    cd "$STARTVERZEICHNIS" || { log rohtext "Fehler: Das ursprüngliche Verzeichnis '$STARTVERZEICHNIS' existiert nicht."; return 0; }
+function osgitstatus() {
+	# Letzte Bearbeitung 08.10.2023
+	log info "OpenSim Sourcecode wird Upgegradet."
+	# Verzeichnis, in dem sich das Git-Repository für OpenSim befindet
+	cd /$STARTVERZEICHNIS/opensim || return 1
+	log rohtext "  OpenSim ist: $(git pull)" || log rohtext "OpenSim kann nicht upgegradet werden."
+	cd /$STARTVERZEICHNIS || return 0
 }
 
 ##	#* Funktion: ende
@@ -1317,48 +1114,7 @@ function letterdel() {
 	# letterdel $variable "[aAbBcCdD]" - letterdel $variable "[[:space:]]"
 	printf '%s\n' "${1//$2/}"
 }
-##	#* Funktion: letterdel
-	#? Beschreibung:
-	# Diese Funktion entfernt bestimmte Zeichen oder Muster aus einer Zeichenkette
-	# und gibt das bereinigte Ergebnis aus.
-	#? Parameter:
-	# $1 - Die Zeichenkette, aus der Zeichen oder Muster entfernt werden sollen.
-	# $2 - Das Zeichen oder Muster, das aus der Zeichenkette entfernt werden soll.
-	#? Rückgabewert:
-	# Die bereinigte Zeichenkette wird auf die Standardausgabe ausgegeben.
-	#? Beispielaufruf:
-	# letterdel "Hallo, Welt!" "[aAbBcCdD]"
-	# Ergebnis: "llo, Welt!"
-##
-function letterdel2() {
-	# Letzte Bearbeitung 26.09.2023
-    # Prüfen, ob beide Parameter übergeben wurden
-    if [ $# -ne 2 ]; then
-        echo "Verwendung: letterdel <Zeichenkette> <Zeichen oder Muster>"
-        return 1
-    fi
 
-    local input_string="$1"
-    local pattern="$2"
-
-    # Verwenden Sie die printf-Funktion, um Zeichen oder Muster aus der Zeichenkette zu entfernen
-    cleaned_string=$(printf '%s\n' "${input_string//$pattern/}")
-
-    echo "$cleaned_string"
-}
-
-##	#* trim_string.
-	# Zeichen entfernen.
-	# Usage: trim_string "   example   string    "
-	#? @param keine.
-	#? @return nichts wird zurueckgegeben.
-	# todo: nichts.
-##
-function trim_string() {
-    : "${1#"${1%%[![:space:]]*}"}"
-    : "${_%"${_##*[![:space:]]}"}"
-    printf '%s\n' "$_"
-}
 ##	#* Funktion: trim_string
 	#? Beschreibung:
 	# Diese Funktion entfernt führende und abschließende Leerzeichen aus einer
@@ -1371,22 +1127,9 @@ function trim_string() {
 	# trimmed_text=$(trim_string "   Hallo, Welt!   ")
 	# Ergebnis: "Hallo, Welt!"
 ##
-function trim_string2() {
-	# Letzte Bearbeitung 26.09.2023
-    # Prüfen, ob ein Parameter übergeben wurde
-    if [ $# -ne 1 ]; then
-        echo "Verwendung: trim_string <Zeichenkette>"
-        return 1
-    fi
-
-    local input_string="$1"
-
-    # Entfernen führender Leerzeichen
-    : '${input_string#"${input_string%%[![:space:]]*"}'
-
-    # Entfernen abschließender Leerzeichen
-    : '${_%"${_##*[![:space:]]}"}'
-
+function trim_string() {
+    : "${1#"${1%%[![:space:]]*}"}"
+    : "${_%"${_##*[![:space:]]}"}"
     printf '%s\n' "$_"
 }
 
@@ -1400,7 +1143,7 @@ function trim_string2() {
 	# vartest "Hello, World!"
 	# Dies wird "true" zurückgeben, da die Variable einen Wert hat.
 ##
-function vartest2() {
+function vartest() {
 	# Letzte Bearbeitung 26.09.2023
     # Das übergebene Argument in die Variable VARIABLE speichern
     VARIABLE="$1"
@@ -1493,18 +1236,18 @@ function iinstall() {
 	fi
 }
 
-##	#* iinstall2 - Diese Funktion überprüft, ob ein Paket bereits installiert ist, und installiert es andernfalls.
-	#? Verwendung: iinstall2 PAKETNAME
+##	#* iinstallnew - Diese Funktion überprüft, ob ein Paket bereits installiert ist, und installiert es andernfalls.
+	#? Verwendung: iinstallnew PAKETNAME
 	#   - PAKETNAME: Der Name des Pakets, das installiert werden soll.
 	# Diese Funktion überprüft, ob das angegebene PAKETNAME bereits installiert ist. Wenn es bereits installiert ist, wird eine Meldung ausgegeben.
 	# Andernfalls wird versucht, das Paket mit sudo apt install zu installieren.
 	#? Parameter:
 	#   - PAKETNAME: Der Name des Pakets, das installiert werden soll.
 	#? Beispiel:
-	#   iinstall2 "firefox"
+	#   iinstallnew "firefox"
 	#   Überprüft, ob das Paket "firefox" installiert ist, und installiert es andernfalls.
 ##
-function iinstall2() {
+function iinstallnew() {
 	installation=$1
 	if dpkg-query -s "$installation" 2>/dev/null | grep -q installed; then
 		log rohtext "$installation ist bereits installiert."
@@ -1671,36 +1414,6 @@ function uncompress() {
     done
 
     return $uncompress;
-}
-##	#* uncompress2 - Eine Funktion zum automatischen Entpacken von komprimierten Dateien.
-	#? Verwendung: uncompress <Datei(en)>
-	# Die Funktion erkennt den Dateityp und verwendet das entsprechende Entpackungswerkzeug.
-	# Unterstützte Dateitypen: gzip, zip, 7z, rar, tar.gz, tar.bz2, tar.xz, bz2, xz
-	#? Beispiel:
-	# uncompress2 datei.zip        # Entpackt eine Zip-Datei
-	# uncompress2 datei.tar.gz     # Entpackt eine tar.gz-Datei
-	# uncompress2 datei.7z         # Entpackt eine 7z-Datei
-	#? Beispielaufruf
-	# uncompress2 datei.zip
-##
-function uncompress2() {
-	# Letzte Bearbeitung 27.09.2023
-
-    for datei in "$@"; do
-        case $(file "$datei") in
-            *ASCII*)    ;;
-            *gzip*)     gunzip "$datei" ;;
-            *zip*)      unzip -p "$datei" ;;
-            *7z*)       7z e "$datei" ;;
-            *rar*)      unrar e "$datei" ;;
-            *tar.gz*)   tar -xf "$datei" ;;
-            *tar.bz2*)  tar -xjf "$datei" ;;
-            *tar.xz*)   tar -xJf "$datei" ;;
-            *bz2*)      bunzip2 "$datei" ;;
-            *xz*)       unxz "$datei" ;;
-            *)          echo "Nicht unterstütztes Dateiformat für '$datei'" ;;
-        esac
-    done
 }
 
 ##	#* makeverzeichnisliste - Eine Funktion zum Erstellen einer Liste von Verzeichnissen aus einer Datei.
@@ -7784,77 +7497,77 @@ function installopensimulator() {
 function installubuntu22() {
 	# Letzte Bearbeitung 01.10.2023
 	#Alles fuer den OpenSimulator ausser mono
-	iinstall2 screen
-	iinstall2 git
-	iinstall2 nant
-	iinstall2 libopenjp3d7
-	iinstall2 graphicsmagick
-	iinstall2 imagemagick
-	iinstall2 curl
-	iinstall2 php-cli
-	iinstall2 php-bcmath
-	iinstall2 dialog
-	iinstall2 at
-	iinstall2 mysqltuner
-	iinstall2 php-mysql
-	iinstall2 php-common
-	iinstall2 php-gd
-	iinstall2 php-pear
-	iinstall2 php-xmlrpc
-	iinstall2 php-curl
-	iinstall2 php-mbstring
-	iinstall2 php-gettext
-	iinstall2 php-fpm php
-	iinstall2 libapache2-mod-php
-	iinstall2 php-xml
-	iinstall2 php-imagick
-	iinstall2 php-cli
-	iinstall2 php-imap
-	iinstall2 php-opcache
-	iinstall2 php-soap
-	iinstall2 php-zip
-	iinstall2 php-intl
-	iinstall2 php-bcmath
-	iinstall2 unzip
-	iinstall2 php-mail
-	iinstall2 zip
-	iinstall2 screen
-	iinstall2 graphicsmagick
-	iinstall2 git
-	iinstall2 libopenjp3d7
-	iinstall2 crudini
-	iinstall2 iptables
-	iinstall2 fail2ban
-	iinstall2 apt-utils
-    iinstall2 libgdiplus
-    iinstall2 libc6-dev
-	iinstall2 translate-shell
+	iinstallnew screen
+	iinstallnew git
+	iinstallnew nant
+	iinstallnew libopenjp3d7
+	iinstallnew graphicsmagick
+	iinstallnew imagemagick
+	iinstallnew curl
+	iinstallnew php-cli
+	iinstallnew php-bcmath
+	iinstallnew dialog
+	iinstallnew at
+	iinstallnew mysqltuner
+	iinstallnew php-mysql
+	iinstallnew php-common
+	iinstallnew php-gd
+	iinstallnew php-pear
+	iinstallnew php-xmlrpc
+	iinstallnew php-curl
+	iinstallnew php-mbstring
+	iinstallnew php-gettext
+	iinstallnew php-fpm php
+	iinstallnew libapache2-mod-php
+	iinstallnew php-xml
+	iinstallnew php-imagick
+	iinstallnew php-cli
+	iinstallnew php-imap
+	iinstallnew php-opcache
+	iinstallnew php-soap
+	iinstallnew php-zip
+	iinstallnew php-intl
+	iinstallnew php-bcmath
+	iinstallnew unzip
+	iinstallnew php-mail
+	iinstallnew zip
+	iinstallnew screen
+	iinstallnew graphicsmagick
+	iinstallnew git
+	iinstallnew libopenjp3d7
+	iinstallnew crudini
+	iinstallnew iptables
+	iinstallnew fail2ban
+	iinstallnew apt-utils
+    iinstallnew libgdiplus
+    iinstallnew libc6-dev
+	iinstallnew translate-shell
 
 	if [ $insterweitert = "yes" ]; then
-		iinstall2 libldns-dev
-		iinstall2 libldns3
-		iinstall2 libjs-jquery-ui
-		iinstall2 libopenexr25
-		iinstall2 libmagickcore-6.q16-6-extra
-		iinstall2 libswscale-dev
-		iinstall2 php-twig
-		iinstall2 libavcodec58
-		iinstall2 libmagickwand-6.q16-6
-		iinstall2 libavutil56
-		iinstall2 imagemagick-6.q16
-		iinstall2 libswscale5
-		iinstall2 libmagickcore-6.q16-6
-		iinstall2 libavutil-dev
-		iinstall2 libswresample3
-		iinstall2 imagemagick-6-common
-		iinstall2 libavformat58
-		iinstall2 python2.7-minimal
-		iinstall2 python2.7
-		iinstall2 libavformat-dev
-		iinstall2 libavcodec-dev
-		iinstall2 libpython2.7-minimal
-		iinstall2 libpython2.7-stdlib
-		iinstall2 libswresample-dev
+		iinstallnew libldns-dev
+		iinstallnew libldns3
+		iinstallnew libjs-jquery-ui
+		iinstallnew libopenexr25
+		iinstallnew libmagickcore-6.q16-6-extra
+		iinstallnew libswscale-dev
+		iinstallnew php-twig
+		iinstallnew libavcodec58
+		iinstallnew libmagickwand-6.q16-6
+		iinstallnew libavutil56
+		iinstallnew imagemagick-6.q16
+		iinstallnew libswscale5
+		iinstallnew libmagickcore-6.q16-6
+		iinstallnew libavutil-dev
+		iinstallnew libswresample3
+		iinstallnew imagemagick-6-common
+		iinstallnew libavformat58
+		iinstallnew python2.7-minimal
+		iinstallnew python2.7
+		iinstallnew libavformat-dev
+		iinstallnew libavcodec-dev
+		iinstallnew libpython2.7-minimal
+		iinstallnew libpython2.7-stdlib
+		iinstallnew libswresample-dev
 	fi
 	deladvantagetools
 }
@@ -9871,108 +9584,6 @@ function db_restorebackuptabellen() {
 	done </$STARTVERZEICHNIS/backup/"$databasename"/liste.txt
 
 	return 0
-}
-
-##	#* Funktion: db_restorebackuptabellen2test
-	# Datum: 02.10.2023
-	#? Beschreibung:
-	# Diese Funktion ermöglicht es dem Benutzer, zuvor gesicherte Datenbanktabellen aus verschiedenen Archivformaten in eine neue Datenbank wiederherzustellen.
-	# Die Funktion erfordert Benutzername, Passwort und den Namen der Datenbank, aus der die Tabellen wiederhergestellt werden sollen, sowie den Namen der neuen Datenbank.
-	# Die Funktion durchläuft die Liste der gesicherten Tabellen, erkennt das Format der Sicherungsdatei und führt die entsprechende Wiederherstellungsaktion aus.
-	#? Parameter:
-	# $1: Benutzername für die Datenbank
-	# $2: Passwort für die Datenbank
-	# $3: Name der Datenbank, aus der die Tabellen wiederhergestellt werden sollen
-	# $4: Name der neuen Datenbank, in die die Tabellen wiederhergestellt werden sollen
-	#? Beispielaufruf:
-	# Die Funktion sollte mit den erforderlichen Parametern aufgerufen werden.
-	# db_restorebackuptabellen2test "mein_benutzer" "geheim123" "gesicherte_datenbank" "neue_datenbank"
-##
-function db_restorebackuptabellen2test() {
-	username=$1
-	password=$2
-	databasename=$3
-	newdatabasename=$4
-
-	cd /$STARTVERZEICHNIS/backup/"$databasename" || exit
-
-	tabellenname=()
-	while IFS= read -r tabellenname; do
-		sleep 1		
-        for file in foo*; do
-            case $(file "$file") in
-                *ASCII*) /"$STARTVERZEICHNIS"/backup/"$databasename"/"$tabellenname".sql | mysql >MYSQL_PWD="$password" -u"$username" "$newdatabasename" ;;
-                *gzip*) gunzip /"$STARTVERZEICHNIS"/backup/"$databasename"/"$tabellenname".sql.gz | mysql >MYSQL_PWD="$password" -u"$username" "$newdatabasename" ;;          
-                *zip*) unzip -p /"$STARTVERZEICHNIS"/backup/"$databasename"/"$tabellenname".sql.zip | mysql >MYSQL_PWD="$password" -u"$username" "$newdatabasename" ;;          
-                *7z*) 7z e /"$STARTVERZEICHNIS"/backup/"$databasename"/"$tabellenname".sql.7z | mysql >MYSQL_PWD="$password" -u"$username" "$newdatabasename" ;;
-                *rar*) unrar e /"$STARTVERZEICHNIS"/backup/"$databasename"/"$tabellenname".sql.rar | mysql >MYSQL_PWD="$password" -u"$username" "$newdatabasename" ;;
-                *tar.gz*) tar -xf /"$STARTVERZEICHNIS"/backup/"$databasename"/"$tabellenname".sql.tar.gz | mysql >MYSQL_PWD="$password" -u"$username" "$newdatabasename" ;;
-                *tar.bz2*) tar -xjf /"$STARTVERZEICHNIS"/backup/"$databasename"/"$tabellenname".sql.tar.bz2 | mysql >MYSQL_PWD="$password" -u"$username" "$newdatabasename" ;;
-                *tar.xz*) tar -xJf /"$STARTVERZEICHNIS"/backup/"$databasename"/"$tabellenname".sql.tar.xz | mysql >MYSQL_PWD="$password" -u"$username" "$newdatabasename" ;;
-                *bz2*) bunzip2 /"$STARTVERZEICHNIS"/backup/"$databasename"/"$tabellenname".sql.bz2 | mysql >MYSQL_PWD="$password" -u"$username" "$newdatabasename" ;;
-                *xz*) unxz /"$STARTVERZEICHNIS"/backup/"$databasename"/"$tabellenname".sql.xz | mysql >MYSQL_PWD="$password" -u"$username" "$newdatabasename" ;;
-            esac
-        done
-		log info "Datenbank Tabelle: $newdatabasename - $tabellenname widerhergestellt."
-	done </$STARTVERZEICHNIS/backup/"$databasename"/liste.txt
-
-	return 0
-}
-
-##	#* Funktion: db_restorebackuptabellen2test2
-	# Datum: 02.10.2023
-	#? Beschreibung:
-	# Diese Funktion ermöglicht es dem Benutzer, zuvor gesicherte Datenbanktabellen aus verschiedenen Archivformaten in eine neue Datenbank wiederherzustellen.
-	# Die Funktion erfordert Benutzername, Passwort und den Namen der Datenbank, aus der die Tabellen wiederhergestellt werden sollen, sowie den Namen der neuen Datenbank.
-	# Die Funktion durchläuft die Liste der gesicherten Tabellen, erkennt das Format der Sicherungsdatei und führt die entsprechende Wiederherstellungsaktion aus.
-	#? Parameter:
-	# $1: Benutzername für die Datenbank
-	# $2: Passwort für die Datenbank
-	# $3: Name der Datenbank, aus der die Tabellen wiederhergestellt werden sollen
-	# $4: Name der neuen Datenbank, in die die Tabellen wiederhergestellt werden sollen
-	#? Beispielaufruf:
-	# Die Funktion sollte mit den erforderlichen Parametern aufgerufen werden.
-	# db_restorebackuptabellen2test2 "mein_benutzer" "geheim123" "gesicherte_datenbank" "neue_datenbank"
-##
-function db_restorebackuptabellen2test2() {
-    username=$1
-    password=$2
-    databasename=$3
-    newdatabasename=$4
-
-    cd /$STARTVERZEICHNIS/backup/"$databasename" || exit
-
-    tabellenname=()
-    while IFS= read -r tabellenname; do
-        sleep 1
-        for file in foo*; do
-            case $(file "$file") in
-                *ASCII*) 
-                    cat /"$STARTVERZEICHNIS"/backup/"$databasename"/"$tabellenname".sql | mysql >MYSQL_PWD="$password" -u"$username" "$newdatabasename" ;;
-                *gzip*) 
-                    gunzip -c /"$STARTVERZEICHNIS"/backup/"$databasename"/"$tabellenname".sql.gz | mysql >MYSQL_PWD="$password" -u"$username" "$newdatabasename" ;;          
-                *zip*) 
-                    unzip -p /"$STARTVERZEICHNIS"/backup/"$databasename"/"$tabellenname".sql.zip | mysql >MYSQL_PWD="$password" -u"$username" "$newdatabasename" ;;          
-                *7z*)  
-                    7z e /"$STARTVERZEICHNIS"/backup/"$databasename"/"$tabellenname".sql.7z | mysql >MYSQL_PWD="$password" -u"$username" "$newdatabasename" ;;
-                *rar*) 
-                    unrar e /"$STARTVERZEICHNIS"/backup/"$databasename"/"$tabellenname".sql.rar | mysql >MYSQL_PWD="$password" -u"$username" "$newdatabasename" ;;
-                *tar.gz*) 
-                    tar -xzf /"$STARTVERZEICHNIS"/backup/"$databasename"/"$tabellenname".sql.tar.gz | mysql >MYSQL_PWD="$password" -u"$username" "$newdatabasename" ;;
-                *tar.bz2*) 
-                    tar -xjf /"$STARTVERZEICHNIS"/backup/"$databasename"/"$tabellenname".sql.tar.bz2 | mysql >MYSQL_PWD="$password" -u"$username" "$newdatabasename" ;;
-                *tar.xz*) 
-                    tar -xJf /"$STARTVERZEICHNIS"/backup/"$databasename"/"$tabellenname".sql.tar.xz | mysql >MYSQL_PWD="$password" -u"$username" "$newdatabasename" ;;
-                *bz2*) 
-                    bunzip2 -c /"$STARTVERZEICHNIS"/backup/"$databasename"/"$tabellenname".sql.bz2 | mysql >MYSQL_PWD="$password" -u"$username" "$newdatabasename" ;;
-                *xz*) 
-                    unxz -c /"$STARTVERZEICHNIS"/backup/"$databasename"/"$tabellenname".sql.xz | mysql >MYSQL_PWD="$password" -u"$username" "$newdatabasename" ;;
-            esac
-        done
-        log info "Datenbank Tabelle: $newdatabasename - $tabellenname wiederhergestellt."
-    done </$STARTVERZEICHNIS/backup/"$databasename"/liste.txt
-
-    return 0
 }
 
 ##	#* Funktion: db_create
@@ -14681,13 +14292,12 @@ function oszipupgrade() {
 #* Automatische Konfigurationen Prototype Funktionsgruppe
 #──────────────────────────────────────────────────────────────────────────────────────────
 
-##
-	# Funktion: ConfigSet
+##* Funktion: ConfigSet
 	# Datum: 02.10.2023
 	# Autor: [Ihr Name oder Benutzername]
-	# Beschreibung:
+	#? Beschreibung:
 	# Diese Funktion verarbeitet eine INI-Datei und wandelt die Konfiguration daraus in eine Bash-Array-Struktur um.
-	# Parameter:
+	#? Parameter:
 	#   $1 (String): Der Name der INI-Datei, die verarbeitet werden soll.
 	# Funktionsverhalten:
 	#   - Löscht zuerst eine eventuell vorhandene "$datei.ini.cnf"-Datei.
@@ -14700,7 +14310,7 @@ function oszipupgrade() {
 	#   - Erstellt ein Bash-Array mit den konfigurierten Werten und weist es der Variable "$dateiConfigList" zu.
 	# Beispielaufruf:
 	#   ConfigSet "config.ini"
-	# Rückgabewert: Die Funktion ändert die Datei "$datei.ini.cnf" und erstellt ein Bash-Array "$dateiConfigList".
+	#? Rückgabewert: Die Funktion ändert die Datei "$datei.ini.cnf" und erstellt ein Bash-Array "$dateiConfigList".
 	# Hinweise:
 	#   - Passen Sie die Funktionalität an die Anforderungen Ihres Skripts an.
 ##
@@ -14735,11 +14345,10 @@ function ConfigSet() {
     sed -i -e '$a)' "$datei.ini.cnf"
 }
 
-##
-	# Funktion: AutoInstall
+##* Funktion: AutoInstall
 	# Datum: 02.10.2023
 	# Autor: [Ihr Name oder Benutzername]
-	# Beschreibung:
+	#? Beschreibung:
 	# Diese Funktion führt eine Grundinstallation für einen Server durch, wobei sie speziell auf verschiedene Versionen von Ubuntu abzielt.
 	# Funktionsverhalten:
 	#   - Ermittelt die Ubuntu-Version und speichert sie in den Variablen $ubuntuDescription, $ubuntuRelease und $ubuntuCodename.
@@ -14748,7 +14357,7 @@ function ConfigSet() {
 	#   - Je nach erkannter Ubuntu-Version werden unterschiedliche Installationsschritte durchgeführt.
 	# Beispielaufruf:
 	#   AutoInstall
-	# Rückgabewert: Die Funktion führt die Grundinstallation des Servers durch, abhängig von der erkannten Ubuntu-Version.
+	#? Rückgabewert: Die Funktion führt die Grundinstallation des Servers durch, abhängig von der erkannten Ubuntu-Version.
 	# Hinweise:
 	#   - Passen Sie die Funktionalität an die Anforderungen Ihres Skripts und die unterstützten Ubuntu-Versionen an.
 ##
@@ -14797,11 +14406,10 @@ function AutoInstall() {
     fi
 }
 
-##
-	# Funktion: osslEnableConfig
+##* Funktion: osslEnableConfig
 	# Datum: 02.10.2023
 	# Autor: [Ihr Name oder Benutzername]
-	# Beschreibung:
+	#? Beschreibung:
 	# Diese Funktion fordert den Benutzer auf, Rechte für ein OpenSimulator-Skript zu konfigurieren.
 	# Funktionsverhalten:
 	#   - Fragt den Benutzer nach den Skriptrechten für den Grid-Betreiber mit der UUID $BenutzerUUID.
@@ -14809,7 +14417,7 @@ function AutoInstall() {
 	#   - Ruft die Funktion osslEnableConfigSet() auf, um die Konfiguration mit den angegebenen Rechten durchzuführen.
 	# Beispielaufruf:
 	#   osslEnableConfig
-	# Rückgabewert: Die Funktion ruft osslEnableConfigSet() mit den verarbeiteten Benutzereingaben auf.
+	#? Rückgabewert: Die Funktion ruft osslEnableConfigSet() mit den verarbeiteten Benutzereingaben auf.
 	# Hinweise:
 	#   - Stellen Sie sicher, dass die Variablen $BenutzerUUID und osslEnableConfigSet() in Ihrem Skript definiert sind.
 	#   - Passen Sie die Funktionalität an die Anforderungen Ihres Skripts an.
@@ -14823,11 +14431,10 @@ function osslEnableConfig() {
     osslEnableConfigSet "$Rechte"
 }
 
-##
-	# Funktion: osslEnableConfigSet
+##* Funktion: osslEnableConfigSet
 	# Datum: 02.10.2023
 	# Autor: [Ihr Name oder Benutzername]
-	# Beschreibung:
+	#? Beschreibung:
 	# Diese Funktion erstellt eine Konfigurationsdatei mit OpenSimulator-Skriptberechtigungen.
 	# Funktionsverhalten:
 	#   - Definiert eine Liste von Konfigurationszeilen für die Berechtigungen von OpenSimulator-Skripten.
@@ -14835,10 +14442,10 @@ function osslEnableConfig() {
 	#   - Tauscht einfache Hochstriche (') gegen doppelte Hochstriche (") aus.
 	# Beispielaufruf:
 	#   osslEnableConfigSet "$Rechte"
-	# Parameter:
+	#? Parameter:
 	#   $Rechte - Die Skriptberechtigungen, die in der Konfigurationsdatei festgelegt werden sollen.
 	#             Dies kann eine Liste von Berechtigungen und Benutzergruppen sein.
-	# Rückgabewert: Die Funktion erstellt die Konfigurationsdatei mit den angegebenen Berechtigungen.
+	#? Rückgabewert: Die Funktion erstellt die Konfigurationsdatei mit den angegebenen Berechtigungen.
 	# Hinweise:
 	#   - Passen Sie die Liste der Berechtigungen an Ihre Anforderungen an.
 	#   - Stellen Sie sicher, dass die Variable $osslEnabledatei in Ihrem Skript definiert ist.
@@ -14997,16 +14604,15 @@ function osslEnableConfigSet() {
 #* Hilfen und Info Funktionsgruppe
 #──────────────────────────────────────────────────────────────────────────────────────────
 
-##
-	# Funktion: show_info
+##* Funktion: show_info
 	# Datum: 02.10.2023
-	# Beschreibung: Zeigt eine Informationsmeldung in einem Dialogfenster an.
-	# Parameter:
+	#? Beschreibung: Zeigt eine Informationsmeldung in einem Dialogfenster an.
+	#? Parameter:
 	#   $1 - Titel des Dialogfensters
 	#   $2 - Die anzuzeigende Information
-	# Verwendung:
+	#? Verwendung:
 	#   show_info "Mein Titel" "Dies ist die anzuzeigende Information."
-	# Rückgabewert:
+	#? Rückgabewert:
 	#   Keiner (void)
 ##
 function show_info() {
@@ -15019,13 +14625,12 @@ function show_info() {
 		--msgbox "$info" 0 0
 }
 
-##
-	# Funktion: systeminformation
+##* Funktion: systeminformation
 	# Datum: 02.10.2023
-	# Beschreibung: Zeigt verschiedene Systeminformationen in einem Dialogfenster an.
-	# Verwendung:
+	#? Beschreibung: Zeigt verschiedene Systeminformationen in einem Dialogfenster an.
+	#? Verwendung:
 	#   systeminformation
-	# Rückgabewert:
+	#? Rückgabewert:
 	#   Keiner (void)
 ##
 function systeminformation() {
@@ -15099,13 +14704,12 @@ function systeminformation() {
 	done
 }
 
-##
-	# Funktion: info
+##* Funktion: info
 	# Datum: 02.10.2023
-	# Beschreibung: Zeigt Informationen über den Server in einem log-Dateiformat an.
-	# Verwendung:
+	#? Beschreibung: Zeigt Informationen über den Server in einem log-Dateiformat an.
+	#? Verwendung:
 	#   info
-	# Rückgabewert:
+	#? Rückgabewert:
 	#   0 - Erfolgreiche Ausführung
 ##
 function info() {
@@ -15119,13 +14723,12 @@ function info() {
 	return 0
 }
 
-##
-	# Funktion: infodialog
+##* Funktion: infodialog
 	# Datum: 02.10.2023
-	# Beschreibung: Zeigt eine Informationsmeldung in einem Dialogfenster an.
-	# Verwendung:
+	#? Beschreibung: Zeigt eine Informationsmeldung in einem Dialogfenster an.
+	#? Verwendung:
 	#   infodialog
-	# Rückgabewert:
+	#? Rückgabewert:
 	#   Keiner (void)
 ##
 function infodialog() {
@@ -15145,13 +14748,12 @@ function infodialog() {
 	hauptmenu
 }
 
-##
-	# Funktion: kalender
+##* Funktion: kalender
 	# Datum: 02.10.2023
-	# Beschreibung: Zeigt einen Kalender in einem Dialogfenster an und ermöglicht die Auswahl eines Datums.
-	# Verwendung:
+	#? Beschreibung: Zeigt einen Kalender in einem Dialogfenster an und ermöglicht die Auswahl eines Datums.
+	#? Verwendung:
 	#   kalender
-	# Rückgabewert:
+	#? Rückgabewert:
 	#   Keiner (void)
 ##
 function kalender() {
@@ -15184,13 +14786,12 @@ function kalender() {
 	fi
 }
 
-##
-	# Funktion: robustbackup
+##* Funktion: robustbackup
 	# Datum: 02.10.2023
-	# Beschreibung: Ermöglicht dem Benutzer die Auswahl eines Datums für ein robustes Backup und speichert das ausgewählte Datum in einer temporären Datei.
-	# Verwendung:
+	#? Beschreibung: Ermöglicht dem Benutzer die Auswahl eines Datums für ein robustes Backup und speichert das ausgewählte Datum in einer temporären Datei.
+	#? Verwendung:
 	#   robustbackup
-	# Rückgabewert:
+	#? Rückgabewert:
 	#   Keiner (void)
 ##
 function robustbackup() {
@@ -15227,13 +14828,12 @@ function robustbackup() {
 	#warnbox "$result_mysqlrest"
 }
 
-##
-	# Funktion: backupdatum
+##* Funktion: backupdatum
 	# Datum: 02.10.2023
-	# Beschreibung: Überprüft, ob eine Datei mit einem Backup-Datum vorhanden ist, vergleicht das Datum mit dem aktuellen Datum und führt entsprechende Aktionen basierend auf dem Vergleich aus.
-	# Verwendung:
+	#? Beschreibung: Überprüft, ob eine Datei mit einem Backup-Datum vorhanden ist, vergleicht das Datum mit dem aktuellen Datum und führt entsprechende Aktionen basierend auf dem Vergleich aus.
+	#? Verwendung:
 	#   backupdatum
-	# Rückgabewert:
+	#? Rückgabewert:
 	#   Keiner (void)
 ## 
 function backupdatum() {
@@ -15261,17 +14861,76 @@ function backupdatum() {
 	return 0
 }
 
+##*	Funktion: osreparatur
+	# Datum: 08.10.2023
+	#! Test für OpenSim 0.9.3 es ist nicht funktionsfähig!!!!!
+	#? Beschreibung: 
+	# Dieses Skript bietet Optionen zur Reparatur einer OpenSim-Umgebung.
+	#? Parameter: Keine
+	#
+	#? Verwendung:
+	#   osreparatur
+	#? Rückgabewert:
+	#   Keiner (void)
 ##
-	# Funktion: senddata
+function osreparatur() {
+    #! Test für OpenSim 0.9.3 es ist nicht funktionsfähig!!!!!
+	log info "*** Reperatur Funktion ***"
+
+	echo " 1 Haben sie Probleme mit den Datenbanken? - STATUS funktioniert!"
+	echo " 2 Haben sie Probleme nach dem letzten upgrade? - STATUS ungetestet"
+	echo " 3 Sind die Probleme ohne upgrade aufgetaucht? - STATUS ungetestet"
+	echo " 4 Sind die Probleme ohne upgrade aufgetaucht aber auswahl 3 brachte nicht das erwünschte ergebnis? - STATUS ungetestet"
+	read -r osrauswahl
+
+# Fallauswahl
+case $osrauswahl in
+  1) 
+  	#Alle Datenbanken Prüfen und Reparieren. - STATUS funktioniert!
+	cd /$STARTVERZEICHNIS || exit
+    allrepair_db; 
+    log info "Alle Datenbanken Checken, Reparieren und Optimieren beendet."
+    ;;
+  2)
+	# rename opensim -> opensim-def und opensim1 -> opensim dann upgrade.
+	cd /$STARTVERZEICHNIS || exit
+	mv opensim opensim-def
+	mv opensim1 opensim
+	osupgrade93
+	log info "Upgrade beendet."
+    ;;
+  3)
+	# opensim auffrischung.
+	# cd /$STARTVERZEICHNIS/opensim || exit
+    # git pull
+	cd /$STARTVERZEICHNIS || exit
+	osbuildingupgrade93
+	log info "Upgrade beendet."
+    ;;
+  4)
+    # Rename opensim -> opensim-def dann download eine Reguläre opensim Version und upgrade.
+	mv opensim opensim-def
+	oscompi93
+	cd /$STARTVERZEICHNIS || exit
+	mv opensim93 opensim
+	log info "Die Reparatur ist beendet."
+    ;;
+  *)
+    log info "Ungültige Eingabe. Bitte wählen Sie einen Punkt von 1 bis 4."
+    ;;
+esac
+}
+
+##*	Funktion: senddata
 	# Datum: 02.10.2023
-	# Beschreibung: Komprimiert ein Verzeichnis und sendet es an einen anderen Server im gleichen Verzeichnis unter Verwendung von rsync.
-	# Parameter:
+	#? Beschreibung: Komprimiert ein Verzeichnis und sendet es an einen anderen Server im gleichen Verzeichnis unter Verwendung von rsync.
+	#? Parameter:
 	#   $1 - Benutzername für den Zielserver
 	#   $2 - Das zu sendende Verzeichnis auf dem lokalen Server
 	#   $3 - Die IP-Adresse oder Hostname des Ziel-Servers
-	# Verwendung:
+	#? Verwendung:
 	#   senddata "Benutzername" "/Pfad/zum/Verzeichnis" "Server-IP-Adresse"
-	# Rückgabewert:
+	#? Rückgabewert:
 	#   Keiner (void)
 ##
 function senddata() {
@@ -15300,13 +14959,12 @@ function senddata() {
 	return 0
 }
 
-##
-	# Funktion: fortschritsanzeige
+##* Funktion: fortschritsanzeige
 	# Datum: 02.10.2023
-	# Beschreibung: Zeigt eine Fortschrittsanzeige mit einem Ladebalken mithilfe von Dialog.
-	# Verwendung:
+	#? Beschreibung: Zeigt eine Fortschrittsanzeige mit einem Ladebalken mithilfe von Dialog.
+	#? Verwendung:
 	#   fortschritsanzeige
-	# Rückgabewert:
+	#? Rückgabewert:
 	#   Keiner (void)
 ##
 function fortschritsanzeige() {
@@ -15328,13 +14986,12 @@ function fortschritsanzeige() {
 }
 
 
-##
-	# Funktion: menuinfo
+##* Funktion: menuinfo
 	# Datum: 02.10.2023
-	# Beschreibung: Zeigt Informationen über den Server, das System und aktive Bildschirmsitzungen in einem Dialogfenster an.
-	# Verwendung:
+	#? Beschreibung: Zeigt Informationen über den Server, das System und aktive Bildschirmsitzungen in einem Dialogfenster an.
+	#? Verwendung:
 	#   menuinfo
-	# Rückgabewert:
+	#? Rückgabewert:
 	#   Keiner (void)
 ##
 function menuinfo() {
@@ -15360,13 +15017,12 @@ function menuinfo() {
 	return 0
 }
 
-##
-	# Funktion: menukonsolenhilfe
+##* Funktion: menukonsolenhilfe
 	# Datum: 02.10.2023
-	# Beschreibung: Zeigt die Konsolenhilfe in einem Dialogfenster an.
-	# Verwendung:
+	#? Beschreibung: Zeigt die Konsolenhilfe in einem Dialogfenster an.
+	#? Verwendung:
 	#   menukonsolenhilfe
-	# Rückgabewert:
+	#? Rückgabewert:
 	#   Keiner (void)
 ##
 function menukonsolenhilfe() {
@@ -15381,13 +15037,12 @@ function menukonsolenhilfe() {
 	return 0
 }
 
-##
-	# Funktion: dotnetinfo
+##* Funktion: dotnetinfo
 	# Datum: 02.10.2023
-	# Beschreibung: Zeigt Informationen zu den verschiedenen Versionen von .NET und den zugehörigen C#-Sprachversionen.
-	# Verwendung:
+	#? Beschreibung: Zeigt Informationen zu den verschiedenen Versionen von .NET und den zugehörigen C#-Sprachversionen.
+	#? Verwendung:
 	#   dotnetinfo
-	# Rückgabewert:
+	#? Rückgabewert:
 	#   Keiner (void)
 ##
 function dotnetinfo() {
@@ -15402,13 +15057,12 @@ function dotnetinfo() {
 	echo "dotNET Framework-alle = C# 7.3"
 }
 
-##
-	# Funktion: dbhilfe
+##* Funktion: dbhilfe
 	# Datum: 02.10.2023
-	# Beschreibung: Zeigt eine Liste von mySQL - mariaDB Befehlen und deren Erklärungen für den Umgang mit Datenbanken.
-	# Verwendung:
+	#? Beschreibung: Zeigt eine Liste von mySQL - mariaDB Befehlen und deren Erklärungen für den Umgang mit Datenbanken.
+	#? Verwendung:
 	#   dbhilfe
-	# Rückgabewert:
+	#? Rückgabewert:
 	#   Keiner (void)
 ##
 function dbhilfe() {
@@ -15664,7 +15318,7 @@ function hilfe() {
 	echo "hilfemenu	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
 	echo "historylogclear	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
 	echo "iinstall	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "iinstall2	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "iinstallnew	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
 	echo "info	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
 	echo "infodialog	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
 	echo "install_mysqltuner	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
@@ -17308,8 +16962,6 @@ function mainMenu() {
 		100 "db_region_parzelle" \
 		101 "db_region_parzelle_pakete" \
 		102 "db_restorebackuptabellen" \
-		103 "db_restorebackuptabellen2test" \
-		104 "db_restorebackuptabellen2test2" \
 		105 "db_setpartner" \
 		106 "db_setuserofline" \
 		107 "db_setuserofline_dialog" \
@@ -17355,7 +17007,6 @@ function mainMenu() {
 		147 "fortschritsanzeige" \
 		148 "fpspeicher" \
 		149 "functionslist" \
-		150 "functionslist2" \
 		151 "funktionenmenu" \
 		152 "getcachegroesse" \
 		153 "getcachesinglegroesse" \
@@ -17379,7 +17030,7 @@ function mainMenu() {
 		171 "IGNORE_DOMAIN_IDS2" \
 		172 "IGNORE_SERVER_IDS" \
 		173 "iinstall" \
-		174 "iinstall2" \
+		174 "iinstallnew" \
 		175 "info" \
 		176 "infodialog" \
 		177 "ini_get" \
@@ -17404,7 +17055,6 @@ function mainMenu() {
 		196 "landclear" \
 		197 "lastrebootdatum" \
 		198 "letterdel" \
-		199 "letterdel2" \
 		200 "linuxupgrade" \
 		201 "loadinventar" \
 		202 "log" \
@@ -17496,7 +17146,6 @@ function mainMenu() {
 		288 "nachrichtbox" \
 		289 "namen" \
 		290 "newhelp" \
-		291 "newhelp2" \
 		292 "newregionini" \
 		293 "OpenSimCommands" \
 		294 "opensimgitcopy93" \
@@ -17519,12 +17168,10 @@ function mainMenu() {
 		311 "osgitholen" \
 		312 "osgitholen93" \
 		313 "osgitstatus" \
-		314 "osgitstatus2" \
 		315 "osgridcopy" \
 		316 "osmnotranslate" \
 		317 "osmtoolconfig" \
 		318 "osmtoolconfigabfrage" \
-		319 "osmtoolconfigabfrage2" \
 		320 "osmtranslate" \
 		321 "osmtranslatedirekt" \
 		322 "osmtranslateinstall" \
@@ -17595,7 +17242,6 @@ function mainMenu() {
 		387 "show_info" \
 		388 "simstats" \
 		389 "skriptversion" \
-		390 "skriptversion2" \
 		391 "sourcelist18" \
 		392 "sourcelist22" \
 		393 "systeminformation" \
@@ -17606,24 +17252,20 @@ function mainMenu() {
 		398 "trimm" \
 		399 "trim_all" \
 		400 "trim_string" \
-		401 "trim_string2" \
 		402 "ufwblock" \
 		403 "ufwlog" \
 		404 "ufwoff" \
 		405 "ufwport" \
 		406 "ufwset" \
 		407 "uncompress" \
-		408 "uncompress2" \
 		409 "vardel" \
 		410 "vardelall" \
-		411 "vartest2" \
 		412 "versionsausgabe93" \
 		413 "vornamen" \
 		414 "warnbox" \
 		415 "waslauft" \
 		416 "works" \
 		417 "xhelp" \
-		418 "xhelp2" \
 	2>&1 >/dev/tty)
 	
     case $choice in
@@ -17729,8 +17371,6 @@ function mainMenu() {
 	100) db_region_parzelle;break;;
 	101) db_region_parzelle_pakete;break;;
 	102) db_restorebackuptabellen;break;;
-	103) db_restorebackuptabellen2test;break;;
-	104) db_restorebackuptabellen2test2;break;;
 	105) db_setpartner;break;;
 	106) db_setuserofline;break;;
 	107) db_setuserofline_dialog;break;;
@@ -17776,7 +17416,6 @@ function mainMenu() {
 	147) fortschritsanzeige;break;;
 	148) fpspeicher;break;;
 	149) functionslist;break;;
-	150) functionslist2;break;;
 	151) funktionenmenu;break;;
 	152) getcachegroesse;break;;
 	153) getcachesinglegroesse;break;;
@@ -17800,7 +17439,7 @@ function mainMenu() {
 	171) IGNORE_DOMAIN_IDS2;break;;
 	172) IGNORE_SERVER_IDS;break;;
 	173) iinstall;break;;
-	174) iinstall2;break;;
+	174) iinstallnew;break;;
 	175) info;break;;
 	176) infodialog;break;;
 	177) ini_get;break;;
@@ -17825,7 +17464,6 @@ function mainMenu() {
 	196) landclear;break;;
 	197) lastrebootdatum;break;;
 	198) letterdel;break;;
-	199) letterdel2;break;;
 	200) linuxupgrade;break;;
 	201) loadinventar;break;;
 	202) log;break;;
@@ -17917,7 +17555,6 @@ function mainMenu() {
 	288) nachrichtbox;break;;
 	289) namen;break;;
 	290) newhelp;break;;
-	291) newhelp2;break;;
 	292) newregionini;break;;
 	293) OpenSimCommands;break;;
 	294) opensimgitcopy93;break;;
@@ -17940,12 +17577,10 @@ function mainMenu() {
 	311) osgitholen;break;;
 	312) osgitholen93;break;;
 	313) osgitstatus;break;;
-	314) osgitstatus2;break;;
 	315) osgridcopy;break;;
 	316) osmnotranslate;break;;
 	317) osmtoolconfig;break;;
 	318) osmtoolconfigabfrage;break;;
-	319) osmtoolconfigabfrage2;break;;
 	320) osmtranslate;break;;
 	321) osmtranslatedirekt;break;;
 	322) osmtranslateinstall;break;;
@@ -18016,7 +17651,6 @@ function mainMenu() {
 	387) show_info;break;;
 	388) simstats;break;;
 	389) skriptversion;break;;
-	390) skriptversion2;break;;
 	391) sourcelist18;break;;
 	392) sourcelist22;break;;
 	393) systeminformation;break;;
@@ -18027,24 +17661,20 @@ function mainMenu() {
 	398) trimm;break;;
 	399) trim_all;break;;
 	400) trim_string;break;;
-	401) trim_string2;break;;
 	402) ufwblock;break;;
 	403) ufwlog;break;;
 	404) ufwoff;break;;
 	405) ufwport;break;;
 	406) ufwset;break;;
 	407) uncompress;break;;
-	408) uncompress2;break;;
 	409) vardel;break;;
 	410) vardelall;break;;
-	411) vartest2;break;;
 	412) versionsausgabe93;break;;
 	413) vornamen;break;;
 	414) warnbox;break;;
 	415) waslauft;break;;
 	416) works;break;;
 	417) xhelp;break;;
-	418) xhelp2;break;;
 	*) break;;
 	esac
 done
@@ -18082,40 +17712,6 @@ function newhelp() {
 	echo " Der Kommando aufruf:"
 	echo "$(tput setaf $FARBE1) $(tput setab $FARBE2)#? Beispiel: bash osmtool.sh oscommand sim1 Welcome \"alert Hallo Welt\" $(tput sgr 0)"
 	echo "$(tput setaf $FARBE1) $(tput setab $FARBE2)#? Beispiel: bash osmtool.sh oscommand sim1 Welcome \"alert-user John Doe Hallo John Doe\" $(tput sgr 0)"
-}
-
-##	#* Funktion: newhelp2
-	# Datum: 02.10.2023	
-	#? Beschreibung:
-	# Diese Funktion zeigt eine Hilfeanzeige für das Shell-Skript "osmtool.sh" an und erläutert die verfügbaren Optionen und Verwendungszwecke.
-	#? Parameter: Keine
-	#? Funktionsverhalten:
-	#   - Zeigt eine Übersicht der verfügbaren Optionen und deren Bedeutungen.
-	#   - Erklärt die Verwendung des Shell-Skripts und zeigt Beispiele für die Befehlseingabe.
-	#? Beispielaufruf:
-	#   newhelp2
-	#? Rückgabewert: Die Funktion gibt die Hilfeanzeige auf dem Bildschirm aus.
-	#? Hinweise:
-	#   - Passen Sie die Hilfeanzeige an die spezifischen Anforderungen des "osmtool.sh"-Skripts an.
-##
-function newhelp2() {
-	log rohtext "Display Hilfe"
-	log rohtext "Syntax: osmtool.sh [h|hilfe|konsolenhilfe|dbhilfe|commandhelp|RobustCommands|OpenSimCommands|hda]"
-	log rohtext "Optionen:"
-	log info "h                       Zeigt diese hilfe."
-	log info "hilfe                   Haupthilfefunktionen."
-	log info "konsolenhilfe           Konsolenhilfe dreht sich um Putty."
-	log info "dbhilfe                 Hilfe rund um die Datenbankmanipulation."
-	log info "commandhelp             OpenSimulator Kommandos in Deutsch."
-	log info "RobustCommands          Robust Kommandos."
-	log info "OpenSimCommands         OpenSimulator Kommandos."
-	log info "MoneyServerCommands     MoneyServer Kommandos."
-	log info "all                     Alle OpenSimulator Konsolenkommandos."
-	log info "hda                     Dialog Menue direktaufrufe."
-	echo " "
-	log rohtext " Der Kommando aufruf:"
-	log rohtext "#? Beispiel: bash osmtool.sh oscommand sim1 Welcome \"alert Hallo Welt\" "
-	log rohtext "#? Beispiel: bash osmtool.sh oscommand sim1 Welcome \"alert-user John Doe Hallo John Doe\" "
 }
 
 #──────────────────────────────────────────────────────────────────────────────────────────
@@ -18497,6 +18093,7 @@ case $KOMMANDO in
 	laeuftos) laeuftos "$2" ;;
 	createmanual) createmanual ;;
 	delete_emty_mark) delete_emty_mark "$2" "$3" ;;
+	osreparatur) osreparatur ;;
 	mainMenu) mainMenu ;;
 	hda | hilfedirektaufruf | hilfemenudirektaufrufe) hilfemenudirektaufrufe ;;
 	h) newhelp ;;
