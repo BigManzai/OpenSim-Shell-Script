@@ -767,8 +767,7 @@ KOMMANDO=$1
 #──────────────────────────────────────────────────────────────────────────────────────────
 
 ## * dummyvar
-	# shellcheck disable=SC2034 umgehen.
-	# Shell-Check ueberlisten wegen der Konfigurationsdatei, 
+	# Fehlermeldungen ueberlisten wegen der Konfigurationsdatei, 
 	# hat sonst keinerlei Funktion und wird auch nicht aufgerufen.
 	#? @param keine.
 	#? @return nichts wird zurueckgegeben.
@@ -17705,6 +17704,7 @@ function mainMenu() {
 	*) break;;
 	esac
 done
+exit 0;
 }
 
 ## *  newhelp
