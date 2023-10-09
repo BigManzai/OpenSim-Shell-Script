@@ -20,7 +20,7 @@
 	# ! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 	# ! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#
-	# * Status 09.10.2023 ca´ 418 Funktionen.
+	# * Letzte bearbeitung 09.10.2023.
 	#
 	# # Installieren sie bitte: #* Visual Studio Code
 	#* dazu die Plugins:
@@ -36,7 +36,7 @@
 #──────────────────────────────────────────────────────────────────────────────────────────
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.1296" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.1297" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 #──────────────────────────────────────────────────────────────────────────────────────────
@@ -1765,7 +1765,8 @@ function menuosstarteintragdel() {
 	dateimenu
 }
 
-## * osdauerstop - Stoppt einen OpenSimulator-Server und entfernt ihn aus der Startliste.
+## * osdauerstop 
+	# Stoppt einen OpenSimulator-Server und entfernt ihn aus der Startliste.
 	# Diese Funktion stoppt einen OpenSimulator-Server, der in einem GNU Screen-Prozess
 	# läuft, und entfernt ihn aus der Liste der gestarteten Server. Der Name des Screens
 	# wird als Argument übergeben.
@@ -1802,7 +1803,8 @@ function osdauerstop() {
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then hauptmenu; fi
 }
 
-## * menuosdauerstop - Stoppt einen OpenSimulator-Server und entfernt ihn aus der Startliste.
+## * menuosdauerstop 
+	# Stoppt einen OpenSimulator-Server und entfernt ihn aus der Startliste.
 	# Diese Funktion stoppt einen OpenSimulator-Server, der in einem GNU Screen-Prozess
 	# läuft, und entfernt ihn aus der Liste der gestarteten Server. Der Name des Screens
 	# wird als Argument übergeben.
@@ -6463,7 +6465,8 @@ function menuautosimstop() {
 }
 
 ## * autologdel
-	# Diese Funktion löscht Log-Dateien für OpenSimulator-Regionen. Sie durchläuft alle Verzeichnisse in der Verzeichnisliste und löscht die Log-Dateien im Verzeichnis "/$STARTVERZEICHNIS/VERZEICHNISSLISTE/bin/". Wenn eine Log-Datei nicht vorhanden ist, wird eine Warnung protokolliert. Nach dem Löschen der Regionen-Log-Dateien wird die Funktion "rologdel()" aufgerufen, um Root-Log-Dateien zu löschen.
+	# Diese Funktion löscht Log-Dateien für OpenSimulator-Regionen. Sie durchläuft alle Verzeichnisse in der Verzeichnisliste und löscht die Log-Dateien im Verzeichnis. 
+	# Wenn eine Log-Datei nicht vorhanden ist, wird eine Warnung protokolliert. Nach dem Löschen der Regionen-Log-Dateien wird die Funktion rologdel aufgerufen, um Root-Log-Dateien zu löschen.
 	#? Parameter: Keine
 	#? Rückgabewert:
 	#   - Kein expliziter Rückgabewert
@@ -6487,7 +6490,8 @@ function autologdel() {
 }
 
 ## * menuautologdel
-	# Diese Funktion löscht Log-Dateien für OpenSimulator-Regionen. Sie durchläuft alle Verzeichnisse in der Verzeichnisliste und löscht die Log-Dateien im Verzeichnis "/$STARTVERZEICHNIS/VERZEICHNISSLISTE/bin/". Nach dem Löschen der Regionen-Log-Dateien wird die Funktion "rologdel()" aufgerufen, um Root-Log-Dateien zu löschen.
+	# Diese Funktion löscht Log-Dateien für OpenSimulator-Regionen. Sie durchläuft alle Verzeichnisse in der Verzeichnisliste und löscht die Log-Dateien im Verzeichnis. 
+	# Nach dem Löschen der Regionen-Log-Dateien wird die Funktion rologdel aufgerufen, um Root-Log-Dateien zu löschen.
 	#? Parameter: Keine
 	#? Rückgabewert:
 	#   - Kein expliziter Rückgabewert
@@ -6512,7 +6516,8 @@ function menuautologdel() {
 }
 
 ## * automapdel
-	# Diese Funktion löscht Kartenkacheln (maptiles) für OpenSimulator-Regionen. Sie durchläuft alle Verzeichnisse in der Verzeichnisliste und löscht den Inhalt des Verzeichnisses "maptiles" im Verzeichnis "/$STARTVERZEICHNIS/VERZEICHNISSLISTE/bin/". Nach dem Löschen der Kartenkacheln für die Regionen wird die Funktion "autorobustmapdel()" aufgerufen, um auch die Kartenkacheln für die Robust-Instanz zu löschen.
+	# Diese Funktion löscht Kartenkacheln (maptiles) für OpenSimulator-Regionen. Sie durchläuft alle Verzeichnisse in der Verzeichnisliste und löscht den Inhalt des Verzeichnisses maptiles im Verzeichnis. 
+	# Nach dem Löschen der Kartenkacheln für die Regionen wird die Funktion autorobustmapdel aufgerufen, um auch die Kartenkacheln für die Robust-Instanz zu löschen.
 	#? Parameter: Keine
 	#? Rückgabewert:
 	#   - Kein expliziter Rückgabewert
@@ -6534,7 +6539,8 @@ function automapdel() {
 }
 
 ## * autorobustmapdel
-	# Diese Funktion löscht die Kartenkacheln (maptiles) für die Robust-Instanz von OpenSimulator. Sie navigiert zum Verzeichnis der Robust-Instanz und löscht den Inhalt des Verzeichnisses "maptiles" im Verzeichnis "/$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/".
+	# Diese Funktion löscht die Kartenkacheln (maptiles) für die Robust-Instanz von OpenSimulator. 
+	# Sie navigiert zum Verzeichnis der Robust-Instanz und löscht den Inhalt des Verzeichnisses "maptiles" im Verzeichnis.
 	#? Parameter: Keine
 	#? Rückgabewert:
 	#   - Kein expliziter Rückgabewert
@@ -6550,7 +6556,7 @@ function autorobustmapdel() {
 }
 
 ## * cleaninstall
-	# Diese Funktion löscht den Inhalt des Verzeichnisses /addon-modules/ im OpenSimulator-Verzeichnis,
+	# Diese Funktion löscht den Inhalt des Verzeichnisses addon-modules im OpenSimulator-Verzeichnis,
 	# sofern dieses Verzeichnis existiert.
 	#? Parameter: Keine
 	#? Rückgabewert:
@@ -6570,7 +6576,7 @@ function cleaninstall() {
 }
 
 ## * cleanprebuild
-	# Diese Funktion löscht bestimmte Dateien und Verzeichnisse im Verzeichnis /addon-modules/
+	# Diese Funktion löscht bestimmte Dateien und Verzeichnisse im Verzeichnis addon-modules
 	# im OpenSimulator-Verzeichnis, sofern dieses Verzeichnis existiert.
 	#? Parameter: Keine
 	#? Rückgabewert:
