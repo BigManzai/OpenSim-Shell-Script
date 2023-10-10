@@ -20,7 +20,7 @@
 	# ! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 	# ! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#
-	# * Letzte bearbeitung 09.10.2023.
+	# * Letzte bearbeitung 10.10.2023.
 	#
 	# # Installieren sie bitte: #* Visual Studio Code
 	#* dazu die Plugins:
@@ -32,15 +32,15 @@
 #
 
 #──────────────────────────────────────────────────────────────────────────────────────────
-#* Konfiguration opensimMULTITOOL # Letzte Bearbeitung 06.10.2023
+#* Konfiguration opensimMULTITOOL
 #──────────────────────────────────────────────────────────────────────────────────────────
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.1297" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.1301" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 #──────────────────────────────────────────────────────────────────────────────────────────
-#* Admin Funktionen # Letzte bearbeitung 04.10.2023
+#* Admin Funktionen
 #──────────────────────────────────────────────────────────────────────────────────────────
 
 ## *  isroot
@@ -196,7 +196,7 @@ function vardelall() {
 }
 
 #──────────────────────────────────────────────────────────────────────────────────────────
-#* Konfiguration opensimMULTITOOL # Letzte Bearbeitung 04.10.2023
+#* Konfiguration opensimMULTITOOL
 #──────────────────────────────────────────────────────────────────────────────────────────
 #? Beschreibung: Dies dient dazu, wichtige Konfigurationsinformationen für das OSM-Tool zu initialisieren.
 
@@ -742,7 +742,7 @@ function osmtoolconfigabfrage() {
 }
 
 #──────────────────────────────────────────────────────────────────────────────────────────
-#* Konfiguration opensimMULTITOOL # Letzte Bearbeitung 26.09.2023
+#* Konfiguration opensimMULTITOOL
 #──────────────────────────────────────────────────────────────────────────────────────────
 # Nutzer mit Konfigurationsfragen quaelen
 # Abfrage Konfig Einstellungen
@@ -1489,7 +1489,8 @@ function makeregionsliste() {
 	return 0
 }
 
-## * mysqlrest 
+## * mysqlrest
+	# Dies funktioniert nur mit mySQL.
 	# Eine Funktion zum Ausführen von MySQL-Befehlen und Erfassen des Ergebnisses.
 	#? Verwendung: mysqlrest <Benutzername> <Passwort> <Datenbankname> <MySQL-Befehl>
 	# Diese Funktion führt den angegebenen MySQL-Befehl in der angegebenen Datenbank aus und erfasst das Ergebnis.
@@ -1512,7 +1513,49 @@ function mysqlrest() {
 
     # Ausführen des MySQL-Befehls und Erfassen des Ergebnisses
 	result_mysqlrest=$(echo "$mysqlcommand;" | MYSQL_PWD=$password mysql -u"$username" "$databasename" -N) 2>/dev/null
-    # result_mysqlrest=$(echo "$mysqlcommand;" | MYSQL_PWD="$password" mysql -u"$username" "$databasename" -N 2>/dev/null)  #** NEU testen
+}
+
+## * mariadbrest
+	# Eine Funktion zum Ausführen von MySQL-Befehlen und Erfassen des Ergebnisses.
+	#? Verwendung: mysqlrest <Benutzername> <Passwort> <Datenbankname> <MySQL-Befehl>
+	# Diese Funktion führt den angegebenen MySQL-Befehl in der angegebenen Datenbank aus und erfasst das Ergebnis.
+	# Das Ergebnis wird in der globalen Variable result_mysqlrest gespeichert.
+	#? Argumente:
+	#   Benutzername - Der MySQL-Benutzername für die Datenbankverbindung.
+	#   Passwort - Das Passwort für die Datenbankverbindung.
+	#   Datenbankname - Der Name der Datenbank, in der der Befehl ausgeführt werden soll.
+	#   MySQL-Befehl - Der zu auszuführende MySQL-Befehl.
+	#? Beispiel:
+	# mysqlrest myuser mypassword mydb "SELECT * FROM mytable"
+##
+function mariadbrest() {
+	# Letzte Bearbeitung 10.10.2023
+
+    # Verbindungsinformationen
+    username="$1"
+    password="$2"
+    databasename="$3"
+    mysqlcommand="$4"
+
+	if [ -z "$username" ]; then echo "Verwendung: mariadbrest <Benutzername> <Passwort> <Datenbankname> [Kommando]"; exit 1; fi
+	if [ -z "$password" ]; then echo "Verwendung: mariadbrest <Benutzername> <Passwort> <Datenbankname> [Kommando]"; exit 1; fi
+	if [ -z "$databasename" ]; then echo "Verwendung: mariadbrest <Benutzername> <Passwort> <Datenbankname> [Kommando]"; exit 1; fi
+	if [ -z "$mysqlcommand" ]; then echo "Verwendung: mariadbrest <Benutzername> <Passwort> <Datenbankname> [Kommando]"; exit 1; fi
+
+    # Prüfen, ob MariaDB-Client installiert ist
+    if ! command -v mysql &> /dev/null; then
+        echo "Der MariaDB-Client ist nicht installiert. Bitte installieren Sie ihn zuerst."
+        return 1
+    fi
+
+    # Ausführen des MySQL-Befehls und Erfassen des Ergebnisses
+	result_mysqlrest=$(echo "$mysqlcommand;" | MYSQL_PWD=$password mysql -u"$username" "$databasename" -N) 2>/dev/null
+	
+	# Testausgabe des MySQL-Befehls
+	echo "$result_mysqlrest"
+
+	# Erfolgreiche Ausführung
+	return 0
 }
 
 ## * mysqlrestnodb 
@@ -2215,13 +2258,15 @@ function schreibeinfo() {
 # *Kopfzeile in die Log Datei schreiben.
 schreibeinfo
 
-## * rebootdatum .
-	# letzter reboot des Servers.
-	# Die Funktion `rebootdatum()` ermittelt das Datum des letzten Systemneustarts
-	# und informiert den Benutzer über die vergangene Zeit seit dem letzten Neustart.
-	#? @param keine.
-	#? @return nichts wird zurueckgegeben.
-	# todo: nichts.
+## * rebootdatum
+	# Ermittelt das Datum des letzten Systemneustarts und informiert den Benutzer über die vergangene Zeit seit dem letzten Neustart.
+	#? Beschreibung:
+	# Die Funktion rebootdatum ermittelt das Datum des letzten Systemneustarts
+	# und zeigt dem Benutzer die vergangene Zeit seit dem letzten Neustart an.
+	#? Parameter:
+	# Es sind keine Parameter erforderlich.
+	#? Rückgabe:
+	# Diese Funktion gibt nichts zurück.
 ##
 function rebootdatum() {
 	# Letzte Bearbeitung 28.09.2023
@@ -2265,7 +2310,8 @@ function rebootdatum() {
 }
 
 ## *  reboot
-	#? Beschreibung: Startet den Server neu.
+	#? Beschreibung: 
+	# Startet den Server neu.
 	#? Parameter: Keine.
 	#? Rückgabewert: Es wird nichts zurückgegeben.
 	#? Aufgaben: 
@@ -14881,7 +14927,7 @@ function backupdatum() {
 	return 0
 }
 
-## * 	Funktion: osreparatur
+## *  osreparatur
 	# Datum: 08.10.2023
 	#! Test für OpenSim 0.9.3 es ist nicht funktionsfähig!!!!!
 	#? Beschreibung: 
@@ -14941,7 +14987,7 @@ case $osrauswahl in
 esac
 }
 
-## * 	Funktion: senddata
+## *  senddata
 	# Datum: 02.10.2023
 	#? Beschreibung: Komprimiert ein Verzeichnis und sendet es an einen anderen Server im gleichen Verzeichnis unter Verwendung von rsync.
 	#? Parameter:
@@ -16019,7 +16065,7 @@ echo "
 "
 }
 
-## * all.
+## * all
 	# Ruft die Hilfen fuer Robust Commands, OpenSim Commands, Money Server Commands auf.
 	# 
 	#? @param name Erklaerung.
@@ -16049,7 +16095,7 @@ function menutrans() {
 	if [ "$OSMTRANSLATOR" = "ON" ]; then trans -brief -no-warn $OSMTRANS "$OSMTRANSTEXT"; fi
 }
 
-## * hauptmenu.
+## * hauptmenu
 	# Startmenue.
 	# 
 	#? @param name Erklaerung.
@@ -16152,7 +16198,7 @@ function hauptmenu() {
 	fi
 }
 
-## * hilfemenu.
+## * hilfemenu
 	# Menue der Hilfe.
 	# 
 	#? @param name Erklaerung.
@@ -16230,7 +16276,7 @@ function hilfemenu() {
 	fi
 }
 
-## * funktionenmenu.
+## * funktionenmenu
 	# Menue fuer Funktionen.
 	# 
 	#? @param name Erklaerung.
@@ -16329,7 +16375,7 @@ function funktionenmenu() {
 	fi
 }
 
-## * dateimenu.
+## * dateimenu
 	# Menue fuer Dateifunktionen.
 	# 
 	#? @param name Erklaerung.
@@ -16425,7 +16471,7 @@ function dateimenu() {
 	fi
 }
 
-## * mySQLmenu.
+## * mySQLmenu
 	# Menue fuer SQL Funktionen.
 	# 
 	#? @param name Erklaerung.
@@ -16542,7 +16588,7 @@ function mySQLmenu() {
 	fi
 }
 
-## * avatarmenu.
+## * avatarmenu
 	# Menue fuer Benutzerfunktionen.
 	# 
 	#? @param name Erklaerung.
@@ -16635,7 +16681,7 @@ function avatarmenu() {
 	fi
 }
 
-## * expertenmenu.
+## * expertenmenu
 	# Menuepunkte fuer Experten.
 	# 
 	#? @param name Erklaerung.
@@ -16752,7 +16798,7 @@ function expertenmenu() {
 	fi
 }
 
-## * buildmenu.
+## * buildmenu
 	# Menue zum erstellen von OpenSim Versionen.
 	# 
 	#? @param name Erklaerung.
@@ -16868,8 +16914,8 @@ function buildmenu() {
 }
 
 ## *  mainMenu Test alle Funktionen
-	# Shell-Skript-Menü mit 418 Funktionen
-	# Dieses Skript bietet ein Menü mit 418 verschiedenen Funktionen, die der Benutzer auswählen und ausführen kann.
+	# Shell-Skript-Menü mit allen Funktionen
+	# Dieses Skript bietet ein Menü mit verschiedenen Funktionen, die der Benutzer auswählen und ausführen kann.
 	#! !!!!! WARNUNG !!!!! Dies darf nur von Personen die wissen was sie machen benutzt werden.
 	#! !!!!! WARNING !!!!! This should only be used by people who know what they are doing.
 	#? Verwendung:
@@ -17781,6 +17827,7 @@ function ostimestamp() {
 #──────────────────────────────────────────────────────────────────────────────────────────
 #* Eingabeauswertung Konsolenmenue Funktionsgruppe
 #──────────────────────────────────────────────────────────────────────────────────────────
+
 case $KOMMANDO in
 	AutoInstall) AutoInstall ;;
 	ConfigSet) ConfigSet "$2" ;;
@@ -18045,6 +18092,8 @@ case $KOMMANDO in
 	db_region_anzahl_regionsnamen) db_region_anzahl_regionsnamen "$2" "$3" "$4" ;;
 	db_region_anzahl_regionsid) db_region_anzahl_regionsid "$2" "$3" "$4" ;;
 	db_inventar_no_assets) db_inventar_no_assets "$2" "$3" "$4" ;;
+	mysqlrest) mysqlrest "$2" "$3" "$4" "$5" ;;
+	mariadbrest) mariadbrest "$2" "$3" "$4" "$5" ;;
 	iptablesset) iptablesset "$2" ;;
 	fail2banset) fail2banset ;;
 	db_gridlist) db_gridlist "$2" "$3" "$4" ;;
