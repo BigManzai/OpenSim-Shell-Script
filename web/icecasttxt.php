@@ -9,6 +9,7 @@
 // Funktion zum Abrufen und Aktualisieren der JSON-Daten
 function updateData() {
     $url = 'http://ec3.yesstreaming.net:3220/status-json.xsl';
+    //$url = 'http://dein-icecast-server/stream/status-json.xsl';
     $jsonData = file_get_contents($url);
     echo "<h1>Icecast2 Sender Daten:</h1><br>";
 
