@@ -1,7 +1,8 @@
 <?php
 /*
-The above code creates a simple web interface for your users to start, stop, or restart the OpenSim server. 
-You can customize this HTML and CSS according to your preferences, but it should be enough for now.
+  The above code creates a simple web interface for your users. 
+  You can customize this HTML and CSS according to your preferences, 
+  but it should be enough for now.
 */
 ?>
 
