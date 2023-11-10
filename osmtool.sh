@@ -20,7 +20,7 @@
 	# ! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 	# ! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#
-	# * Letzte bearbeitung 10.10.2023.
+	# * Letzte bearbeitung 11.11.2023.
 	#
 	# # Installieren sie bitte: #* Visual Studio Code
 	#* dazu die Plugins:
@@ -36,7 +36,7 @@
 #──────────────────────────────────────────────────────────────────────────────────────────
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.1301" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.1304" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 #──────────────────────────────────────────────────────────────────────────────────────────
@@ -14354,6 +14354,29 @@ function oszipupgrade() {
 	return 0
 }
 
+function pcampbot() {
+	PCBfirstname=$1
+	PCBlastname=$2
+	PCBpassword=$3	
+	PCBregion=$4
+	PCBanzahl=$5
+
+	log line
+	log info "Test Bots erstellen die sich auf einer Region bewegen."
+	log line
+
+	if [ "$PCBanzahl" = "" ]; then PCBanzahl=0; fi
+
+	cd /"$ROBUSTVERZEICHNIS" || exit
+
+	# DOTNET oder mono
+	if [[ "${DOTNETMODUS}" == "yes" ]]; then
+	screen -fa -S PCB -d -U -m dotnet pCampBot.dll -loginuri http://127.0.0.1:8002 -s $PCBregion -firstname $PCBfirstname -lastname $PCBlastname -password $PCBpassword -botcount $PCBanzahl -b p
+	else
+	screen -fa -S PCB -d -U -m mono pCampBot.exe -loginuri http://127.0.0.1:8002 -s $PCBregion -firstname $PCBfirstname -lastname $PCBlastname -password $PCBpassword -botcount $PCBanzahl -b p
+	fi
+}
+
 #──────────────────────────────────────────────────────────────────────────────────────────
 #* Automatische Konfigurationen Prototype Funktionsgruppe
 #──────────────────────────────────────────────────────────────────────────────────────────
@@ -16065,6 +16088,38 @@ echo "
 "
 }
 
+## * pCampbotCommands.
+	# pCampbot Commands.
+	# 
+	#? @param name Erklaerung.
+	#? @return name was wird zurueckgegeben.
+	# todo: nichts.
+##  
+function pCampbotCommands() {
+echo "$(tput setaf $FARBE1) $(tput setab $FARBE2) pCampbot Commands $(tput sgr 0)$(tput setaf $FARBE2) $(tput setab $FARBE1)Dies sind die Kommandos der pCampbot Konsole. $(tput sgr 0)"
+echo "
+# add behaviour <abgekürzter Name> [<Bot Nummer>] – Fügt einem Bot ein Verhalten hinzu.
+# connect [<n>] - Bots verbinden.
+# debug lludp packet <Ebene> <Vorname des Avatars> <Nachname des Avatars> – Aktiviert die Protokollierung empfangener Pakete.
+# disconnect [<n>] - Bots trennen.
+# help [<item>] - Hilfe zu einem bestimmten Befehl oder zu einer Liste von Befehlen in einer Kategorie anzeigen.
+# quit - Bots herunterfahren und beenden.
+# remove behaviour <abgekürzter Name> [<Bot-Nummer>] – Entfernt ein Verhalten von einem Bot.
+# set bots <key> <value> - Legt eine Einstellung für alle Bots fest.
+# show bot <bot-number> - Zeigt den detaillierten Status und die Einstellungen eines bestimmten Bots an.
+# show bots - Zeigt den Status aller Bots an.
+# show regions - Bots bekannte Regionen anzeigen.
+# show stats [list|all|(<category>[.<container>])+ - Alias für den Befehl „stats show“.
+# show status - Zeigt den pCampbot-Status an.
+# shutdown - Bots herunterfahren und beenden.
+# sit - Alle Bots hinsetzen.
+# stand - Alle Bots stehen.
+# stats record start|stop - Steuert ob Statistiken regelmäßig in einer separaten Datei aufgezeichnet werden.
+# stats save <path> - Speichert den Statistik-Snapshot in einer Datei. Wenn die Datei bereits vorhanden ist, wird der Bericht angehängt.
+# stats show [list|all|(<category>[.<container>])+ - Statistische Informationen für diesen Server anzeigen.
+"
+}
+
 ## * all
 	# Ruft die Hilfen fuer Robust Commands, OpenSim Commands, Money Server Commands auf.
 	# 
@@ -16076,6 +16131,7 @@ function all() {
 RobustCommands
 OpenSimCommands
 MoneyServerCommands
+pCampbotCommands
 }
 
 #──────────────────────────────────────────────────────────────────────────────────────────
@@ -16161,7 +16217,7 @@ function hauptmenu() {
 		#osmtranslate $OPTIONS
 
 		mauswahl=$(dialog --backtitle "$BACKTITLE" --title "$TITLE" --help-button --defaultno --menu "$MENU" $HEIGHT $WIDTH $CHOICE_HEIGHT "${OPTIONS[@]}" 2>&1 >/dev/tty)
-		antwort=$?
+		mantwort=$?
 		#dialogclear
 		dialog --clear
 		ScreenLog
@@ -16190,8 +16246,8 @@ function hauptmenu() {
 		if [[ $mauswahl = "$BuildFunktionen" ]]; then buildmenu; fi
 		if [[ $mauswahl = "$Avatarmennu" ]]; then avatarmenu; fi
 
-		if [[ $antwort = 2 ]]; then hilfemenu; fi
-		if [[ $antwort = 1 ]]; then exit; fi
+		if [[ $mantwort = 2 ]]; then hilfemenu; fi
+		if [[ $mantwort = 1 ]]; then exit; fi
 	else
 		# wenn dialog nicht installiert ist die Hilfe anzeigen.
 		hilfe
@@ -16216,9 +16272,10 @@ function hilfemenu() {
 	Hilfe=$(menutrans "Hilfe")
 	Konsolenhilfe=$(menutrans "Konsolenhilfe")
 	Kommandohilfe=$(menutrans "Kommandohilfe")
-	RobustCommands=$(menutrans "RobustCommands")
-	OpenSimCommands=$(menutrans "OpenSimCommands")
+	RobustCommands=$(menutrans "RobustCommands")	
+	pCampbotCommands=$(menutrans "pCampbotCommands")
 	MoneyServerCommands=$(menutrans "MoneyServerCommands")
+	RobustCommands=$(menutrans "RobustCommands")
 	Konfigurationlesen=$(menutrans "Konfiguration lesen")
 
 	Passwortgenerator=$(menutrans "Passwortgenerator")
@@ -16234,6 +16291,7 @@ function hilfemenu() {
 			"$RobustCommands" ""
 			"$OpenSimCommands" ""
 			"$MoneyServerCommands" ""
+			"$pCampbotCommands" ""
 			"$Konfigurationlesen" ""
 			"--------------------------" ""
 			"$Passwortgenerator" ""
@@ -16241,16 +16299,10 @@ function hilfemenu() {
 			"--------------------------" ""
 			"$Hauptmenu" "")
 
-		hauswahl=$(dialog --clear \
-			--backtitle "$BACKTITLE" \
-			--title "$TITLE" \
-			--help-button --defaultno \
-			--menu "$MENU" \
-			$HEIGHT $WIDTH $CHOICE_HEIGHT \
-			"${OPTIONS[@]}" \
-			2>&1 >/dev/tty) # 3>&1 1>&2 2>&3
+		#hauswahl=$(dialog --clear --backtitle "$BACKTITLE" --title "$TITLE" --help-button --defaultno --menu "$MENU" $HEIGHT $WIDTH $CHOICE_HEIGHT "${OPTIONS[@]}" 2>&1 >/dev/tty)
+		hauswahl=$(dialog --backtitle "$BACKTITLE" --title "$TITLE" --defaultno --menu "$MENU" $HEIGHT $WIDTH $CHOICE_HEIGHT "${OPTIONS[@]}" 2>&1 >/dev/tty)
 
-		antwort=$?
+		hantwort=$?
 		#dialogclear
 		dialog --clear
 		ScreenLog
@@ -16262,6 +16314,7 @@ function hilfemenu() {
 		if [[ $hauswahl = "$RobustCommands" ]]; then RobustCommands; fi
 		if [[ $hauswahl = "$OpenSimCommands" ]]; then OpenSimCommands; fi
 		if [[ $hauswahl = "$MoneyServerCommands" ]]; then MoneyServerCommands; fi
+		if [[ $hauswahl = "$pCampbotCommands" ]]; then pCampbotCommands; fi
 
 		if [[ $hauswahl = "$Konfigurationlesen" ]]; then menuoswriteconfig; fi
 
@@ -16269,7 +16322,7 @@ function hilfemenu() {
 		if [[ $hauswahl = "$Kalender" ]]; then kalender; fi
 
 		if [[ $hauswahl = "$Hauptmenu" ]]; then hauptmenu; fi
-		if [[ $antwort = 1 ]]; then hauptmenu; fi
+		if [[ $hantwort = 1 ]]; then hauptmenu; fi
 	else
 		# wenn dialog nicht installiert ist die Hilfe anzeigen.
 		hilfe
@@ -16335,16 +16388,9 @@ function funktionenmenu() {
 			"$BuildFunktionen" ""
 			"$ExpertenFunktionen" "")
 
-		fauswahl=$(dialog --clear \
-			--backtitle "$BACKTITLE" \
-			--title "$TITLE" \
-			--help-button --defaultno \
-			--menu "$MENU" \
-			$HEIGHT $WIDTH $CHOICE_HEIGHT \
-			"${OPTIONS[@]}" \
-			2>&1 >/dev/tty) # 3>&1 1>&2 2>&3
+		fauswahl=$(dialog --backtitle "$BACKTITLE" --title "$TITLE" --help-button --defaultno --menu "$MENU" $HEIGHT $WIDTH $CHOICE_HEIGHT "${OPTIONS[@]}" 2>&1 >/dev/tty)
 
-		antwort=$?
+		fantwort=$?
 		#dialogclear
 		dialog --clear
 		ScreenLog
@@ -16367,8 +16413,8 @@ function funktionenmenu() {
 		if [[ $fauswahl = "$BuildFunktionen" ]]; then buildmenu; fi
 		if [[ $fauswahl = "$Avatarmennu" ]]; then avatarmenu; fi
 
-		if [[ $antwort = 2 ]]; then hilfemenu; fi
-		if [[ $antwort = 1 ]]; then exit; fi
+		if [[ $fantwort = 2 ]]; then hilfemenu; fi
+		if [[ $fantwort = 1 ]]; then exit; fi
 	else
 		# wenn dialog nicht installiert ist die Hilfe anzeigen.
 		hilfe
@@ -16430,16 +16476,8 @@ function dateimenu() {
 			"$BuildFunktionen" ""
 			"$ExpertenFunktionen" "")
 
-		dauswahl=$(dialog --clear \
-			--backtitle "$BACKTITLE" \
-			--title "$TITLE" \
-			--help-button --defaultno \
-			--menu "$MENU" \
-			$HEIGHT $WIDTH $CHOICE_HEIGHT \
-			"${OPTIONS[@]}" \
-			2>&1 >/dev/tty) # 3>&1 1>&2 2>&3
-
-		antwort=$?
+		dauswahl==$(dialog --backtitle "$BACKTITLE" --title "$TITLE" --help-button --defaultno --menu "$MENU" $HEIGHT $WIDTH $CHOICE_HEIGHT "${OPTIONS[@]}" 2>&1 >/dev/tty)
+		dantwort=$?
 		#dialogclear
 		dialog --clear
 		ScreenLog
@@ -16463,8 +16501,8 @@ function dateimenu() {
 		if [[ $dauswahl = "$BuildFunktionen" ]]; then buildmenu; fi
 		if [[ $dauswahl = "$Avatarmennu" ]]; then avatarmenu; fi
 
-		if [[ $antwort = 2 ]]; then hilfemenu; fi
-		if [[ $antwort = 1 ]]; then exit; fi
+		if [[ $dantwort = 2 ]]; then hilfemenu; fi
+		if [[ $dantwort = 1 ]]; then exit; fi
 	else
 		# wenn dialog nicht installiert ist die Hilfe anzeigen.
 		hilfe
@@ -16545,7 +16583,7 @@ function mySQLmenu() {
 			"$ExpertenFunktionen" "")
 
 		mysqlauswahl=$(dialog --backtitle "$BACKTITLE" --title "$TITLE" --help-button --defaultno --menu "$MENU" $HEIGHT $WIDTH $CHOICE_HEIGHT "${OPTIONS[@]}" 2>&1 >/dev/tty)
-		antwort=$?
+		mysqlantwort=$?
 		#dialogclear
 		dialog --clear
 		ScreenLog
@@ -16580,8 +16618,8 @@ function mySQLmenu() {
 		if [[ $mysqlauswahl = "$BuildFunktionen" ]]; then buildmenu; fi
 		if [[ $mysqlauswahl = "$Avatarmennu" ]]; then avatarmenu; fi
 
-		if [[ $antwort = 2 ]]; then hilfemenu; fi
-		if [[ $antwort = 1 ]]; then exit; fi
+		if [[ $mysqlantwort = 2 ]]; then hilfemenu; fi
+		if [[ $mysqlantwort = 1 ]]; then exit; fi
 	else
 		# wenn dialog nicht installiert ist die Hilfe anzeigen.
 		hilfe
@@ -16641,16 +16679,9 @@ function avatarmenu() {
 			"$BuildFunktionen" ""
 			"$ExpertenFunktionen" "")
 
-		avatarauswahl=$(dialog --clear \
-			--backtitle "$BACKTITLE" \
-			--title "$TITLE" \
-			--help-button --defaultno \
-			--menu "$MENU" \
-			$HEIGHT $WIDTH $CHOICE_HEIGHT \
-			"${OPTIONS[@]}" \
-			2>&1 >/dev/tty) # 3>&1 1>&2 2>&3
+		avatarauswahl=$(dialog --backtitle "$BACKTITLE" --title "$TITLE" --help-button --defaultno --menu "$MENU" $HEIGHT $WIDTH $CHOICE_HEIGHT "${OPTIONS[@]}" 2>&1 >/dev/tty)
 
-		antwort=$?
+		avatarantwort=$?
 		#dialogclear
 		dialog --clear
 		ScreenLog
@@ -16673,8 +16704,8 @@ function avatarmenu() {
 		if [[ $avatarauswahl = "$ExpertenFunktionen" ]]; then expertenmenu; fi
 		if [[ $avatarauswahl = "$BuildFunktionen" ]]; then buildmenu; fi
 
-		if [[ $antwort = 2 ]]; then hilfemenu; fi
-		if [[ $antwort = 1 ]]; then exit; fi
+		if [[ $avatarantwort = 2 ]]; then hilfemenu; fi
+		if [[ $avatarantwort = 1 ]]; then exit; fi
 	else
 		# wenn dialog nicht installiert ist die Hilfe anzeigen.
 		hilfe
@@ -16716,10 +16747,10 @@ function expertenmenu() {
 
 	Hauptmennu=$(menutrans "Hauptmennu")
 	Avatarmennu=$(menutrans "Avatarmennu")
+	WeitereFunktionen=$(menutrans "Weitere Funktionen")
 	Dateimennu=$(menutrans "Dateimennu")
 	mySQLmenu=$(menutrans "mySQLmenu")
 	BuildFunktionen=$(menutrans "Build Funktionen")
-	#ExpertenFunktionen=$(menutrans "Experten Funktionen")
 
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
@@ -16743,22 +16774,13 @@ function expertenmenu() {
 			"----------Menu------------" ""
 			"$Hauptmennu" ""
 			"$Avatarmennu" ""
+			"$WeitereFunktionen" ""
 			"$Dateimennu" ""
 			"$mySQLmenu" ""
-			"$BuildFunktionen" ""
-			"$WeitereFunktionen" "")
+			"$BuildFunktionen" "")
 
-		feauswahl=$(dialog --clear \
-			--backtitle "$BACKTITLE" \
-			--title "$TITLE" \
-			--help-button --defaultno \
-			--menu "$MENU" \
-			$HEIGHT $WIDTH $CHOICE_HEIGHT \
-			"${OPTIONS[@]}" \
-			2>&1 >/dev/tty)
-			
-
-		antwort=$?
+		feauswahl=$(dialog --backtitle "$BACKTITLE" --title "$TITLE" --help-button --defaultno --menu "$MENU" $HEIGHT $WIDTH $CHOICE_HEIGHT "${OPTIONS[@]}" 2>&1 >/dev/tty)
+		fantwort=$?
 		#dialogclear
 		dialog --clear
 		ScreenLog
@@ -16781,8 +16803,6 @@ function expertenmenu() {
 		if [[ $feauswahl = "$ServerInstallationohnemono" ]]; then installopensimulator; fi
 		if [[ $feauswahl = "$MonoInstallation" ]]; then monoinstall; fi
 
-		if [[ $feauswahl = "$Hilfe" ]]; then hilfemenu; fi
-
 		if [[ $feauswahl = "$Dateimennu" ]]; then dateimenu; fi
 		if [[ $feauswahl = "$mySQLmenu" ]]; then mySQLmenu; fi
 		if [[ $feauswahl = "$Hauptmennu" ]]; then hauptmenu; fi
@@ -16790,8 +16810,8 @@ function expertenmenu() {
 		if [[ $feauswahl = "$BuildFunktionen" ]]; then buildmenu; fi
 		if [[ $feauswahl = "$Avatarmennu" ]]; then avatarmenu; fi
 
-		if [[ $antwort = 2 ]]; then hilfemenu; fi
-		if [[ $antwort = 1 ]]; then exit; fi
+		if [[ $fantwort = 2 ]]; then hilfemenu; fi
+		if [[ $fantwort = 1 ]]; then exit 0; fi
 	else
 		# wenn dialog nicht installiert ist die Hilfe anzeigen.
 		hilfe
@@ -16836,9 +16856,9 @@ function buildmenu() {
 
 	Hauptmennu=$(menutrans "Hauptmennu")
 	Avatarmennu=$(menutrans "Avatarmennu")
+	WeitereFunktionen=$(menutrans "Weitere Funktionen")
 	Dateimennu=$(menutrans "Dateimennu")
 	mySQLmenu=$(menutrans "mySQLmenu")
-	BuildFunktionen=$(menutrans "Build Funktionen")
 	ExpertenFunktionen=$(menutrans "Experten Funktionen")
 
 	# zuerst schauen ob dialog installiert ist
@@ -16872,7 +16892,10 @@ function buildmenu() {
 			"$ExpertenFunktionen" "")
 
 		buildauswahl=$(dialog --backtitle "$BACKTITLE" --title "$TITLE" --help-button --defaultno --menu "$MENU" $HEIGHT $WIDTH $CHOICE_HEIGHT "${OPTIONS[@]}" 2>&1 >/dev/tty)
-		antwort=$?
+		buildantwort=$?
+		if [[ $buildantwort = 1 ]]; then exit 0; fi
+		if [[ $buildantwort = 2 ]]; then hilfemenu; fi
+		#warnbox $buildantwort
 		#dialogclear
 		dialog --clear
 		ScreenLog
@@ -16905,8 +16928,8 @@ function buildmenu() {
 		if [[ $buildauswahl = "$ExpertenFunktionen" ]]; then expertenmenu; fi
 		if [[ $buildauswahl = "$Avatarmennu" ]]; then avatarmenu; fi
 
-		if [[ $antwort = 2 ]]; then hilfemenu; fi
-		if [[ $antwort = 1 ]]; then exit; fi
+		#if [[ $buildantwort = 2 ]]; then hilfemenu; fi
+		#if [[ $buildantwort = 1 ]]; then warnbox $buildantwort; fi
 	else
 		# wenn dialog nicht installiert ist die Hilfe anzeigen.
 		hilfe
@@ -17285,6 +17308,7 @@ function mainMenu() {
 	ReplikatKoordinaten "" \
 	robustbackup "" \
 	RobustCommands "" \
+	pCampbotCommands "" \
 	rologdel "" \
 	rostart "" \
 	rostop "" \
@@ -17697,6 +17721,7 @@ function mainMenu() {
 	ReplikatKoordinaten) ReplikatKoordinaten; break ;;
 	robustbackup) robustbackup; break ;;
 	RobustCommands) RobustCommands; break ;;
+	pCampbotCommands) pCampbotCommands; break ;;
 	rologdel) rologdel; break ;;
 	rostart) rostart; break ;;
 	rostop) rostop; break ;;
@@ -17778,7 +17803,8 @@ function newhelp() {
 	echo "commandhelp             $(tput setaf 2)OpenSimulator Kommandos in Deutsch.$(tput sgr 0)"
 	echo "RobustCommands          $(tput setaf 2)Robust Kommandos.$(tput sgr 0)"
 	echo "OpenSimCommands         $(tput setaf 2)OpenSimulator Kommandos.$(tput sgr 0)"
-	echo "MoneyServerCommands     $(tput setaf 2)MoneyServer Kommandos.$(tput sgr 0)"
+	echo "MoneyServerCommands     $(tput setaf 2)MoneyServer Kommandos.$(tput sgr 0)"	
+	echo "pCampbotCommands        $(tput setaf 2)pCampbotCommands Kommandos.$(tput sgr 0)"
 	echo "all                     $(tput setaf 2)Alle OpenSimulator Konsolenkommandos.$(tput sgr 0)"
 	echo "hda                     $(tput setaf 2)Dialog Menue direktaufrufe.$(tput sgr 0)"
 	echo " "
@@ -17888,6 +17914,7 @@ case $KOMMANDO in
     rc | robust | RobustCommands) RobustCommands ;;
     oc | opensim | OpenSimCommands) OpenSimCommands ;;
     mc | money | MoneyServerCommands) MoneyServerCommands ;;
+	pCampbotCommands) pCampbotCommands ;;
     all) all ;;
 	compi | compilieren) compilieren ;;
 	conf_delete) conf_delete "$2" "$3" "$4" ;;
@@ -17956,7 +17983,7 @@ case $KOMMANDO in
 	infodialog) infodialog ;;
 	installationen) installationen ;;
 	installationhttps22) installationhttps22 "$2" "$3" ;;
-	linuxupgrade) linuxupgrade ;;
+	update | linuxupgrade) linuxupgrade ;;
 	installfinish) installfinish ;;
 	installmariadb18) installmariadb18 ;;
 	installmariadb22) installmariadb22 ;;
@@ -17969,7 +17996,6 @@ case $KOMMANDO in
 	landclear) landclear "$2" "$3" ;;
 	ld | logdel) logdel "$2" ;;
 	leere_db) leere_db "$2" "$3" "$4" ;;
-	linuxupgrade) linuxupgrade ;;
 	loadinventar) loadinventar "$2" "$3" "$4" "$5" ;;
 	makeaot) makeaot ;;
 	makeregionsliste) makeregionsliste ;;
@@ -18141,6 +18167,7 @@ case $KOMMANDO in
 	remarklist) remarklist ;;
 	ini_get) ini_get "$2" "$3" "$4" ;;
 	ini_set) ini_set "$2" "$3" "$4" "$5" ;;
+	pcampbot) pcampbot "$2" "$3" "$4" "$5" "$6" ;;
 	randomname) randomname ;;
 	icecaststart) icecaststart ;;
 	icecaststop) icecaststop ;;
@@ -18176,5 +18203,5 @@ case $KOMMANDO in
 	V | v) echo "$SCRIPTNAME $VERSION" ;;
 	*) hauptmenu ;;
 esac
-# vardelall
+#vardelall
 exit 0
