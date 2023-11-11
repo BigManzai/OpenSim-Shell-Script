@@ -36,7 +36,7 @@
 #──────────────────────────────────────────────────────────────────────────────────────────
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.1304" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.1305" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 #──────────────────────────────────────────────────────────────────────────────────────────
@@ -97,6 +97,29 @@ function benutzer() {
         echo "Sie haben kein Recht, das osmtool.sh zu nutzen!"
         exit 1
     fi
+}
+
+## * osmexit
+	# Diese Funktion beendet alles.
+	#? @param keine.
+	#? @return nichts wird zurueckgegeben.
+	# todo: nichts.
+##
+function osmexit() {
+	# Hier wird der Dialog geloescht.
+	dialogclear
+
+	# Den Blauen hintergrud entfernen.
+	echo -e ""; echo -e ""; echo -e ""; echo -e ""; echo -e ""; echo -e ""; echo -e ""; echo -e ""; echo -e ""; echo -e ""
+
+	# Hier wird der Bildschirm gelöscht.	
+	tput clear
+
+	# Text ausgabe.
+	log info "OSM wurde beendet."
+
+	# Beenden
+	exit
 }
 
 ## * osmupgrade
@@ -16151,6 +16174,81 @@ function menutrans() {
 	if [ "$OSMTRANSLATOR" = "ON" ]; then trans -brief -no-warn $OSMTRANS "$OSMTRANSTEXT"; fi
 }
 
+## * hilfemenu
+	# Menue der Hilfe.
+	# 
+	#? @param name Erklaerung.
+	#? @return name was wird zurueckgegeben.
+	# todo: nichts.
+##
+function hilfemenu() {
+	HEIGHT=0
+	WIDTH=0
+	CHOICE_HEIGHT=30
+	BACKTITLE="opensimMULTITOOL"
+	TITLE="Hilfemenu"
+	MENU="opensimMULTITOOL $VERSION"
+
+	Hilfe=$(menutrans "Hilfe")
+	Konsolenhilfe=$(menutrans "Konsolenhilfe")
+	Kommandohilfe=$(menutrans "Kommandohilfe")
+	RobustCommands=$(menutrans "RobustCommands")	
+	pCampbotCommands=$(menutrans "pCampbotCommands")
+	MoneyServerCommands=$(menutrans "MoneyServerCommands")
+	RobustCommands=$(menutrans "RobustCommands")
+	Konfigurationlesen=$(menutrans "Konfiguration lesen")
+
+	Passwortgenerator=$(menutrans "Passwortgenerator")
+	Kalender=$(menutrans "Kalender")
+
+	Hauptmenu=$(menutrans "Hauptmenu")
+
+	# zuerst schauen ob dialog installiert ist
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
+		OPTIONS=("$Hilfe" ""
+			"$Konsolenhilfe" ""
+			"$Kommandohilfe" ""
+			"$RobustCommands" ""
+			"$OpenSimCommands" ""
+			"$MoneyServerCommands" ""
+			"$pCampbotCommands" ""
+			"$Konfigurationlesen" ""
+			"--------------------------" ""
+			"$Passwortgenerator" ""
+			"$Kalender" ""
+			"--------------------------" ""
+			"$Hauptmenu" "")
+
+		#hauswahl=$(dialog --clear --backtitle "$BACKTITLE" --title "$TITLE" --help-button --defaultno --menu "$MENU" $HEIGHT $WIDTH $CHOICE_HEIGHT "${OPTIONS[@]}" 2>&1 >/dev/tty)
+		hauswahl=$(dialog --backtitle "$BACKTITLE" --title "$TITLE" --defaultno --menu "$MENU" $HEIGHT $WIDTH $CHOICE_HEIGHT "${OPTIONS[@]}" 2>&1 >/dev/tty)
+
+		hantwort=$?
+		#dialogclear
+		dialog --clear
+		ScreenLog
+
+		if [[ $hauswahl = "$Hilfe" ]]; then hilfe; fi
+		if [[ $hauswahl = "$Konsolenhilfe" ]]; then menukonsolenhilfe; fi # Test menukonsolenhilfe
+		if [[ $hauswahl = "$Kommandohilfe" ]]; then commandhelp; fi
+
+		if [[ $hauswahl = "$RobustCommands" ]]; then RobustCommands; fi
+		if [[ $hauswahl = "$OpenSimCommands" ]]; then OpenSimCommands; fi
+		if [[ $hauswahl = "$MoneyServerCommands" ]]; then MoneyServerCommands; fi
+		if [[ $hauswahl = "$pCampbotCommands" ]]; then pCampbotCommands; fi
+
+		if [[ $hauswahl = "$Konfigurationlesen" ]]; then menuoswriteconfig; fi
+
+		if [[ $hauswahl = "$Passwortgenerator" ]]; then passwdgenerator; fi
+		if [[ $hauswahl = "$Kalender" ]]; then kalender; fi
+
+		if [[ $hauswahl = "$Hauptmenu" ]]; then hauptmenu; fi
+		if [[ $hantwort = 1 ]]; then hauptmenu; fi
+	else
+		# wenn dialog nicht installiert ist die Hilfe anzeigen.
+		hilfe
+	fi
+}
+
 ## * hauptmenu
 	# Startmenue.
 	# 
@@ -16247,82 +16345,7 @@ function hauptmenu() {
 		if [[ $mauswahl = "$Avatarmennu" ]]; then avatarmenu; fi
 
 		if [[ $mantwort = 2 ]]; then hilfemenu; fi
-		if [[ $mantwort = 1 ]]; then exit; fi
-	else
-		# wenn dialog nicht installiert ist die Hilfe anzeigen.
-		hilfe
-	fi
-}
-
-## * hilfemenu
-	# Menue der Hilfe.
-	# 
-	#? @param name Erklaerung.
-	#? @return name was wird zurueckgegeben.
-	# todo: nichts.
-##
-function hilfemenu() {
-	HEIGHT=0
-	WIDTH=0
-	CHOICE_HEIGHT=30
-	BACKTITLE="opensimMULTITOOL"
-	TITLE="Hilfemenu"
-	MENU="opensimMULTITOOL $VERSION"
-
-	Hilfe=$(menutrans "Hilfe")
-	Konsolenhilfe=$(menutrans "Konsolenhilfe")
-	Kommandohilfe=$(menutrans "Kommandohilfe")
-	RobustCommands=$(menutrans "RobustCommands")	
-	pCampbotCommands=$(menutrans "pCampbotCommands")
-	MoneyServerCommands=$(menutrans "MoneyServerCommands")
-	RobustCommands=$(menutrans "RobustCommands")
-	Konfigurationlesen=$(menutrans "Konfiguration lesen")
-
-	Passwortgenerator=$(menutrans "Passwortgenerator")
-	Kalender=$(menutrans "Kalender")
-
-	Hauptmenu=$(menutrans "Hauptmenu")
-
-	# zuerst schauen ob dialog installiert ist
-	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
-		OPTIONS=("$Hilfe" ""
-			"$Konsolenhilfe" ""
-			"$Kommandohilfe" ""
-			"$RobustCommands" ""
-			"$OpenSimCommands" ""
-			"$MoneyServerCommands" ""
-			"$pCampbotCommands" ""
-			"$Konfigurationlesen" ""
-			"--------------------------" ""
-			"$Passwortgenerator" ""
-			"$Kalender" ""
-			"--------------------------" ""
-			"$Hauptmenu" "")
-
-		#hauswahl=$(dialog --clear --backtitle "$BACKTITLE" --title "$TITLE" --help-button --defaultno --menu "$MENU" $HEIGHT $WIDTH $CHOICE_HEIGHT "${OPTIONS[@]}" 2>&1 >/dev/tty)
-		hauswahl=$(dialog --backtitle "$BACKTITLE" --title "$TITLE" --defaultno --menu "$MENU" $HEIGHT $WIDTH $CHOICE_HEIGHT "${OPTIONS[@]}" 2>&1 >/dev/tty)
-
-		hantwort=$?
-		#dialogclear
-		dialog --clear
-		ScreenLog
-
-		if [[ $hauswahl = "$Hilfe" ]]; then hilfe; fi
-		if [[ $hauswahl = "$Konsolenhilfe" ]]; then menukonsolenhilfe; fi # Test menukonsolenhilfe
-		if [[ $hauswahl = "$Kommandohilfe" ]]; then commandhelp; fi
-
-		if [[ $hauswahl = "$RobustCommands" ]]; then RobustCommands; fi
-		if [[ $hauswahl = "$OpenSimCommands" ]]; then OpenSimCommands; fi
-		if [[ $hauswahl = "$MoneyServerCommands" ]]; then MoneyServerCommands; fi
-		if [[ $hauswahl = "$pCampbotCommands" ]]; then pCampbotCommands; fi
-
-		if [[ $hauswahl = "$Konfigurationlesen" ]]; then menuoswriteconfig; fi
-
-		if [[ $hauswahl = "$Passwortgenerator" ]]; then passwdgenerator; fi
-		if [[ $hauswahl = "$Kalender" ]]; then kalender; fi
-
-		if [[ $hauswahl = "$Hauptmenu" ]]; then hauptmenu; fi
-		if [[ $hantwort = 1 ]]; then hauptmenu; fi
+		if [[ $mantwort = 1 ]]; then osmexit; fi
 	else
 		# wenn dialog nicht installiert ist die Hilfe anzeigen.
 		hilfe
@@ -16414,7 +16437,7 @@ function funktionenmenu() {
 		if [[ $fauswahl = "$Avatarmennu" ]]; then avatarmenu; fi
 
 		if [[ $fantwort = 2 ]]; then hilfemenu; fi
-		if [[ $fantwort = 1 ]]; then exit; fi
+		if [[ $fantwort = 1 ]]; then osmexit; fi
 	else
 		# wenn dialog nicht installiert ist die Hilfe anzeigen.
 		hilfe
@@ -16502,7 +16525,7 @@ function dateimenu() {
 		if [[ $dauswahl = "$Avatarmennu" ]]; then avatarmenu; fi
 
 		if [[ $dantwort = 2 ]]; then hilfemenu; fi
-		if [[ $dantwort = 1 ]]; then exit; fi
+		if [[ $dantwort = 1 ]]; then osmexit; fi
 	else
 		# wenn dialog nicht installiert ist die Hilfe anzeigen.
 		hilfe
@@ -16619,7 +16642,7 @@ function mySQLmenu() {
 		if [[ $mysqlauswahl = "$Avatarmennu" ]]; then avatarmenu; fi
 
 		if [[ $mysqlantwort = 2 ]]; then hilfemenu; fi
-		if [[ $mysqlantwort = 1 ]]; then exit; fi
+		if [[ $mysqlantwort = 1 ]]; then osmexit; fi
 	else
 		# wenn dialog nicht installiert ist die Hilfe anzeigen.
 		hilfe
@@ -16705,7 +16728,125 @@ function avatarmenu() {
 		if [[ $avatarauswahl = "$BuildFunktionen" ]]; then buildmenu; fi
 
 		if [[ $avatarantwort = 2 ]]; then hilfemenu; fi
-		if [[ $avatarantwort = 1 ]]; then exit; fi
+		if [[ $avatarantwort = 1 ]]; then osmexit; fi
+	else
+		# wenn dialog nicht installiert ist die Hilfe anzeigen.
+		hilfe
+	fi
+}
+
+## * buildmenu
+	# Menue zum erstellen von OpenSim Versionen.
+	# 
+	#? @param name Erklaerung.
+	#? @return name was wird zurueckgegeben.
+	# todo: nichts.
+##
+function buildmenu() {
+	HEIGHT=0
+	WIDTH=0
+	CHOICE_HEIGHT=30
+	BACKTITLE="opensimMULTITOOL"
+	TITLE="Buildmenu"
+	MENU="opensimMULTITOOL $VERSION"
+
+	OpenSimherunterladen=$(menutrans "OpenSim herunterladen")
+	MoneyServervomgitkopieren=$(menutrans "MoneyServer vom git kopieren")
+	OSSLSkriptevomgitkopieren=$(menutrans "OSSL Skripte vom git kopieren")
+	OpensimvomGithubholen=$(menutrans "Opensim vom Github holen")
+
+	DowngradezurletztenVersion=$(menutrans "Downgrade zur letzten Version")
+	Kompilieren=$(menutrans "Kompilieren")
+	oscompi=$(menutrans "oscompi")
+	Opensimulatorupgraden=$(menutrans "Opensimulator upgraden")
+	Opensimulatorauszipupgraden=$(menutrans "Opensimulator aus zip upgraden")
+	Opensimulatorbauenundupgraden=$(menutrans "Opensimulator bauen und upgraden")
+			
+	KonfigurationenundVerzeichnisstrukturenanlegen=$(menutrans "Konfigurationen und Verzeichnisstrukturen anlegen")
+	Verzeichnisstrukturenanlegen=$(menutrans "Verzeichnisstrukturen anlegen")
+	RegionslisteerstellenBackup=$(menutrans "Regionsliste erstellen (Backup)")
+
+	SiminVerzeichnisstruktureneintragen=$(menutrans "Sim in Verzeichnisstrukturen eintragen")
+	SiminVerzeichnisstrukturenaustragen=$(menutrans "Sim in Verzeichnisstrukturen austragen")
+	SiminStartkonfigurationeinfuegen=$(menutrans "Sim in Startkonfiguration einfuegen")
+	SimausStartkonfigurationentfernen=$(menutrans "Sim aus Startkonfiguration entfernen")
+
+	Hauptmennu=$(menutrans "Hauptmennu")
+	Avatarmennu=$(menutrans "Avatarmennu")
+	WeitereFunktionen=$(menutrans "Weitere Funktionen")
+	Dateimennu=$(menutrans "Dateimennu")
+	mySQLmenu=$(menutrans "mySQLmenu")
+	ExpertenFunktionen=$(menutrans "Experten Funktionen")
+
+	# zuerst schauen ob dialog installiert ist
+	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
+		OPTIONS=("$OpenSimherunterladen" ""
+			"$MoneyServervomgitkopieren" ""
+			"$OSSLSkriptevomgitkopieren" ""
+			"$OpensimvomGithubholen" ""
+			"--------------------------" ""
+			"$DowngradezurletztenVersion" ""
+			"$Kompilieren" ""
+			"$oscompi" ""
+			"$Opensimulatorupgraden" ""
+			"$Opensimulatorauszipupgraden" ""
+			"$Opensimulatorbauenundupgraden" ""
+			"--------------------------" ""			
+			"$KonfigurationenundVerzeichnisstrukturenanlegen" ""
+			"$Verzeichnisstrukturenanlegen" ""
+			"$RegionslisteerstellenBackup" ""
+			"--------------------------" ""
+			"$SiminVerzeichnisstruktureneintragen" ""
+			"$SiminVerzeichnisstrukturenaustragen" ""
+			"$SiminStartkonfigurationeinfuegen" ""
+			"$SimausStartkonfigurationentfernen" ""
+			"----------Menu------------" ""
+			"$Hauptmenu" ""
+			"$Avatarmennu" ""
+			"$WeitereFunktionen" ""
+			"$Dateimennu" ""
+			"$mySQLmenu" ""
+			"$ExpertenFunktionen" "")
+
+		buildauswahl=$(dialog --backtitle "$BACKTITLE" --title "$TITLE" --help-button --defaultno --menu "$MENU" $HEIGHT $WIDTH $CHOICE_HEIGHT "${OPTIONS[@]}" 2>&1 >/dev/tty)
+		buildantwort=$?
+		if [[ $buildantwort = 1 ]]; then osmexit; fi
+		if [[ $buildantwort = 2 ]]; then hilfemenu; fi
+		#warnbox $buildantwort
+		#dialogclear
+		dialog --clear
+		ScreenLog
+
+		if [[ $buildauswahl = "$OpenSimherunterladen" ]]; then downloados; fi
+		if [[ $buildauswahl = "$MoneyServervomgitkopieren" ]]; then moneygitcopy; fi
+		if [[ $buildauswahl = "$OSSLSkriptevomgitkopieren" ]]; then scriptgitcopy; fi
+		if [[ $buildauswahl = "$OpensimvomGithubholen" ]]; then osgitholen; fi
+		# -----
+		if [[ $buildauswahl = "$DowngradezurletztenVersion" ]]; then osdowngrade; fi
+		if [[ $buildauswahl = "$Kompilieren" ]]; then compilieren; fi
+		if [[ $buildauswahl = "$oscompi" ]]; then oscompi; fi
+		if [[ $buildauswahl = "$Opensimulatorupgraden" ]]; then osupgrade; fi
+		if [[ $buildauswahl = "$Opensimulatorauszipupgraden" ]]; then oszipupgrade; fi
+		if [[ $buildauswahl = "$Opensimulatorbauenundupgraden" ]]; then osbuilding; fi
+		# -----
+		if [[ $buildauswahl = "$KonfigurationenundVerzeichnisstrukturenanlegen" ]]; then configabfrage; fi
+		if [[ $buildauswahl = "$Verzeichnisstrukturenanlegen" ]]; then menuosstruktur; fi
+		if [[ $buildauswahl = "$RegionslisteerstellenBackup" ]]; then regionliste; fi
+		# -----
+		if [[ $buildauswahl = "$SiminVerzeichnisstruktureneintragen" ]]; then menuosstarteintrag; fi
+		if [[ $buildauswahl = "$SiminVerzeichnisstrukturenaustragen" ]]; then menuosstarteintragdel; fi
+		if [[ $buildauswahl = "$SiminStartkonfigurationeinfuegen" ]]; then menuosdauerstart; fi
+		if [[ $buildauswahl = "$SimausStartkonfigurationentfernen" ]]; then menuosdauerstop; fi
+
+		if [[ $buildauswahl = "$Hauptmenu" ]]; then hauptmenu; fi
+		if [[ $buildauswahl = "$Dateimennu" ]]; then dateimenu; fi
+		if [[ $buildauswahl = "$mySQLmenu" ]]; then mySQLmenu; fi
+		if [[ $buildauswahl = "$WeitereFunktionen" ]]; then funktionenmenu; fi
+		if [[ $buildauswahl = "$ExpertenFunktionen" ]]; then expertenmenu; fi
+		if [[ $buildauswahl = "$Avatarmennu" ]]; then avatarmenu; fi
+
+		#if [[ $buildantwort = 2 ]]; then hilfemenu; fi
+		#if [[ $buildantwort = 1 ]]; then warnbox $buildantwort; fi
 	else
 		# wenn dialog nicht installiert ist die Hilfe anzeigen.
 		hilfe
@@ -16811,125 +16952,7 @@ function expertenmenu() {
 		if [[ $feauswahl = "$Avatarmennu" ]]; then avatarmenu; fi
 
 		if [[ $fantwort = 2 ]]; then hilfemenu; fi
-		if [[ $fantwort = 1 ]]; then exit 0; fi
-	else
-		# wenn dialog nicht installiert ist die Hilfe anzeigen.
-		hilfe
-	fi
-}
-
-## * buildmenu
-	# Menue zum erstellen von OpenSim Versionen.
-	# 
-	#? @param name Erklaerung.
-	#? @return name was wird zurueckgegeben.
-	# todo: nichts.
-##
-function buildmenu() {
-	HEIGHT=0
-	WIDTH=0
-	CHOICE_HEIGHT=30
-	BACKTITLE="opensimMULTITOOL"
-	TITLE="Buildmenu"
-	MENU="opensimMULTITOOL $VERSION"
-
-	OpenSimherunterladen=$(menutrans "OpenSim herunterladen")
-	MoneyServervomgitkopieren=$(menutrans "MoneyServer vom git kopieren")
-	OSSLSkriptevomgitkopieren=$(menutrans "OSSL Skripte vom git kopieren")
-	OpensimvomGithubholen=$(menutrans "Opensim vom Github holen")
-
-	DowngradezurletztenVersion=$(menutrans "Downgrade zur letzten Version")
-	Kompilieren=$(menutrans "Kompilieren")
-	oscompi=$(menutrans "oscompi")
-	Opensimulatorupgraden=$(menutrans "Opensimulator upgraden")
-	Opensimulatorauszipupgraden=$(menutrans "Opensimulator aus zip upgraden")
-	Opensimulatorbauenundupgraden=$(menutrans "Opensimulator bauen und upgraden")
-			
-	KonfigurationenundVerzeichnisstrukturenanlegen=$(menutrans "Konfigurationen und Verzeichnisstrukturen anlegen")
-	Verzeichnisstrukturenanlegen=$(menutrans "Verzeichnisstrukturen anlegen")
-	RegionslisteerstellenBackup=$(menutrans "Regionsliste erstellen (Backup)")
-
-	SiminVerzeichnisstruktureneintragen=$(menutrans "Sim in Verzeichnisstrukturen eintragen")
-	SiminVerzeichnisstrukturenaustragen=$(menutrans "Sim in Verzeichnisstrukturen austragen")
-	SiminStartkonfigurationeinfuegen=$(menutrans "Sim in Startkonfiguration einfuegen")
-	SimausStartkonfigurationentfernen=$(menutrans "Sim aus Startkonfiguration entfernen")
-
-	Hauptmennu=$(menutrans "Hauptmennu")
-	Avatarmennu=$(menutrans "Avatarmennu")
-	WeitereFunktionen=$(menutrans "Weitere Funktionen")
-	Dateimennu=$(menutrans "Dateimennu")
-	mySQLmenu=$(menutrans "mySQLmenu")
-	ExpertenFunktionen=$(menutrans "Experten Funktionen")
-
-	# zuerst schauen ob dialog installiert ist
-	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
-		OPTIONS=("$OpenSimherunterladen" ""
-			"$MoneyServervomgitkopieren" ""
-			"$OSSLSkriptevomgitkopieren" ""
-			"$OpensimvomGithubholen" ""
-			"--------------------------" ""
-			"$DowngradezurletztenVersion" ""
-			"$Kompilieren" ""
-			"$oscompi" ""
-			"$Opensimulatorupgraden" ""
-			"$Opensimulatorauszipupgraden" ""
-			"$Opensimulatorbauenundupgraden" ""
-			"--------------------------" ""			
-			"$KonfigurationenundVerzeichnisstrukturenanlegen" ""
-			"$Verzeichnisstrukturenanlegen" ""
-			"$RegionslisteerstellenBackup" ""
-			"--------------------------" ""
-			"$SiminVerzeichnisstruktureneintragen" ""
-			"$SiminVerzeichnisstrukturenaustragen" ""
-			"$SiminStartkonfigurationeinfuegen" ""
-			"$SimausStartkonfigurationentfernen" ""
-			"----------Menu------------" ""
-			"$Hauptmenu" ""
-			"$Avatarmennu" ""
-			"$WeitereFunktionen" ""
-			"$Dateimennu" ""
-			"$mySQLmenu" ""
-			"$ExpertenFunktionen" "")
-
-		buildauswahl=$(dialog --backtitle "$BACKTITLE" --title "$TITLE" --help-button --defaultno --menu "$MENU" $HEIGHT $WIDTH $CHOICE_HEIGHT "${OPTIONS[@]}" 2>&1 >/dev/tty)
-		buildantwort=$?
-		if [[ $buildantwort = 1 ]]; then exit 0; fi
-		if [[ $buildantwort = 2 ]]; then hilfemenu; fi
-		#warnbox $buildantwort
-		#dialogclear
-		dialog --clear
-		ScreenLog
-
-		if [[ $buildauswahl = "$OpenSimherunterladen" ]]; then downloados; fi
-		if [[ $buildauswahl = "$MoneyServervomgitkopieren" ]]; then moneygitcopy; fi
-		if [[ $buildauswahl = "$OSSLSkriptevomgitkopieren" ]]; then scriptgitcopy; fi
-		if [[ $buildauswahl = "$OpensimvomGithubholen" ]]; then osgitholen; fi
-		# -----
-		if [[ $buildauswahl = "$DowngradezurletztenVersion" ]]; then osdowngrade; fi
-		if [[ $buildauswahl = "$Kompilieren" ]]; then compilieren; fi
-		if [[ $buildauswahl = "$oscompi" ]]; then oscompi; fi
-		if [[ $buildauswahl = "$Opensimulatorupgraden" ]]; then osupgrade; fi
-		if [[ $buildauswahl = "$Opensimulatorauszipupgraden" ]]; then oszipupgrade; fi
-		if [[ $buildauswahl = "$Opensimulatorbauenundupgraden" ]]; then osbuilding; fi
-		# -----
-		if [[ $buildauswahl = "$KonfigurationenundVerzeichnisstrukturenanlegen" ]]; then configabfrage; fi
-		if [[ $buildauswahl = "$Verzeichnisstrukturenanlegen" ]]; then menuosstruktur; fi
-		if [[ $buildauswahl = "$RegionslisteerstellenBackup" ]]; then regionliste; fi
-		# -----
-		if [[ $buildauswahl = "$SiminVerzeichnisstruktureneintragen" ]]; then menuosstarteintrag; fi
-		if [[ $buildauswahl = "$SiminVerzeichnisstrukturenaustragen" ]]; then menuosstarteintragdel; fi
-		if [[ $buildauswahl = "$SiminStartkonfigurationeinfuegen" ]]; then menuosdauerstart; fi
-		if [[ $buildauswahl = "$SimausStartkonfigurationentfernen" ]]; then menuosdauerstop; fi
-
-		if [[ $buildauswahl = "$Hauptmenu" ]]; then hauptmenu; fi
-		if [[ $buildauswahl = "$Dateimennu" ]]; then dateimenu; fi
-		if [[ $buildauswahl = "$mySQLmenu" ]]; then mySQLmenu; fi
-		if [[ $buildauswahl = "$WeitereFunktionen" ]]; then funktionenmenu; fi
-		if [[ $buildauswahl = "$ExpertenFunktionen" ]]; then expertenmenu; fi
-		if [[ $buildauswahl = "$Avatarmennu" ]]; then avatarmenu; fi
-
-		#if [[ $buildantwort = 2 ]]; then hilfemenu; fi
-		#if [[ $buildantwort = 1 ]]; then warnbox $buildantwort; fi
+		if [[ $fantwort = 1 ]]; then osmexit; fi
 	else
 		# wenn dialog nicht installiert ist die Hilfe anzeigen.
 		hilfe
