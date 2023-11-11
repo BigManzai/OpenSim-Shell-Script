@@ -55,7 +55,9 @@ case $action in
   command)
     # Der Befehl, den Sie senden möchten.
     # Beispiel: command 'show info'
-    send_command_to_opensim "$2"
+    #send_command_to_opensim "$2"
+    # Führe die Funktion mit den verbleibenden Argumenten aus
+    send_command_to_opensim "$@"
     ;;
   *)
     echo "Ungültiger Parameter. Verwendung: $0 <start|stop|restart|command>"
