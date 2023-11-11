@@ -25,8 +25,8 @@ restart_opensim() {
 # Funktion zum Senden eines Befehls an OpenSim in tmux
 send_command_to_opensim() {
   if pgrep -x "OpenSim.exe" > /dev/null; then
-    tmux send-keys -t term:0 "$1" C-m
-    echo "Befehl '$1' an OpenSim gesendet."
+    tmux send-keys -t term:0 "$@" C-m
+    echo "Befehl '$*' an OpenSim gesendet."
   else
     echo "Fehler: OpenSim ist nicht aktiv."
   fi
