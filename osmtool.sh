@@ -36,7 +36,7 @@
 #──────────────────────────────────────────────────────────────────────────────────────────
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.1305" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.1306" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 #──────────────────────────────────────────────────────────────────────────────────────────
@@ -100,17 +100,18 @@ function benutzer() {
 }
 
 ## * osmexit
-	# Diese Funktion beendet alles.
-	#? @param keine.
-	#? @return nichts wird zurueckgegeben.
-	# todo: nichts.
+# Diese Funktion beendet dieses Skript und führt verschiedene Aufräumarbeiten durch.
+#? @param keine.
+#? @return Die Funktion gibt nichts zurück.
+# todo: Aktuell sind keine speziellen Aufgaben für die Zukunft geplant.
 ##
 function osmexit() {
 	# Hier wird der Dialog geloescht.
 	dialogclear
 
-	# Den Blauen hintergrud entfernen.
-	echo -e ""; echo -e ""; echo -e ""; echo -e ""; echo -e ""; echo -e ""; echo -e ""; echo -e ""; echo -e ""; echo -e ""
+	# Den Blauen hintergrud restlos entfernen.
+	#echo -e ""; echo -e ""; echo -e ""; echo -e ""; echo -e ""; echo -e ""; echo -e ""; echo -e ""; echo -e ""; echo -e ""
+	printf '\n%.0s' {1..10}
 
 	# Hier wird der Bildschirm gelöscht.	
 	tput clear
