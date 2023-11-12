@@ -20,7 +20,7 @@
 	# ! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 	# ! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#
-	# * Letzte bearbeitung 11.11.2023.
+	# * Letzte bearbeitung 12.11.2023.
 	#
 	# # Installieren sie bitte: #* Visual Studio Code
 	#* dazu die Plugins:
@@ -36,7 +36,7 @@
 #──────────────────────────────────────────────────────────────────────────────────────────
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.1306" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.1311" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 #──────────────────────────────────────────────────────────────────────────────────────────
@@ -1529,57 +1529,92 @@ function makeregionsliste() {
 ##
 function mysqlrest() {
 	# Letzte Bearbeitung 27.09.2023
+
+    # Überprüfen, ob mysql-Client installiert ist # TODO Testen
+    if ! command -v mysql &> /dev/null; then
+        echo "mySQL ist nicht installiert. Bitte installieren Sie es zuerst."
+        return 1
+    fi
+
+	# Überprüfen, ob alle erforderlichen Parameter vorhanden sind # TODO Testen
+    if [ "$#" -ne 4 ]; then
+        echo "Usage: mysqlrest <username> <password> <databasename> <mysqlcommand>"
+        return 1
+    fi
+
     # Übergeben der Argumente an Variablen
     username="$1"
     password="$2"
     databasename="$3"
     mysqlcommand="$4"
 
-    # Ausführen des MySQL-Befehls und Erfassen des Ergebnisses
-	result_mysqlrest=$(echo "$mysqlcommand;" | MYSQL_PWD=$password mysql -u"$username" "$databasename" -N) 2>/dev/null
-}
-
-## * mariadbrest
-	# Eine Funktion zum Ausführen von MySQL-Befehlen und Erfassen des Ergebnisses.
-	#? Verwendung: mysqlrest <Benutzername> <Passwort> <Datenbankname> <MySQL-Befehl>
-	# Diese Funktion führt den angegebenen MySQL-Befehl in der angegebenen Datenbank aus und erfasst das Ergebnis.
-	# Das Ergebnis wird in der globalen Variable result_mysqlrest gespeichert.
-	#? Argumente:
-	#   Benutzername - Der MySQL-Benutzername für die Datenbankverbindung.
-	#   Passwort - Das Passwort für die Datenbankverbindung.
-	#   Datenbankname - Der Name der Datenbank, in der der Befehl ausgeführt werden soll.
-	#   MySQL-Befehl - Der zu auszuführende MySQL-Befehl.
-	#? Beispiel:
-	# mysqlrest myuser mypassword mydb "SELECT * FROM mytable"
-##
-function mariadbrest() {
-	# Letzte Bearbeitung 10.10.2023
-
-    # Verbindungsinformationen
-    username="$1"
-    password="$2"
-    databasename="$3"
-    mysqlcommand="$4"
-
-	if [ -z "$username" ]; then echo "Verwendung: mariadbrest <Benutzername> <Passwort> <Datenbankname> [Kommando]"; exit 1; fi
-	if [ -z "$password" ]; then echo "Verwendung: mariadbrest <Benutzername> <Passwort> <Datenbankname> [Kommando]"; exit 1; fi
-	if [ -z "$databasename" ]; then echo "Verwendung: mariadbrest <Benutzername> <Passwort> <Datenbankname> [Kommando]"; exit 1; fi
-	if [ -z "$mysqlcommand" ]; then echo "Verwendung: mariadbrest <Benutzername> <Passwort> <Datenbankname> [Kommando]"; exit 1; fi
-
-    # Prüfen, ob MariaDB-Client installiert ist
-    if ! command -v mysql &> /dev/null; then
-        echo "Der MariaDB-Client ist nicht installiert. Bitte installieren Sie ihn zuerst."
+	# Überprüfen, ob die erforderlichen Variablen nicht leer sind # TODO Testen
+    if [ -z "$username" ] || [ -z "$password" ] || [ -z "$databasename" ] || [ -z "$mysqlcommand" ]; then
+        echo "All parameters must be provided and not empty."
         return 1
     fi
 
     # Ausführen des MySQL-Befehls und Erfassen des Ergebnisses
 	result_mysqlrest=$(echo "$mysqlcommand;" | MYSQL_PWD=$password mysql -u"$username" "$databasename" -N) 2>/dev/null
+
+	# Testausgabe des MySQL-Befehls
+	#echo "$result_mysqlrest"
+}
+
+## * mariarest
+	# Dies funktioniert nur mit MariaDB.
+	# Eine Funktion zum Ausführen von MariaDB-Befehlen und Erfassen des Ergebnisses.
+	#? Verwendung: mariarest <Benutzername> <Passwort> <Datenbankname> <MariaDB-Befehl>
+	# Diese Funktion führt den angegebenen MariaDB-Befehl in der angegebenen Datenbank aus und erfasst das Ergebnis.
+	# Das Ergebnis wird in der globalen Variable result_mariarest gespeichert.
+	#? Argumente:
+	#   Benutzername - Der MariaDB-Benutzername für die Datenbankverbindung.
+	#   Passwort - Das Passwort für die Datenbankverbindung.
+	#   Datenbankname - Der Name der Datenbank, in der der Befehl ausgeführt werden soll.
+	#   MariaDB-Befehl - Der zu auszuführende MariaDB-Befehl.
+	#? Beispiel:
+	# mariarest myuser mypassword mydb "SELECT UUID FROM land"
+	# mariarest myuser mypassword mydb "SELECT UUID, RegionUUID, LocalLandID, Name, Description, OwnerUUID, IsGroupOwned, Area, AuctionID, Category, ClaimDate, ClaimPrice, GroupUUID FROM land"
+	# TODO : Blob Daten werden mit ausgegeben
+##
+function mariarest() {
+	# Letzte Bearbeitung 12.11.2023
+
+	# Überprüfen, ob MariaDB-Client installiert ist # TODO Testen OK
+    if ! command -v mariadb &> /dev/null; then
+        echo "Der MariaDB-Client ist nicht installiert. Bitte installieren Sie ihn zuerst."
+        return 1
+    fi
+
+	# Überprüfen, ob alle erforderlichen Parameter vorhanden sind # TODO Testen OK
+    if [ "$#" -ne 4 ]; then
+        echo "Usage: mariarest <username> <password> <databasename> <mysqlcommand>"
+        return 1
+    fi
+
+	# Übergeben der Argumente an Variablen
+    username="$1"
+    password="$2"
+    databasename="$3"
+    mariacommand="$4"
+
+	# Überprüfen, ob die erforderlichen Variablen nicht leer sind
+	if [ -z "$username" ]; then echo "Verwendung: mariarest <Benutzername> <Passwort> <Datenbankname> [Kommando]"; exit 1; fi
+	if [ -z "$password" ]; then echo "Verwendung: mariarest <Benutzername> <Passwort> <Datenbankname> [Kommando]"; exit 1; fi
+	if [ -z "$databasename" ]; then echo "Verwendung: mariarest <Benutzername> <Passwort> <Datenbankname> [Kommando]"; exit 1; fi
+	if [ -z "$mariacommand" ]; then echo "Verwendung: mariarest <Benutzername> <Passwort> <Datenbankname> [Kommando]"; exit 1; fi
+
+	# Überprüfen, ob die erforderlichen Variablen nicht leer sind # TODO Testen OK
+    if [ -z "$username" ] || [ -z "$password" ] || [ -z "$databasename" ] || [ -z "$mariacommand" ]; then
+        echo "All parameters must be provided and not empty."
+        return 1
+    fi
+
+    # Ausführen des MariaDB-Befehls und Erfassen des Ergebnisses
+	result_mariarest=$(echo "$mariacommand;" | MYSQL_PWD=$password mariadb -u"$username" "$databasename" -N) 2>/dev/null
 	
 	# Testausgabe des MySQL-Befehls
-	echo "$result_mysqlrest"
-
-	# Erfolgreiche Ausführung
-	return 0
+	#echo "$result_mariarest"
 }
 
 ## * mysqlrestnodb 
@@ -1593,17 +1628,32 @@ function mariadbrest() {
 	#   MySQL-Befehl - Der zu auszuführende MySQL-Befehl.
 	#? Beispiel:
 	# mysqlrestnodb myuser mypassword "SHOW DATABASES"
+	# TODO Überarbeiten oder neu erstellen und das auch für mariaDB
 ##
 function mysqlrestnodb() {
-	# Letzte Bearbeitung 27.09.2023
+	# Letzte Bearbeitung 12.11.2023
+
     # Übergeben der Argumente an Variablen
     username="$1"
     password="$2"
-    mysqlcommand="$3"
+    restnodbcommand="$3"
 
-    # Ausführen des MySQL-Befehls und Erfassen des Ergebnisses
-	result_mysqlrestnodb=$(echo "$mysqlcommand" | MYSQL_PWD=$password mysql -u"$username")
-    # result_mysqlrestnodb=$(echo "$mysqlcommand" | MYSQL_PWD="$password" mysql -u"$username" 2>/dev/null)  #** NEU testen
+	# Überprüfen, ob die erforderlichen Variablen nicht leer sind
+	if [ -z "$username" ]; then echo "Verwendung: mysqlrestnodb <Benutzername> <Passwort> [Kommando]"; exit 1; fi
+	if [ -z "$password" ]; then echo "Verwendung: mysqlrestnodb <Benutzername> <Passwort> [Kommando]"; exit 1; fi
+	if [ -z "$restnodbcommand" ]; then echo "Verwendung: mysqlrestnodb <Benutzername> <Passwort> [Kommando]"; exit 1; fi
+
+	# Überprüfen, welches sql installiert ist und entsprechend aufrufen # TODO Testen OK
+    if ! command -v mariadb &> /dev/null; then
+		# Ausführen des mySQL-Befehls und Erfassen des Ergebnisses
+        result_mysqlrest=$(echo "$restnodbcommand;" | MYSQL_PWD=$password mysql -u"$username" -N) 2>/dev/null
+	else
+		# Ausführen des MariaDB-Befehls und Erfassen des Ergebnisses
+		result_mysqlrest=$(echo "$restnodbcommand;" | MYSQL_PWD=$password mariadb -u"$username" -N) 2>/dev/null
+    fi
+
+	# Testausgabe des MySQL-Befehls
+	echo "$result_mysqlrest"
 }
 
 #──────────────────────────────────────────────────────────────────────────────────────────
@@ -17943,7 +17993,7 @@ case $KOMMANDO in
 	compi | compilieren) compilieren ;;
 	conf_delete) conf_delete "$2" "$3" "$4" ;;
 	conf_read) conf_read "$2" "$3" "$4" ;;
-	conf_write) conf_write "$2" "$3" "$4" "$5" ;;
+	conf_write) conf_write "$2" "$3" "$4" "$5" ;;	
 	connection_name) connection_name "$2" "$3" ;;
 	create_db) create_db "$2" "$3" "$4" ;;
 	create_db_user) create_db_user "$2" "$3" "$4" "$5" ;;
@@ -18143,7 +18193,8 @@ case $KOMMANDO in
 	db_region_anzahl_regionsid) db_region_anzahl_regionsid "$2" "$3" "$4" ;;
 	db_inventar_no_assets) db_inventar_no_assets "$2" "$3" "$4" ;;
 	mysqlrest) mysqlrest "$2" "$3" "$4" "$5" ;;
-	mariadbrest) mariadbrest "$2" "$3" "$4" "$5" ;;
+	mariarest) mariarest "$2" "$3" "$4" "$5" ;;
+	mysqlrestnodb) mysqlrestnodb "$2" "$3" "$4" ;;
 	iptablesset) iptablesset "$2" ;;
 	fail2banset) fail2banset ;;
 	db_gridlist) db_gridlist "$2" "$3" "$4" ;;
