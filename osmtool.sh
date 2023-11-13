@@ -36,7 +36,7 @@
 #──────────────────────────────────────────────────────────────────────────────────────────
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.1372" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.1373" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 #──────────────────────────────────────────────────────────────────────────────────────────
@@ -100,10 +100,23 @@ function benutzer() {
 }
 
 ## * osmexit
-	# Diese Funktion beendet dieses Skript und führt verschiedene Aufräumarbeiten durch.
-	#? @param keine.
-	#? @return Die Funktion gibt nichts zurück.
-	# todo: Aktuell sind keine speziellen Aufgaben für die Zukunft geplant.
+	# Datum: 13.11.2023
+	#? Beschreibung:
+	# Diese Funktion beendet das OSM-Programm. Sie löscht den Dialog, entfernt den blauen Hintergrund und gibt eine Abschlussmeldung aus. Anschließend wird das Programm beendet.
+	#? Parameter:
+	#   - Keine festen Parameter.
+	#? Funktionsverhalten:
+	#   - Löscht den Dialog.
+	#   - Entfernt den blauen Hintergrund.
+	#   - Gibt eine Abschlussmeldung ("OSM wurde beendet.") aus.
+	#   - Beendet das Programm.
+	#? Beispielaufruf:
+	#   Die Funktion wird verwendet, um das OSM-Programm zu beenden.
+	#   Beispiel: osmexit
+	#? Rückgabewert:
+	#   - Beendet das Programm.
+	#? Hinweise:
+	#   - Stellen Sie sicher, dass die Funktion in einem Kontext aufgerufen wird, in dem ein Beenden des Programms angemessen ist.
 ##
 function osmexit() {
 	# Hier wird der Dialog geloescht.
@@ -5747,7 +5760,7 @@ function regionsconfigdateiliste() {
 	return 0
 }
 
-##	 meineregionen
+## * meineregionen
 	# Diese Funktion ruft zuerst die Funktion `makeverzeichnisliste` auf, um eine Liste von Verzeichnissen zu erstellen,
 	# und gibt dann die Regionsnamen aus den Regionskonfigurationsdateien in jedem Verzeichnis aus. Die Ausgabe wird protokolliert.
 	#? Parameter:
@@ -13497,7 +13510,7 @@ function begin_transaction() {
 }
 
 ## * commit_transaction
-	# Datum: [Datum einfügen]
+	# Datum: 13.11.2023
 	#? Beschreibung:
 	# Diese Funktion ermöglicht es dem Benutzer, eine ausstehende Transaktion in einer MariaDB-Datenbank zu bestätigen (commit). Sie fordert den Benutzer auf, die erforderlichen Anmeldeinformationen einzugeben und führt dann die COMMIT-Abfrage in der angegebenen Datenbank aus.
 	#? Parameter:
@@ -13563,7 +13576,23 @@ function rollback_transaction() {
     echo "Transaction rolled back."
 }
 
-## *
+## * display_table_schema
+	# Datum: 13.11.2023
+	#? Beschreibung:
+	# Diese Funktion ermöglicht es dem Benutzer, das Schema einer bestimmten Tabelle in einer MariaDB-Datenbank anzuzeigen. Sie fordert den Benutzer auf, die erforderlichen Anmeldeinformationen, den Datenbanknamen und den Tabellennamen einzugeben. Anschließend führt sie die SHOW COLUMNS-Abfrage aus und gibt das Schema der angegebenen Tabelle aus.
+	#? Parameter:
+	#   - Keine festen Parameter.
+	#? Funktionsverhalten:
+	#   - Fordert den Benutzer auf, MariaDB-Anmeldeinformationen, den Datenbanknamen und den Tabellennamen einzugeben.
+	#   - Führt die SHOW COLUMNS-Abfrage für die angegebene Tabelle aus.
+	#   - Gibt das Schema der angegebenen Tabelle aus.
+	#? Beispielaufruf:
+	#   Die Funktion wird direkt vom Benutzer aufgerufen, um das Schema einer Tabelle anzuzeigen.
+	#   Beispiel: display_table_schema
+	#? Rückgabewert:
+	#   - Das Schema der angegebenen Tabelle wird auf der Konsole ausgegeben.
+	#? Hinweise:
+	#   - Stellen Sie sicher, dass der Benutzer über die erforderlichen Berechtigungen zum Anzeigen des Tabellenschemas verfügt.
 ##
 function display_table_schema() {
     echo -n "Display Table Schema. Enter MariaDB username: "
