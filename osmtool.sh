@@ -36,7 +36,7 @@
 #──────────────────────────────────────────────────────────────────────────────────────────
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.1371" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.1372" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 #──────────────────────────────────────────────────────────────────────────────────────────
@@ -100,10 +100,10 @@ function benutzer() {
 }
 
 ## * osmexit
-# Diese Funktion beendet dieses Skript und führt verschiedene Aufräumarbeiten durch.
-#? @param keine.
-#? @return Die Funktion gibt nichts zurück.
-# todo: Aktuell sind keine speziellen Aufgaben für die Zukunft geplant.
+	# Diese Funktion beendet dieses Skript und führt verschiedene Aufräumarbeiten durch.
+	#? @param keine.
+	#? @return Die Funktion gibt nichts zurück.
+	# todo: Aktuell sind keine speziellen Aufgaben für die Zukunft geplant.
 ##
 function osmexit() {
 	# Hier wird der Dialog geloescht.
@@ -13496,8 +13496,23 @@ function begin_transaction() {
     echo "Transaction started."
 }
 
-## *
-# Funktion zum Commit einer Transaktion
+## * commit_transaction
+	# Datum: [Datum einfügen]
+	#? Beschreibung:
+	# Diese Funktion ermöglicht es dem Benutzer, eine ausstehende Transaktion in einer MariaDB-Datenbank zu bestätigen (commit). Sie fordert den Benutzer auf, die erforderlichen Anmeldeinformationen einzugeben und führt dann die COMMIT-Abfrage in der angegebenen Datenbank aus.
+	#? Parameter:
+	#   - Keine festen Parameter.
+	#? Funktionsverhalten:
+	#   - Fordert den Benutzer auf, MariaDB-Anmeldeinformationen und den Datenbanknamen einzugeben.
+	#   - Führt die COMMIT-Abfrage in der angegebenen Datenbank aus, um eine ausstehende Transaktion zu bestätigen.
+	#? Beispielaufruf:
+	#   Die Funktion wird direkt vom Benutzer aufgerufen, um eine ausstehende Transaktion zu bestätigen.
+	#   Beispiel: commit_transaction
+	#? Rückgabewert:
+	#   - Es gibt keinen expliziten Rückgabewert. Die Funktion gibt eine Erfolgsmeldung aus, nachdem die Transaktion bestätigt wurde.
+	#? Hinweise:
+	#   - Stellen Sie sicher, dass der Benutzer über die erforderlichen Berechtigungen zum Bestätigen von Transaktionen verfügt.
+##
 function commit_transaction() {
     echo -n "Commit Transaction. Enter MariaDB username: "
     read -r db_user
