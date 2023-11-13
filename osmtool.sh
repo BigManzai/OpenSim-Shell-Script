@@ -36,7 +36,7 @@
 #──────────────────────────────────────────────────────────────────────────────────────────
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.1369" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.1371" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 #──────────────────────────────────────────────────────────────────────────────────────────
@@ -12985,11 +12985,31 @@ function db_tablextract_regex() {
 	done
 }
 
-##########################################################################################################################################################################
-################################### MariaDB Spielwiese Playground ########################################################################################################
-##########################################################################################################################################################################
+# XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+# XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX MariaDB Spielwiese Playground XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+# XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
-# Funktion zur Überprüfung und Reparatur mit mysqlcheck
+## * check_and_repair
+	# Datum: 13.11.2023
+	#? Beschreibung:
+	# Diese Funktion führt eine Überprüfung und Reparatur von MariaDB-Tabellen in einer bestimmten Datenbank durch.
+	# Benutzer werden aufgefordert, den MariaDB-Benutzernamen, das Passwort und den Datenbanknamen einzugeben.
+	# Anschließend wird das Tool "mysqlcheck" mit den eingegebenen Informationen aufgerufen, um automatische Reparaturen und Überprüfungen durchzuführen.
+	#? Parameter:
+	#   - Keine festen Parameter; Benutzer wird zur Eingabe von MariaDB-Benutzername, Passwort und Datenbankname aufgefordert.
+	#? Funktionsverhalten:
+	#   - Die Funktion gibt Aufforderungen aus, um den MariaDB-Benutzernamen, das Passwort und den Datenbanknamen einzugeben.
+	#   - Das Tool "mysqlcheck" wird dann mit den eingegebenen Informationen aufgerufen, um automatische Reparaturen und Überprüfungen in der angegebenen Datenbank durchzuführen.
+	#? Beispielaufruf:
+	#   Die Funktion wird direkt vom Benutzer aufgerufen und führt Interaktionen zur Eingabe von MariaDB-Anmeldeinformationen durch.
+	#   Beispiel: check_and_repair
+	#? Rückgabewert:
+	#   - Es gibt keinen expliziten Rückgabewert. Die Funktion führt jedoch Reparaturen und Überprüfungen in der angegebenen MariaDB-Datenbank durch.
+	#? Hinweise:
+	#   - Stellen Sie sicher, dass die erforderlichen MariaDB-Anmeldeinformationen korrekt eingegeben werden.
+	#   - Der Benutzer sollte die Berechtigungen haben, um "mysqlcheck" auf die angegebene Datenbank anzuwenden.
+	#   - Das Tool führt automatische Reparaturen durch, wenn es auf beschädigte Tabellen stößt.
+##
 function check_and_repair() {
     echo "Enter MariaDB username: " 
     read -r db_user
@@ -13002,7 +13022,27 @@ function check_and_repair() {
     sudo mysqlcheck -u "${db_user}" -p"${db_password}" --auto-repair --check "${db_name}"
 }
 
-# Funktion für die manuelle Reparatur mit mysql
+## * manual_repair
+	# Datum: 13.11.2023
+	#? Beschreibung:
+	# Diese Funktion ermöglicht dem Benutzer, manuell auf eine MariaDB-Datenbank zuzugreifen, um Tabellen auszuwählen und die "REPAIR TABLE"-Operation durchzuführen.
+	# Benutzer werden aufgefordert, den MariaDB-Benutzernamen, das Passwort und den Datenbanknamen einzugeben. Anschließend wird eine interaktive MySQL-Shell geöffnet.
+	# Der Benutzer kann dann Tabellen manuell auswählen und die "REPAIR TABLE"-Operation auf die ausgewählte Tabelle anwenden.
+	#? Parameter:
+	#   - Keine festen Parameter; Benutzer wird zur Eingabe von MariaDB-Benutzername, Passwort und Datenbankname aufgefordert.
+	#? Funktionsverhalten:
+	#   - Die Funktion gibt Aufforderungen aus, um den MariaDB-Benutzernamen, das Passwort und den Datenbanknamen einzugeben.
+	#   - Öffnet eine interaktive MySQL-Shell, in der der Benutzer manuell Tabellen auswählen und die "REPAIR TABLE"-Operation durchführen kann.
+	#? Beispielaufruf:
+	#   Die Funktion wird direkt vom Benutzer aufgerufen und ermöglicht eine interaktive Reparatur von MariaDB-Tabellen.
+	#   Beispiel: manual_repair
+	#? Rückgabewert:
+	#   - Es gibt keinen expliziten Rückgabewert. Die Funktion öffnet jedoch eine MySQL-Shell für interaktive Reparaturen.
+	#? Hinweise:
+	#   - Stellen Sie sicher, dass die erforderlichen MariaDB-Anmeldeinformationen korrekt eingegeben werden.
+	#   - Der Benutzer sollte die Berechtigungen haben, um auf die angegebene Datenbank zuzugreifen und "REPAIR TABLE"-Operationen durchzuführen.
+	#   - Der Benutzer sollte mit den erforderlichen MySQL-Befehlen vertraut sein, um Tabellen auszuwählen und Operationen durchzuführen.
+##
 function manual_repair() {
     echo "Enter MariaDB username: " 
     read -r db_user
@@ -13017,7 +13057,27 @@ function manual_repair() {
     # Benutzer wird aufgefordert, die Tabelle manuell auszuwählen und dann REPAIR TABLE auszuführen
 }
 
-# Funktion zum automatischen Reparieren einer Tabelle
+## * repair_table
+	# Datum: 13.11.2023
+	#? Beschreibung:
+	# Diese Funktion ermöglicht dem Benutzer, eine bestimmte Tabelle in einer MariaDB-Datenbank manuell zu reparieren.
+	# Benutzer werden aufgefordert, den MariaDB-Benutzernamen, das Passwort, den Datenbanknamen und den Namen der zu reparierenden Tabelle einzugeben.
+	# Anschließend wird die "REPAIR TABLE"-Operation mit der Option "QUICK" auf die angegebene Tabelle angewendet.
+	#? Parameter:
+	#   - Keine festen Parameter; Benutzer wird zur Eingabe von MariaDB-Benutzername, Passwort, Datenbankname und Tabellennamen aufgefordert.
+	#? Funktionsverhalten:
+	#   - Die Funktion gibt Aufforderungen aus, um den MariaDB-Benutzernamen, das Passwort, den Datenbanknamen und den Tabellennamen einzugeben.
+	#   - Führt die "REPAIR TABLE"-Operation mit der Option "QUICK" auf die angegebene Tabelle in der MariaDB-Datenbank durch.
+	#? Beispielaufruf:
+	#   Die Funktion wird direkt vom Benutzer aufgerufen und ermöglicht eine gezielte Reparatur einer bestimmten Tabelle.
+	#   Beispiel: repair_table
+	#? Rückgabewert:
+	#   - Es gibt keinen expliziten Rückgabewert. Die Funktion führt jedoch die angegebene Reparatur auf der Tabelle durch.
+	#? Hinweise:
+	#   - Stellen Sie sicher, dass die erforderlichen MariaDB-Anmeldeinformationen und der Tabellenname korrekt eingegeben werden.
+	#   - Der Benutzer sollte die Berechtigungen haben, um auf die angegebene Datenbank zuzugreifen und "REPAIR TABLE"-Operationen durchzuführen.
+	#   - Die Verwendung der Option "QUICK" führt eine schnelle Reparatur durch und ist geeignet für nicht allzu umfangreiche Tabellen.
+##
 function repair_table() {
     echo "Enter MariaDB username: " 
     read -r db_user
@@ -13032,7 +13092,27 @@ function repair_table() {
     mysql -u "${db_user}" -p"${db_password}" "${db_name}" -e "REPAIR TABLE ${table_name} QUICK;"
 }
 
-# Funktion zum Reparieren von Tabelleneinträgen
+## * repair_table_entries
+	# Datum: 13.11.2023
+	#? Beschreibung:
+	# Diese Funktion ermöglicht dem Benutzer, alle Einträge in einer bestimmten Tabelle in einer MariaDB-Datenbank zu löschen.
+	# Benutzer werden aufgefordert, den MariaDB-Benutzernamen, das Passwort, den Datenbanknamen und den Namen der Tabelle einzugeben, deren Einträge repariert werden sollen.
+	# Anschließend wird die "DELETE FROM"-Operation auf die angegebene Tabelle angewendet, um alle Einträge zu löschen.
+	#? Parameter:
+	#   - Keine festen Parameter; Benutzer wird zur Eingabe von MariaDB-Benutzername, Passwort, Datenbankname und Tabellennamen aufgefordert.
+	#? Funktionsverhalten:
+	#   - Die Funktion gibt Aufforderungen aus, um den MariaDB-Benutzernamen, das Passwort, den Datenbanknamen und den Tabellennamen einzugeben.
+	#   - Führt die "DELETE FROM"-Operation auf die angegebene Tabelle in der MariaDB-Datenbank durch, um alle Einträge zu löschen.
+	#? Beispielaufruf:
+	#   Die Funktion wird direkt vom Benutzer aufgerufen und ermöglicht das Löschen aller Einträge in einer bestimmten Tabelle.
+	#   Beispiel: repair_table_entries
+	#? Rückgabewert:
+	#   - Es gibt keinen expliziten Rückgabewert. Die Funktion löscht jedoch alle Einträge in der angegebenen Tabelle.
+	#? Hinweise:
+	#   - Stellen Sie sicher, dass die erforderlichen MariaDB-Anmeldeinformationen und der Tabellenname korrekt eingegeben werden.
+	#   - Der Benutzer sollte die Berechtigungen haben, um auf die angegebene Datenbank zuzugreifen und "DELETE FROM"-Operationen durchzuführen.
+	#   - Das Löschen aller Einträge ist eine intensive Operation und sollte mit Vorsicht verwendet werden.
+##
 function repair_table_entries() {
     echo "Enter MariaDB username: " 
     read -r db_user
@@ -13047,7 +13127,28 @@ function repair_table_entries() {
     mysql -u "${db_user}" -p"${db_password}" "${db_name}" -e "DELETE FROM ${table_name};"
 }
 
-# Funktion zum Reparieren einzelner Tabelleneinträge
+## * repair_single_entry
+	# Datum: 13.11.2023
+	#? Beschreibung:
+	# Diese Funktion ermöglicht dem Benutzer, einen einzelnen Eintrag in einer bestimmten Tabelle in einer MariaDB-Datenbank zu reparieren.
+	# Benutzer werden aufgefordert, den MariaDB-Benutzernamen, das Passwort, den Datenbanknamen, den Tabellennamen und den Primärschlüsselwert des zu reparierenden Eintrags einzugeben.
+	# Zuerst wird die "REPAIR TABLE"-Operation mit der Option "USE_FRM" auf die angegebene Tabelle angewendet. Dann wird der spezifizierte Eintrag anhand des Primärschlüssels gelöscht.
+	#? Parameter:
+	#   - Keine festen Parameter; Benutzer wird zur Eingabe von MariaDB-Benutzername, Passwort, Datenbankname, Tabellennamen und Primärschlüsselwert aufgefordert.
+	#? Funktionsverhalten:
+	#   - Die Funktion gibt Aufforderungen aus, um den MariaDB-Benutzernamen, das Passwort, den Datenbanknamen, den Tabellennamen und den Primärschlüsselwert einzugeben.
+	#   - Führt die "REPAIR TABLE"-Operation mit der Option "USE_FRM" auf die angegebene Tabelle in der MariaDB-Datenbank durch.
+	#   - Löscht den spezifizierten Eintrag anhand des Primärschlüssels in der angegebenen Tabelle.
+	#? Beispielaufruf:
+	#   Die Funktion wird direkt vom Benutzer aufgerufen und ermöglicht das Reparieren eines bestimmten Eintrags in einer Tabelle.
+	#   Beispiel: repair_single_entry
+	#? Rückgabewert:
+	#   - Es gibt keinen expliziten Rückgabewert. Die Funktion führt jedoch die angegebene Reparatur auf dem Eintrag durch.
+	#? Hinweise:
+	#   - Stellen Sie sicher, dass die erforderlichen MariaDB-Anmeldeinformationen, der Tabellenname und der Primärschlüsselwert korrekt eingegeben werden.
+	#   - Der Benutzer sollte die Berechtigungen haben, um auf die angegebene Datenbank zuzugreifen und "REPAIR TABLE"-Operationen durchzuführen.
+	#   - Die Verwendung der Option "USE_FRM" kann hilfreich sein, wenn die interne Struktur der Tabelle beschädigt ist.
+##
 function repair_single_entry() {
     echo "Enter MariaDB username: " 
     read -r db_user
@@ -13065,7 +13166,29 @@ function repair_single_entry() {
     mysql -u "${db_user}" -p"${db_password}" "${db_name}" -e "DELETE FROM ${table_name} WHERE primary_key_column=${primary_key_value};"
 }
 
-# Funktion zum Löschen defekter Tabelleneinträge
+## * delete_corrupted_entries
+	# Datum: 13.11.2023
+	#? Beschreibung:
+	# Diese Funktion ermöglicht dem Benutzer, defekte Einträge in einer bestimmten Tabelle in einer MariaDB-Datenbank zu löschen.
+	# Benutzer werden aufgefordert, den MariaDB-Benutzernamen, das Passwort, den Datenbanknamen und den Tabellennamen einzugeben.
+	# Zuerst wird die "CHECK TABLE"-Operation mit der Option "FAST" auf die angegebene Tabelle angewendet, um die Integrität zu überprüfen und gegebenenfalls zu reparieren.
+	# Anschließend werden alle Einträge mit defektem CHECKSUM-Wert in der angegebenen Tabelle gelöscht.
+	#? Parameter:
+	#   - Keine festen Parameter; Benutzer wird zur Eingabe von MariaDB-Benutzername, Passwort, Datenbankname und Tabellennamen aufgefordert.
+	#? Funktionsverhalten:
+	#   - Die Funktion gibt Aufforderungen aus, um den MariaDB-Benutzernamen, das Passwort, den Datenbanknamen und den Tabellennamen einzugeben.
+	#   - Führt die "CHECK TABLE"-Operation mit der Option "FAST" auf die angegebene Tabelle in der MariaDB-Datenbank durch.
+	#   - Löscht alle Einträge mit defektem CHECKSUM-Wert in der angegebenen Tabelle.
+	#? Beispielaufruf:
+	#   Die Funktion wird direkt vom Benutzer aufgerufen und ermöglicht das Löschen defekter Einträge in einer Tabelle.
+	#   Beispiel: delete_corrupted_entries
+	#? Rückgabewert:
+	#   - Es gibt keinen expliziten Rückgabewert. Die Funktion überprüft und repariert die Tabelle und löscht defekte Einträge.
+	#? Hinweise:
+	#   - Stellen Sie sicher, dass die erforderlichen MariaDB-Anmeldeinformationen und der Tabellenname korrekt eingegeben werden.
+	#   - Der Benutzer sollte die Berechtigungen haben, um auf die angegebene Datenbank zuzugreifen und Operationen durchzuführen.
+	#   - Das Löschen von Einträgen mit defektem CHECKSUM-Wert kann bei der Wiederherstellung der Datenintegrität hilfreich sein.
+##
 function delete_corrupted_entries() {
     echo "Enter MariaDB username: " 
     read -r db_user
@@ -13083,7 +13206,30 @@ function delete_corrupted_entries() {
     mysql -u "${db_user}" -p"${db_password}" "${db_name}" -e "DELETE FROM ${table_name} WHERE CHECKSUM = '1';"
 }
 
-# Funktion zum Sichern von Tabellen
+## * backup_tables
+	# Datum: 13.11.2023
+	#? Beschreibung:
+	# Diese Funktion ermöglicht dem Benutzer das Erstellen eines Backups aller Tabellen in einer bestimmten MariaDB-Datenbank.
+	# Benutzer werden aufgefordert, den MariaDB-Benutzernamen, das Passwort und den Datenbanknamen einzugeben.
+	# Das Backup wird im SQL-Format erstellt und in einer Datei gespeichert, die den Datenbanknamen und das aktuelle Datum und die Uhrzeit enthält.
+	#? Parameter:
+	#   - Keine festen Parameter; Benutzer wird zur Eingabe von MariaDB-Benutzername, Passwort und Datenbankname aufgefordert.
+	#? Funktionsverhalten:
+	#   - Die Funktion gibt Aufforderungen aus, um den MariaDB-Benutzernamen, das Passwort und den Datenbanknamen einzugeben.
+	#   - Erstellt ein Backup aller Tabellen in der angegebenen MariaDB-Datenbank im SQL-Format.
+	#   - Die Backup-Datei wird im Format "Datenbankname_backup_JJJJMMTT_STUNDENMINUTENSEKUNDEN.sql" benannt.
+	#   - Die Backup-Datei wird im aktuellen Arbeitsverzeichnis gespeichert.
+	#   - Gibt eine Meldung aus, dass das Backup erfolgreich erstellt und in der entsprechenden Datei gespeichert wurde.
+	#? Beispielaufruf:
+	#   Die Funktion wird direkt vom Benutzer aufgerufen und ermöglicht das Erstellen eines Backups aller Tabellen in einer Datenbank.
+	#   Beispiel: backup_tables
+	#? Rückgabewert:
+	#   - Es gibt keinen expliziten Rückgabewert. Die Funktion erstellt ein Backup und gibt eine Erfolgsmeldung aus.
+	#? Hinweise:
+	#   - Stellen Sie sicher, dass die erforderlichen MariaDB-Anmeldeinformationen korrekt eingegeben werden.
+	#   - Das Backup wird im aktuellen Arbeitsverzeichnis gespeichert, daher überprüfen Sie die Schreibberechtigungen.
+	#   - Verwenden Sie das Backup verantwortungsbewusst und bewahren Sie es an einem sicheren Ort auf.
+##
 function backup_tables() {
     echo "Enter MariaDB username: " 
     read -r db_user
@@ -13101,7 +13247,29 @@ function backup_tables() {
     echo "Backup saved to ${backup_file}"
 }
 
-# Funktion zum Wiederherstellen von Tabellen
+## * restore_tables
+	# Datum: 13.11.2023
+	#? Beschreibung:
+	# Diese Funktion ermöglicht dem Benutzer das Wiederherstellen von Tabellen in einer MariaDB-Datenbank aus einem zuvor erstellten Backup.
+	# Benutzer werden aufgefordert, den MariaDB-Benutzernamen, das Passwort, den Datenbanknamen und den Pfad zur SQL-Backup-Datei einzugeben.
+	# Die Funktion verwendet das angegebene Backup, um die Tabellen in der MariaDB-Datenbank wiederherzustellen.
+	#? Parameter:
+	#   - Keine festen Parameter; Benutzer wird zur Eingabe von MariaDB-Benutzername, Passwort, Datenbankname und Backup-Pfad aufgefordert.
+	#? Funktionsverhalten:
+	#   - Die Funktion gibt Aufforderungen aus, um den MariaDB-Benutzernamen, das Passwort, den Datenbanknamen und den Pfad zur SQL-Backup-Datei einzugeben.
+	#   - Verwendet das angegebene SQL-Backup, um die Tabellen in der MariaDB-Datenbank wiederherzustellen.
+	#   - Die Backup-Datei wird im angegebenen Pfad gesucht und auf die Datenbank angewendet.
+	#   - Gibt eine Meldung aus, dass die Tabellen erfolgreich aus dem Backup wiederhergestellt wurden.
+	#? Beispielaufruf:
+	#   Die Funktion wird direkt vom Benutzer aufgerufen und ermöglicht das Wiederherstellen von Tabellen aus einem SQL-Backup.
+	#   Beispiel: restore_tables
+	#? Rückgabewert:
+	#   - Es gibt keinen expliziten Rückgabewert. Die Funktion stellt die Tabellen wieder her und gibt eine Erfolgsmeldung aus.
+	#? Hinweise:
+	#   - Stellen Sie sicher, dass die erforderlichen MariaDB-Anmeldeinformationen korrekt eingegeben werden.
+	#   - Der Benutzer sollte die erforderlichen Berechtigungen haben, um auf die angegebene Datenbank zuzugreifen und Operationen durchzuführen.
+	#   - Überprüfen Sie den Pfad zur Backup-Datei und stellen Sie sicher, dass die Datei vorhanden ist.
+##
 function restore_tables() {
 
     backup_file_path="/opt" # TODO: ? keine ahnung
@@ -13121,7 +13289,28 @@ function restore_tables() {
     echo "Tables restored to ${db_name} from ${backup_file_path}"
 }
 
-# Funktion zum Aktualisieren von Einträgen
+## * update_entry
+	# Datum: 13.11.2023
+	#? Beschreibung:
+	# Diese Funktion ermöglicht dem Benutzer das Aktualisieren eines Eintrags in einer bestimmten Tabelle in einer MariaDB-Datenbank.
+	# Benutzer werden aufgefordert, den MariaDB-Benutzernamen, das Passwort, den Datenbanknamen, Tabellennamen und die erforderlichen Aktualisierungsinformationen einzugeben.
+	# Die Funktion führt eine UPDATE-Abfrage aus, um den Wert einer bestimmten Spalte in einem Eintrag zu aktualisieren, basierend auf einer angegebenen Bedingung.
+	#? Parameter:
+	#   - Keine festen Parameter; Benutzer wird zur Eingabe von MariaDB-Benutzername, Passwort, Datenbankname, Tabellennamen und Aktualisierungsinformationen aufgefordert.
+	#? Funktionsverhalten:
+	#   - Die Funktion gibt Aufforderungen aus, um den MariaDB-Benutzernamen, das Passwort, den Datenbanknamen, Tabellennamen und erforderliche Informationen für die Aktualisierung einzugeben.
+	#   - Führt eine UPDATE-Abfrage aus, um den Wert einer bestimmten Spalte in einem Eintrag zu aktualisieren.
+	#   - Die Aktualisierung erfolgt basierend auf einer angegebenen Bedingung, die durch eine Spalte und einen Wert definiert ist.
+	#   - Gibt eine Meldung aus, dass der Eintrag erfolgreich aktualisiert wurde.
+	#? Beispielaufruf:
+	#   Die Funktion wird direkt vom Benutzer aufgerufen und ermöglicht das Aktualisieren eines Eintrags in einer Tabelle.
+	#   Beispiel: update_entry
+	#? Rückgabewert:
+	#   - Es gibt keinen expliziten Rückgabewert. Die Funktion führt die Aktualisierung durch und gibt eine Erfolgsmeldung aus.
+	#? Hinweise:
+	#   - Stellen Sie sicher, dass die erforderlichen MariaDB-Anmeldeinformationen, der Tabellenname und die Aktualisierungsinformationen korrekt eingegeben werden.
+	#   - Der Benutzer sollte die Berechtigungen haben, um auf die angegebene Datenbank zuzugreifen und Operationen durchzuführen.
+##
 function update_entry() {
     echo -n "Update Entry. Enter MariaDB username: "
     read -r db_user
@@ -13147,7 +13336,27 @@ function update_entry() {
     echo "Entry updated successfully."
 }
 
-# Funktion zum Hinzufügen von Einträgen
+## * add_entry
+	# Datum: 13.11.2023
+	#? Beschreibung:
+	# Diese Funktion ermöglicht dem Benutzer das Hinzufügen eines neuen Eintrags in eine bestimmte Tabelle in einer MariaDB-Datenbank.
+	# Benutzer werden aufgefordert, den MariaDB-Benutzernamen, das Passwort, den Datenbanknamen, Tabellennamen und die Werte für den neuen Eintrag einzugeben.
+	# Die Funktion führt eine INSERT-Abfrage aus, um einen neuen Eintrag mit den angegebenen Werten in der Tabelle zu erstellen.
+	#? Parameter:
+	#   - Keine festen Parameter; Benutzer wird zur Eingabe von MariaDB-Benutzername, Passwort, Datenbankname, Tabellennamen und den Werten für den neuen Eintrag aufgefordert.
+	#? Funktionsverhalten:
+	#   - Die Funktion gibt Aufforderungen aus, um den MariaDB-Benutzernamen, das Passwort, den Datenbanknamen, Tabellennamen und die Werte für den neuen Eintrag einzugeben.
+	#   - Führt eine INSERT-Abfrage aus, um einen neuen Eintrag mit den angegebenen Werten in der Tabelle zu erstellen.
+	#   - Gibt eine Meldung aus, dass der Eintrag erfolgreich hinzugefügt wurde.
+	#? Beispielaufruf:
+	#   Die Funktion wird direkt vom Benutzer aufgerufen und ermöglicht das Hinzufügen eines neuen Eintrags in eine Tabelle.
+	#   Beispiel: add_entry
+	#? Rückgabewert:
+	#   - Es gibt keinen expliziten Rückgabewert. Die Funktion fügt den Eintrag hinzu und gibt eine Erfolgsmeldung aus.
+	#? Hinweise:
+	#   - Stellen Sie sicher, dass die erforderlichen MariaDB-Anmeldeinformationen und der Tabellenname korrekt eingegeben werden.
+	#   - Der Benutzer sollte die Berechtigungen haben, um auf die angegebene Datenbank zuzugreifen und Operationen durchzuführen.
+##
 function add_entry() {
     echo -n "Add Entry. Enter MariaDB username: "
     read -r db_user
@@ -13169,7 +13378,27 @@ function add_entry() {
     echo "Entry added successfully."
 }
 
-# Funktion zum Löschen von Einträgen
+## * delete_entry
+	# Datum: 13.11.2023
+	#? Beschreibung:
+	# Diese Funktion ermöglicht dem Benutzer das Löschen eines Eintrags aus einer bestimmten Tabelle in einer MariaDB-Datenbank.
+	# Benutzer werden aufgefordert, den MariaDB-Benutzernamen, das Passwort, den Datenbanknamen, Tabellennamen und die Bedingung für das Löschen einzugeben.
+	# Die Funktion führt eine DELETE-Abfrage aus, um den Eintrag basierend auf der angegebenen Bedingung zu löschen.
+	#? Parameter:
+	#   - Keine festen Parameter; Benutzer wird zur Eingabe von MariaDB-Benutzername, Passwort, Datenbankname, Tabellennamen und der Bedingung für das Löschen aufgefordert.
+	#? Funktionsverhalten:
+	#   - Die Funktion gibt Aufforderungen aus, um den MariaDB-Benutzernamen, das Passwort, den Datenbanknamen, Tabellennamen und die Bedingung für das Löschen einzugeben.
+	#   - Führt eine DELETE-Abfrage aus, um den Eintrag basierend auf der angegebenen Bedingung zu löschen.
+	#   - Gibt eine Meldung aus, dass der Eintrag erfolgreich gelöscht wurde.
+	#? Beispielaufruf:
+	#   Die Funktion wird direkt vom Benutzer aufgerufen und ermöglicht das Löschen eines Eintrags aus einer Tabelle.
+	#   Beispiel: delete_entry
+	#? Rückgabewert:
+	#   - Es gibt keinen expliziten Rückgabewert. Die Funktion löscht den Eintrag und gibt eine Erfolgsmeldung aus.
+	#? Hinweise:
+	#   - Stellen Sie sicher, dass die erforderlichen MariaDB-Anmeldeinformationen, der Tabellenname und die Bedingung für das Löschen korrekt eingegeben werden.
+	#   - Der Benutzer sollte die Berechtigungen haben, um auf die angegebene Datenbank zuzugreifen und Operationen durchzuführen.
+##
 function delete_entry() {
     echo -n "Delete Entry. Enter MariaDB username: "
     read -r db_user
@@ -13191,7 +13420,27 @@ function delete_entry() {
     echo "Entry deleted successfully."
 }
 
-# Funktion zum Generieren eines Berichts
+## * generate_report
+	# Datum: 13.11.2023
+	#? Beschreibung:
+	# Diese Funktion ermöglicht dem Benutzer das Generieren eines Berichts basierend auf einer benutzerdefinierten SQL-Abfrage in einer MariaDB-Datenbank.
+	# Benutzer werden aufgefordert, den MariaDB-Benutzernamen, das Passwort, den Datenbanknamen und die SQL-Abfrage für den Bericht einzugeben.
+	# Die Funktion führt die angegebene SQL-Abfrage aus und zeigt die Ergebnisse des Berichts an.
+	#? Parameter:
+	#   - Keine festen Parameter; Benutzer wird zur Eingabe von MariaDB-Benutzername, Passwort, Datenbankname und SQL-Abfrage aufgefordert.
+	#? Funktionsverhalten:
+	#   - Die Funktion gibt Aufforderungen aus, um den MariaDB-Benutzernamen, das Passwort, den Datenbanknamen und die SQL-Abfrage für den Bericht einzugeben.
+	#   - Führt die angegebene SQL-Abfrage aus und speichert das Ergebnis.
+	#   - Zeigt die Ergebnisse des Berichts an.
+	#? Beispielaufruf:
+	#   Die Funktion wird direkt vom Benutzer aufgerufen und ermöglicht das Generieren eines Berichts basierend auf einer SQL-Abfrage.
+	#   Beispiel: generate_report
+	#? Rückgabewert:
+	#   - Es gibt keinen expliziten Rückgabewert. Die Funktion führt die SQL-Abfrage aus und zeigt die Ergebnisse des Berichts an.
+	#? Hinweise:
+	#   - Stellen Sie sicher, dass die erforderlichen MariaDB-Anmeldeinformationen, der Datenbankname und die SQL-Abfrage korrekt eingegeben werden.
+	#   - Der Benutzer sollte die Berechtigungen haben, um auf die angegebene Datenbank zuzugreifen und Operationen durchzuführen.
+##
 function generate_report() {
     echo -n "Generate Report. Enter MariaDB username: "
     read -r db_user
@@ -13211,7 +13460,27 @@ function generate_report() {
     echo "${result}"
 }
 
-# Funktion zum Beginnen einer Transaktion
+## * begin_transaction
+	# Datum: 13.11.2023
+	#? Beschreibung:
+	# Diese Funktion ermöglicht dem Benutzer das Starten einer Transaktion in einer MariaDB-Datenbank.
+	# Benutzer werden aufgefordert, den MariaDB-Benutzernamen, das Passwort und den Datenbanknamen einzugeben.
+	# Die Funktion führt die START TRANSACTION-Abfrage aus, um eine Transaktion in der angegebenen Datenbank zu beginnen.
+	#? Parameter:
+	#   - Keine festen Parameter; Benutzer wird zur Eingabe von MariaDB-Benutzername, Passwort und Datenbankname aufgefordert.
+	#? Funktionsverhalten:
+	#   - Die Funktion gibt Aufforderungen aus, um den MariaDB-Benutzernamen, das Passwort und den Datenbanknamen einzugeben.
+	#   - Führt die START TRANSACTION-Abfrage aus, um eine Transaktion in der angegebenen Datenbank zu starten.
+	#   - Gibt eine Meldung aus, dass die Transaktion erfolgreich gestartet wurde.
+	#? Beispielaufruf:
+	#   Die Funktion wird direkt vom Benutzer aufgerufen und ermöglicht das Starten einer Transaktion in einer Datenbank.
+	#   Beispiel: begin_transaction
+	#? Rückgabewert:
+	#   - Es gibt keinen expliziten Rückgabewert. Die Funktion startet die Transaktion und gibt eine Erfolgsmeldung aus.
+	#? Hinweise:
+	#   - Stellen Sie sicher, dass die erforderlichen MariaDB-Anmeldeinformationen und der Datenbankname korrekt eingegeben werden.
+	#   - Der Benutzer sollte die Berechtigungen haben, um auf die angegebene Datenbank zuzugreifen und Transaktionen durchzuführen.
+##
 function begin_transaction() {
     echo -n "Begin Transaction. Enter MariaDB username: "
     read -r db_user
@@ -13227,6 +13496,7 @@ function begin_transaction() {
     echo "Transaction started."
 }
 
+## *
 # Funktion zum Commit einer Transaktion
 function commit_transaction() {
     echo -n "Commit Transaction. Enter MariaDB username: "
@@ -13243,7 +13513,27 @@ function commit_transaction() {
     echo "Transaction committed."
 }
 
-# Funktion zum Rollback einer Transaktion
+## * rollback_transaction
+	# Datum: 13.11.2023
+	#? Beschreibung:
+	# Diese Funktion ermöglicht dem Benutzer das Rückgängigmachen (Rollback) einer laufenden Transaktion in einer MariaDB-Datenbank.
+	# Benutzer werden aufgefordert, den MariaDB-Benutzernamen, das Passwort und den Datenbanknamen einzugeben.
+	# Die Funktion führt die ROLLBACK-Abfrage aus, um alle Änderungen seit dem Beginn der aktuellen Transaktion rückgängig zu machen.
+	#? Parameter:
+	#   - Keine festen Parameter; Benutzer wird zur Eingabe von MariaDB-Benutzername, Passwort und Datenbankname aufgefordert.
+	#? Funktionsverhalten:
+	#   - Die Funktion gibt Aufforderungen aus, um den MariaDB-Benutzernamen, das Passwort und den Datenbanknamen einzugeben.
+	#   - Führt die ROLLBACK-Abfrage aus, um alle Änderungen seit dem Beginn der aktuellen Transaktion rückgängig zu machen.
+	#   - Gibt eine Meldung aus, dass die Transaktion erfolgreich rückgängig gemacht wurde.
+	#? Beispielaufruf:
+	#   Die Funktion wird direkt vom Benutzer aufgerufen und ermöglicht das Rückgängigmachen einer Transaktion in einer Datenbank.
+	#   Beispiel: rollback_transaction
+	#? Rückgabewert:
+	#   - Es gibt keinen expliziten Rückgabewert. Die Funktion rollt die Transaktion zurück und gibt eine Erfolgsmeldung aus.
+	#? Hinweise:
+	#   - Stellen Sie sicher, dass die erforderlichen MariaDB-Anmeldeinformationen und der Datenbankname korrekt eingegeben werden.
+	#   - Der Benutzer sollte die Berechtigungen haben, um auf die angegebene Datenbank zuzugreifen und Transaktionen durchzuführen.
+##
 function rollback_transaction() {
     echo -n "Rollback Transaction. Enter MariaDB username: "
     read -r db_user
@@ -13258,6 +13548,8 @@ function rollback_transaction() {
     echo "Transaction rolled back."
 }
 
+## *
+##
 function display_table_schema() {
     echo -n "Display Table Schema. Enter MariaDB username: "
     read -r db_user
@@ -13277,6 +13569,27 @@ function display_table_schema() {
     echo "${result}"
 }
 
+## * display_databases
+	# Datum: 13.11.2023
+	#? Beschreibung:
+	# Diese Funktion ermöglicht dem Benutzer das Anzeigen aller verfügbaren Datenbanken in einer MariaDB-Instanz.
+	# Benutzer werden aufgefordert, den MariaDB-Benutzernamen und das Passwort einzugeben.
+	# Die Funktion führt die SHOW DATABASES-Abfrage aus, um eine Liste aller verfügbaren Datenbanken abzurufen.
+	#? Parameter:
+	#   - Keine festen Parameter; Benutzer wird zur Eingabe von MariaDB-Benutzername und Passwort aufgefordert.
+	#? Funktionsverhalten:
+	#   - Die Funktion gibt Aufforderungen aus, um den MariaDB-Benutzernamen und das Passwort einzugeben.
+	#   - Führt die SHOW DATABASES-Abfrage aus, um eine Liste aller verfügbaren Datenbanken abzurufen.
+	#   - Zeigt die Ergebnisse mit den verfügbaren Datenbanken an.
+	#? Beispielaufruf:
+	#   Die Funktion wird direkt vom Benutzer aufgerufen und ermöglicht das Anzeigen aller verfügbaren Datenbanken.
+	#   Beispiel: display_databases
+	#? Rückgabewert:
+	#   - Es gibt keinen expliziten Rückgabewert. Die Funktion zeigt die Liste der verfügbaren Datenbanken an.
+	#? Hinweise:
+	#   - Stellen Sie sicher, dass die erforderlichen MariaDB-Anmeldeinformationen korrekt eingegeben werden.
+	#   - Der Benutzer sollte die Berechtigungen haben, um auf die MariaDB-Instanz zuzugreifen und Datenbanken anzuzeigen.
+##
 function display_databases() {
     echo -n "Display Databases. Enter MariaDB username: "
     read -r db_user
@@ -13292,6 +13605,27 @@ function display_databases() {
     echo "${result}"
 }
 
+## * optimize_tables
+	# Datum: 13.11.2023
+	#? Beschreibung:
+	# Diese Funktion ermöglicht dem Benutzer das Optimieren aller Tabellen in einer MariaDB-Datenbank.
+	# Benutzer werden aufgefordert, den MariaDB-Benutzernamen, das Passwort und den Datenbanknamen einzugeben.
+	# Die Funktion führt die OPTIMIZE TABLE-Abfrage für alle Tabellen in der angegebenen Datenbank aus.
+	#? Parameter:
+	#   - Keine festen Parameter; Benutzer wird zur Eingabe von MariaDB-Benutzername, Passwort und Datenbankname aufgefordert.
+	#? Funktionsverhalten:
+	#   - Die Funktion gibt Aufforderungen aus, um den MariaDB-Benutzernamen, das Passwort und den Datenbanknamen einzugeben.
+	#   - Führt die OPTIMIZE TABLE-Abfrage für alle Tabellen in der angegebenen Datenbank aus.
+	#   - Gibt eine Meldung aus, dass die Tabellen erfolgreich optimiert wurden.
+	#? Beispielaufruf:
+	#   Die Funktion wird direkt vom Benutzer aufgerufen und ermöglicht das Optimieren aller Tabellen in einer Datenbank.
+	#   Beispiel: optimize_tables
+	#? Rückgabewert:
+	#   - Es gibt keinen expliziten Rückgabewert. Die Funktion optimiert die Tabellen und gibt eine Erfolgsmeldung aus.
+	#? Hinweise:
+	#   - Stellen Sie sicher, dass die erforderlichen MariaDB-Anmeldeinformationen und der Datenbankname korrekt eingegeben werden.
+	#   - Der Benutzer sollte die Berechtigungen haben, um auf die angegebene Datenbank zuzugreifen und Tabellen zu optimieren.
+##
 function optimize_tables() {
     echo -n "Optimize Tables. Enter MariaDB username: "
     read -r db_user
@@ -13307,6 +13641,27 @@ function optimize_tables() {
     echo "Tables optimized successfully."
 }
 
+## * display_server_info
+	# Datum: 13.11.2023
+	#? Beschreibung:
+	# Diese Funktion ermöglicht dem Benutzer das Anzeigen von Informationen zum MariaDB-Server.
+	# Benutzer werden aufgefordert, den MariaDB-Benutzernamen und das Passwort einzugeben.
+	# Die Funktion führt die STATUS-Abfrage aus, um Informationen zum aktuellen Zustand des MariaDB-Servers abzurufen.
+	#? Parameter:
+	#   - Keine festen Parameter; Benutzer wird zur Eingabe von MariaDB-Benutzername und Passwort aufgefordert.
+	#? Funktionsverhalten:
+	#   - Die Funktion gibt Aufforderungen aus, um den MariaDB-Benutzernamen und das Passwort einzugeben.
+	#   - Führt die STATUS-Abfrage aus, um Informationen zum aktuellen Zustand des MariaDB-Servers abzurufen.
+	#   - Zeigt die Ergebnisse mit den Informationen zum MariaDB-Server an.
+	#? Beispielaufruf:
+	#   Die Funktion wird direkt vom Benutzer aufgerufen und ermöglicht das Anzeigen von Informationen zum MariaDB-Server.
+	#   Beispiel: display_server_info
+	#? Rückgabewert:
+	#   - Es gibt keinen expliziten Rückgabewert. Die Funktion zeigt die Informationen zum MariaDB-Server an.
+	#? Hinweise:
+	#   - Stellen Sie sicher, dass die erforderlichen MariaDB-Anmeldeinformationen korrekt eingegeben werden.
+	#   - Der Benutzer sollte die Berechtigungen haben, um auf den MariaDB-Server zuzugreifen und Serverinformationen anzuzeigen.
+##
 function display_server_info() {
     echo -n "Display Server Information. Enter MariaDB username: "
     read -r db_user
@@ -13322,7 +13677,27 @@ function display_server_info() {
     echo "${result}"
 }
 
-# Funktion zum Suchen von Einträgen in einer Tabelle
+## * search_entries
+	# Datum: 13.11.2023
+	#? Beschreibung:
+	# Diese Funktion ermöglicht dem Benutzer das Suchen von Einträgen in einer bestimmten Tabelle in einer MariaDB-Datenbank.
+	# Benutzer werden aufgefordert, den MariaDB-Benutzernamen, das Passwort, den Datenbanknamen, Tabellennamen, Spaltennamen und den Suchbegriff einzugeben.
+	# Die Funktion führt eine SELECT-Abfrage aus, um Einträge in der angegebenen Tabelle zu suchen, die dem Suchbegriff entsprechen.
+	#? Parameter:
+	#   - Keine festen Parameter; Benutzer wird zur Eingabe von MariaDB-Benutzername, Passwort, Datenbankname, Tabellennamen, Spaltennamen und Suchbegriff aufgefordert.
+	#? Funktionsverhalten:
+	#   - Die Funktion gibt Aufforderungen aus, um den MariaDB-Benutzernamen, das Passwort, den Datenbanknamen, Tabellennamen, Spaltennamen und den Suchbegriff einzugeben.
+	#   - Führt eine SELECT-Abfrage aus, um Einträge in der angegebenen Tabelle zu suchen, die dem Suchbegriff entsprechen.
+	#   - Zeigt die Ergebnisse der Suche an.
+	#? Beispielaufruf:
+	#   Die Funktion wird direkt vom Benutzer aufgerufen und ermöglicht das Suchen von Einträgen in einer Tabelle.
+	#   Beispiel: search_entries
+	#? Rückgabewert:
+	#   - Es gibt keinen expliziten Rückgabewert. Die Funktion zeigt die Ergebnisse der Suche an.
+	#? Hinweise:
+	#   - Stellen Sie sicher, dass die erforderlichen MariaDB-Anmeldeinformationen, der Datenbankname, Tabellenname, Spaltenname und Suchbegriff korrekt eingegeben werden.
+	#   - Der Benutzer sollte die Berechtigungen haben, um auf die angegebene Datenbank zuzugreifen und SELECT-Abfragen durchzuführen.
+##
 function search_entries() {
     echo -n "Search Entries. Enter MariaDB username: "
     read -r db_user
@@ -13346,7 +13721,28 @@ function search_entries() {
     echo "${result}"
 }
 
-# Funktion zum Suchen von Einträgen in einer Tabelle nach Datum
+## * search_entries_by_date
+	# Datum: 13.11.2023
+	#? Beschreibung:
+	# Diese Funktion ermöglicht dem Benutzer das Suchen von Einträgen in einer bestimmten Tabelle in einer MariaDB-Datenbank basierend auf einem Datumsbereich.
+	# Benutzer werden aufgefordert, den MariaDB-Benutzernamen, das Passwort, den Datenbanknamen, Tabellennamen, Spaltennamen mit Datumsangaben und den Suchbereich einzugeben.
+	# Die Funktion führt eine SELECT-Abfrage aus, um Einträge in der angegebenen Tabelle zu suchen, die innerhalb des angegebenen Datumsbereichs liegen.
+	#? Parameter:
+	#   - Keine festen Parameter; Benutzer wird zur Eingabe von MariaDB-Benutzername, Passwort, Datenbankname, Tabellennamen, Datenspaltennamen und Suchbereich aufgefordert.
+	#? Funktionsverhalten:
+	#   - Die Funktion gibt Aufforderungen aus, um den MariaDB-Benutzernamen, das Passwort, den Datenbanknamen, Tabellennamen, Datenspaltennamen und den Suchbereich einzugeben.
+	#   - Überprüft die Eingabe der Datumsformate und gibt eine Fehlermeldung aus, wenn das Format ungültig ist.
+	#   - Führt eine SELECT-Abfrage aus, um Einträge in der angegebenen Tabelle zu suchen, die innerhalb des angegebenen Datumsbereichs liegen.
+	#   - Zeigt die Ergebnisse der Suche an.
+	#? Beispielaufruf:
+	#   Die Funktion wird direkt vom Benutzer aufgerufen und ermöglicht das Suchen von Einträgen in einer Tabelle basierend auf einem Datumsbereich.
+	#   Beispiel: search_entries_by_date
+	#? Rückgabewert:
+	#   - Es gibt keinen expliziten Rückgabewert. Die Funktion zeigt die Ergebnisse der Suche an.
+	#? Hinweise:
+	#   - Stellen Sie sicher, dass die erforderlichen MariaDB-Anmeldeinformationen, der Datenbankname, Tabellenname, Datenspaltenname und der Suchbereich korrekt eingegeben werden.
+	#   - Der Benutzer sollte die Berechtigungen haben, um auf die angegebene Datenbank zuzugreifen und SELECT-Abfragen durchzuführen.
+##
 function search_entries_by_date() {
     echo -n "Search Entries by Date. Enter MariaDB username: "
     read -r db_user
@@ -13385,7 +13781,27 @@ function search_entries_by_date() {
     echo "${result}"
 }
 
-# Funktion zum Suchen von Einträgen in einer Tabelle nach Unix-Zeitstempeln
+## * search_entries_by_unix_timestamp
+	# Datum: 13.11.2023
+	#? Beschreibung:
+	# Diese Funktion ermöglicht dem Benutzer das Suchen von Einträgen in einer bestimmten Tabelle in einer MariaDB-Datenbank basierend auf Unix-Zeitstempeln.
+	# Benutzer werden aufgefordert, den MariaDB-Benutzernamen, das Passwort, den Datenbanknamen, Tabellennamen, Spaltennamen mit Unix-Zeitstempeln und den Suchbereich einzugeben.
+	# Die Funktion führt eine SELECT-Abfrage mit FROM_UNIXTIME() aus, um Einträge in der angegebenen Tabelle zu suchen, die innerhalb des angegebenen Unix-Zeitstempelbereichs liegen.
+	#? Parameter:
+	#   - Keine festen Parameter; Benutzer wird zur Eingabe von MariaDB-Benutzername, Passwort, Datenbankname, Tabellennamen, Spaltennamen mit Unix-Zeitstempeln und Suchbereich aufgefordert.
+	#? Funktionsverhalten:
+	#   - Die Funktion gibt Aufforderungen aus, um den MariaDB-Benutzernamen, das Passwort, den Datenbanknamen, Tabellennamen, Spaltennamen mit Unix-Zeitstempeln und den Suchbereich einzugeben.
+	#   - Führt eine SELECT-Abfrage mit FROM_UNIXTIME() aus, um Einträge in der angegebenen Tabelle zu suchen, die innerhalb des angegebenen Unix-Zeitstempelbereichs liegen.
+	#   - Zeigt die Ergebnisse der Suche an.
+	#? Beispielaufruf:
+	#   Die Funktion wird direkt vom Benutzer aufgerufen und ermöglicht das Suchen von Einträgen in einer Tabelle basierend auf Unix-Zeitstempeln.
+	#   Beispiel: search_entries_by_unix_timestamp
+	#? Rückgabewert:
+	#   - Es gibt keinen expliziten Rückgabewert. Die Funktion zeigt die Ergebnisse der Suche an.
+	#? Hinweise:
+	#   - Stellen Sie sicher, dass die erforderlichen MariaDB-Anmeldeinformationen, der Datenbankname, Tabellenname, Spaltenname mit Unix-Zeitstempeln und der Suchbereich korrekt eingegeben werden.
+	#   - Der Benutzer sollte die Berechtigungen haben, um auf die angegebene Datenbank zuzugreifen und SELECT-Abfragen durchzuführen.
+##
 function search_entries_by_unix_timestamp() {
     echo -n "Search Entries by Unix Timestamp. Enter MariaDB username: "
     read -r db_user
@@ -13411,6 +13827,27 @@ function search_entries_by_unix_timestamp() {
     echo "${result}"
 }
 
+## * display_table_contents
+	# Datum: 13.11.2023
+	#? Beschreibung:
+	# Diese Funktion ermöglicht dem Benutzer das Anzeigen aller Einträge in einer bestimmten Tabelle in einer MariaDB-Datenbank.
+	# Benutzer werden aufgefordert, den MariaDB-Benutzernamen, das Passwort, den Datenbanknamen und den Tabellennamen einzugeben.
+	# Die Funktion führt eine SELECT-Abfrage aus, um alle Einträge in der angegebenen Tabelle abzurufen.
+	#? Parameter:
+	#   - Keine festen Parameter; Benutzer wird zur Eingabe von MariaDB-Benutzername, Passwort, Datenbankname und Tabellennamen aufgefordert.
+	#? Funktionsverhalten:
+	#   - Die Funktion gibt Aufforderungen aus, um den MariaDB-Benutzernamen, das Passwort, den Datenbanknamen und den Tabellennamen einzugeben.
+	#   - Führt eine SELECT-Abfrage aus, um alle Einträge in der angegebenen Tabelle abzurufen.
+	#   - Zeigt die Ergebnisse der SELECT-Abfrage an.
+	#? Beispielaufruf:
+	#   Die Funktion wird direkt vom Benutzer aufgerufen und ermöglicht das Anzeigen aller Einträge in einer Tabelle.
+	#   Beispiel: display_table_contents
+	#? Rückgabewert:
+	#   - Es gibt keinen expliziten Rückgabewert. Die Funktion zeigt die Ergebnisse der SELECT-Abfrage an.
+	#? Hinweise:
+	#   - Stellen Sie sicher, dass die erforderlichen MariaDB-Anmeldeinformationen und der Tabellenname korrekt eingegeben werden.
+	#   - Der Benutzer sollte die Berechtigungen haben, um auf die angegebene Datenbank zuzugreifen und SELECT-Abfragen durchzuführen.
+##
 function display_table_contents() {
     echo -n "Display Table Contents. Enter MariaDB username: "
     read -r db_user
@@ -13430,6 +13867,27 @@ function display_table_contents() {
     echo "${result}"
 }
 
+## * export_table_to_csv
+	# Datum: 13.11.2023
+	#? Beschreibung:
+	# Diese Funktion ermöglicht dem Benutzer das Exportieren aller Einträge in einer bestimmten Tabelle einer MariaDB-Datenbank in eine CSV-Datei.
+	# Benutzer werden aufgefordert, den MariaDB-Benutzernamen, das Passwort, den Datenbanknamen, den Tabellennamen und den Dateipfad für die CSV-Datei einzugeben.
+	# Die Funktion führt eine SELECT-Abfrage aus und exportiert die Ergebnisse in eine CSV-Datei unter Verwendung des angegebenen Dateipfads.
+	#? Parameter:
+	#   - Keine festen Parameter; Benutzer wird zur Eingabe von MariaDB-Benutzername, Passwort, Datenbankname, Tabellennamen und Dateipfad für die CSV-Datei aufgefordert.
+	#? Funktionsverhalten:
+	#   - Die Funktion gibt Aufforderungen aus, um den MariaDB-Benutzernamen, das Passwort, den Datenbanknamen, den Tabellennamen und den Dateipfad für die CSV-Datei einzugeben.
+	#   - Führt eine SELECT-Abfrage aus und exportiert die Ergebnisse in eine CSV-Datei unter Verwendung des angegebenen Dateipfads.
+	#   - Zeigt eine Erfolgsmeldung nach dem erfolgreichen Export an.
+	#? Beispielaufruf:
+	#   Die Funktion wird direkt vom Benutzer aufgerufen und ermöglicht das Exportieren aller Einträge in einer Tabelle in eine CSV-Datei.
+	#   Beispiel: export_table_to_csv
+	#? Rückgabewert:
+	#   - Es gibt keinen expliziten Rückgabewert. Die Funktion zeigt eine Erfolgsmeldung an, wenn der Export erfolgreich ist.
+	#? Hinweise:
+	#   - Stellen Sie sicher, dass die erforderlichen MariaDB-Anmeldeinformationen, der Tabellenname und der Dateipfad korrekt eingegeben werden.
+	#   - Der Benutzer sollte die Berechtigungen haben, um auf die angegebene Datenbank zuzugreifen und SELECT-Abfragen durchzuführen.
+##
 function export_table_to_csv() {
     echo -n "Export Table to CSV. Enter MariaDB username: "
     read -r db_user
@@ -13449,6 +13907,27 @@ function export_table_to_csv() {
     echo "Table exported to ${csv_file_path} successfully."
 }
 
+## * import_csv_to_table
+	# Datum: 13.11.2023
+	#? Beschreibung:
+	# Diese Funktion ermöglicht dem Benutzer das Importieren von Daten aus einer CSV-Datei in eine bestimmte Tabelle einer MariaDB-Datenbank.
+	# Benutzer werden aufgefordert, den MariaDB-Benutzernamen, das Passwort, den Datenbanknamen, den Tabellennamen und den Dateipfad der CSV-Datei einzugeben.
+	# Die Funktion führt den LOAD DATA LOCAL INFILE-Befehl aus, um Daten aus der CSV-Datei in die angegebene Tabelle zu importieren.
+	#? Parameter:
+	#   - Keine festen Parameter; Benutzer wird zur Eingabe von MariaDB-Benutzername, Passwort, Datenbankname, Tabellennamen und Dateipfad der CSV-Datei aufgefordert.
+	#? Funktionsverhalten:
+	#   - Die Funktion gibt Aufforderungen aus, um den MariaDB-Benutzernamen, das Passwort, den Datenbanknamen, den Tabellennamen und den Dateipfad der CSV-Datei einzugeben.
+	#   - Führt den LOAD DATA LOCAL INFILE-Befehl aus, um Daten aus der CSV-Datei in die angegebene Tabelle zu importieren.
+	#   - Zeigt eine Erfolgsmeldung nach dem erfolgreichen Import an.
+	#? Beispielaufruf:
+	#   Die Funktion wird direkt vom Benutzer aufgerufen und ermöglicht das Importieren von Daten aus einer CSV-Datei in eine Tabelle.
+	#   Beispiel: import_csv_to_table
+	#? Rückgabewert:
+	#   - Es gibt keinen expliziten Rückgabewert. Die Funktion zeigt eine Erfolgsmeldung an, wenn der Import erfolgreich ist.
+	#? Hinweise:
+	#   - Stellen Sie sicher, dass die erforderlichen MariaDB-Anmeldeinformationen, der Tabellenname und der Dateipfad korrekt eingegeben werden.
+	#   - Der Benutzer sollte die Berechtigungen haben, um auf die angegebene Datenbank zuzugreifen und den LOAD DATA LOCAL INFILE-Befehl auszuführen.
+##
 function import_csv_to_table() {
     echo -n "Import CSV to Table. Enter MariaDB username: "
     read -r db_user
@@ -13468,6 +13947,27 @@ function import_csv_to_table() {
     echo "Data imported from ${csv_file_path} to ${table_name} successfully."
 }
 
+## * backup_all_databases
+	# Datum: 13.11.2023
+	#? Beschreibung:
+	# Diese Funktion ermöglicht dem Benutzer das Sichern aller Datenbanken in einer MariaDB-Instanz.
+	# Benutzer werden aufgefordert, den MariaDB-Benutzernamen, das Passwort und den Pfad des Sicherungsverzeichnisses einzugeben.
+	# Die Funktion führt den mysqldump-Befehl für alle Datenbanken aus und speichert das Backup im angegebenen Verzeichnis.
+	#? Parameter:
+	#   - Keine festen Parameter; Benutzer wird zur Eingabe von MariaDB-Benutzername, Passwort und Pfad des Sicherungsverzeichnisses aufgefordert.
+	#? Funktionsverhalten:
+	#   - Die Funktion gibt Aufforderungen aus, um den MariaDB-Benutzernamen, das Passwort und den Pfad des Sicherungsverzeichnisses einzugeben.
+	#   - Führt den mysqldump-Befehl für alle Datenbanken aus und speichert das Backup im angegebenen Verzeichnis.
+	#   - Zeigt eine Erfolgsmeldung nach dem erfolgreichen Backup an.
+	#? Beispielaufruf:
+	#   Die Funktion wird direkt vom Benutzer aufgerufen und ermöglicht das Sichern aller Datenbanken.
+	#   Beispiel: backup_all_databases
+	#? Rückgabewert:
+	#   - Es gibt keinen expliziten Rückgabewert. Die Funktion zeigt eine Erfolgsmeldung an, wenn das Backup erfolgreich ist.
+	#? Hinweise:
+	#   - Stellen Sie sicher, dass die erforderlichen MariaDB-Anmeldeinformationen und der Verzeichnispfad korrekt eingegeben werden.
+	#   - Der Benutzer sollte die Berechtigungen haben, um auf die Datenbanken zuzugreifen und den mysqldump-Befehl auszuführen.
+##
 function backup_all_databases() {
     echo -n "Backup All Databases. Enter MariaDB username: "
     read -r db_user
@@ -13483,6 +13983,27 @@ function backup_all_databases() {
     echo "Backup of all databases saved to ${backup_dir}/all_databases_backup.sql"
 }
 
+## * restore_all_databases
+	# Datum: 13.11.2023
+	#? Beschreibung:
+	# Diese Funktion ermöglicht dem Benutzer die Wiederherstellung aller Datenbanken in einer MariaDB-Instanz aus einer SQL-Sicherungsdatei.
+	# Benutzer werden aufgefordert, den MariaDB-Benutzernamen, das Passwort und den Dateipfad zur SQL-Sicherungsdatei einzugeben.
+	# Die Funktion führt den mysql-Befehl aus, um alle Datenbanken aus der angegebenen Sicherungsdatei wiederherzustellen.
+	#? Parameter:
+	#   - Keine festen Parameter; Benutzer wird zur Eingabe von MariaDB-Benutzername, Passwort und Dateipfad zur SQL-Sicherungsdatei aufgefordert.
+	#? Funktionsverhalten:
+	#   - Die Funktion gibt Aufforderungen aus, um den MariaDB-Benutzernamen, das Passwort und den Dateipfad zur SQL-Sicherungsdatei einzugeben.
+	#   - Führt den mysql-Befehl aus, um alle Datenbanken aus der angegebenen Sicherungsdatei wiederherzustellen.
+	#   - Zeigt eine Erfolgsmeldung nach der erfolgreichen Wiederherstellung an.
+	#? Beispielaufruf:
+	#   Die Funktion wird direkt vom Benutzer aufgerufen und ermöglicht die Wiederherstellung aller Datenbanken aus einer SQL-Sicherungsdatei.
+	#   Beispiel: restore_all_databases
+	#? Rückgabewert:
+	#   - Es gibt keinen expliziten Rückgabewert. Die Funktion zeigt eine Erfolgsmeldung an, wenn die Wiederherstellung erfolgreich ist.
+	#? Hinweise:
+	#   - Stellen Sie sicher, dass die erforderlichen MariaDB-Anmeldeinformationen und der Dateipfad zur SQL-Sicherungsdatei korrekt eingegeben werden.
+	#   - Der Benutzer sollte die Berechtigungen haben, um Datenbanken wiederherzustellen und den mysql-Befehl auszuführen.
+##
 function restore_all_databases() {
     echo -n "Restore All Databases. Enter MariaDB username: "
     read -r db_user
@@ -13498,6 +14019,27 @@ function restore_all_databases() {
     echo "All databases restored from ${backup_file_path} successfully."
 }
 
+## * display_user_permissions
+	# Datum: 13.11.2023
+	#? Beschreibung:
+	# Diese Funktion ermöglicht dem Benutzer das Anzeigen der Berechtigungen für einen bestimmten Benutzer in einer MariaDB-Datenbank.
+	# Benutzer werden aufgefordert, den MariaDB-Benutzernamen, das Passwort, den Datenbanknamen und den Benutzernamen für die Berechtigungsüberprüfung einzugeben.
+	# Die Funktion führt die SHOW GRANTS-Abfrage aus, um die Berechtigungen des angegebenen Benutzers anzuzeigen.
+	#? Parameter:
+	#   - Keine festen Parameter; Benutzer wird zur Eingabe von MariaDB-Benutzername, Passwort, Datenbankname und Benutzernamen für die Berechtigungsüberprüfung aufgefordert.
+	#? Funktionsverhalten:
+	#   - Die Funktion gibt Aufforderungen aus, um den MariaDB-Benutzernamen, das Passwort, den Datenbanknamen und den Benutzernamen für die Berechtigungsüberprüfung einzugeben.
+	#   - Führt die SHOW GRANTS-Abfrage aus, um die Berechtigungen des angegebenen Benutzers anzuzeigen.
+	#   - Zeigt die Ergebnisse der Berechtigungen für den angegebenen Benutzer an.
+	#? Beispielaufruf:
+	#   Die Funktion wird direkt vom Benutzer aufgerufen und ermöglicht das Anzeigen der Berechtigungen für einen bestimmten Benutzer.
+	#   Beispiel: display_user_permissions
+	#? Rückgabewert:
+	#   - Es gibt keinen expliziten Rückgabewert. Die Funktion zeigt die Berechtigungen des angegebenen Benutzers an.
+	#? Hinweise:
+	#   - Stellen Sie sicher, dass die erforderlichen MariaDB-Anmeldeinformationen, der Datenbankname und der Benutzername korrekt eingegeben werden.
+	#   - Der Benutzer sollte die Berechtigungen haben, um die SHOW GRANTS-Abfrage auszuführen.
+##
 function display_user_permissions() {
     echo -n "Display User Permissions. Enter MariaDB username: "
     read -r db_user
@@ -13517,6 +14059,27 @@ function display_user_permissions() {
     echo "${result}"
 }
 
+## * add_user
+	# Datum: 13.11.2023
+	#? Beschreibung:
+	# Diese Funktion ermöglicht dem Benutzer das Hinzufügen eines neuen Benutzers zu einer MariaDB-Datenbank.
+	# Benutzer werden aufgefordert, den MariaDB-Benutzernamen, das Passwort, den Datenbanknamen sowie den Benutzernamen und das Passwort für den neuen Benutzer einzugeben.
+	# Die Funktion führt die CREATE USER-Abfrage aus, um einen neuen Benutzer mit dem angegebenen Benutzernamen und Passwort zu erstellen.
+	#? Parameter:
+	#   - Keine festen Parameter; Benutzer wird zur Eingabe von MariaDB-Benutzername, Passwort, Datenbankname, neuem Benutzernamen und neuem Passwort aufgefordert.
+	#? Funktionsverhalten:
+	#   - Die Funktion gibt Aufforderungen aus, um den MariaDB-Benutzernamen, das Passwort, den Datenbanknamen, den neuen Benutzernamen und das neue Passwort einzugeben.
+	#   - Führt die CREATE USER-Abfrage aus, um einen neuen Benutzer mit den angegebenen Informationen zu erstellen.
+	#   - Zeigt eine Erfolgsmeldung nach erfolgreichem Hinzufügen des Benutzers an.
+	#? Beispielaufruf:
+	#   Die Funktion wird direkt vom Benutzer aufgerufen und ermöglicht das Hinzufügen eines neuen Benutzers zur Datenbank.
+	#   Beispiel: add_user
+	#? Rückgabewert:
+	#   - Es gibt keinen expliziten Rückgabewert. Die Funktion zeigt eine Erfolgsmeldung an, wenn das Hinzufügen des Benutzers erfolgreich ist.
+	#? Hinweise:
+	#   - Stellen Sie sicher, dass die erforderlichen MariaDB-Anmeldeinformationen, der Datenbankname, der neue Benutzername und das neue Passwort korrekt eingegeben werden.
+	#   - Der Benutzer sollte die Berechtigungen haben, um die CREATE USER-Abfrage auszuführen.
+##
 function add_user() {
     echo -n "Add User. Enter MariaDB username: "
     read -r db_user
@@ -13536,6 +14099,27 @@ function add_user() {
     echo "User ${new_username} added successfully."
 }
 
+## * modify_user_permissions
+	# Datum: 13.11.2023
+	#? Beschreibung:
+	# Diese Funktion ermöglicht dem Benutzer die Modifikation der Berechtigungen für einen bestimmten Benutzer in einer MariaDB-Datenbank.
+	# Benutzer werden aufgefordert, den MariaDB-Benutzernamen, das Passwort, den Datenbanknamen, den Benutzernamen für die Berechtigungsmodifikation und die neuen Berechtigungen einzugeben.
+	# Die Funktion führt die GRANT-Abfrage aus, um die Berechtigungen des angegebenen Benutzers zu ändern oder zu erweitern.
+	#? Parameter:
+	#   - Keine festen Parameter; Benutzer wird zur Eingabe von MariaDB-Benutzername, Passwort, Datenbankname, Benutzernamen für die Berechtigungsmodifikation und neuen Berechtigungen aufgefordert.
+	#? Funktionsverhalten:
+	#   - Die Funktion gibt Aufforderungen aus, um den MariaDB-Benutzernamen, das Passwort, den Datenbanknamen, den Benutzernamen für die Berechtigungsmodifikation und die neuen Berechtigungen einzugeben.
+	#   - Führt die GRANT-Abfrage aus, um die Berechtigungen des angegebenen Benutzers zu ändern oder zu erweitern.
+	#   - Zeigt eine Erfolgsmeldung nach erfolgreicher Modifikation der Berechtigungen an.
+	#? Beispielaufruf:
+	#   Die Funktion wird direkt vom Benutzer aufgerufen und ermöglicht die Modifikation der Berechtigungen für einen bestimmten Benutzer.
+	#   Beispiel: modify_user_permissions
+	#? Rückgabewert:
+	#   - Es gibt keinen expliziten Rückgabewert. Die Funktion zeigt eine Erfolgsmeldung an, wenn die Berechtigungen erfolgreich modifiziert wurden.
+	#? Hinweise:
+	#   - Stellen Sie sicher, dass die erforderlichen MariaDB-Anmeldeinformationen, der Datenbankname, der Benutzername für die Berechtigungsmodifikation und die neuen Berechtigungen korrekt eingegeben werden.
+	#   - Der Benutzer sollte die Berechtigungen haben, um die GRANT-Abfrage auszuführen.
+##
 function modify_user_permissions() {
     echo -n "Modify User Permissions. Enter MariaDB username: "
     read -r db_user
@@ -13555,6 +14139,27 @@ function modify_user_permissions() {
     echo "Permissions modified for ${modify_user}."
 }
 
+## * delete_user
+	# Datum: 13.11.2023
+	#? Beschreibung:
+	# Diese Funktion ermöglicht dem Benutzer das Löschen eines bestimmten Benutzers aus einer MariaDB-Datenbank.
+	# Benutzer werden aufgefordert, den MariaDB-Benutzernamen, das Passwort, den Datenbanknamen und den Benutzernamen des zu löschenden Benutzers einzugeben.
+	# Die Funktion führt die DROP USER-Abfrage aus, um den angegebenen Benutzer zu löschen.
+	#? Parameter:
+	#   - Keine festen Parameter; Benutzer wird zur Eingabe von MariaDB-Benutzername, Passwort, Datenbankname und Benutzernamen des zu löschenden Benutzers aufgefordert.
+	#? Funktionsverhalten:
+	#   - Die Funktion gibt Aufforderungen aus, um den MariaDB-Benutzernamen, das Passwort, den Datenbanknamen und den Benutzernamen des zu löschenden Benutzers einzugeben.
+	#   - Führt die DROP USER-Abfrage aus, um den angegebenen Benutzer zu löschen.
+	#   - Zeigt eine Erfolgsmeldung nach erfolgreichem Löschen des Benutzers an.
+	#? Beispielaufruf:
+	#   Die Funktion wird direkt vom Benutzer aufgerufen und ermöglicht das Löschen eines bestimmten Benutzers aus der Datenbank.
+	#   Beispiel: delete_user
+	#? Rückgabewert:
+	#   - Es gibt keinen expliziten Rückgabewert. Die Funktion zeigt eine Erfolgsmeldung an, wenn das Löschen des Benutzers erfolgreich ist.
+	#? Hinweise:
+	#   - Stellen Sie sicher, dass die erforderlichen MariaDB-Anmeldeinformationen, der Datenbankname und der Benutzername des zu löschenden Benutzers korrekt eingegeben werden.
+	#   - Der Benutzer sollte die Berechtigungen haben, um die DROP USER-Abfrage auszuführen.
+##
 function delete_user() {
     echo -n "Delete User. Enter MariaDB username: "
     read -r db_user
@@ -13572,6 +14177,27 @@ function delete_user() {
     echo "User ${delete_user} deleted successfully."
 }
 
+## * rename_table
+	# Datum: 13.11.2023
+	#? Beschreibung:
+	# Diese Funktion ermöglicht dem Benutzer das Umbenennen einer Tabelle in einer MariaDB-Datenbank.
+	# Benutzer werden aufgefordert, den MariaDB-Benutzernamen, das Passwort, den Datenbanknamen sowie den aktuellen und neuen Tabellennamen einzugeben.
+	# Die Funktion führt die RENAME TABLE-Abfrage aus, um die angegebene Tabelle umzubenennen.
+	#? Parameter:
+	#   - Keine festen Parameter; Benutzer wird zur Eingabe von MariaDB-Benutzername, Passwort, Datenbankname sowie aktuellem und neuem Tabellennamen aufgefordert.
+	#? Funktionsverhalten:
+	#   - Die Funktion gibt Aufforderungen aus, um den MariaDB-Benutzernamen, das Passwort, den Datenbanknamen sowie den aktuellen und neuen Tabellennamen einzugeben.
+	#   - Führt die RENAME TABLE-Abfrage aus, um die angegebene Tabelle umzubenennen.
+	#   - Zeigt eine Erfolgsmeldung nach erfolgreichem Umbenennen der Tabelle an.
+	#? Beispielaufruf:
+	#   Die Funktion wird direkt vom Benutzer aufgerufen und ermöglicht das Umbenennen einer Tabelle in der Datenbank.
+	#   Beispiel: rename_table
+	#? Rückgabewert:
+	#   - Es gibt keinen expliziten Rückgabewert. Die Funktion zeigt eine Erfolgsmeldung an, wenn das Umbenennen der Tabelle erfolgreich ist.
+	#? Hinweise:
+	#   - Stellen Sie sicher, dass die erforderlichen MariaDB-Anmeldeinformationen, der Datenbankname sowie aktueller und neuer Tabellenname korrekt eingegeben werden.
+	#   - Der Benutzer sollte die Berechtigungen haben, um die RENAME TABLE-Abfrage auszuführen.
+##
 function rename_table() {
     echo -n "Rename Table. Enter MariaDB username: "
     read -r db_user
@@ -13591,6 +14217,27 @@ function rename_table() {
     echo "Table ${current_table_name} renamed to ${new_table_name} successfully."
 }
 
+## * show_running_processes
+	# Datum: 13.11.2023
+	#? Beschreibung:
+	# Diese Funktion ermöglicht dem Benutzer das Anzeigen der aktuellen laufenden Prozesse in einer MariaDB-Datenbank.
+	# Benutzer werden aufgefordert, den MariaDB-Benutzernamen und das Passwort einzugeben.
+	# Die Funktion führt die SHOW PROCESSLIST-Abfrage aus, um eine Liste der aktuellen Prozesse abzurufen.
+	#? Parameter:
+	#   - Keine festen Parameter; Benutzer wird zur Eingabe von MariaDB-Benutzername und Passwort aufgefordert.
+	#? Funktionsverhalten:
+	#   - Die Funktion gibt Aufforderungen aus, um den MariaDB-Benutzernamen und das Passwort einzugeben.
+	#   - Führt die SHOW PROCESSLIST-Abfrage aus, um eine Liste der aktuellen Prozesse in der MariaDB-Datenbank abzurufen.
+	#   - Zeigt die Ergebnisse, d. h. die laufenden Prozesse, an.
+	#? Beispielaufruf:
+	#   Die Funktion wird direkt vom Benutzer aufgerufen und ermöglicht das Anzeigen der aktuellen laufenden Prozesse.
+	#   Beispiel: show_running_processes
+	#? Rückgabewert:
+	#   - Es gibt keinen expliziten Rückgabewert. Die Funktion zeigt die Liste der aktuellen laufenden Prozesse an.
+	#? Hinweise:
+	#   - Stellen Sie sicher, dass die erforderlichen MariaDB-Anmeldeinformationen korrekt eingegeben werden.
+	#   - Der Benutzer sollte die Berechtigungen haben, um die SHOW PROCESSLIST-Abfrage auszuführen.
+##
 function show_running_processes() {
     echo -n "Show Running Processes. Enter MariaDB username: "
     read -r db_user
@@ -13606,6 +14253,27 @@ function show_running_processes() {
     echo "${result}"
 }
 
+## * clear_query_cache
+	# Datum: 13.11.2023
+	#? Beschreibung:
+	# Diese Funktion ermöglicht dem Benutzer das Löschen des Query-Cache in einer MariaDB-Datenbank.
+	# Benutzer werden aufgefordert, den MariaDB-Benutzernamen und das Passwort einzugeben.
+	# Die Funktion führt den RESET QUERY CACHE-Befehl aus, um den Query-Cache zu leeren.
+	#? Parameter:
+	#   - Keine festen Parameter; Benutzer wird zur Eingabe von MariaDB-Benutzername und Passwort aufgefordert.
+	#? Funktionsverhalten:
+	#   - Die Funktion gibt Aufforderungen aus, um den MariaDB-Benutzernamen und das Passwort einzugeben.
+	#   - Führt den RESET QUERY CACHE-Befehl aus, um den Query-Cache in der MariaDB-Datenbank zu leeren.
+	#   - Zeigt eine Erfolgsmeldung nach erfolgreichem Leeren des Query-Cache an.
+	#? Beispielaufruf:
+	#   Die Funktion wird direkt vom Benutzer aufgerufen und ermöglicht das Löschen des Query-Cache in der Datenbank.
+	#   Beispiel: clear_query_cache
+	#? Rückgabewert:
+	#   - Es gibt keinen expliziten Rückgabewert. Die Funktion zeigt eine Erfolgsmeldung an, wenn das Leeren des Query-Cache erfolgreich ist.
+	#? Hinweise:
+	#   - Stellen Sie sicher, dass die erforderlichen MariaDB-Anmeldeinformationen korrekt eingegeben werden.
+	#   - Der Benutzer sollte die Berechtigungen haben, um den RESET QUERY CACHE-Befehl auszuführen.
+##
 function clear_query_cache() {
     echo -n "Clear Query Cache. Enter MariaDB username: "
     read -r db_user
@@ -13619,6 +14287,27 @@ function clear_query_cache() {
     echo "Query cache cleared successfully."
 }
 
+## * show_index_info
+	# Datum: 13.11.2023
+	#? Beschreibung:
+	# Diese Funktion ermöglicht dem Benutzer das Anzeigen von Indexinformationen für eine Tabelle in einer MariaDB-Datenbank.
+	# Benutzer werden aufgefordert, den MariaDB-Benutzernamen, das Passwort und den Datenbanknamen einzugeben.
+	# Die Funktion führt die SHOW INDEX-Abfrage aus, um Informationen zu den Indizes der angegebenen Tabelle anzuzeigen.
+	#? Parameter:
+	#   - Keine festen Parameter; Benutzer wird zur Eingabe von MariaDB-Benutzernamen, Passwort, Datenbankname und Tabellennamen aufgefordert.
+	#? Funktionsverhalten:
+	#   - Die Funktion gibt Aufforderungen aus, um den MariaDB-Benutzernamen, das Passwort, den Datenbanknamen und den Tabellennamen einzugeben.
+	#   - Führt die SHOW INDEX-Abfrage aus, um Informationen zu den Indizes der angegebenen Tabelle anzuzeigen.
+	#   - Zeigt die Ergebnisse, d. h. die Indexinformationen, an.
+	#? Beispielaufruf:
+	#   Die Funktion wird direkt vom Benutzer aufgerufen und ermöglicht das Anzeigen von Indexinformationen für eine bestimmte Tabelle.
+	#   Beispiel: show_index_info
+	#? Rückgabewert:
+	#   - Es gibt keinen expliziten Rückgabewert. Die Funktion zeigt die Indexinformationen für die angegebene Tabelle an.
+	#? Hinweise:
+	#   - Stellen Sie sicher, dass die erforderlichen MariaDB-Anmeldeinformationen und der Tabellenname korrekt eingegeben werden.
+	#   - Der Benutzer sollte die Berechtigungen haben, um auf die angegebene Datenbank zuzugreifen und Operationen durchzuführen.
+##
 function show_index_info() {
     echo -n "Show Index Information. Enter MariaDB username: "
     read -r db_user
@@ -13638,6 +14327,27 @@ function show_index_info() {
     echo "${result}"
 }
 
+## * analyze_database
+	# Datum: 13.11.2023
+	#? Beschreibung:
+	# Diese Funktion ermöglicht dem Benutzer das Analysieren aller Tabellen in einer MariaDB-Datenbank, um Statistiken zu aktualisieren.
+	# Benutzer werden aufgefordert, den MariaDB-Benutzernamen, das Passwort und den Datenbanknamen einzugeben.
+	# Die Funktion führt den ANALYZE TABLE-Befehl aus, um alle Tabellen in der angegebenen Datenbank zu analysieren.
+	#? Parameter:
+	#   - Keine festen Parameter; Benutzer wird zur Eingabe von MariaDB-Benutzernamen, Passwort und Datenbankname aufgefordert.
+	#? Funktionsverhalten:
+	#   - Die Funktion gibt Aufforderungen aus, um den MariaDB-Benutzernamen, das Passwort und den Datenbanknamen einzugeben.
+	#   - Führt den ANALYZE TABLE-Befehl aus, um alle Tabellen in der angegebenen Datenbank zu analysieren.
+	#   - Zeigt eine Erfolgsmeldung nach erfolgreichem Analysieren der Datenbank an.
+	#? Beispielaufruf:
+	#   Die Funktion wird direkt vom Benutzer aufgerufen und ermöglicht das Analysieren aller Tabellen in einer Datenbank.
+	#   Beispiel: analyze_database
+	#? Rückgabewert:
+	#   - Es gibt keinen expliziten Rückgabewert. Die Funktion zeigt eine Erfolgsmeldung an, wenn das Analysieren der Datenbank erfolgreich ist.
+	#? Hinweise:
+	#   - Stellen Sie sicher, dass die erforderlichen MariaDB-Anmeldeinformationen und der Datenbankname korrekt eingegeben werden.
+	#   - Der Benutzer sollte die Berechtigungen haben, um auf die angegebene Datenbank zuzugreifen und Operationen durchzuführen.
+##
 function analyze_database() {
     echo -n "Analyze Database. Enter MariaDB username: "
     read -r db_user
@@ -13653,6 +14363,27 @@ function analyze_database() {
     echo "Database analyzed successfully."
 }
 
+## * optimize_query
+	# Datum: 13.11.2023
+	#? Beschreibung:
+	# Diese Funktion ermöglicht dem Benutzer das Optimieren einer SQL-Abfrage in einer MariaDB-Datenbank.
+	# Benutzer werden aufgefordert, den MariaDB-Benutzernamen, das Passwort, den Datenbanknamen und die zu optimierende SQL-Abfrage einzugeben.
+	# Die Funktion führt den EXPLAIN-Befehl für den Ausführungsplan der angegebenen SQL-Abfrage aus, um Optimierungsmöglichkeiten aufzuzeigen.
+	#? Parameter:
+	#   - Keine festen Parameter; Benutzer wird zur Eingabe von MariaDB-Benutzernamen, Passwort, Datenbankname und SQL-Abfrage aufgefordert.
+	#? Funktionsverhalten:
+	#   - Die Funktion gibt Aufforderungen aus, um den MariaDB-Benutzernamen, das Passwort, den Datenbanknamen und die SQL-Abfrage einzugeben.
+	#   - Führt den EXPLAIN-Befehl für den Ausführungsplan der SQL-Abfrage aus und zeigt Optimierungsmöglichkeiten an.
+	#   - Zeigt den Ausführungsplan der SQL-Abfrage an.
+	#? Beispielaufruf:
+	#   Die Funktion wird direkt vom Benutzer aufgerufen und ermöglicht das Optimieren einer SQL-Abfrage.
+	#   Beispiel: optimize_query
+	#? Rückgabewert:
+	#   - Es gibt keinen expliziten Rückgabewert. Die Funktion zeigt den Ausführungsplan der SQL-Abfrage an.
+	#? Hinweise:
+	#   - Stellen Sie sicher, dass die erforderlichen MariaDB-Anmeldeinformationen, der Datenbankname und die SQL-Abfrage korrekt eingegeben werden.
+	#   - Die Analyse des Ausführungsplans kann Optimierungsmöglichkeiten für die angegebene SQL-Abfrage aufzeigen.
+##
 function optimize_query() {
     echo -n "Optimize Query. Enter MariaDB username: "
     read -r db_user
@@ -13672,6 +14403,26 @@ function optimize_query() {
     echo "${result}"
 }
 
+## * create_database
+	# Datum: 13.11.2023
+	#? Beschreibung:
+	# Diese Funktion ermöglicht dem Benutzer das Erstellen einer neuen Datenbank in einer MariaDB-Instanz.
+	# Benutzer werden aufgefordert, den MariaDB-Benutzernamen, das Passwort und einen Namen für die neue Datenbank einzugeben.
+	# Die Funktion führt den CREATE DATABASE-Befehl aus, um die neue Datenbank zu erstellen.
+	#? Parameter:
+	#   - Keine festen Parameter; Benutzer wird zur Eingabe von MariaDB-Benutzernamen, Passwort und Namen für die neue Datenbank aufgefordert.
+	#? Funktionsverhalten:
+	#   - Die Funktion gibt Aufforderungen aus, um den MariaDB-Benutzernamen, das Passwort und einen Namen für die neue Datenbank einzugeben.
+	#   - Führt den CREATE DATABASE-Befehl aus, um die neue Datenbank zu erstellen.
+	#? Beispielaufruf:
+	#   Die Funktion wird direkt vom Benutzer aufgerufen und ermöglicht das Erstellen einer neuen Datenbank.
+	#   Beispiel: create_database
+	#? Rückgabewert:
+	#   - Es gibt keinen expliziten Rückgabewert. Die Funktion gibt eine Erfolgsmeldung aus, wenn die Datenbank erfolgreich erstellt wurde.
+	#? Hinweise:
+	#   - Stellen Sie sicher, dass die erforderlichen MariaDB-Anmeldeinformationen und der Name für die neue Datenbank korrekt eingegeben werden.
+	#   - Der Benutzer sollte die erforderlichen Berechtigungen haben, um eine neue Datenbank zu erstellen.
+##
 function create_database() {
     echo -n "Create Database. Enter MariaDB username: "
     read -r db_user
@@ -13687,6 +14438,28 @@ function create_database() {
     echo "Database ${new_db_name} created successfully."
 }
 
+## * create_table
+	# Datum: 13.11.2023
+	#? Beschreibung:
+	# Diese Funktion ermöglicht dem Benutzer das Erstellen einer neuen Tabelle in einer vorhandenen MariaDB-Datenbank.
+	# Benutzer werden aufgefordert, den MariaDB-Benutzernamen, das Passwort, den Datenbanknamen und einen Namen für die neue Tabelle einzugeben.
+	# Zusätzlich werden Benutzer gebeten, die Spalten und ihre Datentypen für die neue Tabelle einzugeben.
+	# Die Funktion führt den CREATE TABLE-Befehl aus, um die neue Tabelle mit den angegebenen Spalten zu erstellen.
+	#? Parameter:
+	#   - Keine festen Parameter; Benutzer wird zur Eingabe von MariaDB-Benutzernamen, Passwort, Datenbanknamen und Namen für die neue Tabelle aufgefordert.
+	#? Funktionsverhalten:
+	#   - Die Funktion gibt Aufforderungen aus, um den MariaDB-Benutzernamen, das Passwort, den Datenbanknamen und den Namen für die neue Tabelle einzugeben.
+	#   - Benutzer werden aufgefordert, die Spalten und ihre Datentypen für die neue Tabelle einzugeben.
+	#   - Führt den CREATE TABLE-Befehl aus, um die neue Tabelle mit den angegebenen Spalten zu erstellen.
+	#? Beispielaufruf:
+	#   Die Funktion wird direkt vom Benutzer aufgerufen und ermöglicht das Erstellen einer neuen Tabelle.
+	#   Beispiel: create_table
+	#? Rückgabewert:
+	#   - Es gibt keinen expliziten Rückgabewert. Die Funktion gibt eine Erfolgsmeldung aus, wenn die Tabelle erfolgreich erstellt wurde.
+	#? Hinweise:
+	#   - Stellen Sie sicher, dass die erforderlichen MariaDB-Anmeldeinformationen, der Datenbankname und der Name für die neue Tabelle korrekt eingegeben werden.
+	#   - Der Benutzer sollte die erforderlichen Berechtigungen haben, um eine neue Tabelle zu erstellen.
+##
 function create_table() {
     echo -n "Create Table. Enter MariaDB username: "
     read -r db_user
@@ -13708,6 +14481,28 @@ function create_table() {
     echo "Table ${new_table_name} created successfully."
 }
 
+## * alter_table_structure
+	# Datum: 13.11.2023
+	#? Beschreibung:
+	# Diese Funktion ermöglicht dem Benutzer das Ändern der Struktur einer vorhandenen Tabelle in einer MariaDB-Datenbank.
+	# Benutzer werden aufgefordert, den MariaDB-Benutzernamen, das Passwort, den Datenbanknamen und den Namen der zu ändernden Tabelle einzugeben.
+	# Zusätzlich werden Benutzer gebeten, die gewünschten Änderungen an der Tabellenstruktur einzugeben.
+	# Die Funktion führt den ALTER TABLE-Befehl aus, um die angegebenen Änderungen an der Tabelle durchzuführen.
+	#? Parameter:
+	#   - Keine festen Parameter; Benutzer wird zur Eingabe von MariaDB-Benutzernamen, Passwort, Datenbanknamen und Namen der zu ändernden Tabelle aufgefordert.
+	#? Funktionsverhalten:
+	#   - Die Funktion gibt Aufforderungen aus, um den MariaDB-Benutzernamen, das Passwort, den Datenbanknamen und den Namen der zu ändernden Tabelle einzugeben.
+	#   - Benutzer werden aufgefordert, die gewünschten Änderungen an der Tabellenstruktur einzugeben.
+	#   - Führt den ALTER TABLE-Befehl aus, um die angegebenen Änderungen an der Tabelle durchzuführen.
+	#? Beispielaufruf:
+	#   Die Funktion wird direkt vom Benutzer aufgerufen und ermöglicht das Ändern der Struktur einer vorhandenen Tabelle.
+	#   Beispiel: alter_table_structure
+	#? Rückgabewert:
+	#   - Es gibt keinen expliziten Rückgabewert. Die Funktion gibt eine Erfolgsmeldung aus, wenn die Tabellenstruktur erfolgreich geändert wurde.
+	#? Hinweise:
+	#   - Stellen Sie sicher, dass die erforderlichen MariaDB-Anmeldeinformationen, der Datenbankname und der Name der zu ändernden Tabelle korrekt eingegeben werden.
+	#   - Der Benutzer sollte die erforderlichen Berechtigungen haben, um die Struktur der Tabelle zu ändern.
+##
 function alter_table_structure() {
     echo -n "Alter Table Structure. Enter MariaDB username: "
     read -r db_user
@@ -13729,6 +14524,26 @@ function alter_table_structure() {
     echo "Table ${alter_table_name} structure altered successfully."
 }
 
+## * show_user_activity
+	# Datum: 13.11.2023
+	#? Beschreibung:
+	# Diese Funktion ermöglicht es dem Benutzer, die Aktivitäten eines bestimmten Benutzers in einer MariaDB-Datenbank anzuzeigen.
+	# Benutzer werden aufgefordert, den MariaDB-Benutzernamen, das Passwort und den Benutzernamen, dessen Aktivität überprüft werden soll, einzugeben.
+	# Die Funktion führt dann eine SHOW PROCESSLIST-Abfrage für den angegebenen Benutzer durch und zeigt die laufenden Prozesse und ihre Details an.
+	#? Parameter:
+	#   - Keine festen Parameter; Benutzer wird zur Eingabe von MariaDB-Benutzernamen, Passwort und dem zu überprüfenden Benutzernamen aufgefordert.
+	#? Funktionsverhalten:
+	#   - Die Funktion gibt Aufforderungen aus, um den MariaDB-Benutzernamen, das Passwort und den Benutzernamen, dessen Aktivität überprüft werden soll, einzugeben.
+	#   - Führt eine SHOW PROCESSLIST-Abfrage für den angegebenen Benutzer durch und zeigt die laufenden Prozesse und ihre Details an.
+	#? Beispielaufruf:
+	#   Die Funktion wird direkt vom Benutzer aufgerufen und ermöglicht das Anzeigen der Aktivität eines bestimmten Benutzers.
+	#   Beispiel: show_user_activity
+	#? Rückgabewert:
+	#   - Es gibt keinen expliziten Rückgabewert. Die Funktion gibt die laufenden Prozesse und ihre Details für den angegebenen Benutzer aus.
+	#? Hinweise:
+	#   - Stellen Sie sicher, dass die erforderlichen MariaDB-Anmeldeinformationen und der zu überprüfende Benutzername korrekt eingegeben werden.
+	#   - Der Benutzer sollte die erforderlichen Berechtigungen haben, um die Aktivität anderer Benutzer überprüfen zu können.
+##
 function show_user_activity() {
     echo -n "Show User Activity. Enter MariaDB username: "
     read -r db_user
@@ -13746,6 +14561,26 @@ function show_user_activity() {
     echo "${result}"
 }
 
+## * show_events
+	# Datum: 13.11.2023
+	#? Beschreibung:
+	# Diese Funktion ermöglicht es dem Benutzer, alle geplanten Ereignisse (Events) in einer MariaDB-Datenbank anzuzeigen.
+	# Benutzer werden aufgefordert, den MariaDB-Benutzernamen und das Passwort einzugeben.
+	# Die Funktion führt dann eine SHOW EVENTS-Abfrage durch und zeigt alle geplanten Ereignisse in der Datenbank an.
+	#? Parameter:
+	#   - Keine festen Parameter; Benutzer wird zur Eingabe von MariaDB-Benutzernamen und Passwort aufgefordert.
+	#? Funktionsverhalten:
+	#   - Die Funktion gibt Aufforderungen aus, um den MariaDB-Benutzernamen und das Passwort einzugeben.
+	#   - Führt eine SHOW EVENTS-Abfrage durch und zeigt alle geplanten Ereignisse in der Datenbank an.
+	#? Beispielaufruf:
+	#   Die Funktion wird direkt vom Benutzer aufgerufen und ermöglicht das Anzeigen aller geplanten Ereignisse in der Datenbank.
+	#   Beispiel: show_events
+	#? Rückgabewert:
+	#   - Es gibt keinen expliziten Rückgabewert. Die Funktion gibt alle geplanten Ereignisse in der Datenbank aus.
+	#? Hinweise:
+	#   - Stellen Sie sicher, dass die erforderlichen MariaDB-Anmeldeinformationen korrekt eingegeben werden.
+	#   - Der Benutzer sollte die erforderlichen Berechtigungen haben, um auf die Ereignisse in der Datenbank zuzugreifen.
+##
 function show_events() {
     echo -n "Show Events. Enter MariaDB username: "
     read -r db_user
@@ -13761,6 +14596,27 @@ function show_events() {
     echo "${result}"
 }
 
+## * check_database_connection
+	# Datum: 13.11.2023
+	#? Beschreibung:
+	# Diese Funktion ermöglicht es dem Benutzer, die Verbindung zur MariaDB-Datenbank zu überprüfen.
+	# Benutzer werden aufgefordert, den MariaDB-Benutzernamen und das Passwort einzugeben.
+	# Die Funktion versucht dann, eine einfache SELECT 1-Abfrage durchzuführen, um die Verbindung zur Datenbank zu testen.
+	# Zeigt eine Erfolgsmeldung an, wenn die Verbindung erfolgreich ist, andernfalls wird eine Fehlermeldung ausgegeben.
+	#? Parameter:
+	#   - Keine festen Parameter; Benutzer wird zur Eingabe von MariaDB-Benutzernamen und Passwort aufgefordert.
+	#? Funktionsverhalten:
+	#   - Die Funktion gibt Aufforderungen aus, um den MariaDB-Benutzernamen und das Passwort einzugeben.
+	#   - Versucht, eine einfache SELECT 1-Abfrage durchzuführen, um die Verbindung zur Datenbank zu testen.
+	#   - Zeigt eine Erfolgsmeldung an, wenn die Verbindung erfolgreich ist, andernfalls wird eine Fehlermeldung ausgegeben.
+	#? Beispielaufruf:
+	#   Die Funktion wird direkt vom Benutzer aufgerufen und überprüft die Verbindung zur MariaDB-Datenbank.
+	#   Beispiel: check_database_connection
+	#? Rückgabewert:
+	#   - Es gibt keinen expliziten Rückgabewert. Die Funktion gibt eine Erfolgs- oder Fehlermeldung aus.
+	#? Hinweise:
+	#   - Stellen Sie sicher, dass die erforderlichen MariaDB-Anmeldeinformationen korrekt eingegeben werden.
+##
 function check_database_connection() {
     echo -n "Check Database Connection. Enter MariaDB username: "
     read -r db_user
@@ -13776,6 +14632,26 @@ function check_database_connection() {
     fi
 }
 
+## * show_variables
+	# Datum: 13.11.2023
+	#? Beschreibung:
+	# Diese Funktion ermöglicht es dem Benutzer, die aktuellen Konfigurationsvariablen der MariaDB-Datenbank anzuzeigen.
+	# Benutzer werden aufgefordert, den MariaDB-Benutzernamen und das Passwort einzugeben.
+	# Die Funktion führt dann eine SHOW VARIABLES-Abfrage aus und gibt die Ergebnisse aus.
+	#? Parameter:
+	#   - Keine festen Parameter; Benutzer wird zur Eingabe von MariaDB-Benutzernamen und Passwort aufgefordert.
+	#? Funktionsverhalten:
+	#   - Die Funktion gibt Aufforderungen aus, um den MariaDB-Benutzernamen und das Passwort einzugeben.
+	#   - Führt eine SHOW VARIABLES-Abfrage aus, um die aktuellen Konfigurationsvariablen anzuzeigen.
+	#   - Zeigt die Ergebnisse der Abfrage an.
+	#? Beispielaufruf:
+	#   Die Funktion wird direkt vom Benutzer aufgerufen, um die aktuellen Datenbankvariablen anzuzeigen.
+	#   Beispiel: show_variables
+	#? Rückgabewert:
+	#   - Es gibt keinen expliziten Rückgabewert. Die Funktion gibt die Ergebnisse der SHOW VARIABLES-Abfrage aus.
+	#? Hinweise:
+	#   - Stellen Sie sicher, dass die erforderlichen MariaDB-Anmeldeinformationen korrekt eingegeben werden.
+##
 function show_variables() {
     echo -n "Show Database Variables. Enter MariaDB username: "
     read -r db_user
@@ -13790,6 +14666,26 @@ function show_variables() {
     echo "${result}"
 }
 
+## * show_database_engines
+	# Datum: 13.11.2023
+	#? Beschreibung:
+	# Diese Funktion ermöglicht es dem Benutzer, die verfügbaren Datenbank-Engines in der MariaDB-Datenbank anzuzeigen.
+	# Benutzer werden aufgefordert, den MariaDB-Benutzernamen und das Passwort einzugeben.
+	# Die Funktion führt dann eine SHOW ENGINES-Abfrage aus und gibt die Ergebnisse aus.
+	#? Parameter:
+	#   - Keine festen Parameter; Benutzer wird zur Eingabe von MariaDB-Benutzernamen und Passwort aufgefordert.
+	#? Funktionsverhalten:
+	#   - Die Funktion gibt Aufforderungen aus, um den MariaDB-Benutzernamen und das Passwort einzugeben.
+	#   - Führt eine SHOW ENGINES-Abfrage aus, um die verfügbaren Datenbank-Engines anzuzeigen.
+	#   - Zeigt die Ergebnisse der Abfrage an.
+	#? Beispielaufruf:
+	#   Die Funktion wird direkt vom Benutzer aufgerufen, um die verfügbaren Datenbank-Engines anzuzeigen.
+	#   Beispiel: show_database_engines
+	#? Rückgabewert:
+	#   - Es gibt keinen expliziten Rückgabewert. Die Funktion gibt die Ergebnisse der SHOW ENGINES-Abfrage aus.
+	#? Hinweise:
+	#   - Stellen Sie sicher, dass die erforderlichen MariaDB-Anmeldeinformationen korrekt eingegeben werden.
+##
 function show_database_engines() {
     echo -n "Show Database Engines. Enter MariaDB username: "
     read -r db_user
@@ -13805,6 +14701,26 @@ function show_database_engines() {
     echo "${result}"
 }
 
+## * show_collations
+	# Datum: 13.11.2023
+	#? Beschreibung:
+	# Diese Funktion ermöglicht es dem Benutzer, die verfügbaren Kollationen (Collations) in der MariaDB-Datenbank anzuzeigen.
+	# Benutzer werden aufgefordert, den MariaDB-Benutzernamen und das Passwort einzugeben.
+	# Die Funktion führt dann eine SHOW COLLATION-Abfrage aus und gibt die Ergebnisse aus.
+	#? Parameter:
+	#   - Keine festen Parameter; Benutzer wird zur Eingabe von MariaDB-Benutzernamen und Passwort aufgefordert.
+	#? Funktionsverhalten:
+	#   - Die Funktion gibt Aufforderungen aus, um den MariaDB-Benutzernamen und das Passwort einzugeben.
+	#   - Führt eine SHOW COLLATION-Abfrage aus, um die verfügbaren Kollationen anzuzeigen.
+	#   - Zeigt die Ergebnisse der Abfrage an.
+	#? Beispielaufruf:
+	#   Die Funktion wird direkt vom Benutzer aufgerufen, um die verfügbaren Kollationen anzuzeigen.
+	#   Beispiel: show_collations
+	#? Rückgabewert:
+	#   - Es gibt keinen expliziten Rückgabewert. Die Funktion gibt die Ergebnisse der SHOW COLLATION-Abfrage aus.
+	#? Hinweise:
+	#   - Stellen Sie sicher, dass die erforderlichen MariaDB-Anmeldeinformationen korrekt eingegeben werden.
+##
 function show_collations() {
     echo -n "Show Collations. Enter MariaDB username: "
     read -r db_user
@@ -13820,6 +14736,26 @@ function show_collations() {
     echo "${result}"
 }
 
+## * show_database_statistics
+	# Datum: 13.11.2023
+	#? Beschreibung:
+	# Diese Funktion ermöglicht es dem Benutzer, Statistiken für die angegebene MariaDB-Datenbank anzuzeigen.
+	# Benutzer werden aufgefordert, den MariaDB-Benutzernamen, das Passwort und den Datenbanknamen einzugeben.
+	# Die Funktion führt dann eine ANALYZE TABLE-Abfrage für die gesamte Datenbank aus und gibt die Ergebnisse aus.
+	#? Parameter:
+	#   - Keine festen Parameter; Benutzer wird zur Eingabe von MariaDB-Benutzernamen, Passwort und Datenbanknamen aufgefordert.
+	#? Funktionsverhalten:
+	#   - Die Funktion gibt Aufforderungen aus, um den MariaDB-Benutzernamen, das Passwort und den Datenbanknamen einzugeben.
+	#   - Führt eine ANALYZE TABLE-Abfrage für die gesamte Datenbank aus.
+	#   - Zeigt die Ergebnisse der Abfrage an, die Statistiken für die Tabellen in der angegebenen Datenbank umfassen.
+	#? Beispielaufruf:
+	#   Die Funktion wird direkt vom Benutzer aufgerufen, um die Statistiken für eine bestimmte Datenbank anzuzeigen.
+	#   Beispiel: show_database_statistics
+	#? Rückgabewert:
+	#   - Es gibt keinen expliziten Rückgabewert. Die Funktion gibt die Ergebnisse der ANALYZE TABLE-Abfrage aus.
+	#? Hinweise:
+	#   - Stellen Sie sicher, dass die erforderlichen MariaDB-Anmeldeinformationen und der Datenbankname korrekt eingegeben werden.
+##
 function show_database_statistics() {
     echo -n "Show Database Statistics. Enter MariaDB username: "
     read -r db_user
@@ -13837,6 +14773,26 @@ function show_database_statistics() {
     echo "${result}"
 }
 
+## * show_foreign_keys
+	# Datum: 13.11.2023
+	#? Beschreibung:
+	# Diese Funktion ermöglicht es dem Benutzer, die Fremdschlüssel für eine bestimmte Tabelle in einer MariaDB-Datenbank anzuzeigen.
+	# Benutzer werden aufgefordert, den MariaDB-Benutzernamen, das Passwort, den Datenbanknamen und den Tabellennamen einzugeben.
+	# Die Funktion führt dann eine SHOW CREATE TABLE-Abfrage für die angegebene Tabelle durch und extrahiert die Fremdschlüsselinformationen.
+	#? Parameter:
+	#   - Keine festen Parameter; Benutzer wird zur Eingabe von MariaDB-Benutzernamen, Passwort, Datenbanknamen und Tabellennamen aufgefordert.
+	#? Funktionsverhalten:
+	#   - Die Funktion gibt Aufforderungen aus, um den MariaDB-Benutzernamen, das Passwort, den Datenbanknamen und den Tabellennamen einzugeben.
+	#   - Führt eine SHOW CREATE TABLE-Abfrage für die angegebene Tabelle durch und extrahiert die Fremdschlüsselinformationen.
+	#   - Zeigt die Ergebnisse der Abfrage an, die die Fremdschlüssel für die angegebene Tabelle enthält.
+	#? Beispielaufruf:
+	#   Die Funktion wird direkt vom Benutzer aufgerufen, um die Fremdschlüssel für eine bestimmte Tabelle anzuzeigen.
+	#   Beispiel: show_foreign_keys
+	#? Rückgabewert:
+	#   - Es gibt keinen expliziten Rückgabewert. Die Funktion gibt die Ergebnisse der SHOW CREATE TABLE-Abfrage mit den Fremdschlüsseln aus.
+	#? Hinweise:
+	#   - Stellen Sie sicher, dass die erforderlichen MariaDB-Anmeldeinformationen, der Datenbankname und der Tabellenname korrekt eingegeben werden.
+##
 function show_foreign_keys() {
     echo -n "Show Foreign Keys. Enter MariaDB username: "
     read -r db_user
@@ -13856,6 +14812,26 @@ function show_foreign_keys() {
     echo "${result}"
 }
 
+## * add_column_encryption
+	# Datum: 13.11.2023
+	#? Beschreibung:
+	# Diese Funktion ermöglicht es dem Benutzer, eine Spalte in einer MariaDB-Tabelle zu verschlüsseln.
+	# Der Benutzer wird aufgefordert, den MariaDB-Benutzernamen, das Passwort, den Datenbanknamen, den Tabellennamen und den Namen der zu verschlüsselnden Spalte einzugeben.
+	# Die Funktion führt dann eine ALTER TABLE-Abfrage durch, um die angegebene Spalte in der angegebenen Tabelle zu verschlüsseln.
+	#? Parameter:
+	#   - Keine festen Parameter; Benutzer wird zur Eingabe von MariaDB-Benutzernamen, Passwort, Datenbanknamen, Tabellennamen und Spaltennamen aufgefordert.
+	#? Funktionsverhalten:
+	#   - Die Funktion gibt Aufforderungen aus, um den MariaDB-Benutzernamen, das Passwort, den Datenbanknamen, den Tabellennamen und den Spaltennamen einzugeben.
+	#   - Führt eine ALTER TABLE-Abfrage durch, um die angegebene Spalte in der angegebenen Tabelle zu verschlüsseln.
+	#   - Gibt eine Erfolgsmeldung aus, nachdem die Spalte erfolgreich verschlüsselt wurde.
+	#? Beispielaufruf:
+	#   Die Funktion wird direkt vom Benutzer aufgerufen, um eine bestimmte Spalte in einer Tabelle zu verschlüsseln.
+	#   Beispiel: add_column_encryption
+	#? Rückgabewert:
+	#   - Es gibt keinen expliziten Rückgabewert. Die Funktion gibt eine Erfolgsmeldung nach erfolgreicher Verschlüsselung der Spalte aus.
+	#? Hinweise:
+	#   - Stellen Sie sicher, dass die erforderlichen MariaDB-Anmeldeinformationen, der Datenbankname, der Tabellenname und der Spaltenname korrekt eingegeben werden.
+##
 function add_column_encryption() {
     echo -n "Add Column Encryption. Enter MariaDB username: "
     read -r db_user
@@ -13875,6 +14851,26 @@ function add_column_encryption() {
     echo "Column ${column_name} in ${table_name} encrypted successfully."
 }
 
+## * show_last_table_changes
+	# Datum: 13.11.2023
+	#? Beschreibung:
+	# Diese Funktion ermöglicht es dem Benutzer, die letzten Änderungen an einer bestimmten Tabelle in MariaDB anzuzeigen.
+	# Der Benutzer wird aufgefordert, den MariaDB-Benutzernamen, das Passwort, den Datenbanknamen und den Tabellennamen einzugeben.
+	# Die Funktion führt dann eine INFORMATION_SCHEMA-Abfrage durch, um die letzten Änderungen an der angegebenen Tabelle abzurufen.
+	#? Parameter:
+	#   - Keine festen Parameter; Benutzer wird zur Eingabe von MariaDB-Benutzernamen, Passwort, Datenbanknamen und Tabellennamen aufgefordert.
+	#? Funktionsverhalten:
+	#   - Die Funktion gibt Aufforderungen aus, um den MariaDB-Benutzernamen, das Passwort, den Datenbanknamen und den Tabellennamen einzugeben.
+	#   - Führt eine INFORMATION_SCHEMA-Abfrage durch, um die letzten Änderungen an der angegebenen Tabelle abzurufen.
+	#   - Gibt die Ergebnisse der Abfrage aus, die die letzten Änderungen an der Tabelle anzeigen.
+	#? Beispielaufruf:
+	#   Die Funktion wird direkt vom Benutzer aufgerufen, um die letzten Änderungen an einer bestimmten Tabelle anzuzeigen.
+	#   Beispiel: show_last_table_changes
+	#? Rückgabewert:
+	#   - Es gibt keinen expliziten Rückgabewert. Die Funktion gibt die Ergebnisse der Abfrage aus, die die letzten Änderungen an der Tabelle anzeigen.
+	#? Hinweise:
+	#   - Stellen Sie sicher, dass die erforderlichen MariaDB-Anmeldeinformationen, der Datenbankname und der Tabellenname korrekt eingegeben werden.
+##
 function show_last_table_changes() {
     echo -n "Show Last Table Changes. Enter MariaDB username: "
     read -r db_user
@@ -13894,6 +14890,26 @@ function show_last_table_changes() {
     echo "${result}"
 }
 
+## * show_database_events
+	# Datum: 13.11.2023
+	#? Beschreibung:
+	# Diese Funktion ermöglicht es dem Benutzer, die geplanten Ereignisse (Events) einer bestimmten Datenbank in MariaDB anzuzeigen.
+	# Der Benutzer wird aufgefordert, den MariaDB-Benutzernamen, das Passwort und den Datenbanknamen einzugeben.
+	# Die Funktion führt dann eine SHOW EVENTS-Abfrage durch, um die geplanten Ereignisse der angegebenen Datenbank abzurufen.
+	#? Parameter:
+	#   - Keine festen Parameter; Benutzer wird zur Eingabe von MariaDB-Benutzernamen, Passwort und Datenbanknamen aufgefordert.
+	#? Funktionsverhalten:
+	#   - Die Funktion gibt Aufforderungen aus, um den MariaDB-Benutzernamen, das Passwort und den Datenbanknamen einzugeben.
+	#   - Führt eine SHOW EVENTS-Abfrage durch, um die geplanten Ereignisse der angegebenen Datenbank abzurufen.
+	#   - Gibt die Ergebnisse der Abfrage aus, die die geplanten Ereignisse der Datenbank anzeigen.
+	#? Beispielaufruf:
+	#   Die Funktion wird direkt vom Benutzer aufgerufen, um die geplanten Ereignisse einer bestimmten Datenbank anzuzeigen.
+	#   Beispiel: show_database_events
+	#? Rückgabewert:
+	#   - Es gibt keinen expliziten Rückgabewert. Die Funktion gibt die Ergebnisse der SHOW EVENTS-Abfrage aus, die die geplanten Ereignisse der Datenbank anzeigen.
+	#? Hinweise:
+	#   - Stellen Sie sicher, dass die erforderlichen MariaDB-Anmeldeinformationen und der Datenbankname korrekt eingegeben werden.
+##
 function show_database_events() {
     echo -n "Show Database Events. Enter MariaDB username: "
     read -r db_user
@@ -13911,6 +14927,26 @@ function show_database_events() {
     echo "${result}"
 }
 
+## * check_database_consistency
+	# Datum: 13.11.2023
+	#? Beschreibung:
+	# Diese Funktion ermöglicht es dem Benutzer, die Konsistenz einer bestimmten Datenbank in MariaDB zu überprüfen.
+	# Der Benutzer wird aufgefordert, den MariaDB-Benutzernamen, das Passwort und den Datenbanknamen einzugeben.
+	# Die Funktion führt dann eine CHECK TABLE-Abfrage für alle Tabellen in der angegebenen Datenbank durch, um die Konsistenz zu überprüfen.
+	#? Parameter:
+	#   - Keine festen Parameter; Benutzer wird zur Eingabe von MariaDB-Benutzernamen, Passwort und Datenbanknamen aufgefordert.
+	#? Funktionsverhalten:
+	#   - Die Funktion gibt Aufforderungen aus, um den MariaDB-Benutzernamen, das Passwort und den Datenbanknamen einzugeben.
+	#   - Führt eine CHECK TABLE-Abfrage für alle Tabellen in der angegebenen Datenbank durch, um die Konsistenz zu überprüfen.
+	#   - Gibt die Ergebnisse der Abfrage aus, die den Konsistenzstatus der Tabellen in der Datenbank anzeigen.
+	#? Beispielaufruf:
+	#   Die Funktion wird direkt vom Benutzer aufgerufen, um die Konsistenz einer bestimmten Datenbank zu überprüfen.
+	#   Beispiel: check_database_consistency
+	#? Rückgabewert:
+	#   - Es gibt keinen expliziten Rückgabewert. Die Funktion gibt die Ergebnisse der CHECK TABLE-Abfrage aus, die den Konsistenzstatus der Tabellen in der Datenbank anzeigen.
+	#? Hinweise:
+	#   - Stellen Sie sicher, dass die erforderlichen MariaDB-Anmeldeinformationen und der Datenbankname korrekt eingegeben werden.
+##
 function check_database_consistency() {
     echo -n "Check Database Consistency. Enter MariaDB username: "
     read -r db_user
@@ -13928,6 +14964,26 @@ function check_database_consistency() {
     echo "${result}"
 }
 
+## * backup_database
+	# Datum: 13.11.2023
+	#? Beschreibung:
+	# Diese Funktion ermöglicht es dem Benutzer, eine Sicherung einer bestimmten Datenbank in MariaDB zu erstellen.
+	# Der Benutzer wird aufgefordert, den MariaDB-Benutzernamen, das Passwort, den Datenbanknamen und den gewünschten Namen für die Backup-Datei (ohne Erweiterung) einzugeben.
+	# Die Funktion führt dann eine mysqldump-Abfrage für die angegebene Datenbank durch und speichert das Backup in einer SQL-Datei mit dem angegebenen Namen.
+	#? Parameter:
+	#   - Keine festen Parameter; Benutzer wird zur Eingabe von MariaDB-Benutzernamen, Passwort, Datenbanknamen und Backup-Dateinamen aufgefordert.
+	#? Funktionsverhalten:
+	#   - Die Funktion gibt Aufforderungen aus, um den MariaDB-Benutzernamen, das Passwort, den Datenbanknamen und den gewünschten Namen für die Backup-Datei einzugeben.
+	#   - Führt eine mysqldump-Abfrage für die angegebene Datenbank durch und speichert das Backup in einer SQL-Datei.
+	#   - Gibt eine Erfolgsmeldung aus, wenn das Backup erfolgreich erstellt wurde.
+	#? Beispielaufruf:
+	#   Die Funktion wird direkt vom Benutzer aufgerufen, um eine Sicherung einer bestimmten Datenbank zu erstellen.
+	#   Beispiel: backup_database
+	#? Rückgabewert:
+	#   - Es gibt keinen expliziten Rückgabewert. Die Funktion gibt eine Erfolgsmeldung aus, wenn das Backup erfolgreich erstellt wurde.
+	#? Hinweise:
+	#   - Stellen Sie sicher, dass die erforderlichen MariaDB-Anmeldeinformationen, der Datenbankname und der gewünschte Dateiname für das Backup korrekt eingegeben werden.
+##
 function backup_database() {
     echo -n "Backup Database. Enter MariaDB username: "
     read -r db_user
@@ -13945,6 +15001,26 @@ function backup_database() {
     echo "Database backed up successfully to ${backup_file}.sql"
 }
 
+## * restore_database
+	# Datum: 13.11.2023
+	#? Beschreibung:
+	# Diese Funktion ermöglicht es dem Benutzer, eine zuvor gesicherte Datenbank in MariaDB wiederherzustellen.
+	# Der Benutzer wird aufgefordert, den MariaDB-Benutzernamen, das Passwort, den Datenbanknamen und den Dateinamen der Backup-Datei (mit .sql-Erweiterung) einzugeben.
+	# Die Funktion führt dann eine mysql-Abfrage durch, um die Datenbank aus der angegebenen Backup-Datei wiederherzustellen.
+	#? Parameter:
+	#   - Keine festen Parameter; Benutzer wird zur Eingabe von MariaDB-Benutzernamen, Passwort, Datenbanknamen und Backup-Dateinamen aufgefordert.
+	#? Funktionsverhalten:
+	#   - Die Funktion gibt Aufforderungen aus, um den MariaDB-Benutzernamen, das Passwort, den Datenbanknamen und den Dateinamen der Backup-Datei einzugeben.
+	#   - Führt eine mysql-Abfrage durch, um die Datenbank aus der Backup-Datei wiederherzustellen.
+	#   - Gibt eine Erfolgsmeldung aus, wenn die Datenbank erfolgreich wiederhergestellt wurde.
+	#? Beispielaufruf:
+	#   Die Funktion wird direkt vom Benutzer aufgerufen, um eine zuvor gesicherte Datenbank wiederherzustellen.
+	#   Beispiel: restore_database
+	#? Rückgabewert:
+	#   - Es gibt keinen expliziten Rückgabewert. Die Funktion gibt eine Erfolgsmeldung aus, wenn die Datenbank erfolgreich wiederhergestellt wurde.
+	#? Hinweise:
+	#   - Stellen Sie sicher, dass die erforderlichen MariaDB-Anmeldeinformationen, der Datenbankname und der korrekte Dateiname der Backup-Datei angegeben werden.
+##
 function restore_database() {
     echo -n "Restore Database. Enter MariaDB username: "
     read -r db_user
@@ -13962,6 +15038,26 @@ function restore_database() {
     echo "Database restored successfully from ${backup_file}"
 }
 
+## * show_database_users
+	# Datum: 13.11.2023
+	#? Beschreibung:
+	# Diese Funktion ermöglicht es dem Benutzer, alle Benutzer in einer bestimmten MariaDB-Datenbank anzuzeigen.
+	# Der Benutzer wird aufgefordert, den MariaDB-Benutzernamen, das Passwort und den Datenbanknamen einzugeben.
+	# Die Funktion führt dann eine SHOW USERS-Abfrage durch und gibt die Liste der Benutzer in der angegebenen Datenbank aus.
+	#? Parameter:
+	#   - Keine festen Parameter; Benutzer wird zur Eingabe von MariaDB-Benutzernamen, Passwort und Datenbanknamen aufgefordert.
+	#? Funktionsverhalten:
+	#   - Die Funktion gibt Aufforderungen aus, um den MariaDB-Benutzernamen, das Passwort und den Datenbanknamen einzugeben.
+	#   - Führt eine SHOW USERS-Abfrage durch, um alle Benutzer in der angegebenen Datenbank anzuzeigen.
+	#   - Gibt die Liste der Benutzer in der Datenbank aus.
+	#? Beispielaufruf:
+	#   Die Funktion wird direkt vom Benutzer aufgerufen, um alle Benutzer in einer bestimmten MariaDB-Datenbank anzuzeigen.
+	#   Beispiel: show_database_users
+	#? Rückgabewert:
+	#   - Es gibt keinen expliziten Rückgabewert. Die Funktion gibt die Liste der Benutzer in der Datenbank aus.
+	#? Hinweise:
+	#   - Stellen Sie sicher, dass die erforderlichen MariaDB-Anmeldeinformationen und der Datenbankname angegeben werden.
+##
 function show_database_users() {
     echo -n "Show Database Users. Enter MariaDB username: "
     read -r db_user
@@ -13979,6 +15075,26 @@ function show_database_users() {
     echo "${result}"
 }
 
+## * check_user_privileges
+	# Datum: 13.11.2023
+	#? Beschreibung:
+	# Diese Funktion ermöglicht es dem Benutzer, die Berechtigungen eines bestimmten Benutzers in einer MariaDB-Datenbank zu überprüfen.
+	# Der Benutzer wird aufgefordert, den MariaDB-Benutzernamen, das Passwort, den Datenbanknamen und den Benutzernamen für die Berechtigungsüberprüfung einzugeben.
+	# Die Funktion führt dann eine SHOW GRANTS-Abfrage für den angegebenen Benutzer in der angegebenen Datenbank durch und gibt die Berechtigungen aus.
+	#? Parameter:
+	#   - Keine festen Parameter; Benutzer wird zur Eingabe von MariaDB-Benutzernamen, Passwort, Datenbanknamen und Benutzername für die Berechtigungsüberprüfung aufgefordert.
+	#? Funktionsverhalten:
+	#   - Die Funktion gibt Aufforderungen aus, um den MariaDB-Benutzernamen, das Passwort, den Datenbanknamen und den Benutzernamen für die Berechtigungsüberprüfung einzugeben.
+	#   - Führt eine SHOW GRANTS-Abfrage für den angegebenen Benutzer in der angegebenen Datenbank durch.
+	#   - Gibt die Berechtigungen des Benutzers aus.
+	#? Beispielaufruf:
+	#   Die Funktion wird direkt vom Benutzer aufgerufen, um die Berechtigungen eines bestimmten Benutzers in einer MariaDB-Datenbank zu überprüfen.
+	#   Beispiel: check_user_privileges
+	#? Rückgabewert:
+	#   - Es gibt keinen expliziten Rückgabewert. Die Funktion gibt die Berechtigungen des angegebenen Benutzers aus.
+	#? Hinweise:
+	#   - Stellen Sie sicher, dass die erforderlichen MariaDB-Anmeldeinformationen, der Datenbankname und der Benutzername für die Berechtigungsüberprüfung angegeben werden.
+##
 function check_user_privileges() {
     echo -n "Check User Privileges. Enter MariaDB username: "
     read -r db_user
@@ -13998,6 +15114,26 @@ function check_user_privileges() {
     echo "${result}"
 }
 
+## * change_user_password
+	# Datum: 13.11.2023
+	#? Beschreibung:
+	# Diese Funktion ermöglicht es dem Benutzer, das Passwort für einen bestimmten MariaDB-Benutzer zu ändern.
+	# Der Benutzer wird aufgefordert, den MariaDB-Benutzernamen, das Passwort, den Benutzernamen des zu ändernden Benutzers und das neue Passwort einzugeben.
+	# Die Funktion führt dann eine SET PASSWORD-Abfrage durch, um das Passwort des angegebenen Benutzers zu ändern.
+	#? Parameter:
+	#   - Keine festen Parameter; Benutzer wird zur Eingabe von MariaDB-Benutzernamen, Passwort, Benutzernamen des zu ändernden Benutzers und neuem Passwort aufgefordert.
+	#? Funktionsverhalten:
+	#   - Die Funktion gibt Aufforderungen aus, um den MariaDB-Benutzernamen, das Passwort, den Benutzernamen des zu ändernden Benutzers und das neue Passwort einzugeben.
+	#   - Führt eine SET PASSWORD-Abfrage durch, um das Passwort des angegebenen Benutzers zu ändern.
+	#   - Gibt eine Bestätigung aus, dass das Passwort erfolgreich geändert wurde.
+	#? Beispielaufruf:
+	#   Die Funktion wird direkt vom Benutzer aufgerufen, um das Passwort eines bestimmten Benutzers in MariaDB zu ändern.
+	#   Beispiel: change_user_password
+	#? Rückgabewert:
+	#   - Es gibt keinen expliziten Rückgabewert. Die Funktion gibt eine Bestätigung aus, dass das Passwort erfolgreich geändert wurde.
+	#? Hinweise:
+	#   - Stellen Sie sicher, dass die erforderlichen MariaDB-Anmeldeinformationen, der Benutzername des zu ändernden Benutzers und das neue Passwort angegeben werden.
+##
 function change_user_password() {
     echo -n "Change User Password. Enter MariaDB username: "
     read -r db_user
@@ -14015,14 +15151,30 @@ function change_user_password() {
     echo "Password for ${change_user} changed successfully."
 }
 
-# Funktion zum Überprüfen der MariaDB-Fehlerprotokolle
+## * check_error_logs
+	# Datum: 13.11.2023
+	#? Beschreibung:
+	# Diese Funktion ermöglicht es dem Benutzer, die MySQL-Fehlerprotokolle zu überprüfen. Sie öffnet das Fehlerprotokoll in einem Texteditor (hier nano) und gibt dem Benutzer die Möglichkeit, das Protokoll zu inspizieren.
+	#? Parameter:
+	#   - Keine festen Parameter.
+	#? Funktionsverhalten:
+	#   - Öffnet das MySQL-Fehlerprotokoll in einem Texteditor (hier nano).
+	#   - Der Benutzer kann das Protokoll überprüfen und bei Bedarf nach relevanten Informationen suchen.
+	#? Beispielaufruf:
+	#   Die Funktion wird direkt vom Benutzer aufgerufen, um das MySQL-Fehlerprotokoll zu überprüfen.
+	#   Beispiel: check_error_logs
+	#? Rückgabewert:
+	#   - Es gibt keinen expliziten Rückgabewert. Die Funktion öffnet das Fehlerprotokoll im Texteditor und ermöglicht dem Benutzer, es zu überprüfen.
+	#? Hinweise:
+	#   - Stellen Sie sicher, dass der Benutzer über die erforderlichen Berechtigungen verfügt, um auf das Fehlerprotokoll zuzugreifen.
+##
 function check_error_logs() {
     sudo nano /var/log/mysql/error.log
 }
 
-##########################################################################################################################################################################
-################################### MariaDB Spielwiese Playground ENDE ###################################################################################################
-##########################################################################################################################################################################
+# XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+# XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX MariaDB Spielwiese Playground ENDE XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+# XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
 ## *  conf_write
 	# Datum: 02.10.2023
