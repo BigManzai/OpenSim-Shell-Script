@@ -20,7 +20,7 @@
 	# ! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 	# ! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#
-	# * Letzte bearbeitung 12.11.2023.
+	# * Letzte bearbeitung 13.11.2023.
 	#
 	# # Installieren sie bitte: #* Visual Studio Code
 	#* dazu die Plugins:
@@ -36,7 +36,7 @@
 #──────────────────────────────────────────────────────────────────────────────────────────
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.1311" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.1369" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 #──────────────────────────────────────────────────────────────────────────────────────────
@@ -12985,6 +12985,1045 @@ function db_tablextract_regex() {
 	done
 }
 
+##########################################################################################################################################################################
+################################### MariaDB Spielwiese Playground ########################################################################################################
+##########################################################################################################################################################################
+
+# Funktion zur Überprüfung und Reparatur mit mysqlcheck
+function check_and_repair() {
+    echo "Enter MariaDB username: " 
+    read -r db_user
+    echo "Enter MariaDB password: " 
+    read -r db_password
+    echo    # newline
+    echo "Enter MariaDB database name: " 
+    read -r db_name
+
+    sudo mysqlcheck -u "${db_user}" -p"${db_password}" --auto-repair --check "${db_name}"
+}
+
+# Funktion für die manuelle Reparatur mit mysql
+function manual_repair() {
+    echo "Enter MariaDB username: " 
+    read -r db_user
+    echo "Enter MariaDB password: " 
+    read -r db_password
+    echo    # newline
+    echo "Enter MariaDB database name: " 
+    read -r db_name
+
+    mysql -u "${db_user}" -p"${db_password}" "${db_name}"
+
+    # Benutzer wird aufgefordert, die Tabelle manuell auszuwählen und dann REPAIR TABLE auszuführen
+}
+
+# Funktion zum automatischen Reparieren einer Tabelle
+function repair_table() {
+    echo "Enter MariaDB username: " 
+    read -r db_user
+    echo "Enter MariaDB password: " 
+    read -r db_password
+    echo    # newline
+    echo "Enter MariaDB database name: " 
+    read -r db_name
+    echo "Enter table name to repair: " 
+    read -r table_name
+
+    mysql -u "${db_user}" -p"${db_password}" "${db_name}" -e "REPAIR TABLE ${table_name} QUICK;"
+}
+
+# Funktion zum Reparieren von Tabelleneinträgen
+function repair_table_entries() {
+    echo "Enter MariaDB username: " 
+    read -r db_user
+    echo "Enter MariaDB password: " 
+    read -r db_password
+    echo    # newline
+    echo "Enter MariaDB database name: " 
+    read -r db_name
+    echo "Enter table name to repair entries: " 
+    read -r table_name
+
+    mysql -u "${db_user}" -p"${db_password}" "${db_name}" -e "DELETE FROM ${table_name};"
+}
+
+# Funktion zum Reparieren einzelner Tabelleneinträge
+function repair_single_entry() {
+    echo "Enter MariaDB username: " 
+    read -r db_user
+    echo "Enter MariaDB password: " 
+    read -r db_password
+    echo    # newline
+    echo "Enter MariaDB database name: " 
+    read -r db_name
+    echo "Enter table name to repair entry: " 
+    read -r table_name
+    echo "Enter primary key value of the entry to repair: " 
+    read -r primary_key_value
+
+    mysql -u "${db_user}" -p"${db_password}" "${db_name}" -e "REPAIR TABLE ${table_name} USE_FRM;"
+    mysql -u "${db_user}" -p"${db_password}" "${db_name}" -e "DELETE FROM ${table_name} WHERE primary_key_column=${primary_key_value};"
+}
+
+# Funktion zum Löschen defekter Tabelleneinträge
+function delete_corrupted_entries() {
+    echo "Enter MariaDB username: " 
+    read -r db_user
+    echo "Enter MariaDB password: " 
+    read -r db_password
+    echo    # newline
+    echo "Enter MariaDB database name: " 
+    read -r db_name
+    echo "Enter table name to delete corrupted entries: " 
+    read -r table_name
+
+    # Überprüfen und Reparieren der Tabelle
+    mysql -u "${db_user}" -p"${db_password}" "${db_name}" -e "CHECK TABLE ${table_name} FAST;"
+    # Löschen defekter Einträge
+    mysql -u "${db_user}" -p"${db_password}" "${db_name}" -e "DELETE FROM ${table_name} WHERE CHECKSUM = '1';"
+}
+
+# Funktion zum Sichern von Tabellen
+function backup_tables() {
+    echo "Enter MariaDB username: " 
+    read -r db_user
+    echo "Enter MariaDB password: " 
+    read -r db_password
+    echo    # newline
+    echo "Enter MariaDB database name: " 
+    read -r db_name
+
+    current_date=$(date +"%Y%m%d_%H%M%S")
+    backup_file="${db_name}_backup_${current_date}.sql"
+
+    mysqldump -u "${db_user}" -p"${db_password}" "${db_name}" > "${backup_file}"
+
+    echo "Backup saved to ${backup_file}"
+}
+
+# Funktion zum Wiederherstellen von Tabellen
+function restore_tables() {
+
+    backup_file_path="/opt" # TODO: ? keine ahnung
+
+    echo "Enter MariaDB username: "
+    read -r db_user
+    echo "Enter MariaDB password: "
+    read -r db_password
+    echo    # newline
+    echo "Enter MariaDB database name: "
+    read -r db_name
+
+    echo "Enter the path to the SQL backup file: " backup_file_path
+
+    mysql -u "${db_user}" -p"${db_password}" "${db_name}" < "${backup_file_path}"
+
+    echo "Tables restored to ${db_name} from ${backup_file_path}"
+}
+
+# Funktion zum Aktualisieren von Einträgen
+function update_entry() {
+    echo -n "Update Entry. Enter MariaDB username: "
+    read -r db_user
+    echo "Enter MariaDB password: " 
+    read -r db_password
+    echo    # newline
+    echo -n "Enter MariaDB database name: "
+    read -r db_name
+    echo -n "Enter table name: "
+    read -r table_name
+    echo -n "Enter column name for condition: "
+    read -r condition_column
+    echo -n "Enter condition value: "
+    read -r condition_value
+    echo -n "Enter column name to update: "
+    read -r update_column
+    echo -n "Enter new value: "
+    read -r new_value
+
+    # Ausführen der UPDATE-Abfrage
+    mysql -u "${db_user}" -p"${db_password}" "${db_name}" -e "UPDATE ${table_name} SET ${update_column}='${new_value}' WHERE ${condition_column}='${condition_value}';"
+
+    echo "Entry updated successfully."
+}
+
+# Funktion zum Hinzufügen von Einträgen
+function add_entry() {
+    echo -n "Add Entry. Enter MariaDB username: "
+    read -r db_user
+    echo "Enter MariaDB password: " 
+    read -r db_password
+    echo    # newline
+    echo -n "Enter MariaDB database name: "
+    read -r db_name
+    echo -n "Enter table name: "
+    read -r table_name
+
+    # Benutzer wird aufgefordert, Werte für neue Einträge einzugeben
+    echo "Enter values for each column separated by spaces: " 
+    read -r new_values
+
+    # Ausführen der INSERT-Abfrage
+    mysql -u "${db_user}" -p"${db_password}" "${db_name}" -e "INSERT INTO ${table_name} VALUES (${new_values});"
+
+    echo "Entry added successfully."
+}
+
+# Funktion zum Löschen von Einträgen
+function delete_entry() {
+    echo -n "Delete Entry. Enter MariaDB username: "
+    read -r db_user
+    echo "Enter MariaDB password: " 
+    read -r db_password
+    echo    # newline
+    echo -n "Enter MariaDB database name: "
+    read -r db_name
+    echo -n "Enter table name: "
+    read -r table_name
+    echo -n "Enter column name for condition: "
+    read -r condition_column
+    echo -n "Enter condition value: "
+    read -r condition_value
+
+    # Ausführen der DELETE-Abfrage
+    mysql -u "${db_user}" -p"${db_password}" "${db_name}" -e "DELETE FROM ${table_name} WHERE ${condition_column}='${condition_value}';"
+
+    echo "Entry deleted successfully."
+}
+
+# Funktion zum Generieren eines Berichts
+function generate_report() {
+    echo -n "Generate Report. Enter MariaDB username: "
+    read -r db_user
+    echo "Enter MariaDB password: " 
+    read -r db_password
+    echo    # newline
+    echo -n "Enter MariaDB database name: "
+    read -r db_name
+    echo -n "Enter SQL query for the report: "
+    read -r sql_query
+
+    # Ausführen der SQL-Abfrage
+    result=$(mysql -u "${db_user}" -p"${db_password}" "${db_name}" -se "${sql_query}")
+
+    # Anzeigen der Ergebnisse
+    echo "Report Results:"
+    echo "${result}"
+}
+
+# Funktion zum Beginnen einer Transaktion
+function begin_transaction() {
+    echo -n "Begin Transaction. Enter MariaDB username: "
+    read -r db_user
+    echo "Enter MariaDB password: " 
+    read -r db_password
+    echo    # newline
+    echo -n "Enter MariaDB database name: "
+    read -r db_name
+
+    # Ausführen der START TRANSACTION-Abfrage
+    mysql -u "${db_user}" -p"${db_password}" "${db_name}" -e "START TRANSACTION;"
+
+    echo "Transaction started."
+}
+
+# Funktion zum Commit einer Transaktion
+function commit_transaction() {
+    echo -n "Commit Transaction. Enter MariaDB username: "
+    read -r db_user
+    echo "Enter MariaDB password: " 
+    read -r db_password
+    echo    # newline
+    echo -n "Enter MariaDB database name: "
+    read -r db_name
+
+    # Ausführen der COMMIT-Abfrage
+    mysql -u "${db_user}" -p"${db_password}" "${db_name}" -e "COMMIT;"
+
+    echo "Transaction committed."
+}
+
+# Funktion zum Rollback einer Transaktion
+function rollback_transaction() {
+    echo -n "Rollback Transaction. Enter MariaDB username: "
+    read -r db_user
+    echo "Enter MariaDB password: " db_password
+    echo    # newline
+    echo -n "Enter MariaDB database name: "
+    read -r db_name
+
+    # Ausführen der ROLLBACK-Abfrage
+    mysql -u "${db_user}" -p"${db_password}" "${db_name}" -e "ROLLBACK;"
+
+    echo "Transaction rolled back."
+}
+
+function display_table_schema() {
+    echo -n "Display Table Schema. Enter MariaDB username: "
+    read -r db_user
+    echo "Enter MariaDB password: " 
+    read -r db_password
+    echo    # newline
+    echo -n "Enter MariaDB database name: "
+    read -r db_name
+    echo -n "Enter table name: "
+    read -r table_name
+
+    # Ausführen der SHOW COLUMNS-Abfrage
+    result=$(mysql -u "${db_user}" -p"${db_password}" "${db_name}" -se "SHOW COLUMNS FROM ${table_name};")
+
+    # Anzeigen der Ergebnisse
+    echo "Table Schema for ${table_name}:"
+    echo "${result}"
+}
+
+function display_databases() {
+    echo -n "Display Databases. Enter MariaDB username: "
+    read -r db_user
+    echo "Enter MariaDB password: "
+    read -r db_password
+    echo    # newline
+
+    # Ausführen der SHOW DATABASES-Abfrage
+    result=$(mysql -u "${db_user}" -p"${db_password}" -se "SHOW DATABASES;")
+
+    # Anzeigen der Ergebnisse
+    echo "Available Databases:"
+    echo "${result}"
+}
+
+function optimize_tables() {
+    echo -n "Optimize Tables. Enter MariaDB username: "
+    read -r db_user
+    echo "Enter MariaDB password: "
+    read -r db_password
+    echo    # newline
+    echo -n "Enter MariaDB database name: "
+    read -r db_name
+
+    # Ausführen der OPTIMIZE TABLE-Abfrage
+    mysqlcheck -u "${db_user}" -p"${db_password}" --optimize --all-databases
+    
+    echo "Tables optimized successfully."
+}
+
+function display_server_info() {
+    echo -n "Display Server Information. Enter MariaDB username: "
+    read -r db_user
+    echo "Enter MariaDB password: "
+    read -r db_password
+    echo    # newline
+
+    # Ausführen der STATUS-Abfrage
+    result=$(mysql -u "${db_user}" -p"${db_password}" -se "STATUS;")
+
+    # Anzeigen der Ergebnisse
+    echo "MariaDB Server Information:"
+    echo "${result}"
+}
+
+# Funktion zum Suchen von Einträgen in einer Tabelle
+function search_entries() {
+    echo -n "Search Entries. Enter MariaDB username: "
+    read -r db_user
+    read -r "Enter MariaDB password: "
+    read -r db_password
+    echo    # newline
+    echo -n "Enter MariaDB database name: "
+    read -r db_name
+    echo -n "Enter table name to search: "
+    read -r table_name
+    echo -n "Enter column name to search: "
+    read -r column_name
+    echo -n "Enter search term: "
+    read -r search_term
+
+    # Ausführen der SELECT-Abfrage
+    result=$(mysql -u "${db_user}" -p"${db_password}" "${db_name}" -se "SELECT * FROM ${table_name} WHERE ${column_name} LIKE '%${search_term}%';")
+
+    # Anzeigen der Ergebnisse
+    echo "Search Results:"
+    echo "${result}"
+}
+
+# Funktion zum Suchen von Einträgen in einer Tabelle nach Datum
+function search_entries_by_date() {
+    echo -n "Search Entries by Date. Enter MariaDB username: "
+    read -r db_user
+    read -r "Enter MariaDB password: "
+    read -r db_password
+    echo    # newline
+    echo -n "Enter MariaDB database name: "
+    read -r db_name
+    echo -n "Enter table name to search: "
+    read -r table_name
+    echo -n "Enter column name with date values: "
+    read -r date_column
+    echo -n "Enter search start date (YYYY-MM-DD): "
+    read -r start_date
+    echo -n "Enter search end date (YYYY-MM-DD): "
+    read -r end_date
+
+    # Überprüfen, ob die eingegebenen Datumsformate korrekt sind
+    date -d "$start_date" > /dev/null 2>&1
+    if ! make "${start_date}"; then
+        echo "Invalid start date format. Please use YYYY-MM-DD."
+        return 1
+    fi
+
+    date -d "${end_date}" > /dev/null 2>&1
+    if ! make "$end_date"; then
+        echo "Invalid end date format. Please use YYYY-MM-DD."
+        return 1
+    fi
+
+    # Ausführen der SELECT-Abfrage
+    result=$(mysql -u "${db_user}" -p"${db_password}" "${db_name}" -se "SELECT * FROM ${table_name} WHERE ${date_column} BETWEEN '${start_date}' AND '${end_date}';")
+
+    # Anzeigen der Ergebnisse
+    echo "Search Results:"
+    echo "${result}"
+}
+
+# Funktion zum Suchen von Einträgen in einer Tabelle nach Unix-Zeitstempeln
+function search_entries_by_unix_timestamp() {
+    echo -n "Search Entries by Unix Timestamp. Enter MariaDB username: "
+    read -r db_user
+    read -r "Enter MariaDB password: "
+    read -r db_password
+    echo    # newline
+    echo -n "Enter MariaDB database name: "
+    read -r db_name
+    echo -n "Enter table name to search: "
+    read -r table_name
+    echo -n "Enter column name with Unix timestamps: "
+    read -r unix_timestamp_column
+    echo -n "Enter search start Unix timestamp: "
+    read -r start_unix_timestamp
+    echo -n "Enter search end Unix timestamp: "
+    read -r end_unix_timestamp
+
+    # Ausführen der SELECT-Abfrage mit FROM_UNIXTIME()
+    result=$(mysql -u "${db_user}" -p"${db_password}" "${db_name}" -se "SELECT * FROM ${table_name} WHERE ${unix_timestamp_column} BETWEEN FROM_UNIXTIME(${start_unix_timestamp}) AND FROM_UNIXTIME(${end_unix_timestamp});")
+
+    # Anzeigen der Ergebnisse
+    echo "Search Results:"
+    echo "${result}"
+}
+
+function display_table_contents() {
+    echo -n "Display Table Contents. Enter MariaDB username: "
+    read -r db_user
+    echo "Enter MariaDB password: "
+    read -r db_password
+    echo    # newline
+    echo -n "Enter MariaDB database name: "
+    read -r db_name
+    echo -n "Enter table name: "
+    read -r table_name
+
+    # Ausführen der SELECT-Abfrage
+    result=$(mysql -u "${db_user}" -p"${db_password}" "${db_name}" -se "SELECT * FROM ${table_name};")
+
+    # Anzeigen der Ergebnisse
+    echo "Table Contents for ${table_name}:"
+    echo "${result}"
+}
+
+function export_table_to_csv() {
+    echo -n "Export Table to CSV. Enter MariaDB username: "
+    read -r db_user
+    echo "Enter MariaDB password: "
+    read -r db_password
+    echo    # newline
+    echo -n "Enter MariaDB database name: "
+    read -r db_name
+    echo -n "Enter table name: "
+    read -r table_name
+    echo -n "Enter CSV file path: "
+    read -r csv_file_path
+
+    # Ausführen der SELECT-Abfrage und Export in CSV
+    mysql -u "${db_user}" -p"${db_password}" "${db_name}" -e "SELECT * INTO OUTFILE '${csv_file_path}' FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '\"' LINES TERMINATED BY '\n' FROM ${table_name};"
+
+    echo "Table exported to ${csv_file_path} successfully."
+}
+
+function import_csv_to_table() {
+    echo -n "Import CSV to Table. Enter MariaDB username: "
+    read -r db_user
+    echo "Enter MariaDB password: "
+    read -r db_password
+    echo    # newline
+    echo -n "Enter MariaDB database name: "
+    read -r db_name
+    echo -n "Enter table name: "
+    read -r table_name
+    echo -n "Enter CSV file path: "
+    read -r csv_file_path
+
+    # Ausführen des LOAD DATA LOCAL INFILE-Befehls
+    mysql -u "${db_user}" -p"${db_password}" "${db_name}" -e "LOAD DATA LOCAL INFILE '${csv_file_path}' INTO TABLE ${table_name} FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '\"' LINES TERMINATED BY '\n';"
+
+    echo "Data imported from ${csv_file_path} to ${table_name} successfully."
+}
+
+function backup_all_databases() {
+    echo -n "Backup All Databases. Enter MariaDB username: "
+    read -r db_user
+    echo "Enter MariaDB password: "
+    read -r db_password
+    echo    # newline
+    echo -n "Enter backup directory path: "
+    read -r backup_dir
+
+    # Ausführen des mysqldump-Befehls für alle Datenbanken
+    mysqldump -u "${db_user}" -p"${db_password}" --all-databases > "${backup_dir}/all_databases_backup.sql"
+
+    echo "Backup of all databases saved to ${backup_dir}/all_databases_backup.sql"
+}
+
+function restore_all_databases() {
+    echo -n "Restore All Databases. Enter MariaDB username: "
+    read -r db_user
+    echo "Enter MariaDB password: "
+    read -r db_password
+    echo    # newline
+    echo -n "Enter path to the SQL backup file: "
+    read -r backup_file_path
+
+    # Ausführen des mysql-Befehls für die Wiederherstellung aller Datenbanken
+    mysql -u "${db_user}" -p"${db_password}" < "${backup_file_path}"
+
+    echo "All databases restored from ${backup_file_path} successfully."
+}
+
+function display_user_permissions() {
+    echo -n "Display User Permissions. Enter MariaDB username: "
+    read -r db_user
+    echo "Enter MariaDB password: "
+    read -r db_password
+    echo    # newline
+    echo -n "Enter MariaDB database name: "
+    read -r db_name
+    echo -n "Enter username to check permissions: "
+    read -r check_user
+
+    # Ausführen der SHOW GRANTS-Abfrage
+    result=$(mysql -u "${db_user}" -p"${db_password}" "${db_name}" -se "SHOW GRANTS FOR '${check_user}'@'%';")
+
+    # Anzeigen der Ergebnisse
+    echo "Permissions for ${check_user}:"
+    echo "${result}"
+}
+
+function add_user() {
+    echo -n "Add User. Enter MariaDB username: "
+    read -r db_user
+    echo "Enter MariaDB password: "
+    read -r db_password
+    echo    # newline
+    echo -n "Enter MariaDB database name: "
+    read -r db_name
+    echo -n "Enter new username: "
+    read -r new_username
+    echo -n "Enter password for the new user: "
+    read -r new_password
+
+    # Ausführen der CREATE USER-Abfrage
+    mysql -u "${db_user}" -p"${db_password}" "${db_name}" -e "CREATE USER '${new_username}'@'%' IDENTIFIED BY '${new_password}';"
+
+    echo "User ${new_username} added successfully."
+}
+
+function modify_user_permissions() {
+    echo -n "Modify User Permissions. Enter MariaDB username: "
+    read -r db_user
+    echo "Enter MariaDB password: "
+    read -r db_password
+    echo    # newline
+    echo -n "Enter MariaDB database name: "
+    read -r db_name
+    echo -n "Enter username to modify permissions: "
+    read -r modify_user
+    echo -n "Enter new permissions (e.g., SELECT, INSERT): "
+    read -r new_permissions
+
+    # Ausführen der GRANT-Abfrage
+    mysql -u "${db_user}" -p"${db_password}" "${db_name}" -e "GRANT ${new_permissions} ON *.* TO '${modify_user}'@'%';"
+
+    echo "Permissions modified for ${modify_user}."
+}
+
+function delete_user() {
+    echo -n "Delete User. Enter MariaDB username: "
+    read -r db_user
+    echo "Enter MariaDB password: "
+    read -r db_password
+    echo    # newline
+    echo -n "Enter MariaDB database name: "
+    read -r db_name
+    echo -n "Enter username to delete: "
+    read -r delete_user
+
+    # Ausführen der DROP USER-Abfrage
+    mysql -u "${db_user}" -p"${db_password}" "${db_name}" -e "DROP USER '${delete_user}'@'%';"
+
+    echo "User ${delete_user} deleted successfully."
+}
+
+function rename_table() {
+    echo -n "Rename Table. Enter MariaDB username: "
+    read -r db_user
+    echo "Enter MariaDB password: "
+    read -r db_password
+    echo    # newline
+    echo -n "Enter MariaDB database name: "
+    read -r db_name
+    echo -n "Enter current table name: "
+    read -r current_table_name
+    echo -n "Enter new table name: "
+    read -r new_table_name
+
+    # Ausführen der RENAME TABLE-Abfrage
+    mysql -u "${db_user}" -p"${db_password}" "${db_name}" -e "RENAME TABLE ${current_table_name} TO ${new_table_name};"
+
+    echo "Table ${current_table_name} renamed to ${new_table_name} successfully."
+}
+
+function show_running_processes() {
+    echo -n "Show Running Processes. Enter MariaDB username: "
+    read -r db_user
+    echo "Enter MariaDB password: "
+    read -r db_password
+    echo    # newline
+
+    # Ausführen der SHOW PROCESSLIST-Abfrage
+    result=$(mysql -u "${db_user}" -p"${db_password}" -e "SHOW PROCESSLIST;")
+
+    # Anzeigen der Ergebnisse
+    echo "Running Processes:"
+    echo "${result}"
+}
+
+function clear_query_cache() {
+    echo -n "Clear Query Cache. Enter MariaDB username: "
+    read -r db_user
+    echo "Enter MariaDB password: "
+    read -r db_password
+    echo    # newline
+
+    # Ausführen des RESET QUERY CACHE-Befehls
+    mysql -u "${db_user}" -p"${db_password}" -e "RESET QUERY CACHE;"
+
+    echo "Query cache cleared successfully."
+}
+
+function show_index_info() {
+    echo -n "Show Index Information. Enter MariaDB username: "
+    read -r db_user
+    echo "Enter MariaDB password: "
+    read -r db_password
+    echo    # newline
+    echo -n "Enter MariaDB database name: "
+    read -r db_name
+    echo -n "Enter table name: "
+    read -r table_name
+
+    # Ausführen der SHOW INDEX-Abfrage
+    result=$(mysql -u "${db_user}" -p"${db_password}" "${db_name}" -e "SHOW INDEX FROM ${table_name};")
+
+    # Anzeigen der Ergebnisse
+    echo "Index Information for ${table_name}:"
+    echo "${result}"
+}
+
+function analyze_database() {
+    echo -n "Analyze Database. Enter MariaDB username: "
+    read -r db_user
+    echo "Enter MariaDB password: "
+    read -r db_password
+    echo    # newline
+    echo -n "Enter MariaDB database name: "
+    read -r db_name
+
+    # Ausführen des ANALYZE TABLE-Befehls
+    mysql -u "${db_user}" -p"${db_password}" "${db_name}" -e "ANALYZE TABLE;"
+
+    echo "Database analyzed successfully."
+}
+
+function optimize_query() {
+    echo -n "Optimize Query. Enter MariaDB username: "
+    read -r db_user
+    echo "Enter MariaDB password: "
+    read -r db_password
+    echo    # newline
+    echo -n "Enter MariaDB database name: "
+    read -r db_name
+    echo -n "Enter SQL query to optimize: "
+    read -r sql_query
+
+    # Ausführen des EXPLAIN-Befehls für den Ausführungsplan
+    result=$(mysql -u "${db_user}" -p"${db_password}" "${db_name}" -e "EXPLAIN ${sql_query};")
+
+    # Anzeigen des Ausführungsplans
+    echo "Query Execution Plan:"
+    echo "${result}"
+}
+
+function create_database() {
+    echo -n "Create Database. Enter MariaDB username: "
+    read -r db_user
+    echo "Enter MariaDB password: "
+    read -r db_password
+    echo    # newline
+    echo -n "Enter name for the new database: "
+    read -r new_db_name
+
+    # Ausführen des CREATE DATABASE-Befehls
+    mysql -u "${db_user}" -p"${db_password}" -e "CREATE DATABASE ${new_db_name};"
+
+    echo "Database ${new_db_name} created successfully."
+}
+
+function create_table() {
+    echo -n "Create Table. Enter MariaDB username: "
+    read -r db_user
+    echo "Enter MariaDB password: "
+    read -r db_password
+    echo    # newline
+    echo -n "Enter MariaDB database name: "
+    read -r db_name
+    echo -n "Enter name for the new table: "
+    read -r new_table_name
+
+    # Benutzer wird aufgefordert, Spalten und deren Datentypen einzugeben
+    echo "Enter columns and data types (e.g., 'column1 INT, column2 VARCHAR(255), ...'): "
+    read -r table_columns
+
+    # Ausführen des CREATE TABLE-Befehls
+    mysql -u "${db_user}" -p"${db_password}" "${db_name}" -e "CREATE TABLE ${new_table_name} (${table_columns});"
+
+    echo "Table ${new_table_name} created successfully."
+}
+
+function alter_table_structure() {
+    echo -n "Alter Table Structure. Enter MariaDB username: "
+    read -r db_user
+    echo "Enter MariaDB password: "
+    read -r db_password
+    echo    # newline
+    echo -n "Enter MariaDB database name: "
+    read -r db_name
+    echo -n "Enter name of the table to alter: "
+    read -r alter_table_name
+
+    # Benutzer wird aufgefordert, die gewünschten Änderungen einzugeben
+    echo "Enter alterations (e.g., 'ADD COLUMN new_column INT, DROP COLUMN obsolete_column, ...'): "
+    read -r alterations
+
+    # Ausführen des ALTER TABLE-Befehls
+    mysql -u "${db_user}" -p"${db_password}" "${db_name}" -e "ALTER TABLE ${alter_table_name} ${alterations};"
+
+    echo "Table ${alter_table_name} structure altered successfully."
+}
+
+function show_user_activity() {
+    echo -n "Show User Activity. Enter MariaDB username: "
+    read -r db_user
+    echo "Enter MariaDB password: "
+    read -r db_password
+    echo    # newline
+    echo -n "Enter username to check activity: "
+    read -r check_user
+
+    # Ausführen der SHOW PROCESSLIST-Abfrage für den bestimmten Benutzer
+    result=$(mysql -u "${db_user}" -p"${db_password}" -e "SHOW PROCESSLIST LIKE '${check_user}';")
+
+    # Anzeigen der Ergebnisse
+    echo "User Activity for ${check_user}:"
+    echo "${result}"
+}
+
+function show_events() {
+    echo -n "Show Events. Enter MariaDB username: "
+    read -r db_user
+    echo "Enter MariaDB password: "
+    read -r db_password
+    echo    # newline
+
+    # Ausführen der SHOW EVENTS-Abfrage
+    result=$(mysql -u "${db_user}" -p"${db_password}" -e "SHOW EVENTS;")
+
+    # Anzeigen der Ergebnisse
+    echo "Database Events:"
+    echo "${result}"
+}
+
+function check_database_connection() {
+    echo -n "Check Database Connection. Enter MariaDB username: "
+    read -r db_user
+    echo "Enter MariaDB password: "
+    read -r db_password
+    echo    # newline
+
+    # Versuch der Verbindung zur Datenbank
+    if mysql -u "${db_user}" -p"${db_password}" -e "SELECT 1;" &> /dev/null; then
+        echo "Database connection successful."
+    else
+        echo "Unable to connect to the database."
+    fi
+}
+
+function show_variables() {
+    echo -n "Show Database Variables. Enter MariaDB username: "
+    read -r db_user
+    echo "Enter MariaDB password: " db_password
+    echo    # newline
+
+    # Ausführen der SHOW VARIABLES-Abfrage
+    result=$(mysql -u "${db_user}" -p"${db_password}" -e "SHOW VARIABLES;")
+
+    # Anzeigen der Ergebnisse
+    echo "Database Variables:"
+    echo "${result}"
+}
+
+function show_database_engines() {
+    echo -n "Show Database Engines. Enter MariaDB username: "
+    read -r db_user
+    echo "Enter MariaDB password: "
+    read -r db_password
+    echo    # newline
+
+    # Ausführen der SHOW ENGINES-Abfrage
+    result=$(mysql -u "${db_user}" -p"${db_password}" -e "SHOW ENGINES;")
+
+    # Anzeigen der Ergebnisse
+    echo "Database Engines:"
+    echo "${result}"
+}
+
+function show_collations() {
+    echo -n "Show Collations. Enter MariaDB username: "
+    read -r db_user
+    echo "Enter MariaDB password: "
+    read -r db_password
+    echo    # newline
+
+    # Ausführen der SHOW COLLATION-Abfrage
+    result=$(mysql -u "${db_user}" -p"${db_password}" -e "SHOW COLLATION;")
+
+    # Anzeigen der Ergebnisse
+    echo "Database Collations:"
+    echo "${result}"
+}
+
+function show_database_statistics() {
+    echo -n "Show Database Statistics. Enter MariaDB username: "
+    read -r db_user
+    echo "Enter MariaDB password: "
+    read -r db_password
+    echo    # newline
+    echo -n "Enter MariaDB database name: "
+    read -r db_name
+
+    # Ausführen der ANALYZE TABLE-Abfrage
+    result=$(mysql -u "${db_user}" -p"${db_password}" "${db_name}" -e "ANALYZE TABLE;")
+
+    # Anzeigen der Ergebnisse
+    echo "Database Statistics for ${db_name}:"
+    echo "${result}"
+}
+
+function show_foreign_keys() {
+    echo -n "Show Foreign Keys. Enter MariaDB username: "
+    read -r db_user
+    echo "Enter MariaDB password: "
+    read -r db_password
+    echo    # newline
+    echo -n "Enter MariaDB database name: "
+    read -r db_name
+    echo -n "Enter table name: "
+    read -r table_name
+
+    # Ausführen der SHOW CREATE TABLE-Abfrage
+    result=$(mysql -u "${db_user}" -p"${db_password}" "${db_name}" -e "SHOW CREATE TABLE ${table_name}\G" | grep 'FOREIGN KEY';)
+
+    # Anzeigen der Ergebnisse
+    echo "Foreign Keys for ${table_name}:"
+    echo "${result}"
+}
+
+function add_column_encryption() {
+    echo -n "Add Column Encryption. Enter MariaDB username: "
+    read -r db_user
+    echo "Enter MariaDB password: "
+    read -r db_password
+    echo    # newline
+    echo -n "Enter MariaDB database name: "
+    read -r db_name
+    echo -n "Enter table name: "
+    read -r table_name
+    echo -n "Enter column name to encrypt: "
+    read -r column_name
+
+    # Ausführen der ALTER TABLE-Abfrage mit Verschlüsselung
+    mysql -u "${db_user}" -p"${db_password}" "${db_name}" -e "ALTER TABLE ${table_name} MODIFY COLUMN ${column_name} VARBINARY(255) ENCRYPTED;"
+    
+    echo "Column ${column_name} in ${table_name} encrypted successfully."
+}
+
+function show_last_table_changes() {
+    echo -n "Show Last Table Changes. Enter MariaDB username: "
+    read -r db_user
+    echo "Enter MariaDB password: "
+    read -r db_password
+    echo    # newline
+    echo -n "Enter MariaDB database name: "
+    read -r db_name
+    echo -n "Enter table name: "
+    read -r table_name
+
+    # Ausführen der INFORMATION_SCHEMA-Abfrage für Änderungen
+    result=$(mysql -u "${db_user}" -p"${db_password}" "${db_name}" -e "SELECT * FROM information_schema.tables WHERE table_name = '${table_name}' ORDER BY update_time DESC LIMIT 1;")
+
+    # Anzeigen der Ergebnisse
+    echo "Last changes to ${table_name}:"
+    echo "${result}"
+}
+
+function show_database_events() {
+    echo -n "Show Database Events. Enter MariaDB username: "
+    read -r db_user
+    echo "Enter MariaDB password: "
+    read -r db_password
+    echo    # newline
+    echo -n "Enter MariaDB database name: "
+    read -r db_name
+
+    # Ausführen der SHOW EVENTS-Abfrage
+    result=$(mysql -u "${db_user}" -p"${db_password}" -e "SHOW EVENTS FROM ${db_name};")
+
+    # Anzeigen der Ergebnisse
+    echo "Database Events for ${db_name}:"
+    echo "${result}"
+}
+
+function check_database_consistency() {
+    echo -n "Check Database Consistency. Enter MariaDB username: "
+    read -r db_user
+    echo "Enter MariaDB password: "
+    read -r db_password
+    echo    # newline
+    echo -n "Enter MariaDB database name: "
+    read -r db_name
+
+    # Ausführen der CHECK TABLE-Abfrage für alle Tabellen
+    result=$(mysqlcheck -u "${db_user}" -p"${db_password}" --check --databases "${db_name}")
+
+    # Anzeigen der Ergebnisse
+    echo "Database Consistency Check for ${db_name}:"
+    echo "${result}"
+}
+
+function backup_database() {
+    echo -n "Backup Database. Enter MariaDB username: "
+    read -r db_user
+    echo "Enter MariaDB password: "
+    read -r db_password
+    echo    # newline
+    echo -n "Enter MariaDB database name: "
+    read -r db_name
+    echo -n "Enter backup file name (without extension): "
+    read -r backup_file
+
+    # Ausführen der mysqldump-Abfrage für die Sicherung
+    mysqldump -u "${db_user}" -p"${db_password}" "${db_name}" > "${backup_file}.sql"
+
+    echo "Database backed up successfully to ${backup_file}.sql"
+}
+
+function restore_database() {
+    echo -n "Restore Database. Enter MariaDB username: "
+    read -r db_user
+    echo "Enter MariaDB password: "
+    read -r db_password
+    echo    # newline
+    echo -n "Enter MariaDB database name: "
+    read -r db_name
+    echo -n "Enter backup file name (with .sql extension): "
+    read -r backup_file
+
+    # Ausführen der mysql-Abfrage für die Wiederherstellung
+    mysql -u "${db_user}" -p"${db_password}" "${db_name}" < "${backup_file}"
+
+    echo "Database restored successfully from ${backup_file}"
+}
+
+function show_database_users() {
+    echo -n "Show Database Users. Enter MariaDB username: "
+    read -r db_user
+    echo "Enter MariaDB password: "
+    read -r db_password
+    echo    # newline
+    echo -n "Enter MariaDB database name: "
+    read -r db_name
+
+    # Ausführen der SHOW USERS-Abfrage
+    result=$(mysql -u "${db_user}" -p"${db_password}" "${db_name}" -e "SELECT user FROM mysql.user;")
+
+    # Anzeigen der Ergebnisse
+    echo "Database Users:"
+    echo "${result}"
+}
+
+function check_user_privileges() {
+    echo -n "Check User Privileges. Enter MariaDB username: "
+    read -r db_user
+    echo "Enter MariaDB password: "
+    read -r db_password
+    echo    # newline
+    echo -n "Enter MariaDB database name: "
+    read -r db_name
+    echo -n "Enter username to check privileges: "
+    read -r check_user
+
+    # Ausführen der SHOW GRANTS-Abfrage für den bestimmten Benutzer
+    result=$(mysql -u "${db_user}" -p"${db_password}" "${db_name}" -e "SHOW GRANTS FOR '${check_user}'@'%';")
+
+    # Anzeigen der Ergebnisse
+    echo "Privileges for ${check_user}:"
+    echo "${result}"
+}
+
+function change_user_password() {
+    echo -n "Change User Password. Enter MariaDB username: "
+    read -r db_user
+    echo "Enter MariaDB password: "
+    read -r db_password
+    echo    # newline
+    echo -n "Enter username to change password: "
+    read -r change_user
+    echo -n "Enter new password: "
+    read -s -r new_password
+
+    # Ausführen der SET PASSWORD-Abfrage
+    mysql -u "${db_user}" -p"${db_password}" -e "SET PASSWORD FOR '${change_user}'@'%' = PASSWORD('${new_password}');"
+
+    echo "Password for ${change_user} changed successfully."
+}
+
+# Funktion zum Überprüfen der MariaDB-Fehlerprotokolle
+function check_error_logs() {
+    sudo nano /var/log/mysql/error.log
+}
+
+##########################################################################################################################################################################
+################################### MariaDB Spielwiese Playground ENDE ###################################################################################################
+##########################################################################################################################################################################
+
 ## *  conf_write
 	# Datum: 02.10.2023
 	#? Beschreibung:
@@ -18273,6 +19312,64 @@ case $KOMMANDO in
 	delete_emty_mark) delete_emty_mark "$2" "$3" ;;
 	osreparatur) osreparatur ;;
 	mainMenu) mainMenu ;;
+	check_and_repair) check_and_repair ;;
+	manual_repair) manual_repair ;;
+	repair_table) repair_table ;;
+	repair_table_entries) repair_table_entries ;;
+	repair_single_entry) repair_single_entry ;;
+	delete_corrupted_entries) delete_corrupted_entries ;;
+	backup_tables) backup_tables ;;
+	restore_tables) restore_tables ;;
+	update_entry) update_entry ;;
+	add_entr) add_entr ;;
+	delete_entry) delete_entry ;;
+	generate_report) generate_report ;;
+	begin_transaction) begin_transaction ;;
+	commit_transaction) commit_transaction ;;
+	rollback_transaction) rollback_transaction ;;
+	display_table_schema) display_table_schema ;;
+	display_databases) display_databases ;;
+	optimize_tables) optimize_tables ;;
+	display_server_info) display_server_info ;;
+	search_entries) search_entries ;;
+	search_entries_by_date) search_entries_by_date ;;
+	search_entries_by_unix_timestamp) search_entries_by_unix_timestamp ;;
+	display_table_contents) display_table_contents ;;
+	export_table_to_csv) export_table_to_csv ;;
+	import_csv_to_table) import_csv_to_table ;;
+	backup_all_databases) backup_all_databases ;;
+	restore_all_databases) restore_all_databases ;;
+	display_user_permissions) display_user_permissions ;;
+	add_user) add_user ;;
+	modify_user_permissions) modify_user_permissions ;;
+	delete_user) delete_user ;;
+	rename_table) rename_table ;;
+	show_running_processes) show_running_processes ;;
+	clear_query_cache) clear_query_cache ;;
+	show_index_info) show_index_info ;;
+	analyze_database) analyze_database ;;
+	optimize_query) optimize_query ;;
+	create_database) create_database ;;
+	create_table) create_table ;;
+	alter_table_structure) alter_table_structure ;;
+	show_user_activity) show_user_activity ;;
+	show_events) show_events ;;
+	check_database_connection) check_database_connection ;;
+	show_variables) show_variables ;;
+	show_database_engines) show_database_engines ;;
+	show_collations) show_collations ;;
+	show_database_statistics) show_database_statistics ;;
+	show_foreign_keys) show_foreign_keys ;;
+	add_column_encryption) add_column_encryption ;;
+	show_last_table_changes) show_last_table_changes ;;
+	show_database_events) show_database_events ;;
+	check_database_consistency) check_database_consistency ;;
+	backup_database) backup_database ;;
+	restore_database) restore_database ;;
+	show_database_users) show_database_users ;;
+	check_user_privileges) check_user_privileges ;;
+	change_user_password) change_user_password ;;
+	check_error_logs) check_error_logs ;;
 	hda | hilfedirektaufruf | hilfemenudirektaufrufe) hilfemenudirektaufrufe ;;
 	h) newhelp ;;
 	V | v) echo "$SCRIPTNAME $VERSION" ;;
