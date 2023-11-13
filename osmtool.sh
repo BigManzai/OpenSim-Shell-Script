@@ -36,14 +36,58 @@
 #──────────────────────────────────────────────────────────────────────────────────────────
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.1373" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.1381" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 #──────────────────────────────────────────────────────────────────────────────────────────
 #* Admin Funktionen
 #──────────────────────────────────────────────────────────────────────────────────────────
 
-## *  isroot
+## * password_prompt
+	# Funktion: Passwortabfrage mit Beendigung bei falscher Eingabe
+	# Datum: 13.11.2023
+	# Beschreibung:
+	# Diese Funktion fordert den Benutzer zur Eingabe eines Passworts auf und beendet das Skript, wenn das eingegebene Passwort nicht korrekt ist.
+	#? Parameter:
+	#   - Keine festen Parameter.
+	#? Funktionsverhalten:
+	#   - Definiert das erwartete Passwort.
+	#   - Fordert den Benutzer zur Eingabe des Passworts auf (ohne Anzeige der Eingabe).
+	#   - Überprüft, ob das eingegebene Passwort korrekt ist.
+	#   - Gibt eine Fehlermeldung aus und beendet das Skript bei falschem Passwort.
+	#   - Gibt eine Bestätigung aus und ermöglicht die Ausführung des Skriptcodes nach erfolgreicher Passwortprüfung.
+	#? Beispielaufruf:
+	#   Die Funktion wird verwendet, um den Benutzer nach einem Passwort zu fragen.
+	#   Beispiel: password_prompt
+	#? Rückgabewert:
+	#   - Beendet das Skript mit Exit-Code 1 bei falschem Passwort.
+	#   - Ermöglicht die Ausführung des nachfolgenden Skriptcodes bei korrektem Passwort.
+	#? Hinweise:
+	#   - Ersetzen Sie "IhrErwartetesPasswort" durch das tatsächliche erwartete Passwort.
+	#   - Dies ist eine allgemeine Passwortabfrage und sollte nicht für sicherheitskritische Anwendungen verwendet werden.
+##
+function password_prompt() {
+    # Definieren Sie das erwartete Passwort
+    expected_password="IhrErwartetesPasswort"
+
+    # Passwort abfragen
+    echo -n "Bitte geben Sie das Passwort ein: "
+    read -s entered_password  # -s für die Eingabe ohne Anzeige
+
+    # Überprüfen, ob das eingegebene Passwort korrekt ist
+    if [ "$entered_password" != "$expected_password" ]; then
+        echo -e "\nFalsches Passwort. Das Skript wird beendet."
+        exit 1
+    else
+        echo -e "\nPasswort korrekt. Das Skript wird fortgesetzt."
+        # Hier können Sie den eigentlichen Code des Skripts einfügen, der nach der Passwortprüfung ausgeführt wird.
+    fi
+}
+
+# Beispielaufruf der Funktion password_prompt
+#password_prompt
+
+## * isroot
 	#? Beschreibung:
 	# Diese Funktion überprüft, ob der aktuelle Benutzer root-Rechte (Administratorrechte) hat.
 	# Sie vergleicht den effektiven Benutzer (EUID) mit 0, wobei 0 normalerweise auf den root-Benutzer hinweist.
@@ -98,6 +142,139 @@ function benutzer() {
         exit 1
     fi
 }
+
+#──────────────────────────────────────────────────────────────────────────────────────────
+#* Tests
+#──────────────────────────────────────────────────────────────────────────────────────────
+
+## * check_admin
+	#? Beschreibung:
+	# Überprüft, ob der Benutzer Root-Rechte hat. Beendet das Skript mit einem Fehler, falls nicht.
+	#? Parameter:
+	#   - Keine festen Parameter.
+	#? Funktionsverhalten:
+	#   - Überprüft, ob der Benutzer Root-Rechte hat.
+	#   - Beendet das Skript mit einer Fehlermeldung, falls nicht.
+	#? Beispielaufruf:
+	#   Die Funktion wird zu Beginn eines Skripts aufgerufen, um sicherzustellen, dass es mit Root-Rechten ausgeführt wird.
+	#   Beispiel: check_admin
+	#? Rückgabewert:
+	#   - Beendet das Skript mit einem Fehler, falls der Benutzer keine Root-Rechte hat.
+##
+function check_admin() {
+    # Überprüfen, ob der Benutzer Root-Rechte hat
+    if [ "$(id -u)" != "0" ]; then
+        echo "Error: This script must be run as root."
+        exit 1
+    fi
+}
+
+## * admin_only_function
+	#? Beschreibung:
+	# Gibt eine Meldung aus, dass diese Funktion Administratorrechte erfordert. Der eigentliche Code der Funktion sollte hier eingefügt werden.
+	#? Parameter:
+	#   - Keine festen Parameter.
+	#? Funktionsverhalten:
+	#   - Gibt eine Meldung aus, dass diese Funktion Administratorrechte erfordert.
+	#   - Der eigentliche Code der Funktion sollte hier eingefügt werden.
+	#? Beispielaufruf:
+	#   Diese Funktion wird von anderen Funktionen verwendet, die Administratorrechte benötigen.
+	#   Beispiel: admin_only_function
+	#? Rückgabewert:
+	#   - Kein spezifischer Rückgabewert.
+##
+function admin_only_function() {
+    echo "This function requires administrator privileges."
+    # Hier können Sie den eigentlichen Code der Funktion einfügen
+}
+
+## * check_non_admin
+	#? Beschreibung:
+	# Überprüft, ob der Benutzer keine Root-Rechte hat. Beendet das Skript mit einem Fehler, falls doch.
+	#? Parameter:
+	#   - Keine festen Parameter.
+	#? Funktionsverhalten:
+	#   - Überprüft, ob der Benutzer keine Root-Rechte hat.
+	#   - Beendet das Skript mit einer Fehlermeldung, falls doch.
+	#? Beispielaufruf:
+	#   Die Funktion wird verwendet, um sicherzustellen, dass das Skript nicht mit Root-Rechten ausgeführt wird.
+	#   Beispiel: check_non_admin
+	#? Rückgabewert:
+	#   - Beendet das Skript mit einem Fehler, falls der Benutzer Root-Rechte hat.
+##
+function check_non_admin() {
+    # Überprüfen, ob der Benutzer nicht Root-Rechte hat
+    if [ "$(id -u)" == "0" ]; then
+        echo "Error: This script must not be run as root."
+        exit 1
+    fi
+}
+
+## * non_admin_only_function
+	#? Beschreibung:
+	# Gibt eine Meldung aus, dass diese Funktion keine Administratorrechte erfordert. Der eigentliche Code der Funktion sollte hier eingefügt werden.
+	#? Parameter:
+	#   - Keine festen Parameter.
+	#? Funktionsverhalten:
+	#   - Gibt eine Meldung aus, dass diese Funktion keine Administratorrechte erfordert.
+	#   - Der eigentliche Code der Funktion sollte hier eingefügt werden.
+	#? Beispielaufruf:
+	#   Diese Funktion wird von anderen Funktionen verwendet, die keine Administratorrechte benötigen.
+	#   Beispiel: non_admin_only_function
+	#? Rückgabewert:
+	#   - Kein spezifischer Rückgabewert.
+##
+function non_admin_only_function() {
+    echo "This function does not require administrator privileges."
+    # Hier können Sie den eigentlichen Code der Funktion einfügen
+}
+
+## * check_user
+	#? Beschreibung:
+	# Überprüft, ob der aktuelle Benutzer dem erwarteten Benutzer entspricht. Beendet das Skript mit einem Fehler, falls nicht.
+	#? Parameter:
+	#   - Keine festen Parameter.
+	#? Funktionsverhalten:
+	#   - Überprüft, ob der aktuelle Benutzer dem erwarteten Benutzer entspricht.
+	#   - Beendet das Skript mit einer Fehlermeldung, falls nicht.
+	#? Beispielaufruf:
+	#   Die Funktion wird verwendet, um sicherzustellen, dass das Skript von einem bestimmten Benutzer ausgeführt wird.
+	#   Beispiel: check_user
+	#? Rückgabewert:
+	#   - Beendet das Skript mit einem Fehler, falls der Benutzer nicht dem erwarteten Benutzer entspricht.
+##
+function check_user() {
+    expected_user="your_expected_user"
+
+    # Überprüfen, ob der aktuelle Benutzer dem erwarteten Benutzer entspricht
+    if [ "$(whoami)" != "$expected_user" ]; then
+        echo "Error: This script must be run by $expected_user."
+        exit 1
+    fi
+}
+
+## * specific_user_function
+	#? Beschreibung:
+	# Gibt eine Meldung aus, dass diese Funktion nur von einem bestimmten Benutzer ausgeführt werden sollte. Der eigentliche Code der Funktion sollte hier eingefügt werden.
+	#? Parameter:
+	#   - Keine festen Parameter.
+	#? Funktionsverhalten:
+	#   - Gibt eine Meldung aus, dass diese Funktion nur von einem bestimmten Benutzer ausgeführt werden sollte.
+	#   - Der eigentliche Code der Funktion sollte hier eingefügt werden.
+	#? Beispielaufruf:
+	#   Diese Funktion wird von anderen Funktionen verwendet, die nur von einem bestimmten Benutzer ausgeführt werden sollen.
+	#   Beispiel: specific_user_function
+	#? Rückgabewert:
+	#   - Kein spezifischer Rückgabewert.
+##
+function specific_user_function() {
+    echo "This function should only be executed by $expected_user."
+    # Hier können Sie den eigentlichen Code der Funktion einfügen
+}
+
+#──────────────────────────────────────────────────────────────────────────────────────────
+#* Tests Ende
+#──────────────────────────────────────────────────────────────────────────────────────────
 
 ## * osmexit
 	# Datum: 13.11.2023
@@ -12998,9 +13175,9 @@ function db_tablextract_regex() {
 	done
 }
 
-# XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-# XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX MariaDB Spielwiese Playground XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-# XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+#───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+#────────────────────────────────────────────────────────────────────────────────────────── MariaDB Spielwiese Playground ──────────────────────────────────────────────────────────────────────────────────────────
+#───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 ## * check_and_repair
 	# Datum: 13.11.2023
@@ -15216,9 +15393,9 @@ function check_error_logs() {
     sudo nano /var/log/mysql/error.log
 }
 
-# XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-# XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX MariaDB Spielwiese Playground ENDE XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-# XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+#───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+#────────────────────────────────────────────────────────────────────────────────────────── MariaDB Spielwiese Playground ENDE ─────────────────────────────────────────────────────────────────────────────────────
+#───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 ## *  conf_write
 	# Datum: 02.10.2023
