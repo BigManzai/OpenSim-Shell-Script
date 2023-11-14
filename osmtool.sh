@@ -36,7 +36,7 @@
 #──────────────────────────────────────────────────────────────────────────────────────────
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.1381" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.1396" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 #──────────────────────────────────────────────────────────────────────────────────────────
@@ -83,9 +83,6 @@ function password_prompt() {
         # Hier können Sie den eigentlichen Code des Skripts einfügen, der nach der Passwortprüfung ausgeführt wird.
     fi
 }
-
-# Beispielaufruf der Funktion password_prompt
-#password_prompt
 
 ## * isroot
 	#? Beschreibung:
@@ -272,6 +269,354 @@ function specific_user_function() {
     # Hier können Sie den eigentlichen Code der Funktion einfügen
 }
 
+## * update_and_restart
+	#? Beschreibung:
+	# Diese Funktion führt die Aktualisierung des Paket-Caches, das Upgrade der installierten Pakete und den Neustart des Servers durch.
+	# Der Paket-Cache wird mit 'sudo apt update' aktualisiert, die installierten Pakete mit 'sudo apt upgrade -y' aktualisiert, und schließlich wird der Server mit 'sudo reboot' neu gestartet.
+	# Beachten Sie, dass der Parameter '-y' verwendet wird, um automatisch mit "Ja" auf eventuelle Bestätigungsanfragen zu antworten.
+	# Die Funktion gibt keine Rückmeldung über den Erfolg oder Fehler des Upgrades; dies muss separat überprüft werden.
+	#? Parameter:
+	# Diese Funktion erwartet keine Parameter.
+	#? Rückgabewert:
+	# - Erfolgreich: Die Funktion führt die Aktualisierung und das Upgrade durch und gibt keine explizite Rückmeldung.
+	# - Fehler: Eventuelle Fehler während des Upgrades müssen separat überprüft werden.
+	#? Beispielaufruf:
+	# update_and_restart
+##
+function update_and_restart() {
+  # Update des Paket-Caches
+  sudo apt update
+
+  # Upgrade der installierten Pakete
+  sudo apt upgrade -y
+  
+  # Server neu starten
+  sudo reboot
+}
+
+## * update_clean
+	#? Beschreibung:
+	# Diese Funktion führt die Bereinigung nicht mehr benötigter Paketabhängigkeiten und das Löschen der heruntergeladenen Paket-Caches durch.
+	# Die Bereinigung erfolgt mit 'sudo apt autoremove -y', um nicht mehr benötigte Paketabhängigkeiten zu entfernen, und das Löschen der heruntergeladenen Paket-Caches mit 'sudo apt clean'.
+	# Der Parameter '-y' wird verwendet, um automatisch mit "Ja" auf eventuelle Bestätigungsanfragen zu antworten.
+	# Die Funktion gibt keine Rückmeldung über den Erfolg oder Fehler der Bereinigung; dies muss separat überprüft werden.
+	#? Parameter:
+	# Diese Funktion erwartet keine Parameter.
+	#? Rückgabewert:
+	# - Erfolgreich: Die Funktion führt die Bereinigung durch und gibt keine explizite Rückmeldung.
+	# - Fehler: Eventuelle Fehler während der Bereinigung müssen separat überprüft werden.
+	#? Beispielaufruf:
+	# update_clean
+##
+function update_clean() {
+  # Bereinigung von nicht mehr benötigten Paketabhängigkeiten
+  sudo apt autoremove -y
+
+  # Löschen der heruntergeladenen Paket-Caches
+  sudo apt clean
+}
+
+# Globale Variablen:
+# Beispiel für eine Ziel-IP-Adresse
+#ziel_ip="127.0.0.1"
+ziel_ip=${AKTUELLEIP}
+# Beispiel für einen externen Dienst
+externer_dienst="www.google.com"
+
+## * zeige_netzwerkinformationen
+	#? Beschreibung:
+	# Diese Funktion zeigt umfassende Netzwerkinformationen an, einschließlich IP-Adressen, Netzwerkverbindungszuständen, Netzwerkschnittstelleninformationen, Routinginformationen und DNS-Namenauflösung für eine Ziel-IP-Adresse.
+	# Der Benutzer wird aufgefordert, eine Ziel-IP-Adresse einzugeben, und die Informationen werden dann angezeigt.
+	#? Parameter:
+	# Diese Funktion erwartet keine Parameter.
+	#? Rückgabewert:
+	# Die Funktion gibt keine explizite Rückmeldung über den Erfolg oder Fehler. Überprüfen Sie die ausgegebenen Informationen.
+	#? Beispielaufruf:
+	# zeige_netzwerkinformationen
+##
+function zeige_netzwerkinformationen() {
+    echo "### Netzwerkinformationen ###"
+    # Abfrage der IP-Adresse
+    echo "Geben sie eine Ziel IP Adresse an:[$ziel_ip]"
+    read -r ziel_ip
+
+    # Anzeige der IP-Adresse(n)
+    echo -n "IP-Adresse(n): "
+    hostname -I
+
+    # Anzeige der Netzwerkverbindungszustände
+    echo "Netzwerkverbindungszustand:"
+    ss -tulwn
+
+    # Anzeige von Netzwerkschnittstelleninformationen
+    echo "Netzwerkschnittstelleninformationen:"
+    ifconfig
+
+    # Anzeige von Routinginformationen
+    echo "Routinginformationen:"
+    route -n
+
+    # Auflösung des DNS-Namens für die Ziel-IP
+    echo -n "DNS-Name für $ziel_ip: "
+    nslookup "$ziel_ip" | grep 'name ='
+}
+
+## * ping_test
+	#? Beschreibung:
+	# Diese Funktion führt einen Ping-Test zu einer Ziel-IP-Adresse durch.
+	# Der Benutzer wird aufgefordert, eine Ziel-IP-Adresse einzugeben, und der Ping-Test wird dann durchgeführt.
+	#? Parameter:
+	# Diese Funktion erwartet keine Parameter.
+	#? Rückgabewert:
+	# Die Funktion gibt keine explizite Rückmeldung über den Erfolg oder Fehler. Überprüfen Sie die ausgegebenen Ping-Ergebnisse.
+	#? Beispielaufruf:
+	# ping_test
+##
+function ping_test() {
+    # Abfrage der IP-Adresse
+    echo "Geben sie eine Ziel IP Adresse an:[$ziel_ip]"
+    read -r ziel_ip
+
+    echo "### Ping-Test ###"
+    ping -c 4 "$ziel_ip"
+}
+
+## * netstat_info
+	#? Beschreibung:
+	# Diese Funktion zeigt Netzstatistiken an, einschließlich detaillierter Informationen über Netzwerkverbindungen.
+	# Überprüft zuerst, ob netstat installiert ist. Wenn nicht, wird der Benutzer gefragt, ob netstat installiert werden soll.
+	# Bei Zustimmung wird netstat installiert und die Statistiken werden angezeigt.
+	#? Parameter:
+	# Diese Funktion erwartet keine Parameter.
+	#? Rückgabewert:
+	# Die Funktion gibt keine explizite Rückmeldung über den Erfolg oder Fehler. Überprüfen Sie die ausgegebenen Statistiken.
+	#? Beispielaufruf:
+	# netstat_info
+##
+function netstat_info() {
+    # Überprüfe, ob netstat installiert ist
+    if command -v netstat >/dev/null 2>&1; then
+        echo "### Netzstatistik ###"
+        netstat -s
+    else
+        echo "netstat ist nicht installiert."
+
+        # Frage den Benutzer, ob netstat installiert werden soll
+        echo "Möchtest du netstat installieren? (Ja/Nein): "
+        read -r antwort
+
+        if [ "$antwort" = "Ja" ] || [ "$antwort" = "ja" ]; then
+            # Installiere netstat, z.B., mit dem Paketmanager deiner Distribution
+            # Hier wird apt-get für Debian-basierte Systeme verwendet. Du kannst dies anpassen.
+            sudo apt-get install net-tools
+            echo "netstat wurde installiert."
+        else
+            echo "netstat wurde nicht installiert. Die Funktion ist nicht verfügbar."
+        fi
+    fi
+}
+
+## * traceroute_info
+	#? Beschreibung:
+	# Diese Funktion führt einen Traceroute zu einer Ziel-IP-Adresse durch.
+	# Überprüft zuerst, ob traceroute installiert ist. Wenn nicht, wird der Benutzer gefragt, ob traceroute installiert werden soll.
+	# Bei Zustimmung wird traceroute installiert und der Traceroute wird durchgeführt.
+	# Der Benutzer wird aufgefordert, eine Ziel-IP-Adresse einzugeben, und der Traceroute wird dann angezeigt.
+	#? Parameter:
+	# Diese Funktion erwartet keine Parameter.
+	#? Rückgabewert:
+	# Die Funktion gibt keine explizite Rückmeldung über den Erfolg oder Fehler. Überprüfen Sie die ausgegebenen Traceroute-Ergebnisse.
+	#? Beispielaufruf:
+	# traceroute_info
+##
+function traceroute_info() {
+    # Überprüfe, ob traceroute installiert ist
+    if command -v traceroute >/dev/null 2>&1; then
+        # Trage die Ziel-IP-Adresse ab
+        echo "Geben Sie eine Ziel-IP-Adresse an: [$ziel_ip]"
+        read -r ziel_ip
+
+        echo "### Traceroute zu $ziel_ip ###"
+        traceroute "$ziel_ip"
+    else
+        echo "traceroute ist nicht installiert."
+
+        # Frage den Benutzer, ob traceroute installiert werden soll
+        echo "Möchten Sie traceroute installieren? (Ja/Nein): " 
+        read -r antwort
+
+        if [ "$antwort" = "Ja" ] || [ "$antwort" = "ja" ]; then
+            # Installiere traceroute, z.B., mit dem Paketmanager deiner Distribution
+            # Hier wird apt-get für Debian-basierte Systeme verwendet. Du kannst dies anpassen.
+            sudo apt-get install traceroute
+            echo "traceroute wurde installiert."
+            
+            # Trage erneut die Ziel-IP-Adresse ab
+            echo "Geben Sie eine Ziel-IP-Adresse an: [$ziel_ip]"
+            read -r ziel_ip
+
+            echo "### Traceroute zu $ziel_ip ###"
+            traceroute "$ziel_ip"
+        else
+            echo "traceroute wurde nicht installiert. Die Funktion ist nicht verfügbar."
+        fi
+    fi
+}
+
+## * pruefe_dienst_nc
+	#? Beschreibung:
+	# Diese Funktion überprüft die Verfügbarkeit eines externen Dienstes unter Verwendung von 'nc' (Netcat).
+	# Der Benutzer wird aufgefordert, die IP-Adresse oder den Hostnamen des externen Dienstes einzugeben.
+	# Die Verfügbarkeit des Dienstes wird durch einen Verbindungsversuch auf Port 80 überprüft.
+	#? Parameter:
+	# Diese Funktion erwartet keine Parameter.
+	#? Rückgabewert:
+	# Die Funktion gibt eine Meldung zur Verfügbarkeit des Dienstes aus.
+	#? Beispielaufruf:
+	# pruefe_dienst_nc
+##
+function pruefe_dienst_nc() {
+    # Abfrage des esternen Dienstes
+    echo "Geben sie externen Dienst an:[[$externer_dienst]]"
+    read -r externer_dienst
+
+    echo "### Überprüfung der Verfügbarkeit externer Dienste mit nc ###"
+    echo "Verfügbarkeit von $externer_dienst:"
+    if nc -zv -w 2 "$externer_dienst" 80; then
+        echo "$externer_dienst ist erreichbar."
+    else
+        echo "$externer_dienst ist nicht erreichbar."
+    fi
+}
+
+## * pruefe_dienst_curl
+	#? Beschreibung:
+	# Diese Funktion überprüft die Verfügbarkeit eines externen Dienstes unter Verwendung von 'curl'.
+	# Der Benutzer wird aufgefordert, die IP-Adresse oder den Hostnamen des externen Dienstes einzugeben.
+	# Die Verfügbarkeit des Dienstes wird durch einen HTTP-HEAD-Request auf Port 80 überprüft.
+	#? Parameter:
+	# Diese Funktion erwartet keine Parameter.
+	#? Rückgabewert:
+	# Die Funktion gibt eine Meldung zur Verfügbarkeit des Dienstes aus.
+	#? Beispielaufruf:
+	# pruefe_dienst_curl
+##
+function pruefe_dienst_curl() {
+    # Abfrage des esternen Dienstes
+    echo "Geben sie externen Dienst an:[[$externer_dienst]]"
+    read -r externer_dienst
+    
+    echo "### Überprüfung der Verfügbarkeit externer Dienste mit curl ###"
+    echo "Verfügbarkeit von $externer_dienst:"
+    if curl --head --silent --fail "$externer_dienst" > /dev/null; then
+        echo "$externer_dienst ist erreichbar."
+    else
+        echo "$externer_dienst ist nicht erreichbar."
+    fi
+}
+
+## * whois_info
+	#? Beschreibung:
+	# Diese Funktion zeigt Whois-Informationen für eine Ziel-IP-Adresse an.
+	# Der Benutzer wird aufgefordert, eine Ziel-IP-Adresse einzugeben, und die Whois-Informationen werden dann angezeigt.
+	#? Parameter:
+	# Diese Funktion erwartet keine Parameter.
+	#? Rückgabewert:
+	# Die Funktion gibt keine explizite Rückmeldung über den Erfolg oder Fehler. Überprüfen Sie die ausgegebenen Whois-Informationen.
+	#? Beispielaufruf:
+	# whois_info
+##
+function whois_info() {
+    # Abfrage der IP-Adresse
+    echo "Geben sie eine Ziel IP Adresse an:[$ziel_ip]"
+    read -r ziel_ip
+
+    echo "### Whois-Informationen für $ziel_ip ###"
+    whois "$ziel_ip"
+}
+
+## * netz_ss_info
+	#? Beschreibung:
+	# Diese Funktion zeigt den Netzwerkverbindungszustand mit 'ss' an.
+	#? Parameter:
+	# Diese Funktion erwartet keine Parameter.
+	#? Rückgabewert:
+	# Die Funktion gibt keine explizite Rückmeldung über den Erfolg oder Fehler. Überprüfen Sie die ausgegebenen Informationen.
+	#? Beispielaufruf:
+	# ss_info
+##
+function netz_ss_info() {
+    echo "### Netzwerkverbindungszustand mit ss ###"
+    ss -tulwn
+}
+
+## * dns_dig_info
+	#? Beschreibung:
+	# Diese Funktion zeigt DNS-Informationen für eine Ziel-IP-Adresse mit 'dig' an.
+	# Der Benutzer wird aufgefordert, eine Ziel-IP-Adresse einzugeben, und die DNS-Informationen werden dann angezeigt.
+	#? Parameter:
+	# Diese Funktion erwartet keine Parameter.
+	#? Rückgabewert:
+	# Die Funktion gibt keine explizite Rückmeldung über den Erfolg oder Fehler. Überprüfen Sie die ausgegebenen DNS-Informationen.
+	#? Beispielaufruf:
+	# dig_info
+##
+function dns_dig_info() {
+    # Abfrage der IP-Adresse
+    echo "Geben sie eine Ziel IP Adresse an:[$ziel_ip]"
+    read -r ziel_ip
+
+    echo "### DNS-Informationen für $ziel_ip ###"
+    dig "$ziel_ip"
+}
+
+## * nmap_scan
+	#? Beschreibung:
+	# Diese Funktion führt einen nmap-Scan zu einer Ziel-IP-Adresse durch.
+	# Überprüft zuerst, ob nmap installiert ist. Wenn nicht, wird der Benutzer gefragt, ob nmap installiert werden soll.
+	# Bei Zustimmung wird nmap installiert und der nmap-Scan wird durchgeführt.
+	# Der Benutzer wird aufgefordert, eine Ziel-IP-Adresse einzugeben, und der nmap-Scan wird dann angezeigt.
+	#? Parameter:
+	# Diese Funktion erwartet keine Parameter.
+	#? Rückgabewert:
+	# Die Funktion gibt keine explizite Rückmeldung über den Erfolg oder Fehler. Überprüfen Sie die ausgegebenen nmap-Scan-Ergebnisse.
+	#? Beispielaufruf:
+	# nmap_scan
+##
+function nmap_scan() {
+    # Überprüfe, ob nmap installiert ist
+    if command -v nmap >/dev/null 2>&1; then
+        # Trage die Ziel-IP-Adresse ab
+        echo "Geben Sie eine Ziel-IP-Adresse an: [$ziel_ip]"
+        read -r ziel_ip
+
+        echo "### nmap-Scan für $ziel_ip ###"
+        nmap "$ziel_ip"
+    else
+        echo "nmap ist nicht installiert."
+
+        # Frage den Benutzer, ob nmap installiert werden soll
+        echo "Möchten Sie nmap installieren? (Ja/Nein): "
+        read -r antwort
+
+        if [ "$antwort" = "Ja" ] || [ "$antwort" = "ja" ]; then
+            # Installiere nmap, z.B., mit dem Paketmanager deiner Distribution
+            # Hier wird apt-get für Debian-basierte Systeme verwendet. Du kannst dies anpassen.
+            sudo apt-get install nmap
+            echo "nmap wurde installiert."
+            
+            # Trage erneut die Ziel-IP-Adresse ab
+            echo "Geben Sie eine Ziel-IP-Adresse an: [$ziel_ip]"
+            read -r ziel_ip
+
+            echo "### nmap-Scan für $ziel_ip ###"
+            nmap "$ziel_ip"
+        else
+            echo "nmap wurde nicht installiert. Die Funktion ist nicht verfügbar."
+        fi
+    fi
+}
+
 #──────────────────────────────────────────────────────────────────────────────────────────
 #* Tests Ende
 #──────────────────────────────────────────────────────────────────────────────────────────
@@ -359,7 +704,7 @@ function osmupgrade() {
 	# todo: nichts.
 ##
 function vardel() {
-	# Letzte Bearbeitung 26.09.2023
+	# Letzte Bearbeitung 14.11.2023
     # Liste der zu löschenden Variablen
     local variables=(
         STARTVERZEICHNIS
@@ -388,7 +733,12 @@ function vardel() {
 
     # Lösche alle aufgeführten Variablen
     for var in "${variables[@]}"; do
-        unset "$var"
+        if [ -n "${!var}" ]; then
+            unset "$var"
+            echo "Variable $var gelöscht."
+        else
+            echo "Variable $var nicht vorhanden."
+        fi
     done
 
     return 0
@@ -401,11 +751,21 @@ function vardel() {
 	#? @return nichts wird zurueckgegeben.
 	# todo: nichts.
 ##
-function vardelall() {
+function vardelall1() {
 	# Letzte Bearbeitung 26.09.2023
     # Verwende `set` mit `eval` und `unset`, um alle Variablen zu durchlaufen und zu löschen.
     for var in $(set | awk -F= '{print $1}'); do
         unset "$var"
+    done
+}
+function vardelall() {
+    # Letzte Bearbeitung 14.11.2023
+    local prefix="MY_PREFIX_"  # Ändere dies zu dem Präfix, das deine Variablen haben
+
+    # Verwende `set` mit `eval` und `unset`, um Variablen mit einem bestimmten Präfix zu löschen
+    for var in $(set | grep "^$prefix" | awk -F= '{print $1}'); do
+        unset "$var"
+        echo "Variable $var gelöscht."
     done
 }
 
@@ -444,6 +804,9 @@ SQLVERSION=$(echo "${SQLVERSIONVOLL:0:45}")
 
 # Den Pfad des osmtool.sh Skriptes herausfinden
 SCRIPTPATH=$(cd "$(dirname "$0")" && pwd)
+
+# Die IP des Servers herausfinden
+#SYSTEMIP='"'$(curl -s ifconfig.me)'"'
 #****************************************************************
 
 ## *  osmtranslateinstall
@@ -7419,6 +7782,8 @@ function menuautostop() {
 function autorestart() {
 	# Letzte Bearbeitung 01.10.2023
 	log rohtext " Automatischer Restart wird ausgeführt!"
+	log line
+	
 	# Alles stoppen.
 	autostop
 	if [ "$LOGDELETE" = "yes" ]; then autologdel; fi
@@ -20743,10 +21108,23 @@ case $KOMMANDO in
 	check_user_privileges) check_user_privileges ;;
 	change_user_password) change_user_password ;;
 	check_error_logs) check_error_logs ;;
+	update_and_restart) update_and_restart	;;
+	update_clean) update_clean	;;
+	zeige_netzwerkinformationen) zeige_netzwerkinformationen	;;
+	ping_test) ping_test	;;
+	netstat_info) netstat_info	;;
+	traceroute_info) traceroute_info	;;
+	pruefe_dienst_nc) pruefe_dienst_nc	;;
+	pruefe_dienst_curl)	pruefe_dienst_curl	;;
+	whois_info)	whois_info	;;
+	netz_ss_info) netz_ss_info	;;
+	ss_info) ss_info	;;
+	dns_dig_info) dns_dig_info	;;
+	nmap_scan) nmap_scan	;;
 	hda | hilfedirektaufruf | hilfemenudirektaufrufe) hilfemenudirektaufrufe ;;
 	h) newhelp ;;
 	V | v) echo "$SCRIPTNAME $VERSION" ;;
 	*) hauptmenu ;;
 esac
-#vardelall
+vardelall
 exit 0
