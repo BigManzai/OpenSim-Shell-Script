@@ -20,7 +20,7 @@
 	# ! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 	# ! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#
-	# * Letzte bearbeitung 13.11.2023.
+	# * Letzte bearbeitung 14.11.2023.
 	#
 	# # Installieren sie bitte: #* Visual Studio Code
 	#* dazu die Plugins:
@@ -36,7 +36,7 @@
 #──────────────────────────────────────────────────────────────────────────────────────────
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.1396" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.1399" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 #──────────────────────────────────────────────────────────────────────────────────────────
@@ -1767,6 +1767,59 @@ function laeuftos() {
 	then
         log info "$PROZESSNAME läuft mit .NET 4.8."
     fi
+}
+
+## * dotnetubu18
+	# DOTNET installieren unter Ubuntu 18
+	# Ungetestet - erstellt am: 02.12.2023
+	#? @param
+	#? @return
+	# todo: Testen.
+##
+function dotnetubu18() {
+	# Microsoft-Paket-Repository hinzufügen.
+	wget https://packages.microsoft.com/config/ubuntu/18.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+	if [ $? -ne 0 ]; then
+		echo "Fehler beim Herunterladen des Microsoft-Paket-Repository-Deb-Pakets."
+		return 1
+	fi
+
+	sudo dpkg -i packages-microsoft-prod.deb
+	if [ $? -ne 0 ]; then
+		echo "Fehler beim Installieren des Microsoft-Paket-Repository-Deb-Pakets."
+		return 1
+	fi
+	rm packages-microsoft-prod.deb
+
+	# Installation des SDK
+	sudo apt-get update && sudo apt-get install -y dotnet-sdk-6.0
+	if [ $? -ne 0 ]; then
+		echo "Fehler beim Installieren des .NET SDK."
+		return 1
+	fi
+
+	# Frage den Benutzer nach der Installation von ASP.NET
+	read -p "Möchten Sie DOTNET 6 mit ASP.NET installieren? (j/n): " installAspNet
+	case $installAspNet in
+		[jJyY])
+			# Installation des runtime mit ASP.NET
+			sudo apt-get update && sudo apt-get install -y aspnetcore-runtime-6.0
+			if [ $? -ne 0 ]; then
+				echo "Fehler beim Installieren des .NET Runtimes mit ASP.NET."
+				return 1
+			fi
+			;;
+		*)
+			# Installation des runtime ohne ASP.NET
+			sudo apt-get update && sudo apt-get install -y dotnet-runtime-6.0
+			if [ $? -ne 0 ]; then
+				echo "Fehler beim Installieren des .NET Runtimes ohne ASP.NET."
+				return 1
+			fi
+			;;
+	esac
+
+	echo ".NET SDK und Runtime wurden erfolgreich installiert."
 }
 
 ## * trim_all 
@@ -5374,6 +5427,7 @@ function oscompi93() {
 	# Letzte Bearbeitung 01.10.2023
 	# ohne log Datei.
     git clone git://opensimulator.org/git/opensim opensim93
+	# https://github.com/opensim/opensim.git
     cd opensim93 || exit
     git checkout dotnet6
     ./runprebuild.sh
@@ -5541,6 +5595,7 @@ function opensimgitcopy93() {
 	if [[ $MONEYCOPY = "yes" ]]; then
 		log info "OpenSimulator wird vom GIT geholt"
 		git clone git://opensimulator.org/git/opensim /$STARTVERZEICHNIS/opensim
+		# https://github.com/opensim/opensim.git
 	else
 		log error "OpenSimulator nicht vorhanden"
 	fi
@@ -7198,6 +7253,7 @@ function menuautologdel() {
 ##
 function automapdel() {
 	# Letzte Bearbeitung 01.10.2023
+	autorobustmapdel
 	makeverzeichnisliste
 	sleep 1
 	for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
@@ -7206,7 +7262,7 @@ function automapdel() {
 		log warn "OpenSimulator maptile ${VERZEICHNISSLISTE[$i]} geloescht"
 		sleep 1
 	done
-	autorobustmapdel
+	# autorobustmapdel
 	return 0
 }
 
@@ -8816,6 +8872,9 @@ function osbuildingupgrade93() {
 	log line
 	log info "osupgrade93 startet!"
     osupgrade93
+
+	log info "Maptile werden aus robust geloescht"
+	autorobustmapdel
 
 	return 0
 }
@@ -20814,6 +20873,7 @@ case $KOMMANDO in
 	default_master_connection) default_master_connection "$2" "$3" ;;
 	delete_db) delete_db "$2" "$3" "$4" ;;
 	dotnetinfo) dotnetinfo ;;
+	dotnetubu18) dotnetubu18 ;;
 	downloados) downloados ;;
 	e | terminator) terminator ;;
 	ende) ende ;; # Test
