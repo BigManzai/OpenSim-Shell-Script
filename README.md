@@ -3,10 +3,10 @@
 
 Info: This is not for neuromusculoskeletal modeling and simulation. This is OpenSim Metaverse software.
 
-:warning: **Durch die Umstellung von .NET und mono auf dotnet6 gibt es beim bauen mit mono 5/6 Probleme, da jetzt der Standard dotnet 6 ist. 
+:warning: **Durch die Umstellung von .NET und mono auf dotnet6 gibt es beim bauen mit mono 5/6 Probleme, da jetzt der Standard dotnet 6 ist.
 Das erstellen des OpenSimulator mit den xxxx93 Funktionen des opensimMULTITOOL funktioniert aber noch. 
 Um den OpenSimulator zu erstellen und zu betreiben ist jetzt dotnet 6 zu nutzen.
-Fazit: Bitte versuchen Sie kein automatisches Upgrade der OpenSimulator Versionen für .NET4,6/4,8 mehr.
+Fazit: Bitte versuchen Sie kein automatisches Upgrade der OpenSimulator Versionen für .NET4,6/4,8 mehr.<br>
 In der nächsten Version des opensimMULTITOOL mit namen osmtool23.sh werden alle mono Funktionen entfernt werden und nur noch dotnet ab Version 6 genutzt.**
 
 
