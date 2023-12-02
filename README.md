@@ -8,7 +8,7 @@ Das erstellen des OpenSimulator mit den xxxx93 Funktionen des opensimMULTITOOL f
 Um den OpenSimulator zu erstellen und zu betreiben ist jetzt dotnet 6 zu nutzen.**<br>
 :warning: **Fazit: Bitte versuchen Sie kein automatisches Upgrade der OpenSimulator Versionen für .NET4,6/4,8 mehr.<br>
 
-:information_source: :information_desk_person: **In der nächsten Version des opensimMULTITOOL mit namen osmtool23.sh werden alle mono Funktionen entfernt werden und nur noch dotnet ab Version 6 genutzt.**
+:information_source: **In der nächsten Version des opensimMULTITOOL mit namen osmtool23.sh werden alle mono Funktionen entfernt werden und nur noch dotnet ab Version 6 genutzt.**
 
 
 Dieses opensimMULTITOOL Skript, ist in der Lage ein Komplettes Virtuelles Metaversum, auf einem Ubuntu Server zu erstellen. 
