@@ -36,7 +36,7 @@
 #──────────────────────────────────────────────────────────────────────────────────────────
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.1423" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.1424" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 #──────────────────────────────────────────────────────────────────────────────────────────
@@ -188,6 +188,75 @@ function dotnetubu18() {
         7)
             sdkPackage="dotnet-sdk-7.0"
             ;;
+        *)
+            echo "Ungültige Auswahl. Bitte wählen Sie 6 oder 7."
+            return 1
+            ;;
+    esac
+
+    # Frage den Benutzer nach der Installation von ASP.NET
+    echo "Möchten Sie $dotnetVersion mit ASP.NET installieren? (j/n): "
+    read -r installAspNet
+    case $installAspNet in
+        [jJyY])
+            runtimePackage="aspnetcore-runtime-$dotnetVersion"
+            ;;
+        *)
+            runtimePackage="dotnet-runtime-$dotnetVersion"
+            ;;
+    esac
+
+    # Installation des SDK
+    sudo apt-get update && sudo apt-get install -y $sdkPackage
+    if [ $? -ne 0 ]; then
+        echo "Fehler beim Installieren des .NET SDK."
+        return 1
+    fi
+
+    # Installation des Runtimes
+    sudo apt-get update && sudo apt-get install -y $runtimePackage
+    if [ $? -ne 0 ]; then
+        echo "Fehler beim Installieren des .NET Runtimes."
+        return 1
+    fi
+
+    echo ".NET SDK und Runtime wurden erfolgreich installiert."
+}
+
+## * Funktion: dotnetubu22
+#! Diese Funktion erleichtert die Installation von .NET SDK und Runtime auf einem System mit Ubuntu 22.04.
+# Die Funktion führt die folgenden Schritte aus:
+#? 1. **Hinzufügen des Microsoft-Paket-Repositories:**
+#    - Das Deb-Paket wird von der Microsoft-Website heruntergeladen.
+#    - Bei einem Downloadfehler wird eine Fehlermeldung ausgegeben, und die Funktion gibt 1 zurück.
+#    - Das Deb-Paket wird installiert.
+#? 2. **Installation des .NET SDK:**
+#    - Das .NET SDK wird über die Paketverwaltung installiert.
+#    - Bei einem Installationsfehler wird eine Fehlermeldung ausgegeben, und die Funktion gibt 1 zurück.
+#? 3. **Abfrage des Benutzers bezüglich ASP.NET:**
+#    - Der Benutzer wird gefragt, ob er ASP.NET installieren möchte.
+#? 4. **Installation des .NET Runtimes:**
+#    - Abhängig von der Benutzerantwort wird das Runtime-Paket mit oder ohne ASP.NET installiert.
+#    - Bei einem Installationsfehler wird eine Fehlermeldung ausgegeben, und die Funktion gibt 1 zurück.
+#? Verwendung:
+# bash osmtool.sh dotnetubu18
+# todo: Testen.
+##
+function dotnetubu22() {
+
+    # Frage den Benutzer nach der Version von .NET SDK
+    echo "Möchten Sie DOTNET 6 oder DOTNET 7 installieren? (6/7/8): "
+    read -r dotnetVersion
+    case $dotnetVersion in
+        6)
+            sdkPackage="dotnet-sdk-6.0"
+            ;;
+        7)
+            sdkPackage="dotnet-sdk-7.0"
+            ;;
+		8)
+			sdkPackage="dotnet-sdk-8.0"
+			;;
         *)
             echo "Ungültige Auswahl. Bitte wählen Sie 6 oder 7."
             return 1
@@ -1277,10 +1346,6 @@ function osmtoolconfig() {
 		echo '    SETULIMITON="yes"'
 		echo '    SETMONOGCPARAMSON1="no"'
 		echo '    SETMONOGCPARAMSON2="yes"'
-		echo "     "
-		echo "#* Mono Version fuer Build Vorgang Visual Studio 2019 oder 2022 - Zweite Zahl net/mono framework."
-		echo "    # 1948, 1950, 1960, 1970 - 2248, 2250, 2260, 2270"
-		echo '    netversion="2248"'
 		echo "     "
 		echo "#* Divers"
 		echo '    SETOSCOMPION="no" # Mit oder ohne log Datei kompilieren. yes oder no.'
@@ -2974,8 +3039,6 @@ function schreibeinfo() {
 		log rohtext "  $DATUM $(date +%H:%M:%S) INFO: Release Nummer: $ubuntuRelease"
 		log rohtext "  $DATUM $(date +%H:%M:%S) INFO: Linux Name: $ubuntuCodename"
 		log rohtext "  $DATUM $(date +%H:%M:%S) INFO: Bash Version: ${BASH_VERSION}"
-		txtmono=$(mono --version);
-		log rohtext "  $DATUM $(date +%H:%M:%S) INFO: MONO Version: ${txtmono:0:37}"
 		log rohtext "  $DATUM $(date +%H:%M:%S) INFO: MONO THREAD Einstellung: ${MONO_THREADS_PER_CPU}"
 		dotnetversion=$(dotnet --version);
 		log rohtext "  $DATUM $(date +%H:%M:%S) INFO: DOTNET Version: ${dotnetversion}"
@@ -20823,6 +20886,7 @@ case $KOMMANDO in
 	delete_db) delete_db "$2" "$3" "$4" ;;
 	dotnetinfo) dotnetinfo ;;
 	dotnetubu18) dotnetubu18 ;;
+	dotnetubu22) dotnetubu22 ;;
 	uninstall_mono) uninstall_mono ;;
 	downloados) downloados ;;
 	e | terminator) terminator ;;
