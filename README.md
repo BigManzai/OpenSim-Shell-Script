@@ -9,7 +9,7 @@ Info: This is not for neuromusculoskeletal modeling and simulation. This is Open
 
 :warning: **Fazit: Bitte versuchen Sie kein automatisches Upgrade der OpenSimulator Versionen für .NET4,6/4,8 mehr.** <br>
 
-:information_source: **In der nächsten Version des opensimMULTITOOL mit namen osmtool23.sh werden alle mono Funktionen entfernt werden und nur noch dotnet ab Version 6 genutzt.**
+:information_source: **In der nächsten Version des opensimMULTITOOL werden alle mono Funktionen entfernt werden und nur noch dotnet ab Version 6 genutzt.**
 
 
 Dieses opensimMULTITOOL Skript, ist in der Lage ein Komplettes Virtuelles Metaversum, auf einem Ubuntu Server zu erstellen. 
