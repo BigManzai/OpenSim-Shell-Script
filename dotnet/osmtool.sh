@@ -36,7 +36,7 @@
 #──────────────────────────────────────────────────────────────────────────────────────────
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.1424" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.1425" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 #──────────────────────────────────────────────────────────────────────────────────────────
@@ -189,6 +189,89 @@ function dotnetubu18() {
         7)
             sdkPackage="dotnet-sdk-7.0"
             ;;
+        *)
+            echo "Ungültige Auswahl. Bitte wählen Sie 6 oder 7."
+            return 1
+            ;;
+    esac
+
+    # Frage den Benutzer nach der Installation von ASP.NET
+    echo "Möchten Sie $dotnetVersion mit ASP.NET installieren? (j/n): "
+    read -r installAspNet
+    case $installAspNet in
+        [jJyY])
+            runtimePackage="aspnetcore-runtime-$dotnetVersion"
+            ;;
+        *)
+            runtimePackage="dotnet-runtime-$dotnetVersion"
+            ;;
+    esac
+
+    # Installation des SDK
+    sudo apt-get update && sudo apt-get install -y $sdkPackage
+    if [ $? -ne 0 ]; then
+        echo "Fehler beim Installieren des .NET SDK."
+        return 1
+    fi
+
+    # Installation des Runtimes
+    sudo apt-get update && sudo apt-get install -y $runtimePackage
+    if [ $? -ne 0 ]; then
+        echo "Fehler beim Installieren des .NET Runtimes."
+        return 1
+    fi
+
+    echo ".NET SDK und Runtime wurden erfolgreich installiert."
+}
+
+## * Funktion: dotnetubu20
+#! Diese Funktion erleichtert die Installation von .NET SDK und Runtime auf einem System mit Ubuntu 20.04.
+# Die Funktion führt die folgenden Schritte aus:
+#? 1. **Hinzufügen des Microsoft-Paket-Repositories:**
+#    - Das Deb-Paket wird von der Microsoft-Website heruntergeladen.
+#    - Bei einem Downloadfehler wird eine Fehlermeldung ausgegeben, und die Funktion gibt 1 zurück.
+#    - Das Deb-Paket wird installiert.
+#? 2. **Installation des .NET SDK:**
+#    - Das .NET SDK wird über die Paketverwaltung installiert.
+#    - Bei einem Installationsfehler wird eine Fehlermeldung ausgegeben, und die Funktion gibt 1 zurück.
+#? 3. **Abfrage des Benutzers bezüglich ASP.NET:**
+#    - Der Benutzer wird gefragt, ob er ASP.NET installieren möchte.
+#? 4. **Installation des .NET Runtimes:**
+#    - Abhängig von der Benutzerantwort wird das Runtime-Paket mit oder ohne ASP.NET installiert.
+#    - Bei einem Installationsfehler wird eine Fehlermeldung ausgegeben, und die Funktion gibt 1 zurück.
+#? Verwendung:
+# bash osmtool.sh dotnetubu20
+# todo: Testen.
+##
+function dotnetubu20() {
+    # Microsoft-Paket-Repository hinzufügen.
+    wget https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+    if [ $? -ne 0 ]; then
+        echo "Fehler beim Herunterladen des Microsoft-Paket-Repository-Deb-Pakets."
+        return 1
+    fi
+
+    sudo dpkg -i packages-microsoft-prod.deb
+    if [ $? -ne 0 ]; then
+        echo "Fehler beim Installieren des Microsoft-Paket-Repository-Deb-Pakets."
+        return 1
+    fi
+    rm packages-microsoft-prod.deb
+
+    # Frage den Benutzer nach der Version von .NET SDK
+    echo "Möchten Sie DOTNET 6 oder DOTNET 7 oder DOTNET 8 installieren? (6/7/8): "
+    read -r dotnetVersion
+	if [ "$dotnetVersion" = "" ]; then dotnetVersion="6"; fi
+    case $dotnetVersion in
+        6)
+            sdkPackage="dotnet-sdk-6.0"
+            ;;
+        7)
+            sdkPackage="dotnet-sdk-7.0"
+            ;;
+		8)
+			sdkPackage="dotnet-sdk-8.0"
+			;;
         *)
             echo "Ungültige Auswahl. Bitte wählen Sie 6 oder 7."
             return 1
