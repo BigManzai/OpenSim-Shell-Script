@@ -4,6 +4,8 @@ Dies befindet sich in der Entwicklung.
 	# DOTNET 6 Installation entweder:
 	# Ubuntu 18
 	bash osmtool.sh dotnetubu18
+ 	# Ubuntu 20
+	bash osmtool.sh dotnetubu20
 	# Ubuntu 22 und 23
 	bash osmtool.sh dotnetubu22
 
