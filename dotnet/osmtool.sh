@@ -181,6 +181,7 @@ function dotnetubu18() {
     # Frage den Benutzer nach der Version von .NET SDK
     echo "Möchten Sie DOTNET 6 oder DOTNET 7 installieren? (6/7): "
     read -r dotnetVersion
+	if [ "$dotnetVersion" = "" ]; then dotnetVersion="6"; fi
     case $dotnetVersion in
         6)
             sdkPackage="dotnet-sdk-6.0"
@@ -243,10 +244,10 @@ function dotnetubu18() {
 # todo: Testen.
 ##
 function dotnetubu22() {
-
     # Frage den Benutzer nach der Version von .NET SDK
-    echo "Möchten Sie DOTNET 6 oder DOTNET 7 installieren? (6/7/8): "
+    echo "Möchten Sie DOTNET 6 oder DOTNET 7 oder DOTNET 8 installieren? (6/7/8): "
     read -r dotnetVersion
+	if [ "$dotnetVersion" = "" ]; then dotnetVersion="6"; fi
     case $dotnetVersion in
         6)
             sdkPackage="dotnet-sdk-6.0"
