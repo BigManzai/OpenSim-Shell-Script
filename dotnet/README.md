@@ -19,7 +19,7 @@ Dies befindet sich in der Entwicklung.
 	# OpenSim stoppen:
 	bash osmtool.sh autostop
 
-	# Alte OpenSim installationen entfernen:
+	# Alte OpenSim installationen entfernen (Konfigurationen, Einstellungen und Datenbanken sind nicht betroffen):
 	bash osmtool.sh autoallclean
 
 	# Jetzt eine neue Master Version als ZIP herunterladen von hier:
