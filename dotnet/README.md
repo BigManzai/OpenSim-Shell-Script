@@ -31,7 +31,7 @@ Dies befindet sich in der Entwicklung.
 	# Neue OpenSim DOTNET 6 Version Kompilieren und Installieren:
 	bash osmtool.sh osbuilding 202
 
-Beispiel die OpenSim Version hat den Namen opensim-0.9.3.0Dev-202-ge0ee44c.zip dann ist die Nummer 202.
+Beispiel die OpenSim Version hat den Namen opensim-0.9.3.0Dev-202-ge0ee44c.zip dann ist die Nummer 202 anzugeben.
 
 Es wird dann automatisch die Zip Datei entpackt mit MoneyServer und den Skripten zusammengebaut und Kompiliert.
 
