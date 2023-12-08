@@ -39,4 +39,4 @@ Zuletzt wird dann alles upgegradet und neu gestartet.
 
 :warning: ** Bitte nicht die Datenbank Migration vergessen! **
 
-:information_source: Informationen: http://opensimulator.org/wiki/0.9.0.0_Release/de
+:information_source: ** Informationen: ** http://opensimulator.org/wiki/0.9.0.0_Release/de
