@@ -37,6 +37,6 @@ Es wird dann automatisch die Zip Datei entpackt mit MoneyServer und den Skripten
 
 Zuletzt wird dann alles upgegradet und neu gestartet.
 
-:warning: **Bitte nicht die Datenbank Migration vergessen!**
+:warning: **Bitte nicht die Datenbank Migrationen vergessen!**
 
 :information_source: **Informationen:** [http://opensimulator.org/wiki/Upgrading/de] [http://opensimulator.org/wiki/0.9.0.0_Release/de]
