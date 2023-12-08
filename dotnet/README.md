@@ -1,6 +1,8 @@
 # osmtool für DOTNET 6
 Dies befindet sich in der Entwicklung.
 
+:warning: **opensim-0.9.3.0Dev-203-g4a3cfd1 BulletSim Probleme bei Ubuntu 18!**
+
 	# DOTNET 6 Installation entweder:
 	# Ubuntu 18
 	bash osmtool.sh dotnetubu18
@@ -8,6 +10,9 @@ Dies befindet sich in der Entwicklung.
 	bash osmtool.sh dotnetubu20
 	# Ubuntu 22 und 23
 	bash osmtool.sh dotnetubu22
+
+	# Warscheinlich muss noch folgendes installiert werden:
+	sudo apt install libgdiplus
 
 	# Deinstallation von mono falls nötig:
 	bash osmtool.sh uninstall_mono
