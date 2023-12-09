@@ -3,6 +3,9 @@ Dies befindet sich in der Entwicklung.
 
 :warning: **opensim-0.9.3.0Dev-203-g4a3cfd1 BulletSim Probleme bei Ubuntu 18!**
 
+        # Backup nicht vergessen
+        bash osmtool.sh autoregionbackup
+
 	# DOTNET 6 Installation entweder:
 	# Ubuntu 18
 	bash osmtool.sh dotnetubu18
