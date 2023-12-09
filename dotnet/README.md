@@ -18,6 +18,7 @@ Dies befindet sich in der Entwicklung.
 
 	# OpenSim stoppen:
 	bash osmtool.sh autostop
+ 
  	# Deinstallation von mono falls nötig:
 	bash osmtool.sh uninstall_mono
 
@@ -56,4 +57,5 @@ Zuletzt wird dann alles upgegradet und neu gestartet.
 	# Restart um 6 Uhr dotnet 6
 	0 6 * * * bash /opt/osmtool.sh autorestart
 
+## **TODO**
 Falsche MoneyServer Version behoben. Fehlende libgdiplus installation hinzugefügt. Zuerst muss man natürlich den OpenSimulator herunterfahren bevor man mono deinstalliert.
