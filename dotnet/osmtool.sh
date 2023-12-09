@@ -36,7 +36,7 @@
 #──────────────────────────────────────────────────────────────────────────────────────────
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.1425" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.1426" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 #──────────────────────────────────────────────────────────────────────────────────────────
@@ -200,10 +200,10 @@ function dotnetubu18() {
     read -r installAspNet
     case $installAspNet in
         [jJyY])
-            runtimePackage="aspnetcore-runtime-$dotnetVersion"
+            runtimePackage="aspnetcore-runtime-$dotnetVersion.0"
             ;;
         *)
-            runtimePackage="dotnet-runtime-$dotnetVersion"
+            runtimePackage="dotnet-runtime-$dotnetVersion.0"
             ;;
     esac
 
@@ -283,10 +283,10 @@ function dotnetubu20() {
     read -r installAspNet
     case $installAspNet in
         [jJyY])
-            runtimePackage="aspnetcore-runtime-$dotnetVersion"
+            runtimePackage="aspnetcore-runtime-$dotnetVersion.0"
             ;;
         *)
-            runtimePackage="dotnet-runtime-$dotnetVersion"
+            runtimePackage="dotnet-runtime-$dotnetVersion.0"
             ;;
     esac
 
@@ -352,10 +352,10 @@ function dotnetubu22() {
     read -r installAspNet
     case $installAspNet in
         [jJyY])
-            runtimePackage="aspnetcore-runtime-$dotnetVersion"
+            runtimePackage="aspnetcore-runtime-$dotnetVersion.0"
             ;;
         *)
-            runtimePackage="dotnet-runtime-$dotnetVersion"
+            runtimePackage="dotnet-runtime-$dotnetVersion.0"
             ;;
     esac
 
@@ -5708,7 +5708,7 @@ function opensimgitcopy93() {
 	#? Beispiel:
 	# moneygitcopy93
 ##
-function moneygitcopy93() {
+function moneygitcopy() {
 	# Letzte Bearbeitung 01.10.2023
 	#Money und Scripte vom Git holen
 
@@ -5731,7 +5731,7 @@ function moneygitcopy93() {
 	#? Beispiel:
 	# moneygitcopy
 ##
-function moneygitcopy() {
+function moneygitcopy21() {
 	# Letzte Bearbeitung 01.10.2023
 	#Money und Scripte vom Git holen
 
