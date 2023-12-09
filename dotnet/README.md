@@ -10,13 +10,6 @@ Dies befindet sich in der Entwicklung.
 	bash osmtool.sh dotnetubu20
 	# Ubuntu 22 und 23
 	bash osmtool.sh dotnetubu22
-
-	# Warscheinlich muss noch folgendes installiert werden:
-	sudo apt install libgdiplus
-
-	# Deinstallation von mono falls nötig:
-	bash osmtool.sh uninstall_mono
-
 	# Herunterladen von source Dateien:
 	# MoneyServer
 	bash osmtool.sh moneygitcopy
@@ -25,6 +18,8 @@ Dies befindet sich in der Entwicklung.
 
 	# OpenSim stoppen:
 	bash osmtool.sh autostop
+ 	# Deinstallation von mono falls nötig:
+	bash osmtool.sh uninstall_mono
 
 	# Alte OpenSim installationen entfernen (Konfigurationen, Einstellungen und Datenbanken sind nicht betroffen):
 	bash osmtool.sh autoallclean
@@ -42,6 +37,21 @@ Es wird dann automatisch die Zip Datei entpackt mit MoneyServer und den Skripten
 
 Zuletzt wird dann alles upgegradet und neu gestartet.
 
+
 :warning: **Bitte nicht die Datenbank Migrationen vergessen!**
 
 :information_source: **Informationen:** [http://opensimulator.org/wiki/Upgrading/de] [http://opensimulator.org/wiki/0.9.0.0_Release/de]
+
+
+	#Crontab ändern?
+	#Crontab anzeigen:
+	crontab -l
+
+	#Crontab bearbeiten oder erstellen:
+	crontab -e
+
+	#Nachfolgende Zeilen unten im mit "crontab -e" geöffneten Crontab einfügen.
+	Format: Minute(0 - 59)-Stunde(0 - 23)-Tag(1 - 31)-Monat(1 - 12)-Wochentag(0 - 7) - Aktion/Program -
+
+	# Restart um 6 Uhr dotnet 6
+	0 6 * * * bash /opt/osmtool.sh autorestart
