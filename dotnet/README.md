@@ -3,6 +3,10 @@ Dies befindet sich in der Entwicklung.
 
 :warning: **opensim-0.9.3.0Dev-203-g4a3cfd1 BulletSim Probleme bei Ubuntu 18!**
 
+Das Problem ist die libBulletSim-3.26-20231207-x86_64.so Datei diese ist auf Ubuntu 20 gebaut und funktioniert nicht auf Ubuntu 18.
+
+Im BulletSim Verzeichnis befindet sich eine Version die unter Ubuntu 18 gebaut wurde und im Test läuft.
+
         # Backup nicht vergessen
         bash osmtool.sh autoregionbackup
 
