@@ -12,4 +12,4 @@ Das einfachste ist die Datei /opt/opensim/bin/lib64/libBulletSim-3.26-20231207-x
 Möchte man aber die Versionsnamen behalten muss die Datei /opt/opensim/bin/OpenSim.Region.PhysicsModule.BulletS.dll.config zusätzlich angepasst werden.
 
 ## Fazit
-Die Original libBulletSim ist auf Ubuntu 20 gebaut worden und ich habe den eindruck das diese auf einem Ubuntu 22 Server langsammer läuft.
+Die Original libBulletSim ist auf Ubuntu 20 gebaut worden und ich habe den Eindruck das diese auf einem Ubuntu 22 Server langsamer läuft.
