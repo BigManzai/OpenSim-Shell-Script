@@ -8,7 +8,7 @@ Im BulletSim Verzeichnis befindet sich eine Version die unter Ubuntu 18 und Ubun
  
 	# Backup nicht vergessen, diese Art von Backup erstellt 4 Dateien für jede Region
 	bash osmtool.sh autoregionbackup
-
+ 
 	# DOTNET 6 Installation entweder:
 	# Ubuntu 18
 	bash osmtool.sh dotnetubu18
