@@ -6,7 +6,7 @@ Im BulletSim Verzeichnis befindet sich eine Version die unter Ubuntu 18 und Ubun
 	# Zuerst alte Konfigurationsdatei löschen (osmtoolconfig.ini) und neue anlegen lassen
 	bash osmtool.sh
  
-	# Backup nicht vergessen, diese Art von Backup erstellt 4 Dateien für jede Region
+	# Backup nicht vergessen, dieses Backup erstellt 4 Dateien für jede Region (Alle Backup möglichkeiten)
 	bash osmtool.sh autoregionbackup
  
 	# DOTNET 6 Installation entweder:
