@@ -1,7 +1,7 @@
 # osmtool für DOTNET 6
 Dies befindet sich in der Entwicklung.
 
-Im [https://github.com/BigManzai/BulletSim | BulletSim] Verzeichnis befindet sich eine Version die unter Ubuntu 18 und Ubuntu 22 gebaut wurde und im Test läuft.
+Im [[https://github.com/BigManzai/BulletSim|BulletSim]] Verzeichnis befindet sich eine Version die unter Ubuntu 18 und Ubuntu 22 gebaut wurde und im Test läuft.
 
 	# Zuerst alte Konfigurationsdatei löschen (osmtoolconfig.ini) und neue anlegen lassen
 	bash osmtool.sh
