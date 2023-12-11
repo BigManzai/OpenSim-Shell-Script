@@ -3,11 +3,11 @@ Dies befindet sich in der Entwicklung.
 
 Im BulletSim Verzeichnis befindet sich eine Version die unter Ubuntu 18 und Ubuntu 22 gebaut wurde und im Test läuft.
 
-	# Zuerst alte Konfigurationsdatei löschen (osmtoolconfig.ini)
+	# Zuerst alte Konfigurationsdatei löschen (osmtoolconfig.ini) und neue anlegen lassen
 	bash osmtool.sh
  
-        # Backup nicht vergessen
-        bash osmtool.sh autoregionbackup
+	# Backup nicht vergessen, diese Art von Backup erstellt 4 Dateien für jede Region
+	bash osmtool.sh autoregionbackup
 
 	# DOTNET 6 Installation entweder:
 	# Ubuntu 18
