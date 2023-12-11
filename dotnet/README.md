@@ -71,3 +71,4 @@ Zuletzt wird dann alles upgegradet und neu gestartet.
 * Zuerst muss man natürlich den OpenSimulator herunterfahren bevor man mono deinstalliert. 
 * MoneyServer wird jetzt direkt mitgebaut. 
 * BulletSim für Ubuntu 18 + 22 wird jetzt automatisch eingefügt.
+* bionic ist unter Linux nicht Bionic.
