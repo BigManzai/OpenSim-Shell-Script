@@ -36,7 +36,7 @@
 #──────────────────────────────────────────────────────────────────────────────────────────
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.1429" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.1430" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 #──────────────────────────────────────────────────────────────────────────────────────────
@@ -17496,7 +17496,7 @@ function AutoInstall() {
 	ubuntuCodename=$(cut -f2 <<<"$myCodename")       # jammy
 
 	if [ "$ubuntuCodename" = "jammy" ]; then MYSERVER="Ubuntu 22 jammy"; fi
-	if [ "$ubuntuCodename" = "Bionic" ]; then MYSERVER="Ubuntu 18 Bionic"; fi
+	if [ "$ubuntuCodename" = "bionic" ]; then MYSERVER="Ubuntu 18 bionic"; fi
 
     log rohtext "Herzlich willkommen zur Grundinstallation ihreres Servers."
     log rohtext "Möchten sie eine Grundinstallation ihres $MYSERVER Servers, "
@@ -17516,7 +17516,7 @@ function AutoInstall() {
             ufwset
             #installationhttps22
             installfinish
-        elif [ "$ubuntuCodename" = "Bionic" ]; then
+        elif [ "$ubuntuCodename" = "bionic" ]; then
             #echo "entdeckt Ubuntu 18"
             serverupgrade
             installopensimulator
