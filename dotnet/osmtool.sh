@@ -36,7 +36,7 @@
 #──────────────────────────────────────────────────────────────────────────────────────────
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.1428" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.1429" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 #──────────────────────────────────────────────────────────────────────────────────────────
@@ -5935,8 +5935,8 @@ function bulletcopy() {
 	cp -r /$STARTVERZEICHNIS/$BULLETSOURCE/* /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin/lib64
 	fi
 	
-	if [ "$ubuntuCodename" = "Bionic" ]; then
-	#echo "entdeckt Ubuntu 18" 
+	if [ "$ubuntuCodename" = "bionic" ]; then
+	#echo "entdeckt Ubuntu 18" /opt/BulletSim/Ubuntu18
 	BULLETSOURCE="BulletSim/Ubuntu18" 
 	cp -r /$STARTVERZEICHNIS/$BULLETSOURCE/* /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin/lib64
 	fi	
