@@ -7,6 +7,9 @@ Das Problem ist die libBulletSim-3.26-20231207-x86_64.so Datei diese ist auf Ubu
 
 Im BulletSim Verzeichnis befindet sich eine Version die unter Ubuntu 18 gebaut wurde und im Test läuft.
 
+	# Zuerst alte Konfigurationsdatei löschen (osmtoolconfig.ini)
+	bash osmtool.sh
+ 
         # Backup nicht vergessen
         bash osmtool.sh autoregionbackup
 
@@ -17,11 +20,14 @@ Im BulletSim Verzeichnis befindet sich eine Version die unter Ubuntu 18 gebaut w
 	bash osmtool.sh dotnetubu20
 	# Ubuntu 22 und 23
 	bash osmtool.sh dotnetubu22
+ 
 	# Herunterladen von source Dateien:
 	# MoneyServer
 	bash osmtool.sh moneygitcopy
 	# ossl Skripte
 	bash osmtool.sh scriptgitcopy
+ 	#BulletSim für Ubuntu 18 + 22
+	bash osmtool.sh bulletgitcopy
 
 	# OpenSim stoppen:
 	bash osmtool.sh autostop
@@ -64,4 +70,8 @@ Zuletzt wird dann alles upgegradet und neu gestartet.
 	0 6 * * * bash /opt/osmtool.sh autorestart
 
 ## **TODO**
-Falsche MoneyServer Version behoben. Fehlende libgdiplus installation hinzugefügt. Zuerst muss man natürlich den OpenSimulator herunterfahren bevor man mono deinstalliert.
+* Falsche MoneyServer Version behoben. 
+* Fehlende libgdiplus installation hinzugefügt. 
+* Zuerst muss man natürlich den OpenSimulator herunterfahren bevor man mono deinstalliert. 
+* MoneyServer wird jetzt direkt mitgebaut. 
+* BulletSim für Ubuntu 18 + 22 kann jetzt automatisch eingefügt werden.
