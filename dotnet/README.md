@@ -1,11 +1,7 @@
 # osmtool für DOTNET 6
 Dies befindet sich in der Entwicklung.
 
-:warning: **opensim-0.9.3.0Dev-203-g4a3cfd1 BulletSim Probleme bei Ubuntu 18!**
-
-Das Problem ist die libBulletSim-3.26-20231207-x86_64.so Datei diese ist auf Ubuntu 20 gebaut und funktioniert nicht auf Ubuntu 18.
-
-Im BulletSim Verzeichnis befindet sich eine Version die unter Ubuntu 18 gebaut wurde und im Test läuft.
+Im BulletSim Verzeichnis befindet sich eine Version die unter Ubuntu 18 und Ubuntu 22 gebaut wurde und im Test läuft.
 
 	# Zuerst alte Konfigurationsdatei löschen (osmtoolconfig.ini)
 	bash osmtool.sh
@@ -52,7 +48,7 @@ Es wird dann automatisch die Zip Datei entpackt mit MoneyServer und den Skripten
 Zuletzt wird dann alles upgegradet und neu gestartet.
 
 
-:warning: **Bitte nicht die Datenbank Migrationen vergessen!**
+:warning: **Bitte nicht die Datenbank Migrationen bei älteren OpenSim Versionen vergessen!**
 
 :information_source: **Informationen:** [http://opensimulator.org/wiki/Upgrading/de] [http://opensimulator.org/wiki/0.9.0.0_Release/de]
 
