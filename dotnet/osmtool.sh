@@ -36,7 +36,7 @@
 #──────────────────────────────────────────────────────────────────────────────────────────
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.1426" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.1428" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 #──────────────────────────────────────────────────────────────────────────────────────────
@@ -1299,10 +1299,8 @@ function osmtoolconfig() {
 		echo '    SCRIPTSOURCE="opensim-ossl-example-scripts-main"'
 		echo '    SCRIPTZIP="opensim-ossl-example-scripts-main.zip"'
 		echo "     "
-		echo '    MONEYSOURCE="OpenSimCurrencyServer-2021-master"'
-		echo '    MONEYZIP="OpenSimCurrencyServer-2021-master.zip"'
-		echo '    #MONEYSOURCE="OpenSimCurrencyServer-2023"'
-		echo '    #MONEYZIP="OpenSimCurrencyServer-2023.zip"'
+		echo '    MONEYSOURCE="OpenSimCurrencyServer-2023"'
+		echo '    MONEYZIP="OpenSimCurrencyServer-2023.zip"'
 		echo '    #MUTELISTSOURCE="opensim-ossl-example-scripts-main"'
 		echo '    #MUTELISTZIP="OpenSimCurrencyServer-2021-master.zip"'
 		echo '    #OSSEARCHSOURCE="opensim-ossl-example-scripts-main"'
@@ -1314,8 +1312,8 @@ function osmtoolconfig() {
 		echo '    CONFIGURESOURCE="opensim-configuration-addon-modul-main"'
 		echo '    CONFIGUREZIP="opensim-configuration-addon-modul-main.zip"'
 		echo "     "
-		echo '    OSSEARCHSOURCE="OpenSimSearch"'
-		echo '    OSSEARCHSZIP="OpenSimSearch-master.zip"'
+		echo '    #OSSEARCHSOURCE="OpenSimSearch"'
+		echo '    #OSSEARCHSZIP="OpenSimSearch-master.zip"'
 		echo "     "
 		echo '    BUILDOLD="yes"'
 		echo "     "
@@ -1609,7 +1607,7 @@ KOMMANDO=$1
 ##
 function dummyvar() {
 	# shellcheck disable=SC2034
-	MONEYVERZEICHNIS="robust"; ROBUSTVERZEICHNIS="robust"; OPENSIMVERZEICHNIS="opensim"; SCRIPTSOURCE="ScriptNeu"; SCRIPTZIP="opensim-ossl-example-scripts-main.zip"; MONEYSOURCE="money48"
+	MONEYVERZEICHNIS="robust"; ROBUSTVERZEICHNIS="robust"; OPENSIMVERZEICHNIS="opensim"; SCRIPTSOURCE="ScriptNeu"; SCRIPTZIP="opensim-ossl-example-scripts-main.zip"; MONEYSOURCE="OpenSimCurrencyServer-2023"
 	MONEYZIP="OpenSimCurrencyServer-2021-master.zip"; REGIONSDATEI="osmregionlist.ini"; SIMDATEI="osmsimlist.ini"; WARTEZEIT=30; STARTWARTEZEIT=10; STOPWARTEZEIT=30; MONEYWARTEZEIT=60; ROBUSTWARTEZEIT=60
 	BACKUPWARTEZEIT=120; AUTOSTOPZEIT=60; SETMONOTHREADS=800; SETMONOTHREADSON="yes"; OPENSIMDOWNLOAD="http://opensimulator.org/dist/"; SEARCHADRES="icanhazip.com"; # AUTOCONFIG="no"
 	CONFIGURESOURCE="opensim-configuration-addon-modul-main"; CONFIGUREZIP="opensim-configuration-addon-modul-main.zip"
@@ -5675,7 +5673,7 @@ function oscompi() {
 	return 0
 }
 
-## *  opensimgitcopy93
+## *  opensimgitcopy
 	# Diese Funktion kopiert OpenSimulator-Dateien aus einem Git-Repository in das angegebene Verzeichnis, wenn $MONEYCOPY auf "yes" gesetzt ist.
 	#? Parameter:
 	# Keine
@@ -5684,7 +5682,7 @@ function oscompi() {
 	#? Beispiel:
 	# opensimgitcopy93
 ##
-function opensimgitcopy93() {
+function opensimgitcopy() {
 	# Letzte Bearbeitung 01.10.2023
 	#Money und Scripte vom Git holen
 
@@ -5698,7 +5696,7 @@ function opensimgitcopy93() {
 	return 0
 }
 
-## *  moneygitcopy93
+## *  moneygitcopy
 	# Diese Funktion kopiert den MoneyServer und die Skripte aus einem Git-Repository in das angegebene Verzeichnis,
 	# wenn $MONEYCOPY auf "yes" gesetzt ist.
 	#? Parameter:
@@ -5740,6 +5738,19 @@ function moneygitcopy21() {
 		git clone https://github.com/BigManzai/OpenSimCurrencyServer-2021 /$STARTVERZEICHNIS/OpenSimCurrencyServer-2021-master
 	else
 		log error "MONEYSERVER: MoneyServer nicht vorhanden"
+	fi
+	return 0
+}
+
+function bulletgitcopy() {
+	# Letzte Bearbeitung 11.12.2023
+	#BulletSim vom Git holen
+
+	if [[ $MONEYCOPY = "yes" ]]; then
+		log info "MONEYSERVER: MoneyServer wird vom GIT geholt"
+		git clone https://github.com/BigManzai/BulletSim /$STARTVERZEICHNIS/BulletSim
+	else
+		log error "BulletSim nicht vorhanden"
 	fi
 	return 0
 }
@@ -5852,7 +5863,7 @@ function scriptcopy() {
 	return 0
 }
 
-## *  moneycopy93
+## *  moneycopy
 	# Diese Funktion kopiert den MoneyServer (Währungsserver) und die Add-On-Module in das OpenSimulator-Verzeichnis,
 	# wenn $MONEYCOPY auf "yes" gesetzt ist.
 	#? Parameter:
@@ -5862,7 +5873,7 @@ function scriptcopy() {
 	#? Beispiel:
 	# moneycopy93
 ##
-function moneycopy93() {
+function moneycopy() {
 	# Letzte Bearbeitung 01.10.2023
 	if [[ $MONEYCOPY = "yes" ]]; then
 	MONEYSOURCE93="OpenSimCurrencyServer-2023"
@@ -5895,7 +5906,7 @@ function moneycopy93() {
 	#? Beispiel:
 	# moneycopy
 ##
-function moneycopy() {
+function moneycopyalt() {
 	# Letzte Bearbeitung 01.10.2023
 	if [[ $MONEYCOPY = "yes" ]]; then
 		if [ -d /$STARTVERZEICHNIS/$MONEYSOURCE/ ]; then
@@ -5915,6 +5926,20 @@ function moneycopy() {
 		log warn "Money Server wird nicht kopiert."
 	fi
 	return 0
+}
+
+function bulletcopy() {
+	if [ "$ubuntuCodename" = "jammy" ]; then 
+	#echo "entdeckt Ubuntu 22"
+	BULLETSOURCE="BulletSim/Ubuntu22" 
+	cp -r /$STARTVERZEICHNIS/$BULLETSOURCE/* /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin/lib64
+	fi
+	
+	if [ "$ubuntuCodename" = "Bionic" ]; then
+	#echo "entdeckt Ubuntu 18" 
+	BULLETSOURCE="BulletSim/Ubuntu18" 
+	cp -r /$STARTVERZEICHNIS/$BULLETSOURCE/* /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin/lib64
+	fi	
 }
 
 ## *  mutelistcopy
@@ -17072,6 +17097,8 @@ function compilieren() {
 		log error "MoneyServer Verzeichnis existiert nicht"
 	fi
 
+	bulletcopy
+
 	if [ ! -f "/$STARTVERZEICHNIS/$OSSEARCHCOPY/" ]; then
 		searchgitcopy
 	else
@@ -21022,6 +21049,7 @@ case $KOMMANDO in
 	moneydelete) moneydelete ;;
 	moneygitcopy) moneygitcopy ;;
 	moneygitcopy93) moneygitcopy93 ;;
+	bulletgitcopy) bulletgitcopy ;;
 	moneyserverini) moneyserverini ;;
 	monoinstall) monoinstall ;;
 	mr | meineregionen) meineregionen ;;
