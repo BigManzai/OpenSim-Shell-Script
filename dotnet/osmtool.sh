@@ -36,7 +36,7 @@
 #──────────────────────────────────────────────────────────────────────────────────────────
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.1430" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.1433" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 #──────────────────────────────────────────────────────────────────────────────────────────
@@ -1301,6 +1301,8 @@ function osmtoolconfig() {
 		echo "     "
 		echo '    MONEYSOURCE="OpenSimCurrencyServer-2023"'
 		echo '    MONEYZIP="OpenSimCurrencyServer-2023.zip"'
+		echo '    BULLETSOURCE="BulletSim"'
+		echo '    BULLETZIP="BulletSim-main.zip"'
 		echo '    #MUTELISTSOURCE="opensim-ossl-example-scripts-main"'
 		echo '    #MUTELISTZIP="OpenSimCurrencyServer-2021-master.zip"'
 		echo '    #OSSEARCHSOURCE="opensim-ossl-example-scripts-main"'
@@ -1402,16 +1404,26 @@ function osmtoolconfig() {
 		echo '    LOGDELETE="yes" # yes/no'
 		echo '    VISITORLIST="yes" # yes/no - schreibt vor dem loeschen alle Besucher samt mac in eine log Datei.'
 		echo "     "
+		echo '	BULLETUBUNTU1804bionic="libBulletSim-3.26-20231210-x86_64.so"'
+		echo '	BULLETUBUNTU1810cosmic="libBulletSim-3.26-20231210-x86_64.so"'
+		echo '	BULLETUBUNTU2004focal="libBulletSim-3.26-20231207-x86_64.so"'
+		echo '	BULLETUBUNTU2010groovy="libBulletSim-3.26-20231207-x86_64.so"'
+		echo '	BULLETUBUNTU2204jammy="libBulletSim-3.26-20231209-x86_64.so"'
+		echo '	BULLETUBUNTU2210kinetic="libBulletSim-3.26-20231209-x86_64.so"'
+		echo '	BULLETUBUNTU2304lunar="libBulletSim-3.26-20231209-x86_64.so"'
+		echo '	BULLETUBUNTU2310mantic="libBulletSim-3.26-20231209-x86_64.so"'
+		echo '	BULLETUBUNTU2404noble="libBulletSim-3.26-20231209-x86_64.so"'
+		echo "     "
 		echo "#* Inklusive"
 		echo '    SCRIPTCOPY="yes"'
 		echo '    MONEYCOPY="yes"'
+		echo '    BULLETCOPY="yes"'
 		echo '    MUTELISTCOPY="no"'
 		echo '    OSSEARCHCOPY="no"'
 		echo '    DIVACOPY="no"'
 		echo '    PYTHONCOPY="no"'
 		echo '    CHRISOSCOPY="no"'
 		echo '    AUTOCONFIG="no"'
-		echo '    OSSEARCHCOPY="no"'
 		echo "     "
 		echo "#* Die unterschiedlichen wartezeiten bis die Aktion ausgefuehrt wurde."
 		echo "    WARTEZEIT=60 # Ist eine allgemeine Wartezeit."
@@ -1565,10 +1577,10 @@ function osmtoolconfigabfrage() {
 	log rohtext "Soll dotnet 6 benutzt werden [yes] no"
 	read -r DOTNETMODUS
 	if [ "$DOTNETMODUS" = "" ]; then DOTNETMODUS="yes"; fi
-	log rohtext "Ihre dotnet 6 auswahl ist DOTNETMODUS=$DOTNETMODUS"
+	log rohtext "Ihre dotnet 6 auswahl ist $DOTNETMODUS"
 	log rohtext "*******************************************************************"
 
-    # Fertig und abfragen
+    # Fertig und schreiben.
     #osmtoolconfig "/$STARTVERZEICHNIS/osmtoolconfig.ini"
 	osmtoolconfig $STARTVERZEICHNIS $ROBUSTVERZEICHNIS $MONEYVERZEICHNIS $OPENSIMVERZEICHNIS $CONFIGPFAD "/$SCRIPTPATH/osmtoolconfig.ini"
 }
@@ -1607,14 +1619,15 @@ KOMMANDO=$1
 ##
 function dummyvar() {
 	# shellcheck disable=SC2034
-	MONEYVERZEICHNIS="robust"; ROBUSTVERZEICHNIS="robust"; OPENSIMVERZEICHNIS="opensim"; SCRIPTSOURCE="ScriptNeu"; SCRIPTZIP="opensim-ossl-example-scripts-main.zip"; MONEYSOURCE="OpenSimCurrencyServer-2023"
-	MONEYZIP="OpenSimCurrencyServer-2021-master.zip"; REGIONSDATEI="osmregionlist.ini"; SIMDATEI="osmsimlist.ini"; WARTEZEIT=30; STARTWARTEZEIT=10; STOPWARTEZEIT=30; MONEYWARTEZEIT=60; ROBUSTWARTEZEIT=60
+	MONEYVERZEICHNIS="robust"; ROBUSTVERZEICHNIS="robust"; OPENSIMVERZEICHNIS="opensim"; SCRIPTSOURCE="ScriptNeu"; SCRIPTZIP="opensim-ossl-example-scripts-main.zip"; MONEYSOURCE="OpenSimCurrencyServer-2023";
+	BULLETSOURCE="BulletSim"; BULLETZIP="BulletSim-main.zip";
+	MONEYZIP="OpenSimCurrencyServer-2021-master.zip"; REGIONSDATEI="osmregionlist.ini"; SIMDATEI="osmsimlist.ini"; WARTEZEIT=30; STARTWARTEZEIT=10; STOPWARTEZEIT=30; MONEYWARTEZEIT=60; ROBUSTWARTEZEIT=60;
 	BACKUPWARTEZEIT=120; AUTOSTOPZEIT=60; SETMONOTHREADS=800; SETMONOTHREADSON="yes"; OPENSIMDOWNLOAD="http://opensimulator.org/dist/"; SEARCHADRES="icanhazip.com"; # AUTOCONFIG="no"
 	CONFIGURESOURCE="opensim-configuration-addon-modul-main"; CONFIGUREZIP="opensim-configuration-addon-modul-main.zip"
-	textfontcolor=7; textbaggroundcolor=0; debugfontcolor=4; debugbaggroundcolor=0	infofontcolor=2	infobaggroundcolor=0; warnfontcolor=3; warnbaggroundcolor=0
+	textfontcolor=7; textbaggroundcolor=0; debugfontcolor=4; debugbaggroundcolor=0	infofontcolor=2	infobaggroundcolor=0; warnfontcolor=3; warnbaggroundcolor=0;
 	errorfontcolor=1; errorbaggroundcolor=0; SETMONOGCPARAMSON1="no"; SETMONOGCPARAMSON2="yes"	LOGDELETE="no"; LOGWRITE="no"; "$trimmvar"; logfilename="_multitool"
-	username="username"	password="userpasswd"	databasename="grid"	linefontcolor=7	linebaggroundcolor=0; apache2errorlog="/var/log/apache2/error.log"; apache2accesslog="/var/log/apache2/access.log"
-	authlog="/var/log/auth.log"	ufwlog="/var/log/ufw.log"	mysqlmariadberor="/var/log/mysql/mariadb.err"; mysqlerrorlog="/var/log/mysql/error.log"; listVar=""; ScreenLogLevel=0
+	username="username"	password="userpasswd"	databasename="grid"	linefontcolor=7	linebaggroundcolor=0; apache2errorlog="/var/log/apache2/error.log"; apache2accesslog="/var/log/apache2/access.log";
+	authlog="/var/log/auth.log"	ufwlog="/var/log/ufw.log"	mysqlmariadberor="/var/log/mysql/mariadb.err"; mysqlerrorlog="/var/log/mysql/error.log"; listVar=""; ScreenLogLevel=0;
 	# DIALOG_OK=0; DIALOG_HELP=2; DIALOG_EXTRA=3; DIALOG_ITEM_HELP=4; SIG_NONE=0; SIG_HUP=1; SIG_INT=2; SIG_QUIT=3; SIG_KILL=9; SIG_TERM=15
 	DIALOG_CANCEL=1; DIALOG_ESC=255; DIALOG=dialog; VISITORLIST="yes"; REGIONSANZEIGE="yes"; #DELREGIONS="no";
 	netversion="1946"; CONFIGPFAD="OpenSimConfig"; DOTNETMODUS="yes";
@@ -5683,8 +5696,8 @@ function oscompi() {
 	# opensimgitcopy93
 ##
 function opensimgitcopy() {
-	# Letzte Bearbeitung 01.10.2023
-	#Money und Scripte vom Git holen
+	# Letzte Bearbeitung 13.12.2023
+	if [[ -z "$MONEYCOPY" || "$MONEYCOPY" = "no" ]]; then return; fi
 
 	if [[ $MONEYCOPY = "yes" ]]; then
 		log info "OpenSimulator wird vom GIT geholt"
@@ -5707,8 +5720,8 @@ function opensimgitcopy() {
 	# moneygitcopy93
 ##
 function moneygitcopy() {
-	# Letzte Bearbeitung 01.10.2023
-	#Money und Scripte vom Git holen
+	# Letzte Bearbeitung 13.12.2023
+	if [[ -z "$MONEYCOPY" || "$MONEYCOPY" = "no" ]]; then return; fi
 
 	if [[ $MONEYCOPY = "yes" ]]; then
 		log info "MONEYSERVER: MoneyServer wird vom GIT geholt"
@@ -5730,27 +5743,38 @@ function moneygitcopy() {
 	# moneygitcopy
 ##
 function moneygitcopy21() {
-	# Letzte Bearbeitung 01.10.2023
-	#Money und Scripte vom Git holen
+	# Letzte Bearbeitung 13.12.2023
+	if [[ -z "$MONEYCOPY" || "$MONEYCOPY" = "no" ]]; then return; fi
 
 	if [[ $MONEYCOPY = "yes" ]]; then
 		log info "MONEYSERVER: MoneyServer wird vom GIT geholt"
 		git clone https://github.com/BigManzai/OpenSimCurrencyServer-2021 /$STARTVERZEICHNIS/OpenSimCurrencyServer-2021-master
 	else
-		log error "MONEYSERVER: MoneyServer nicht vorhanden"
+		#log error "MONEYSERVER: MoneyServer nicht vorhanden"
+		return 0;
 	fi
 	return 0
 }
 
+## *  bulletgitcopy
+	# Diese Funktion kopiert die Bullet Physic aus einem Git-Repository in das angegebene Verzeichnis,
+	#? Parameter:
+	# Keine
+	#? Rückgabewert:
+	# Die Funktion gibt immer 0 zurück.
+	#? Beispiel:
+	# bulletgitcopy
+##
 function bulletgitcopy() {
-	# Letzte Bearbeitung 11.12.2023
-	#BulletSim vom Git holen
+	# Letzte Bearbeitung 13.12.2023
+	if [[ -z "$BULLETCOPY" || "$BULLETCOPY" = "no" ]]; then return; fi
 
-	if [[ $MONEYCOPY = "yes" ]]; then
+	if [[ $BULLETCOPY = "yes" ]]; then
 		log info "MONEYSERVER: MoneyServer wird vom GIT geholt"
 		git clone https://github.com/BigManzai/BulletSim /$STARTVERZEICHNIS/BulletSim
 	else
-		log error "BulletSim nicht vorhanden"
+		#log error "BulletSim nicht vorhanden"
+		return 0;
 	fi
 	return 0
 }
@@ -5766,8 +5790,8 @@ function bulletgitcopy() {
 	# divagitcopy
 ##
 function divagitcopy() {
-	# Letzte Bearbeitung 01.10.2023
-	#DIVA und Scripte vom Git holen
+	# Letzte Bearbeitung 13.12.2023
+	if [[ -z "$DIVACOPY" || "$DIVACOPY" = "no" ]]; then return; fi
 
 	if [[ $DIVACOPY = "yes" ]]; then
 		log info "DIVA wird vom GIT geholt"
@@ -5777,6 +5801,7 @@ function divagitcopy() {
 	fi
 	return 0
 }
+
 ## *  divacopy
 	# Diese Funktion kopiert DIVA-Dateien und Add-On-Module in das OpenSimulator-Verzeichnis, wenn $DIVACOPY auf "yes" gesetzt ist.
 	#? Parameter:
@@ -5787,7 +5812,9 @@ function divagitcopy() {
 	# divacopy
 ##
 function divacopy() {
-	# Letzte Bearbeitung 01.10.2023
+	# Letzte Bearbeitung 13.12.2023
+	if [[ -z "$DIVACOPY" || "$DIVACOPY" = "no" ]]; then return; fi
+
 	if [[ $DIVACOPY = "yes" ]]; then
 		if [ -d /$STARTVERZEICHNIS/$DIVASOURCE/ ]; then
 			log info "DIVA Kopiervorgang gestartet"
@@ -5819,8 +5846,9 @@ function divacopy() {
 	# scriptgitcopy
 ##
 function scriptgitcopy() {
-	# Letzte Bearbeitung 01.10.2023
-	#Scripte vom Git holen
+	# Letzte Bearbeitung 13.12.2023
+	if [[ -z "$SCRIPTCOPY" || "$SCRIPTCOPY" = "no" ]]; then return; fi
+
 	if [[ $SCRIPTCOPY = "yes" ]]; then
 		log info "Script Assets werden vom GIT geholt"
 		git clone https://github.com/BigManzai/opensim-ossl-example-scripts /$STARTVERZEICHNIS/opensim-ossl-example-scripts-main
@@ -5841,7 +5869,9 @@ function scriptgitcopy() {
 	# scriptcopy
 ##
 function scriptcopy() {
-	# Letzte Bearbeitung 01.10.2023
+	# Letzte Bearbeitung 13.12.2023
+	if [[ -z "$SCRIPTCOPY" || "$SCRIPTCOPY" = "no" ]]; then return; fi
+
 	if [[ $SCRIPTCOPY = "yes" ]]; then
 		if [ -d /$STARTVERZEICHNIS/$SCRIPTSOURCE/ ]; then
 			log info "Script Assets werden kopiert"
@@ -5874,7 +5904,9 @@ function scriptcopy() {
 	# moneycopy93
 ##
 function moneycopy() {
-	# Letzte Bearbeitung 01.10.2023
+	# Letzte Bearbeitung 13.12.2023
+	if [[ -z "$MONEYCOPY" || "$MONEYCOPY" = "no" ]]; then return; fi
+
 	if [[ $MONEYCOPY = "yes" ]]; then
 	MONEYSOURCE93="OpenSimCurrencyServer-2023"
 		if [ -d /$STARTVERZEICHNIS/$MONEYSOURCE93/ ]; then
@@ -5907,7 +5939,9 @@ function moneycopy() {
 	# moneycopy
 ##
 function moneycopyalt() {
-	# Letzte Bearbeitung 01.10.2023
+	# Letzte Bearbeitung 13.12.2023
+	if [[ -z "$MONEYCOPY" || "$MONEYCOPY" = "no" ]]; then return; fi
+
 	if [[ $MONEYCOPY = "yes" ]]; then
 		if [ -d /$STARTVERZEICHNIS/$MONEYSOURCE/ ]; then
 			log info "Money Server Kopiervorgang gestartet"
@@ -5928,18 +5962,113 @@ function moneycopyalt() {
 	return 0
 }
 
+## *  bulletconfig
+	# Diese Funktion konfiguriert die DLL-Zuordnungen für die BulletSim-Physikmodule basierend auf der übergebenen Bullet-Version.
+	# Wenn $BULLETVERSION auf "no" gesetzt ist, wird die Funktion beendet. Andernfalls wird die Standardversion verwendet.
+	#? Parameter:
+	# $1: Die Bullet-Version (optional).
+	#? Rückgabewert:
+	# Die Funktion gibt keine expliziten Rückgabewerte zurück.
+	#? Beispiel:
+	# bulletconfig "libBulletSim-3.26-20231209-x86_64.so"
+##
+function bulletconfig() {
+	BULLETVERSION=$1
+
+	# Überprüfe, ob die Bullet-Version auf "no" gesetzt ist, und beende die Funktion in diesem Fall.
+	if [[ "$BULLETVERSION" = "no" ]]; then return; fi
+
+	# Wenn keine Bullet-Version übergeben wurde, setze die Standardversion.
+	if [[ -z "$BULLETVERSION" ]]; then BULLETVERSION=$BULLETUBUNTU2004focal; fi
+
+# Konfiguration schreiben.
+{
+	echo "<configuration>"
+	echo '  <dllmap os="windows" cpu="x86-64" dll="BulletSim" target="lib64/BulletSim-3.26-20231207-x86_64.dll" />'
+	echo '  <dllmap os="osx" dll="BulletSim" target="lib64/libBulletSim.dylib" />'
+	echo '  <dllmap os="!windows,osx" cpu="x86-64" dll="BulletSim" target="lib64/'$BULLETVERSION'" />'
+	echo '  <dllmap os="!windows,osx" cpu="arm64" dll="BulletSim" target="lib64/libBulletSim-arm64.so" />'
+	echo "</configuration>"
+} > "/$STARTVERZEICHNIS/opensim/bin/OpenSim.Region.PhysicsModule.BulletS.dll.config"
+
+	return 0
+}
+
+## *  bulletcopy
+	# Diese Funktion kopiert BulletSim 1.3 und Bullet Physic 3.2.6 in das OpenSimulator lib64 Verzeichnis,
+	#? Parameter:
+	# Keine
+	#? Rückgabewert:
+	# Die Funktion gibt immer 0 zurück.
+	#? Beispiel:
+	# bulletcopy
+##
 function bulletcopy() {
-	if [ "$ubuntuCodename" = "jammy" ]; then 
-	#echo "entdeckt Ubuntu 22"
-	BULLETSOURCE="BulletSim/Ubuntu22" 
-	cp -r /$STARTVERZEICHNIS/$BULLETSOURCE/* /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin/lib64
-	fi
-	
+	# Letzte Bearbeitung 13.12.2023
+	if [[ -z "$BULLETCOPY" || "$BULLETCOPY" = "no" ]]; then return; fi
+
 	if [ "$ubuntuCodename" = "bionic" ]; then
-	#echo "entdeckt Ubuntu 18" /opt/BulletSim/Ubuntu18
+	log info "entdeckt Ubuntu 18.04"
 	BULLETSOURCE="BulletSim/Ubuntu18" 
 	cp -r /$STARTVERZEICHNIS/$BULLETSOURCE/* /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin/lib64
-	fi	
+	bulletconfig $BULLETUBUNTU1804bionic
+	fi
+
+	if [ "$ubuntuCodename" = "cosmic" ]; then
+	log info "entdeckt Ubuntu 18.10"
+	BULLETSOURCE="BulletSim/Ubuntu18" 
+	cp -r /$STARTVERZEICHNIS/$BULLETSOURCE/* /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin/lib64
+	bulletconfig $BULLETUBUNTU1810cosmic
+	fi
+
+	if [ "$ubuntuCodename" = "focal" ]; then
+	log info "entdeckt Ubuntu 20.04"
+	cp -r /$STARTVERZEICHNIS/$BULLETSOURCE/* /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin/lib64
+	bulletconfig $BULLETUBUNTU2004focal
+	fi
+
+	if [ "$ubuntuCodename" = "groovy" ]; then
+	log info "entdeckt Ubuntu 20.10"
+	cp -r /$STARTVERZEICHNIS/$BULLETSOURCE/* /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin/lib64
+	bulletconfig $BULLETUBUNTU2010groovy
+	fi
+
+	if [ "$ubuntuCodename" = "jammy" ]; then 
+	log info "entdeckt Ubuntu 22"
+	BULLETSOURCE="BulletSim/Ubuntu22" 
+	cp -r /$STARTVERZEICHNIS/$BULLETSOURCE/* /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin/lib64
+	bulletconfig $BULLETUBUNTU2204jammy
+	fi
+
+	if [ "$ubuntuCodename" = "kinetic" ]; then
+	log info "entdeckt Ubuntu 22.10"
+	BULLETSOURCE="BulletSim/Ubuntu22" 
+	cp -r /$STARTVERZEICHNIS/$BULLETSOURCE/* /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin/lib64
+	bulletconfig $BULLETUBUNTU2210kinetic
+	fi
+
+	if [ "$ubuntuCodename" = "lunar" ]; then
+	log info "entdeckt Ubuntu 23.04"
+	BULLETSOURCE="BulletSim/Ubuntu22" 
+	cp -r /$STARTVERZEICHNIS/$BULLETSOURCE/* /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin/lib64
+	bulletconfig $BULLETUBUNTU2304lunar
+	fi
+
+	if [ "$ubuntuCodename" = "mantic" ]; then
+	log info "entdeckt Ubuntu 23.10"
+	BULLETSOURCE="BulletSim/Ubuntu22" 
+	cp -r /$STARTVERZEICHNIS/$BULLETSOURCE/* /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin/lib64
+	bulletconfig $BULLETUBUNTU2310mantic
+	fi
+
+	if [ "$ubuntuCodename" = "noble" ]; then
+	log info "entdeckt Ubuntu 24.04"
+	BULLETSOURCE="BulletSim/Ubuntu22" 
+	cp -r /$STARTVERZEICHNIS/$BULLETSOURCE/* /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin/lib64
+	bulletconfig $BULLETUBUNTU2404noble
+	fi
+
+	return 0
 }
 
 ## *  mutelistcopy
@@ -5953,7 +6082,9 @@ function bulletcopy() {
 	# mutelistcopy
 ##
 function mutelistcopy() {
-	# Letzte Bearbeitung 01.10.2023
+	# Letzte Bearbeitung 13.12.2023
+	if [[ -z "$MUTELISTCOPY" || "$MUTELISTCOPY" = "no" ]]; then return; fi
+	
 	if [[ $MUTELISTCOPY = "yes" ]]; then
 		if [ -d /$STARTVERZEICHNIS/$MUTELISTSOURCE/ ]; then
 			log info "MUTELIST Server Kopiervorgang gestartet"
@@ -5985,7 +6116,9 @@ function mutelistcopy() {
 	# searchcopy
 ##
 function searchcopy() {
-	# Letzte Bearbeitung 01.10.2023
+	# Letzte Bearbeitung 13.12.2023
+	if [[ -z "$OSSEARCHCOPY" || "$OSSEARCHCOPY" = "no" ]]; then return; fi
+
 	if [[ $OSSEARCHCOPY = "yes" ]]; then
 		if [ -d /$STARTVERZEICHNIS/$OSSEARCHSOURCE/ ]; then
 			log info "OpenSimSearch Kopiervorgang gestartet"
@@ -6357,7 +6490,9 @@ function oscopysim() {
 	#   oscopy "MeinOpenSimVerzeichnis"
 ##
 function oscopy() {
-	# Letzte Bearbeitung 01.10.2023
+	# Letzte Bearbeitung 13.12.2023
+	#if [[ -z "$OSCOPY" || "$OSCOPY" = "no" ]]; then return; fi
+
 	cd /$STARTVERZEICHNIS || return 1
 	VERZEICHNIS=$1
 	log info "Kopiere Simulator $VERZEICHNIS "
@@ -17097,7 +17232,11 @@ function compilieren() {
 		log error "MoneyServer Verzeichnis existiert nicht"
 	fi
 
-	bulletcopy
+	if [ ! -f "/$STARTVERZEICHNIS/$BULLETSOURCE/" ]; then
+		bulletcopy
+	else
+		log error "BulletSim Verzeichnis existiert nicht"
+	fi
 
 	if [ ! -f "/$STARTVERZEICHNIS/$OSSEARCHCOPY/" ]; then
 		searchgitcopy
@@ -17130,17 +17269,12 @@ function compilieren() {
 	fi
 
 	if [ ! -f "/$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/" ]; then
-
-		# AOT Aktiveren oder Deaktivieren.
-		if [[ $SETAOTON = "yes" ]]; then
-			oscompiaot
-		else
-			oscompi
-		fi
-
+		# Jetzt alles Kompilieren.
+		oscompi
 	else
 		log error "OpenSim Verzeichnis zum Kompilieren existiert nicht"
 	fi
+
 	return 0
 }
 
@@ -17307,6 +17441,15 @@ function osdowngrade() {
 	log text " *****************************"
 
 	log info "Das Grid wird jetzt zurückgesetzt, auf die vorherige Version."
+
+	echo "Das zurücksetzen von OpenSim 0.9.3 auf 0.9.2 ist zur Zeit nicht möglich!!!"
+	echo "Möchten Sie das wirklich tun? (ja/[nein]): " 
+	read -r osdowngradeanswer
+    if [[ "$osdowngradeanswer" != "ja" ]]; then
+        echo "Abbruch."
+        exit 1
+    fi
+
 	autostop
 	# Cache loeschen
 	if [ "$GRIDCACHECLEAR" = "yes" ]; then gridcachedelete; fi
@@ -21307,6 +21450,7 @@ case $KOMMANDO in
 	ss_info) ss_info	;;
 	dns_dig_info) dns_dig_info	;;
 	nmap_scan) nmap_scan	;;
+	bulletconfig) bulletconfig "$2" ;;
 	hda | hilfedirektaufruf | hilfemenudirektaufrufe) hilfemenudirektaufrufe ;;
 	h) newhelp ;;
 	V | v) echo "$SCRIPTNAME $VERSION" ;;
