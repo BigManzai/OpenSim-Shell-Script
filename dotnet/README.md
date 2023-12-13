@@ -16,7 +16,7 @@ Im [BulletSim](https://github.com/BigManzai/BulletSim) Verzeichnis befindet sich
 	bash osmtool.sh moneygitcopy
 	# ossl Skripte
 	bash osmtool.sh scriptgitcopy
- 	#BulletSim für Ubuntu 18 + 22
+ 	#BulletSim für Ubuntu 18 + 22 (Upgrade VERSION 0.9.3.0.1433+)
 	bash osmtool.sh bulletgitcopy
 
 	# OpenSim stoppen:
