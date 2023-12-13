@@ -9,13 +9,7 @@ Im [BulletSim](https://github.com/BigManzai/BulletSim) Verzeichnis befindet sich
 	# Backup nicht vergessen, dieses Backup erstellt 4 Dateien für jede Region (Alle Backup möglichkeiten)
 	bash osmtool.sh autoregionbackup
  
-	# DOTNET 6 Installation entweder:
-	# Ubuntu 18
-	bash osmtool.sh dotnetubu18
- 	# Ubuntu 20
-	bash osmtool.sh dotnetubu20
-	# Ubuntu 22 und 23
-	bash osmtool.sh dotnetubu22
+	# Bullet 3.2.1 Installationen sind automatisiert.
  
 	# Herunterladen von source Dateien:
 	# MoneyServer
