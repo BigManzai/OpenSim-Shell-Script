@@ -20,7 +20,7 @@
 	# ! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 	# ! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#
-	# * Letzte bearbeitung 07.12.2023.
+	# * Letzte bearbeitung 14.12.2023.
 	#
 	# # Installieren sie bitte: #* Visual Studio Code
 	#* dazu die Plugins:
@@ -36,7 +36,7 @@
 #──────────────────────────────────────────────────────────────────────────────────────────
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.1433" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.1435" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 #──────────────────────────────────────────────────────────────────────────────────────────
@@ -220,6 +220,8 @@ function dotnetubu18() {
         echo "Fehler beim Installieren des .NET Runtimes."
         return 1
     fi
+
+	apt install -y libgdiplus
 
     echo ".NET SDK und Runtime wurden erfolgreich installiert."
 }
@@ -5994,6 +5996,8 @@ function bulletconfig() {
 	return 0
 }
 
+# bulletcopy funktioniert nicht
+
 ## *  bulletcopy
 	# Diese Funktion kopiert BulletSim 1.3 und Bullet Physic 3.2.6 in das OpenSimulator lib64 Verzeichnis,
 	#? Parameter:
@@ -6010,61 +6014,61 @@ function bulletcopy() {
 	if [ "$ubuntuCodename" = "bionic" ]; then
 	log info "entdeckt Ubuntu 18.04"
 	BULLETSOURCE="BulletSim/Ubuntu18" 
-	cp -r /$STARTVERZEICHNIS/$BULLETSOURCE/* /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin/lib64
+	cp -r /$STARTVERZEICHNIS/BulletSim/* /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin/lib64
 	bulletconfig $BULLETUBUNTU1804bionic
 	fi
 
 	if [ "$ubuntuCodename" = "cosmic" ]; then
 	log info "entdeckt Ubuntu 18.10"
 	BULLETSOURCE="BulletSim/Ubuntu18" 
-	cp -r /$STARTVERZEICHNIS/$BULLETSOURCE/* /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin/lib64
+	cp -r /$STARTVERZEICHNIS/BulletSim/* /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin/lib64
 	bulletconfig $BULLETUBUNTU1810cosmic
 	fi
 
 	if [ "$ubuntuCodename" = "focal" ]; then
 	log info "entdeckt Ubuntu 20.04"
-	cp -r /$STARTVERZEICHNIS/$BULLETSOURCE/* /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin/lib64
+	cp -r /$STARTVERZEICHNIS/BulletSim/* /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin/lib64
 	bulletconfig $BULLETUBUNTU2004focal
 	fi
 
 	if [ "$ubuntuCodename" = "groovy" ]; then
 	log info "entdeckt Ubuntu 20.10"
-	cp -r /$STARTVERZEICHNIS/$BULLETSOURCE/* /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin/lib64
+	cp -r /$STARTVERZEICHNIS/BulletSim/* /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin/lib64
 	bulletconfig $BULLETUBUNTU2010groovy
 	fi
 
 	if [ "$ubuntuCodename" = "jammy" ]; then 
 	log info "entdeckt Ubuntu 22"
 	BULLETSOURCE="BulletSim/Ubuntu22" 
-	cp -r /$STARTVERZEICHNIS/$BULLETSOURCE/* /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin/lib64
+	cp -r /$STARTVERZEICHNIS/BulletSim/* /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin/lib64
 	bulletconfig $BULLETUBUNTU2204jammy
 	fi
 
 	if [ "$ubuntuCodename" = "kinetic" ]; then
 	log info "entdeckt Ubuntu 22.10"
 	BULLETSOURCE="BulletSim/Ubuntu22" 
-	cp -r /$STARTVERZEICHNIS/$BULLETSOURCE/* /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin/lib64
+	cp -r /$STARTVERZEICHNIS/BulletSim/* /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin/lib64
 	bulletconfig $BULLETUBUNTU2210kinetic
 	fi
 
 	if [ "$ubuntuCodename" = "lunar" ]; then
 	log info "entdeckt Ubuntu 23.04"
 	BULLETSOURCE="BulletSim/Ubuntu22" 
-	cp -r /$STARTVERZEICHNIS/$BULLETSOURCE/* /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin/lib64
+	cp -r /$STARTVERZEICHNIS/BulletSim/* /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin/lib64
 	bulletconfig $BULLETUBUNTU2304lunar
 	fi
 
 	if [ "$ubuntuCodename" = "mantic" ]; then
 	log info "entdeckt Ubuntu 23.10"
 	BULLETSOURCE="BulletSim/Ubuntu22" 
-	cp -r /$STARTVERZEICHNIS/$BULLETSOURCE/* /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin/lib64
+	cp -r /$STARTVERZEICHNIS/BulletSim/* /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin/lib64
 	bulletconfig $BULLETUBUNTU2310mantic
 	fi
 
 	if [ "$ubuntuCodename" = "noble" ]; then
 	log info "entdeckt Ubuntu 24.04"
 	BULLETSOURCE="BulletSim/Ubuntu22" 
-	cp -r /$STARTVERZEICHNIS/$BULLETSOURCE/* /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin/lib64
+	cp -r /$STARTVERZEICHNIS/BulletSim/* /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/bin/lib64
 	bulletconfig $BULLETUBUNTU2404noble
 	fi
 
@@ -17232,7 +17236,7 @@ function compilieren() {
 		log error "MoneyServer Verzeichnis existiert nicht"
 	fi
 
-	if [ ! -f "/$STARTVERZEICHNIS/$BULLETSOURCE/" ]; then
+	if [ ! -f "/$STARTVERZEICHNIS/BulletSim/" ]; then
 		bulletcopy
 	else
 		log error "BulletSim Verzeichnis existiert nicht"
