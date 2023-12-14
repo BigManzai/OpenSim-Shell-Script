@@ -1,5 +1,6 @@
 # osmtool für DOTNET 6
 Dies befindet sich in der Entwicklung.
+
 14.12.2023 Zweites Ubuntu 18.04 Grid erfolgreich upgegradet dabei haben ich Bulletkopierfehler behoben.
 
 Im [BulletSim](https://github.com/BigManzai/BulletSim) Verzeichnis befindet sich eine Version die unter Ubuntu 18 und Ubuntu 22 gebaut wurde und im Test läuft.
