@@ -10,6 +10,11 @@ Im [BulletSim](https://github.com/BigManzai/BulletSim) Verzeichnis befindet sich
 	bash osmtool.sh autoregionbackup
  
 	# Bullet 3.2.1 Installationen sind automatisiert.
+ 	bash osmtool.sh dotnetubu18
+ 	# oder
+ 	bash osmtool.sh dotnetubu20
+	# oder
+ 	bash osmtool.sh dotnetubu22
  
 	# Herunterladen von source Dateien:
 	# MoneyServer
