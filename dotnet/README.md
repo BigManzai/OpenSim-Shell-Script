@@ -1,5 +1,6 @@
 # osmtool für DOTNET 6
 Dies befindet sich in der Entwicklung.
+14.12.2023 Zweites Ubuntu 18.04 Grid erfolgreich upgegradet dabei haben ich Bulletkopierfehler behoben.
 
 Im [BulletSim](https://github.com/BigManzai/BulletSim) Verzeichnis befindet sich eine Version die unter Ubuntu 18 und Ubuntu 22 gebaut wurde und im Test läuft.
 
@@ -71,3 +72,5 @@ Zuletzt wird dann alles upgegradet und neu gestartet.
 * MoneyServer wird jetzt direkt mitgebaut. 
 * BulletSim für Ubuntu 18 + 22 wird jetzt automatisch eingefügt.
 * bionic ist unter Linux nicht Bionic.
+* Bullet Setup geändert.
+* Bulletkopierfehler behoben.
