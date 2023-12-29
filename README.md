@@ -1,7 +1,7 @@
 # OpenSim-Shell-Script
 ![GitHub Logo](https://github.com/BigManzai/OpenSim-Shell-Script/blob/main/opensimMultitool.jpg)
 
-[![Anurag's GitHub stats](https://github-readme-stats.vercel.app/api?username=BigManzai)]([https://github.com/anuraghazra/github-readme-stats](https://github.com/BigManzai/OpenSim-Shell-Script/edit/main/README.md))
+[![Anurag's GitHub stats](https://github-readme-stats.vercel.app/api?username=BigManzai)](https://github.com/BigManzai/OpenSim-Shell-Script/edit/main/README.md)
 
 Info: This is not for neuromusculoskeletal modeling and simulation. This is OpenSim Metaverse software.
 
