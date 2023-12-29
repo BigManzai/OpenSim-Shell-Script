@@ -1,6 +1,8 @@
 # OpenSim-Shell-Script
 ![GitHub Logo](https://github.com/BigManzai/OpenSim-Shell-Script/blob/main/opensimMultitool.jpg)
 
+[![Anurag's GitHub stats](https://github-readme-stats.vercel.app/api?username=anuraghazra)](https://github.com/anuraghazra/github-readme-stats)
+
 Info: This is not for neuromusculoskeletal modeling and simulation. This is OpenSim Metaverse software.
 
 :warning: **Durch die Umstellung von .NET und mono auf dotnet6 gibt es beim bauen mit mono 5/6 Probleme, da jetzt der Standard dotnet 6 ist.** <br>
