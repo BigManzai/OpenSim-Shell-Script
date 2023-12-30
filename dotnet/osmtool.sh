@@ -20,7 +20,7 @@
 	# ! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 	# ! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#
-	# * Letzte bearbeitung 14.12.2023.
+	# * Letzte bearbeitung 30.12.2023.
 	#
 	# # Installieren sie bitte: #* Visual Studio Code
 	#* dazu die Plugins:
@@ -36,7 +36,7 @@
 #──────────────────────────────────────────────────────────────────────────────────────────
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.1435" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.1437" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 #──────────────────────────────────────────────────────────────────────────────────────────
@@ -222,6 +222,7 @@ function dotnetubu18() {
     fi
 
 	apt install -y libgdiplus
+	apt install -y zlib1g-dev
 
     echo ".NET SDK und Runtime wurden erfolgreich installiert."
 }
@@ -1389,7 +1390,7 @@ function osmtoolconfig() {
 		echo "    linefontcolor=7;    linebaggroundcolor=0;"
 		echo "     "
 		echo "    ScreenLogLevel=0; # ScreenLogLevel=0 nichts machen, bis ScreenLogLevel=5 Funktionsnamen ausgeben."
-		echo '    LOGWRITE="yes" # yes/no'
+		echo '    LOGWRITE="no" # yes/no'
 		echo '    logfilename="_multitool"'
 		echo '    line="************************************************************";'
 		echo "     "
@@ -1404,7 +1405,7 @@ function osmtoolconfig() {
 		echo '    REGIONSANZEIGE="yes"'
 		echo "     "
 		echo '    LOGDELETE="yes" # yes/no'
-		echo '    VISITORLIST="yes" # yes/no - schreibt vor dem loeschen alle Besucher samt mac in eine log Datei.'
+		echo '    VISITORLIST="no" # yes/no - schreibt vor dem loeschen alle Besucher samt mac in eine log Datei.'
 		echo "     "
 		echo '	BULLETUBUNTU1804bionic="libBulletSim-3.26-20231210-x86_64.so"'
 		echo '	BULLETUBUNTU1810cosmic="libBulletSim-3.26-20231210-x86_64.so"'
@@ -3389,8 +3390,6 @@ function mariadberror() {
         warnbox "$mysqlmariadberor Datei nicht gefunden!"
     fi
 }
-
-
 
 ## *  ufwlog
 	#? Beschreibung: Zeigt den Inhalt der UFW-Protokolldatei an, falls vorhanden.
@@ -5627,6 +5626,55 @@ function terminator() {
 	killall screen
 	screen -ls
 	return 0
+}
+
+function buildbullet()
+{
+    BuildDate=""
+    BulletVersion=""
+
+    echo "Erstelle BulettSim für den OpenSimulator!"
+    # BulletSim vom Git holen
+    cd /opt || exit
+    git clone git://opensimulator.org/git/opensim-libs opensim-libs
+    
+     # Bullet3 vom Git holen
+    cd /opt/opensim-libs/trunk/unmanaged/BulletSim || exit
+    git clone --depth 1 --single-branch https://github.com/bulletphysics/bullet3.git
+
+    # Anwenden aller Patches für Bullet.
+
+
+    cd bullet3 || exit ; for file in ../*.patch ; do cat "$file" | patch -p1 ; done
+
+    cd /opt/opensim-libs/trunk/unmanaged/BulletSim || exit
+
+    # Informationen zur Versionsdatei generieren
+    bash buildBulletCMake.sh
+    # BulletSim erstellen
+    bash buildVersionInfo.sh
+    # Ausführen das BulletSim-Kompilierungs- und Link-Skript.
+    bash buildBulletSim.sh
+    echo "Erstellen des BulettSim beendet!"
+    echo "Die Datei libBulletSim-******.so kopieren und die Konfigurationsdatei OpenSim.Region.PhysicsModule.BulletS.dll.config anpassen!"
+
+    # BulletSimVersionInfo auslesen
+    # shellcheck disable=SC1091
+    . /opt/opensim-libs/trunk/unmanaged/BulletSim/BulletSimVersionInfo
+    # Testausgabe
+    echo "libBulletSim-$BulletVersion-$BuildDate-x86_64.so"
+    # Neue Konfiguration schreiben im OpenSim/bin Verzeichnis.
+    #bulletconfig libBulletSim-"$BulletVersion"-"$BuildDate"-x86_64.so
+
+	# Konfiguration schreiben im Verzeichnis der neuen Bullet so Datei.
+{
+	echo "<configuration>"
+	echo '  <dllmap os="windows" cpu="x86-64" dll="BulletSim" target="lib64/BulletSim-3.26-20231207-x86_64.dll" />'
+	echo '  <dllmap os="osx" dll="BulletSim" target="lib64/libBulletSim.dylib" />'
+	echo '  <dllmap os="!windows,osx" cpu="x86-64" dll="BulletSim" target="lib64/'$BULLETVERSION'" />'
+	echo '  <dllmap os="!windows,osx" cpu="arm64" dll="BulletSim" target="lib64/libBulletSim-arm64.so" />'
+	echo "</configuration>"
+} > "/opt/opensim-libs/trunk/unmanaged/BulletSim/OpenSim.Region.PhysicsModule.BulletS.dll.config"
 }
 
 ## *  oscompi93
@@ -8492,6 +8540,7 @@ function installopensimulator() {
 	# findtime = 600
 	iinstall apt-utils
     iinstall libgdiplus
+	iinstall zlib1g-dev
     iinstall libc6-dev
 	iinstall translate-shell
 
@@ -8553,6 +8602,7 @@ function installubuntu22() {
 	iinstallnew fail2ban
 	iinstallnew apt-utils
     iinstallnew libgdiplus
+	iinstallnew zlib1g-dev
     iinstallnew libc6-dev
 	iinstallnew translate-shell
 
@@ -21214,6 +21264,7 @@ case $KOMMANDO in
 	opensimini) opensimini ;;
 	os | osstruktur) osstruktur "$2" "$3" ;;
 	osbuilding) osbuilding "$2" ;;
+	buildbullet) buildbullet ;;
 	osc | com | oscommand) oscommand "$2" "$3" "$4" ;;
 	osc2 | com2 | oscommand2) oscommand2 "$2" "$3" "$4" "$5" ;;
 	oscompi) oscompi ;;
