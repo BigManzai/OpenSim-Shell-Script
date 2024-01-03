@@ -17377,7 +17377,7 @@ function compilieren() {
 	#   - Überprüfen Sie, ob die Überwachung des Build-Status korrekt implementiert ist.
 ##  
 function osgridcopy() {
-	log text " ───────────────"
+	log text " ──────────────────────────────"
 	log text "Steht hier:"
 	log text " "
 	log info "Build succeeded."
@@ -17385,10 +17385,10 @@ function osgridcopy() {
 	log text "    0 Error(s)"
 	log text " "
 	log info "Dann ist alles gut gegangen."
-	log text " ───────────────"
+	log text " ──────────────────────────────"
 	log warn " !!!      BEI FEHLER      !!! "
 	log warn " !!! ABBRUCH MIT STRG + C !!! "
-	log text " ───────────────"
+	log text " ──────────────────────────────"
 
 	log info "Das Grid wird jetzt kopiert/aktualisiert"
 	log line
@@ -17426,10 +17426,10 @@ function osgridcopy() {
 	#   - Aktivieren Sie das Grid-Starten, wenn Sie möchten, dass das Grid automatisch nach dem Upgrade gestartet wird.
 ## 
 function osupgrade93() {
-	log text " ───────────────"
+	log text " ──────────────────────────────"
 	log text " !!!      BEI FEHLER      !!! "
 	log text " !!! ABBRUCH MIT STRG + C !!! "
-	log text " ───────────────"
+	log text " ──────────────────────────────"
 
 	log info "Das Grid wird jetzt upgegradet"
 	autostop
@@ -17472,10 +17472,10 @@ function osupgrade93() {
 	#   - Aktivieren Sie das Grid-Starten, wenn Sie möchten, dass das Grid automatisch nach dem Upgrade gestartet wird.
 ##
 function osupgrade() {
-	log text " ───────────────"
+	log text " ──────────────────────────────"
 	log text " !!!      BEI FEHLER      !!! "
 	log text " !!! ABBRUCH MIT STRG + C !!! "
-	log text " ───────────────"
+	log text " ──────────────────────────────"
 
 	log info "Das Grid wird jetzt upgegradet"
 	autostop
@@ -17515,10 +17515,10 @@ function osupgrade() {
 	#   - Aktivieren Sie das Grid-Starten, wenn Sie möchten, dass das Grid automatisch nach dem Downgrade gestartet wird.
 ##
 function osdowngrade() {
-	log text " ───────────────"
+	log text " ──────────────────────────────"
 	log text " !!!      BEI FEHLER      !!! "
 	log text " !!! ABBRUCH MIT STRG + C !!! "
-	log text " ───────────────"
+	log text " ──────────────────────────────"
 
 	log info "Das Grid wird jetzt zurückgesetzt, auf die vorherige Version."
 
