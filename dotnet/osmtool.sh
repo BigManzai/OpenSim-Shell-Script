@@ -20,7 +20,7 @@
 	# ! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 	# ! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#
-	# * Letzte bearbeitung 30.12.2023.
+	# * Letzte bearbeitung 03.01.2024.
 	#
 	# # Installieren sie bitte: #* Visual Studio Code
 	#* dazu die Plugins:
@@ -36,7 +36,7 @@
 #──────────────────────────────────────────────────────────────────────────────────────────
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.1437" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.1439" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 #──────────────────────────────────────────────────────────────────────────────────────────
@@ -1071,7 +1071,7 @@ SCRIPTPATH=$(cd "$(dirname "$0")" && pwd)
 
 # Die IP des Servers herausfinden
 #SYSTEMIP='"'$(curl -s ifconfig.me)'"'
-#****************************************************************
+#────────────────────────────────────────────────────────────
 
 ## *  osmtranslateinstall
 	#? Beschreibung:
@@ -1392,7 +1392,8 @@ function osmtoolconfig() {
 		echo "    ScreenLogLevel=0; # ScreenLogLevel=0 nichts machen, bis ScreenLogLevel=5 Funktionsnamen ausgeben."
 		echo '    LOGWRITE="no" # yes/no'
 		echo '    logfilename="_multitool"'
-		echo '    line="************************************************************";'
+		echo '    line="──────────────────────────────────────────────────────────────────────────────────────────";'
+		echo '    lline="──────────────────────────────────────────────────────────────────────────────────────────";'
 		echo "     "
 		echo "#* Dateien"
 		echo '    REGIONSDATEI="osmregionlist.ini"'
@@ -1407,14 +1408,29 @@ function osmtoolconfig() {
 		echo '    LOGDELETE="yes" # yes/no'
 		echo '    VISITORLIST="no" # yes/no - schreibt vor dem loeschen alle Besucher samt mac in eine log Datei.'
 		echo "     "
+		echo "#* Ubuntu version history"
+		echo "     "
+		echo "    # bionic 18.04"
+		echo "    # cosmic 18.10"
+		echo "    # focal 20.04"
+		echo "    # groovy 20.10"
+		echo "    # jammy 22.04"
+		echo "    # kinetic 22.10"
+		echo "    # lunar 23.04"
+		echo "    # mantic 23.10"
+		echo "     "
 		echo '	BULLETUBUNTU1804bionic="libBulletSim-3.26-20231210-x86_64.so"'
 		echo '	BULLETUBUNTU1810cosmic="libBulletSim-3.26-20231210-x86_64.so"'
+		echo "     "
 		echo '	BULLETUBUNTU2004focal="libBulletSim-3.26-20231207-x86_64.so"'
 		echo '	BULLETUBUNTU2010groovy="libBulletSim-3.26-20231207-x86_64.so"'
+		echo "     "
 		echo '	BULLETUBUNTU2204jammy="libBulletSim-3.26-20231209-x86_64.so"'
 		echo '	BULLETUBUNTU2210kinetic="libBulletSim-3.26-20231209-x86_64.so"'
+		echo "     "
 		echo '	BULLETUBUNTU2304lunar="libBulletSim-3.26-20231209-x86_64.so"'
 		echo '	BULLETUBUNTU2310mantic="libBulletSim-3.26-20231209-x86_64.so"'
+		echo "     "
 		echo '	BULLETUBUNTU2404noble="libBulletSim-3.26-20231209-x86_64.so"'
 		echo "     "
 		echo "#* Inklusive"
@@ -1502,7 +1518,7 @@ function osmtoolconfig() {
     } > "$OSTOOLINI"
 
 	echo "** Ihre neuen Konfigurationsdateien wurden geschrieben! **#"
-	echo "#*******************  FERTIG  ****************************#"
+	echo "──────────────────────────────  FERTIG  ──────────────────────────────"
 }
 
 ## * osmtoolconfigabfrage 
@@ -1528,60 +1544,60 @@ function osmtoolconfigabfrage() {
 	read -r OSMTRANSLATOR
 	if [ "$OSMTRANSLATOR" = "" ]; then OSMTRANSLATOR="OFF"; fi
 	log rohtext "your selection: $OSMTRANSLATOR"
-	log rohtext "*******************************************************************"
+	log rohtext "──────────────────────────────────────────────────────────────────────────────────────────"
 
 	log rohtext "Please select your language: [:de]"
 	read -r OSMTRANS
 	if [ "$OSMTRANS" = "" ]; then OSMTRANS=":de"; fi
 	log rohtext "Your language $OSMTRANS"
-	log rohtext "*******************************************************************"
+	log rohtext "──────────────────────────────────────────────────────────────────────────────────────────"
 
 	log rohtext " "
-	log rohtext "*******************************************************************"
-	log rohtext "********** ABBRUCH MIT DER TASTENKOMBINATION ********************"
-	log rohtext "********************  CTRL/STRG + C  *****************************"
-	log rohtext "*******************************************************************"
+	log rohtext "──────────────────────────────────────────────────────────────────────────────────────────"
+	log rohtext "───────────────────────── ABBRUCH MIT DER TASTENKOMBINATION ──────────────────────────────"
+	log rohtext "──────────────────────────────────  CTRL/STRG + C  ───────────────────────────────────────"
+	log rohtext "──────────────────────────────────────────────────────────────────────────────────────────"
 	log rohtext #**     Die Werte in den [Klammern] sind vorschläge              *#"
 	log rohtext #**     und können mit Enter übernommen werden.                  *#"
-	log rohtext "*******************************************************************"
+	log rohtext "──────────────────────────────────────────────────────────────────────────────────────────"
 	log rohtext #**   Daten stehen gegeben falls auch in der alten opensim.cnf   *#"
-	log rohtext "*******************************************************************"
+	log rohtext "──────────────────────────────────────────────────────────────────────────────────────────"
 	log rohtext " "
 	log rohtext "Das Verzeichnis wo sich ihr Grid befindet oder befinden soll ["${VSTARTVERZEICHNIS//\//}"]"
 	read -r STARTVERZEICHNIS
 	if [ "$STARTVERZEICHNIS" = "" ]; then STARTVERZEICHNIS=""${VSTARTVERZEICHNIS//\//}""; fi
 	log rohtext "Ihr Gridverzeichnis ist $STARTVERZEICHNIS"
-	log rohtext "*******************************************************************"
+	log rohtext "──────────────────────────────────────────────────────────────────────────────────────────"
 
 	log rohtext "Das Verzeichnis wo sich ihr Robust befindet [robust]"
 	read -r ROBUSTVERZEICHNIS
 	if [ "$ROBUSTVERZEICHNIS" = "" ]; then ROBUSTVERZEICHNIS="robust"; fi
 	log rohtext "Ihr Robustverzeichnis ist $ROBUSTVERZEICHNIS"
-	log rohtext "*******************************************************************"
+	log rohtext "──────────────────────────────────────────────────────────────────────────────────────────"
 
 	log rohtext "Das Verzeichnis wo sich ihr Moneyverzeichnis befindet [robust]"
 	read -r MONEYVERZEICHNIS
 	if [ "$MONEYVERZEICHNIS" = "" ]; then MONEYVERZEICHNIS="robust"; fi
 	log rohtext "Ihr Moneyverzeichnis ist $MONEYVERZEICHNIS"
-	log rohtext "*******************************************************************"
+	log rohtext "──────────────────────────────────────────────────────────────────────────────────────────"
 
 	log rohtext "Das Verzeichnis wo sich ihr OpenSimverzeichnis befindet [opensim]"
 	read -r OPENSIMVERZEICHNIS
 	if [ "$OPENSIMVERZEICHNIS" = "" ]; then OPENSIMVERZEICHNIS="opensim"; fi
 	log rohtext "Ihr OpenSimverzeichnis ist $OPENSIMVERZEICHNIS"
-	log rohtext "*******************************************************************"
+	log rohtext "──────────────────────────────────────────────────────────────────────────────────────────"
 
 	log rohtext "Das Verzeichnis wo sich ihre Konfigurationsdateien befindet [OpenSimConfig]"
 	read -r CONFIGPFAD
 	if [ "$CONFIGPFAD" = "" ]; then CONFIGPFAD="OpenSimConfig"; fi
 	log rohtext "Ihr Konfigurationsdateienverzeichnis ist $CONFIGPFAD"
-	log rohtext "*******************************************************************"
+	log rohtext "──────────────────────────────────────────────────────────────────────────────────────────"
 
 	log rohtext "Soll dotnet 6 benutzt werden [yes] no"
 	read -r DOTNETMODUS
 	if [ "$DOTNETMODUS" = "" ]; then DOTNETMODUS="yes"; fi
 	log rohtext "Ihre dotnet 6 auswahl ist $DOTNETMODUS"
-	log rohtext "*******************************************************************"
+	log rohtext "──────────────────────────────────────────────────────────────────────────────────────────"
 
     # Fertig und schreiben.
     #osmtoolconfig "/$STARTVERZEICHNIS/osmtoolconfig.ini"
@@ -6987,7 +7003,7 @@ function osgitholen() {
 	# Letzte Bearbeitung 01.10.2023
 	if [ -d /$STARTVERZEICHNIS/$OPENSIMVERZEICHNIS/ ]; then
 		log rohtext "Kopieren der Entwicklungsversion des OpenSimulator aus dem Git."
-		log info "*****************************#"
+		log info "────────────────────────────────────────────────────────────────────────────"
 		cd /$STARTVERZEICHNIS || return 1
 		rm -r /$STARTVERZEICHNIS/opensim1
 		mv /$STARTVERZEICHNIS/opensim /$STARTVERZEICHNIS/opensim1
@@ -6995,7 +7011,7 @@ function osgitholen() {
 		log info "OPENSIMHOLEN: Git klonen"
 	else
 		log rohtext "Kopieren der Entwicklungsversion des OpenSimulator aus dem Git."
-		log info "*****************************#"
+		log info "────────────────────────────────────────────────────────────────────────────"
 		log info "Kopieren der Entwicklungsversion des OpenSimulator aus dem Git"
 		git clone git://opensimulator.org/git/opensim opensim
 	fi
@@ -7016,7 +7032,7 @@ function osgitholen() {
 function osgitholen93() {
 	# Letzte Bearbeitung 01.10.2023
 	log rohtext "Kopieren der Entwicklungsversion des OpenSimulator aus dem Git."
-	log info "*****************************#"
+	log info "────────────────────────────────────────────────────────────────────────────"
 	cd /$STARTVERZEICHNIS || return 1
 	rm -r /$STARTVERZEICHNIS/opensim1
 	mv /$STARTVERZEICHNIS/opensim /$STARTVERZEICHNIS/opensim1
@@ -8546,6 +8562,11 @@ function installopensimulator() {
 
 }
 
+function ubuntuprowerbung() {
+	# Ubuntu Pro Werbung abschalten:
+	sudo dpkg-divert --divert /etc/apt/apt.conf.d/20apt-esm-hook.conf.bak --rename --local /etc/apt/apt.conf.d/20apt-esm-hook.conf
+}
+
 ## * installubuntu22
 	# Diese Funktion führt die Installation von Paketen durch, die für die Installation und den Betrieb von OpenSimulator auf einem Ubuntu 22.04-System benötigt werden.
 	#? Parameter:
@@ -8557,7 +8578,11 @@ function installopensimulator() {
 	#   - Optionale erweiterte Pakete installieren, wenn $insterweitert = "yes".
 ##
 function installubuntu22() {
-	# Letzte Bearbeitung 01.10.2023
+	# Letzte Bearbeitung 03.01.2024
+
+	# Ubuntu Pro Werbung abschalten:
+	# sudo dpkg-divert --divert /etc/apt/apt.conf.d/20apt-esm-hook.conf.bak --rename --local /etc/apt/apt.conf.d/20apt-esm-hook.conf
+
 	#Alles fuer den OpenSimulator ausser mono
 	iinstallnew screen
 	iinstallnew git
@@ -8605,6 +8630,7 @@ function installubuntu22() {
 	iinstallnew zlib1g-dev
     iinstallnew libc6-dev
 	iinstallnew translate-shell
+	iinstallnew ubuntu-advantage-tools
 
 	if [ $insterweitert = "yes" ]; then
 		iinstallnew libldns-dev
@@ -8725,7 +8751,7 @@ function ufwset() {
 	# Um eine Regel zu löschen, verwenden Sie delete:
 	# sudo ufw delete deny 22
 
-	#*************************************************
+	#─────────────────────────
 
 	#Nach robust Konfigurationen suchen und die eingestellten Ports mit ufw freischalten.
 	# Ist im Vereichnis robust/bin irgendeine ini Datei wo etwas mit Port steht und nicht mit ; ausdokumentiert ist.
@@ -8749,7 +8775,7 @@ function ufwset() {
 	# XmlRpcPort
 	# InternalPort
 
-	#******************************************************
+	#─────────────────────────****
 
 	#** Nachfolgende Einstellungen sind nur, damit es irgendwie laeuft.
 	# Port oeffnen robust
@@ -16951,7 +16977,7 @@ function osconfigstruktur() {
         # Restliche Dateien kopieren
         
 	done
-    echo "*******************************************************************"
+    log lline
 	return 0
 }
 
@@ -16993,48 +17019,48 @@ function configabfrage() {
 	echo "$SCRIPTNAME Version $VERSION"
 	log rohtext "Ihre aktuelle externe IP ist $AKTUELLEIP"
 	echo " "
-	echo "*******************************************************************"
-	log rohtext "********** ABBRUCH MIT DER TASTENKOMBINATION ********************"
-	log rohtext "********************  CTRL/STRG + C  *****************************"
-	echo "*******************************************************************"
+	log lline
+	log rohtext "───────────────────────── ABBRUCH MIT DER TASTENKOMBINATION ──────────────────────────────"
+	log rohtext "───────────────────────────────────  CTRL/STRG + C  ──────────────────────────────────────"
+	log lline
 	log rohtext #**     Die Werte in den [Klammern] sind vorschläge              *#"
 	log rohtext #**     und können mit Enter übernommen werden.                  *#"
-	echo "*******************************************************************"
+	log lline
 	echo " "
 	log rohtext "Wieviele Konfigurationen darf ich ihnen schreiben? [5]"
 	read -r CONFIGANZAHL
 	if [ "$CONFIGANZAHL" = "" ]; then CONFIGANZAHL="5"; fi
 	log rohtext "Ihre Anzahl ist $CONFIGANZAHL"
-	echo "*******************************************************************"
+	log lline
 
 	log rohtext "Wohin darf ich diese schreiben? [$STARTVERZEICHNIS]"
 	read -r VERZEICHNISABFRAGE
 	if [ "$VERZEICHNISABFRAGE" = "" ]; then log rohtext "Ihr Konfigurationsordner ist $STARTVERZEICHNIS"; else STARTVERZEICHNIS="$VERZEICHNISABFRAGE";fi
-	echo "*******************************************************************"
+	log lline
 
 	log rohtext "Ihre Server Adresse? [$AKTUELLEIP]"
 	read -r BASEHOSTNAME
 	if [ "$BASEHOSTNAME" = "" ]; then BASEHOSTNAME="$AKTUELLEIP"; fi
 	log rohtext "Ihre Server Adresse ist $BASEHOSTNAME"
-	echo "*******************************************************************"
+	log lline
 
 	log rohtext "Ihr SimulatorPort startet bei: [9010]"
 	read -r SIMULATORPORT
 	if [ "$SIMULATORPORT" = "" ]; then SIMULATORPORT="9010"; fi
 	log rohtext "Ihr SimulatorPort startet bei: $SIMULATORPORT"
-	echo "*******************************************************************"
+	log lline
 
 	log rohtext "Bitte geben sie den mySQL/mariaDB Benutzernamen ihrer Datenbank an [opensim]:"
 	read -r MYSQLUSER
 	if [ "$MYSQLUSER" = "" ]; then MYSQLUSER="opensim"; fi
 	log rohtext "Ihr Datenbank Benutzername lautet: $MYSQLUSER"
-	echo "*******************************************************************"
+	log lline
 
 	log rohtext "Bitte geben sie das Passwort ihrer mySQL/mariaDB Datenbank an [opensim]:"
 	read -r MYSQLPASSWORD
 	if [ "$MYSQLPASSWORD" = "" ]; then MYSQLPASSWORD="opensim"; fi
 	log rohtext "Ihr Passwort ihrer Datenbank lautet: $MYSQLPASSWORD"
-	echo "*******************************************************************"
+	log lline
 
 	log rohtext "Datenbanken jetzt direkt anlegen [nein]:"
 	read -r CREATEDATABASE
@@ -17046,7 +17072,7 @@ function configabfrage() {
 		if [ "$MYSQLDATABASE" = "" ]; then MYSQLDATABASE="opensim"; fi
 		log rohtext "Ihr Datenbanknamen lautet: $MYSQLDATABASE"
 		CREATEROBUSTDATABASENAME="$MYSQLDATABASE"
-		echo "*******************************************************************"
+		log lline
 	fi
 
 	if [ "$CREATEDATABASE" = "ja" ]; then
@@ -17067,7 +17093,7 @@ function configabfrage() {
 			createdatabase $CREATEROBUSTDATABASENAME $MYSQLUSER $MYSQLPASSWORD
 		fi
 	fi
-	echo "*******************************************************************"
+	log lline
 
 	# Der Grid Master Avatar
 
@@ -17075,38 +17101,38 @@ function configabfrage() {
 	read -r FIRSTNAMEMASTER
 	if [ "$FIRSTNAMEMASTER" = "" ]; then FIRSTNAMEMASTER="John"; fi
 	log rohtext "Der Vornamen ihres Grid Besitzer/Master Avatar lautet: $FIRSTNAMEMASTER"
-	echo "*******************************************************************"
+	log lline
 
 	log rohtext "Bitte geben sie den Nachnamen ihres Grid Besitzer/Master Avatar an [Doe]:"
 	read -r LASTNAMEMASTER
 	if [ "$LASTNAMEMASTER" = "" ]; then LASTNAMEMASTER="Doe"; fi
 	log rohtext "Der Nachnamen ihres Grid Besitzer/Master Avatar lautet: $LASTNAMEMASTER"
-	echo "*******************************************************************"
+	log lline
 
 	log rohtext "Bitte geben sie das Passwort ihres Grid Besitzer/Master Avatar an [opensim]:"
 	read -r PASSWDNAMEMASTER
 	if [ "$PASSWDNAMEMASTER" = "" ]; then PASSWDNAMEMASTER="opensim"; fi
 	log rohtext "Das Passwort ihres Grid Besitzer/Master Avatar lautet: $PASSWDNAMEMASTER"
-	echo "*******************************************************************"
+	log lline
 
 	log rohtext "Bitte geben sie die E-Mail ihres Grid Besitzer/Master Avatar an [john@doe.com]:"
 	read -r EMAILNAMEMASTER
 	if [ "$EMAILNAMEMASTER" = "" ]; then EMAILNAMEMASTER="john@doe.com"; fi
 	log rohtext "Die E-Mail ihres Grid Besitzer/Master Avatar lautet: $EMAILNAMEMASTER"
-	echo "*******************************************************************"
+	log lline
 
 	UUIDNAMEMASTER=$(uuidgen)
 	log rohtext "Bitte geben sie die UUID ihres Grid Besitzer/Master Avatar an [$UUIDNAMEMASTER]:"
 	read -r UUIDNAMEMASTER
 	if [ "$UUIDNAMEMASTER" = "" ]; then UUIDNAMEMASTER="$UUIDNAMEMASTER"; fi
 	log rohtext "Die UUID ihres Grid Besitzer/Master Avatar lautet: $UUIDNAMEMASTER"
-	echo "*******************************************************************"
+	log lline
 
 	log rohtext "Bitte geben sie das Estate ihres Grid Besitzer/Master Avatar an [MyGrid Estate]:"
 	read -r ESTATENAMEMASTER
 	if [ "$ESTATENAMEMASTER" = "" ]; then ESTATENAMEMASTER="MyGrid Estate"; fi
 	log rohtext "Das Estate ihres Grid Besitzer/Master Avatar lautet: $ESTATENAMEMASTER"
-	echo "*******************************************************************"
+	log lline
 
 	MODELNAMEMASTER=""
 
@@ -17121,37 +17147,37 @@ function configabfrage() {
 	#bash osmtool.sh oscommand sim1 Welcome "$LASTNAMEMASTER"
 	#bash osmtool.sh oscommand sim1 Welcome "$ESTATENAMEMASTER"
 
-	#echo "*******************************************************************"
+	#log lline
 
 	log rohtext "Bitte geben sie den Namen ihrer Startregion an [Welcome]:"
 	read -r STARTREGION
 	if [ "$STARTREGION" = "" ]; then STARTREGION="Welcome"; fi
 	log rohtext "Der Name ihrer Startregion lautet: $STARTREGION"
-	echo "*******************************************************************"
+	log lline
 
 	log rohtext "Bitte geben sie den Namen ihres Grids an [MyGrid]:"
 	read -r SIMULATORGRIDNAME
 	if [ "$SIMULATORGRIDNAME" = "" ]; then SIMULATORGRIDNAME="MyGrid"; fi
 	log rohtext "Der Name ihrers Grids lautet: $SIMULATORGRIDNAME"
-	echo "*******************************************************************"
+	log lline
 
 	log rohtext "Bitte geben sie den Grid-Nickname an [MG]:"
 	read -r SIMULATORGRIDNICK
 	if [ "$SIMULATORGRIDNICK" = "" ]; then SIMULATORGRIDNICK="MG"; fi
 	log rohtext "Der Grid-Nickname lautet: $SIMULATORGRIDNICK"
-	echo "*******************************************************************"
+	log lline
 
 	log rohtext "Möchten sie die Regionskonfigurationen direkt Aktivieren ja/nein [nein]:"
 	read -r REGIONAKTIV
 	if [ "$REGIONAKTIV" = "" ]; then REGIONAKTIV="nein"; fi
 	log rohtext "Sie haben ausgewählt: $REGIONAKTIV"
-	echo "*******************************************************************"
+	log lline
 
 	log rohtext "Möchten sie die Skriptkonfigurationen Aktivieren ja/nein [nein]:"
 	read -r SKRIPTAKTIV
 	if [ "$SKRIPTAKTIV" = "" ]; then SKRIPTAKTIV="nein"; fi
 	log rohtext "Sie haben ausgewählt: $SKRIPTAKTIV"
-	echo "*******************************************************************"
+	log lline
 
 	# Weitere Auswertungen
 	if [ "$PRIVURL" = "" ]; then PRIVURL="\${Const|BaseURL}"; fi
@@ -17351,7 +17377,7 @@ function compilieren() {
 	#   - Überprüfen Sie, ob die Überwachung des Build-Status korrekt implementiert ist.
 ##  
 function osgridcopy() {
-	log text " *****************************"
+	log text " ───────────────"
 	log text "Steht hier:"
 	log text " "
 	log info "Build succeeded."
@@ -17359,10 +17385,10 @@ function osgridcopy() {
 	log text "    0 Error(s)"
 	log text " "
 	log info "Dann ist alles gut gegangen."
-	log text " *****************************"
+	log text " ───────────────"
 	log warn " !!!      BEI FEHLER      !!! "
 	log warn " !!! ABBRUCH MIT STRG + C !!! "
-	log text " *****************************"
+	log text " ───────────────"
 
 	log info "Das Grid wird jetzt kopiert/aktualisiert"
 	log line
@@ -17400,10 +17426,10 @@ function osgridcopy() {
 	#   - Aktivieren Sie das Grid-Starten, wenn Sie möchten, dass das Grid automatisch nach dem Upgrade gestartet wird.
 ## 
 function osupgrade93() {
-	log text " *****************************"
+	log text " ───────────────"
 	log text " !!!      BEI FEHLER      !!! "
 	log text " !!! ABBRUCH MIT STRG + C !!! "
-	log text " *****************************"
+	log text " ───────────────"
 
 	log info "Das Grid wird jetzt upgegradet"
 	autostop
@@ -17446,10 +17472,10 @@ function osupgrade93() {
 	#   - Aktivieren Sie das Grid-Starten, wenn Sie möchten, dass das Grid automatisch nach dem Upgrade gestartet wird.
 ##
 function osupgrade() {
-	log text " *****************************"
+	log text " ───────────────"
 	log text " !!!      BEI FEHLER      !!! "
 	log text " !!! ABBRUCH MIT STRG + C !!! "
-	log text " *****************************"
+	log text " ───────────────"
 
 	log info "Das Grid wird jetzt upgegradet"
 	autostop
@@ -17489,10 +17515,10 @@ function osupgrade() {
 	#   - Aktivieren Sie das Grid-Starten, wenn Sie möchten, dass das Grid automatisch nach dem Downgrade gestartet wird.
 ##
 function osdowngrade() {
-	log text " *****************************"
+	log text " ───────────────"
 	log text " !!!      BEI FEHLER      !!! "
 	log text " !!! ABBRUCH MIT STRG + C !!! "
-	log text " *****************************"
+	log text " ───────────────"
 
 	log info "Das Grid wird jetzt zurückgesetzt, auf die vorherige Version."
 
@@ -21505,6 +21531,8 @@ case $KOMMANDO in
 	ss_info) ss_info	;;
 	dns_dig_info) dns_dig_info	;;
 	nmap_scan) nmap_scan	;;
+	serverupgrade) serverupgrade ;;
+	ubuntuprowerbung) ubuntuprowerbung ;;
 	bulletconfig) bulletconfig "$2" ;;
 	hda | hilfedirektaufruf | hilfemenudirektaufrufe) hilfemenudirektaufrufe ;;
 	h) newhelp ;;
