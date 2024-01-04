@@ -20,15 +20,20 @@
 	# ! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 	# ! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#
-	# * Letzte bearbeitung 03.01.2024.
+	# * Letzte bearbeitung 04.01.2024.
 	#
 	# # Installieren sie bitte: #* Visual Studio Code
 	#* dazu die Plugins:
 	# ShellCheck #! ist eine geniale Hilfe gegen Fehler.
 	# shellman #? Shell Skript Schnipsel.
-	# Better Comments #* Bessere Farbliche Darstellung. Standards: #! #* #? #// #todo
+	# Better Comments #* Bessere Farbliche Darstellung. 
+		# Standards:
+		#! Rot
+		#* Hell
+		#? Blau
+		#// Durchgestrichen
+		#todo Orange
 	# outline map #? Navigationsleiste für Funktionen.
-	# todo: eine Menge warten wir´s ab.
 #
 
 #──────────────────────────────────────────────────────────────────────────────────────────
@@ -36,7 +41,7 @@
 #──────────────────────────────────────────────────────────────────────────────────────────
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.1439" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.1440" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 #──────────────────────────────────────────────────────────────────────────────────────────
@@ -2627,12 +2632,25 @@ function menuoswriteconfig() {
 	# todo: nichts.
 ##
 function osstarteintrag() {
-	# Letzte Bearbeitung 27.09.2023
-	OSEINTRAG=$1 # OpenSimulator, Verzeichnis und Screen Name
-	log info "OpenSimulator $OSEINTRAG wird der Datei $SIMDATEI hinzugefuegt!"
+    OSEINTRAG=$1  # OpenSimulator, Verzeichnis und Screen Name
 
-	sed -i '1s/.*$/'"$OSEINTRAG"'\n&/g' /"$STARTVERZEICHNIS"/$SIMDATEI
-	sort /"$STARTVERZEICHNIS"/$SIMDATEI -o /"$STARTVERZEICHNIS"/$SIMDATEI
+    # Überprüfe, ob der Eintrag bereits vorhanden ist
+    if grep -q "$OSEINTRAG" /"$STARTVERZEICHNIS"/$SIMDATEI; then
+        # Info-Log-Nachricht anzeigen
+        log info "OpenSimulator $OSEINTRAG ist bereits in der Datei $SIMDATEI vorhanden. Lösche den Eintrag."
+
+        # Lösche die Zeile mit dem OSEINTRAG aus der SIMDATEI
+        sed -i "/$OSEINTRAG/d" /"$STARTVERZEICHNIS"/$SIMDATEI
+    else
+        # Info-Log-Nachricht anzeigen
+        log info "OpenSimulator $OSEINTRAG wird der Datei $SIMDATEI hinzugefügt!"
+
+        # Füge den OSEINTRAG als erste Zeile in die SIMDATEI ein und aktualisiere die Datei
+        sed -i '1s/.*$/'"$OSEINTRAG"'\n&/g' /"$STARTVERZEICHNIS"/$SIMDATEI
+
+        # Sortiere die SIMDATEI, um die Einträge zu ordnen
+        sort /"$STARTVERZEICHNIS"/$SIMDATEI -o /"$STARTVERZEICHNIS"/$SIMDATEI
+    fi
 }
 
 ## * menuosstarteintrag
@@ -2658,10 +2676,11 @@ function menuosstarteintrag() {
 	dialogclear
 	ScreenLog
 
-	log info "OpenSimulator $MENUOSEINTRAG wird der Datei $SIMDATEI hinzugefuegt!"
+	# Eintrag hinzufuegen oder entfernen.
+	osstarteintrag $MENUOSEINTRAG
 
-	sed -i '1s/.*$/'"$MENUOSEINTRAG"'\n&/g' /"$STARTVERZEICHNIS"/$SIMDATEI
-	sort /"$STARTVERZEICHNIS"/$SIMDATEI -o /"$STARTVERZEICHNIS"/$SIMDATEI
+	#sed -i '1s/.*$/'"$MENUOSEINTRAG"'\n&/g' /"$STARTVERZEICHNIS"/$SIMDATEI
+	#sort /"$STARTVERZEICHNIS"/$SIMDATEI -o /"$STARTVERZEICHNIS"/$SIMDATEI
 
 	dateimenu
 }
@@ -2683,10 +2702,8 @@ function menuosstarteintrag() {
 function osstarteintragdel() {
 	# Letzte Bearbeitung 27.09.2023
 	OSEINTRAGDEL=$1 # OpenSimulator, Verzeichnis und Screen Name
-	log info "OpenSimulator $OSEINTRAGDEL wird aus der Datei $SIMDATEI entfernt!"
-
-	sed -i '/'"$OSEINTRAGDEL"'/d' /"$STARTVERZEICHNIS"/$SIMDATEI
-	sort /"$STARTVERZEICHNIS"/$SIMDATEI -o /"$STARTVERZEICHNIS"/$SIMDATEI
+	# Eintrag hinzufuegen oder entfernen.
+	osstarteintrag $OSEINTRAGDEL
 }
 
 ## * menuosstarteintragdel
@@ -2714,9 +2731,8 @@ function menuosstarteintragdel() {
 	dialogclear
 	ScreenLog
 
-	log info "OpenSimulator $MENUOSEINTRAGDEL wird aus der Datei $SIMDATEI entfernt!"
-	sed -i '/'"$MENUOSEINTRAGDEL"'/d' /"$STARTVERZEICHNIS"/$SIMDATEI
-	sort /"$STARTVERZEICHNIS"/$SIMDATEI -o /"$STARTVERZEICHNIS"/$SIMDATEI
+	# Eintrag hinzufuegen oder entfernen.
+	osstarteintrag $MENUOSEINTRAGDEL
 
 	dateimenu
 }
@@ -2741,6 +2757,7 @@ function osdauerstop() {
 	# Überprüfen, ob der Screen existiert
 	if screen -list | grep -q "$OSDAUERSTOPSCREEN"; then
 		log warn "OpenSimulator $OSDAUERSTOPSCREEN Beenden und aus der Startliste loeschen!"
+		# Eintrag hinzufuegen oder entfernen.
 		osstarteintrag "$OSDAUERSTOPSCREEN"
 
 		# Senden des Befehls zum Herunterfahren des OpenSimulator-Servers
@@ -2750,6 +2767,7 @@ function osdauerstop() {
 		return 0
 	else
 		log error "OpenSimulator $OSDAUERSTOPSCREEN nicht vorhanden"
+		# Eintrag hinzufuegen oder entfernen.
 		osstarteintrag "$OSDAUERSTOPSCREEN"
 
 		return 1
@@ -2788,7 +2806,8 @@ function menuosdauerstop() {
 		(
 			echo "10"
 			screen -S "$IOSDAUERSTOPSCREEN" -p 0 -X eval "stuff 'shutdown'^M"
-			osstarteintragdel "$IOSDAUERSTOPSCREEN"
+			# Eintrag hinzufuegen oder entfernen.
+			osstarteintrag "$IOSDAUERSTOPSCREEN"
 			sleep 3
 			echo "100"
 			sleep 1
@@ -2799,10 +2818,12 @@ function menuosdauerstop() {
 		$DIALOG --msgbox "$IOSDAUERSTOPSCREEN beendet!" 5 20
 		dialogclear
 		ScreenLog
-		osstarteintragdel "$IOSDAUERSTOPSCREEN"
+		# Eintrag hinzufuegen oder entfernen.
+		osstarteintrag "$IOSDAUERSTOPSCREEN"
 		dateimenu
 	else
-		osstarteintragdel "$IOSDAUERSTOPSCREEN"
+		# Eintrag hinzufuegen oder entfernen.
+		osstarteintrag "$IOSDAUERSTOPSCREEN"
 		dateimenu
 	fi
 }
@@ -2820,6 +2841,7 @@ function menuosdauerstop() {
 function osdauerstart() {
 	# Letzte Bearbeitung 28.09.2023
 	OSDAUERSTARTSCREEN=$1 # OpenSimulator, Verzeichnis und Screen Name
+	# Eintrag hinzufuegen oder entfernen.
 	osstarteintrag "$OSDAUERSTARTSCREEN"
 
 	if ! screen -list | grep -q "$OSDAUERSTARTSCREEN"; then
@@ -2872,6 +2894,7 @@ function menuosdauerstart() {
 	dialogclear
 	ScreenLog
 
+	# Eintrag hinzufuegen oder entfernen.
 	osstarteintrag "$IOSDAUERSTARTSCREEN"
 	cd /$STARTVERZEICHNIS/"$IOSDAUERSTARTSCREEN"/bin || return 1
 	screen -fa -S "$IOSDAUERSTARTSCREEN" -d -U -m mono OpenSim.exe
