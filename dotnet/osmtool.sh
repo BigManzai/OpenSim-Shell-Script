@@ -41,7 +41,7 @@
 #──────────────────────────────────────────────────────────────────────────────────────────
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.1440" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.1441" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 #──────────────────────────────────────────────────────────────────────────────────────────
@@ -1522,6 +1522,73 @@ function osmtoolconfig() {
 		echo '    listVar="50s 60s 70s 80s 90s Alternative Blues Classic Club Country Dance Disco EDM Easy Electronic Folk Funk Gothic Heavy Hits House Indie Jazz Metal Misc Oldies Party Pop Reggae Rock Schlager Soul Techno Top Trance industrial pop"'
     } > "$OSTOOLINI"
 
+	{
+		echo "     ### Das Grid wird nun anders gestartet und gestoppt.	"
+		echo "     	"
+		echo "     Es ist immer besser, wenn man in das Verzeichnis /$STARTVERZEICHNIS wechselt,	"
+		echo "     weil das osmtool das Startverzeichnis als Hauptverzeichnis benutzt:	"
+		echo "      cd /$STARTVERZEICHNIS	"
+		echo "     und dann erst das osmtool.sh aufruft.	"
+		echo "     	"
+		echo "     # Die Hauptfunktionen die man benötigt:	"
+		echo "      bash osmtool.sh autorestart	"
+		echo "     Dann vielleicht seltener mal:	"
+		echo "      bash osmtool.sh autostart	"
+		echo "      bash osmtool.sh autostop	"
+		echo "     	"
+		echo "     # Einzelne Regionen Starten oder Soppen:	"
+		echo "      bash osmtool.sh osstart sim1 # oder sim2 oder sim3 oder sim…	"
+		echo "     oder	"
+		echo "      bash osmtool.sh osstop sim1 # oder sim2 oder sim3 oder sim…	"
+		echo "      	"
+		echo "     Das gleiche aber dauerhaft:	"
+		echo "      bash osmtool.sh osdauerstart sim1 # oder sim2 oder sim3 oder sim…	"
+		echo "      bash osmtool.sh osdauerstop sim1 # oder sim2 oder sim3 oder sim…	"
+		echo "      	"
+		echo "     # Eine neue Regionskonfigurationsdatei erstellen:	"
+		echo "     Aufrufen der Funktion zum Erstellen einer Regions.ini Datei:	"
+		echo "      bash osmtool.sh newregionini	"
+		echo "     Den Anweisungen folgen und die Datei wird im Anschluss erstellt.	"
+		echo "     Anschließend muss noch das Estate und der Besitzer angegeben werden.	"
+		echo "     Hierzu in der OpenSim Konsole folgendes eingeben:	"
+		echo "      screen -r sim1 # oder sim2 oder sim3 oder sim…	"
+		echo "     Info: Der Estate Name ist frei wählbar.	"
+		echo "     Info: Der Besitzer muss existieren.	"
+		echo "     	"
+		echo "     # Einfach mal die Hilfen aufrufen:	"
+		echo "      bash osmtool.sh h	"
+		echo "     oder	"
+		echo "      bash osmtool.sh hilfe	"
+		echo "     	"
+		echo "     	"
+		echo "     ### Informationen ###	"
+		echo "     	"
+		echo "     Der Hauptunterschied zum mono OpenSim und DOTNET OpenSim ist die Art und Weise wie es per Hand gestartet wird.	"
+		echo "     Früher wurde OpenSim folgendermaßen gestartet:	"
+		echo "     mono Robust.exe	"
+		echo "     mono OpenSim.exe	"
+		echo "     mono MoneyServer.exe	"
+		echo "     Heute wird das so gestartet:	"
+		echo "     dotnet Robust.dll	"
+		echo "     dotnet OpenSim.dll	"
+		echo "     dotnet MoneyServer.dll	"
+		echo "     Es gibt also keine exe Dateien mehr unter Linux.	"
+		echo "     	"
+		echo "     ### Offline Editor ###	"
+		echo "     	"
+		echo "     Das beste was man benutzen kann ist der Visual Studio Code, diesen gibt es für die meisten Betriebssysteme:	"
+		echo "      https://code.visualstudio.com/	"
+		echo "     Dieser kann sofort für alle Konfigurationsarbeiten genutzt werden,	"
+		echo "     aber auch für LSL OSSL Skripte, da muss halt noch eine entsprechende Erweiterung installiert werden.	"
+		echo "     Meine Erweiterungen die ich nutze:	"
+		echo "      # ShellCheck - ist eine geniale Hilfe gegen Fehler.	"
+		echo "      # shellman - Shell Skript Schnipsel.	"
+		echo "      # Better Comments - Bessere Farbliche Darstellung.	"
+		echo "       Standards: #! Rot #* Hell #? Blau #// Durchgestrichen #todo Orange	"
+		echo "      # outline map - Navigationsleiste für Funktionen.	"
+	} > "liesmich2024.txt"
+
+
 	echo "** Ihre neuen Konfigurationsdateien wurden geschrieben! **#"
 	echo "──────────────────────────────  FERTIG  ──────────────────────────────"
 }
@@ -2679,9 +2746,6 @@ function menuosstarteintrag() {
 	# Eintrag hinzufuegen oder entfernen.
 	osstarteintrag $MENUOSEINTRAG
 
-	#sed -i '1s/.*$/'"$MENUOSEINTRAG"'\n&/g' /"$STARTVERZEICHNIS"/$SIMDATEI
-	#sort /"$STARTVERZEICHNIS"/$SIMDATEI -o /"$STARTVERZEICHNIS"/$SIMDATEI
-
 	dateimenu
 }
 
@@ -2916,11 +2980,7 @@ function menuosdauerstart() {
 					echo "100"
 					sleep 1
 				) 
-				#|
-				#$DIALOG --title "$IOSDAUERSTARTSCREEN" --gauge "Start" 8 30
-				#$dialogclear
-				#$DIALOG --msgbox "$IOSDAUERSTARTSCREEN gestartet!" 5 20
-				#$dialogclear
+
 				ScreenLog
 				return 0
 			else
@@ -2931,11 +2991,8 @@ function menuosdauerstart() {
 					sleep 3
 					echo "100"
 					sleep 1
-				) #|
-					#$DIALOG --title "$IOSDAUERSTARTSCREEN" --gauge "Start" 8 30
-				#$dialogclear
-				#$DIALOG --msgbox "$IOSDAUERSTARTSCREEN gestartet!" 5 20
-				#$dialogclear
+				)
+				
 				ScreenLog
 				dateimenu
 			fi
