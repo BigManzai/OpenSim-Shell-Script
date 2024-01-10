@@ -67,6 +67,7 @@ Zuletzt wird dann alles upgegradet und neu gestartet.
 	0 6 * * * bash /opt/osmtool.sh autorestart
 
 ## **TODO**
+* Benutzerlisten überarbeitet.
 * buildbullet - baut automatisch BulletSim 1.3 - Bullet Physic 3.26
 * Falsche MoneyServer Version behoben. 
 * Fehlende libgdiplus installation hinzugefügt. 
