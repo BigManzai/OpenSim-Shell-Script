@@ -20,7 +20,7 @@
 	# ! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 	# ! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#
-	# * Letzte bearbeitung 04.01.2024.
+	# * Letzte bearbeitung 10.01.2024.
 	#
 	# # Installieren sie bitte: #* Visual Studio Code
 	#* dazu die Plugins:
@@ -41,7 +41,7 @@
 #──────────────────────────────────────────────────────────────────────────────────────────
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.1441" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.1445" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 #──────────────────────────────────────────────────────────────────────────────────────────
@@ -1411,7 +1411,9 @@ function osmtoolconfig() {
 		echo '    REGIONSANZEIGE="yes"'
 		echo "     "
 		echo '    LOGDELETE="yes" # yes/no'
-		echo '    VISITORLIST="no" # yes/no - schreibt vor dem loeschen alle Besucher samt mac in eine log Datei.'
+		echo '    VISITORLIST="yes" # yes/no - schreibt vor dem loeschen alle Besucher samt mac in eine log Datei.'
+		echo "    # loesche visitor list.log weil mir die Text Datei reicht."
+		echo '    VISITORLISTLOGDEL="yes"'
 		echo "     "
 		echo "#* Ubuntu version history"
 		echo "     "
@@ -1542,8 +1544,7 @@ function osmtoolconfig() {
 		echo "      bash osmtool.sh osstop sim1 # oder sim2 oder sim3 oder sim…	"
 		echo "      	"
 		echo "     Das gleiche aber dauerhaft:	"
-		echo "      bash osmtool.sh osdauerstart sim1 # oder sim2 oder sim3 oder sim…	"
-		echo "      bash osmtool.sh osdauerstop sim1 # oder sim2 oder sim3 oder sim…	"
+		echo "      bash osmtool.sh osdauerstartstop sim1 # oder sim2 oder sim3 oder sim…	"
 		echo "      	"
 		echo "     # Eine neue Regionskonfigurationsdatei erstellen:	"
 		echo "     Aufrufen der Funktion zum Erstellen einer Regions.ini Datei:	"
@@ -2801,7 +2802,7 @@ function menuosstarteintragdel() {
 	dateimenu
 }
 
-## * osdauerstop 
+## * osdauerstartstop 
 	# Stoppt einen OpenSimulator-Server und entfernt ihn aus der Startliste.
 	# Diese Funktion stoppt einen OpenSimulator-Server, der in einem GNU Screen-Prozess
 	# läuft, und entfernt ihn aus der Liste der gestarteten Server. Der Name des Screens
@@ -2812,10 +2813,10 @@ function menuosstarteintragdel() {
 	#   0 - Erfolgreich beendet.
 	#   1 - Der Screen wurde nicht gefunden.
 	#? Beispiel:
-	#   osdauerstop myopensim
+	#   osdauerstartstop myopensim
 	# todo: nichts.
 ##
-function osdauerstop() {
+function osdauerstartstop() {
 	# Letzte Bearbeitung 27.09.2023
 	OSDAUERSTOPSCREEN=$1
 	# Überprüfen, ob der Screen existiert
@@ -2841,7 +2842,7 @@ function osdauerstop() {
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then hauptmenu; fi
 }
 
-## * menuosdauerstop 
+## * menuosdauerstartstop 
 	# Stoppt einen OpenSimulator-Server und entfernt ihn aus der Startliste.
 	# Diese Funktion stoppt einen OpenSimulator-Server, der in einem GNU Screen-Prozess
 	# läuft, und entfernt ihn aus der Liste der gestarteten Server. Der Name des Screens
@@ -2852,10 +2853,10 @@ function osdauerstop() {
 	#   0 - Erfolgreich beendet.
 	#   1 - Der Screen wurde nicht gefunden.
 	#? Beispiel:
-	#   osdauerstop myopensim
+	#   osdauerstartstop myopensim
 	# todo: nichts.
 ##
-function menuosdauerstop() {
+function menuosdauerstartstop() {
 	# Letzte Bearbeitung 27.09.2023
 	IOSDAUERSTOPSCREEN=$(
 		dialog --backtitle "opensimMULTITOOL $VERSION" --title "opensimMULTITOOL Eingabe" \
@@ -5404,7 +5405,7 @@ function logdel() {
 
 ## *  rologdel
 	#? Beschreibung:
-	# Die Funktion `rologdel` löscht bestimmte Log-Dateien und erstellt eine Besucherliste, sofern die entsprechenden Verzeichnisse existieren. Sie überprüft zuerst, ob die Verzeichnisse vorhanden sind, und löscht dann bestimmte Log-Dateien. Wenn die `VISITORLIST`-Variable auf "yes" gesetzt ist, werden Besucherinformationen aus der Robust-Log-Datei extrahiert und in eine separate Datei geschrieben.
+	# Die Funktion `rologdel` löscht bestimmte Log-Dateien und erstellt eine Besucherliste, sofern die entsprechenden Verzeichnisse existieren.
 	#? Parameter:
 	# Keine Parameter werden von dieser Funktion akzeptiert.
 	# Abhängigkeiten:
@@ -5415,26 +5416,24 @@ function logdel() {
 	# Exit-Status:
 	# 0 - Die Log-Dateien wurden erfolgreich gelöscht oder die Verzeichnisse existieren nicht.
 	# Anderer Wert (normalerweise 1) - Es gab Probleme beim Löschen der Log-Dateien oder die Verzeichnisse existieren nicht.
-	#? Hinweise:
-	# - Die Funktion überprüft zuerst, ob die Verzeichnisse existieren (`-d`-Test) und gibt entsprechende Log-Meldungen aus.
-	# - Wenn die `VISITORLIST`-Variable auf "yes" gesetzt ist, werden Besucherinformationen aus der Robust-Log-Datei extrahiert und in eine separate Datei geschrieben.
-	# - Die Funktion gibt Log-Meldungen aus, um den Status des Löschvorgangs und das Erstellen der Besucherliste anzuzeigen.
 ##
 function rologdel() {
-	# Letzte Bearbeitung 01.10.2023
-	if [ -d /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS ]; then	
+	# Letzte Bearbeitung 10.01.2024
+	if [ -d /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS ]; then
 		if [ "$VISITORLIST" = "yes" ]; then 
-			# Schreibe alle Besucher in eine Datei namens DATUM_visitorlist.log.
-			sed -n -e '/'"INFO  (Thread Pool Worker)"'/p' /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/Robust.log >> /$STARTVERZEICHNIS/"$DATEIDATUM"_osmvisitorlist.log;
-			# Zeilenumgruch nach jeder Zeile.
-			sed -i 's/$/\n/g' /$STARTVERZEICHNIS/"$DATEIDATUM"_osmvisitorlist.log
+			# Lese alle passenden Zeilen aus Robust.log aus.
+			PASSENDEZEILEN=$(grep 'GATEKEEPER SERVICE' /"$STARTVERZEICHNIS"/"$ROBUSTVERZEICHNIS"/bin/Robust.log | awk -F ']: ' '{print $2}')
 
-			# Hiermit wird das ganze etwas lesbarer.
-			# Etwas umstaendlich aber was besseres faellt mir auf die schnelle nicht ein.
-			text1="INFO  (Thread Pool Worker) - OpenSim.Services.LLLoginService.LLLoginService \[LLOGIN SERVICE\]: "
-			text2="INFO  (Thread Pool Worker) - OpenSim.Services.HypergridService.GatekeeperService \[GATEKEEPER SERVICE\]: "
-			cat /$STARTVERZEICHNIS/"$DATEIDATUM"_osmvisitorlist.log | sed -e 's/, /\n/g' -e 's/'"$text1"'/\n/g' -e 's/'"$text2"'/\n/g' -e 's/ using/\nusing/g' > /$STARTVERZEICHNIS/"$DATEIDATUM"_osmvisitorlist.txt
-			log info "Besucherlisten wurden geschrieben!"; 
+			# Überprüfe, ob PASSENDEZEILEN nicht leer ist.
+			if [ -n "$PASSENDEZEILEN" ]; then
+				# Schreiben aller passenden Zeilen.
+				log line;
+				log info "Ausführliche Besucherliste:"
+				echo "$PASSENDEZEILEN" | sed 's/,/,\'$'\n''/g' >> /"$STARTVERZEICHNIS"/"$DATEIDATUM""$logfilename".log				
+			else
+				log info "No matching log lines found in Robust.log"
+			fi	
+			log info "Besucherlisten wurden geschrieben!";
 		fi
 
 		# schauen ist Robust und Money da dann diese Logs auch loeschen!
@@ -7224,7 +7223,7 @@ function install_mysqltuner() {
 function regionbackup() {
 	# Letzte Bearbeitung 01.10.2023
 	# regionbackup "$BACKUPSCREEN" "$BACKUPREGION"
-	log rohtext "Empfange: $BACKUPSCREEN $BACKUPREGION"
+	log rohtext "Erstelle Backup von: $BACKUPSCREEN $BACKUPREGION"
 
 	sleep 1
 	BACKUPVERZEICHNISSCREENNAME=$1
@@ -7994,7 +7993,7 @@ function autoregionbackup() {
 	for ((i = 0; i < "$ANZAHLREGIONSLISTE"; i++)); do
 		BACKUPSCREEN=$(echo "${REGIONSLISTE[$i]}" | cut -d ' ' -f 1)
 		BACKUPREGION=$(echo "${REGIONSLISTE[$i]}" | cut -d ' ' -f 2)
-		log rohtext "Sende: " "$BACKUPSCREEN" "$BACKUPREGION" # Testausgabe
+		log rohtext "Starte  Backup von: $BACKUPSCREEN $BACKUPREGION" # Testausgabe
 		regionbackup "$BACKUPSCREEN" "$BACKUPREGION"
 		if [ -f /$STARTVERZEICHNIS/"$BACKUPSCREEN"/bin/Regions/"$BACKUPREGION".ini.offline ]; then
 			log rohtext "$BACKUPREGION Region ist Offline und wird uebersprungen."
@@ -9560,6 +9559,31 @@ function db_gridlist() {
 
 	mygridliste=$( echo "$result_mysqlrest" | sed 's/.*;http:\/\/ *//;T;s/ *\/;.*//' )
 	echo "$mygridliste" >/$STARTVERZEICHNIS/osmgridlist.txt
+	echo "$mygridliste"
+	return 0
+}
+
+## * db_griduserlist.
+	# Gridliste der Benutzer, die schon einmal im eigenen Grid waren.
+	# Aufruf: bash osmtool.sh db_griduserlist databaseusername databasepassword databasename
+	# 
+	#? @param "$username" "$password" "$databasename".
+	#? @return "$mygridliste".
+	# todo: nichts.
+##
+function db_griduserlist() {
+	# Letzte Bearbeitung 01.10.2023
+	username=$1
+	password=$2
+	databasename=$3
+
+	log rohtext "Listet die Grids aus Ihrer Datenbank auf:"
+	# SELECT * FROM 'GridUser' ORDER BY 'GridUser'.'UserID' ASC 
+	#mysqlrest "$username" "$password" "$databasename" "SELECT regionName as 'Regions' FROM regions"
+	mysqlrest "$username" "$password" "$databasename" "SELECT * FROM GridUser ORDER BY GridUser.UserID"
+
+	mygridliste=$( echo "$result_mysqlrest")
+	echo "$mygridliste" >/$STARTVERZEICHNIS/osmgriduserlist.txt
 	echo "$mygridliste"
 	return 0
 }
@@ -18787,8 +18811,7 @@ function hilfe() {
 	echo "oscopy	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
 	echo "oscopyrobust	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
 	echo "oscopysim	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "osdauerstart	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "osdauerstop	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "osdauerstartstop	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
 	echo "osdelete	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
 	echo "osdowngrade	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
 	echo "osmtoolconfig	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
@@ -18878,10 +18901,9 @@ function hilfemenudirektaufrufe() {
 	echo "menumostart	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
 	echo "menumostop	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
 	echo "menuoscommand	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "menuosdauerstart	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "menuosdauerstop	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "menuosdauerstartstop	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
 	echo "menuosstart	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
-	echo "menuosstarteintrag	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
+	echo "osdauerstartstop	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
 	echo "menuosstarteintragdel	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
 	echo "menuosstop	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
 	echo "menuosstruktur	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."
@@ -20079,12 +20101,10 @@ function buildmenu() {
 	Verzeichnisstrukturenanlegen=$(menutrans "Verzeichnisstrukturen anlegen")
 	RegionslisteerstellenBackup=$(menutrans "Regionsliste erstellen (Backup)")
 
-	SiminVerzeichnisstruktureneintragen=$(menutrans "Sim in Verzeichnisstrukturen eintragen")
-	SiminVerzeichnisstrukturenaustragen=$(menutrans "Sim in Verzeichnisstrukturen austragen")
-	SiminStartkonfigurationeinfuegen=$(menutrans "Sim in Startkonfiguration einfuegen")
-	SimausStartkonfigurationentfernen=$(menutrans "Sim aus Startkonfiguration entfernen")
+	SiminVerzeichnisstruktureneintragenaustragen=$(menutrans "Sim in Verzeichnisstrukturen eintragen oder austragen")
+	SiminStartkonfigurationeinfuegenentfernen=$(menutrans "Sim in Startkonfiguration einfuegen oder entfernen")
 
-	Hauptmennu=$(menutrans "Hauptmennu")
+	Hauptmenu=$(menutrans "Hauptmennu")
 	Avatarmennu=$(menutrans "Avatarmennu")
 	WeitereFunktionen=$(menutrans "Weitere Funktionen")
 	Dateimennu=$(menutrans "Dateimennu")
@@ -20108,11 +20128,6 @@ function buildmenu() {
 			"$KonfigurationenundVerzeichnisstrukturenanlegen" ""
 			"$Verzeichnisstrukturenanlegen" ""
 			"$RegionslisteerstellenBackup" ""
-			"--------------------------" ""
-			"$SiminVerzeichnisstruktureneintragen" ""
-			"$SiminVerzeichnisstrukturenaustragen" ""
-			"$SiminStartkonfigurationeinfuegen" ""
-			"$SimausStartkonfigurationentfernen" ""
 			"----------Menu------------" ""
 			"$Hauptmenu" ""
 			"$Avatarmennu" ""
@@ -20146,10 +20161,12 @@ function buildmenu() {
 		if [[ $buildauswahl = "$Verzeichnisstrukturenanlegen" ]]; then menuosstruktur; fi
 		if [[ $buildauswahl = "$RegionslisteerstellenBackup" ]]; then regionliste; fi
 		# -----
-		if [[ $buildauswahl = "$SiminVerzeichnisstruktureneintragen" ]]; then menuosstarteintrag; fi
-		if [[ $buildauswahl = "$SiminVerzeichnisstrukturenaustragen" ]]; then menuosstarteintragdel; fi
-		if [[ $buildauswahl = "$SiminStartkonfigurationeinfuegen" ]]; then menuosdauerstart; fi
-		if [[ $buildauswahl = "$SimausStartkonfigurationentfernen" ]]; then menuosdauerstop; fi
+		# entfernt bis auf weiteres
+		#"--------------------------" ""
+		#"$SiminVerzeichnisstruktureneintragenaustragen" ""
+		#"$SiminStartkonfigurationeinfuegenentfernen" ""
+		#if [[ $buildauswahl = "$SiminVerzeichnisstruktureneintragenaustragen" ]]; then osdauerstartstop; fi
+		#if [[ $buildauswahl = "$SimausStartkonfigurationentfernen" ]]; then menuosdauerstartstop; fi
 
 		if [[ $buildauswahl = "$Hauptmenu" ]]; then hauptmenu; fi
 		if [[ $buildauswahl = "$Dateimennu" ]]; then dateimenu; fi
@@ -20199,7 +20216,7 @@ function expertenmenu() {
 
 	KommandoanOpenSimsenden=$(trans -brief -no-warn "Kommando an OpenSim senden")
 
-	Hauptmennu=$(menutrans "Hauptmennu")
+	Hauptmenu=$(menutrans "Hauptmennu")
 	Avatarmennu=$(menutrans "Avatarmennu")
 	WeitereFunktionen=$(menutrans "Weitere Funktionen")
 	Dateimennu=$(menutrans "Dateimennu")
@@ -20226,7 +20243,7 @@ function expertenmenu() {
 			"--------------------------" ""
 			"$KommandoanOpenSimsenden" ""
 			"----------Menu------------" ""
-			"$Hauptmennu" ""
+			"$Hauptmenu" ""
 			"$Avatarmennu" ""
 			"$WeitereFunktionen" ""
 			"$Dateimennu" ""
@@ -20259,7 +20276,7 @@ function expertenmenu() {
 
 		if [[ $feauswahl = "$Dateimennu" ]]; then dateimenu; fi
 		if [[ $feauswahl = "$mySQLmenu" ]]; then mySQLmenu; fi
-		if [[ $feauswahl = "$Hauptmennu" ]]; then hauptmenu; fi
+		if [[ $feauswahl = "$Hauptmenu" ]]; then hauptmenu; fi
 		if [[ $feauswahl = "$WeitereFunktionen" ]]; then funktionenmenu; fi
 		if [[ $feauswahl = "$BuildFunktionen" ]]; then buildmenu; fi
 		if [[ $feauswahl = "$Avatarmennu" ]]; then avatarmenu; fi
@@ -20532,10 +20549,9 @@ function mainMenu() {
 	menumostart "" \
 	menumostop "" \
 	menuoscommand "" \
-	menuosdauerstart "" \
-	menuosdauerstop "" \
+	menuosdauerstartstop "" \
 	menuosstart "" \
-	menuosstarteintrag "" \
+	osdauerstartstop "" \
 	menuosstarteintragdel "" \
 	menuosstop "" \
 	menuosstruktur "" \
@@ -20587,8 +20603,7 @@ function mainMenu() {
 	oscopy "" \
 	oscopyrobust "" \
 	oscopysim "" \
-	osdauerstart "" \
-	osdauerstop "" \
+	osdauerstartstop "" \
 	osdelete "" \
 	osdowngrade "" \
 	osgitholen "" \
@@ -20945,10 +20960,9 @@ function mainMenu() {
 	menumostart) menumostart; break ;;
 	menumostop) menumostop; break ;;
 	menuoscommand) menuoscommand; break ;;
-	menuosdauerstart) menuosdauerstart; break ;;
-	menuosdauerstop) menuosdauerstop; break ;;
+	menuosdauerstartstop) menuosdauerstartstop; break ;;
 	menuosstart) menuosstart; break ;;
-	menuosstarteintrag) menuosstarteintrag; break ;;
+	osdauerstartstop) osdauerstartstop; break ;;
 	menuosstarteintragdel) menuosstarteintragdel; break ;;
 	menuosstop) menuosstop; break ;;
 	menuosstruktur) menuosstruktur; break ;;
@@ -21000,8 +21014,7 @@ function mainMenu() {
 	oscopy) oscopy; break ;;
 	oscopyrobust) oscopyrobust; break ;;
 	oscopysim) oscopysim; break ;;
-	osdauerstart) osdauerstart; break ;;
-	osdauerstop) osdauerstop; break ;;
+	osdauerstartstop) osdauerstartstop; break ;;
 	osdelete) osdelete; break ;;
 	osdowngrade) osdowngrade; break ;;
 	osgitholen) osgitholen; break ;;
@@ -21345,8 +21358,7 @@ case $KOMMANDO in
 	mc93 | moneycopy93) moneycopy93 ;;
 	md | mapdel) mapdel "$2" ;;
 	menuinfo) menuinfo ;;
-	menuosdauerstart) menuosdauerstart "$2" ;; # Test
-	menuosdauerstop) menuosdauerstop "$2" ;; # Test
+	menuosdauerstartstop) menuosdauerstartstop "$2" ;;
 	menuoswriteconfig) menuoswriteconfig "$2" ;;
 	menuworks) menuworks "$2" ;;
 	moneydelete) moneydelete ;;
@@ -21377,8 +21389,7 @@ case $KOMMANDO in
 	oscopy) oscopy "$2" ;;
 	oscopyrobust) oscopyrobust ;;
 	oscopysim) oscopysim ;;
-	osdauerstart) osdauerstart "$2" ;; # Test
-	osdauerstop) osdauerstop "$2" ;; # Test
+	osdauerstartstop) osdauerstartstop "$2" ;;
 	osg | osgitholen) osgitholen ;;
 	osg93 | osgitholen93) osgitholen93 ;;
 	osbauen93) osbauen93 ;;
@@ -21465,6 +21476,7 @@ case $KOMMANDO in
 	iptablesset) iptablesset "$2" ;;
 	fail2banset) fail2banset ;;
 	db_gridlist) db_gridlist "$2" "$3" "$4" ;;
+	db_griduserlist) db_griduserlist "$2" "$3" "$4" ;;
 	db_backuptabellentypen) db_backuptabellentypen "$2" "$3" "$4" ;;
 	db_ungenutzteobjekte) db_ungenutzteobjekte "$2" "$3" "$4" "$5" "$6" ;;
 	senddata) senddata "$2" "$3" "$4" ;;
