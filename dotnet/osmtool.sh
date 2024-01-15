@@ -20,14 +20,14 @@
 	# ! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 	# ! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#
-	# * Letzte bearbeitung 13.01.2024.
+	# * Letzte bearbeitung 15.01.2024.
 	#
 	# # Installieren sie bitte: #* Visual Studio Code
 	#* dazu die Plugins:
-	# ShellCheck #! ist eine geniale Hilfe gegen Fehler.
+	# ShellCheck #? ist eine geniale Hilfe gegen Fehler.
 	# shellman #? Shell Skript Schnipsel.
-	# Better Comments #* Bessere Farbliche Darstellung. 
-		# Standards:
+	# Better Comments #? Bessere Farbliche Darstellung. 
+		#* Standards:
 		#! Rot
 		#* Hell
 		#? Blau
@@ -41,7 +41,7 @@
 #──────────────────────────────────────────────────────────────────────────────────────────
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.1451" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.1465" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 #──────────────────────────────────────────────────────────────────────────────────────────
@@ -87,6 +87,31 @@ function password_prompt() {
         echo -e "\nPasswort korrekt. Das Skript wird fortgesetzt."
         # Hier können Sie den eigentlichen Code des Skripts einfügen, der nach der Passwortprüfung ausgeführt wird.
     fi
+}
+function password_prompt_menu() {
+    # Definieren Sie das erwartete Passwort
+    expected_password="IhrErwartetesPasswort"
+
+    # Menü mit Dialog-Bildschirmmaske
+    dialog --title "Password Prompt" \
+        --inputbox "Please enter the password:" 8 40 2>tempfile
+
+    # Passwort auslesen
+    entered_password=$(cat tempfile)
+
+    # Überprüfen, ob das eingegebene Passwort korrekt ist
+    if [ "$entered_password" != "$expected_password" ]; then
+        dialog --title "Incorrect Password" \
+            --msgbox "Wrong password. The script will exit." 8 40
+        exit 1
+    else
+        dialog --title "Correct Password" \
+            --msgbox "Password correct. The script will continue." 8 40
+        # Hier können Sie den eigentlichen Code des Skripts einfügen, der nach der Passwortprüfung ausgeführt wird.
+    fi
+
+    # Temp-Datei entfernen
+    rm tempfile
 }
 
 ## * isroot
@@ -144,6 +169,32 @@ function benutzer() {
         exit 1
     fi
 }
+function benutzer_menu() {
+    # Letzte Bearbeitung 26.09.2023
+
+    # Menü mit Dialog-Bildschirmmaske
+    dialog --title "User Authentication" \
+        --inputbox "Please enter your username:" 8 40 2>tempfile
+
+    # Benutzernamen auslesen
+    BBENUTZER=$(cat tempfile)
+
+    # Überprüfen, ob der aktuelle Benutzer mit dem angegebenen Benutzernamen
+    # übereinstimmt und ob der Anmeldebenutzername gleich dem aktuellen Benutzer ist
+    if [ "$USER" = "$BBENUTZER" ] && [ "$USER" = "$LOGNAME" ]; then
+        dialog --title "Authentication Successful" \
+            --msgbox "You have the right to use osmtool.sh!" 8 40
+        return 0
+    else
+        dialog --title "Authentication Failed" \
+            --msgbox "You do not have the right to use osmtool.sh!" 8 40
+        exit 1
+    fi
+
+    # Temp-Datei entfernen
+    rm tempfile
+}
+
 
 #──────────────────────────────────────────────────────────────────────────────────────────
 #* Tests
@@ -434,6 +485,17 @@ function check_admin() {
         exit 1
     fi
 }
+function check_admin_menu() {
+    # Menü mit Dialog-Bildschirmmaske
+    dialog --title "Administrator Check" \
+        --yesno "This script requires root privileges. Do you want to continue?" 10 50
+
+    # Überprüfen, ob der Benutzer "Ja" ausgewählt hat
+    if [ $? -ne 0 ]; then
+        echo "Script aborted. Root privileges required."
+        exit 1
+    fi
+}
 
 ## * admin_only_function
 	#? Beschreibung:
@@ -452,6 +514,23 @@ function check_admin() {
 function admin_only_function() {
     echo "This function requires administrator privileges."
     # Hier können Sie den eigentlichen Code der Funktion einfügen
+}
+function admin_only_function_menu() {
+    # Menü mit Dialog-Bildschirmmaske für die Überprüfung von Administratorrechten
+    dialog --title "Administrator Check" \
+        --yesno "This function requires administrator privileges. Do you want to continue?" 10 50
+
+    # Überprüfen, ob der Benutzer "Ja" ausgewählt hat
+    if [ $? -ne 0 ]; then
+        echo "Function aborted. Administrator privileges required."
+        return 1
+    fi
+
+    echo "Administrator privileges confirmed. Executing the function."
+
+    # Hier können Sie den eigentlichen Code der Funktion einfügen
+
+    echo "Function completed."
 }
 
 ## * check_non_admin
@@ -475,6 +554,23 @@ function check_non_admin() {
         exit 1
     fi
 }
+function check_non_admin_menu() {
+    # Menü mit Dialog-Bildschirmmaske für die Überprüfung von Nicht-Administratorrechten
+    dialog --title "Non-Admin Check" \
+        --yesno "This script must not be run as root. Are you sure you want to continue?" 10 50
+
+    # Überprüfen, ob der Benutzer "Ja" ausgewählt hat
+    if [ $? -eq 0 ]; then
+        echo "Function aborted. Running this script as root is not allowed."
+        exit 1
+    fi
+
+    echo "Non-administrator privileges confirmed. Continuing with the script."
+
+    # Hier können Sie den eigentlichen Code des Skripts einfügen
+
+    echo "Script completed."
+}
 
 ## * non_admin_only_function
 	#? Beschreibung:
@@ -493,6 +589,15 @@ function check_non_admin() {
 function non_admin_only_function() {
     echo "This function does not require administrator privileges."
     # Hier können Sie den eigentlichen Code der Funktion einfügen
+}
+function non_admin_only_function_menu() {
+    # Menü mit Dialog-Bildschirmmaske für die Bestätigung von Nicht-Administratorrechten
+    dialog --title "Non-Admin Function" \
+        --msgbox "This function does not require administrator privileges." 10 50
+
+    # Hier können Sie den eigentlichen Code der Funktion einfügen
+
+    echo "Non-admin function completed."
 }
 
 ## * check_user
@@ -515,6 +620,17 @@ function check_user() {
     # Überprüfen, ob der aktuelle Benutzer dem erwarteten Benutzer entspricht
     if [ "$(whoami)" != "$expected_user" ]; then
         echo "Error: This script must be run by $expected_user."
+        exit 1
+    fi
+}
+function check_user_menu() {
+    expected_user="your_expected_user"
+
+    # Überprüfen, ob der aktuelle Benutzer dem erwarteten Benutzer entspricht
+    if [ "$(whoami)" != "$expected_user" ]; then
+        # Menü mit Dialog-Bildschirmmaske für Fehlermeldung anzeigen
+        dialog --title "Error" \
+            --msgbox "Error: This script must be run by $expected_user." 10 50
         exit 1
     fi
 }
@@ -562,6 +678,32 @@ function update_and_restart() {
   # Server neu starten
   sudo reboot
 }
+function update_and_restart_menu() {
+  # Menü mit Dialog-Bildschirmmaske für Bestätigung anzeigen
+  dialog --title "System Update" \
+    --yesno "Möchten Sie das System aktualisieren und den Server neu starten?" 10 50
+
+  # Überprüfen, ob der Benutzer "Ja" ausgewählt hat (Rückgabewert 0)
+  if [ $? -eq 0 ]; then
+    # Update des Paket-Caches
+    sudo apt update
+
+    # Upgrade der installierten Pakete
+    sudo apt upgrade -y
+
+    # Grid stoppen
+    autostop
+
+    # Menü mit Dialog-Bildschirmmaske für Neustart anzeigen
+    dialog --title "System Update" \
+      --msgbox "Das System wurde aktualisiert. Der Server wird jetzt neu gestartet." 10 50
+
+    # Server neu starten
+    sudo reboot
+  else
+    echo "Systemupdate und Neustart wurden abgebrochen."
+  fi
+}
 
 ## * update_clean
 	#? Beschreibung:
@@ -583,6 +725,35 @@ function update_clean() {
 
   # Löschen der heruntergeladenen Paket-Caches
   sudo apt clean
+}
+function update_clean_menu() {
+    # Dialog-Bildschirmmaske anzeigen
+    dialog --title "Update und Bereinigung" \
+        --yesno "Möchten Sie das System aktualisieren und nicht mehr benötigte Paketabhängigkeiten bereinigen?" 8 60
+
+    # Auswertung der Benutzerantwort
+    response=$?
+    case $response in
+        0)  # Fortfahren mit dem Update und der Bereinigung
+            # Update des Paket-Caches
+            sudo apt update
+
+            # Upgrade der installierten Pakete
+            sudo apt upgrade -y
+
+            # Bereinigung von nicht mehr benötigten Paketabhängigkeiten
+            sudo apt autoremove -y
+
+            # Löschen der heruntergeladenen Paket-Caches
+            sudo apt clean
+
+            # Dialog-Bildschirmmaske für den Abschluss anzeigen
+            dialog --title "Update und Bereinigung" --msgbox "Das System wurde aktualisiert und bereinigt." 8 40
+            ;;
+        1)  # Abbruch
+            dialog --title "Update und Bereinigung" --msgbox "Update und Bereinigung abgebrochen." 8 40
+            ;;
+    esac
 }
 
 # Globale Variablen:
@@ -629,6 +800,37 @@ function zeige_netzwerkinformationen() {
     echo -n "DNS-Name für $ziel_ip: "
     nslookup "$ziel_ip" | grep 'name ='
 }
+function zeige_netzwerkinformationen_menu() {
+    # Menü mit Dialog-Bildschirmmaske für die Ziel-IP-Abfrage
+    dialog --title "Netzwerkinformationen" \
+        --inputbox "Geben Sie die Ziel-IP-Adresse an:" 8 40 2>tempfile
+
+    # Ziel-IP auslesen
+    ziel_ip=$(cat tempfile)
+
+    # Anzeige der IP-Adresse(n)
+    ip_addresses=$(hostname -I)
+    dialog --title "IP-Adresse(n)" --msgbox "IP-Adresse(n): $ip_addresses" 8 40
+
+    # Anzeige der Netzwerkverbindungszustände
+    network_connections=$(ss -tulwn)
+    dialog --title "Netzwerkverbindungszustand" --msgbox "Netzwerkverbindungszustand:\n$network_connections" 20 60
+
+    # Anzeige von Netzwerkschnittstelleninformationen
+    network_interfaces=$(ifconfig)
+    dialog --title "Netzwerkschnittstelleninformationen" --msgbox "Netzwerkschnittstelleninformationen:\n$network_interfaces" 20 60
+
+    # Anzeige von Routinginformationen
+    routing_info=$(route -n)
+    dialog --title "Routinginformationen" --msgbox "Routinginformationen:\n$routing_info" 20 60
+
+    # Auflösung des DNS-Namens für die Ziel-IP
+    dns_resolution=$(nslookup "$ziel_ip" | grep 'name =')
+    dialog --title "DNS-Auflösung" --msgbox "DNS-Name für $ziel_ip:\n$dns_resolution" 8 40
+
+    # Temporäre Datei entfernen
+    rm tempfile
+}
 
 ## * ping_test
 	#? Beschreibung:
@@ -648,6 +850,21 @@ function ping_test() {
 
     echo "### Ping-Test ###"
     ping -c 4 "$ziel_ip"
+}
+function ping_test_menu() {
+    # Dialog-Bildschirmmaske anzeigen
+    dialog --title "Ping-Test" \
+        --inputbox "Geben Sie die Ziel-IP-Adresse für den Ping-Test ein:" 8 60 2>tempfile
+
+    # Auslesen der eingegebenen IP-Adresse
+    ziel_ip=$(cat tempfile)
+
+    # Ping-Test durchführen
+    echo "### Ping-Test ###"
+    ping -c 4 "$ziel_ip"
+
+    # Temporäre Datei entfernen
+    rm tempfile
 }
 
 ## * netstat_info
@@ -675,6 +892,30 @@ function netstat_info() {
         read -r antwort
 
         if [ "$antwort" = "Ja" ] || [ "$antwort" = "ja" ]; then
+            # Installiere netstat, z.B., mit dem Paketmanager deiner Distribution
+            # Hier wird apt-get für Debian-basierte Systeme verwendet. Du kannst dies anpassen.
+            sudo apt-get install net-tools
+            echo "netstat wurde installiert."
+        else
+            echo "netstat wurde nicht installiert. Die Funktion ist nicht verfügbar."
+        fi
+    fi
+}
+function netstat_info_menu() {
+    # Überprüfe, ob netstat installiert ist
+    if command -v netstat >/dev/null 2>&1; then
+        echo "### Netzstatistik ###"
+        netstat -s
+    else
+        echo "netstat ist nicht installiert."
+
+        # Frage den Benutzer, ob netstat installiert werden soll
+        dialog --title "Netstat Installation" \
+            --yesno "netstat ist nicht installiert. Möchten Sie netstat installieren?" 8 60
+
+        # Auswertung der Benutzerantwort
+        antwort=$?
+        if [ "$antwort" -eq 0 ]; then
             # Installiere netstat, z.B., mit dem Paketmanager deiner Distribution
             # Hier wird apt-get für Debian-basierte Systeme verwendet. Du kannst dies anpassen.
             sudo apt-get install net-tools
@@ -963,6 +1204,40 @@ function osmupgrade() {
         echo "Keine Updates verfügbar. Aktuelle Version: $VERSION"
     fi
 }
+function osmupgrade_menu() {
+    # Definiert das Repository und die Dateinamen
+    repo_url="https://raw.githubusercontent.com/BigManzai/OpenSim-Shell-Script/main/osmtool.sh"
+    script_name="osmtool.sh"
+    current_version="$VERSION" # Verwendet die Umgebungsvariable VERSION
+
+    # Überprüft, ob das Skript lokal existiert
+    if [ ! -f "$script_name" ]; then
+        dialog --title "OSMTool Upgrade" --infobox "Das Skript wird heruntergeladen..." 5 50
+        wget "$repo_url" -O "$script_name"
+    else
+        dialog --title "OSMTool Upgrade" --msgbox "Das Skript ist bereits vorhanden" 5 50
+    fi
+
+    # Definiert die aktuelle und neueste Version
+    current_version="$(grep -o 'VERSION=\"[0-9]\{1,\}\.[0-9]\{1,\}\.[0-9]\{1,\}\"' "$script_name" | head -1 | tr -d '\;"')"
+    latest_version="$(curl -s "$repo_url" | grep -o 'VERSION=\"[0-9]\{1,\}\.[0-9]\{1,\}\.[0-9]\{1,\}\"' | head -1 | tr -d '\;"')"
+
+    # Überprüft, ob das Skript auf GitHub aktualisiert wurde
+    if dpkg --compare-versions "${current_version}" lt "${latest_version}"; then
+        dialog --title "OSMTool Upgrade" --yesno "Neue Version verfügbar. Möchten Sie das Skript aktualisieren?" 10 50
+
+        if [ $? -eq 0 ]; then
+            dialog --title "OSMTool Upgrade" --infobox "Aktualisierung..." 5 50
+            wget -q "$repo_url" -O "$script_name"
+            dialog --title "OSMTool Upgrade" --msgbox "Aktualisierung abgeschlossen. Version ${latest_version} installiert." 10 50
+        else
+            dialog --title "OSMTool Upgrade" --msgbox "Aktualisierung abgebrochen. Aktuelle Version: $current_version" 10 50
+        fi
+    else
+        dialog --title "OSMTool Upgrade" --msgbox "Keine Updates verfügbar. Aktuelle Version: $current_version" 10 50
+    fi
+}
+
 
 ## * vardel
 	# Diese Funktion löscht eine Reihe von Umgebungsvariablen, die möglicherweise aus
@@ -16811,6 +17086,80 @@ function regionconfig() {
     } > "$REGIONSINI"
 }
 
+function regionconfig_menu() {
+    UUID=$(uuidgen)
+
+    # ist Regionsname leer dann Zufallsnamen nutzen.
+    namen; NEUERREGIONSNAME=$NEUERREGIONSNAME
+    if [ "$NEUERREGIONSNAME" = "" ]; then NEUERREGIONSNAME="Region_$(date +%Y%m%d%H%M%S)"; fi
+    if [ "$REGIONSNAME" = "zufall" ] || [ "$REGIONSNAME" = "" ]; then REGIONSNAME=$NEUERREGIONSNAME; fi
+    REGIONSINI="$REGIONSNAME.ini"
+    # Zufallszahl ermitteln.
+    RANDOMPOSITION=$((100 + $RANDOM % 200))
+    if [ "$STARTLOCATION" = "" ]; then STARTLOCATION="$((2000 + $RANDOM % 8000)),$((2000 + $RANDOM % 8000))"; fi
+    if [ "$SIZE" = "" ]; then SIZE=256; fi
+    if [ "$INTERNALPORT" = "" ]; then INTERNALPORT="9$RANDOMPOSITION"; fi
+    # AKTUELLEIP
+    if [ "$BASEHOSTNAME" = "" ]; then BASEHOSTNAME="$AKTUELLEIP"; fi
+
+    if [ "$MAXPRIMS" = "" ]; then MAXPRIMS="100000"; fi
+    if [ "$MAXAGENTS" = "" ]; then MAXAGENTS="99"; fi
+    if [ "$DEFAULTLANDING" = "" ]; then DEFAULTLANDING="<128, 128, 30>"; fi
+
+    # Menü mit Dialog-Bildschirmmaske
+    dialog --title "Regionskonfiguration" \
+        --form "Konfiguriere eine OpenSimulator region:" 16 60 12 \
+        "Regionsname:" 1 1 "$REGIONSNAME" 1 15 40 0 \
+        "Startlocation:" 2 1 "$STARTLOCATION" 2 15 40 0 \
+        "Size:" 3 1 "$SIZE" 3 15 40 0 \
+        "InternalPort:" 4 1 "$INTERNALPORT" 4 15 40 0 \
+        "MaxPrims:" 5 1 "$MAXPRIMS" 5 15 40 0 \
+        "MaxAgents:" 6 1 "$MAXAGENTS" 6 15 40 0 \
+        "DefaultLanding:" 7 1 "$DEFAULTLANDING" 7 15 40 0 \
+        2>tempfile
+
+    # Werte auslesen
+    REGIONSNAME=$(cat tempfile | head -1)
+    STARTLOCATION=$(cat tempfile | head -2 | tail -1)
+    SIZE=$(cat tempfile | head -3 | tail -1)
+    INTERNALPORT=$(cat tempfile | head -4 | tail -1)
+    MAXPRIMS=$(cat tempfile | head -5 | tail -1)
+    MAXAGENTS=$(cat tempfile | head -6 | tail -1)
+    DEFAULTLANDING=$(cat tempfile | head -7 | tail -1)
+
+    # Rest der Funktion bleibt unverändert
+    {
+    echo "[$REGIONSNAME]"
+    echo "RegionUUID = $UUID"
+    echo "Location = $STARTLOCATION"
+    echo "SizeX = $SIZE"
+    echo "SizeY = $SIZE"
+    echo "SizeZ = $SIZE"
+    echo "InternalAddress = 0.0.0.0"
+    echo "InternalPort = $INTERNALPORT"
+    echo "ResolveAddress = False"
+    echo "ExternalHostName = $BASEHOSTNAME"
+    echo "MaptileStaticUUID = $UUID"
+    echo "DefaultLanding = $DEFAULTLANDING"
+    echo ";MaxPrimsPerUser = -1"
+    echo "MaxPrims = $MAXPRIMS"
+    echo "MaxAgents = $MAXAGENTS"
+    echo ";ScopeID = $UUID"
+    echo ";RegionType = Mainland"
+    echo ";MapImageModule = Warp3DImageModule"
+    echo ";TextureOnMapTile = true"
+    echo ";DrawPrimOnMapTile = true"
+    echo ";GenerateMaptiles = true"
+    echo ";MaptileRefresh = 0"
+    echo ";MasterAvatarFirstName = John"
+    echo ";MasterAvatarLastName = Doe"
+    echo ";MasterAvatarSandboxPassword = passwd" 
+    } > "$REGIONSNAME.ini"
+
+    # temp-Datei entfernen
+    rm tempfile
+}
+
 ## *  flotsamconfig
 	# Datum: 02.10.2023
 	#? Beschreibung:
@@ -17046,34 +17395,123 @@ function moneyconfig() {
     echo 'EnableGuestAvatar = "true"'
     echo 'HGAvatarDefaultBalance = "1000"'
     echo 'GuestAvatarDefaultBalance = "1000"'
-    #shellcheck disable=SC2016
     echo 'BalanceMessageSendGift     = "Sent Gift L${0} to {1}."'
-    #shellcheck disable=SC2016
     echo 'BalanceMessageReceiveGift  = "Received Gift L${0} from {1}."'
-    #shellcheck disable=SC2016
     echo 'BalanceMessagePayCharge    = "Paid the Money L${0} for creation."'
-    #shellcheck disable=SC2016
     echo 'BalanceMessageBuyObject    = "Bought the Object {2} from {1} by L${0}."'
-    #shellcheck disable=SC2016
     echo 'BalanceMessageSellObject   = "{1} bought the Object {2} by L${0}."'
-    #shellcheck disable=SC2016
     echo 'BalanceMessageLandSale     = "Paid the Money L${0} for Land."'
-    #shellcheck disable=SC2016
     echo 'BalanceMessageScvLandSale  = "Paid the Money L${0} for Land."'
-    #shellcheck disable=SC2016
     echo 'BalanceMessageGetMoney     = "Got the Money L${0} from {1}."'
-    #shellcheck disable=SC2016
     echo 'BalanceMessageBuyMoney     = "Bought the Money L${0}."'
-    #shellcheck disable=SC2016
     echo 'BalanceMessageRollBack     = "RollBack the Transaction: L${0} from/to {1}."'
-    #shellcheck disable=SC2016
     echo 'BalanceMessageSendMoney    = "Paid the Money L${0} to {1}."'
-    #shellcheck disable=SC2016
     echo 'BalanceMessageReceiveMoney = "Received L${0} from {1}."'
     echo "[Certificate]"
     echo 'CheckServerCert = "false"'
     } > "$MONEYINI"
 }
+# Defekt testen
+function menumoneyconfig() {
+	# Defekt
+	UUID=$(uuidgen)	
+	MCMYSQLHOST="127.0.0.1"
+	MCMYSQLDATABASE="robust"
+	MCMYSQLUSER="opensim"
+	MCMYSQLPASSWORD="*****"
+	if [ "$BASEHOSTNAME" = "" ]; then BASEHOSTNAME=$AKTUELLEIP; fi
+	MoneyServerPort="8008"
+	DefaultBalance="1000"
+	BankerAvatarUUID="$UUID"
+	EnableForceTransfer="true"
+    EnableScriptSendMoney="true"
+	MoneyScriptAccessKey="123456789"
+	MoneyScriptIPAddress="$BASEHOSTNAME"
+    EnableHGAvatar="true"
+    EnableGuestAvatar="true"
+    HGAvatarDefaultBalance="1000"
+    GuestAvatarDefaultBalance="1000"
+
+    # Menü mit Dialog-Bildschirmmaske
+    dialog --title "MoneyServer Konfiguration" \
+        --form "Konfigurieren des MoneyServer:" 20 80 15 \
+        "MySQL Hostname:" 1 1 "$MCMYSQLHOST" 1 30 40 0 \
+        "MySQL Database:" 2 1 "$MCMYSQLDATABASE" 2 30 40 0 \
+        "MySQL Username:" 3 1 "$MCMYSQLUSER" 3 30 40 0 \
+        "MySQL Password:" 4 1 "$MCMYSQLPASSWORD" 4 30 40 0 \
+        "MoneyServer Port:" 5 1 "$MoneyServerPort" 5 30 40 0 \
+        "Default Balance:" 6 1 "$DefaultBalance" 6 30 40 0 \
+        "Banker Avatar UUID:" 7 1 "$BankerAvatarUUID" 7 30 40 0 \
+        "Enable Force Transfer:" 8 1 "$EnableForceTransfer" 8 30 40 0 \
+        "Enable Script Send Money:" 9 1 "$EnableScriptSendMoney" 9 30 40 0 \
+        "Money Script Access Key:" 10 1 "$MoneyScriptAccessKey" 10 30 40 0 \
+        "Money Script IP Address:" 11 1 "$MoneyScriptIPAddress" 11 30 40 0 \
+        "Enable HG Avatar:" 12 1 "$EnableHGAvatar" 12 30 40 0 \
+        "Enable Guest Avatar:" 13 1 "$EnableGuestAvatar" 13 30 40 0 \
+        "HG Avatar Default Balance:" 14 1 "$HGAvatarDefaultBalance" 14 30 40 0 \
+        "Guest Avatar Default Balance:" 15 1 "$GuestAvatarDefaultBalance" 15 30 40 0 \
+        2>tempfile
+
+    # Werte auslesen
+    MCMYSQLHOST=$(cat tempfile | head -1)
+    MCMYSQLDATABASE=$(cat tempfile | head -2 | tail -1)
+    MCMYSQLUSER=$(cat tempfile | head -3 | tail -1)
+    MCMYSQLPASSWORD=$(cat tempfile | head -4 | tail -1)
+	MoneyServerPort=$(cat tempfile | head -5 | tail -1)
+	DefaultBalance=$(cat tempfile | head -6 | tail -1)
+	BankerAvatarUUID=$(cat tempfile | head -7 | tail -1)
+	EnableForceTransfer=$(cat tempfile | head -8 | tail -1)
+    EnableScriptSendMoney=$(cat tempfile | head -9 | tail -1)
+	MoneyScriptAccessKey=$(cat tempfile | head -10 | tail -1)
+	MoneyScriptIPAddress=$(cat tempfile | head -11 | tail -1)
+    EnableHGAvatar=$(cat tempfile | head -12 | tail -1)
+    EnableGuestAvatar=$(cat tempfile | head -13 | tail -1)
+    HGAvatarDefaultBalance=$(cat tempfile | head -14 | tail -1)
+    GuestAvatarDefaultBalance=$(cat tempfile | head -15 | tail -1)
+
+    # Rest der Funktion bleibt unverändert
+    {
+    echo "[Startup]"
+    echo "[MySql]"
+    echo 'hostname = "'"$MCMYSQLHOST"'"'
+    echo 'database = "'"$MCMYSQLDATABASE"'"'
+    echo 'username = "'"$MCMYSQLUSER"'"'
+    echo 'password = "'"$MCMYSQLPASSWORD"'"'
+    echo 'pooling  = "true"'
+    echo 'port = "3306"'
+    echo "[MoneyServer]"
+    echo 'ServerPort = "'"$MoneyServerPort"'"'
+    echo 'DefaultBalance = "'"$DefaultBalance"'"'
+    echo 'EnableAmountZero = "true"'
+    echo 'BankerAvatar = "'$BankerAvatarUUID'"'
+    echo 'EnableForceTransfer = "'"$EnableForceTransfer"'"'
+    echo 'EnableScriptSendMoney = "'"$EnableScriptSendMoney"'"'
+    echo 'MoneyScriptAccessKey  = "'"$MoneyScriptAccessKey"'"'
+    echo "MoneyScriptIPaddress  = $BASEHOSTNAME"
+    echo 'EnableHGAvatar = "'"$EnableHGAvatar"'"'
+    echo 'EnableGuestAvatar = "'"$EnableGuestAvatar"'"'
+    echo 'HGAvatarDefaultBalance = "'"$HGAvatarDefaultBalance"'"'
+    echo 'GuestAvatarDefaultBalance = "'"$GuestAvatarDefaultBalance"'"'
+    echo 'BalanceMessageSendGift     = "Sent Gift L\${0} to {1}."'
+    echo 'BalanceMessageReceiveGift  = "Received Gift L\${0} from {1}."'
+    echo 'BalanceMessagePayCharge    = "Paid the Money L\${0} for creation."'
+    echo 'BalanceMessageBuyObject    = "Bought the Object {2} from {1} by L\${0}."'
+    echo 'BalanceMessageSellObject   = "{1} bought the Object {2} by L\${0}."'
+    echo 'BalanceMessageLandSale     = "Paid the Money L\${0} for Land."'
+    echo 'BalanceMessageScvLandSale  = "Paid the Money L\${0} for Land."'
+    echo 'BalanceMessageGetMoney     = "Got the Money L\${0} from {1}."'
+    echo 'BalanceMessageBuyMoney     = "Bought the Money L\${0}."'
+    echo 'BalanceMessageRollBack     = "RollBack the Transaction: L\${0} from/to {1}."'
+    echo 'BalanceMessageSendMoney    = "Paid the Money L\${0} to {1}."'
+    echo 'BalanceMessageReceiveMoney = "Received L\${0} from {1}."'
+    echo "[Certificate]"
+    echo 'CheckServerCert = "false"'
+    } > "MoneyServer.ini"
+
+    # Temp-Datei entfernen
+    rm tempfile
+}
+
 
 ## *  osconfigstruktur
 	# Datum: 02.10.2023
@@ -19887,7 +20325,8 @@ function dateimenu() {
     AssetCacheloeschen=$(menutrans "Asset Cache loeschen")
     Assetloeschen=$(menutrans "Asset loeschen")
 
-    GridKonfigurationenerstellen=$(menutrans "Grid Konfigurationen erstellen")
+    Regionskonfigurationsdateierstellen=$(menutrans "Regionskonfiguration erstellen")
+	GridKonfigurationenerstellen=$(menutrans "Grid Konfigurationen erstellen")
 
     Hauptmenu=$(menutrans "Hauptmenu")
     Avatarmennu=$(menutrans "Avatarmennu")
@@ -19910,6 +20349,7 @@ function dateimenu() {
             "$AssetCacheloeschen" ""
             "$Assetloeschen" ""
             "--------------------------" ""
+			"$Regionskonfigurationsdateierstellen" ""
             "$GridKonfigurationenerstellen" ""
             "----------Menu------------" ""
             "$Hauptmenu" ""
@@ -19936,6 +20376,7 @@ function dateimenu() {
             "$MapKartenloeschen") automapdel ;;
             "$Assetloeschen") menuassetdel ;;
             "$AssetCacheloeschen") autoassetcachedel ;;
+			"$Regionskonfigurationsdateierstellen") regionconfig_menu ;;
             "$GridKonfigurationenerstellen") configabfrage ;;
             "$Hauptmenu") hauptmenu ;;
             "$mySQLmenu") mySQLmenu ;;
@@ -21573,6 +22014,8 @@ case $KOMMANDO in
 	name | namen) namen "$2" ;;
 	vornamen) vornamen "$2" ;;
 	regionconfig) regionconfig "$2" "$3" "$4" "$5" "$6" ;;
+	regionconfig_menu) regionconfig_menu ;;
+	menumoneyconfig) menumoneyconfig ;;
 	createdatabase) createdatabase "$2" "$3" "$4" ;;
 	createdbuser) createdbuser "$2" "$3" "$4" "$5" ;;
 	clearuserlist) clearuserlist ;;
@@ -21713,7 +22156,20 @@ case $KOMMANDO in
 	ubuntuprowerbung) ubuntuprowerbung ;;
 	bulletconfig) bulletconfig "$2" ;;
 	rologdel_menu) rologdel_menu ;;
+	password_prompt_menu) password_prompt_menu ;;
+	benutzer_menu) benutzer_menu ;;
+	check_admin_menu) check_admin_menu ;;
+	admin_only_function_menu) admin_only_function_menu ;;
+	check_non_admin_menu) check_non_admin_menu ;;
+	non_admin_only_function_menu) non_admin_only_function_menu ;;
+	check_user_menu) check_user_menu ;;
+	update_and_restart_menu) update_and_restart_menu ;;
+	update_clean_menu) update_clean_menu ;;
+	zeige_netzwerkinformationen_menu) zeige_netzwerkinformationen_menu ;;
+	ping_test_menu) ping_test_menu ;;
+	netstat_info_menu) netstat_info_menu ;;
 	hda | hilfedirektaufruf | hilfemenudirektaufrufe) hilfemenudirektaufrufe ;;
+	osmupgrade_menu) osmupgrade_menu ;;
 	h) newhelp ;;
 	V | v) echo "$SCRIPTNAME $VERSION" ;;
 	*) hauptmenu ;;
