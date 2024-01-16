@@ -20,7 +20,7 @@
 	# ! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 	# ! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#
-	# * Letzte bearbeitung 15.01.2024.
+	# * Letzte bearbeitung 16.01.2024.
 	#
 	# # Installieren sie bitte: #* Visual Studio Code
 	#* dazu die Plugins:
@@ -41,7 +41,7 @@
 #──────────────────────────────────────────────────────────────────────────────────────────
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.1465" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.1473" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 #──────────────────────────────────────────────────────────────────────────────────────────
@@ -199,6 +199,45 @@ function benutzer_menu() {
 #──────────────────────────────────────────────────────────────────────────────────────────
 #* Tests
 #──────────────────────────────────────────────────────────────────────────────────────────
+
+## * progress_end_menu
+#!  progress_end_menu
+##
+progress_end_menu() {
+    # Benachrichtigung über den Abschluss
+    dialog --title "Fertig" --msgbox "Vorgang abgeschlossen!" 6 40
+}
+
+## * show_progress_menu
+#! Funktion, um Fortschrittsbalken anzuzeigen
+# Beispiel für die Verwendung der Funktion
+# show_progress_menu "Fortschrittsbalken" "Bitte warten..." "2"
+# "Das ist die Überschrift in Blau" "Dies ist die Schwarze innere Meldung." "Die Wartezeit der Anzeige"
+# Benachrichtigung über den Abschluss
+# progress_end_menu
+##
+show_progress_menu() {
+    local title="$1" # ueberschrift
+    local text="$2" # text
+    local height=8; # hoehe
+    local width=60; # breite
+	local GAUGEWARTEZEIT="$3" # wartezeit
+
+    # Funktion zum Simulieren von Fortschritt
+    simulate_progress() {
+		# Gibt es keine voreingestellte Wartezeit dann 3 Sekunden nehmen.
+		if [ "$GAUGEWARTEZEIT" = "" ]; then GAUGEWARTEZEIT=5; fi
+        for ((i = 0; i <= 100; i += 10)); do
+            echo $i
+            sleep $GAUGEWARTEZEIT
+        done
+    }
+
+    # Fortschrittsbalken anzeigen
+    dialog --title "$title" --gauge "\n$text" "$height" "$width" < <(
+        simulate_progress
+    ) 2>&1
+}
 
 ## * Funktion: dotnetubu18
 #! Diese Funktion erleichtert die Installation von .NET SDK und Runtime auf einem System mit Ubuntu 18.04.
@@ -2403,6 +2442,20 @@ function laeuftos() {
         log info "$PROZESSNAME läuft mit .NET 4.8."
     fi
 }
+function laeuftos_menu() {
+    # Dialog-Bildschirmmaske für Eingabe
+    PROZESSNAME=$(dialog --inputbox "Geben Sie den Prozessnamen ein:" 8 40 3>&1 1>&2 2>&3)
+
+    # Prüfen, ob der Prozess mit .dotnet 6 läuft
+    if pgrep -f "$PROZESSNAME" > /dev/null; then
+        dialog --infobox "$PROZESSNAME läuft mit .dotnet 6." 8 40
+    fi
+
+    # Prüfen, ob der Prozess mit .NET 4.8 läuft
+    if pgrep -x "$PROZESSNAME" > /dev/null; then
+        dialog --infobox "$PROZESSNAME läuft mit .NET 4.8." 8 40
+    fi
+}
 
 ## * trim_all 
 	# Diese Funktion entfernt führende und nachfolgende Leerzeichen aus allen Argumenten und gibt das bereinigte Ergebnis zurück.
@@ -2505,6 +2558,37 @@ function linuxupgrade() {
 
     echo "Systemupdate und System-Upgrade abgeschlossen."
 }
+function linuxupgrade_menu() {
+    # Letzte Bearbeitung 15.01.2024
+    # Überprüfen, ob die Funktion mit Root-Berechtigungen ausgeführt wird.
+    if [ "$EUID" -ne 0 ]; then
+        dialog --msgbox "Fehler: Diese Funktion erfordert Root-Berechtigungen. Bitte führen Sie sie mit 'sudo' aus." 8 40
+        return 1
+    fi
+
+    # Dialog-Bildschirmmaske für Bestätigung des Systemupdates
+    dialog --yesno "Möchten Sie das System wirklich aktualisieren und ein Upgrade durchführen?" 8 40
+
+    # Überprüfen, ob der Benutzer das Systemupdate bestätigt hat
+    if [ $? -ne 0 ]; then
+        dialog --msgbox "Systemupdate abgebrochen." 8 40
+        return 1
+    fi
+
+    # Dialog-Bildschirmmaske während des Systemupdates
+    dialog --infobox "Systemupdate wird durchgeführt..." 8 40
+
+    # Aktualisiere die Paketlisten
+    apt update
+
+    # Führe ein System-Upgrade durch, um verfügbare Aktualisierungen zu installieren.
+    dialog --infobox "System-Upgrade wird durchgeführt..." 8 40
+    apt upgrade -y
+
+    # Abschlussmeldung
+    dialog --msgbox "Systemupdate und System-Upgrade abgeschlossen." 8 40
+}
+
 
 ## * deladvantagetools 
 	# Diese Funktion entfernt das Paket "ubuntu-advantage-tools" von Ihrem Ubuntu-System.
@@ -2531,6 +2615,33 @@ function deladvantagetools() {
 
     echo "Das Paket 'ubuntu-advantage-tools' wurde entfernt."
 }
+function del_advantage_tools_menu() {
+    # Letzte Bearbeitung 26.09.2023
+    # Überprüfen, ob die Funktion mit Root-Berechtigungen ausgeführt wird
+    if [ "$EUID" -ne 0 ]; then
+        dialog --msgbox "Fehler: Diese Funktion erfordert Root-Berechtigungen. Bitte führen Sie sie mit 'sudo' aus." 8 40
+        return 1
+    fi
+
+    # Dialog-Bildschirmmaske für Bestätigung der Paketentfernung
+    dialog --yesno "Möchten Sie das Paket 'ubuntu-advantage-tools' wirklich entfernen?" 8 40
+
+    # Überprüfen, ob der Benutzer die Paketentfernung bestätigt hat
+    if [ $? -ne 0 ]; then
+        dialog --msgbox "Paketentfernung abgebrochen." 8 40
+        return 1
+    fi
+
+    # Dialog-Bildschirmmaske während der Paketentfernung
+    dialog --infobox "Entferne das Paket 'ubuntu-advantage-tools'..." 8 40
+
+    # Entfernen des Pakets ubuntu-advantage-tools
+    sudo apt remove ubuntu-advantage-tools -y
+
+    # Abschlussmeldung
+    dialog --msgbox "Das Paket 'ubuntu-advantage-tools' wurde entfernt." 8 40
+}
+
 
 ## * finstall 
 	# Führt eine apt-get-Installationsroutine aus einer Textdatei durch.
@@ -2700,6 +2811,34 @@ function makeregionsliste() {
 	# Erfolgreiche Ausführung
 	return 0
 }
+function make_regionsliste_menu() {
+    # Letzte Bearbeitung 27.09.2023
+
+    # Dialog-Bildschirmmaske für Auswahl der Regionsdatei
+    REGIONSDATEI=$(dialog --inputbox "Geben Sie den Namen der Regionsdatei ein:" 8 40 3>&1 1>&2 2>&3)
+
+    # Überprüfen, ob die Regionsdatei vorhanden ist
+    if [ ! -f "$STARTVERZEICHNIS/$REGIONSDATEI" ]; then
+        dialog --msgbox "Fehler: Die angegebene Regionsdatei existiert nicht." 8 40
+        return 1
+    fi
+
+    # Initialisieren der Regionenliste
+    REGIONSLISTE=()
+
+    # Schleife zum Lesen der Zeilen aus der REGIONSDATEI und Hinzufügen zum Array
+    while IFS= read -r line; do
+        REGIONSLISTE+=("$line")
+    done < "$STARTVERZEICHNIS/$REGIONSDATEI"
+
+    # Anzahl der Einträge in der Regionenliste
+    ANZAHLREGIONSLISTE=${#REGIONSLISTE[*]}
+
+    # Erfolgreiche Ausführung
+    dialog --msgbox "Die Regionsliste wurde erfolgreich erstellt." 8 40
+    return 0
+}
+
 
 ## * mysqlrest
 	# Dies funktioniert nur mit mySQL.
@@ -3325,6 +3464,34 @@ function ossettings() {
 		export MONO_GC_DEBUG=""
 		export MONO_ENV_OPTIONS="--desktop"
 	fi
+	return 0
+}
+function ossettings_dotnet() {
+	# Letzte Bearbeitung 15.01.2024
+	SETMONOTHREADS=1024;
+	log line
+
+	log info "Setze die Einstellung fuer DOTNET 6.0"; echo " ";
+	log info "ulimit -s 1048576"
+	ulimit -s 1048576
+
+	log info "DOTNET_THREADS_PER_CPU=$SETMONOTHREADS"
+	export MONO_THREADS_PER_CPU=$SETMONOTHREADS
+	# LOL ;)
+	export DOTNET_THREADS_PER_CPU=$SETMONOTHREADS
+	
+	# Garbage Collection-Parameter:
+	log info "DOTNET_GC_SERVER=1"
+	export DOTNET_GC_SERVER=1
+	log info "DOTNET_GC_CONCURRENT=1"
+	export DOTNET_GC_CONCURRENT=1
+	log info "DOTNET_GC_HEAP_COUNT=1"
+	export DOTNET_GC_HEAP_COUNT=1
+	log info "DOTNET_GC_GCHANDLE_TYPE=0"
+	export DOTNET_GC_GCHANDLE_TYPE=0
+	log info "DOTNET_GC_HEAP_HARDLIMIT=0"
+	export DOTNET_GC_HEAP_HARDLIMIT=0
+
 	return 0
 }
 
@@ -5073,8 +5240,9 @@ function menurostart() {
 		screen -fa -S RO -d -U -m mono Robust.exe
 	fi
 
-	sleep $ROBUSTWARTEZEIT
-
+	#sleep $ROBUSTWARTEZEIT
+	# show_progress_menu ist die Gauge anzeige und löst sleep ab.
+	show_progress_menu "Robust wurde angewiesen zu starten." "Bitte warten..." "5"
 	log info " Robust wurde gestartet"
 	return 0
 }
@@ -5117,7 +5285,9 @@ function menurostop() {
 	if screen -list | grep -q "RO"; then
 		screen -S RO -p 0 -X eval "stuff 'shutdown'^M"
 		log warn "Robust Beenden"
-		sleep $WARTEZEIT
+		#sleep $WARTEZEIT
+		# show_progress_menu ist die Gauge anzeige und löst sleep ab.
+		show_progress_menu "Robust wurde angewiesen zu stoppen." "Bitte warten..." "5"
 	else
 		log error "Robust nicht vorhanden"
 	fi
@@ -5177,7 +5347,9 @@ function menumostart() {
 		screen -fa -S MO -d -U -m mono MoneyServer.exe
 	fi
 
-	sleep $MONEYWARTEZEIT
+	#sleep $MONEYWARTEZEIT
+	# show_progress_menu ist die Gauge anzeige und löst sleep ab.
+	show_progress_menu "MoneyServer wurde angewiesen zu starten." "Bitte warten..." "5"
 	log info " Money wurde gestartet"
 	return 0
 }
@@ -5220,7 +5392,9 @@ function menumostop() {
 	if screen -list | grep -q "MO"; then
 		screen -S MO -p 0 -X eval "stuff 'shutdown'^M"
 		log warn "Money Beenden"
-		sleep $MONEYWARTEZEIT
+		#sleep $MONEYWARTEZEIT
+		# show_progress_menu ist die Gauge anzeige und löst sleep ab.
+		show_progress_menu "MoneyServer wurde angewiesen zu stoppen." "Bitte warten..." "5"
 		return 0
 	else
 		log error "Money nicht vorhanden"
@@ -5266,7 +5440,8 @@ function osscreenstop() {
 ##
 function gridstart() {
 	# Letzte Bearbeitung 30.09.2023
-	ossettings
+	#ossettings
+	ossettings_dotnet
 	if screen -list | grep -q RO; then
 		log error "Robust laeuft bereits"
 	else
@@ -5293,7 +5468,8 @@ function gridstart() {
 ##
 function menugridstart() {
 	# Letzte Bearbeitung 30.09.2023
-	ossettings
+	#ossettings
+	ossettings_dotnet
 	log line
 	if screen -list | grep -q RO; then
 		log error " Robust laeuft bereits"
@@ -7912,14 +8088,16 @@ function menuautosimstart() {
 				fi
 
 			fi
-			sleep $STARTWARTEZEIT
+			#sleep $STARTWARTEZEIT
+			# show_progress_menu ist die Gauge anzeige und löst sleep ab.
+			show_progress_menu "${VERZEICHNISSLISTE[$i]} wurde angewiesen zu starten." "Bitte warten..." "3"
 		done
 	else
 		# es laeuft mindestens ein Simulator - work
 		log text "WORKS:  Regionen laufen bereits!"
 	fi
 	#hauptmenu
-	menuinfo
+	#menuinfo
 	#return 0
 }
 
@@ -7939,21 +8117,17 @@ function menuautosimstop() {
 		if screen -list | grep -q "${VERZEICHNISSLISTE[$i]}"; then
 			log text "Regionen ${VERZEICHNISSLISTE[$i]} Beenden"
 
-			#BALKEN2=$(("$i"*5))
-			#TMP2=$(("$ANZAHLVERZEICHNISSLISTE"*"$i"))
-			#BALKEN2=$(("$TMP2/100"))
-			#BERECHNUNG2=$((100 / "$ANZAHLVERZEICHNISSLISTE"))
-			#BALKEN2=$(("$i" * "$BERECHNUNG2"))
-			#BALKEN2=$(( (100/"$ANZAHLVERZEICHNISSLISTE") * "${VERZEICHNISSLISTE[$i]}"))
-
 			screen -S "${VERZEICHNISSLISTE[$i]}" -p 0 -X eval "stuff 'shutdown'^M" | log info "${VERZEICHNISSLISTE[$i]} wurde angewiesen zu stoppen." #| dialog --gauge "Alle Simulatoren werden gestoppt!" 6 64 $BALKEN2
-			#dialogclear
-			sleep $STOPWARTEZEIT
+
+			#sleep $STOPWARTEZEIT
+			# show_progress_menu ist die Gauge anzeige und löst sleep ab.
+			show_progress_menu "${VERZEICHNISSLISTE[$i]} wurde angewiesen zu stoppen." "Bitte warten..." "4"
 		else
 			log error "Regionen ${VERZEICHNISSLISTE[$i]}  laeuft nicht!"
 		fi
 	done
-	return 0
+	#menuinfo
+	#return 0
 }
 
 ## * autologdel
@@ -8570,15 +8744,16 @@ function menuautostart() {
 ##
 function menuautostop() {
 	# Letzte Bearbeitung 01.10.2023
-	log warn "#** Stoppe das Grid! **#"
+	log warn "*** Stoppe das Grid! ***"
+
 	# schauen ob screens laufen wenn ja beenden.
 	if screen -list | grep -q 'sim'; then log info "Bitte warten..."; menuautosimstop; fi
 	if screen -list | grep -q "RO"; then log info "Bitte warten..."; menugridstop; fi
+
 	# schauen ob screens laufen wenn ja warten.
 	if screen -list | grep -q 'sim'; then log info "Bitte warten..."; sleep $AUTOSTOPZEIT; killall screen; fi
 
 	menuautoscreenstop
-	hauptmenu
 }
 
 ## *  autorestart
@@ -8639,11 +8814,11 @@ function autorestart() {
 function menuautorestart() {
 	# Letzte Bearbeitung 01.10.2023
 	log rohtext " Automatischer Restart wird ausgeführt!"
-	autostop
+	menuautostop
 	if [ "$LOGDELETE" = "yes" ]; then autologdel; fi
 	#if [ "$DELREGIONS" = "yes" ]; then deleteregionfromdatabase; fi
-	gridstart
-	autosimstart
+	menugridstart
+	menuautosimstart
 	screenlistrestart
 
 	# log info "Auto Restart abgeschlossen."
@@ -20272,15 +20447,15 @@ function funktionenmenu() {
         ScreenLog
 
         case $fauswahl in
-            "$Gridstarten") gridstart ;;
-            "$Gridstoppen") gridstop ;;
-            "$Robuststarten") rostart ;;
-            "$Robuststoppen") rostop ;;
-            "$Moneystarten") mostart ;;
-            "$Moneystoppen") mostop ;;
+            "$Gridstarten") menugridstart ;;
+            "$Gridstoppen") menugridstop ;;
+            "$Robuststarten") menurostart ;;
+            "$Robuststoppen") menurostop ;;
+            "$Moneystarten") menumostart ;;
+            "$Moneystoppen") menumostop ;;
             "$AutomatischerSimstart") menuautosimstart ;;
             "$AutomatischerSimstop") menuautosimstop ;;
-            "$AutomatischerScreenstop") autoscreenstop ;;
+            "$AutomatischerScreenstop") menuautoscreenstop ;;
             "$Regionenanzeigen") meineregionen ;;
             "$Dateimennu") dateimenu ;;
             "$mySQLmenu") mySQLmenu ;;
@@ -21863,12 +22038,14 @@ case $KOMMANDO in
 	installationen) installationen ;;
 	installationhttps22) installationhttps22 "$2" "$3" ;;
 	update | linuxupgrade) linuxupgrade ;;
+	linuxupgrade_menu) linuxupgrade_menu ;;
 	installfinish) installfinish ;;
 	installmariadb18) installmariadb18 ;;
 	installmariadb22) installmariadb22 ;;
 	installphpmyadmin) installphpmyadmin ;;
 	installubuntu22) installubuntu22 ;;
 	deladvantagetools) deladvantagetools ;;
+	del_advantage_tools_menu) del_advantage_tools_menu ;;
 	ipsetzen) ipsetzen ;;
 	konsolenhilfe) konsolenhilfe ;;
 	l | list | screenlist) screenlist ;;
@@ -21955,6 +22132,7 @@ case $KOMMANDO in
 	rs | robuststart | rostart) rostart ;;
 	rsto | robuststop | rostop | rsto93 | robuststop93 | rostop93) rostop ;;
 	s | settings | ossettings) ossettings ;;
+	ossettings_dotnet) ossettings_dotnet ;;
 	saveinventar) saveinventar "$2" "$3" "$4" "$5" ;;
 	sc | scriptcopy) scriptcopy ;;
 	schreibeinfo) schreibeinfo ;;
@@ -21970,7 +22148,9 @@ case $KOMMANDO in
 	ss | osscreenstop | ss93 | osscreenstop93) osscreenstop "$2" ;;
 	sta | autosimstart | simstart) autosimstart ;;
 	sta93 | autosimstart93 | simstart93) autosimstart ;;
+	menuautosimstart) menuautosimstart ;;
 	sto | autosimstop | simstop | sto93 | autosimstop93 | simstop93) autosimstop ;;
+	menuautosimstop) menuautosimstop ;;
 	systeminformation) systeminformation ;;
 	tabellenabfrage) tabellenabfrage "$2" "$3" "$4" ;;
 	textbox) textbox "$2" ;;
@@ -22077,6 +22257,7 @@ case $KOMMANDO in
 	benutzer) benutzer ;;
 	pull) pull ;;
 	laeuftos) laeuftos "$2" ;;
+	laeuftos_menu) laeuftos_menu "$2" ;;
 	createmanual) createmanual ;;
 	delete_emty_mark) delete_emty_mark "$2" "$3" ;;
 	osreparatur) osreparatur ;;
@@ -22168,8 +22349,10 @@ case $KOMMANDO in
 	zeige_netzwerkinformationen_menu) zeige_netzwerkinformationen_menu ;;
 	ping_test_menu) ping_test_menu ;;
 	netstat_info_menu) netstat_info_menu ;;
+	menuautorestart) menuautorestart ;;
 	hda | hilfedirektaufruf | hilfemenudirektaufrufe) hilfemenudirektaufrufe ;;
 	osmupgrade_menu) osmupgrade_menu ;;
+	show_progress_menu) show_progress_menu "$2" "$3" "$4" ;;
 	h) newhelp ;;
 	V | v) echo "$SCRIPTNAME $VERSION" ;;
 	*) hauptmenu ;;
