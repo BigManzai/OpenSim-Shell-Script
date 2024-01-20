@@ -20,7 +20,7 @@
 	# ! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 	# ! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#
-	# * Letzte bearbeitung 16.01.2024.
+	# * Letzte bearbeitung 19.01.2024.
 	#
 	# # Installieren sie bitte: #* Visual Studio Code
 	#* dazu die Plugins:
@@ -41,7 +41,7 @@
 #──────────────────────────────────────────────────────────────────────────────────────────
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.1473" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.1475" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 #──────────────────────────────────────────────────────────────────────────────────────────
@@ -1709,7 +1709,7 @@ function osmtoolconfig() {
 		echo "    linefontcolor=7;    linebaggroundcolor=0;"
 		echo "     "
 		echo "    ScreenLogLevel=0; # ScreenLogLevel=0 nichts machen, bis ScreenLogLevel=5 Funktionsnamen ausgeben."
-		echo '    LOGWRITE="no" # yes/no'
+		echo '    LOGWRITE="yes" # yes/no'
 		echo '    logfilename="_multitool"'
 		echo '    line="──────────────────────────────────────────────────────────────────────────────────────────";'
 		echo '    lline="──────────────────────────────────────────────────────────────────────────────────────────";'
@@ -3467,28 +3467,46 @@ function ossettings() {
 	return 0
 }
 function ossettings_dotnet() {
-	# Letzte Bearbeitung 15.01.2024
-	SETMONOTHREADS=1024;
+	# Letzte Bearbeitung 17.01.2024. Dies sind DOTNET6.0 Tests.
+	
 	log line
 
-	log info "Setze die Einstellung fuer DOTNET 6.0"; echo " ";
+	log info "Setze die Einstellung fuer DOTNET 6.0 (Testbetrieb)"; echo " ";
+
+	log info "DOTNET_Thread_UseAllCpuGroups=1"
+	export DOTNET_Thread_UseAllCpuGroups=1
+
+	log info "ThreadPoolMinThreads=8"
+	export ThreadPoolMinThreads=8
+
+	log info "ThreadPoolMaxThreads=$SETMONOTHREADS"
+	export ThreadPoolMaxThreads=$SETMONOTHREADS
+
+	log info "AutoreleasePoolSupport=true"
+	export AutoreleasePoolSupport=true
+
 	log info "ulimit -s 1048576"
 	ulimit -s 1048576
 
 	log info "DOTNET_THREADS_PER_CPU=$SETMONOTHREADS"
 	export MONO_THREADS_PER_CPU=$SETMONOTHREADS
+	export SETMONOTHREADS=$SETMONOTHREADS
 	# LOL ;)
 	export DOTNET_THREADS_PER_CPU=$SETMONOTHREADS
 	
 	# Garbage Collection-Parameter:
 	log info "DOTNET_GC_SERVER=1"
 	export DOTNET_GC_SERVER=1
+
 	log info "DOTNET_GC_CONCURRENT=1"
 	export DOTNET_GC_CONCURRENT=1
+
 	log info "DOTNET_GC_HEAP_COUNT=1"
 	export DOTNET_GC_HEAP_COUNT=1
+
 	log info "DOTNET_GC_GCHANDLE_TYPE=0"
 	export DOTNET_GC_GCHANDLE_TYPE=0
+
 	log info "DOTNET_GC_HEAP_HARDLIMIT=0"
 	export DOTNET_GC_HEAP_HARDLIMIT=0
 
