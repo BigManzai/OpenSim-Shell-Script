@@ -20,7 +20,7 @@
 	# ! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 	# ! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#
-	# * Letzte bearbeitung 19.01.2024.
+	# * Letzte bearbeitung 23.01.2024.
 	#
 	# # Installieren sie bitte: #* Visual Studio Code
 	#* dazu die Plugins:
@@ -41,7 +41,7 @@
 #──────────────────────────────────────────────────────────────────────────────────────────
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.1475" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.1477" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 #──────────────────────────────────────────────────────────────────────────────────────────
@@ -3488,11 +3488,9 @@ function ossettings_dotnet() {
 	log info "ulimit -s 1048576"
 	ulimit -s 1048576
 
-	log info "DOTNET_THREADS_PER_CPU=$SETMONOTHREADS"
+	log info "MONO_THREADS_PER_CPU=$SETMONOTHREADS"
 	export MONO_THREADS_PER_CPU=$SETMONOTHREADS
 	export SETMONOTHREADS=$SETMONOTHREADS
-	# LOL ;)
-	export DOTNET_THREADS_PER_CPU=$SETMONOTHREADS
 	
 	# Garbage Collection-Parameter:
 	log info "DOTNET_GC_SERVER=1"
@@ -5847,7 +5845,7 @@ function mapdel() {
 
 ## *  logdel
 	#? Beschreibung:
-	# Die Funktion `logdel` löscht Log-Dateien aus einem angegebenen Verzeichnis, sofern das Verzeichnis existiert. Sie überprüft zuerst, ob das Verzeichnis existiert, und löscht dann alle Dateien mit der Erweiterung ".log" aus dem Verzeichnis.
+	# Die Funktion logdel löscht Log-Dateien aus einem angegebenen Verzeichnis, sofern das Verzeichnis existiert. Sie überprüft zuerst, ob das Verzeichnis existiert, und löscht dann alle Dateien mit der Erweiterung ".log" aus dem Verzeichnis.
 	#? Parameter:
 	# $1 - Das Verzeichnis, dessen Log-Dateien gelöscht werden sollen.
 	# Abhängigkeiten:
@@ -5872,76 +5870,113 @@ function logdel() {
 	return 0
 }
 
-## *  rologdel
+## *  write_visitor_log
 	#? Beschreibung:
-	# Die Funktion `rologdel` löscht bestimmte Log-Dateien und erstellt eine Besucherliste, sofern die entsprechenden Verzeichnisse existieren.
-	#? Parameter:
-	# Keine Parameter werden von dieser Funktion akzeptiert.
-	# Abhängigkeiten:
-	# - Die Verzeichnisse, deren Log-Dateien gelöscht werden sollen, sollten bereits vorhanden sein.
-	# - Log-Funktion: Eine Funktion oder ein externes Tool zum Protokollieren von Informationen.
-	# Ausgabe:
-	# Die Funktion gibt Log-Meldungen aus, um den Status des Löschvorgangs und das Erstellen der Besucherliste anzuzeigen.
-	# Exit-Status:
-	# 0 - Die Log-Dateien wurden erfolgreich gelöscht oder die Verzeichnisse existieren nicht.
-	# Anderer Wert (normalerweise 1) - Es gab Probleme beim Löschen der Log-Dateien oder die Verzeichnisse existieren nicht.
+	# Die Funktion write_visitor_log erstellt eine HG Besucherliste im logfile.
 ##
-function rologdel_alt() {
-	# Letzte Bearbeitung 10.01.2024
-	if [ -d /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS ]; then
-		if [ "$VISITORLIST" = "yes" ]; then 
-			# Lese alle passenden Zeilen aus Robust.log aus.
-			PASSENDEZEILEN=$(grep 'GATEKEEPER SERVICE' /"$STARTVERZEICHNIS"/"$ROBUSTVERZEICHNIS"/bin/Robust.log | awk -F ']: ' '{print $2}')
-
-			# Überprüfe, ob PASSENDEZEILEN nicht leer ist.
-			if [ -n "$PASSENDEZEILEN" ]; then
-				# Schreiben aller passenden Zeilen.
-				log line;
-				log info "Ausführliche Besucherliste:"
-				echo "$PASSENDEZEILEN" | sed 's/,/,\'$'\n''/g' >> /"$STARTVERZEICHNIS"/"$DATEIDATUM""$logfilename".log				
-			else
-				log info "No matching log lines found in Robust.log"
-			fi	
-			log info "Besucherlisten wurden geschrieben!";
-		fi
-
-		# schauen ist Robust und Money da dann diese Logs auch loeschen!
-		if [[ $ROBUSTVERZEICHNIS == "robust" ]]; then
-			# log warn "Robust Log Dateien loeschen!"
-			rm /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/*.log 2>/dev/null || return 0
-		else
-			log info "Robust Log Dateien loeschen ist abgeschaltet!"
-		fi
-
-		# schauen ist Money da dann diese Logs auch loeschen!
-		if [[ $MONEYVERZEICHNIS == "money" ]]; then
-			log warn "Money Log Dateien loeschen!"
-			rm /$STARTVERZEICHNIS/$MONEYVERZEICHNIS/bin/*.log 2>/dev/null || return 0
-		else
-			log info "Money Log Dateien loeschen ist abgeschaltet "
-			log info "oder wurde mit der Robust.log geloescht!"
-		fi
-
-	fi	
-	return 0
-}
-### NEU NEU NEU NEU NEU NEU
 function write_visitor_log() {
     cd /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS || exit
-    PASSENDEZEILEN=$(grep 'GATEKEEPER SERVICE' /"$STARTVERZEICHNIS"/"$ROBUSTVERZEICHNIS"/bin/Robust.log | awk -F ']: ' '{print $2}')
-    if [ -n "$PASSENDEZEILEN" ]; then
-        log line;
-        log info "Ausführliche Besucherliste:"
 
-        #echo "$PASSENDEZEILEN" | sed 's/,/,\'$'\n''/g' >> /opt/logtestfile.log
-        echo "$PASSENDEZEILEN" | sed 's/,/,\'$'\n''/g' >> /"$STARTVERZEICHNIS"/"$DATEIDATUM""$logfilename".log
+	log line
+	log info "Erstelle eine HG Besucherliste:"
 
-        #echo "$PASSENDEZEILEN" | sed 's/,/,\'$'\n''/g'
+	# Dateipfad für die Log-Datei
+	log_file="/$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/Robust.log"
 
-    else
-        log info "No matching log lines found in Robust.log"
-    fi
-    log info "Besucherlisten wurden geschrieben!";
+	# Der zu suchende String
+	search_string='\[GATEKEEPER SERVICE\]: Login request for'
+
+	# Suchen und Extrahieren des Strings
+	log_entry=$(grep "$search_string" "$log_file")
+
+	# Überprüfen, ob der String gefunden wurde
+	if [[ -n "$log_entry" ]]; then
+		# Parsen der Werte
+		regex='\[GATEKEEPER SERVICE\]: Login request for ([^@]+) @ ([^ ]+) \(([^)]+)\) at ([^ ]+) using viewer ([^,]+), channel ([^,]+), IP ([^,]+), Mac ([^,]+), Id0 ([^,]+), Teleport Flags: ([^\.]+)\. From region ([^@]+) @ ([^ ]+)'
+
+		if [[ $log_entry =~ $regex ]]; then
+			# Extrahieren der Werte aus den RegExp-Matches
+			Name="${BASH_REMATCH[1]}"
+			URL="${BASH_REMATCH[2]}"
+			AgentID="${BASH_REMATCH[3]}"
+			RegionID="${BASH_REMATCH[4]}"
+			Viewer="${BASH_REMATCH[5]}"
+			Channel="${BASH_REMATCH[6]}"
+			IPAddress="${BASH_REMATCH[7]}"
+			Mac="${BASH_REMATCH[8]}"
+			Id0="${BASH_REMATCH[9]}"
+			teleportFlags="${BASH_REMATCH[10]}"
+			RegionName="${BASH_REMATCH[11]}"
+			ServerURI="${BASH_REMATCH[12]}"
+
+
+			# Ausgabe der Werte (log info, log rohtext, log text...) Variation 1
+			# echo "Name: $Name"
+			# echo "URL: $URL"
+			# echo "AgentID: $AgentID"
+			# echo "RegionID: $RegionID"
+			# echo "Viewer: $Viewer"
+			# echo "Channel: $Channel"
+			# echo "IPAddress: $IPAddress"
+			# echo "Mac: $Mac"
+			# echo "Id0: $Id0"
+			# echo "teleportFlags: $teleportFlags"
+			# echo "RegionName: $RegionName"
+			# echo "ServerURI: $ServerURI"
+			# echo " "
+
+			# Ausgabe der Werte (log info, log rohtext, log text...) Variation 2
+			# log rohtext "Name: $Name"
+			# log rohtext "URL: $URL"
+			# log rohtext "AgentID: $AgentID"
+			# log rohtext "RegionID: $RegionID"
+			# log rohtext "Viewer: $Viewer"
+			# log rohtext "Channel: $Channel"
+			# log rohtext "IPAddress: $IPAddress"
+			# log rohtext "Mac: $Mac"
+			# log rohtext "Id0: $Id0"
+			# log rohtext "teleportFlags: $teleportFlags"
+			# log rohtext "RegionName: $RegionName"
+			# log rohtext "ServerURI: $ServerURI"
+			# log line
+
+			# Ausgabe der Werte (log info, log rohtext, log text...) Variation 3
+			log text "Name: $Name"
+			log text "URL: $URL"
+			log text "AgentID: $AgentID"
+			log text "RegionID: $RegionID"
+			log text "Viewer: $Viewer"
+			log text "Channel: $Channel"
+			log text "IPAddress: $IPAddress"
+			log text "Mac: $Mac"
+			log text "Id0: $Id0"
+			log text "teleportFlags: $teleportFlags"
+			log text "RegionName: $RegionName"
+			log text "ServerURI: $ServerURI"
+			log line
+			
+			# Ausgabe der Werte in die Log-Datei Variation 4
+			# echo "Name: $Name" >> /"$STARTVERZEICHNIS"/"$DATEIDATUM""$logfilename".log
+			# echo "URL: $URL" >> /"$STARTVERZEICHNIS"/"$DATEIDATUM""$logfilename".log
+			# echo "AgentID: $AgentID" >> /"$STARTVERZEICHNIS"/"$DATEIDATUM""$logfilename".log
+			# echo "RegionID: $RegionID" >> /"$STARTVERZEICHNIS"/"$DATEIDATUM""$logfilename".log
+			# echo "Viewer: $Viewer" >> /"$STARTVERZEICHNIS"/"$DATEIDATUM""$logfilename".log
+			# echo "Channel: $Channel" >> /"$STARTVERZEICHNIS"/"$DATEIDATUM""$logfilename".log
+			# echo "IPAddress: $IPAddress" >> /"$STARTVERZEICHNIS"/"$DATEIDATUM""$logfilename".log
+			# echo "Mac: $Mac" >> /"$STARTVERZEICHNIS"/"$DATEIDATUM""$logfilename".log
+			# echo "Id0: $Id0" >> /"$STARTVERZEICHNIS"/"$DATEIDATUM""$logfilename".log
+			# echo "teleportFlags: $teleportFlags" >> /"$STARTVERZEICHNIS"/"$DATEIDATUM""$logfilename".log
+			# echo "RegionName: $RegionName" >> /"$STARTVERZEICHNIS"/"$DATEIDATUM""$logfilename".log
+			# echo "ServerURI: $ServerURI" >> /"$STARTVERZEICHNIS"/"$DATEIDATUM""$logfilename".log
+			# echo " " >> /"$STARTVERZEICHNIS"/"$DATEIDATUM""$logfilename".log
+		else
+			log warn "String im Log Eintrag entspricht nicht dem erwarteten Format."
+			#echo "String im Log Eintrag entspricht nicht dem erwarteten Format." >> /opt/LoginAgentList.log
+		fi
+	else
+		log warn "Der gesuchte Log Eintrag wurde in der Datei nicht gefunden."
+		#echo "Der gesuchte Log Eintrag wurde in der Datei nicht gefunden." >> /opt/LoginAgentList.log
+	fi
 }
 
 function delete_robust_logs() {
@@ -22371,6 +22406,9 @@ case $KOMMANDO in
 	hda | hilfedirektaufruf | hilfemenudirektaufrufe) hilfemenudirektaufrufe ;;
 	osmupgrade_menu) osmupgrade_menu ;;
 	show_progress_menu) show_progress_menu "$2" "$3" "$4" ;;
+	write_visitor_log) write_visitor_log ;;
+	delete_robust_logs) delete_robust_logs ;;
+    delete_money_logs) delete_money_logs ;;
 	h) newhelp ;;
 	V | v) echo "$SCRIPTNAME $VERSION" ;;
 	*) hauptmenu ;;
