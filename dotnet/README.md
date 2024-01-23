@@ -67,6 +67,8 @@ Zuletzt wird dann alles upgegradet und neu gestartet.
 	0 6 * * * bash /opt/osmtool.sh autorestart
 
 ## **TODO**
+* Grid Besucherlisten werden jetzt ordentlich gespeichert und ausgegeben.
+* Logs werden jetzt komplett gelöscht.
 * Nicht mehr funktionierende Menüs überarbeitet.
 * Benutzerlisten überarbeitet diese werden jetzt in der Standart log Datei geschrieben.
 * buildbullet - baut automatisch BulletSim 1.3 - Bullet Physic 3.26
