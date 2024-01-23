@@ -41,7 +41,7 @@
 #──────────────────────────────────────────────────────────────────────────────────────────
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.1477" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.1478" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 #──────────────────────────────────────────────────────────────────────────────────────────
@@ -5887,7 +5887,7 @@ function write_visitor_log() {
 	search_string='\[GATEKEEPER SERVICE\]: Login request for'
 
 	# Suchen und Extrahieren des Strings
-	log_entry=$(grep "$search_string" "$log_file")
+	log_entry=$(grep "$search_string" "$log_file") || log info "Besucher wurden nicht gefunden."
 
 	# Überprüfen, ob der String gefunden wurde
 	if [[ -n "$log_entry" ]]; then
@@ -5973,30 +5973,44 @@ function write_visitor_log() {
 			log warn "String im Log Eintrag entspricht nicht dem erwarteten Format."
 			#echo "String im Log Eintrag entspricht nicht dem erwarteten Format." >> /opt/LoginAgentList.log
 		fi
-	else
-		log warn "Der gesuchte Log Eintrag wurde in der Datei nicht gefunden."
+	#else
+		#log warn "Der gesuchte Log Eintrag wurde in der Datei nicht gefunden."
 		#echo "Der gesuchte Log Eintrag wurde in der Datei nicht gefunden." >> /opt/LoginAgentList.log
 	fi
 }
 
 function delete_robust_logs() {
     if [[ $ROBUSTVERZEICHNIS == "robust" ]]; then
+        log warn "Alle Robust Log Dateien loeschen!"
+        rm /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/*.log 2>/dev/null || return 0
+    else
+        log info "Alle Robust Log Datei loeschen ist abgeschaltet!"
+    fi
+}
+
+function delete_robust_logs2() {
+    if [[ $ROBUSTVERZEICHNIS == "robust" ]]; then
         log warn "Robust Log Dateien loeschen!"
         rm /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/Robust.log 2>/dev/null || return 0
     else
-        log info "Robust Log Dateien loeschen ist abgeschaltet!"
+        log info "Robust Log Datei loeschen ist abgeschaltet!"
     fi
 }
 
 function delete_money_logs() {
-    if [[ $MONEYVERZEICHNIS == "money" ]]; then
+    if [[ $MONEYVERZEICHNIS == "money" ]] || [[ $ROBUSTVERZEICHNIS == "robust" ]]; then
         log warn "Money Log Dateien loeschen!"
-        rm /$STARTVERZEICHNIS/$MONEYVERZEICHNIS/bin/MoneyServer.log 2>/dev/null || return 0
+
+        # Money Log Datei löschen im Verzeichnis money
+        rm "$STARTVERZEICHNIS/$MONEYVERZEICHNIS/bin/MoneyServer.log" 2>/dev/null || rm "$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/MoneyServer.log" 2>/dev/null
+        # Money Log Datei löschen im Verzeichnis robust
+        #rm "$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/MoneyServer.log" 2>/dev/null
+		log info "Money Log Datei wurden gelöscht!"
     else
-        log info "Money Log Dateien loeschen ist abgeschaltet "
-        log info "oder wurde mit der Robust.log geloescht!"
+        log info "Money Log Datei loeschen ist abgeschaltet!"
     fi
 }
+
 
 function rologdel_menu() {
     # Dialog-Bildschirmmaske
@@ -6043,7 +6057,7 @@ function rologdel() {
         fi
 
         delete_robust_logs
-        delete_money_logs
+        #delete_money_logs
     fi    
     return 0
 }
