@@ -14,6 +14,7 @@ def getch():
     subprocess.run(["cmake", "--version"])
     subprocess.run(["git", "--version"])
     subprocess.run(["pip", "--version"])
+    subprocess.run(["autobuild", "--version"])
     
     #subprocess.run(["pip", "install", "llbase"])
     #subprocess.run(["pip", "install", "git+https://github.com/secondlife/autobuild.git#egg=autobuild"])
