@@ -21,6 +21,7 @@ def getch():
     #subprocess.run(["pip", "install", "llsd"])
 
     #print("\nCloning Firestorm repository:")
-    #subprocess.run(["git", "clone", "https://github.com/FirestormViewer/phoenix-firestorm-alpha"])
+    #subprocess.run(["git", "clone", "https://github.com/FirestormViewer/phoenix-firestorm-alpha phoenix-firestorm-alpha"])
+    # subprocess.run(["git", "clone", "https://github.com/FirestormViewer/fs-build-variables.git fs-build-variables"])
 
 getch()
