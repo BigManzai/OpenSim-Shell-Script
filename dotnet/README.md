@@ -65,7 +65,7 @@ Zuletzt wird dann alles upgegradet und neu gestartet.
 	0 6 * * * bash /opt/osmtool.sh autorestart
 
 ## **TODO**
-* Besucherlisten Fehler: Nur der erste eintrag wird ausgegeben oder gespeichert behoben. Es wird jetzt jeder gespeichert.
+* Besucherlisten Fehler: Nur der erste eintrag wird ausgegeben oder gespeichert, behoben. Es wird jetzt jeder gespeichert. Kontrollausgabe: bash osmtool.sh write_visitor_log.
 * Grid Besucherlisten werden jetzt ordentlich gespeichert und ausgegeben.
 * Logs werden jetzt komplett gelöscht.
 * Nicht mehr funktionierende Menüs überarbeitet.
