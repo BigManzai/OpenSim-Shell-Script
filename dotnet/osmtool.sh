@@ -20,7 +20,7 @@
 	# ! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 	# ! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#
-	# * Letzte bearbeitung 23.01.2024.
+	# * Letzte bearbeitung 27.01.2024.
 	#
 	# # Installieren sie bitte: #* Visual Studio Code
 	#* dazu die Plugins:
@@ -41,7 +41,7 @@
 #──────────────────────────────────────────────────────────────────────────────────────────
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.1478" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.1481" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 #──────────────────────────────────────────────────────────────────────────────────────────
@@ -3444,9 +3444,7 @@ function ossettings() {
 	if [[ $SETMONOTHREADSON = "yes" ]]; then
 		log info "Setze die Mono Threads auf $SETMONOTHREADS"
 		MONO_THREADS_PER_CPU=$SETMONOTHREADS
-		# Test 30.06.2022
 		export MONO_THREADS_PER_CPU=$SETMONOTHREADS
-		# MonoSetEnv MONO_THREADS_PER_CPU=$SETMONOTHREADS
 	fi
 
 	# MONO_GC_PARAMS
@@ -3466,8 +3464,53 @@ function ossettings() {
 	fi
 	return 0
 }
-function ossettings_dotnet() {
-	# Letzte Bearbeitung 17.01.2024. Dies sind DOTNET6.0 Tests.
+function ossettings2() {
+    # Letzte Bearbeitung 25.01.2024
+    log line
+    log info "Hier werden alle gewünschten Einstellungen vorgenommen."
+
+    # ulimit
+    log info "Setze die Einstellung: ulimit -s 1048576"
+    ulimit -s 1048576 || {
+        log error "Fehler beim Setzen von ulimit -s 1048576"
+        return 1
+    }
+
+    # MONO_THREADS_PER_CPU
+    log info "Setze die Mono Threads auf $SETMONOTHREADS"
+    export MONO_THREADS_PER_CPU=$SETMONOTHREADS || {
+        log error "Fehler beim Setzen von MONO_THREADS_PER_CPU"
+        return 1
+    }
+
+    # MONO_GC_PARAMS
+    log info "Setze die Einstellung: minor=split,promotion-age=14,nursery-size=64m"
+    export MONO_GC_PARAMS="minor=split,promotion-age=14,nursery-size=64m" || {
+        log error "Fehler beim Setzen von MONO_GC_PARAMS"
+        return 1
+    }
+
+    log info "Setze die Einstellung: promotion-age=14,"
+    log info "minor=split,major=marksweep,no-lazy-sweep,alloc-ratio=50,"
+    log info "nursery-size=64m"
+
+    export MONO_GC_PARAMS="promotion-age=14,minor=split,major=marksweep,no-lazy-sweep,alloc-ratio=50,nursery-size=64m" || {
+        log error "Fehler beim Setzen von MONO_GC_PARAMS"
+        return 1
+    }
+    export MONO_GC_DEBUG="" || {
+        log error "Fehler beim Setzen von MONO_GC_DEBUG"
+        return 1
+    }
+    export MONO_ENV_OPTIONS="--desktop" || {
+        log error "Fehler beim Setzen von MONO_ENV_OPTIONS"
+        return 1
+    }
+
+    return 0
+}
+function ossettings_dotnet1() {
+	# Letzte Bearbeitung 25.01.2024. Dies sind DOTNET6.0 Tests.
 	
 	log line
 
@@ -3490,7 +3533,6 @@ function ossettings_dotnet() {
 
 	log info "MONO_THREADS_PER_CPU=$SETMONOTHREADS"
 	export MONO_THREADS_PER_CPU=$SETMONOTHREADS
-	export SETMONOTHREADS=$SETMONOTHREADS
 	
 	# Garbage Collection-Parameter:
 	log info "DOTNET_GC_SERVER=1"
@@ -3510,6 +3552,88 @@ function ossettings_dotnet() {
 
 	return 0
 }
+function ossettings_dotnet() {
+    # Letzte Bearbeitung 25.01.2024. Dies sind DOTNET6.0 Tests.
+    log line
+    log info "Einstellungen für DOTNET 6.0 (Testbetrieb)"
+	log info "Exportierte Einstellungen:"
+
+    # DOTNET_Thread_UseAllCpuGroups
+	log info "DOTNET_Thread_UseAllCpuGroups=1: Verwendet alle CPU-Gruppen."
+    export DOTNET_Thread_UseAllCpuGroups=1 || {
+        log error "Fehler beim Setzen von DOTNET_Thread_UseAllCpuGroups"
+        return 1
+    }
+
+    # ThreadPoolMinThreads
+	log info "ThreadPoolMinThreads=8: Minimale Anzahl von Threads im ThreadPool."
+    export ThreadPoolMinThreads=8 || {
+        log error "Fehler beim Setzen von ThreadPoolMinThreads"
+        return 1
+    }
+
+    # ThreadPoolMaxThreads
+	log info "ThreadPoolMaxThreads=$SETMONOTHREADS: Maximale Anzahl von Threads im ThreadPool."
+    export ThreadPoolMaxThreads=$SETMONOTHREADS || {
+        log error "Fehler beim Setzen von ThreadPoolMaxThreads"
+        return 1
+    }
+
+    # AutoreleasePoolSupport
+	log info "AutoreleasePoolSupport=true: Aktiviert den Autorelease Pool Support."
+    export AutoreleasePoolSupport=true || {
+        log error "Fehler beim Setzen von AutoreleasePoolSupport"
+        return 1
+    }
+
+    # ulimit -s 1048576
+	log info "ulimit -s 1048576: Setzt die maximale Stapeltiefe auf 1048576."
+    ulimit -s 1048576 || {
+        log error "Fehler beim Setzen von ulimit -s 1048576"
+        return 1
+    }
+
+    # MONO_THREADS_PER_CPU
+    log info "MONO_THREADS_PER_CPU=$SETMONOTHREADS: Anzahl der Mono-Threads pro CPU."
+    export MONO_THREADS_PER_CPU=$SETMONOTHREADS || {
+        log error "Fehler beim Setzen von MONO_THREADS_PER_CPU"
+        return 1
+    }
+
+    # Garbage Collection-Parameter
+    log info "DOTNET_GC_SERVER=1: Aktiviert DOTNET GarbageCollector im Server-Modus."
+    export DOTNET_GC_SERVER=1 || {
+        log error "Fehler beim Setzen von DOTNET_GC_SERVER"
+        return 1
+    }
+
+    log info "DOTNET_GC_CONCURRENT=1: Aktiviert DOTNET concurrent GarbageCollector."
+    export DOTNET_GC_CONCURRENT=1 || {
+        log error "Fehler beim Setzen von DOTNET_GC_CONCURRENT"
+        return 1
+    }
+
+    log info "DOTNET_GC_HEAP_COUNT=1: Anzahl der verwalteten Heaps."
+    export DOTNET_GC_HEAP_COUNT=1 || {
+        log error "Fehler beim Setzen von DOTNET_GC_HEAP_COUNT"
+        return 1
+    }
+
+    log info "DOTNET_GC_GCHANDLE_TYPE=0: Setzt den Typ der verwalteten Handles."
+    export DOTNET_GC_GCHANDLE_TYPE=0 || {
+        log error "Fehler beim Setzen von DOTNET_GC_GCHANDLE_TYPE"
+        return 1
+    }
+
+    log info "DOTNET_GC_HEAP_HARDLIMIT=0: Setzt das harte Limit für den Heapspeicher."
+    export DOTNET_GC_HEAP_HARDLIMIT=0 || {
+        log error "Fehler beim Setzen von DOTNET_GC_HEAP_HARDLIMIT"
+        return 1
+    }
+
+    return 0
+}
+
 
 #──────────────────────────────────────────────────────────────────────────────────────────
 #* Log und Cache Dateien Funktionsgruppe
@@ -3560,23 +3684,53 @@ function dialogclear() {
 }
 
 ## * clearuserlist.
-	# Diese Funktion löscht die Besucherlisten-Protokolldateien im angegebenen Verzeichnis.
+	# Diese Funktionen löschen die Besucherlisten-Protokolldateien im angegebenen Verzeichnis.
 	#? Argumente: Keine
 	#? Rückgabewerte: Keine
 	#? Beispielaufruf:
 	# clearuserlist
 ##
-function clearuserlist() {
-    # Letzte Bearbeitung 28.09.2023
-    log rohtext "Lösche Besucherlisten log"
+function clear_multitool_log() {
+    # Letzte Bearbeitung 25.01.2024
+    log info "Lösche multitool log Dateien"
     
-    # Lösche alle Dateien, die mit "_osmvisitorlist.log" enden, im angegebenen Verzeichnis.
-    rm -r "/$STARTVERZEICHNIS"/*_osmvisitorlist.log
+    # Lösche alle Dateien, die mit "_multitool.log" enden, im angegebenen Verzeichnis.
+    rm -r "/$STARTVERZEICHNIS"/*_multitool.log
+}
 
-    log rohtext "Lösche Besucherlisten txt"
+# Löscht alle Logdateien, die älter als der letzte Sonntag sind.
+# Beispiel Datei: 25_01_2024_multitool.log
+#
+# Parameter:
+# Keine
+function clear_multitool_log_week() {
+    # Letzte Bearbeitung 25.01.2024
+    log info "Lösche multitool log Dateien die älter als letzten Sonntag sind"
 
-    # Lösche alle Dateien, die mit "_osmvisitorlist.txt" enden, im angegebenen Verzeichnis.
-    rm -r "/$STARTVERZEICHNIS"/*_osmvisitorlist.txt
+    # Bestimme das Datum des letzten Sonntags
+    last_sunday=$(date +'%Y-%m-%d' -d "last Sunday")
+
+    # Lösche alle Logdateien, die vor dem letzten Sonntag erstellt wurden
+    find "/$STARTVERZEICHNIS" -name "*_multitool.log" -type f ! -newermt "$last_sunday" -exec rm {} \; || log error "Fehler beim Löschen der Datei $log_file"
+}
+
+# Löscht alle Logdateien, die älter als eine bestimmte Anzahl von Wochen sind.
+# Standardmäßig werden alle Logdateien gelöscht, die älter als eine Woche sind.
+# Der Benutzer kann eine benutzerdefinierte Anzahl von Wochen als Parameter übergeben.
+# Beispiel: clear_variable_multitool_log_week 2
+# Löscht alle Logdateien, die älter als 2 Wochen sind.
+#
+# Parameter:
+# $1 (optional): Anzahl der Wochen, die zurückgehen sollen (Standardwert: 1)
+function clear_variable_multitool_log_week() {
+    local WOCHE="${1:-1}"
+    local weeks_offset="${WOCHE} week ago"
+    local sunday=$(date +'%Y-%m-%d' -d "$weeks_offset")
+    local log_dir="$(dirname "$log_file")"
+
+    log info "Lösche multitool log Dateien die älter als $WOCHE Wochen sind!"	
+
+    find "$log_dir" -name "*_multitool.log" ! -newermt "$sunday" -exec rm {} \; || log error "Fehler beim Löschen der Datei $log_file"
 }
 
 ## * historylogclear.
@@ -3820,7 +3974,7 @@ function warnbox() {
 	# 4. Protokolliert die Bildschirmausgabe mithilfe der Funktion 'ScreenLog'.
 	# 5. Ruft die Hauptmenü-Funktion 'hauptmenu' auf, um zum Hauptmenü zurückzukehren.
 ##
-function edittextbox() {
+function edittextbox1() {
 	# Letzte Bearbeitung 29.09.2023
     # Öffnet die angegebene Textdatei in einem Editor-Dialogfeld zur Bearbeitung.
     dialog --editbox "$1" 0 0
@@ -3834,7 +3988,32 @@ function edittextbox() {
     # Ruft die Hauptmenü-Funktion auf.
     hauptmenu
 }
+function edittextbox() {
+    # Letzte Bearbeitung 25.01.2024
+    # Öffnet ein Dialogfeld, und bietet die Möglichkeit, den Text zu bearbeiten.
+    TMPFILE=$(mktemp)
+	EDITATIONSDATEI=$1
+    dialog --editbox "$EDITATIONSDATEI" 0 0 2> $TMPFILE
 
+    # Überprüft, ob der Benutzer Änderungen speichern möchte.
+    dialog --yesno "Möchten Sie die Änderungen speichern?" 0 0
+    if [ $? -eq 0 ]; then
+        # Speichert die Änderungen, wenn der Benutzer 'Ja' auswählt.
+        mv $TMPFILE "$EDITATIONSDATEI"
+    else
+        # Löscht die temporäre Datei, wenn der Benutzer 'Nein' auswählt.
+        rm -f $TMPFILE
+    fi
+
+	# Löscht den Dialogbildschirm.
+    dialogclear
+
+    # Protokolliert die Bildschirmausgabe.
+    ScreenLog
+
+    # Ruft die Hauptmenü-Funktion auf.
+    hauptmenu
+}
 
 ## *  textbox
 	#? Beschreibung: Zeigt den Inhalt einer Textdatei in einem Dialogfeld an.
@@ -4843,12 +5022,32 @@ function landclear() {
 		screen -S "$LANDCLEARSCREEN" -p 0 -X eval "stuff 'alert "Loesche Parzellen von der Region!"'^M" # Mit einer loesch Meldung
 		screen -S "$LANDCLEARSCREEN" -p 0 -X eval "stuff 'land clear'^M"                                # Objekt loeschen
 		screen -S "$LANDCLEARSCREEN" -p 0 -X eval "stuff 'y'^M"                                         # Mit y also yes bestaetigen
-		return 0
+		
 		log info "Bitte die Region neu starten."
+		return 0
 	else
 		log error "LANDCLEAR: $LANDCLEARSCREEN Parzellen von der Region $REGION loeschen fehlgeschlagen"
 		return 1
 	fi
+}
+function landcleartest() {
+    # Letzte Bearbeitung 30.09.2023
+    LANDCLEARSCREEN=$1
+    REGION=$2
+    # Nachschauen ob der Screen und die Region existiert.
+    if screen -list | grep -q "$LANDCLEARSCREEN"; then
+        log warn "$LANDCLEARSCREEN Parzellen von der Region $REGION loeschen"
+        screen -S "$LANDCLEARSCREEN" -p 0 -X eval "stuff 'change region ""$REGION""' > /$STARTVERZEICHNIS/landcleartest.txt^M"                 # Region wechseln
+        screen -S "$LANDCLEARSCREEN" -p 0 -X eval "stuff 'alert "Loesche Parzellen von der Region!" > /$STARTVERZEICHNIS/landcleartest.txt^M" # Mit einer loesch Meldung
+        screen -S "$LANDCLEARSCREEN" -p 0 -X eval "stuff 'land clear' > /$STARTVERZEICHNIS/landcleartest.txt^M"                                # Objekt loeschen
+        screen -S "$LANDCLEARSCREEN" -p 0 -X eval "stuff 'y' > /$STARTVERZEICHNIS/landcleartest.txt^M"                                      # Mit y also yes bestaetigen
+		cat /$STARTVERZEICHNIS/landcleartest.txt || echo "/$STARTVERZEICHNIS/landcleartest.txt wurde nicht gefunden."
+        log info "Bitte die Region neu starten."
+        return 0
+    else
+        log error "LANDCLEAR: $LANDCLEARSCREEN Parzellen von der Region $REGION loeschen fehlgeschlagen"
+        return 1
+    fi
 }
 
 ## *  menulandclear
@@ -5059,6 +5258,52 @@ function osstart() {
 	else
 		# es laeuft - work
 		log warn "OpenSimulator $OSSTARTSCREEN laeuft bereits"
+		return 1
+	fi
+}
+function osstart_test() {
+	# Letzte Bearbeitung 25.01.2024
+	OSSTARTSCREEN=$1 # OpenSimulator, Verzeichnis und Screen Name
+
+	log info "Starte OpenSimulator $OSSTARTSCREEN"
+
+	# Überprüfen, ob bereits eine Screen-Sitzung mit diesem Namen läuft
+	if ! screen -list | grep -q "$OSSTARTSCREEN"; then
+
+		# Überprüfen, ob das Verzeichnis existiert
+		if [ -d "$OSSTARTSCREEN" ]; then
+
+			# Wechseln Sie in das Unterverzeichnis bin oder beenden Sie bei einem Fehler
+			cd /$STARTVERZEICHNIS/"$OSSTARTSCREEN"/bin || return 1
+			
+			# Beenden Sie jede vorhandene Screen-Sitzung mit diesem Namen
+			screen -X -S "$OSSTARTSCREEN" kill
+
+			# Starten Sie eine neue Screen-Sitzung mit dem entsprechenden Befehl
+			if [[ "${DOTNETMODUS}" == "ja" ]]; then
+				screen -fa -S "$OSSTARTSCREEN" -d -U -m dotnet OpenSim.dll || {
+					log error "Fehler beim Starten von OpenSimulator $OSSTARTSCREEN mit dotnet"
+					return 1
+				}
+			elif [[ "${DOTNETMODUS}" == "nein" ]]; then
+				screen -fa -S "$OSSTARTSCREEN" -d -U -m mono OpenSim.exe || {
+					log error "Fehler beim Starten von OpenSimulator $OSSTARTSCREEN mit mono"
+					return 1
+				}
+			else
+				log error "Ungültiger Wert für DOTNETMODUS: $DOTNETMODUS"
+				return 1
+			fi
+
+			# Pause, um die Screen-Sitzung zu starten
+			sleep 10
+		else
+			log error "OpenSimulator Verzeichnis $OSSTARTSCREEN existiert nicht"
+			return 1
+		fi
+	else
+		# Die Screen-Sitzung läuft bereits
+		log warn "OpenSimulator $OSSTARTSCREEN läuft bereits"
 		return 1
 	fi
 }
@@ -5809,7 +6054,7 @@ function menuwaslauft() {
 ##
 function checkfile() {
 	# Letzte Bearbeitung 01.10.2023
-	# Verwendung als Einzeiler: checkfile /pfad/zur/datei && echo "File exists" || echo "File not found!"
+	# Verwendung als Einzeiler: checkfile /$STARTVERZEICHNIS/datei && echo "File exists" || echo "File not found!"
 	DATEINAME=$1
 	[ -f "$DATEINAME" ]
 	return $?
@@ -5873,110 +6118,56 @@ function logdel() {
 ## *  write_visitor_log
 	#? Beschreibung:
 	# Die Funktion write_visitor_log erstellt eine HG Besucherliste im logfile.
+	# Es werden alle Registriert, für jeden Besuch oder Anmeldung.
 ##
 function write_visitor_log() {
     cd /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS || exit
 
-	log line
-	log info "Erstelle eine HG Besucherliste:"
+    log line
+    log info "Erstelle eine Liste aller die sich im Grid befanden:"
 
-	# Dateipfad für die Log-Datei
-	log_file="/$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/Robust.log"
+    # Dateipfad für die Log-Datei
+    log_file="/$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/Robust.log"
 
-	# Der zu suchende String
-	search_string='\[GATEKEEPER SERVICE\]: Login request for'
+    # Der zu suchende String
+    search_string='\[GATEKEEPER SERVICE\]: Login request for'
 
-	# Suchen und Extrahieren des Strings
-	log_entry=$(grep "$search_string" "$log_file") || log info "Besucher wurden nicht gefunden."
+    # Schleife, um alle Vorkommen des Suchmusters in der Log-Datei zu durchlaufen
+    grep "$search_string" "$log_file" | while IFS= read -r log_entry; do
+        # Überprüfen, ob der String gefunden wurde
+        if [[ -n "$log_entry" ]]; then
+            # Parsen der Werte
+            regex='\[GATEKEEPER SERVICE\]: Login request for ([^@]+) @ ([^ ]+) \(([^)]+)\) at ([^ ]+) using viewer ([^,]+), channel ([^,]+), IP ([^,]+), Mac ([^,]+), Id0 ([^,]+)'
 
-	# Überprüfen, ob der String gefunden wurde
-	if [[ -n "$log_entry" ]]; then
-		# Parsen der Werte
-		regex='\[GATEKEEPER SERVICE\]: Login request for ([^@]+) @ ([^ ]+) \(([^)]+)\) at ([^ ]+) using viewer ([^,]+), channel ([^,]+), IP ([^,]+), Mac ([^,]+), Id0 ([^,]+), Teleport Flags: ([^\.]+)\. From region ([^@]+) @ ([^ ]+)'
+            if [[ $log_entry =~ $regex ]]; then
+                # Extrahieren der Werte aus den RegExp-Matches
+                Name="${BASH_REMATCH[1]}"
+                URL="${BASH_REMATCH[2]}"
+                AgentID="${BASH_REMATCH[3]}"
+                RegionID="${BASH_REMATCH[4]}"
+                Viewer="${BASH_REMATCH[5]}"
+                Channel="${BASH_REMATCH[6]}"
+                IPAddress="${BASH_REMATCH[7]}"
+                Mac="${BASH_REMATCH[8]}"
+                Id0="${BASH_REMATCH[9]}"
 
-		if [[ $log_entry =~ $regex ]]; then
-			# Extrahieren der Werte aus den RegExp-Matches
-			Name="${BASH_REMATCH[1]}"
-			URL="${BASH_REMATCH[2]}"
-			AgentID="${BASH_REMATCH[3]}"
-			RegionID="${BASH_REMATCH[4]}"
-			Viewer="${BASH_REMATCH[5]}"
-			Channel="${BASH_REMATCH[6]}"
-			IPAddress="${BASH_REMATCH[7]}"
-			Mac="${BASH_REMATCH[8]}"
-			Id0="${BASH_REMATCH[9]}"
-			teleportFlags="${BASH_REMATCH[10]}"
-			RegionName="${BASH_REMATCH[11]}"
-			ServerURI="${BASH_REMATCH[12]}"
+                # Ausgabe
+                log text "Name: $Name"
+                log text "URL: $URL"
+                log text "AgentID: $AgentID"
+                log text "RegionID: $RegionID"
+                log text "Viewer: $Viewer"
+                log text "Channel: $Channel"
+                log text "IPAddress: $IPAddress"
+                log text "Mac: $Mac"
+                log text "Id0: $Id0"
 
-
-			# Ausgabe der Werte (log info, log rohtext, log text...) Variation 1
-			# echo "Name: $Name"
-			# echo "URL: $URL"
-			# echo "AgentID: $AgentID"
-			# echo "RegionID: $RegionID"
-			# echo "Viewer: $Viewer"
-			# echo "Channel: $Channel"
-			# echo "IPAddress: $IPAddress"
-			# echo "Mac: $Mac"
-			# echo "Id0: $Id0"
-			# echo "teleportFlags: $teleportFlags"
-			# echo "RegionName: $RegionName"
-			# echo "ServerURI: $ServerURI"
-			# echo " "
-
-			# Ausgabe der Werte (log info, log rohtext, log text...) Variation 2
-			# log rohtext "Name: $Name"
-			# log rohtext "URL: $URL"
-			# log rohtext "AgentID: $AgentID"
-			# log rohtext "RegionID: $RegionID"
-			# log rohtext "Viewer: $Viewer"
-			# log rohtext "Channel: $Channel"
-			# log rohtext "IPAddress: $IPAddress"
-			# log rohtext "Mac: $Mac"
-			# log rohtext "Id0: $Id0"
-			# log rohtext "teleportFlags: $teleportFlags"
-			# log rohtext "RegionName: $RegionName"
-			# log rohtext "ServerURI: $ServerURI"
-			# log line
-
-			# Ausgabe der Werte (log info, log rohtext, log text...) Variation 3
-			log text "Name: $Name"
-			log text "URL: $URL"
-			log text "AgentID: $AgentID"
-			log text "RegionID: $RegionID"
-			log text "Viewer: $Viewer"
-			log text "Channel: $Channel"
-			log text "IPAddress: $IPAddress"
-			log text "Mac: $Mac"
-			log text "Id0: $Id0"
-			log text "teleportFlags: $teleportFlags"
-			log text "RegionName: $RegionName"
-			log text "ServerURI: $ServerURI"
-			log line
-			
-			# Ausgabe der Werte in die Log-Datei Variation 4
-			# echo "Name: $Name" >> /"$STARTVERZEICHNIS"/"$DATEIDATUM""$logfilename".log
-			# echo "URL: $URL" >> /"$STARTVERZEICHNIS"/"$DATEIDATUM""$logfilename".log
-			# echo "AgentID: $AgentID" >> /"$STARTVERZEICHNIS"/"$DATEIDATUM""$logfilename".log
-			# echo "RegionID: $RegionID" >> /"$STARTVERZEICHNIS"/"$DATEIDATUM""$logfilename".log
-			# echo "Viewer: $Viewer" >> /"$STARTVERZEICHNIS"/"$DATEIDATUM""$logfilename".log
-			# echo "Channel: $Channel" >> /"$STARTVERZEICHNIS"/"$DATEIDATUM""$logfilename".log
-			# echo "IPAddress: $IPAddress" >> /"$STARTVERZEICHNIS"/"$DATEIDATUM""$logfilename".log
-			# echo "Mac: $Mac" >> /"$STARTVERZEICHNIS"/"$DATEIDATUM""$logfilename".log
-			# echo "Id0: $Id0" >> /"$STARTVERZEICHNIS"/"$DATEIDATUM""$logfilename".log
-			# echo "teleportFlags: $teleportFlags" >> /"$STARTVERZEICHNIS"/"$DATEIDATUM""$logfilename".log
-			# echo "RegionName: $RegionName" >> /"$STARTVERZEICHNIS"/"$DATEIDATUM""$logfilename".log
-			# echo "ServerURI: $ServerURI" >> /"$STARTVERZEICHNIS"/"$DATEIDATUM""$logfilename".log
-			# echo " " >> /"$STARTVERZEICHNIS"/"$DATEIDATUM""$logfilename".log
-		else
-			log warn "String im Log Eintrag entspricht nicht dem erwarteten Format."
-			#echo "String im Log Eintrag entspricht nicht dem erwarteten Format." >> /opt/LoginAgentList.log
-		fi
-	#else
-		#log warn "Der gesuchte Log Eintrag wurde in der Datei nicht gefunden."
-		#echo "Der gesuchte Log Eintrag wurde in der Datei nicht gefunden." >> /opt/LoginAgentList.log
-	fi
+                log line
+            else
+                log warn "String im Log Eintrag entspricht nicht dem erwarteten Format: $log_entry"
+            fi
+        fi
+    done
 }
 
 function delete_robust_logs() {
@@ -8855,6 +9046,7 @@ function autorestart() {
 	gridstart
 	autosimstart
 	screenlistrestart
+	#clear_variable_multitool_log_week 3
 
 	log info "Auto Restart abgeschlossen."
 	return 0
@@ -17180,7 +17372,7 @@ function newregionini() {
 	#   - Die Konfigurationsdatei enthält verschiedene Sektionen und Parameter.
 	#   - Die Werte der Parameter werden aus den übergebenen Argumenten genommen und in die Datei geschrieben.
 	#? Beispielaufruf:
-	#   constconfig "example.com" "http://example.com" "8002" "9000" "mydatabase" "myuser" "mypassword" "MyRegion" "MyGrid" "NickName" "/pfad/zur/ausgabedatei.ini"
+	#   constconfig "example.com" "http://example.com" "8002" "9000" "mydatabase" "myuser" "mypassword" "MyRegion" "MyGrid" "NickName" "/$STARTVERZEICHNIS/ausgabedatei.ini"
 	#? Rückgabewert:
 	#   - Die Funktion gibt keine expliziten Rückgabewerte zurück.
 	#? Hinweise:
@@ -19499,7 +19691,8 @@ function hilfe() {
 	echo "checkfile	- $(tput setab 5)pfad name$(tput sgr 0) – pruefen ob Datei vorhanden ist."	
 	#echo "chrisoscopy	- $(tput setab 5)Parameter$(tput sgr 0) – Informationen-Erklaerung."	
 	echo "cleaninstall	- $(tput setab 5)keine Parameter$(tput sgr 0) – loeschen aller externen addon Module."	
-	echo "clearuserlist	- $(tput setab 5)keine Parameter$(tput sgr 0) – Alle Besucherlisten loeschen."	
+	echo "clear_multitool_log	- $(tput setab 5)keine Parameter$(tput sgr 0) – Alle Besucherlisten loeschen."	
+	echo "clear_multitool_log_week	- $(tput setab 5)keine Parameter$(tput sgr 0) – Alle Besucherlisten loeschen ausser die aktuelle Woche."	
 	echo "compilieren	- $(tput setab 5)keine Parameter$(tput sgr 0) – kompilieren des OpenSimulator."	
 	echo "configabfrage	- $(tput setab 5)Abfragen$(tput sgr 0) – Konfigurationen und Verzeichnisstrukturen anlegen."
 	echo "constconfig	- $(tput setab 5)11Parameter$(tput sgr 0) – const.ini schreiben."	
@@ -21084,7 +21277,8 @@ function mainMenu() {
 	cleanaot "" \
 	cleaninstall "" \
 	cleanprebuild "" \
-	clearuserlist "" \
+	clear_multitool_log "" \
+	clear_multitool_log_week "" \
 	commandhelp "" \
 	compilieren "" \
 	configabfrage "" \
@@ -21495,7 +21689,8 @@ function mainMenu() {
 	cleanaot) cleanaot; break ;;
 	cleaninstall) cleaninstall; break ;;
 	cleanprebuild) cleanprebuild; break ;;
-	clearuserlist) clearuserlist; break ;;
+	clear_multitool_log) clear_multitool_log; break ;;
+	clear_multitool_log_week)clear_multitool_log_week; break ;;
 	commandhelp) commandhelp; break ;;
 	compilieren) compilieren; break ;;
 	configabfrage) configabfrage; break ;;
@@ -22265,7 +22460,9 @@ case $KOMMANDO in
 	menumoneyconfig) menumoneyconfig ;;
 	createdatabase) createdatabase "$2" "$3" "$4" ;;
 	createdbuser) createdbuser "$2" "$3" "$4" "$5" ;;
-	clearuserlist) clearuserlist ;;
+	clear_multitool_log) clear_multitool_log ;;
+	clear_multitool_log_week) clear_multitool_log_week ;;
+	clear_variable_multitool_log_week) clear_variable_multitool_log_week "$2" ;;
 	instdialog) instdialog ;;
 	createmasteravatar) createmasteravatar ;;
 	createregionavatar) createregionavatar ;;
