@@ -41,7 +41,7 @@
 #──────────────────────────────────────────────────────────────────────────────────────────
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.1481" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.1482" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 #──────────────────────────────────────────────────────────────────────────────────────────
@@ -1937,7 +1937,7 @@ function osmtoolconfigabfrage() {
 	read -r OSMTRANS
 	if [ "$OSMTRANS" = "" ]; then OSMTRANS=":de"; fi
 	log rohtext "Your language $OSMTRANS"
-	log rohtext "──────────────────────────────────────────────────────────────────────────────────────────"
+	#log rohtext "──────────────────────────────────────────────────────────────────────────────────────────"
 
 	log rohtext " "
 	log rohtext "──────────────────────────────────────────────────────────────────────────────────────────"
@@ -2136,7 +2136,12 @@ function namen() {
 	"Schöningstedt" "Sessrumnir" "Skaerbaek" "Skalundahög" "Slidur" "Sontheim" "Speyer" "SteinvonMora" "Svartalfaheimr" "Sökkwabeck" \
 	"Sörupsten" "Thrudheim" "Thrymheim" "Tibirke" "Tinnum" "Tofting" "Uppsala" "Urach" "Urdbrunnen" "Utgard" "Valaskjalf" \
 	"Vanaheimr" "Vineta" "Vingolf" "Vorbasse" "Waberlohe" "Wahlitz" "Walhall" "Werder" "Westick" "Wierde" "Wigrid" "Winternheim" \
-	"Wittemoor"	"Ermunduren" "Danduten")
+	"Wittemoor"	"Ermunduren" "Danduten" "Kristalltal" "Morgenlichtmoor" "Silbersee" "Dämmerwald" "Sternenlichthain" "Saphirgipfel"  \
+	"Nebelklippen" "Goldenebene" "Drachenküste" "Elfenhain" "Feuerfels" "Sonnenwindland" "Dunkelforst" "Wasserfallenreich" "Silberglanzland"  \
+	"Trauminsel" "Feenlichtbucht" "Smaragdtal" "Donnergrat" "Kristallwasser" "Himmelslichtebene" "Schattentannen" "Mondlichtbucht" "Frostfluss"  \
+	"Goldhügel" "Schatteninsel" "Sonnentauhain" "Nebelschlucht" "Waldeslichtung" "Eisenzinnen" "Wasserblütental" "Perlentauchersee" "Mondwiesenland"  \
+	"Sturmhöhle" "Sonnenscheinbucht" "Drachengrube" "Sternenlichtklippen" "Donnersteinland" "Eisfeuerwüste" "Feenstaubwald" "Sonnentautal"  \
+	"Eisdrachenhöhle" "Nebelinseln" "Wasserkristallreich" "Dornenland" "Schneekristallwald" "Morgenrötebucht" "Schwarzwald" "Sturmmeerinsel")
 
 	# Anzahl der Elemente im namensarray.
 	count=${#namensarray[@]}
@@ -2175,7 +2180,11 @@ function vornamen() {
 					"Stefan" "Marianne" "Detlef" "Bärbel" "Volker" "Doris" "Walter" "Beate" "Bernhard" "Rita" "Hartmut" "Gudrun" "Alexander" "Hannelore" "Christian" "Anke" "Rüdiger" "Marlis" "Georg" \
 					"Heidi" "Roland" "Anette" "Axel" "Rosemarie" "Herbert" "Carmen" "Jan" "Inge" "Dirk" "Margrit" "Carsten" "Irene" "Udo" "Maren" "Siegfried" "Kerstin" "Kurt" "Olga" "Herrmann" "Anita" \
 					"Lutz" "Frauke" "Johannes" "Annelise" "Hubert" "Susanne" "Heiko" "Meike" "Wilhelm" "Gertrud" "Paul" "Ina" "Arno" "Gunda" "Jochen" "Stephanie" "Heiner" "Gerlinde" "Niels" "Tamara" \
-					"Henning" "Liane" "Anton" "Ursel" "Edmund" "Rosa" )
+					"Henning" "Liane" "Anton" "Ursel" "Edmund" "Rosa" "ShadowHunter" "LunaStarlight" "CyberNinja" "MysticDreamer" "PhoenixFire" "NeonSpectre" "CrimsonWraith" "ElectricEcho" "SerenityFrost"  \
+					"DarkAngelDusk" "SilverDragon" "EnigmaCipher" "EchoKnight" "NovaVortex" "PixelPirate" "QuantumQuasar" "CosmicSerpent" "AzureSkywalker" "InfinityGazer" "NeonNebula" "TechnoMage" "LunarLotus"  \
+					"ArcaneOracle" "StormRider" "CelestialChaos" "BlazeStarlight" "VoidVoyager" "OmegaSpecter" "PhoenixPhantom" "DreamWeaver" "NeonNomad" "CyberSphinx" "MysticMarauder" "NovaNinja" "ShadowSorcerer"  \
+					"SeraphicStorm" "ElectricEmpress" "QuantumQuill" "CrimsonCaster" "SilverSilhouette" "EnigmaEclipse" "EchoEnchanter" "NebulaNymph" "TechnoTitan" "LunarLuminance" "ArcaneAcolyte" "StormSylph"  \
+					"CelestialCipher" "BlazeBard" "VoidVigilante" )
 
 	# Anzahl der Elemente im namensarray.
 	count=${#firstnamensarray[@]}
@@ -6115,6 +6124,46 @@ function logdel() {
 	return 0
 }
 
+# Funktion zum Parsen einer Zeile ungetestet
+parse_log_line() {
+    local line="$1"
+
+    # Regex pattern to match the log line structure
+    local pattern="\[GATEKEEPER SERVICE\]: Login request for ([^@]+)@([^:]+):[^ ]+ @ ([^:]+):[^ ]+ \(([^)]+)\) at ([^ ]+) using viewer ([^ ]+) ([^,]+), channel ([^,]+), IP ([^,]+), Mac ([^,]+), Id0 ([^,]+), Teleport Flags: ([^ ]+)(, .+)? From region ([^ ]+) \(([^)]+)\) @ ([^:]+):[^ ]+"
+
+    if [[ $line =~ $pattern ]]; then
+        # Extracting matched groups
+        local username="${BASH_REMATCH[1]}"
+        local domain="${BASH_REMATCH[2]}"
+        local viewer="${BASH_REMATCH[6]}"
+        local version="${BASH_REMATCH[7]}"
+        local channel="${BASH_REMATCH[8]}"
+        local ip="${BASH_REMATCH[9]}"
+        local mac="${BASH_REMATCH[10]}"
+        local id0="${BASH_REMATCH[11]}"
+        local teleport_flags="${BASH_REMATCH[12]}"
+        local region="${BASH_REMATCH[14]}"
+        local region_id="${BASH_REMATCH[15]}"
+        local region_url="${BASH_REMATCH[16]}"
+
+        # Printing extracted information
+        echo "Username: $username"
+        echo "Domain: $domain"
+        echo "Viewer: $viewer"
+        echo "Version: $version"
+        echo "Channel: $channel"
+        echo "IP: $ip"
+        echo "Mac: $mac"
+        echo "Id0: $id0"
+        echo "Teleport Flags: $teleport_flags"
+        echo "Region: $region"
+        echo "Region ID: $region_id"
+        echo "Region URL: $region_url"
+    else
+        echo "Failed to parse line: $line"
+    fi
+}
+
 ## *  write_visitor_log
 	#? Beschreibung:
 	# Die Funktion write_visitor_log erstellt eine HG Besucherliste im logfile.
@@ -6125,6 +6174,7 @@ function write_visitor_log() {
 
     log line
     log info "Erstelle eine Liste aller die sich im Grid befanden:"
+	log line
 
     # Dateipfad für die Log-Datei
     log_file="/$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin/Robust.log"
@@ -6137,7 +6187,7 @@ function write_visitor_log() {
         # Überprüfen, ob der String gefunden wurde
         if [[ -n "$log_entry" ]]; then
             # Parsen der Werte
-            regex='\[GATEKEEPER SERVICE\]: Login request for ([^@]+) @ ([^ ]+) \(([^)]+)\) at ([^ ]+) using viewer ([^,]+), channel ([^,]+), IP ([^,]+), Mac ([^,]+), Id0 ([^,]+)'
+			regex='\[GATEKEEPER SERVICE\]: Login request for ([^@]+) @ ([^ ]+) \(([^)]+)\) at ([^ ]+) using viewer ([^,]+), channel ([^,]+), IP ([^,]+), Mac ([^,]+), Id0 ([^,]+)|\[GATEKEEPER SERVICE\]: Login request for ([^@]+) @([^ ]+) @ ([^ ]+) \(([^)]+)\) at ([^ ]+) using viewer ([^,]+), channel ([^,]+), IP ([^,]+), Mac ([^,]+), Id0 ([^,]+)'
 
             if [[ $log_entry =~ $regex ]]; then
                 # Extrahieren der Werte aus den RegExp-Matches
@@ -6151,16 +6201,38 @@ function write_visitor_log() {
                 Mac="${BASH_REMATCH[8]}"
                 Id0="${BASH_REMATCH[9]}"
 
+				XX10="${BASH_REMATCH[10]}"
+				XX11="${BASH_REMATCH[11]}"
+				XX12="${BASH_REMATCH[12]}"
+				XX13="${BASH_REMATCH[13]}"
+				XX14="${BASH_REMATCH[14]}"
+				XX15="${BASH_REMATCH[15]}"
+				XX16="${BASH_REMATCH[16]}"
+				XX17="${BASH_REMATCH[17]}"
+				XX18="${BASH_REMATCH[18]}"
+				XX19="${BASH_REMATCH[19]}"
+
                 # Ausgabe
-                log text "Name: $Name"
-                log text "URL: $URL"
-                log text "AgentID: $AgentID"
-                log text "RegionID: $RegionID"
-                log text "Viewer: $Viewer"
-                log text "Channel: $Channel"
-                log text "IPAddress: $IPAddress"
-                log text "Mac: $Mac"
-                log text "Id0: $Id0"
+				if [[ -n "$Name" ]]; then log text "Name: $Name"; fi
+                if [[ -n "$Name" ]]; then log text "URL: $URL"; fi
+                if [[ -n "$Name" ]]; then log text "AgentID: $AgentID"; fi
+                if [[ -n "$Name" ]]; then log text "RegionID: $RegionID"; fi
+                if [[ -n "$Name" ]]; then log text "Viewer: $Viewer"; fi
+                if [[ -n "$Name" ]]; then log text "Channel: $Channel"; fi
+                if [[ -n "$Name" ]]; then log text "IPAddress: $IPAddress"; fi
+                if [[ -n "$Name" ]]; then log text "Mac: $Mac"; fi
+                if [[ -n "$Name" ]]; then log text "Id0: $Id0"; fi
+
+				if [[ -n "$XX10" ]]; then log text "Name: $XX10"; fi
+				if [[ -n "$XX11" ]]; then log text "Domain: $XX11"; fi
+				if [[ -n "$XX12" ]]; then log text "URL: $XX12"; fi
+				if [[ -n "$XX13" ]]; then log text "AgentID: $XX13"; fi
+				if [[ -n "$XX14" ]]; then log text "RegionID: $XX14"; fi
+				if [[ -n "$XX15" ]]; then log text "Viewer: $XX15"; fi
+				if [[ -n "$XX16" ]]; then log text "Channel: $XX16"; fi
+				if [[ -n "$XX17" ]]; then log text "IPAddress: $XX17"; fi
+				if [[ -n "$XX18" ]]; then log text "Mac: $XX18"; fi
+				if [[ -n "$XX19" ]]; then log text "Id0: $XX19"; fi
 
                 log line
             else
