@@ -41,7 +41,7 @@
 #──────────────────────────────────────────────────────────────────────────────────────────
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.1486" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.1487" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 #──────────────────────────────────────────────────────────────────────────────────────────
@@ -275,7 +275,7 @@ EOF
 # Hier weitere Befehle einfügen, die nach der Installation ausgeführt werden sollen
 
 # Wechsel in den bin-Ordner
-cd "opt/opensim/bin" || exit
+#cd "opt/opensim/bin" || exit
 
 # Überprüfe und kopiere OpenSim.ini.example nach OpenSim.ini
 if [ ! -f "OpenSim.ini" ]; then
@@ -319,10 +319,10 @@ EOF
 	log info "Altes debpkgs Verzeichnis löschen."
     rm -r /$PAKETVERZEICHNIS/debpkgs
     
-    log info "Das fertige Paket befindet sich jetzt in /opt/$PAKETNAME"
+    log info "Das fertige Paket befindet sich jetzt in /opt/$PAKETNAME.deb"
 	log info "Die installation wir so gestartet: apt install /opt/opensim_0_9_3_0_Dev_Extended.deb"
 	log info "Achtung der installiert einfach nach /usr/bin"
-	log info "apt remove opensim"
+	log info "Zum Deinstallieren einfach: apt remove opensim"
 }
 
 ## * progress_end_menu
