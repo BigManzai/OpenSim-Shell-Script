@@ -41,7 +41,7 @@
 #──────────────────────────────────────────────────────────────────────────────────────────
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.1485" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.1486" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 #──────────────────────────────────────────────────────────────────────────────────────────
@@ -221,11 +221,6 @@ check_and_execute() {
     fi
 }
 
-# Test Variablen für den Paketbuilder
-SOURCEVERZEICHNIS="/opt" # Binary distribution
-PAKETVERZEICHNIS="/home" # Paket Verzeichnis
-PAKETNAME="opensim_0_9_3_0_Dev_Extended" # OpenSimulator Version
-
 function depends_installer() {
     # Prüfen, ob die erforderlichen Pakete installiert sind
     if ! dpkg -s build-essential debhelper dh-make quilt devscripts >/dev/null 2>&1; then
@@ -236,13 +231,21 @@ function depends_installer() {
 }
 
 function debpaketbuild() {
+	# Test Variablen für den Paketbuilder
+	SOURCEVERZEICHNIS="/opt/opensim-master" # Binary distribution
+	PAKETVERZEICHNIS="/opt" # Paket Verzeichnis
+	PAKETNAME="opensim_0_9_3_0_Dev_Extended" # OpenSimulator Version
+	log info "SOURCEVERZEICHNIS=$SOURCEVERZEICHNIS" 
+	log info "PAKETVERZEICHNIS=$PAKETVERZEICHNIS"
+	log info "PAKETNAME=$PAKETNAME"
+
     # Altes debpkgs Verzeichnis löschen.
-	log info "Altes debpkgs Verzeichnis löschen."
-    rm -r /$PAKETVERZEICHNIS/debpkgs || log info "$PAKETVERZEICHNIS Verzeichnis existiert noch nicht starte Peketerstellung."
+	#log info "Altes debpkgs Verzeichnis löschen."
+    #rm -r /$PAKETVERZEICHNIS/debpkgs || log info "$PAKETVERZEICHNIS Verzeichnis existiert noch nicht starte Peketerstellung."
 
     # Prüfen ob das Quellverzeichnis existiert sonst abbruch.
 	log info "Prüfen ob das Quellverzeichnis existiert sonst abbruch."
-    cd $SOURCEVERZEICHNIS/opensim/bin || exit 1
+    cd $SOURCEVERZEICHNIS/bin || exit 1
     
     # Erstellen des Projektverzeichnisses
 	log info "Erstellen des Projektverzeichnisses."
@@ -250,12 +253,12 @@ function debpaketbuild() {
     
     # Kopieren der Dateien
 	log info "Kopieren der Dateien."
-    cp -r "$SOURCEVERZEICHNIS/opensim/bin" "$PAKETVERZEICHNIS/debpkgs/$PAKETNAME/bin/"
+    cp -r "$SOURCEVERZEICHNIS/bin" "$PAKETVERZEICHNIS/debpkgs/$PAKETNAME/bin/"
 
     # Erstellen der Steuerdatei. Es können auch eigene Dateien verwendet werden wie Datei opensim: Depends: ${opensim:Depends}
 	log info "Erstellen der Steuerdatei"
     cat <<EOF > "$PAKETVERZEICHNIS/debpkgs/$PAKETNAME/DEBIAN/control"
-Package: OpenSimulator
+Package: opensim
 Version: 0.9.3.0
 Architecture: all
 Essential: no
@@ -309,8 +312,17 @@ EOF
     # Paket generieren
 	log info "Paket generieren."
     dpkg-deb --build "$PAKETVERZEICHNIS/debpkgs/$PAKETNAME"
+
+	log info "Kopieren das Paket nach /opt."
+	cp "$PAKETVERZEICHNIS/debpkgs/$PAKETNAME.deb" "/opt"
+
+	log info "Altes debpkgs Verzeichnis löschen."
+    rm -r /$PAKETVERZEICHNIS/debpkgs
     
-    log info "Das fertige Paket befindet sich jetzt in $PAKETVERZEICHNIS/debpkgs"
+    log info "Das fertige Paket befindet sich jetzt in /opt/$PAKETNAME"
+	log info "Die installation wir so gestartet: apt install /opt/opensim_0_9_3_0_Dev_Extended.deb"
+	log info "Achtung der installiert einfach nach /usr/bin"
+	log info "apt remove opensim"
 }
 
 ## * progress_end_menu
