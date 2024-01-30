@@ -41,7 +41,7 @@
 #──────────────────────────────────────────────────────────────────────────────────────────
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.1482" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.1485" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 #──────────────────────────────────────────────────────────────────────────────────────────
@@ -199,6 +199,119 @@ function benutzer_menu() {
 #──────────────────────────────────────────────────────────────────────────────────────────
 #* Tests
 #──────────────────────────────────────────────────────────────────────────────────────────
+
+## * check_and_execute
+# Funktion zum Überprüfen der Existenz einer Datei und Ausführen der Aktionen.
+#? Beispiele:
+# Wechsel in das gewünschte Verzeichnis
+# cd /Verzeichnis
+# Kopiere OpenSim.ini.example nach OpenSim.ini wenn dies nicht existiert
+# check_and_execute "OpenSim.ini" "cp OpenSim.ini.example OpenSim.ini"
+# Kopiere StandaloneCommon.ini.example nach StandaloneCommon.ini wenn dies nicht existiert
+# check_and_execute "StandaloneCommon.ini" "cp StandaloneCommon.ini.example StandaloneCommon.ini"
+# Kopiere FlotsamCache.ini.example nach FlotsamCache.ini wenn dies nicht existiert
+# check_and_execute "FlotsamCache.ini" "cp FlotsamCache.ini.example FlotsamCache.ini"
+##
+check_and_execute() {
+    if [ ! -f "$1" ]; then
+        # Datei existiert nicht, Aktionen ausführen
+        "$2"
+    else
+        echo "Die Datei $1 existiert bereits."
+    fi
+}
+
+# Test Variablen für den Paketbuilder
+SOURCEVERZEICHNIS="/opt" # Binary distribution
+PAKETVERZEICHNIS="/home" # Paket Verzeichnis
+PAKETNAME="opensim_0_9_3_0_Dev_Extended" # OpenSimulator Version
+
+function depends_installer() {
+    # Prüfen, ob die erforderlichen Pakete installiert sind
+    if ! dpkg -s build-essential debhelper dh-make quilt devscripts >/dev/null 2>&1; then
+        # Installieren der benötigten Pakete
+        sudo apt-get update
+        sudo apt-get install -y build-essential debhelper dh-make quilt devscripts
+    fi
+}
+
+function debpaketbuild() {
+    # Altes debpkgs Verzeichnis löschen.
+	log info "Altes debpkgs Verzeichnis löschen."
+    rm -r /$PAKETVERZEICHNIS/debpkgs || log info "$PAKETVERZEICHNIS Verzeichnis existiert noch nicht starte Peketerstellung."
+
+    # Prüfen ob das Quellverzeichnis existiert sonst abbruch.
+	log info "Prüfen ob das Quellverzeichnis existiert sonst abbruch."
+    cd $SOURCEVERZEICHNIS/opensim/bin || exit 1
+    
+    # Erstellen des Projektverzeichnisses
+	log info "Erstellen des Projektverzeichnisses."
+    mkdir -p "$PAKETVERZEICHNIS/debpkgs/$PAKETNAME/DEBIAN"
+    
+    # Kopieren der Dateien
+	log info "Kopieren der Dateien."
+    cp -r "$SOURCEVERZEICHNIS/opensim/bin" "$PAKETVERZEICHNIS/debpkgs/$PAKETNAME/bin/"
+
+    # Erstellen der Steuerdatei. Es können auch eigene Dateien verwendet werden wie Datei opensim: Depends: ${opensim:Depends}
+	log info "Erstellen der Steuerdatei"
+    cat <<EOF > "$PAKETVERZEICHNIS/debpkgs/$PAKETNAME/DEBIAN/control"
+Package: OpenSimulator
+Version: 0.9.3.0
+Architecture: all
+Essential: no
+Priority: optional
+Depends: dotnet-sdk-6.0, aspnetcore-runtime-6.0, apt-utils, libgdiplus, libc6-dev, sqlite3, mariadb-server, screen, graphicsmagick, imagemagick
+Maintainer: Manfred Aabye
+Description: OpenSimulator is an open source multi-platform, multi-user 3D application server.
+EOF
+
+    # Erstellen des postinst-Skripts
+	log info "Erstellen des postinst-Skripts."
+    cat <<EOF > "$PAKETVERZEICHNIS/debpkgs/$PAKETNAME/DEBIAN/postinst"
+#!/bin/bash
+# Hier weitere Befehle einfügen, die nach der Installation ausgeführt werden sollen
+
+# Wechsel in den bin-Ordner
+cd "opt/opensim/bin" || exit
+
+# Überprüfe und kopiere OpenSim.ini.example nach OpenSim.ini
+if [ ! -f "OpenSim.ini" ]; then
+    cp OpenSim.ini.example OpenSim.ini
+else
+    echo "Die Datei OpenSim.ini existiert bereits."
+fi
+
+# Überprüfe und aktualisiere PublicPort im [Const]-Abschnitt
+sed -i 's/^PublicPort *=.*/PublicPort = 9000/' OpenSim.ini
+
+# Kommentiere die Zeile Standalone.ini im [Architecture]-Abschnitt aus
+sed -i 's/^; *Standalone.ini/Standalone.ini/' OpenSim.ini
+
+# Wechsel in den bin/config-include-Ordner
+cd ../config-include || exit
+
+# Überprüfe und kopiere StandaloneCommon.ini.example nach StandaloneCommon.ini
+if [ ! -f "StandaloneCommon.ini" ]; then
+    cp StandaloneCommon.ini.example StandaloneCommon.ini
+else
+    echo "Die Datei StandaloneCommon.ini existiert bereits."
+fi
+
+# Überprüfe und kopiere FlotsamCache.ini.example nach FlotsamCache.ini
+if [ ! -f "FlotsamCache.ini" ]; then
+    cp FlotsamCache.ini.example FlotsamCache.ini
+else
+    echo "Die Datei FlotsamCache.ini existiert bereits."
+fi
+EOF
+    chmod 755 "$PAKETVERZEICHNIS/debpkgs/$PAKETNAME/DEBIAN/postinst"
+
+    # Paket generieren
+	log info "Paket generieren."
+    dpkg-deb --build "$PAKETVERZEICHNIS/debpkgs/$PAKETNAME"
+    
+    log info "Das fertige Paket befindet sich jetzt in $PAKETVERZEICHNIS/debpkgs"
+}
 
 ## * progress_end_menu
 #!  progress_end_menu
@@ -22692,6 +22805,9 @@ case $KOMMANDO in
 	write_visitor_log) write_visitor_log ;;
 	delete_robust_logs) delete_robust_logs ;;
     delete_money_logs) delete_money_logs ;;
+	check_and_execute) check_and_execute "$2" ;;
+	depends_installer) depends_installer ;;
+	debpaketbuild) debpaketbuild ;;
 	h) newhelp ;;
 	V | v) echo "$SCRIPTNAME $VERSION" ;;
 	*) hauptmenu ;;
