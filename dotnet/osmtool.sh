@@ -20,7 +20,7 @@
 	# ! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 	# ! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#
-	# * Letzte bearbeitung 27.01.2024.
+	# * Letzte bearbeitung 01.02.2024.
 	#
 	# # Installieren sie bitte: #* Visual Studio Code
 	#* dazu die Plugins:
@@ -41,7 +41,7 @@
 #──────────────────────────────────────────────────────────────────────────────────────────
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.1487" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.1488" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 #──────────────────────────────────────────────────────────────────────────────────────────
@@ -230,33 +230,54 @@ function depends_installer() {
     fi
 }
 
+## * debpaketbuild
+	# Das Skript erstellt ein Debian-Paket für den OpenSimulator und führt verschiedene Aktionen aus, um das Paket zu konfigurieren und zu generieren. 
+	# Hier sind die Funktionen des Skripts:
+	# Variablen setzen: Das Skript akzeptiert eine Versionsnummer als Argument und setzt dann verschiedene Variablen für Quellverzeichnis, Paketverzeichnis, Paketname und das Installationsverzeichnis des OpenSimulators.
+	# Projektverzeichnis erstellen: Das Skript erstellt ein Projektverzeichnis für das Paket, einschließlich eines Verzeichnisses für die DEBIAN-Struktur.
+	# Dateien kopieren: Es kopiert die Binärdateien des OpenSimulators in das Installationsverzeichnis.
+	# Steuerdatei erstellen: Das Skript erstellt eine Steuerdatei für das Paket, die Metadaten wie Paketname, Version, Architektur, Abhängigkeiten und Beschreibung enthält.
+	# postinst-Skript erstellen: Es erstellt ein postinst-Skript, das nach der Installation des Pakets ausgeführt wird. Das Skript führt verschiedene Konfigurationsänderungen durch, wie das Kopieren von Konfigurationsdateien und das Aktualisieren von Einstellungen.
+	# Paket generieren: Das Skript generiert das Debian-Paket mit Hilfe des dpkg-deb-Befehls.
+	# Paket kopieren: Das erstellte Paket wird nach /opt kopiert.
+	# Aufräumen: Schließlich werden temporäre Verzeichnisse gelöscht und eine Nachricht mit Anweisungen zur Installation und Deinstallation des Pakets ausgegeben.
+	# Dieses Skript erstellt ein Debian-Paket für den OpenSimulator und führt die erforderlichen Schritte aus, um es zu konfigurieren und zu generieren. Es ist darauf ausgelegt, auf 64-Bit-Debian-Systemen und deren Derivaten zu funktionieren.
+##
 function debpaketbuild() {
-	# Test Variablen für den Paketbuilder
-	SOURCEVERZEICHNIS="/opt/opensim-master" # Binary distribution
-	PAKETVERZEICHNIS="/opt" # Paket Verzeichnis
-	PAKETNAME="opensim_0_9_3_0_Dev_Extended" # OpenSimulator Version
-	log info "SOURCEVERZEICHNIS=$SOURCEVERZEICHNIS" 
-	log info "PAKETVERZEICHNIS=$PAKETVERZEICHNIS"
-	log info "PAKETNAME=$PAKETNAME"
+    NUMMER=$1
+    # Überprüfen, ob die Variable NUMMER leer ist
+    if [ -z "$NUMMER" ]; then NUMMER="0000"; fi
+    
+    # Test Variablen für den Paketbuilder
+    SOURCEVERZEICHNIS="/opt/opensim-master" 				# Binary distribution
+    PAKETVERZEICHNIS="/opt" 								# Paket Verzeichnis
+    PAKETNAME="opensim_0_9_3_0_Dev-$NUMMER-Extended.amd64" 	# OpenSimulator Version
+	HOME="/home/opensim" 									# apt install Installationsverzeichnis
+    log info "SOURCEVERZEICHNIS=$SOURCEVERZEICHNIS" 
+    log info "PAKETVERZEICHNIS=$PAKETVERZEICHNIS"
+    log info "PAKETNAME=$PAKETNAME"
+	log info "HOME=$HOME"
 
     # Altes debpkgs Verzeichnis löschen.
-	#log info "Altes debpkgs Verzeichnis löschen."
+    #log info "Altes debpkgs Verzeichnis löschen."
     #rm -r /$PAKETVERZEICHNIS/debpkgs || log info "$PAKETVERZEICHNIS Verzeichnis existiert noch nicht starte Peketerstellung."
 
     # Prüfen ob das Quellverzeichnis existiert sonst abbruch.
-	log info "Prüfen ob das Quellverzeichnis existiert sonst abbruch."
+    log info "Prüfen ob das Quellverzeichnis existiert sonst abbruch."
     cd $SOURCEVERZEICHNIS/bin || exit 1
     
     # Erstellen des Projektverzeichnisses
-	log info "Erstellen des Projektverzeichnisses."
+    log info "Erstellen des Projektverzeichnisses."
     mkdir -p "$PAKETVERZEICHNIS/debpkgs/$PAKETNAME/DEBIAN"
     
     # Kopieren der Dateien
-	log info "Kopieren der Dateien."
-    cp -r "$SOURCEVERZEICHNIS/bin" "$PAKETVERZEICHNIS/debpkgs/$PAKETNAME/bin/"
+    log info "Kopieren der Dateien."
+    # Kopiere die Binärdateien nach $HOME/bin
+    mkdir -p "$PAKETVERZEICHNIS/debpkgs/$PAKETNAME/$HOME/bin"
+    cp -r "$SOURCEVERZEICHNIS/bin" "$PAKETVERZEICHNIS/debpkgs/$PAKETNAME/$HOME/"
 
     # Erstellen der Steuerdatei. Es können auch eigene Dateien verwendet werden wie Datei opensim: Depends: ${opensim:Depends}
-	log info "Erstellen der Steuerdatei"
+    log info "Erstellen der Steuerdatei"
     cat <<EOF > "$PAKETVERZEICHNIS/debpkgs/$PAKETNAME/DEBIAN/control"
 Package: opensim
 Version: 0.9.3.0
@@ -269,40 +290,40 @@ Description: OpenSimulator is an open source multi-platform, multi-user 3D appli
 EOF
 
     # Erstellen des postinst-Skripts
-	log info "Erstellen des postinst-Skripts."
+    log info "Erstellen des postinst-Skripts."
     cat <<EOF > "$PAKETVERZEICHNIS/debpkgs/$PAKETNAME/DEBIAN/postinst"
 #!/bin/bash
 # Hier weitere Befehle einfügen, die nach der Installation ausgeführt werden sollen
 
 # Wechsel in den bin-Ordner
-#cd "opt/opensim/bin" || exit
+#cd "$HOME/opensim/bin" || exit
 
 # Überprüfe und kopiere OpenSim.ini.example nach OpenSim.ini
-if [ ! -f "OpenSim.ini" ]; then
-    cp OpenSim.ini.example OpenSim.ini
+if [ ! -f $HOME/bin/OpenSim.ini" ]; then
+    cp $HOME/bin/OpenSim.ini.example" $HOME/bin/OpenSim.ini"
 else
     echo "Die Datei OpenSim.ini existiert bereits."
 fi
 
 # Überprüfe und aktualisiere PublicPort im [Const]-Abschnitt
-sed -i 's/^PublicPort *=.*/PublicPort = 9000/' OpenSim.ini
+sed -i 's/^PublicPort *=.*/PublicPort = 9000/' $HOME/bin/OpenSim.ini"
 
 # Kommentiere die Zeile Standalone.ini im [Architecture]-Abschnitt aus
-sed -i 's/^; *Standalone.ini/Standalone.ini/' OpenSim.ini
+sed -i 's/^; *Standalone.ini/Standalone.ini/' $HOME/bin/OpenSim.ini"
 
 # Wechsel in den bin/config-include-Ordner
-cd ../config-include || exit
+cd $HOME/bin/config-include" || exit
 
 # Überprüfe und kopiere StandaloneCommon.ini.example nach StandaloneCommon.ini
-if [ ! -f "StandaloneCommon.ini" ]; then
-    cp StandaloneCommon.ini.example StandaloneCommon.ini
+if [ ! -f $HOME/bin/config-include/StandaloneCommon.ini" ]; then
+    cp $HOME/bin/config-include/StandaloneCommon.ini.example" $HOME/bin/config-include/StandaloneCommon.ini"
 else
     echo "Die Datei StandaloneCommon.ini existiert bereits."
 fi
 
 # Überprüfe und kopiere FlotsamCache.ini.example nach FlotsamCache.ini
-if [ ! -f "FlotsamCache.ini" ]; then
-    cp FlotsamCache.ini.example FlotsamCache.ini
+if [ ! -f $HOME/bin/config-include/FlotsamCache.ini" ]; then
+    cp $HOME/bin/config-include/FlotsamCache.ini.example" $HOME/bin/config-include/FlotsamCache.ini"
 else
     echo "Die Datei FlotsamCache.ini existiert bereits."
 fi
@@ -310,19 +331,19 @@ EOF
     chmod 755 "$PAKETVERZEICHNIS/debpkgs/$PAKETNAME/DEBIAN/postinst"
 
     # Paket generieren
-	log info "Paket generieren."
+    log info "Paket generieren."
     dpkg-deb --build "$PAKETVERZEICHNIS/debpkgs/$PAKETNAME"
 
-	log info "Kopieren das Paket nach /opt."
-	cp "$PAKETVERZEICHNIS/debpkgs/$PAKETNAME.deb" "/opt"
+    log info "Kopieren das Paket nach /opt."
+    cp "$PAKETVERZEICHNIS/debpkgs/$PAKETNAME.deb" "/opt"
 
-	log info "Altes debpkgs Verzeichnis löschen."
+    log info "Altes debpkgs Verzeichnis löschen."
     rm -r /$PAKETVERZEICHNIS/debpkgs
     
     log info "Das fertige Paket befindet sich jetzt in /opt/$PAKETNAME.deb"
-	log info "Die installation wir so gestartet: apt install /opt/opensim_0_9_3_0_Dev_Extended.deb"
-	log info "Achtung der installiert einfach nach /usr/bin"
-	log info "Zum Deinstallieren einfach: apt remove opensim"
+    log info "Die installation wir so gestartet: apt install /opt/opensim_0_9_3_0_Dev-$NUMMER-Extended.amd64.deb"
+    log info "Achtung der installiert einfach nach $HOME/bin"
+    log info "Zum Deinstallieren einfach: apt remove opensim"
 }
 
 ## * progress_end_menu
@@ -22819,7 +22840,7 @@ case $KOMMANDO in
     delete_money_logs) delete_money_logs ;;
 	check_and_execute) check_and_execute "$2" ;;
 	depends_installer) depends_installer ;;
-	debpaketbuild) debpaketbuild ;;
+	debpaketbuild) debpaketbuild "$2" ;;
 	h) newhelp ;;
 	V | v) echo "$SCRIPTNAME $VERSION" ;;
 	*) hauptmenu ;;
