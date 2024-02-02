@@ -20,7 +20,7 @@
 	# ! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 	# ! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#
-	# * Letzte bearbeitung 01.02.2024.
+	# * Letzte bearbeitung 02.02.2024.
 	#
 	# # Installieren sie bitte: #* Visual Studio Code
 	#* dazu die Plugins:
@@ -41,7 +41,7 @@
 #──────────────────────────────────────────────────────────────────────────────────────────
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.1488" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.1490" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 #──────────────────────────────────────────────────────────────────────────────────────────
@@ -200,19 +200,56 @@ function benutzer_menu() {
 #* Tests
 #──────────────────────────────────────────────────────────────────────────────────────────
 
-## * check_and_execute
-# Funktion zum Überprüfen der Existenz einer Datei und Ausführen der Aktionen.
-#? Beispiele:
-# Wechsel in das gewünschte Verzeichnis
-# cd /Verzeichnis
-# Kopiere OpenSim.ini.example nach OpenSim.ini wenn dies nicht existiert
-# check_and_execute "OpenSim.ini" "cp OpenSim.ini.example OpenSim.ini"
-# Kopiere StandaloneCommon.ini.example nach StandaloneCommon.ini wenn dies nicht existiert
-# check_and_execute "StandaloneCommon.ini" "cp StandaloneCommon.ini.example StandaloneCommon.ini"
-# Kopiere FlotsamCache.ini.example nach FlotsamCache.ini wenn dies nicht existiert
-# check_and_execute "FlotsamCache.ini" "cp FlotsamCache.ini.example FlotsamCache.ini"
+## * log_error
+	# Parameter:
+	#   $1 - OSSTARTSCREEN: OpenSimulator, Verzeichnis und Screen Name
+	# Beschreibung:
+	#   Diese Funktion überprüft die Logdatei des OpenSimulators nach "ERROR" oder "WARN".
+	#   Wenn entsprechende Einträge gefunden werden, werden sie in der Konsole ausgegeben
+	#   und zusätzlich in eine separate Logdatei geschrieben.
+	# Rückgabewerte:
+	#   None
 ##
-check_and_execute() {
+function log_error() {
+    OSSTARTSCREEN=$1 # OpenSimulator, Verzeichnis und Screen Name
+
+    # Pfad zur Log-Datei
+    log_file="/$STARTVERZEICHNIS/$OSSTARTSCREEN/bin/OpenSim.log"
+
+    # Überprüfen, ob die Datei existiert
+    if [ -f "$log_file" ]; then        
+        
+        # Suchen nach "ERROR" oder "WARN" und Speichern in Variable
+        log_output=$(grep -E 'ERROR|WARN' "$log_file")
+        
+        # Überprüfen, ob Variable nicht leer ist
+        if [ -n "$log_output" ]; then
+			log info "OpenSimulator Logdatei $OSSTARTSCREEN auswerten"
+
+            # Ausgabe der Zeilen mit "ERROR" oder "WARN" in der Konsole
+            echo "$log_output"
+            
+            # Zusätzlich Ausgabe in separate Log-Datei
+            echo "$log_output" >> /$STARTVERZEICHNIS/"$DATEIDATUM""$logfilename".log
+        fi
+    else
+        echo "Die Datei $log_file existiert nicht."
+    fi
+}
+
+## * check_and_execute
+	# Funktion zum Überprüfen der Existenz einer Datei und Ausführen der Aktionen.
+	#? Beispiele:
+	# Wechsel in das gewünschte Verzeichnis
+	# cd /Verzeichnis
+	# Kopiere OpenSim.ini.example nach OpenSim.ini wenn dies nicht existiert
+	# check_and_execute "OpenSim.ini" "cp OpenSim.ini.example OpenSim.ini"
+	# Kopiere StandaloneCommon.ini.example nach StandaloneCommon.ini wenn dies nicht existiert
+	# check_and_execute "StandaloneCommon.ini" "cp StandaloneCommon.ini.example StandaloneCommon.ini"
+	# Kopiere FlotsamCache.ini.example nach FlotsamCache.ini wenn dies nicht existiert
+	# check_and_execute "FlotsamCache.ini" "cp FlotsamCache.ini.example FlotsamCache.ini"
+##
+function check_and_execute() {
     if [ ! -f "$1" ]; then
         # Datei existiert nicht, Aktionen ausführen
         "$2"
@@ -247,6 +284,9 @@ function debpaketbuild() {
     NUMMER=$1
     # Überprüfen, ob die Variable NUMMER leer ist
     if [ -z "$NUMMER" ]; then NUMMER="0000"; fi
+
+	# Zip Paket erstellen
+	oscopycompress $NUMMER
     
     # Test Variablen für den Paketbuilder
     SOURCEVERZEICHNIS="/opt/opensim-master" 				# Binary distribution
@@ -344,6 +384,32 @@ EOF
     log info "Die installation wir so gestartet: apt install /opt/opensim_0_9_3_0_Dev-$NUMMER-Extended.amd64.deb"
     log info "Achtung der installiert einfach nach $HOME/bin"
     log info "Zum Deinstallieren einfach: apt remove opensim"
+}
+
+# Funktion zum Kopieren von Verzeichnissen und Dateien in ein neues Verzeichnis und anschließendes Komprimieren mit ZIP
+function oscopycompress() {
+	NUMMER=$1
+    # Überprüfen, ob die Variable NUMMER leer ist
+    if [ -z "$NUMMER" ]; then NUMMER="0000"; fi
+
+	cd /opt || exit
+
+	PAKETNAME="opensim-0.9.3.0.$NUMMER" 	# OpenSimulator Version
+    
+    # Erstelle das PAKETNAME
+    mkdir "$PAKETNAME"
+    
+    # Kopiere Verzeichnisse
+    cp -r /opt/opensim/bin /opt/BulletSim /opt/opensim/ThirdPartyLicenses "$PAKETNAME"
+    
+    # Kopiere Dateien
+    cp /opt/opensim/BUILDING.md "$PAKETNAME"
+	cp /opt/opensim/CONTRIBUTORS.txt "$PAKETNAME"
+	cp /opt/opensim/LICENSE.txt "$PAKETNAME"
+	cp /opt/opensim/TESTING.txt "$PAKETNAME"
+
+    # Komprimiere das PAKETNAME mit ZIP
+    zip -r "${PAKETNAME}.zip" "$PAKETNAME"
 }
 
 ## * progress_end_menu
@@ -1340,7 +1406,6 @@ function osmexit() {
 	dialogclear
 
 	# Den Blauen hintergrud restlos entfernen.
-	#echo -e ""; echo -e ""; echo -e ""; echo -e ""; echo -e ""; echo -e ""; echo -e ""; echo -e ""; echo -e ""; echo -e ""
 	printf '\n%.0s' {1..10}
 
 	# Hier wird der Bildschirm gelöscht.	
@@ -1871,6 +1936,7 @@ function osmtoolconfig() {
 		echo '    REGIONSANZEIGE="yes"'
 		echo "     "
 		echo '    LOGDELETE="yes" # yes/no'
+		echo '    WRITEERROR="yes" # yes/no'
 		echo '    VISITORLIST="yes" # yes/no - schreibt vor dem loeschen alle Besucher samt mac in eine log Datei.'
 		echo "    # loesche visitor list.log weil mir die Text Datei reicht."
 		echo '    VISITORLISTLOGDEL="yes"'
@@ -2177,7 +2243,7 @@ function dummyvar() {
 	BACKUPWARTEZEIT=120; AUTOSTOPZEIT=60; SETMONOTHREADS=800; SETMONOTHREADSON="yes"; OPENSIMDOWNLOAD="http://opensimulator.org/dist/"; SEARCHADRES="icanhazip.com"; # AUTOCONFIG="no"
 	CONFIGURESOURCE="opensim-configuration-addon-modul-main"; CONFIGUREZIP="opensim-configuration-addon-modul-main.zip"
 	textfontcolor=7; textbaggroundcolor=0; debugfontcolor=4; debugbaggroundcolor=0	infofontcolor=2	infobaggroundcolor=0; warnfontcolor=3; warnbaggroundcolor=0;
-	errorfontcolor=1; errorbaggroundcolor=0; SETMONOGCPARAMSON1="no"; SETMONOGCPARAMSON2="yes"	LOGDELETE="no"; LOGWRITE="no"; "$trimmvar"; logfilename="_multitool"
+	errorfontcolor=1; errorbaggroundcolor=0; SETMONOGCPARAMSON1="no"; SETMONOGCPARAMSON2="yes"	LOGDELETE="no"; LOGWRITE="no"; WRITEERROR="no"; "$trimmvar"; logfilename="_multitool"
 	username="username"	password="userpasswd"	databasename="grid"	linefontcolor=7	linebaggroundcolor=0; apache2errorlog="/var/log/apache2/error.log"; apache2accesslog="/var/log/apache2/access.log";
 	authlog="/var/log/auth.log"	ufwlog="/var/log/ufw.log"	mysqlmariadberor="/var/log/mysql/mariadb.err"; mysqlerrorlog="/var/log/mysql/error.log"; listVar=""; ScreenLogLevel=0;
 	# DIALOG_OK=0; DIALOG_HELP=2; DIALOG_EXTRA=3; DIALOG_ITEM_HELP=4; SIG_NONE=0; SIG_HUP=1; SIG_INT=2; SIG_QUIT=3; SIG_KILL=9; SIG_TERM=15
@@ -5401,7 +5467,7 @@ function osstart() {
 
 			# DOTNETMODUS="no"
 			if [[ "${DOTNETMODUS}" == "no" ]]; then
-				screen -fa -S "$SCSTARTSCREEN" -d -U -m mono OpenSim.exe
+				screen -fa -S "$SCSTARTSCREEN" -d -U -m mono OpenSim.exe				
 			fi
 
 			sleep 10
@@ -8621,6 +8687,13 @@ function autologdel() {
 	makeverzeichnisliste
 	sleep 1
 	for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
+		
+		if [ "$WRITEERROR" = "yes" ]; then 
+			# Fehler anzeigen
+			log info "${VERZEICHNISSLISTE[$i]} hat folgende Fehler:";
+			log_error "${VERZEICHNISSLISTE[$i]}"; 
+		fi
+
 		log info "OpenSimulator log Datei ${VERZEICHNISSLISTE[$i]} geloescht"
 		rm /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/*.log 2>/dev/null || log warn "Die Log Datei ${VERZEICHNISSLISTE[$i]} ist nicht vorhanden!"		
 		sleep 1
@@ -22841,6 +22914,8 @@ case $KOMMANDO in
 	check_and_execute) check_and_execute "$2" ;;
 	depends_installer) depends_installer ;;
 	debpaketbuild) debpaketbuild "$2" ;;
+	oscopycompress) oscopycompress "$2" ;;
+	log_error) log_error "$2" ;;
 	h) newhelp ;;
 	V | v) echo "$SCRIPTNAME $VERSION" ;;
 	*) hauptmenu ;;
