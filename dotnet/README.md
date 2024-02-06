@@ -3,7 +3,8 @@ Dies befindet sich in der Entwicklung.
 
 Im [BulletSim](https://github.com/BigManzai/BulletSim) Verzeichnis befindet sich eine Version die unter Ubuntu 18 und Ubuntu 22 gebaut wurde und im Test läuft.
 
-	:warning: # Zuerst alte Konfigurationsdatei löschen (osmtoolconfig.ini) und neue anlegen lassen
+:warning: # Zuerst alte Konfigurationsdatei löschen (osmtoolconfig.ini) und neue anlegen lassen
+
 	bash osmtool.sh
  
 	# Backup nicht vergessen, dieses Backup erstellt 4 Dateien für jede Region (Alle Backup möglichkeiten)
