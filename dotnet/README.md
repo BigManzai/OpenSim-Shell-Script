@@ -54,7 +54,6 @@ Zuletzt wird dann alles upgegradet und neu gestartet.
 :information_source: **Informationen:** [http://opensimulator.org/wiki/Upgrading/de] [http://opensimulator.org/wiki/0.9.0.0_Release/de]
 
 
-	#Crontab ändern?
 	#Crontab anzeigen:
 	crontab -l
 
