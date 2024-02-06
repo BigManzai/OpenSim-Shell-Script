@@ -5,6 +5,7 @@ Im [BulletSim](https://github.com/BigManzai/BulletSim) Verzeichnis befindet sich
 
 :warning: Zuerst alte Konfigurationsdatei löschen (osmtoolconfig.ini) und neue anlegen lassen
 
+        cd /Ort/des/osmtools_und_OpenSim
 	bash osmtool.sh
  
 	# Backup nicht vergessen, dieses Backup erstellt 4 Dateien für jede Region (Alle Backup möglichkeiten)
