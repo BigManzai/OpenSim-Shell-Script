@@ -20,7 +20,7 @@
 	# ! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 	# ! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#
-	# * Letzte bearbeitung 02.02.2024.
+	# * Letzte bearbeitung 06.02.2024.
 	#
 	# # Installieren sie bitte: #* Visual Studio Code
 	#* dazu die Plugins:
@@ -41,7 +41,7 @@
 #──────────────────────────────────────────────────────────────────────────────────────────
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.1490" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.1495" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 #──────────────────────────────────────────────────────────────────────────────────────────
@@ -200,6 +200,16 @@ function benutzer_menu() {
 #* Tests
 #──────────────────────────────────────────────────────────────────────────────────────────
 
+function VivoxVoiceSetup() {
+    VIVOXSCREEN=$1 # OpenSimulator Verzeichnis und Screen Name
+    ENABLED=$2     # Wert für enabled (true/false)
+
+    log info "OpenSimulator VivoxVoice $VIVOXSCREEN Starten oder Stoppen"
+	cd /$STARTVERZEICHNIS/"$VIVOXSCREEN"/bin || return 1
+	# OpenSimulator VivoxVoice Stoppen.
+	sed -i "s/^\[VivoxVoice\]\nenabled = .*/[VivoxVoice]\nenabled = $ENABLED/" /opt/$VIVOXSCREEN/bin/OpenSim.ini
+}
+
 ## * log_error
 	# Parameter:
 	#   $1 - OSSTARTSCREEN: OpenSimulator, Verzeichnis und Screen Name
@@ -212,6 +222,7 @@ function benutzer_menu() {
 ##
 function log_error() {
     OSSTARTSCREEN=$1 # OpenSimulator, Verzeichnis und Screen Name
+	#LOGERROR="ERROR|WARN"
 
     # Pfad zur Log-Datei
     log_file="/$STARTVERZEICHNIS/$OSSTARTSCREEN/bin/OpenSim.log"
@@ -220,7 +231,10 @@ function log_error() {
     if [ -f "$log_file" ]; then        
         
         # Suchen nach "ERROR" oder "WARN" und Speichern in Variable
-        log_output=$(grep -E 'ERROR|WARN' "$log_file")
+        log_output=$(grep -E "$LOGERROR" "$log_file")
+		# Dies sollte geteilt werden in Error und Warn.
+		#log_output=$(grep -E 'ERROR|WARN' "$log_file")
+		#log_output=$(grep -E 'ERROR' "$log_file")
         
         # Überprüfen, ob Variable nicht leer ist
         if [ -n "$log_output" ]; then
@@ -1554,7 +1568,7 @@ function vardelall1() {
 }
 function vardelall() {
     # Letzte Bearbeitung 14.11.2023
-    local prefix="MY_PREFIX_"  # Ändere dies zu dem Präfix, das deine Variablen haben
+    local prefix="OSM_VAR_"  # Ändere dies zu dem Präfix, das deine Variablen haben
 
     # Verwende `set` mit `eval` und `unset`, um Variablen mit einem bestimmten Präfix zu löschen
     for var in $(set | grep "^$prefix" | awk -F= '{print $1}'); do
@@ -1864,50 +1878,6 @@ function osmtoolconfig() {
 		echo "#     OSMTRANS=":fi" # Sprache in der übersetzt werdn soll."
 		echo "#     OSMTRANS=":zh-CN" # Sprache in der übersetzt werdn soll."
 		echo "#     OSMTRANS=":zh-TW" # Sprache in der übersetzt werdn soll."
-		echo "# Alle Sprachen die möglich sind."
-		echo "#     ┌───────────────────────┬───────────────────────┬───────────────────────┐"
-		echo "#     │ Afrikaans      -   af │ Hebrew         -   he │ Portuguese     -   pt │"
-		echo "#     │ Albanian       -   sq │ Hill Mari      -  mrj │ Punjabi        -   pa │"
-		echo "#     │ Amharic        -   am │ Hindi          -   hi │ Querétaro Otomi-  otq │"
-		echo "#     │ Arabic         -   ar │ Hmong          -  hmn │ Romanian       -   ro │"
-		echo "#     │ Armenian       -   hy │ Hmong Daw      -  mww │ Russian        -   ru │"
-		echo "#     │ Azerbaijani    -   az │ Hungarian      -   hu │ Samoan         -   sm │"
-		echo "#     │ Bashkir        -   ba │ Icelandic      -   is │ Scots Gaelic   -   gd │"
-		echo "#     │ Basque         -   eu │ Igbo           -   ig │ Serbian (Cyr...-sr-Cyrl"
-		echo "#     │ Belarusian     -   be │ Indonesian     -   id │ Serbian (Latin)-sr-Latn"
-		echo "#     │ Bengali        -   bn │ Irish          -   ga │ Sesotho        -   st │"
-		echo "#     │ Bosnian        -   bs │ Italian        -   it │ Shona          -   sn │"
-		echo "#     │ Bulgarian      -   bg │ Japanese       -   ja │ Sindhi         -   sd │"
-		echo "#     │ Cantonese      -  yue │ Javanese       -   jv │ Sinhala        -   si │"
-		echo "#     │ Catalan        -   ca │ Kannada        -   kn │ Slovak         -   sk │"
-		echo "#     │ Cebuano        -  ceb │ Kazakh         -   kk │ Slovenian      -   sl │"
-		echo "#     │ Chichewa       -   ny │ Khmer          -   km │ Somali         -   so │"
-		echo "#     │ Chinese Simp...- zh-CN│ Klingon        -  tlh │ Spanish        -   es │"
-		echo "#     │ Chinese Trad...- zh-TW│ Klingon (pIqaD)tlh-Qaak Sundanese      -   su │"
-		echo "#     │ Corsican       -   co │ Korean         -   ko │ Swahili        -   sw │"
-		echo "#     │ Croatian       -   hr │ Kurdish        -   ku │ Swedish        -   sv │"
-		echo "#     │ Czech          -   cs │ Kyrgyz         -   ky │ Tahitian       -   ty │"
-		echo "#     │ Danish         -   da │ Lao            -   lo │ Tajik          -   tg │"
-		echo "#     │ Dutch          -   nl │ Latin          -   la │ Tamil          -   ta │"
-		echo "#     │ Eastern Mari   -  mhr │ Latvian        -   lv │ Tatar          -   tt │"
-		echo "#     │ Emoji          -  emj │ Lithuanian     -   lt │ Telugu         -   te │"
-		echo "#     │ English        -   en │ Luxembourgish  -   lb │ Thai           -   th │"
-		echo "#     │ Esperanto      -   eo │ Macedonian     -   mk │ Tongan         -   to │"
-		echo "#     │ Estonian       -   et │ Malagasy       -   mg │ Turkish        -   tr │"
-		echo "#     │ Fijian         -   fj │ Malay          -   ms │ Udmurt         -  udm │"
-		echo "#     │ Filipino       -   tl │ Malayalam      -   ml │ Ukrainian      -   uk │"
-		echo "#     │ Finnish        -   fi │ Maltese        -   mt │ Urdu           -   ur │"
-		echo "#     │ French         -   fr │ Maori          -   mi │ Uzbek          -   uz │"
-		echo "#     │ Frisian        -   fy │ Marathi        -   mr │ Vietnamese     -   vi │"
-		echo "#     │ Galician       -   gl │ Mongolian      -   mn │ Welsh          -   cy │"
-		echo "#     │ Georgian       -   ka │ Myanmar        -   my │ Xhosa          -   xh │"
-		echo "#     │ German         -   de │ Nepali         -   ne │ Yiddish        -   yi │"
-		echo "#     │ Greek          -   el │ Norwegian      -   no │ Yoruba         -   yo │"
-		echo "#     │ Gujarati       -   gu │ Papiamento     -  pap │ Yucatec Maya   -  yua │"
-		echo "#     │ Haitian Creole -   ht │ Pashto         -   ps │ Zulu           -   zu │"
-		echo "#     │ Hausa          -   ha │ Persian        -   fa │                       │"
-		echo "#     │ Hawaiian       -  haw │ Polish         -   pl │                       │"
-		echo "#     └───────────────────────┴───────────────────────┴───────────────────────┘"
 		echo "     "
 		echo "#* Schrift- und Hintergrundfarben"
 		echo "#*  0 – Black, 1 – Red, 2 – Green, 3 – Yellow, 4 – Blue, 5 – Magenta, 6 – Cyan, 7 – White"
@@ -1919,12 +1889,6 @@ function osmtoolconfig() {
 		echo "    errorfontcolor=1;   errorbaggroundcolor=7;"
 		echo "    linefontcolor=7;    linebaggroundcolor=0;"
 		echo "     "
-		echo "    ScreenLogLevel=0; # ScreenLogLevel=0 nichts machen, bis ScreenLogLevel=5 Funktionsnamen ausgeben."
-		echo '    LOGWRITE="yes" # yes/no'
-		echo '    logfilename="_multitool"'
-		echo '    line="──────────────────────────────────────────────────────────────────────────────────────────";'
-		echo '    lline="──────────────────────────────────────────────────────────────────────────────────────────";'
-		echo "     "
 		echo "#* Dateien"
 		echo '    REGIONSDATEI="osmregionlist.ini"'
 		echo '    SIMDATEI="osmsimlist.ini"'
@@ -1935,11 +1899,28 @@ function osmtoolconfig() {
 		echo "     "
 		echo '    REGIONSANZEIGE="yes"'
 		echo "     "
+		echo "#* Log Dateien"
+		echo "    ScreenLogLevel=0; # ScreenLogLevel=0 nichts machen, bis ScreenLogLevel=5 Funktionsnamen ausgeben."
+		echo '    LOGWRITE="yes" # yes/no'
+		echo '    logfilename="_multitool"'
+		echo '    line="──────────────────────────────────────────────────────────────────────────────────────────";'
+		echo '    lline="──────────────────────────────────────────────────────────────────────────────────────────";'
+		echo '    SETOSCOMPION="no" # Mit oder ohne log Datei kompilieren. yes oder no.'
+		echo "     "
 		echo '    LOGDELETE="yes" # yes/no'
-		echo '    WRITEERROR="yes" # yes/no'
+		echo '    WRITEERROR="no" # yes/no'
+		echo '    LOGERROR="ERROR" # ERROR, WARN, ERROR|WARN'
+		echo '    MULTITOOLLOGDELETE="yes" # Log Dateien älter als letzten Sonntag löschen.'
 		echo '    VISITORLIST="yes" # yes/no - schreibt vor dem loeschen alle Besucher samt mac in eine log Datei.'
 		echo "    # loesche visitor list.log weil mir die Text Datei reicht."
 		echo '    VISITORLISTLOGDEL="yes"'
+		echo "     "
+		echo '    apache2errorlog="/var/log/apache2/error.log"'
+		echo '    apache2accesslog="/var/log/apache2/access.log"'
+		echo '    authlog="/var/log/auth.log"'
+		echo '    ufwlog="/var/log/ufw.log"'
+		echo '    mysqlmariadberor="/var/log/mysql/mariadb.err"'
+		echo '    mysqlerrorlog="/var/log/mysql/error.log"'
 		echo "     "
 		echo "#* Ubuntu version history"
 		echo "     "
@@ -1994,7 +1975,6 @@ function osmtoolconfig() {
 		echo '    SETMONOGCPARAMSON2="yes"'
 		echo "     "
 		echo "#* Divers"
-		echo '    SETOSCOMPION="no" # Mit oder ohne log Datei kompilieren. yes oder no.'
 		echo '    SETAOTON="no"'
 		echo "    # opensim-0.9.3.0Dev-4-g5e9b3b4.zip"
 		echo '    OSVERSION="opensim-0.9.3.0Dev-"'
@@ -2036,15 +2016,14 @@ function osmtoolconfig() {
 		echo '    LINK23="http://opensimulator.org/dist/opensim-0.9.2.0-source.zip"'
 		echo '    LINK24="http://opensimulator.org/dist/opensim-0.9.2.0.tar.gz"'
 		echo '    LINK25="http://opensimulator.org/dist/opensim-0.9.2.0.zip"'
-		echo '    LINK26="http://opensimulator.org/dist/opensim-0.9.2.1.zip"'
-		echo "     "
-		echo "#* Log Dateien"
-		echo '    apache2errorlog="/var/log/apache2/error.log"'
-		echo '    apache2accesslog="/var/log/apache2/access.log"'
-		echo '    authlog="/var/log/auth.log"'
-		echo '    ufwlog="/var/log/ufw.log"'
-		echo '    mysqlmariadberor="/var/log/mysql/mariadb.err"'
-		echo '    mysqlerrorlog="/var/log/mysql/error.log"'
+		echo '    LINK26="http://opensimulator.org/dist/opensim-0.9.2.1-source.tar.gz"'
+		echo '    LINK27="http://opensimulator.org/dist/opensim-0.9.2.1-source.zip"'
+		echo '    LINK28="http://opensimulator.org/dist/opensim-0.9.2.1.tar.gz"'
+		echo '    LINK29="http://opensimulator.org/dist/opensim-0.9.2.1.zip"'
+		echo '    LINK30="http://opensimulator.org/dist/opensim-0.9.2.2-source.tar.gz"'
+		echo '    LINK31="http://opensimulator.org/dist/opensim-0.9.2.2-source.zip"'
+		echo '    LINK32="http://opensimulator.org/dist/opensim-0.9.2.2.tar.gz"'
+		echo '    LINK33="http://opensimulator.org/dist/opensim-0.9.2.2.zip"'
 		echo "     "
 		echo "#* Liste der zu verwendende Musiklisten."
 		echo '    listVar="50s 60s 70s 80s 90s Alternative Blues Classic Club Country Dance Disco EDM Easy Electronic Folk Funk Gothic Heavy Hits House Indie Jazz Metal Misc Oldies Party Pop Reggae Rock Schlager Soul Techno Top Trance industrial pop"'
@@ -5742,10 +5721,16 @@ function menurostart() {
 function rostop() {
 	# Letzte Bearbeitung 30.09.2023
 	if screen -list | grep -q "RO"; then
-		screen -S RO -p 0 -X eval "stuff 'shutdown'^M"
-		log warn "Robust Beenden"
-		sleep $WARTEZEIT
-		return 0
+
+		if [[ $ROBUSTVERZEICHNIS = "no" ]]; then
+			return 0
+		else
+			screen -S RO -p 0 -X eval "stuff 'shutdown'^M"
+			log warn "Robust Beenden"
+			sleep $WARTEZEIT
+			return 0
+		fi
+
 	else
 		log error "Robust nicht vorhanden"
 		return 1
@@ -5922,17 +5907,33 @@ function osscreenstop() {
 ##
 function gridstart() {
 	# Letzte Bearbeitung 30.09.2023
+
+	# MONEYVERZEICHNIS="no"
+    # ROBUSTVERZEICHNIS="no"
+
 	#ossettings
 	ossettings_dotnet
 	if screen -list | grep -q RO; then
 		log error "Robust laeuft bereits"
 	else
-		rostart
+
+		if [[ $ROBUSTVERZEICHNIS = "no" ]]; then
+			return 0
+		else
+			rostart
+		fi
+
 	fi
 	if screen -list | grep -q MO; then
 		log error "Money laeuft bereits"
 	else
-		mostart
+
+		if [[ $MONEYVERZEICHNIS = "no" ]]; then
+			return 0
+		else
+			mostart
+		fi
+		
 	fi
 	return 0
 }
@@ -9114,13 +9115,25 @@ function autoscreenstop() {
 	fi
 
 	if ! screen -list | grep -q "MO"; then
-		log info "MONEY Server ist bereits OFFLINE!"
+
+		if [[ $MONEYVERZEICHNIS = "no" ]]; then
+			return 0
+		else
+			log info "MONEY Server ist bereits OFFLINE!"
+		fi
+		
 	else
 		screen -S MO -X quit || echo " "
 	fi
 
 	if ! screen -list | grep -q "RO"; then
-		log info "ROBUST Server ist bereits OFFLINE!"
+
+		if [[ $ROBUSTVERZEICHNIS = "no" ]]; then
+			return 0
+		else
+			log info "ROBUST Server ist bereits OFFLINE!"
+		fi
+
 	else
 		screen -S RO -X quit || echo " "
 	fi
@@ -9232,7 +9245,13 @@ function autostop() {
 	fi
 
 	if ! screen -list | grep -q "RO"; then
-		log info "ROBUST OFFLINE!"
+
+		if [[ $ROBUSTVERZEICHNIS = "no" ]]; then
+			return 0
+		else
+			log info "ROBUST OFFLINE!"
+		fi
+
 	else
 		gridstop
 	fi
@@ -9337,8 +9356,9 @@ function autorestart() {
 	gridstart
 	autosimstart
 	screenlistrestart
+	if [ "$MULTITOOLLOGDELETE" = "yes" ]; then clear_multitool_log_week; fi	
 	#clear_variable_multitool_log_week 3
-
+	
 	log info "Auto Restart abgeschlossen."
 	return 0
 }
@@ -22916,6 +22936,7 @@ case $KOMMANDO in
 	debpaketbuild) debpaketbuild "$2" ;;
 	oscopycompress) oscopycompress "$2" ;;
 	log_error) log_error "$2" ;;
+	VivoxVoiceSetup) VivoxVoiceSetup "$2" "$3" ;;
 	h) newhelp ;;
 	V | v) echo "$SCRIPTNAME $VERSION" ;;
 	*) hauptmenu ;;
