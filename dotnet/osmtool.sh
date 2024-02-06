@@ -41,7 +41,7 @@
 #──────────────────────────────────────────────────────────────────────────────────────────
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.1495" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.1496" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 #──────────────────────────────────────────────────────────────────────────────────────────
@@ -1910,7 +1910,11 @@ function osmtoolconfig() {
 		echo '    LOGDELETE="yes" # yes/no'
 		echo '    WRITEERROR="no" # yes/no'
 		echo '    LOGERROR="ERROR" # ERROR, WARN, ERROR|WARN'
-		echo '    MULTITOOLLOGDELETE="yes" # Log Dateien älter als letzten Sonntag löschen.'
+		echo '    MULTITOOLLOGDELETE="no" # Log Dateien älter als letzten Sonntag löschen.'
+		echo '    MULTITOOLLOGDELETEWEEK="no" # Log Dateien älter als X Wochen sind löschen. Testbetrieb'
+		echo '    WEEKS="2"'
+		echo '    MULTITOOLLOGDELETEDAY="yes" # Log Dateien älter als X Tage sind löschen. Testbetrieb'
+		echo '    DAYS="10"'
 		echo '    VISITORLIST="yes" # yes/no - schreibt vor dem loeschen alle Besucher samt mac in eine log Datei.'
 		echo "    # loesche visitor list.log weil mir die Text Datei reicht."
 		echo '    VISITORLISTLOGDEL="yes"'
@@ -3898,6 +3902,21 @@ function clear_multitool_log() {
     rm -r "/$STARTVERZEICHNIS"/*_multitool.log
 }
 
+function clear_multitool_log_days() {
+    # Parameter: Anzahl der Tage, die älter sein sollen
+    local days=$1
+
+    # Letzte Bearbeitung 25.01.2024
+    log info "Lösche multitool log Dateien, die älter als $days Tage sind"
+
+    # Bestimme das Datum, das $days Tage in der Vergangenheit liegt
+    days_ago=$(date +'%Y-%m-%d' -d "$days days ago")
+
+    # Lösche alle Logdateien, die älter als $days Tage sind
+    find "/$STARTVERZEICHNIS" -name "*_multitool.log" -type f ! -newermt "$days_ago" -exec rm {} \; || log error "Fehler beim Löschen der Datei $log_file"
+}
+
+
 # Löscht alle Logdateien, die älter als der letzte Sonntag sind.
 # Beispiel Datei: 25_01_2024_multitool.log
 #
@@ -3963,6 +3982,15 @@ function historylogclear() {
 		;;
 	esac
 }
+
+# Alte multitool log Dateien löschen.
+if [ "$MULTITOOLLOGDELETE" = "yes" ]; then clear_multitool_log_week; fi
+
+if [ -z "$WEEKS" ]; then WEEKS="2"; fi
+if [ "$MULTITOOLLOGDELETEWEEK" = "yes" ]; then clear_variable_multitool_log_week $WEEKS; fi
+
+if [ -z "$DAYS" ]; then DAYS="30"; fi
+if [ "$MULTITOOLLOGDELETEDAY" = "yes" ]; then clear_multitool_log_days $DAYS; fi
 
 #──────────────────────────────────────────────────────────────────────────────────────────
 #* Bildschirmausgaben Funktionsgruppe
@@ -9344,20 +9372,17 @@ function menuautostop() {
 	# autorestart
 ##
 function autorestart() {
-	# Letzte Bearbeitung 01.10.2023
+	# Letzte Bearbeitung 06.02.2024
 	log rohtext " Automatischer Restart wird ausgeführt!"
 	log line
 	
 	# Alles stoppen.
 	autostop
 	if [ "$LOGDELETE" = "yes" ]; then autologdel; fi
-	#if [ "$DELREGIONS" = "yes" ]; then deleteregionfromdatabase; fi
 
 	gridstart
 	autosimstart
 	screenlistrestart
-	if [ "$MULTITOOLLOGDELETE" = "yes" ]; then clear_multitool_log_week; fi	
-	#clear_variable_multitool_log_week 3
 	
 	log info "Auto Restart abgeschlossen."
 	return 0
@@ -22774,6 +22799,7 @@ case $KOMMANDO in
 	clear_multitool_log) clear_multitool_log ;;
 	clear_multitool_log_week) clear_multitool_log_week ;;
 	clear_variable_multitool_log_week) clear_variable_multitool_log_week "$2" ;;
+	clear_multitool_log_days) clear_multitool_log_days "$2" ;;
 	instdialog) instdialog ;;
 	createmasteravatar) createmasteravatar ;;
 	createregionavatar) createregionavatar ;;
@@ -22924,7 +22950,6 @@ case $KOMMANDO in
 	zeige_netzwerkinformationen_menu) zeige_netzwerkinformationen_menu ;;
 	ping_test_menu) ping_test_menu ;;
 	netstat_info_menu) netstat_info_menu ;;
-	menuautorestart) menuautorestart ;;
 	hda | hilfedirektaufruf | hilfemenudirektaufrufe) hilfemenudirektaufrufe ;;
 	osmupgrade_menu) osmupgrade_menu ;;
 	show_progress_menu) show_progress_menu "$2" "$3" "$4" ;;
