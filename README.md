@@ -179,11 +179,9 @@ Nachfolgende Zeilen unten im mit "crontab -e" geöffneten Crontab einfügen.
 
 Format: Minute(0 - 59)-Stunde(0 - 23)-Tag(1 - 31)-Monat(1 - 12)-Wochentag(0 - 7) - Aktion/Program -
 
-    # Restart um 6 Uhr
-    # .net bis 4.8
-    0 6 * * * bash /opt/osmtool.sh restart
-    # dotnet 6
-    0 6 * * * bash /opt/osmtool.sh autorestart93
+     # Restart um 6 Uhr und am 1. jeden Monats den ganzen Server um 5 Uhr 45 neu starten.
+     45 5 1 * * bash /opt/osmtool.sh reboot
+     0 6 * * * bash /opt/osmtool.sh autorestart
 
 (Format: Minute=0, Stunde=6)
 
