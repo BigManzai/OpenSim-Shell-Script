@@ -20,7 +20,7 @@
 	# ! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 	# ! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#
-	# * Letzte bearbeitung 06.02.2024.
+	# * Letzte bearbeitung 14.02.2024.
 	#
 	# # Installieren sie bitte: #* Visual Studio Code
 	#* dazu die Plugins:
@@ -41,7 +41,7 @@
 #──────────────────────────────────────────────────────────────────────────────────────────
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.1496" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.1503" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 #──────────────────────────────────────────────────────────────────────────────────────────
@@ -303,7 +303,7 @@ function debpaketbuild() {
 	oscopycompress $NUMMER
     
     # Test Variablen für den Paketbuilder
-    SOURCEVERZEICHNIS="/opt/opensim-master" 				# Binary distribution
+    SOURCEVERZEICHNIS="/opt/opensim-0.9.3.0.$NUMMER"		# Binary distribution
     PAKETVERZEICHNIS="/opt" 								# Paket Verzeichnis
     PAKETNAME="opensim_0_9_3_0_Dev-$NUMMER-Extended.amd64" 	# OpenSimulator Version
 	HOME="/home/opensim" 									# apt install Installationsverzeichnis
@@ -1913,7 +1913,7 @@ function osmtoolconfig() {
 		echo '    MULTITOOLLOGDELETE="no" # Log Dateien älter als letzten Sonntag löschen.'
 		echo '    MULTITOOLLOGDELETEWEEK="no" # Log Dateien älter als X Wochen sind löschen. Testbetrieb'
 		echo '    WEEKS="2"'
-		echo '    MULTITOOLLOGDELETEDAY="yes" # Log Dateien älter als X Tage sind löschen. Testbetrieb'
+		echo '    MULTITOOLLOGDELETEDAY="no" # Log Dateien älter als X Tage sind löschen. Testbetrieb'
 		echo '    DAYS="10"'
 		echo '    VISITORLIST="yes" # yes/no - schreibt vor dem loeschen alle Besucher samt mac in eine log Datei.'
 		echo "    # loesche visitor list.log weil mir die Text Datei reicht."
@@ -4075,7 +4075,7 @@ function schreibeinfo() {
 		log rohtext "  $DATUM $(date +%H:%M:%S) INFO: Linux Name: $ubuntuCodename"
 		log rohtext "  $DATUM $(date +%H:%M:%S) INFO: Bash Version: ${BASH_VERSION}"
 		log rohtext "  $DATUM $(date +%H:%M:%S) INFO: MONO THREAD Einstellung: ${MONO_THREADS_PER_CPU}"
-		dotnetversion=$(dotnet --version);
+		if [ "$DOTNETMODUS" = "yes" ]; then dotnetversion=$(dotnet --version); fi		
 		log rohtext "  $DATUM $(date +%H:%M:%S) INFO: DOTNET Version: ${dotnetversion}"
 		log rohtext "  $DATUM $(date +%H:%M:%S) INFO: Spracheinstellung: ${LANG}"
 		log rohtext "  $DATUM $(date +%H:%M:%S) INFO: $(screen --version)"
@@ -8978,7 +8978,9 @@ function gridcachedelete() {
 	if [ "$SCRIPTCLEAR" = "yes" ]; then  rm -r /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/ScriptEngines || echo " "; fi
 	done
 	# Robust
-	if [ "$RMAPTILESCLEAR" = "yes" ]; then  rm -r /$STARTVERZEICHNIS/robust/bin/maptiles || echo " "; fi
+	if [ -d "/$STARTVERZEICHNIS/robust" ]; then
+		if [ "$RMAPTILESCLEAR" = "yes" ]; then  rm -r /$STARTVERZEICHNIS/robust/bin/maptiles || echo " "; fi
+	fi
 	# Ist das Verzeichnis vorhanden dann erst löschen.
 	if [ ! -d "/$STARTVERZEICHNIS/robust/bin/bakes" ]; then
 		if [ "$RBAKESCLEAR" = "yes" ]; then  rm -r /$STARTVERZEICHNIS/robust/bin/bakes || echo " "; fi
@@ -10454,6 +10456,13 @@ function osbuilding() {
 	# dialog Aktionen Ende
 
 	cd /$STARTVERZEICHNIS || exit
+
+	# Ist die OpenSim Datei vorhanden?
+	if [ ! -e "$OSVERSION$VERSIONSNUMMER"*.zip ]; then
+		log error "Die Datei $OSVERSION$VERSIONSNUMMER-*.zip existiert nicht."
+		exit 1  # Beenden Sie das Skript mit einem Fehlercode
+	fi
+
 	log info "Alten OpenSimulator sichern"
 	osdelete
 
@@ -10484,6 +10493,79 @@ function osbuilding() {
 
 	return 0
 }
+
+function opensimbuildera() {
+	# Alle Aktionen ohne dialog
+	VERSIONSNUMMER=$1
+
+	cd /$STARTVERZEICHNIS || exit
+	log info "Alten OpenSimulator sichern"
+	osdelete
+
+	log line
+
+	# Neue Versionsnummer: opensim-0.9.3.0Dev-4-g5e9b3b4.zip
+	log info "Neuen OpenSimulator entpacken"
+	unzip $OSVERSION"$VERSIONSNUMMER"-*.zip
+
+	log line
+
+	log info "Neuen OpenSimulator umbenennen"
+	mv /$STARTVERZEICHNIS/$OSVERSION"$VERSIONSNUMMER"-*/ /$STARTVERZEICHNIS/opensim/
+
+	log line
+	sleep 3
+
+	log info "Prebuild des neuen OpenSimulator starten"
+	setversion "$VERSIONSNUMMER"
+
+	log line
+
+	log info "Compilieren des neuen OpenSimulator"
+	compilieren
+
+	log line
+	osupgrade
+
+	return 0
+}
+function opensimbuilderb() {
+    cd /$STARTVERZEICHNIS || exit
+    log info "Alten OpenSimulator sichern"
+    osdelete
+
+    log line
+
+    # Neue Versionsnummer: opensim-0.9.3.0Dev-4-g5e9b3b4.zip
+    # Nehmen Sie die Versionsnummer als Argument oder setzen Sie sie fest
+    VERSIONSNUMMER=$1
+
+    log info "Neuen OpenSimulator entpacken"
+    unzip $OSVERSION"$VERSIONSNUMMER"-*.zip
+
+    log line
+
+    log info "Neuen OpenSimulator umbenennen"
+    mv /$STARTVERZEICHNIS/$OSVERSION"$VERSIONSNUMMER"-*/ /$STARTVERZEICHNIS/opensim/
+
+    log line
+    sleep 3
+
+    log info "Prebuild des neuen OpenSimulator starten"
+    setversion "$VERSIONSNUMMER"
+
+    log line
+
+    log info "Compilieren des neuen OpenSimulator"
+    compilieren
+
+    log line
+    osupgrade
+
+    return 0
+}
+
+
 
 ## * createuser.
 	# Erstellen eines neuen Benutzer in der Robust Konsole.
@@ -10716,6 +10798,30 @@ function db_griduserlist() {
 
 	mygridliste=$( echo "$result_mysqlrest")
 	echo "$mygridliste" >/$STARTVERZEICHNIS/osmgriduserlist.txt
+	echo "$mygridliste"
+	return 0
+}
+
+## * db_besucherliste.
+	# Gridliste der Benutzer, die schon einmal im eigenen Grid waren.
+	# Aufruf: bash osmtool.sh db_griduserlist databaseusername databasepassword databasename
+	# 
+	#? @param "$username" "$password" "$databasename".
+	#? @return "$mygridliste".
+	# todo: nichts.
+##
+function db_besucherliste() {
+	# Letzte Bearbeitung 14.02.2024
+	username=$1
+	password=$2
+	databasename=$3
+
+	log rohtext "Listet alle Besucher aus Ihrer Datenbank auf:"
+	#mysqlrest "$username" "$password" "$databasename" "SELECT * FROM userinfo ORDER BY avatar"
+	mysqlrest "$username" "$password" "$databasename" "SELECT userinfo.avatar, userinfo.serverurl FROM userinfo ORDER BY userinfo.avatar"
+
+	mygridliste=$( echo "$result_mysqlrest")
+	echo "$mygridliste" >/$STARTVERZEICHNIS/besucherliste.txt
 	echo "$mygridliste"
 	return 0
 }
@@ -18800,7 +18906,7 @@ function osgridcopy() {
 	oscopysim
 	log line
 	# MoneyServer eventuell loeschen.
-	if [ "$MONEYVERZEICHNIS" = "keins" ] || [ "$MONEYVERZEICHNIS" = "no" ] || [ "$MONEYVERZEICHNIS" = "nein" ]; then moneydelete; fi
+	# if [ "$MONEYVERZEICHNIS" = "keins" ] || [ "$MONEYVERZEICHNIS" = "no" ] || [ "$MONEYVERZEICHNIS" = "nein" ]; then moneydelete; fi
 	return 0
 }
 
@@ -18843,7 +18949,7 @@ function osupgrade93() {
 	oscopysim
 	autologdel
 	# MoneyServer eventuell loeschen.
-	if [ "$MONEYVERZEICHNIS" = "keins" ] || [ "$MONEYVERZEICHNIS" = "no" ] || [ "$MONEYVERZEICHNIS" = "nein" ]; then moneydelete; fi
+	# if [ "$MONEYVERZEICHNIS" = "keins" ] || [ "$MONEYVERZEICHNIS" = "no" ] || [ "$MONEYVERZEICHNIS" = "nein" ]; then moneydelete; fi
 	# Grid Starten.
 	# log info "Das Grid wird jetzt gestartet"
 	autostart
@@ -18887,7 +18993,7 @@ function osupgrade() {
 	oscopysim
 	autologdel
 	# MoneyServer eventuell loeschen.
-	if [ "$MONEYVERZEICHNIS" = "keins" ] || [ "$MONEYVERZEICHNIS" = "no" ] || [ "$MONEYVERZEICHNIS" = "nein" ]; then moneydelete; fi
+	# if [ "$MONEYVERZEICHNIS" = "keins" ] || [ "$MONEYVERZEICHNIS" = "no" ] || [ "$MONEYVERZEICHNIS" = "nein" ]; then moneydelete; fi
 	# Grid Starten.
 	# log info "Das Grid wird jetzt gestartet"
 	autostart
@@ -18943,7 +19049,7 @@ function osdowngrade() {
 	oscopysim
 	autologdel
 	# MoneyServer eventuell loeschen.
-	if [ "$MONEYVERZEICHNIS" = "keins" ] || [ "$MONEYVERZEICHNIS" = "no" ] || [ "$MONEYVERZEICHNIS" = "nein" ]; then moneydelete; fi
+	# if [ "$MONEYVERZEICHNIS" = "keins" ] || [ "$MONEYVERZEICHNIS" = "no" ] || [ "$MONEYVERZEICHNIS" = "nein" ]; then moneydelete; fi
 	# Grid Starten.
 	# log info "Das Grid wird jetzt gestartet"
 	autostart
@@ -22782,6 +22888,7 @@ case $KOMMANDO in
 	fail2banset) fail2banset ;;
 	db_gridlist) db_gridlist "$2" "$3" "$4" ;;
 	db_griduserlist) db_griduserlist "$2" "$3" "$4" ;;
+	db_besucherliste) db_besucherliste "$2" "$3" "$4" ;;
 	db_backuptabellentypen) db_backuptabellentypen "$2" "$3" "$4" ;;
 	db_ungenutzteobjekte) db_ungenutzteobjekte "$2" "$3" "$4" "$5" "$6" ;;
 	senddata) senddata "$2" "$3" "$4" ;;
