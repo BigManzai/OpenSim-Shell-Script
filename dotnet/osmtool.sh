@@ -41,7 +41,7 @@
 #──────────────────────────────────────────────────────────────────────────────────────────
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.1503" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.1504" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 #──────────────────────────────────────────────────────────────────────────────────────────
@@ -73,7 +73,7 @@ tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 ##
 function password_prompt() {
     # Definieren Sie das erwartete Passwort
-    expected_password="IhrErwartetesPasswort"
+    expected_local password="IhrErwartetesPasswort"
 
     # Passwort abfragen
     echo -n "Bitte geben Sie das Passwort ein: "
@@ -90,14 +90,14 @@ function password_prompt() {
 }
 function password_prompt_menu() {
     # Definieren Sie das erwartete Passwort
-    expected_password="IhrErwartetesPasswort"
+    expected_local password="IhrErwartetesPasswort"
 
     # Menü mit Dialog-Bildschirmmaske
     dialog --title "Password Prompt" \
         --inputbox "Please enter the password:" 8 40 2>tempfile
 
     # Passwort auslesen
-    entered_password=$(cat tempfile)
+    entered_local password=$(cat tempfile)
 
     # Überprüfen, ob das eingegebene Passwort korrekt ist
     if [ "$entered_password" != "$expected_password" ]; then
@@ -177,7 +177,7 @@ function benutzer_menu() {
         --inputbox "Please enter your username:" 8 40 2>tempfile
 
     # Benutzernamen auslesen
-    BBENUTZER=$(cat tempfile)
+    Blocal benutzer=$(cat tempfile)
 
     # Überprüfen, ob der aktuelle Benutzer mit dem angegebenen Benutzernamen
     # übereinstimmt und ob der Anmeldebenutzername gleich dem aktuellen Benutzer ist
@@ -2227,7 +2227,7 @@ function dummyvar() {
 	CONFIGURESOURCE="opensim-configuration-addon-modul-main"; CONFIGUREZIP="opensim-configuration-addon-modul-main.zip"
 	textfontcolor=7; textbaggroundcolor=0; debugfontcolor=4; debugbaggroundcolor=0	infofontcolor=2	infobaggroundcolor=0; warnfontcolor=3; warnbaggroundcolor=0;
 	errorfontcolor=1; errorbaggroundcolor=0; SETMONOGCPARAMSON1="no"; SETMONOGCPARAMSON2="yes"	LOGDELETE="no"; LOGWRITE="no"; WRITEERROR="no"; "$trimmvar"; logfilename="_multitool"
-	username="username"	password="userpasswd"	databasename="grid"	linefontcolor=7	linebaggroundcolor=0; apache2errorlog="/var/log/apache2/error.log"; apache2accesslog="/var/log/apache2/access.log";
+	local username="username"	local password="userpasswd"	local databasename="grid"	linefontcolor=7	linebaggroundcolor=0; apache2errorlog="/var/log/apache2/error.log"; apache2accesslog="/var/log/apache2/access.log";
 	authlog="/var/log/auth.log"	ufwlog="/var/log/ufw.log"	mysqlmariadberor="/var/log/mysql/mariadb.err"; mysqlerrorlog="/var/log/mysql/error.log"; listVar=""; ScreenLogLevel=0;
 	# DIALOG_OK=0; DIALOG_HELP=2; DIALOG_EXTRA=3; DIALOG_ITEM_HELP=4; SIG_NONE=0; SIG_HUP=1; SIG_INT=2; SIG_QUIT=3; SIG_KILL=9; SIG_TERM=15
 	DIALOG_CANCEL=1; DIALOG_ESC=255; DIALOG=dialog; VISITORLIST="yes"; REGIONSANZEIGE="yes"; #DELREGIONS="no";
@@ -3074,9 +3074,9 @@ function mysqlrest() {
     fi
 
     # Übergeben der Argumente an Variablen
-    username="$1"
-    password="$2"
-    databasename="$3"
+    local username="$1"
+    local password="$2"
+    local databasename="$3"
     mysqlcommand="$4"
 
 	# Überprüfen, ob die erforderlichen Variablen nicht leer sind # TODO Testen
@@ -3124,9 +3124,9 @@ function mariarest() {
     fi
 
 	# Übergeben der Argumente an Variablen
-    username="$1"
-    password="$2"
-    databasename="$3"
+    local username="$1"
+    local password="$2"
+    local databasename="$3"
     mariacommand="$4"
 
 	# Überprüfen, ob die erforderlichen Variablen nicht leer sind
@@ -3165,8 +3165,8 @@ function mysqlrestnodb() {
 	# Letzte Bearbeitung 12.11.2023
 
     # Übergeben der Argumente an Variablen
-    username="$1"
-    password="$2"
+    local username="$1"
+    local password="$2"
     restnodbcommand="$3"
 
 	# Überprüfen, ob die erforderlichen Variablen nicht leer sind
@@ -4686,9 +4686,9 @@ done
 ##
 function mysqlbackup() {
 	# bearbeitung noetig! # Letzte Bearbeitung 29.09.2023
-	username=$1
-	password=$2
-	databasename=$3
+	local username=$1
+	local password=$2
+	local databasename=$3
 	dbcompress=$4
 	mkdir -p /$STARTVERZEICHNIS/backup || log rohtext "Verzeichnis vorhanden"
 	cd /$STARTVERZEICHNIS/backup || return 1
@@ -5359,7 +5359,7 @@ function loadinventar() {
 	LOADINVSCREEN="sim1"
 	NAME=$1
 	VERZEICHNIS=$2
-	PASSWORD=$3
+	local password=$3
 	DATEI=$4
 	# Überprüfen, ob der 'screen'-Prozess existiert.
 	if screen -list | grep -q "$LOADINVSCREEN"; then
@@ -5410,7 +5410,7 @@ function menuloadinventar() {
 		# Die Zeilen aus der Benutzereingabe in verschiedene Variablen schreiben.
 		NAME=$(echo "$loadinventarBOXERGEBNIS" | sed -n '1p')
 		VERZEICHNIS=$(echo "$loadinventarBOXERGEBNIS" | sed -n '2p')
-		PASSWORD=$(echo "$loadinventarBOXERGEBNIS" | sed -n '3p')
+		local password=$(echo "$loadinventarBOXERGEBNIS" | sed -n '3p')
 		DATEI=$(echo "$loadinventarBOXERGEBNIS" | sed -n '4p')
 
 		# Dialog-Bildschirm löschen und Log aktivieren
@@ -6082,7 +6082,7 @@ function saveinventar() {
 	SAVEINVSCREEN="sim1"
 	NAME=$1
 	VERZEICHNIS=$2
-	PASSWORD=$3
+	local password=$3
 	DATEI=$4
 	if screen -list | grep -q "$SAVEINVSCREEN"; then
 		log info "OSCOMMAND: save iar $NAME $VERZEICHNIS ***** $DATEI "
@@ -6133,7 +6133,7 @@ function menusaveinventar() {
 		# Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
 		NAME=$(echo "$saveinventarBOXERGEBNIS" | sed -n '1p')
 		VERZEICHNIS=$(echo "$saveinventarBOXERGEBNIS" | sed -n '2p')
-		PASSWORD=$(echo "$saveinventarBOXERGEBNIS" | sed -n '3p')
+		local password=$(echo "$saveinventarBOXERGEBNIS" | sed -n '3p')
 		DATEI=$(echo "$saveinventarBOXERGEBNIS" | sed -n '4p')
 
 		# Alles loeschen.
@@ -10700,10 +10700,10 @@ function menucreateuser() {
 ##
 function db_friends() {
 	# Letzte Bearbeitung 01.10.2023
-	username=$1
-	password=$2
-	databasename=$3
-	useruuid=$4
+	local username=$1
+	local password=$2
+	local databasename=$3
+	local useruuid=$4
 
 	log rohtext "Listet alle internen Freunde auf, aber keine hg freunde:"
 	mysqlrest "$username" "$password" "$databasename" "SELECT Friends.PrincipalID, CONCAT(UserAccounts.FirstName, ' ', UserAccounts.LastName) AS 'Friend' FROM Friends,UserAccounts WHERE Friends.Friend = '$useruuid' AND UserAccounts.PrincipalID = Friends.PrincipalID UNION SELECT Friends.Friend, CONCAT(UserAccounts.FirstName, ' ', UserAccounts.LastName) AS 'Friend'  FROM Friends, UserAccounts WHERE Friends.PrincipalID ='$useruuid' AND UserAccounts.PrincipalID = Friends.Friend"
@@ -10721,9 +10721,9 @@ function db_friends() {
 ##
 function db_online() {
 	# Letzte Bearbeitung 01.10.2023
-	username=$1
-	password=$2
-	databasename=$3
+	local username=$1
+	local password=$2
+	local databasename=$3
 
 	log rohtext "Listet Online User auf:"
 	mysqlrest "$username" "$password" "$databasename" "SELECT concat(FirstName, ' ', LastName) AS 'Online Users' FROM UserAccounts INNER JOIN GridUser ON UserAccounts.PrincipalID = GridUser.UserID WHERE GridUser.Online = 'True'"
@@ -10741,9 +10741,9 @@ function db_online() {
 ##
 function db_region() {
 	# Letzte Bearbeitung 01.10.2023
-	username=$1
-	password=$2
-	databasename=$3
+	local username=$1
+	local password=$2
+	local databasename=$3
 
 	log rohtext "Listet die Regionen in Ihrer Datenbank auf:"
 	mysqlrest "$username" "$password" "$databasename" "SELECT regionName as 'Regions' FROM regions"
@@ -10762,9 +10762,9 @@ function db_region() {
 ##
 function db_gridlist() {
 	# Letzte Bearbeitung 01.10.2023
-	username=$1
-	password=$2
-	databasename=$3
+	local username=$1
+	local password=$2
+	local databasename=$3
 
 	log rohtext "Listet die Grids aus Ihrer Datenbank auf:"
 	# SELECT * FROM 'GridUser' ORDER BY 'GridUser'.'UserID' ASC 
@@ -10787,9 +10787,9 @@ function db_gridlist() {
 ##
 function db_griduserlist() {
 	# Letzte Bearbeitung 01.10.2023
-	username=$1
-	password=$2
-	databasename=$3
+	local username=$1
+	local password=$2
+	local databasename=$3
 
 	log rohtext "Listet die Grids aus Ihrer Datenbank auf:"
 	# SELECT * FROM 'GridUser' ORDER BY 'GridUser'.'UserID' ASC 
@@ -10803,27 +10803,144 @@ function db_griduserlist() {
 }
 
 ## * db_besucherliste.
-	# Gridliste der Benutzer, die schon einmal im eigenen Grid waren.
-	# Aufruf: bash osmtool.sh db_griduserlist databaseusername databasepassword databasename
-	# 
-	#? @param "$username" "$password" "$databasename".
-	#? @return "$mygridliste".
-	# todo: nichts.
+	# Letzte Bearbeitung 14.02.2024
+	# Funktion: db_besucherliste
+	# Beschreibung: Listet alle Besucher aus der angegebenen Datenbank auf.
+	# Parameter:
+	#   $1: Benutzername
+	#   $2: Passwort
+	#   $3: Datenbankname
+	# Rückgabewert: 0 (Erfolg)
 ##
 function db_besucherliste() {
-	# Letzte Bearbeitung 14.02.2024
-	username=$1
-	password=$2
-	databasename=$3
+    local username="$1"
+    local password="$2"
+    local databasename="$3"
 
-	log rohtext "Listet alle Besucher aus Ihrer Datenbank auf:"
-	#mysqlrest "$username" "$password" "$databasename" "SELECT * FROM userinfo ORDER BY avatar"
-	mysqlrest "$username" "$password" "$databasename" "SELECT userinfo.avatar, userinfo.serverurl FROM userinfo ORDER BY userinfo.avatar"
+    # Log-Nachricht
+    log rohtext "Listet alle Besucher aus Ihrer Datenbank auf:"
 
+    # Datenbankabfrage
+    mysqlrest "$username" "$password" "$databasename" "SELECT userinfo.avatar, userinfo.serverurl FROM userinfo ORDER BY userinfo.avatar"
+
+	# Ergebnis in Variable
 	mygridliste=$( echo "$result_mysqlrest")
-	echo "$mygridliste" >/$STARTVERZEICHNIS/besucherliste.txt
-	echo "$mygridliste"
-	return 0
+
+	# Ergebnis in eine Textdatei schreiben
+	echo "$mygridliste" >/$STARTVERZEICHNIS/$DATEIDATUM.besucherliste.txt
+
+	# Ausgabe des Ergebnisses
+	log rohtext "$mygridliste"
+
+    return 0
+}
+
+## * db_neueobjekte.
+	# Letzte Bearbeitung 14.02.2024
+	# Funktion: db_neueobjekte
+	# Beschreibung: Listet alle neuen Objekte aus Ihrer Datenbank auf.
+	# Parameter:
+	#   $1: Benutzername
+	#   $2: Passwort
+	#   $3: Datenbankname
+	# Rückgabewert: 0 (Erfolg)
+##
+function db_neueobjekte() {
+    local username="$1"
+    local password="$2"
+    local databasename="$3"
+
+	# Aktuelles Datum als Unix-Timestamp
+	local current_timestamp=$(date +%s)
+
+    # Log-Nachricht
+    log rohtext "Listet alle neuen Objekte aus Ihrer Datenbank auf:"
+
+    # Datenbankabfrage
+	mysqlrest "$username" "$password" "$databasename" "SELECT assets.name FROM assets WHERE DATE(FROM_UNIXTIME(create_time)) = CURDATE() ORDER BY name"
+
+	# Ergebnis in Variable
+	mygridliste=$( echo "$result_mysqlrest")
+
+	# Ergebnis in eine Textdatei schreiben
+	echo "$mygridliste" >/$STARTVERZEICHNIS/$DATEIDATUM.besucherliste.txt
+
+	# Ausgabe des Ergebnisses
+	log rohtext "$mygridliste"
+
+    return 0
+}
+
+##! Vorsicht im Test
+function db_rename_objects1() {
+    local username="$1"
+    local password="$2"
+    local databasename="$3"
+
+    # Log-Nachricht
+    log rohtext "Es werden namenlose Objekte anhand des assettype umbenannt."
+
+	# Verbindung zur MySQL-Datenbank und Abfrage der Einträge ohne Namen
+	mysqlrest "$username" "$password" "$databasename" "SELECT id, assetType FROM assets WHERE name IS NULL" | while read -r id assetType; do
+		case $assetType in
+			-2) new_name="Material" ;;
+			0) new_name="Texture" ;;
+			1) new_name="Sound" ;;
+			2) new_name="CallingCard" ;;
+			3) new_name="Landmark" ;;
+			5) new_name="Clothing" ;;
+			6) new_name="Object" ;;
+			7) new_name="Notecard" ;;
+			10) new_name="LSLText" ;;
+			13) new_name="BodyPart" ;;
+			20) new_name="Animation" ;;
+			21) new_name="Gesture" ;;
+			49) new_name="Mesh" ;;
+			56) new_name="Setting" ;;
+			57) new_name="MaterialPBR" ;;
+			*) new_name="Unknown" ;;
+		esac
+
+		# Aktualisierung des Namens in der Datenbank
+		mysqlrest "$username" "$password" "$databasename" "UPDATE assets SET name='$new_name' WHERE id=$id"
+		echo "Asset mit ID $id: Name aktualisiert zu $new_name"
+	done
+
+    return 0
+}
+function db_rename_objects() {
+    local username="$1"
+    local password="$2"
+    local databasename="$3"
+
+	# Log-Nachricht
+    log rohtext "Es werden namenlose Objekte anhand des assettype umbenannt."
+
+    # Verbindung zur MySQL-Datenbank und Abfrage der Einträge ohne Namen
+    mysqlrest "$username" "$password" "$databasename" "SELECT assets.name, assetType FROM assets WHERE assets.name IS NULL" | while read -r name assetType; do
+        case $assetType in
+            -2) new_name="Material" ;;
+            0) new_name="Texture" ;;
+            1) new_name="Sound" ;;
+            2) new_name="CallingCard" ;;
+            3) new_name="Landmark" ;;
+            5) new_name="Clothing" ;;
+            6) new_name="Object" ;;
+            7) new_name="Notecard" ;;
+            10) new_name="LSLText" ;;
+            13) new_name="BodyPart" ;;
+            20) new_name="Animation" ;;
+            21) new_name="Gesture" ;;
+            49) new_name="Mesh" ;;
+            56) new_name="Setting" ;;
+            57) new_name="MaterialPBR" ;;
+            *) new_name="Unknown" ;;
+        esac
+
+        # Aktualisierung des Namens in der Datenbank
+        mysqlrest "$username" "$password" "$databasename" "UPDATE assets SET assets.name='$new_name' WHERE assets.name=$name"
+        log rohtext "Asset mit name $name: Name aktualisiert zu $new_name"
+    done
 }
 
 ## * db_inv_search 
@@ -10841,10 +10958,10 @@ function db_besucherliste() {
 ##
 function db_inv_search() {
 	# Letzte Bearbeitung 01.10.2023
-	username=$1
-	password=$2
-	databasename=$3
-    invname=$4
+	local username=$1
+	local password=$2
+	local databasename=$3
+    local invname=$4
 
 	log rohtext "Inventareinträge mit einem bestimmten Namen auflisten:"
 	mysqlrest "$username" "$password" "$databasename" "SELECT concat(inventoryName, ' - ',  replace(inventoryID, '-', '')) AS 'Inventory', concat(assets.name, ' - ', hex(assets.id)) AS 'Asset' FROM inventoryitems LEFT JOIN assets ON replace(assetID, '-', '')=hex(assets.id) WHERE inventoryName = '$invname'"
@@ -10869,9 +10986,9 @@ function db_inv_search() {
 ##
 function db_ungenutzteobjekte() {
 	# Letzte Bearbeitung 01.10.2023
-	username=$1
-	password=$2
-	databasename=$3
+	local username=$1
+	local password=$2
+	local databasename=$3
 
 	from_date=$4
 	to_date=$5
@@ -10909,9 +11026,9 @@ return 0
 ##
 function db_user_anzahl() {
 	# Letzte Bearbeitung 01.10.2023
-	username=$1
-	password=$2
-	databasename=$3
+	local username=$1
+	local password=$2
+	local databasename=$3
 
 	log rohtext "Zaehlt die Gesamtzahl der Benutzer:"
 	mysqlrest "$username" "$password" "$databasename" "SELECT count(PrincipalID) AS 'Users' FROM UserAccounts"
@@ -10934,9 +11051,9 @@ function db_user_anzahl() {
 ##
 function db_user_online() {
 	# Letzte Bearbeitung 01.10.2023
-	username=$1
-	password=$2
-	databasename=$3
+	local username=$1
+	local password=$2
+	local databasename=$3
 
 	log rohtext "Users Online:"
 	mysqlrest "$username" "$password" "$databasename" "SELECT count(UserID) AS 'Online' FROM GridUser WHERE Online = 'True'"
@@ -10959,9 +11076,9 @@ function db_user_online() {
 ##
 function db_region_parzelle() {
 	# Letzte Bearbeitung 01.10.2023
-	username=$1
-	password=$2
-	databasename=$3
+	local username=$1
+	local password=$2
+	local databasename=$3
 
 	log rohtext "Zaehlt die Regionen mit Parzellen:"
 	mysqlrest "$username" "$password" "$databasename" "SELECT count(DISTINCT regionUUID) FROM parcels"
@@ -10984,9 +11101,9 @@ function db_region_parzelle() {
 ##
 function db_region_parzelle_pakete() {
 	# Letzte Bearbeitung 01.10.2023
-	username=$1
-	password=$2
-	databasename=$3
+	local username=$1
+	local password=$2
+	local databasename=$3
 
 	log rohtext "Zaehlt die Gesamtzahl der Pakete:"
 	mysqlrest "$username" "$password" "$databasename" "SELECT count(parcelUUID) AS 'Parcels' FROM parcels"
@@ -11009,9 +11126,9 @@ function db_region_parzelle_pakete() {
 ##
 function db_region_anzahl_regionsnamen() {
 	# Letzte Bearbeitung 01.10.2023
-	username=$1
-	password=$2
-	databasename=$3
+	local username=$1
+	local password=$2
+	local databasename=$3
 
 	log rohtext "Zaehlt eindeutige Regionsnamen:"
 	mysqlrest "$username" "$password" "$databasename" "SELECT count(DISTINCT regionName) AS 'Regions' FROM regions"
@@ -11034,9 +11151,9 @@ function db_region_anzahl_regionsnamen() {
 ##
 function db_region_anzahl_regionsid() {
 	# Letzte Bearbeitung 01.10.2023
-	username=$1
-	password=$2
-	databasename=$3
+	local username=$1
+	local password=$2
+	local databasename=$3
 
 	log rohtext "Zaehlt RegionIDs:"
 	mysqlrest "$username" "$password" "$databasename" "SELECT count(UUID) AS 'Regions' FROM regions"
@@ -11068,9 +11185,9 @@ function db_region_anzahl_regionsid() {
 ## 
 function db_inventar_no_assets() {
 	# Letzte Bearbeitung 01.10.2023
-	username=$1
-	password=$2
-	databasename=$3
+	local username=$1
+	local password=$2
+	local databasename=$3
 
 	log rohtext "Listet alle Inventareintraege auf, die auf nicht vorhandene Assets verweisen:"
 	mysqlrest "$username" "$password" "$databasename" "SELECT inventoryname, inventoryID, assetID FROM inventoryitems WHERE replace(assetID, '-', '') NOT IN (SELECT hex(id) FROM assets)"
@@ -11100,9 +11217,9 @@ function db_inventar_no_assets() {
 ##
 function db_anzeigen() {
 	# Letzte Bearbeitung 01.10.2023
-	username=$1
-	password=$2
-	databasename=$3
+	local username=$1
+	local password=$2
+	local databasename=$3
 
 	log text "PRINT DATABASE: Alle Datenbanken anzeigen."
 	mysqlrest "$username" "$password" "$databasename" "show databases"
@@ -11145,8 +11262,8 @@ function db_anzeigen_dialog() {
 		db_menu=$(dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 3>&1 1>&2 2>&3 3>&-)
 
 		# Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
-		username=$(echo "$db_menu" | sed -n '1p')
-		password=$(echo "$db_menu" | sed -n '2p')
+		local username=$(echo "$db_menu" | sed -n '1p')
+		local password=$(echo "$db_menu" | sed -n '2p')
 
 		# Alles loeschen.
 		dialogclear
@@ -11178,9 +11295,9 @@ function db_anzeigen_dialog() {
 ##
 function db_tables() {
 	# Letzte Bearbeitung 02.10.2023
-	username=$1
-	password=$2
-	databasename=$3
+	local username=$1
+	local password=$2
+	local databasename=$3
 
 	log text "PRINT DATABASE: tabellenabfrage, listet alle Tabellen in einer Datenbank auf."
 	mysqlrest "$username" "$password" "$databasename" "SHOW TABLES FROM $databasename"
@@ -11218,9 +11335,9 @@ function db_tables_dialog() {
 		ASSETDELBOXERGEBNIS=$(dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 3>&1 1>&2 2>&3 3>&-)
 
 		# Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
-		username=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '1p')
-		password=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '2p')
-		databasename=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '3p')
+		local username=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '1p')
+		local password=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '2p')
+		local databasename=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '3p')
 
 		# Alles loeschen.
 		dialogclear
@@ -11267,16 +11384,16 @@ function db_benutzer_anzeigen() {
 		db_benutzer_anzeigenBOXERGEBNIS=$(dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 3>&1 1>&2 2>&3 3>&-)
 
 		# Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
-		username=$(echo "$db_benutzer_anzeigenBOXERGEBNIS" | sed -n '1p')
-		password=$(echo "$db_benutzer_anzeigenBOXERGEBNIS" | sed -n '2p')
+		local username=$(echo "$db_benutzer_anzeigenBOXERGEBNIS" | sed -n '1p')
+		local password=$(echo "$db_benutzer_anzeigenBOXERGEBNIS" | sed -n '2p')
 
 		# Alles loeschen.
 		dialogclear
 		ScreenLog
 	else
 		# Alle Aktionen ohne dialog
-		username=$1
-		password=$2
+		local username=$1
+		local password=$2
 	fi # dialog Aktionen Ende
 
 	log text "PRINT DATABASE USER: Alle Datenbankbenutzer anzeigen."
@@ -11325,18 +11442,18 @@ function db_regions() {
 		db_regionsBOXERGEBNIS=$(dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 3>&1 1>&2 2>&3 3>&-)
 
 		# Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
-		username=$(echo "$db_regionsBOXERGEBNIS" | sed -n '1p')
-		password=$(echo "$db_regionsBOXERGEBNIS" | sed -n '2p')
-		databasename=$(echo "$db_regionsBOXERGEBNIS" | sed -n '3p')
+		local username=$(echo "$db_regionsBOXERGEBNIS" | sed -n '1p')
+		local password=$(echo "$db_regionsBOXERGEBNIS" | sed -n '2p')
+		local databasename=$(echo "$db_regionsBOXERGEBNIS" | sed -n '3p')
 
 		# Alles loeschen.
 		dialogclear
 		ScreenLog
 	else
 		# Alle Aktionen ohne dialog
-		username=$1
-		password=$2
-		databasename=$3
+		local username=$1
+		local password=$2
+		local databasename=$3
 	fi # dialog Aktionen Ende
 
 	log text "PRINT DATABASE: Alle Regionen listen."
@@ -11385,18 +11502,18 @@ function db_regionsuri() {
 		db_regionsuriBOXERGEBNIS=$(dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 3>&1 1>&2 2>&3 3>&-)
 
 		# Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
-		username=$(echo "$db_regionsuriBOXERGEBNIS" | sed -n '1p')
-		password=$(echo "$db_regionsuriBOXERGEBNIS" | sed -n '2p')
-		databasename=$(echo "$db_regionsuriBOXERGEBNIS" | sed -n '3p')
+		local username=$(echo "$db_regionsuriBOXERGEBNIS" | sed -n '1p')
+		local password=$(echo "$db_regionsuriBOXERGEBNIS" | sed -n '2p')
+		local databasename=$(echo "$db_regionsuriBOXERGEBNIS" | sed -n '3p')
 
 		# Alles loeschen.
 		dialogclear
 		ScreenLog
 	else
 		# Alle Aktionen ohne dialog
-		username=$1
-		password=$2
-		databasename=$3
+		local username=$1
+		local password=$2
+		local databasename=$3
 	fi # dialog Aktionen Ende
 
 	log text "PRINT DATABASE: Region URI pruefen sortiert nach URI."
@@ -11449,18 +11566,18 @@ function db_regionsport() {
 		db_regionsportBOXERGEBNIS=$(dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 3>&1 1>&2 2>&3 3>&-)
 
 		# Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
-		username=$(echo "$db_regionsportBOXERGEBNIS" | sed -n '1p')
-		password=$(echo "$db_regionsportBOXERGEBNIS" | sed -n '2p')
-		databasename=$(echo "$db_regionsportBOXERGEBNIS" | sed -n '3p')
+		local username=$(echo "$db_regionsportBOXERGEBNIS" | sed -n '1p')
+		local password=$(echo "$db_regionsportBOXERGEBNIS" | sed -n '2p')
+		local databasename=$(echo "$db_regionsportBOXERGEBNIS" | sed -n '3p')
 
 		# Alles loeschen.
 		dialogclear
 		ScreenLog
 	else
 		# Alle Aktionen ohne dialog
-		username=$1
-		password=$2
-		databasename=$3
+		local username=$1
+		local password=$2
+		local databasename=$3
 	fi # dialog Aktionen Ende
 
 	log text "PRINT DATABASE: Alle Datenbanken anzeigen."
@@ -11491,9 +11608,9 @@ function db_regionsport() {
 	# - Die Verwendung von Passwörtern auf der Befehlszeile kann unsicher sein, daher wird die Fehlerausgabe unterdrückt.
 ##
 function create_db() {
-	DBBENUTZER=$1
-	DBPASSWORT=$2
-	DATENBANKNAME=$3
+	local DBlocal benutzer=$1
+	local DBPASSWORT=$2
+	local DATENBANKNAME=$3
 
 	log info "CREATE DATABASE: Datenbanken anlegen."
 	log info  "$DBBENUTZER, ********, $DATENBANKNAME"
@@ -11529,10 +11646,10 @@ function create_db() {
 	# - Nachdem die Aktionen abgeschlossen sind, werden die Eingabevariablen gelöscht, um die Sicherheit zu gewährleisten.
 ##
 function create_db_user() {
-	DBBENUTZER=$1
-	DBPASSWORT=$2
-	NEUERNAME=$3
-	NEUESPASSWORT=$4
+	local DBlocal benutzer=$1
+	local DBPASSWORT=$2
+	local NEUERNAME=$3
+	local NEUESPASSWORT=$4
 
 	log info "CREATE DATABASE USER: Datenbankbenutzer anlegen."
 	log info  "$DBBENUTZER, ********, $NEUERNAME, ********"
@@ -11565,9 +11682,9 @@ function create_db_user() {
 	# - Die Verwendung von Passwörtern auf der Befehlszeile kann unsicher sein, daher wird die Fehlerausgabe unterdrückt.
 ##
 function delete_db() {
-	DBBENUTZER=$1
-	DBPASSWORT=$2
-	DATENBANKNAME=$3
+	local DBlocal benutzer=$1
+	local DBPASSWORT=$2
+	local DATENBANKNAME=$3
 
 	log info  "DELETE DATABASE: Datenbank loeschen"
 	log info  "$DBBENUTZER, ********, $DATENBANKNAME"
@@ -11619,18 +11736,18 @@ function db_empty() {
 		db_emptyRGEBNIS=$(dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 3>&1 1>&2 2>&3 3>&-)
 
 		# Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
-		username=$(echo "$db_emptyRGEBNIS" | sed -n '1p')
-		password=$(echo "$db_emptyRGEBNIS" | sed -n '2p')
-		databasename=$(echo "$db_emptyRGEBNIS" | sed -n '3p')
+		local username=$(echo "$db_emptyRGEBNIS" | sed -n '1p')
+		local password=$(echo "$db_emptyRGEBNIS" | sed -n '2p')
+		local databasename=$(echo "$db_emptyRGEBNIS" | sed -n '3p')
 
 		# Alles loeschen.
 		dialogclear
 		ScreenLog
 	else
 		# Alle Aktionen ohne dialog
-		username=$1
-		password=$2
-		databasename=$3
+		local username=$1
+		local password=$2
+		local databasename=$3
 	fi # dialog Aktionen Ende
 
 	#log text "EMPTY DATABASE: Datenbank $databasename leeren."
@@ -11695,16 +11812,16 @@ function allrepair_db() {
 		landclearBOXERGEBNIS=$(dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 3>&1 1>&2 2>&3 3>&-)
 
 		# Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
-		username=$(echo "$landclearBOXERGEBNIS" | sed -n '1p')
-		password=$(echo "$landclearBOXERGEBNIS" | sed -n '2p')
+		local username=$(echo "$landclearBOXERGEBNIS" | sed -n '1p')
+		local password=$(echo "$landclearBOXERGEBNIS" | sed -n '2p')
 
 		# Alles loeschen.
 		dialogclear
 		ScreenLog
 	else
 		# Alle Aktionen ohne dialog
-		username=$1
-		password=$2
+		local username=$1
+		local password=$2
 	fi # dialog Aktionen Ende
 
 	#log text "ALL REPAIR DATABASE: Alle Datenbanken Checken, Reparieren und Optimieren"
@@ -11764,9 +11881,9 @@ function mysql_neustart() {
 	# db_backup "mein_benutzer" "geheim123" "meine_datenbank"
 ##
 function db_backup() {
-	username=$1
-	password=$2
-	databasename=$3
+	local username=$1
+	local password=$2
+	local databasename=$3
 
 	log text "SAVE DATABASE: Datenbank $databasename sichern."
 
@@ -11792,9 +11909,9 @@ function db_backup() {
 	# db_compress_backup "mein_benutzer" "geheim123" "meine_datenbank"
 ##
 function db_compress_backup() {
-	username=$1
-	password=$2
-	databasename=$3
+	local username=$1
+	local password=$2
+	local databasename=$3
 
 	log text "SAVE DATABASE: Datenbank $databasename sichern."
 
@@ -11821,9 +11938,9 @@ function db_compress_backup() {
 ##
 function db_backuptabellen() {
 	# Hier fehlt noch das die Asset Datenbank gesplittet wird.
-	username=$1
-	password=$2
-	databasename=$3 #tabellenname=$3;
+	local username=$1
+	local password=$2
+	local databasename=$3 #tabellenname=$3;
 	#DATEIDATUM=$(date +%d_%m_%Y);
 
 	# Verzeichnis erstellen:
@@ -11859,9 +11976,9 @@ function db_backuptabellen() {
 ##
 function db_backuptabelle_noassets() {
 	# Hier fehlt noch das die Asset Datenbank gesplittet wird.
-	username=$1
-	password=$2
-	databasename=$3 #tabellenname=$3;
+	local username=$1
+	local password=$2
+	local databasename=$3 #tabellenname=$3;
 	#DATEIDATUM=$(date +%d_%m_%Y);
 
 	# Verzeichnis erstellen:
@@ -11903,12 +12020,12 @@ function db_backuptabelle_noassets() {
 	# db_backuptabellentypen "mein_benutzer" "geheim123" "meine_datenbank" "assets" "assetType" "ja"
 ##
 function db_backuptabellentypen() {
-	username=$1
-	password=$2
-	databasename=$3
-	fromtable="assets"
-	fromtypes="assetType"
-	dbcompress="ja"
+	local username=$1
+	local password=$2
+	local databasename=$3
+	local fromtable="assets"
+	local fromtypes="assetType"
+	local dbcompress="ja"
 
 	log info "Backup, Asset Datenbank Tabelle geteilt in Typen speichern."
 	# Verzeichnis erstellen:
@@ -12001,10 +12118,10 @@ function db_backuptabellentypen() {
 	# db_restorebackuptabellen "mein_benutzer" "geheim123" "gesicherte_datenbank" "neue_datenbank"
 ##
 function db_restorebackuptabellen() {
-	username=$1
-	password=$2
-	databasename=$3
-	newdatabasename=$4
+	local username=$1
+	local password=$2
+	local databasename=$3
+	newlocal databasename=$4
 
 	cd /$STARTVERZEICHNIS/backup/"$databasename" || exit
 
@@ -12051,18 +12168,18 @@ function db_create() {
 		db_regionsportBOXERGEBNIS=$(dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 3>&1 1>&2 2>&3 3>&-)
 
 		# Zeilen aus der Benutzereingabe in verschiedene Variablen schreiben
-		username=$(echo "$db_regionsportBOXERGEBNIS" | sed -n '1p')
-		password=$(echo "$db_regionsportBOXERGEBNIS" | sed -n '2p')
-		databasename=$(echo "$db_regionsportBOXERGEBNIS" | sed -n '3p')
+		local username=$(echo "$db_regionsportBOXERGEBNIS" | sed -n '1p')
+		local password=$(echo "$db_regionsportBOXERGEBNIS" | sed -n '2p')
+		local databasename=$(echo "$db_regionsportBOXERGEBNIS" | sed -n '3p')
 
 		# Alles im Dialogfenster löschen
 		dialogclear
 		ScreenLog
 	else
 		# Falls das Dialog-Paket nicht verfügbar ist, Parameter verwenden
-		username=$1
-		password=$2
-		databasename=$3
+		local username=$1
+		local password=$2
+		local databasename=$3
 	fi
 
 	log text "CREATE DATABASE: Datenbank anlegen."
@@ -12097,8 +12214,8 @@ function db_create() {
 	# db_dbuser "mein_benutzer" "geheim123"
 ##
 function db_dbuser() {
-	username=$1
-	password=$2
+	local username=$1
+	local password=$2
 
 	log text "PRINT DATABASE: Alle Datenbankbenutzer anzeigen."
 	result_mysqlrest=$(echo "select User from mysql.user;" | MYSQL_PWD=$password mysql -u"$username" -N) 2>/dev/null
@@ -12138,18 +12255,18 @@ function db_dbuserrechte() {
 		db_dbuserrechteERGEBNIS=$(dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 3>&1 1>&2 2>&3 3>&-)
 
 		# Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
-		username=$(echo "db_dbuserrechteERGEBNIS" | sed -n '1p')
-		password=$(echo "$db_dbuserrechteERGEBNIS" | sed -n '2p')
-		databasename=$(echo "$db_dbuserrechteERGEBNIS" | sed -n '3p')
+		local username=$(echo "db_dbuserrechteERGEBNIS" | sed -n '1p')
+		local password=$(echo "$db_dbuserrechteERGEBNIS" | sed -n '2p')
+		local databasename=$(echo "$db_dbuserrechteERGEBNIS" | sed -n '3p')
 
 		# Alles loeschen.
 		dialogclear
 		ScreenLog
 	else
 		# Alle Aktionen ohne dialog
-		username=$1
-		password=$2
-		databasename=$3
+		local username=$1
+		local password=$2
+		local databasename=$3
 	fi # dialog Aktionen Ende
 
 	result_mysqlrest=$(echo "SHOW GRANTS FOR '$benutzer'@'localhost';" | MYSQL_PWD=$password mysql -u"$username" -N) 2>/dev/null
@@ -12195,18 +12312,18 @@ function db_deldbuser() {
 		db_deldbuserERGEBNIS=$(dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 3>&1 1>&2 2>&3 3>&-)
 
 		# Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
-		username=$(echo "$db_deldbuserERGEBNIS" | sed -n '1p')
-		password=$(echo "$db_deldbuserERGEBNIS" | sed -n '2p')
-		benutzer=$(echo "$db_deldbuserERGEBNIS" | sed -n '3p')
+		local username=$(echo "$db_deldbuserERGEBNIS" | sed -n '1p')
+		local password=$(echo "$db_deldbuserERGEBNIS" | sed -n '2p')
+		local benutzer=$(echo "$db_deldbuserERGEBNIS" | sed -n '3p')
 
 		# Alles loeschen.
 		dialogclear
 		ScreenLog
 	else
 		# Alle Aktionen ohne dialog
-		username=$1
-		password=$2
-		benutzer=$3
+		local username=$1
+		local password=$2
+		local benutzer=$3
 	fi # dialog Aktionen Ende
 
 	#echo "DROP USER '$benutzer'@'localhost';" | MYSQL_PWD=$password mysql -u"$username" -N
@@ -12264,8 +12381,8 @@ function db_create_new_dbuser() {
 		loadinventarBOXERGEBNIS=$(dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 "$lable4" 4 1 "$lablename4" 4 25 25 30 3>&1 1>&2 2>&3 3>&-)
 
 		# Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
-		username=$(echo "$loadinventarBOXERGEBNIS" | sed -n '1p')
-		password=$(echo "$loadinventarBOXERGEBNIS" | sed -n '2p')
+		local username=$(echo "$loadinventarBOXERGEBNIS" | sed -n '1p')
+		local password=$(echo "$loadinventarBOXERGEBNIS" | sed -n '2p')
 		NEUERNAME=$(echo "$loadinventarBOXERGEBNIS" | sed -n '3p')
 		NEUESPASSWORT=$(echo "$loadinventarBOXERGEBNIS" | sed -n '4p')
 
@@ -12274,8 +12391,8 @@ function db_create_new_dbuser() {
 		ScreenLog
 	else
 		# Alle Aktionen ohne dialog
-		username=$1
-		password=$2
+		local username=$1
+		local password=$2
 		NEUERNAME=$3
 		NEUESPASSWORT=$4
 	fi # dialog Aktionen Ende
@@ -12420,18 +12537,18 @@ function db_delete() {
 		db_deleteERGEBNIS=$(dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 3>&1 1>&2 2>&3 3>&-)
 
 		# Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
-		username=$(echo "$db_deleteERGEBNIS" | sed -n '1p')
-		password=$(echo "$db_deleteERGEBNIS" | sed -n '2p')
-		databasename=$(echo "$db_deleteERGEBNIS" | sed -n '3p')
+		local username=$(echo "$db_deleteERGEBNIS" | sed -n '1p')
+		local password=$(echo "$db_deleteERGEBNIS" | sed -n '2p')
+		local databasename=$(echo "$db_deleteERGEBNIS" | sed -n '3p')
 
 		# Alles loeschen.
 		dialogclear
 		ScreenLog
 	else
 		# Alle Aktionen ohne dialog
-		username=$1
-		password=$2
-		databasename=$3
+		local username=$1
+		local password=$2
+		local databasename=$3
 	fi # dialog Aktionen Ende
 
 	# Vor dem Loeschen sicherzustellen dass die Datenbank existiert.
@@ -12465,9 +12582,9 @@ function db_delete() {
 	# - Sie stellt sicher, dass die Tabellen in der angegebenen Datenbank existieren, bevor sie die Abfrage ausführt.
 ##
 function tabellenabfrage() {
-	DBBENUTZER=$1
-	DBPASSWORT=$2
-	DATENBANKNAME=$3
+	local DBlocal benutzer=$1
+	local DBPASSWORT=$2
+	local DATENBANKNAME=$3
 
 	mysql -u"$DBBENUTZER" -p"$DBPASSWORT" <<MEINE_ABFRAGE_ENDE 2>/dev/null
 USE $DATENBANKNAME
@@ -12495,9 +12612,9 @@ MEINE_ABFRAGE_ENDE
 	# - Stellen Sie sicher, dass die Tabelle "regions" in der angegebenen Datenbank existiert, bevor Sie die Funktion aufrufen.
 ##
 function regionsabfrage() {
-	DBBENUTZER=$1
-	DBPASSWORT=$2
-	DATENBANKNAME=$3
+	local DBlocal benutzer=$1
+	local DBPASSWORT=$2
+	local DATENBANKNAME=$3
 	mysql -u"$DBBENUTZER" -p"$DBPASSWORT" <<MEIN_ABFRAGE_ENDE 2>/dev/null
 USE $DATENBANKNAME
 SELECT regionName FROM regions
@@ -12524,9 +12641,9 @@ MEIN_ABFRAGE_ENDE
 	# - Stellen Sie sicher, dass die Tabelle "regions" in der angegebenen Datenbank existiert, bevor Sie die Funktion aufrufen.
 ##
 function regionsuri() {
-	DBBENUTZER=$1
-	DBPASSWORT=$2
-	DATENBANKNAME=$3
+	local DBlocal benutzer=$1
+	local DBPASSWORT=$2
+	local DATENBANKNAME=$3
 	mysql -u"$DBBENUTZER" -p"$DBPASSWORT" <<MEIN_ABFRAGE_ENDE 2>/dev/null
 USE $DATENBANKNAME
 SELECT regionName , serverURI FROM regions ORDER BY serverURI
@@ -12553,9 +12670,9 @@ MEIN_ABFRAGE_ENDE
 	# - Stellen Sie sicher, dass die Tabelle "regions" in der angegebenen Datenbank existiert, bevor Sie die Funktion aufrufen.
 ##
 function regionsport() {
-	DBBENUTZER=$1
-	DBPASSWORT=$2
-	DATENBANKNAME=$3
+	local DBlocal benutzer=$1
+	local DBPASSWORT=$2
+	local DATENBANKNAME=$3
 	mysql -u"$DBBENUTZER" -p"$DBPASSWORT" <<MEIN_ABFRAGE_ENDE 2>/dev/null
 USE $DATENBANKNAME
 SELECT regionName , serverPort FROM regions ORDER BY serverPort
@@ -12583,9 +12700,9 @@ MEIN_ABFRAGE_ENDE
 	# - Stellen Sie sicher, dass die Tabelle "userprofile" in der angegebenen Datenbank existiert, bevor Sie die Funktion aufrufen.
 ##
 function setpartner() {
-	DBBENUTZER=$1
-	DBPASSWORT=$2
-	DATENBANKNAME=$3
+	local DBlocal benutzer=$1
+	local DBPASSWORT=$2
+	local DATENBANKNAME=$3
 	AVATARUUID=$4
 	NEUERPARTNER=$5
 
@@ -12621,9 +12738,9 @@ MEIN_ABFRAGE_ENDE
 	# - Stellen Sie sicher, dass die Tabelle "userprofile" in der angegebenen Datenbank existiert, bevor Sie die Funktion aufrufen.
 ##
 function db_setpartner() {
-	username=$1
-	password=$2
-	databasename=$3
+	local username=$1
+	local password=$2
+	local databasename=$3
 	AVATARUUID=$4
 	NEUERPARTNER=$5
 
@@ -12655,9 +12772,9 @@ function db_setpartner() {
 	# - Stellen Sie sicher, dass die Tabelle "userprofile" in der angegebenen Datenbank existiert, bevor Sie die Funktion aufrufen.
 ##
 function db_deletepartner() {
-	username=$1
-	password=$2
-	databasename=$3
+	local username=$1
+	local password=$2
+	local databasename=$3
 	AVATARUUID=$4
 
 	LEEREMPTY="00000000-0000-0000-0000-000000000000"
@@ -12686,9 +12803,9 @@ function db_deletepartner() {
 	# - Stellen Sie sicher, dass die Tabelle "UserAccounts" in der angegebenen Datenbank existiert, bevor Sie die Funktion aufrufen.
 ##
 function db_all_user() {
-	username=$1
-	password=$2
-	databasename=$3
+	local username=$1
+	local password=$2
+	local databasename=$3
 	log rohtext "Daten von allen Benutzern anzeigen:"
 	echo " "
 	mysqlrest "$username" "$password" "$databasename" "SELECT * FROM UserAccounts" # Alles holen und in die Variable result_mysqlrest schreiben.
@@ -12733,9 +12850,9 @@ function db_all_user_dialog() {
 		ASSETDELBOXERGEBNIS=$(dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 3>&1 1>&2 2>&3 3>&-)
 
 		# Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
-		username=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '1p')
-		password=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '2p')
-		databasename=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '3p')
+		local username=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '1p')
+		local password=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '2p')
+		local databasename=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '3p')
 
 		# Alles loeschen.
 		dialogclear
@@ -12769,9 +12886,9 @@ function db_all_user_dialog() {
 	# - Stellen Sie sicher, dass die Tabelle "UserAccounts" in der angegebenen Datenbank existiert, bevor Sie die Funktion aufrufen.
 ##
 function db_all_uuid() {
-	username=$1
-	password=$2
-	databasename=$3
+	local username=$1
+	local password=$2
+	local databasename=$3
 	log rohtext "UUID von allen Benutzern anzeigen:"
 	echo " "
 	mysqlrest "$username" "$password" "$databasename" "SELECT PrincipalID FROM UserAccounts"
@@ -12815,9 +12932,9 @@ function db_all_uuid_dialog() {
 		ASSETDELBOXERGEBNIS=$(dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 3>&1 1>&2 2>&3 3>&-)
 
 		# Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
-		username=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '1p')
-		password=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '2p')
-		databasename=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '3p')
+		local username=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '1p')
+		local password=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '2p')
+		local databasename=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '3p')
 
 		# Alles loeschen.
 		dialogclear
@@ -12852,9 +12969,9 @@ function db_all_uuid_dialog() {
 	# - Stellen Sie sicher, dass die Tabelle "UserAccounts" in der angegebenen Datenbank vorhanden ist.
 ##
 function db_all_name() {
-	username=$1
-	password=$2
-	databasename=$3
+	local username=$1
+	local password=$2
+	local databasename=$3
 	log rohtext "Vor- und Zuname von allen Benutzern anzeigen:"
 	echo " "
 	mysqlrest "$username" "$password" "$databasename" "SELECT FirstName, LastName FROM UserAccounts"
@@ -12898,9 +13015,9 @@ function db_all_name_dialog() {
 		db_all_name=$(dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 3>&1 1>&2 2>&3 3>&-)
 
 		# Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
-		username=$(echo "$db_all_name" | sed -n '1p')
-		password=$(echo "$db_all_name" | sed -n '2p')
-		databasename=$(echo "$db_all_name" | sed -n '3p')
+		local username=$(echo "$db_all_name" | sed -n '1p')
+		local password=$(echo "$db_all_name" | sed -n '2p')
+		local databasename=$(echo "$db_all_name" | sed -n '3p')
 
 		# Alles loeschen.
 		dialogclear
@@ -12938,9 +13055,9 @@ function db_all_name_dialog() {
 	# - Stellen Sie sicher, dass die Tabelle "UserAccounts" in der angegebenen Datenbank vorhanden ist.
 ##
 function db_user_data() {
-	username=$1
-	password=$2
-	databasename=$3
+	local username=$1
+	local password=$2
+	local databasename=$3
 	firstname=$4
 	lastname=$5
 	log rohtext "Daten von einem Benutzer anzeigen:"
@@ -12988,9 +13105,9 @@ function db_user_data_dialog() {
 		db_user_data=$(dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 "$lable4" 4 1 "$lablename4" 4 25 25 30 "$lable5" 5 1 "$lablename5" 5 25 25 30 3>&1 1>&2 2>&3 3>&-)
 
 		# Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
-		username=$(echo "$db_user_data" | sed -n '1p')
-		password=$(echo "$db_user_data" | sed -n '2p')
-		databasename=$(echo "$db_user_data" | sed -n '3p')
+		local username=$(echo "$db_user_data" | sed -n '1p')
+		local password=$(echo "$db_user_data" | sed -n '2p')
+		local databasename=$(echo "$db_user_data" | sed -n '3p')
 		firstname=$(echo "$db_user_data" | sed -n '4p')
 		lastname=$(echo "$db_user_data" | sed -n '5p')
 
@@ -13024,9 +13141,9 @@ function db_user_data_dialog() {
 	# - Die Funktion verwendet das Dialog-Tool zur Benutzerinteraktion. Stellen Sie sicher, dass Dialog installiert ist.
 ##
 function db_user_infos() {
-	username=$1
-	password=$2
-	databasename=$3
+	local username=$1
+	local password=$2
+	local databasename=$3
 	firstname=$4
 	lastname=$5
 	log rohtext "UUID Vor- und Nachname sowie E-Mail Adresse von einem Benutzer anzeigen:"
@@ -13074,9 +13191,9 @@ function db_user_infos_dialog() {
 		db_user_infos=$(dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 "$lable4" 4 1 "$lablename4" 4 25 25 30 "$lable5" 5 1 "$lablename5" 5 25 25 30 3>&1 1>&2 2>&3 3>&-)
 
 		# Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
-		username=$(echo "$db_user_infos" | sed -n '1p')
-		password=$(echo "$db_user_infos" | sed -n '2p')
-		databasename=$(echo "$db_user_infos" | sed -n '3p')
+		local username=$(echo "$db_user_infos" | sed -n '1p')
+		local password=$(echo "$db_user_infos" | sed -n '2p')
+		local databasename=$(echo "$db_user_infos" | sed -n '3p')
 		firstname=$(echo "$db_user_infos" | sed -n '4p')
 		lastname=$(echo "$db_user_infos" | sed -n '5p')
 
@@ -13110,9 +13227,9 @@ function db_user_infos_dialog() {
 	# - Die Funktion verwendet das Dialog-Tool zur Benutzerinteraktion. Stellen Sie sicher, dass Dialog installiert ist.
 ##
 function db_user_uuid() {
-	username=$1
-	password=$2
-	databasename=$3
+	local username=$1
+	local password=$2
+	local databasename=$3
 	firstname=$4
 	lastname=$5
 	log rohtext "UUID von einem Benutzer anzeigen:"
@@ -13161,9 +13278,9 @@ function db_user_uuid_dialog() {
 		db_user_uuid=$(dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 "$lable4" 4 1 "$lablename4" 4 25 25 30 "$lable5" 5 1 "$lablename5" 5 25 25 30 3>&1 1>&2 2>&3 3>&-)
 
 		# Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
-		username=$(echo "$db_user_uuid" | sed -n '1p')
-		password=$(echo "$db_user_uuid" | sed -n '2p')
-		databasename=$(echo "$db_user_uuid" | sed -n '3p')
+		local username=$(echo "$db_user_uuid" | sed -n '1p')
+		local password=$(echo "$db_user_uuid" | sed -n '2p')
+		local databasename=$(echo "$db_user_uuid" | sed -n '3p')
 		firstname=$(echo "$db_user_uuid" | sed -n '4p')
 		lastname=$(echo "$db_user_uuid" | sed -n '5p')
 
@@ -13203,9 +13320,9 @@ function db_user_uuid_dialog() {
 	# - Der Verzeichnistyp kann als Text (z. B. "Textures") oder als Zahl (z. B. "0") angegeben werden. Die Funktion konvertiert den Text in die entsprechende Zahl.
 ##
 function db_foldertyp_user() {
-	username=$1
-	password=$2
-	databasename=$3
+	local username=$1
+	local password=$2
+	local databasename=$3
 	firstname=$4
 	lastname=$5
 	foldertyp=$6
@@ -13295,9 +13412,9 @@ function db_all_userfailed() {
 		db_all_userfailed=$(dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 "$lable4" 4 1 "$lablename4" 4 25 25 30 "$lable5" 5 1 "$lablename5" 5 25 25 30 3>&1 1>&2 2>&3 3>&-)
 
 		# Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
-		username=$(echo "$db_all_userfailed" | sed -n '1p')
-		password=$(echo "$db_all_userfailed" | sed -n '2p')
-		databasename=$(echo "$db_all_userfailed" | sed -n '3p')
+		local username=$(echo "$db_all_userfailed" | sed -n '1p')
+		local password=$(echo "$db_all_userfailed" | sed -n '2p')
+		local databasename=$(echo "$db_all_userfailed" | sed -n '3p')
 		firstname=$(echo "$db_all_userfailed" | sed -n '4p')
 		lastname=$(echo "$db_all_userfailed" | sed -n '5p')
 
@@ -13307,9 +13424,9 @@ function db_all_userfailed() {
 	else
 		# Alle Aktionen ohne dialog
 		log info "Finde alles vom inventoryfolders was type -1 des User ist:"
-		username=$1
-		password=$2
-		databasename=$3
+		local username=$1
+		local password=$2
+		local databasename=$3
 		firstname=$4
 		lastname=$5
 	fi # dialog Aktionen Ende
@@ -13381,9 +13498,9 @@ function db_userdate() {
 		db_userdate=$(dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 "$lable4" 4 1 "$lablename4" 4 25 25 30 "$lable5" 5 1 "$lablename5" 5 25 25 30 3>&1 1>&2 2>&3 3>&-)
 
 		# Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
-		username=$(echo "$db_userdate" | sed -n '1p')
-		password=$(echo "$db_userdate" | sed -n '2p')
-		databasename=$(echo "$db_userdate" | sed -n '3p')
+		local username=$(echo "$db_userdate" | sed -n '1p')
+		local password=$(echo "$db_userdate" | sed -n '2p')
+		local databasename=$(echo "$db_userdate" | sed -n '3p')
 		firstname=$(echo "$db_userdate" | sed -n '4p')
 		lastname=$(echo "$db_userdate" | sed -n '5p')
 
@@ -13393,9 +13510,9 @@ function db_userdate() {
 	else
 		# Alle Aktionen ohne dialog
 		log info "Zeige Erstellungsdatum eines Users an:"
-		username=$1
-		password=$2
-		databasename=$3
+		local username=$1
+		local password=$2
+		local databasename=$3
 		firstname=$4
 		lastname=$5
 	fi # dialog Aktionen Ende
@@ -13462,9 +13579,9 @@ function db_false_email() {
 		db_false_emailBOXERGEBNIS=$(dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 3>&1 1>&2 2>&3 3>&-)
 
 		# Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
-		username=$(echo "$db_false_emailBOXERGEBNIS" | sed -n '1p')
-		password=$(echo "$db_false_emailBOXERGEBNIS" | sed -n '2p')
-		databasename=$(echo "$db_false_emailBOXERGEBNIS" | sed -n '3p')
+		local username=$(echo "$db_false_emailBOXERGEBNIS" | sed -n '1p')
+		local password=$(echo "$db_false_emailBOXERGEBNIS" | sed -n '2p')
+		local databasename=$(echo "$db_false_emailBOXERGEBNIS" | sed -n '3p')
 
 		# Alles loeschen.
 		dialogclear
@@ -13472,9 +13589,9 @@ function db_false_email() {
 	else
 		# Alle Aktionen ohne dialog
 		log info "Finde offensichtlich falsche E-Mail Adressen der User ausser von $ausnahmefirstname $ausnahmelastname."
-		username=$1
-		password=$2
-		databasename=$3
+		local username=$1
+		local password=$2
+		local databasename=$3
 	fi # dialog Aktionen Ende
 
 	# Ausnahmen
@@ -13522,9 +13639,9 @@ function db_false_email() {
 ##
 function set_empty_user() {
 	regex="^(([-a-zA-Z0-9\!#\$%\&\'*+/=?^_\`{\|}~]+|(\"([][,:;<>\&@a-zA-Z0-9\!#\$%\&\'*+/=?^_\`{\|}~-]|(\\\\[\\ \"]))+\"))\.)*([-a-zA-Z0-9\!#\$%\&\'*+/=?^_\`{\|}~]+|(\"([][,:;<>\&@a-zA-Z0-9\!#\$%\&\'*+/=?^_\`{\|}~-]|(\\\\[\\ \"]))+\"))@\w((-|\w)*\w)*\.(\w((-|\w)*\w)*\.)*\w{2,4}$"
-	username=$1
-	password=$2
-	databasename=$3
+	local username=$1
+	local password=$2
+	local databasename=$3
 	firstname=$4
 	lastname=$5
 	email=$6
@@ -13574,9 +13691,9 @@ function set_empty_user() {
 	#   - Stellen Sie sicher, dass die Tabelle "UserAccounts" in der angegebenen Datenbank vorhanden ist.
 ##
 function db_email_setincorrectuseroff() {
-	username=$1
-	password=$2
-	databasename=$3
+	local username=$1
+	local password=$2
+	local databasename=$3
 	ausnahmefirstname="GRID"
 	ausnahmelastname="SERVICES"
 
@@ -13634,9 +13751,9 @@ function db_email_setincorrectuseroff_dialog() {
 		ASSETDELBOXERGEBNIS=$(dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 3>&1 1>&2 2>&3 3>&-)
 
 		# Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
-		username=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '1p')
-		password=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '2p')
-		databasename=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '3p')
+		local username=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '1p')
+		local password=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '2p')
+		local databasename=$(echo "$ASSETDELBOXERGEBNIS" | sed -n '3p')
 
 		# Alles loeschen.
 		dialogclear
@@ -13678,9 +13795,9 @@ function db_email_setincorrectuseroff_dialog() {
 	#   - Stellen Sie sicher, dass die Tabelle "UserAccounts" in der angegebenen Datenbank vorhanden ist.
 ##
 function db_setuserofline() {
-	username=$1
-	password=$2
-	databasename=$3
+	local username=$1
+	local password=$2
+	local databasename=$3
 	firstname=$4
 	lastname=$5
 
@@ -13742,9 +13859,9 @@ function db_setuserofline_dialog() {
 		setuserofline=$(dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 "$lable4" 4 1 "$lablename4" 4 25 25 30 "$lable5" 5 1 "$lablename5" 5 25 25 30 3>&1 1>&2 2>&3 3>&-)
 
 		# Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
-		username=$(echo "$setuserofline" | sed -n '1p')
-		password=$(echo "$setuserofline" | sed -n '2p')
-		databasename=$(echo "$setuserofline" | sed -n '3p')
+		local username=$(echo "$setuserofline" | sed -n '1p')
+		local password=$(echo "$setuserofline" | sed -n '2p')
+		local databasename=$(echo "$setuserofline" | sed -n '3p')
 		firstname=$(echo "$setuserofline" | sed -n '4p')
 		lastname=$(echo "$setuserofline" | sed -n '5p')
 
@@ -13785,9 +13902,9 @@ function db_setuserofline_dialog() {
 	#   - Stellen Sie sicher, dass die Tabelle "UserAccounts" in der angegebenen Datenbank vorhanden ist.
 ##
 function db_setuseronline() {
-	username=$1
-	password=$2
-	databasename=$3
+	local username=$1
+	local password=$2
+	local databasename=$3
 	firstname=$4
 	lastname=$5
 
@@ -13839,9 +13956,9 @@ function db_setuseronline_dialog() {
 		setuseronline=$(dialog --backtitle "$boxbacktitel" --title "$boxtitel" --form "$formtitle" 25 60 16 "$lable1" 1 1 "$lablename1" 1 25 25 30 "$lable2" 2 1 "$lablename2" 2 25 25 30 "$lable3" 3 1 "$lablename3" 3 25 25 30 "$lable4" 4 1 "$lablename4" 4 25 25 30 "$lable5" 5 1 "$lablename5" 5 25 25 30 3>&1 1>&2 2>&3 3>&-)
 
 		# Zeilen aus einer Variablen zerlegen und in verschiedenen Variablen schreiben.
-		username=$(echo "$setuseronline" | sed -n '1p')
-		password=$(echo "$setuseronline" | sed -n '2p')
-		databasename=$(echo "$setuseronline" | sed -n '3p')
+		local username=$(echo "$setuseronline" | sed -n '1p')
+		local password=$(echo "$setuseronline" | sed -n '2p')
+		local databasename=$(echo "$setuseronline" | sed -n '3p')
 		firstname=$(echo "$setuseronline" | sed -n '4p')
 		lastname=$(echo "$setuseronline" | sed -n '5p')
 
@@ -13889,8 +14006,8 @@ function db_tabellencopy() {
 	nachdatenbank=$2
 	kopieretabelle=$3
 
-	username=$4
-	password=$5
+	local username=$4
+	local password=$5
 
 	#CREATE TABLE new_table LIKE old_table
 	#INSERT INTO new_table SELECT * FROM old_table
@@ -13937,8 +14054,8 @@ function db_tabellencopy_extern() {
 	nachdatenbank=$3
 	kopieretabelle=$4	
 
-	username=$5
-	password=$6
+	local username=$5
+	local password=$6
 
 	# Für den externen weg muss der externe Server angegeben werden testen ob es ein teil 
 	#EXTERNERSERVER="root@192.168.1.155"
@@ -13980,14 +14097,14 @@ function db_tabellencopy_extern() {
 	#   - Das Master-Passwort sollte sicher gespeichert und übertragen werden, da es Zugriff auf den MySQL-Master-Server ermöglicht.
 ##
 function default_master_connection() {
-	username=$1
-	password=$2
-	if [ -z "$username" ]; then username="root"; fi
-	if [ -z "$password" ]; then password=""; fi
+	local username=$1
+	local password=$2
+	if [ -z "$username" ]; then local username="root"; fi
+	if [ -z "$password" ]; then local password=""; fi
 
 	mysqlrestnodb "$username" "$password" "SET default_master_connection = '$username';"
 	mysqlrestnodb "$username" "$password" "STOP SLAVE;"
-	mysqlrestnodb "$username" "$password" "CHANGE MASTER TO MASTER_PASSWORD='$password';"
+	mysqlrestnodb "$username" "$password" "CHANGE MASTER TO MASTER_local password='$password';"
 	mysqlrestnodb "$username" "$password" "START SLAVE;"
 	#shellcheck disable=SC2128
 	log text " $FUNCNAME: $result_mysqlrestnodb"
@@ -14017,13 +14134,13 @@ function default_master_connection() {
 	#   - Das Master-Passwort sollte sicher gespeichert und übertragen werden, da es Zugriff auf den MySQL-Master-Server ermöglicht.
 ##
 function connection_name() {
-	username=$1
-	password=$2
-	if [ -z "$username" ]; then username="root"; fi
-	if [ -z "$password" ]; then password=""; fi
+	local username=$1
+	local password=$2
+	if [ -z "$username" ]; then local username="root"; fi
+	if [ -z "$password" ]; then local password=""; fi
 
 	mysqlrestnodb "$username" "$password" "STOP SLAVE '$username';"
-	mysqlrestnodb "$username" "$password" "CHANGE MASTER '$username' TO MASTER_PASSWORD='$password';"
+	mysqlrestnodb "$username" "$password" "CHANGE MASTER '$username' TO MASTER_local password='$password';"
 	mysqlrestnodb "$username" "$password" "START SLAVE '$username';"
 	#shellcheck disable=SC2128
 	log text " $FUNCNAME: $result_mysqlrestnodb"
@@ -14053,13 +14170,13 @@ function connection_name() {
 	#   - Das Master-Passwort und der Benutzername sollten sicher gespeichert und übertragen werden, da sie Zugriff auf den MySQL-Master-Server ermöglichen.
 ##
 function MASTER_USER() {
-	username=$1
-	password=$2
-	if [ -z "$username" ]; then username="root"; fi
-	if [ -z "$password" ]; then password=""; fi
+	local username=$1
+	local password=$2
+	if [ -z "$username" ]; then local username="root"; fi
+	if [ -z "$password" ]; then local password=""; fi
 
 	mysqlrestnodb "$username" "$password" "STOP SLAVE;"
-	mysqlrestnodb "$username" "$password" "CHANGE MASTER TO MASTER_USER='$username', MASTER_PASSWORD='$password';"
+	mysqlrestnodb "$username" "$password" "CHANGE MASTER TO MASTER_USER='$username', MASTER_local password='$password';"
 	mysqlrestnodb "$username" "$password" "START SLAVE;"
 	#shellcheck disable=SC2128
 	log text " $FUNCNAME: $result_mysqlrestnodb"
@@ -14089,13 +14206,13 @@ function MASTER_USER() {
 	#   - Das Master-Passwort sollte sicher gespeichert und übertragen werden, da es Zugriff auf den MySQL-Master-Server ermöglicht.
 ##
 function MASTER_PASSWORD() {
-	username=$1
-	password=$2
-	if [ -z "$username" ]; then username="root"; fi
-	if [ -z "$password" ]; then password=""; fi
+	local username=$1
+	local password=$2
+	if [ -z "$username" ]; then local username="root"; fi
+	if [ -z "$password" ]; then local password=""; fi
 
 	mysqlrestnodb "$username" "$password" "STOP SLAVE;"
-	mysqlrestnodb "$username" "$password" "CHANGE MASTER TO MASTER_PASSWORD=$password;"
+	mysqlrestnodb "$username" "$password" "CHANGE MASTER TO MASTER_local password=$password;"
 	mysqlrestnodb "$username" "$password" "START SLAVE;"
 	#shellcheck disable=SC2128
 	log text " $FUNCNAME: $result_mysqlrestnodb"
@@ -14126,15 +14243,15 @@ function MASTER_PASSWORD() {
 	#   - Die Hostadresse, der Benutzername und das Passwort sollten sicher gespeichert und übertragen werden, da sie Zugriff auf den MySQL-Master-Server ermöglichen.
 ##
 function MASTER_HOST() {
-	username=$1
-	password=$2
+	local username=$1
+	local password=$2
 	MASTERHOST=$3
-	if [ -z "$username" ]; then username="root"; fi
-	if [ -z "$password" ]; then password=""; fi
+	if [ -z "$username" ]; then local username="root"; fi
+	if [ -z "$password" ]; then local password=""; fi
 	if [ -z "$MASTERHOST" ]; then MASTERHOST='127.0.0.1'; fi
 
 	mysqlrestnodb "$username" "$password" "STOP SLAVE;"
-	mysqlrestnodb "$username" "$password" "CHANGE MASTER TO MASTER_HOST='$MASTERHOST', MASTER_USER='$username', MASTER_PASSWORD='$password', MASTER_USE_GTID=slave_pos;"
+	mysqlrestnodb "$username" "$password" "CHANGE MASTER TO MASTER_HOST='$MASTERHOST', MASTER_USER='$username', MASTER_local password='$password', MASTER_USE_GTID=slave_pos;"
 	mysqlrestnodb "$username" "$password" "START SLAVE;"
 	#shellcheck disable=SC2128
 	log text " $FUNCNAME: $result_mysqlrestnodb"
@@ -14165,17 +14282,17 @@ function MASTER_HOST() {
 	#   - Die Hostadresse, der Benutzername und das Passwort sollten sicher gespeichert und übertragen werden, da sie Zugriff auf den MySQL-Master-Server ermöglichen.
 ##
 function MASTER_PORT() {
-	username=$1
-	password=$2
+	local username=$1
+	local password=$2
 	MASTERHOST=$3
 	MASTERPORT=$4
-	if [ -z "$username" ]; then username="root"; fi
-	if [ -z "$password" ]; then password=""; fi
+	if [ -z "$username" ]; then local username="root"; fi
+	if [ -z "$password" ]; then local password=""; fi
 	if [ -z "$MASTERHOST" ]; then MASTERHOST='127.0.0.1'; fi
 	if [ -z "$MASTERPORT" ]; then MASTERPORT='3306'; fi
 
 	mysqlrestnodb "$username" "$password" "STOP SLAVE;"
-	mysqlrestnodb "$username" "$password" "CHANGE MASTER TO MASTER_HOST='$MASTERHOST', MASTER_PORT='$MASTERPORT', MASTER_USER='$username', MASTER_PASSWORD='$password', MASTER_USE_GTID=slave_pos;"
+	mysqlrestnodb "$username" "$password" "CHANGE MASTER TO MASTER_HOST='$MASTERHOST', MASTER_PORT='$MASTERPORT', MASTER_USER='$username', MASTER_local password='$password', MASTER_USE_GTID=slave_pos;"
 	mysqlrestnodb "$username" "$password" "START SLAVE;"
 	#shellcheck disable=SC2128
 	log text " $FUNCNAME: $result_mysqlrestnodb"
@@ -14205,11 +14322,11 @@ function MASTER_PORT() {
 	#   - Stellen Sie sicher, dass Sie über ausreichende Berechtigungen für die MySQL-Verbindung und die Konfiguration des Master-Slave-Replikationsprozesses verfügen.
 ##
 function MASTER_CONNECT_RETRY() {
-	username=$1
-	password=$2
+	local username=$1
+	local password=$2
 	MASTERCONNECTRETRY=$3
-	if [ -z "$username" ]; then username="root"; fi
-	if [ -z "$password" ]; then password=""; fi
+	if [ -z "$username" ]; then local username="root"; fi
+	if [ -z "$password" ]; then local password=""; fi
 	if [ -z "$MASTERCONNECTRETRY" ]; then MASTERCONNECTRETRY='20'; fi
 
 	mysqlrestnodb "$username" "$password" "STOP SLAVE;"
@@ -14243,11 +14360,11 @@ function MASTER_CONNECT_RETRY() {
 	#   - Stellen Sie sicher, dass Sie über ausreichende Berechtigungen für die MySQL-Verbindung und die Konfiguration des Master-Slave-Replikationsprozesses verfügen.
 ##
 function MASTER_SSL() {
-	username=$1
-	password=$2
+	local username=$1
+	local password=$2
 	MASTERSSL=$3
-	if [ -z "$username" ]; then username="root"; fi
-	if [ -z "$password" ]; then password=""; fi
+	if [ -z "$username" ]; then local username="root"; fi
+	if [ -z "$password" ]; then local password=""; fi
 	if [ -z "$MASTERSSL" ]; then MASTERSSL=1; fi
 
 	mysqlrestnodb "$username" "$password" "STOP SLAVE;"
@@ -14280,10 +14397,10 @@ function MASTER_SSL() {
 	#   - Passen Sie die in der Funktion fest codierten SSL-Zertifikatsdateien und Optionen an Ihre spezifischen Anforderungen an.
 ##
 function MASTER_SSL_CA() {
-	username=$1
-	password=$2
-	if [ -z "$username" ]; then username="root"; fi
-	if [ -z "$password" ]; then password=""; fi
+	local username=$1
+	local password=$2
+	if [ -z "$username" ]; then local username="root"; fi
+	if [ -z "$password" ]; then local password=""; fi
 
 	MASTERSSLCERT='/etc/my.cnf.d/certificates/server-cert.pem'
 	MASTERSSLKEY='/etc/my.cnf.d/certificates/server-key.pem'
@@ -14321,10 +14438,10 @@ function MASTER_SSL_CA() {
 	#   - Das CA-Path-Verzeichnis sollte Zertifikate im PEM-Format enthalten.
 ##
 function MASTER_SSL_CAPATH() {
-	username=$1
-	password=$2
-	if [ -z "$username" ]; then username="root"; fi
-	if [ -z "$password" ]; then password=""; fi
+	local username=$1
+	local password=$2
+	if [ -z "$username" ]; then local username="root"; fi
+	if [ -z "$password" ]; then local password=""; fi
 
 	MASTERSSLCERT='/etc/my.cnf.d/certificates/server-cert.pem'
 	MASTERSSLKEY='/etc/my.cnf.d/certificates/server-key.pem'
@@ -14361,10 +14478,10 @@ function MASTER_SSL_CAPATH() {
 	#   - Passen Sie die in der Funktion fest codierten SSL-Zertifikatsdateien und Optionen an Ihre spezifischen Anforderungen an.
 ##
 function MASTER_SSL_CERT() {
-	username=$1
-	password=$2
-	if [ -z "$username" ]; then username="root"; fi
-	if [ -z "$password" ]; then password=""; fi
+	local username=$1
+	local password=$2
+	if [ -z "$username" ]; then local username="root"; fi
+	if [ -z "$password" ]; then local password=""; fi
 
 	MASTERSSLCERT='/etc/my.cnf.d/certificates/server-cert.pem'
 	MASTERSSLKEY='/etc/my.cnf.d/certificates/server-key.pem'
@@ -14402,10 +14519,10 @@ function MASTER_SSL_CERT() {
 	#   - Passen Sie die in der Funktion fest codierten SSL-Zertifikatsdateien, Optionen und CRL-Dateipfade an Ihre spezifischen Anforderungen an.
 ##
 function MASTER_SSL_CRL() {
-	username=$1
-	password=$2
-	if [ -z "$username" ]; then username="root"; fi
-	if [ -z "$password" ]; then password=""; fi
+	local username=$1
+	local password=$2
+	if [ -z "$username" ]; then local username="root"; fi
+	if [ -z "$password" ]; then local password=""; fi
 
 	MASTERSSLCERT='/etc/my.cnf.d/certificates/server-cert.pem'
 	MASTERSSLKEY='/etc/my.cnf.d/certificates/server-key.pem'
@@ -14443,10 +14560,10 @@ function MASTER_SSL_CRL() {
 	#   - Passen Sie die in der Funktion fest codierten SSL-Zertifikatsdateien, Optionen und das Verzeichnis für die CRL-Dateien an Ihre spezifischen Anforderungen an.
 ##
 function MASTER_SSL_CRLPATH() {
-	username=$1
-	password=$2
-	if [ -z "$username" ]; then username="root"; fi
-	if [ -z "$password" ]; then password=""; fi
+	local username=$1
+	local password=$2
+	if [ -z "$username" ]; then local username="root"; fi
+	if [ -z "$password" ]; then local password=""; fi
 
 	MASTERSSLCERT='/etc/my.cnf.d/certificates/server-cert.pem'
 	MASTERSSLKEY='/etc/my.cnf.d/certificates/server-key.pem'
@@ -14484,10 +14601,10 @@ function MASTER_SSL_CRLPATH() {
 	#   - Passen Sie die in der Funktion fest codierten SSL-Zertifikatsdateien, Optionen und den Pfad zum privaten Schlüssel an Ihre spezifischen Anforderungen an.
 ##
 function MASTER_SSL_KEY() {
-	username=$1
-	password=$2
-	if [ -z "$username" ]; then username="root"; fi
-	if [ -z "$password" ]; then password=""; fi
+	local username=$1
+	local password=$2
+	if [ -z "$username" ]; then local username="root"; fi
+	if [ -z "$password" ]; then local password=""; fi
 
 	MASTERSSLCERT='/etc/my.cnf.d/certificates/server-cert.pem'
 	MASTERSSLKEY='/etc/my.cnf.d/certificates/server-key.pem'
@@ -14526,10 +14643,10 @@ function MASTER_SSL_KEY() {
 	#   - Die SSL-Cipher-Suite muss gemäß den Sicherheitsanforderungen Ihrer Umgebung ausgewählt werden.
 ##
 function MASTER_SSL_CIPHER() {
-	username=$1
-	password=$2
-	if [ -z "$username" ]; then username="root"; fi
-	if [ -z "$password" ]; then password=""; fi
+	local username=$1
+	local password=$2
+	if [ -z "$username" ]; then local username="root"; fi
+	if [ -z "$password" ]; then local password=""; fi
 
 	MASTERSSLCERT='/etc/my.cnf.d/certificates/server-cert.pem'
 	MASTERSSLKEY='/etc/my.cnf.d/certificates/server-key.pem'
@@ -14567,10 +14684,10 @@ function MASTER_SSL_CIPHER() {
 	#   - Passen Sie die in der Funktion fest codierten SSL-Zertifikatsdateien, Optionen und den Pfad zum privaten Schlüssel an Ihre spezifischen Anforderungen an.
 ##
 function MASTER_SSL_VERIFY_SERVER_CERT() {
-	username=$1
-	password=$2
-	if [ -z "$username" ]; then username="root"; fi
-	if [ -z "$password" ]; then password=""; fi
+	local username=$1
+	local password=$2
+	if [ -z "$username" ]; then local username="root"; fi
+	if [ -z "$password" ]; then local password=""; fi
 
 	MASTERSSLCERT='/etc/my.cnf.d/certificates/server-cert.pem'
 	MASTERSSLKEY='/etc/my.cnf.d/certificates/server-key.pem'
@@ -14610,12 +14727,12 @@ function MASTER_SSL_VERIFY_SERVER_CERT() {
 	#   - Die Verwendung der richtigen binären Protokoll-Datei und Position ist entscheidend, um sicherzustellen, dass die Replikation korrekt funktioniert.
 ##
 function MASTER_LOG_FILE() {
-	username=$1
-	password=$2
+	local username=$1
+	local password=$2
 	MASTERLOGFILE=$3
 	MASTERLOGPOS=$4
-	if [ -z "$username" ]; then username="root"; fi
-	if [ -z "$password" ]; then password=""; fi
+	if [ -z "$username" ]; then local username="root"; fi
+	if [ -z "$password" ]; then local password=""; fi
 	if [ -z "$MASTERLOGPOS" ]; then MASTERLOGPOS=4; fi
 	if [ -z "$MASTERLOGFILE" ]; then MASTERLOGFILE="master2-bin.001"; fi
 
@@ -14652,12 +14769,12 @@ function MASTER_LOG_FILE() {
 	#   - Die Verwendung der richtigen Position im binären Protokoll und des richtigen binären Protokoll-Dateinamens ist entscheidend, um sicherzustellen, dass die Replikation korrekt funktioniert.
 ##
 function MASTER_LOG_POS() {
-	username=$1
-	password=$2
+	local username=$1
+	local password=$2
 	MASTERLOGFILE=$2
 	MASTERLOGPOS=$2
-	if [ -z "$username" ]; then username="root"; fi
-	if [ -z "$password" ]; then password=""; fi
+	if [ -z "$username" ]; then local username="root"; fi
+	if [ -z "$password" ]; then local password=""; fi
 	if [ -z "$MASTERLOGPOS" ]; then MASTERLOGPOS=4; fi
 	if [ -z "$MASTERLOGFILE" ]; then MASTERLOGFILE="master2-bin.001"; fi
 
@@ -14694,12 +14811,12 @@ function MASTER_LOG_POS() {
 	#   - Die Verwendung der richtigen Position im Relay-Log und des richtigen Relay-Log-Dateinamens ist entscheidend, um sicherzustellen, dass die Replikation korrekt funktioniert.
 ##
 function RELAY_LOG_FILE() {
-	username=$1
-	password=$2
+	local username=$1
+	local password=$2
 	RELAYLOGFILE=$3
 	RELAYLOGPOS=$4
-	if [ -z "$username" ]; then username="root"; fi
-	if [ -z "$password" ]; then password=""; fi
+	if [ -z "$username" ]; then local username="root"; fi
+	if [ -z "$password" ]; then local password=""; fi
 	if [ -z "$RELAYLOGPOS" ]; then RELAYLOGPOS=4025; fi
 	if [ -z "$RELAYLOGFILE" ]; then RELAYLOGFILE="slave-relay-bin.006"; fi
 
@@ -14736,12 +14853,12 @@ function RELAY_LOG_FILE() {
 	#   - Die Verwendung der richtigen Position im Relay-Log ist entscheidend, um sicherzustellen, dass die Replikation korrekt funktioniert.
 ##
 function RELAY_LOG_POS() {
-	username=$1
-	password=$2
+	local username=$1
+	local password=$2
 	RELAYLOGFILE=$3
 	RELAYLOGPOS=$4
-	if [ -z "$username" ]; then username="root"; fi
-	if [ -z "$password" ]; then password=""; fi
+	if [ -z "$username" ]; then local username="root"; fi
+	if [ -z "$password" ]; then local password=""; fi
 	if [ -z "$RELAYLOGPOS" ]; then RELAYLOGPOS=4025; fi
 	if [ -z "$RELAYLOGFILE" ]; then RELAYLOGFILE="slave-relay-bin.006"; fi
 
@@ -14775,10 +14892,10 @@ function RELAY_LOG_POS() {
 	#   - Stellen Sie sicher, dass Sie über ausreichende Berechtigungen für die MySQL-Verbindung und die Verwendung von GTID verfügen.
 ##
 function MASTER_USE_GTID() {
-	username=$1
-	password=$2
-	if [ -z "$username" ]; then username="root"; fi
-	if [ -z "$password" ]; then password=""; fi
+	local username=$1
+	local password=$2
+	if [ -z "$username" ]; then local username="root"; fi
+	if [ -z "$password" ]; then local password=""; fi
 
 	mysqlrestnodb "$username" "$password" "STOP SLAVE;"
 	mysqlrestnodb "$username" "$password" "CHANGE MASTER TO MASTER_USE_GTID = current_pos;"
@@ -14810,11 +14927,11 @@ function MASTER_USE_GTID() {
 	#   - Stellen Sie sicher, dass Sie über ausreichende Berechtigungen für die MySQL-Verbindung und die Verwendung von GTID verfügen.
 ## 
 function MASTER_USE_GTID_slv() {
-	username=$1
-	password=$2
+	local username=$1
+	local password=$2
 	gtidslavepos=$3
-	if [ -z "$username" ]; then username="root"; fi
-	if [ -z "$password" ]; then password=""; fi
+	if [ -z "$username" ]; then local username="root"; fi
+	if [ -z "$password" ]; then local password=""; fi
 	if [ -z "$gtidslavepos" ]; then gtidslavepos='0-1-153'; fi
 
 	mysqlrestnodb "$username" "$password" "STOP SLAVE;"
@@ -14849,11 +14966,11 @@ function MASTER_USE_GTID_slv() {
 	#   - Stellen Sie sicher, dass Sie über ausreichende Berechtigungen für die MySQL-Verbindung und die Konfiguration der Server-IDs verfügen.
 ##
 function IGNORE_SERVER_IDS() {
-	username=$1
-	password=$2
+	local username=$1
+	local password=$2
 	ids=$3
-	if [ -z "$username" ]; then username="root"; fi
-	if [ -z "$password" ]; then password=""; fi
+	if [ -z "$username" ]; then local username="root"; fi
+	if [ -z "$password" ]; then local password=""; fi
 
 	mysqlrestnodb "$username" "$password" "STOP SLAVE;"
 	mysqlrestnodb "$username" "$password" "CHANGE MASTER TO IGNORE_SERVER_IDS = ($ids);"
@@ -14886,11 +15003,11 @@ function IGNORE_SERVER_IDS() {
 	#   - Stellen Sie sicher, dass Sie über ausreichende Berechtigungen für die MySQL-Verbindung und die Konfiguration der Domänen-IDs verfügen.
 ##
 function DO_DOMAIN_IDS() {
-	username=$1
-	password=$2
+	local username=$1
+	local password=$2
 	ids=$3
-	if [ -z "$username" ]; then username="root"; fi
-	if [ -z "$password" ]; then password=""; fi
+	if [ -z "$username" ]; then local username="root"; fi
+	if [ -z "$password" ]; then local password=""; fi
 
 	mysqlrestnodb "$username" "$password" "STOP SLAVE;"
 	mysqlrestnodb "$username" "$password" "CHANGE MASTER TO DO_DOMAIN_IDS = ($ids);"
@@ -14923,10 +15040,10 @@ function DO_DOMAIN_IDS() {
 	#   - Stellen Sie sicher, dass Sie über ausreichende Berechtigungen für die MySQL-Verbindung und die Konfiguration der Domänen-IDs verfügen.
 ## 
 function DO_DOMAIN_IDS2_nids() {
-	username=$1
-	password=$2
-	if [ -z "$username" ]; then username="root"; fi
-	if [ -z "$password" ]; then password=""; fi
+	local username=$1
+	local password=$2
+	if [ -z "$username" ]; then local username="root"; fi
+	if [ -z "$password" ]; then local password=""; fi
 
 	mysqlrestnodb "$username" "$password" "STOP SLAVE;"
 	mysqlrestnodb "$username" "$password" "CHANGE MASTER TO DO_DOMAIN_IDS = ();"
@@ -14959,11 +15076,11 @@ function DO_DOMAIN_IDS2_nids() {
 	#   - Stellen Sie sicher, dass Sie über ausreichende Berechtigungen für die MySQL-Verbindung und die Konfiguration der Domänen-IDs verfügen.
 ##
 function IGNORE_DOMAIN_IDS() {
-	username=$1
-	password=$2
+	local username=$1
+	local password=$2
 	ids=$3
-	if [ -z "$username" ]; then username="root"; fi
-	if [ -z "$password" ]; then password=""; fi
+	if [ -z "$username" ]; then local username="root"; fi
+	if [ -z "$password" ]; then local password=""; fi
 
 	mysqlrestnodb "$username" "$password" "STOP SLAVE;"
 	mysqlrestnodb "$username" "$password" "CHANGE MASTER TO IGNORE_DOMAIN_IDS = ($ids);"
@@ -14996,10 +15113,10 @@ function IGNORE_DOMAIN_IDS() {
 	#   - Stellen Sie sicher, dass Sie über ausreichende Berechtigungen für die MySQL-Verbindung und die Konfiguration der Domänen-IDs verfügen.
 ##
 function IGNORE_DOMAIN_IDS2_nids() {
-	username=$1
-	password=$2
-	if [ -z "$username" ]; then username="root"; fi
-	if [ -z "$password" ]; then password=""; fi
+	local username=$1
+	local password=$2
+	if [ -z "$username" ]; then local username="root"; fi
+	if [ -z "$password" ]; then local password=""; fi
 
 	mysqlrestnodb "$username" "$password" "STOP SLAVE;"
 	mysqlrestnodb "$username" "$password" "CHANGE MASTER TO IGNORE_DOMAIN_IDS = ();"
@@ -15032,11 +15149,11 @@ function IGNORE_DOMAIN_IDS2_nids() {
 	#   - Stellen Sie sicher, dass Sie über ausreichende Berechtigungen für die MySQL-Verbindung und die Konfiguration der Verzögerung verfügen.
 ##
 function MASTER_DELAY() {
-	username=$1
-	password=$2
+	local username=$1
+	local password=$2
 	MASTERDELAY=$3
-	if [ -z "$username" ]; then username="root"; fi
-	if [ -z "$password" ]; then password=""; fi
+	if [ -z "$username" ]; then local username="root"; fi
+	if [ -z "$password" ]; then local password=""; fi
 	if [ -z "$MASTERDELAY" ]; then MASTERDELAY=3600; fi
 
 	mysqlrestnodb "$username" "$password" "STOP SLAVE;"
@@ -15069,12 +15186,12 @@ function MASTER_DELAY() {
 	#   - Stellen Sie sicher, dass Sie über ausreichende Berechtigungen für die MySQL-Verbindung und die Konfiguration des Replikations-Backups verfügen.
 ##
 function Replica_Backup() {
-	username=$1
-	password=$2
+	local username=$1
+	local password=$2
 	MASTERLOGFILE=$3
 	MASTERLOGPOS=$4
-	if [ -z "$username" ]; then username="root"; fi
-	if [ -z "$password" ]; then password=""; fi
+	if [ -z "$username" ]; then local username="root"; fi
+	if [ -z "$password" ]; then local password=""; fi
 	if [ -z "$MASTERLOGFILE" ]; then MASTERLOGFILE="master2-bin.001"; fi
 	if [ -z "$MASTERLOGPOS" ]; then MASTERLOGPOS=4; fi
 
@@ -15107,11 +15224,11 @@ function Replica_Backup() {
 	#   - Stellen Sie sicher, dass Sie über ausreichende Berechtigungen für die MySQL-Verbindung und die Konfiguration des Replikations-Backups verfügen.
 ##
 function Replica_Backup_nmlp() {
-	username=$1
-	password=$2
+	local username=$1
+	local password=$2
 	gtidslavepos=$3
-	if [ -z "$username" ]; then username="root"; fi
-	if [ -z "$password" ]; then password=""; fi
+	if [ -z "$username" ]; then local username="root"; fi
+	if [ -z "$password" ]; then local password=""; fi
 	if [ -z "$gtidslavepos" ]; then gtidslavepos='0-1-153'; fi
 
 	mysqlrestnodb "$username" "$password" "SET GLOBAL gtid_slave_pos='$gtidslavepos';"
@@ -15147,20 +15264,20 @@ function Replica_Backup_nmlp() {
 	#   - Stellen Sie sicher, dass Sie über ausreichende Berechtigungen für die MySQL-Verbindung und die Konfiguration des Replikats verfügen.
 ##
 function ReplikatKoordinaten() {
-	username=$1
-	password=$2
+	local username=$1
+	local password=$2
 	MASTERHOST=$3
 	MASTERPORT=$4
 	MASTERLOGFILE=$5
 	MASTERLOGPOS=$6
 	MASTERCONNECTRETRY=$7
-	if [ -z "$username" ]; then username="root"; fi
-	if [ -z "$password" ]; then password=""; fi
+	if [ -z "$username" ]; then local username="root"; fi
+	if [ -z "$password" ]; then local password=""; fi
 
 	# Dies aendert die Koordinaten des primaeren und des primaeren Binaerlogs.
 	# Dies wird verwendet, wenn Sie das Replikat so einrichten moechten, dass es das primaere repliziert:
 
-	mysqlrestnodb "$username" "$password" "CHANGE MASTER TO  MASTER_HOST=$MASTERHOST, MASTER_USER=$username, MASTER_PASSWORD=$password, MASTER_PORT=$MASTERPORT, MASTER_LOG_FILE=$MASTERLOGFILE, MASTER_LOG_POS=$MASTERLOGPOS, MASTER_CONNECT_RETRY=$MASTERCONNECTRETRY;"
+	mysqlrestnodb "$username" "$password" "CHANGE MASTER TO  MASTER_HOST=$MASTERHOST, MASTER_USER=$username, MASTER_local password=$password, MASTER_PORT=$MASTERPORT, MASTER_LOG_FILE=$MASTERLOGFILE, MASTER_LOG_POS=$MASTERLOGPOS, MASTER_CONNECT_RETRY=$MASTERCONNECTRETRY;"
 	mysqlrestnodb "$username" "$password" "START SLAVE;"
 	#shellcheck disable=SC2128
 	log text " $FUNCNAME: $result_mysqlrestnodb"
@@ -17830,7 +17947,7 @@ function constconfig() {
     SIMULATORPORT=$4
     MYSQLDATABASE=$5
     MYSQLUSER=$6
-    MYSQLPASSWORD=$7
+    MYSQLlocal password=$7
     STARTREGION=$8
     SIMULATORGRIDNAME=$9
     SIMULATORGRIDNICK=${10}
@@ -18294,7 +18411,7 @@ function menumoneyconfig() {
 	MCMYSQLHOST="127.0.0.1"
 	MCMYSQLDATABASE="robust"
 	MCMYSQLUSER="opensim"
-	MCMYSQLPASSWORD="*****"
+	MCMYSQLlocal password="*****"
 	if [ "$BASEHOSTNAME" = "" ]; then BASEHOSTNAME=$AKTUELLEIP; fi
 	MoneyServerPort="8008"
 	DefaultBalance="1000"
@@ -18332,7 +18449,7 @@ function menumoneyconfig() {
     MCMYSQLHOST=$(cat tempfile | head -1)
     MCMYSQLDATABASE=$(cat tempfile | head -2 | tail -1)
     MCMYSQLUSER=$(cat tempfile | head -3 | tail -1)
-    MCMYSQLPASSWORD=$(cat tempfile | head -4 | tail -1)
+    MCMYSQLlocal password=$(cat tempfile | head -4 | tail -1)
 	MoneyServerPort=$(cat tempfile | head -5 | tail -1)
 	DefaultBalance=$(cat tempfile | head -6 | tail -1)
 	BankerAvatarUUID=$(cat tempfile | head -7 | tail -1)
@@ -18563,7 +18680,7 @@ function configabfrage() {
 
 	log rohtext "Bitte geben sie das Passwort ihrer mySQL/mariaDB Datenbank an [opensim]:"
 	read -r MYSQLPASSWORD
-	if [ "$MYSQLPASSWORD" = "" ]; then MYSQLPASSWORD="opensim"; fi
+	if [ "$MYSQLPASSWORD" = "" ]; then MYSQLlocal password="opensim"; fi
 	log rohtext "Ihr Passwort ihrer Datenbank lautet: $MYSQLPASSWORD"
 	log lline
 
@@ -18576,7 +18693,7 @@ function configabfrage() {
 		read -r MYSQLDATABASE
 		if [ "$MYSQLDATABASE" = "" ]; then MYSQLDATABASE="opensim"; fi
 		log rohtext "Ihr Datenbanknamen lautet: $MYSQLDATABASE"
-		CREATEROBUSTDATABASENAME="$MYSQLDATABASE"
+		CREATEROBUSTlocal databasename="$MYSQLDATABASE"
 		log lline
 	fi
 
@@ -18584,7 +18701,7 @@ function configabfrage() {
 		#** OpenSim Datenbanken
 		log rohtext "Name der Datenbanken [sim]:"
 		read -r CREATEDATABASENAME	
-		if [ "$CREATEDATABASENAME" = "" ]; then CREATEDATABASENAME="sim"; fi
+		if [ "$CREATEDATABASENAME" = "" ]; then CREATElocal databasename="sim"; fi
 
 		#** Robust Datenbank
 		log rohtext "Robust Datenbank anlegen [nein]:"
@@ -18594,7 +18711,7 @@ function configabfrage() {
 		if [ "$CREATEROBUSTDATABASE" = "ja" ]; then
 			log rohtext "Name der Robust Datenbank [robust]:"
 			read -r CREATEROBUSTDATABASENAME
-			if [ "$CREATEROBUSTDATABASENAME" = "" ]; then CREATEROBUSTDATABASENAME="robust"; fi
+			if [ "$CREATEROBUSTDATABASENAME" = "" ]; then CREATEROBUSTlocal databasename="robust"; fi
 			createdatabase $CREATEROBUSTDATABASENAME $MYSQLUSER $MYSQLPASSWORD
 		fi
 	fi
@@ -19118,7 +19235,7 @@ function oszipupgrade() {
 function pcampbot() {
 	PCBfirstname=$1
 	PCBlastname=$2
-	PCBpassword=$3	
+	PCBlocal password=$3	
 	PCBregion=$4
 	PCBanzahl=$5
 
@@ -21302,7 +21419,7 @@ function mySQLmenu() {
 
     Datenbankleeren=$(menutrans "Datenbank leeren")
     Datenbankkomplettloeschen=$(menutrans "Datenbank komplett loeschen")
-    LoeschteinenDatenbankbenutzer=$(menutrans "Loescht einen Datenbankbenutzer")
+    LoeschteinenDatenbanklocal benutzer=$(menutrans "Loescht einen Datenbankbenutzer")
 
     mysqlTunerherunterladen=$(menutrans "mysqlTuner herunterladen")
     AlleDatenbankenCheckenReparierenundOptimieren=$(menutrans "Alle Datenbanken Checken, Reparieren und Optimieren")            
@@ -22889,6 +23006,8 @@ case $KOMMANDO in
 	db_gridlist) db_gridlist "$2" "$3" "$4" ;;
 	db_griduserlist) db_griduserlist "$2" "$3" "$4" ;;
 	db_besucherliste) db_besucherliste "$2" "$3" "$4" ;;
+	db_neueobjekte) db_neueobjekte "$2" "$3" "$4" ;;
+	db_rename_objects) db_rename_objects "$2" "$3" "$4" ;;
 	db_backuptabellentypen) db_backuptabellentypen "$2" "$3" "$4" ;;
 	db_ungenutzteobjekte) db_ungenutzteobjekte "$2" "$3" "$4" "$5" "$6" ;;
 	senddata) senddata "$2" "$3" "$4" ;;
