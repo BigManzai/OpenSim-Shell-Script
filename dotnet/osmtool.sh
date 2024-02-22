@@ -41,7 +41,7 @@
 #──────────────────────────────────────────────────────────────────────────────────────────
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.1504" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.1505" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 #──────────────────────────────────────────────────────────────────────────────────────────
@@ -88,6 +88,10 @@ function password_prompt() {
         # Hier können Sie den eigentlichen Code des Skripts einfügen, der nach der Passwortprüfung ausgeführt wird.
     fi
 }
+
+## * password_prompt
+	# Menüversion von password_prompt.
+##
 function password_prompt_menu() {
     # Definieren Sie das erwartete Passwort
     expected_local password="IhrErwartetesPasswort"
@@ -169,6 +173,10 @@ function benutzer() {
         exit 1
     fi
 }
+
+## * benutzer_menu
+	# Menüversion von benutzer.
+##
 function benutzer_menu() {
     # Letzte Bearbeitung 26.09.2023
 
@@ -200,6 +208,15 @@ function benutzer_menu() {
 #* Tests
 #──────────────────────────────────────────────────────────────────────────────────────────
 
+## * VivoxVoiceSetup
+	# Der ausgewählte Code definiert eine Funktion namens VivoxVoiceSetup. 
+	# Diese Funktion akzeptiert zwei Parameter: "VIVOXSCREEN" und "ENABLED".
+	# Die Funktion ändert die Konfigurationsdatei "OpenSim.ini" für den VivoxVoice-Dienst im OpenSimulator. 
+	# Sie navigiert zum Verzeichnis des OpenSimulators, sucht die Zeile in der Konfigurationsdatei, 
+	# die die Einstellung "enabled" für VivoxVoice enthält, und ändert den Wert auf den übergebenen Wert von "ENABLED".
+	# Die Funktion wird verwendet, um den VivoxVoice-Dienst im OpenSimulator zu starten oder zu stoppen, 
+	# indem der Wert für "enabled" in der Konfigurationsdatei entsprechend geändert wird.
+##
 function VivoxVoiceSetup() {
     VIVOXSCREEN=$1 # OpenSimulator Verzeichnis und Screen Name
     ENABLED=$2     # Wert für enabled (true/false)
@@ -272,6 +289,18 @@ function check_and_execute() {
     fi
 }
 
+## * depends_installer
+	# Die Funktion verwendet den Befehl dpkg -s, um zu überprüfen, ob die Pakete build-essential, debhelper, dh-make, quilt und devscripts installiert sind. 
+	# Wenn einer dieser Pakete nicht installiert ist, wird der Befehl apt-get verwendet, um die Pakete zu aktualisieren und zu installieren.
+	# Der Code verwendet die Bedingung if ! dpkg -s ..., um zu überprüfen, ob der Befehl dpkg -s erfolgreich ausgeführt wurde. 
+	# Das !-Zeichen vor dem Befehl kehrt das Ergebnis um, sodass der Codeblock in der Bedingung ausgeführt wird, wenn der Befehl nicht erfolgreich war.
+	# Wenn die Bedingung erfüllt ist, werden die erforderlichen Pakete mit den Befehlen sudo apt-get update und sudo apt-get install -y ... installiert. 
+	# Der Befehl sudo wird verwendet, um die Installation mit Administratorrechten auszuführen.
+	# Es ist wichtig zu beachten, dass dieser Code spezifisch für Linux-basierte Systeme ist, die den Paketmanager apt-get verwenden. 
+	# Wenn Sie ein anderes Betriebssystem verwenden, müssen Sie möglicherweise die entsprechenden Befehle für Ihren Paketmanager verwenden.
+	# Dieser Code ist nützlich, wenn Sie sicherstellen möchten, dass bestimmte Pakete auf Ihrem System installiert sind, bevor Sie andere Aufgaben ausführen, die von diesen Paketen abhängen. 
+	# Es ist eine gute Praxis, solche Überprüfungen und Installationen in Skripten durchzuführen, um sicherzustellen, dass alle erforderlichen Abhängigkeiten vorhanden sind.
+##
 function depends_installer() {
     # Prüfen, ob die erforderlichen Pakete installiert sind
     if ! dpkg -s build-essential debhelper dh-make quilt devscripts >/dev/null 2>&1; then
@@ -465,6 +494,28 @@ show_progress_menu() {
     ) 2>&1
 }
 
+## * Funktion: autodotnetubu
+	# Es wird das Ubuntu-System überprüft und je nach Version eine entsprechende Funktion aufruft. 
+	# Wenn das System Ubuntu 18.04 ist, wird die Funktion "dotnetubu18" aufgerufen. 
+	# Wenn das System Ubuntu 20.04 ist, wird die Funktion "dotnetubu20" aufgerufen. 
+	# Das gleiche gilt für die Versionen 22.04 und 24.04. 
+	# Wenn das System keine unterstützte Version hat, wird eine Meldung ausgegeben, dass das System nicht unterstützt wird.
+##
+function autodotnetubu() {
+	# Abfrage des Ubuntu-Systems
+	if [ "$(lsb_release -rs)" = "18.04" ]; then
+		dotnetubu18
+	elif [ "$(lsb_release -rs)" = "20.04" ]; then
+		dotnetubu20
+	elif [ "$(lsb_release -rs)" = "22.04" ]; then
+		dotnetubu22
+	elif [ "$(lsb_release -rs)" = "24.04" ]; then
+		dotnetubu24
+	else
+		echo "Das System wird nicht unterstützt."
+	fi
+}
+
 ## * Funktion: dotnetubu18
 #! Diese Funktion erleichtert die Installation von .NET SDK und Runtime auf einem System mit Ubuntu 18.04.
 # Die Funktion führt die folgenden Schritte aus:
@@ -647,7 +698,7 @@ function dotnetubu20() {
 #    - Abhängig von der Benutzerantwort wird das Runtime-Paket mit oder ohne ASP.NET installiert.
 #    - Bei einem Installationsfehler wird eine Fehlermeldung ausgegeben, und die Funktion gibt 1 zurück.
 #? Verwendung:
-# bash osmtool.sh dotnetubu18
+# bash osmtool.sh dotnetubu22
 # todo: Testen.
 ##
 function dotnetubu22() {
@@ -698,6 +749,75 @@ function dotnetubu22() {
     fi
 
     echo ".NET SDK und Runtime wurden erfolgreich installiert."
+}
+
+## * Funktion: dotnetubu24
+#! Diese Funktion erleichtert die Installation von .NET SDK und Runtime auf einem System mit Ubuntu 24.04.
+# Die Funktion führt die folgenden Schritte aus:
+#? 1. **Hinzufügen des Microsoft-Paket-Repositories:**
+#    - Das Deb-Paket wird von der Microsoft-Website heruntergeladen.
+#    - Bei einem Downloadfehler wird eine Fehlermeldung ausgegeben, und die Funktion gibt 1 zurück.
+#    - Das Deb-Paket wird installiert.
+#? 2. **Installation des .NET SDK:**
+#    - Das .NET SDK wird über die Paketverwaltung installiert.
+#    - Bei einem Installationsfehler wird eine Fehlermeldung ausgegeben, und die Funktion gibt 1 zurück.
+#? 3. **Abfrage des Benutzers bezüglich ASP.NET:**
+#    - Der Benutzer wird gefragt, ob er ASP.NET installieren möchte.
+#? 4. **Installation des .NET Runtimes:**
+#    - Abhängig von der Benutzerantwort wird das Runtime-Paket mit oder ohne ASP.NET installiert.
+#    - Bei einem Installationsfehler wird eine Fehlermeldung ausgegeben, und die Funktion gibt 1 zurück.
+#? Verwendung:
+# bash osmtool.sh dotnetubu24
+# todo: Testen.
+##
+function dotnetubu24() {
+	# Frage den Benutzer nach der Version von .NET SDK
+	echo "Möchten Sie DOTNET 6 oder DOTNET 7 oder DOTNET 8 installieren? (6/7/8): "
+	read -r dotnetVersion
+	if [ "$dotnetVersion" = "" ]; then dotnetVersion="6"; fi
+	case $dotnetVersion in
+		6)
+			sdkPackage="dotnet-sdk-6.0"
+			;;
+		7)
+			sdkPackage="dotnet-sdk-7.0"
+			;;
+		8)
+			sdkPackage="dotnet-sdk-8.0"
+			;;
+		*)
+			echo "Ungültige Auswahl. Bitte wählen Sie 6 oder 7."
+			return 1
+			;;
+	esac
+
+	# Frage den Benutzer nach der Installation von ASP.NET
+	echo "Möchten Sie $dotnetVersion mit ASP.NET installieren? (j/n): "
+	read -r installAspNet
+	case $installAspNet in
+		[jJyY])
+			runtimePackage="aspnetcore-runtime-$dotnetVersion.0"
+			;;
+		*)
+			runtimePackage="dotnet-runtime-$dotnetVersion.0"
+			;;
+	esac
+
+	# Installation des SDK
+	sudo apt-get update && sudo apt-get install -y $sdkPackage
+	if [ $? -ne 0 ]; then
+		echo "Fehler beim Installieren des .NET SDK."
+		return 1
+	fi
+
+	# Installation des Runtimes
+	sudo apt-get update && sudo apt-get install -y $runtimePackage
+	if [ $? -ne 0 ]; then
+		echo "Fehler beim Installieren des .NET Runtimes."
+		return 1
+	fi
+
+	echo ".NET SDK und Runtime wurden erfolgreich installiert."
 }
 
 ## * uninstall_mono
@@ -1502,7 +1622,6 @@ function osmupgrade_menu() {
     fi
 }
 
-
 ## * vardel
 	# Diese Funktion löscht eine Reihe von Umgebungsvariablen, die möglicherweise aus
 	# vorherigen Sitzungen oder Skripten übrig geblieben sind, um sicherzustellen, dass
@@ -1559,13 +1678,6 @@ function vardel() {
 	#? @return nichts wird zurueckgegeben.
 	# todo: nichts.
 ##
-function vardelall1() {
-	# Letzte Bearbeitung 26.09.2023
-    # Verwende `set` mit `eval` und `unset`, um alle Variablen zu durchlaufen und zu löschen.
-    for var in $(set | awk -F= '{print $1}'); do
-        unset "$var"
-    done
-}
 function vardelall() {
     # Letzte Bearbeitung 14.11.2023
     local prefix="OSM_VAR_"  # Ändere dies zu dem Präfix, das deine Variablen haben
@@ -22835,8 +22947,11 @@ case $KOMMANDO in
 	default_master_connection) default_master_connection "$2" "$3" ;;
 	delete_db) delete_db "$2" "$3" "$4" ;;
 	dotnetinfo) dotnetinfo ;;
+	autodotnetubu) autodotnetubu ;;
 	dotnetubu18) dotnetubu18 ;;
+	dotnetubu20) dotnetubu20 ;;
 	dotnetubu22) dotnetubu22 ;;
+	dotnetubu24) dotnetubu24 ;;
 	uninstall_mono) uninstall_mono ;;
 	downloados) downloados ;;
 	e | terminator) terminator ;;
