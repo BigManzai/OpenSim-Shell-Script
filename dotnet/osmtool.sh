@@ -20,7 +20,7 @@
 	# ! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 	# ! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#
-	# * Letzte bearbeitung 14.02.2024.
+	# * Letzte bearbeitung 23.02.2024.
 	#
 	# # Installieren sie bitte: #* Visual Studio Code
 	#* dazu die Plugins:
@@ -41,7 +41,7 @@
 #──────────────────────────────────────────────────────────────────────────────────────────
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.1505" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.1515" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 #──────────────────────────────────────────────────────────────────────────────────────────
@@ -429,7 +429,17 @@ EOF
     log info "Zum Deinstallieren einfach: apt remove opensim"
 }
 
-# Funktion zum Kopieren von Verzeichnissen und Dateien in ein neues Verzeichnis und anschließendes Komprimieren mit ZIP
+## * oscopycompress
+	# Funktion zum Kopieren von Verzeichnissen und Dateien in ein neues Verzeichnis und anschließendes Komprimieren mit ZIP
+	# Die Funktion oscopycompress() nimmt einen Parameter NUMMER entgegen, der optional ist. Dieser Parameter wird verwendet, um den Namen des Pakets zu generieren.
+	# Die Variable NUMMER wird überprüft, ob sie leer ist. Wenn sie leer ist, wird ihr der Wert "0000" zugewiesen.
+	# Das Arbeitsverzeichnis wird auf /opt geändert. Wenn das Ändern des Verzeichnisses fehlschlägt, wird das Skript beendet.
+	# Der Name des Pakets wird mit der Variable NUMMER generiert. Der Name des Pakets folgt dem Muster "opensim-0.9.3.0.$NUMMER".
+	# Ein Verzeichnis mit dem Namen des Pakets wird erstellt.
+	# Bestimmte Verzeichnisse (/opt/opensim/bin, /opt/BulletSim, /opt/opensim/ThirdPartyLicenses) werden in das Paketverzeichnis kopiert. Die Option -r wird verwendet, um die Verzeichnisse rekursiv zu kopieren.
+	# Bestimmte Dateien (/opt/opensim/BUILDING.md, /opt/opensim/CONTRIBUTORS.txt, /opt/opensim/LICENSE.txt, /opt/opensim/TESTING.txt) werden in das Paketverzeichnis kopiert.
+	# Das Paketverzeichnis wird mit dem ZIP-Programm komprimiert. Die Option -r wird verwendet, um das Verzeichnis rekursiv zu komprimieren. Das komprimierte Paket wird mit dem Namen ${PAKETNAME}.zip gespeichert.
+##
 function oscopycompress() {
 	NUMMER=$1
     # Überprüfen, ob die Variable NUMMER leer ist
@@ -456,6 +466,10 @@ function oscopycompress() {
 }
 
 ## * progress_end_menu
+	# Diese Funktion wird verwendet, um eine Benachrichtigung anzuzeigen, dass der Vorgang abgeschlossen ist. 
+	# In diesem Fall wird die Benachrichtigung mit dem Dialogprogramm angezeigt, 
+	# das einen Titel "Fertig" und eine Meldungsbox mit dem Text "Vorgang abgeschlossen!" hat. 
+	# Die Meldungsbox hat eine Höhe von 6 Zeilen und eine Breite von 40 Zeichen.
 #!  progress_end_menu
 ##
 progress_end_menu() {
@@ -492,28 +506,6 @@ show_progress_menu() {
     dialog --title "$title" --gauge "\n$text" "$height" "$width" < <(
         simulate_progress
     ) 2>&1
-}
-
-## * Funktion: autodotnetubu
-	# Es wird das Ubuntu-System überprüft und je nach Version eine entsprechende Funktion aufruft. 
-	# Wenn das System Ubuntu 18.04 ist, wird die Funktion "dotnetubu18" aufgerufen. 
-	# Wenn das System Ubuntu 20.04 ist, wird die Funktion "dotnetubu20" aufgerufen. 
-	# Das gleiche gilt für die Versionen 22.04 und 24.04. 
-	# Wenn das System keine unterstützte Version hat, wird eine Meldung ausgegeben, dass das System nicht unterstützt wird.
-##
-function autodotnetubu() {
-	# Abfrage des Ubuntu-Systems
-	if [ "$(lsb_release -rs)" = "18.04" ]; then
-		dotnetubu18
-	elif [ "$(lsb_release -rs)" = "20.04" ]; then
-		dotnetubu20
-	elif [ "$(lsb_release -rs)" = "22.04" ]; then
-		dotnetubu22
-	elif [ "$(lsb_release -rs)" = "24.04" ]; then
-		dotnetubu24
-	else
-		echo "Das System wird nicht unterstützt."
-	fi
 }
 
 ## * Funktion: dotnetubu18
@@ -698,7 +690,7 @@ function dotnetubu20() {
 #    - Abhängig von der Benutzerantwort wird das Runtime-Paket mit oder ohne ASP.NET installiert.
 #    - Bei einem Installationsfehler wird eine Fehlermeldung ausgegeben, und die Funktion gibt 1 zurück.
 #? Verwendung:
-# bash osmtool.sh dotnetubu22
+# bash osmtool.sh dotnetubu18
 # todo: Testen.
 ##
 function dotnetubu22() {
@@ -751,25 +743,6 @@ function dotnetubu22() {
     echo ".NET SDK und Runtime wurden erfolgreich installiert."
 }
 
-## * Funktion: dotnetubu24
-#! Diese Funktion erleichtert die Installation von .NET SDK und Runtime auf einem System mit Ubuntu 24.04.
-# Die Funktion führt die folgenden Schritte aus:
-#? 1. **Hinzufügen des Microsoft-Paket-Repositories:**
-#    - Das Deb-Paket wird von der Microsoft-Website heruntergeladen.
-#    - Bei einem Downloadfehler wird eine Fehlermeldung ausgegeben, und die Funktion gibt 1 zurück.
-#    - Das Deb-Paket wird installiert.
-#? 2. **Installation des .NET SDK:**
-#    - Das .NET SDK wird über die Paketverwaltung installiert.
-#    - Bei einem Installationsfehler wird eine Fehlermeldung ausgegeben, und die Funktion gibt 1 zurück.
-#? 3. **Abfrage des Benutzers bezüglich ASP.NET:**
-#    - Der Benutzer wird gefragt, ob er ASP.NET installieren möchte.
-#? 4. **Installation des .NET Runtimes:**
-#    - Abhängig von der Benutzerantwort wird das Runtime-Paket mit oder ohne ASP.NET installiert.
-#    - Bei einem Installationsfehler wird eine Fehlermeldung ausgegeben, und die Funktion gibt 1 zurück.
-#? Verwendung:
-# bash osmtool.sh dotnetubu24
-# todo: Testen.
-##
 function dotnetubu24() {
 	# Frage den Benutzer nach der Version von .NET SDK
 	echo "Möchten Sie DOTNET 6 oder DOTNET 7 oder DOTNET 8 installieren? (6/7/8): "
@@ -818,6 +791,49 @@ function dotnetubu24() {
 	fi
 
 	echo ".NET SDK und Runtime wurden erfolgreich installiert."
+}
+
+## * dotnetubuautomatik
+	# Die Funktion namens dotnetubuautomatik() dient dazu, 
+	# automatisch die entsprechende Funktion für die Installation von .NET auf verschiedenen Ubuntu-Versionen aufzurufen.
+	# Die Funktion überprüft zunächst, ob die Datei /etc/os-release existiert. Diese Datei enthält Informationen über das Betriebssystem, einschließlich der Ubuntu-Version.
+	# Wenn die Datei existiert, wird sie eingelesen und die darin enthaltenen Variablen werden verwendet. Insbesondere wird die Variable VERSION_ID überprüft, um die Ubuntu-Version zu ermitteln.
+	# Anschließend werden verschiedene Bedingungen mit if-Anweisungen überprüft, um die entsprechende Funktion für die Installation von .NET aufzurufen, basierend auf der ermittelten Ubuntu-Version.
+	# In diesem Codeausschnitt werden spezifische Ubuntu-Versionen überprüft, nämlich 18.04, 20.04, 22.04 und 24.04. Wenn die ermittelte Ubuntu-Version mit einer dieser Versionen übereinstimmt, 
+	# wird die entsprechende Funktion aufgerufen. Zum Beispiel wird dotnetubu18 aufgerufen, wenn die Ubuntu-Version 18.04 ist.
+	# Es ist wichtig zu beachten, dass die Funktionen dotnetubu18, dotnetubu20, dotnetubu22 und dotnetubu24 in diesem Codeausschnitt nicht definiert sind. 
+	# Es wird erwartet, dass sie an anderer Stelle im Skript definiert sind und den Code für die Installation von .NET auf den jeweiligen Ubuntu-Versionen enthalten.
+##
+function dotnetubuautomatik() {
+	# Schaue welche Ubuntu Version installiert ist und starte automatisch die dotnetubuXX Funktion.
+	# Ubuntu 18.04
+	if [ -f /etc/os-release ]; then
+		. /etc/os-release
+		if [ "$VERSION_ID" = "18.04" ]; then
+			dotnetubu18
+		fi
+	fi
+	# Ubuntu 20.04
+	if [ -f /etc/os-release ]; then
+		. /etc/os-release
+		if [ "$VERSION_ID" = "20.04" ]; then
+			dotnetubu20
+		fi
+	fi
+	# Ubuntu 22.04
+	if [ -f /etc/os-release ]; then
+		. /etc/os-release
+		if [ "$VERSION_ID" = "22.04" ]; then
+			dotnetubu22
+		fi
+	fi
+	# Ubuntu 24.04
+	if [ -f /etc/os-release ]; then
+		. /etc/os-release
+		if [ "$VERSION_ID" = "24.04" ]; then
+			dotnetubu24
+		fi
+	fi
 }
 
 ## * uninstall_mono
@@ -870,6 +886,10 @@ function check_admin() {
         exit 1
     fi
 }
+
+## * check_admin_menu
+	# Menüversion von check_admin.
+##
 function check_admin_menu() {
     # Menü mit Dialog-Bildschirmmaske
     dialog --title "Administrator Check" \
@@ -900,6 +920,10 @@ function admin_only_function() {
     echo "This function requires administrator privileges."
     # Hier können Sie den eigentlichen Code der Funktion einfügen
 }
+
+## * admin_only_function_menu
+	# Menüversion von admin_only_function.
+##
 function admin_only_function_menu() {
     # Menü mit Dialog-Bildschirmmaske für die Überprüfung von Administratorrechten
     dialog --title "Administrator Check" \
@@ -939,6 +963,10 @@ function check_non_admin() {
         exit 1
     fi
 }
+
+## * check_non_admin_menu
+	# Menüversion von check_non_admin.
+##
 function check_non_admin_menu() {
     # Menü mit Dialog-Bildschirmmaske für die Überprüfung von Nicht-Administratorrechten
     dialog --title "Non-Admin Check" \
@@ -975,6 +1003,10 @@ function non_admin_only_function() {
     echo "This function does not require administrator privileges."
     # Hier können Sie den eigentlichen Code der Funktion einfügen
 }
+
+## * non_admin_only_function_menu
+	# Menüversion von non_admin_only_function.
+##
 function non_admin_only_function_menu() {
     # Menü mit Dialog-Bildschirmmaske für die Bestätigung von Nicht-Administratorrechten
     dialog --title "Non-Admin Function" \
@@ -1008,6 +1040,10 @@ function check_user() {
         exit 1
     fi
 }
+
+## * check_user_menu
+	# Menüversion von check_user.
+##
 function check_user_menu() {
     expected_user="your_expected_user"
 
@@ -1063,6 +1099,10 @@ function update_and_restart() {
   # Server neu starten
   sudo reboot
 }
+
+## * update_and_restart_menu
+	# Menüversion von update_and_restart.
+##
 function update_and_restart_menu() {
   # Menü mit Dialog-Bildschirmmaske für Bestätigung anzeigen
   dialog --title "System Update" \
@@ -1111,6 +1151,10 @@ function update_clean() {
   # Löschen der heruntergeladenen Paket-Caches
   sudo apt clean
 }
+
+## * update_clean_menu
+	# Menüversion von update_clean.
+##
 function update_clean_menu() {
     # Dialog-Bildschirmmaske anzeigen
     dialog --title "Update und Bereinigung" \
@@ -1185,6 +1229,10 @@ function zeige_netzwerkinformationen() {
     echo -n "DNS-Name für $ziel_ip: "
     nslookup "$ziel_ip" | grep 'name ='
 }
+
+## * zeige_netzwerkinformationen_menu
+	# Menüversion von zeige_netzwerkinformationen.
+##
 function zeige_netzwerkinformationen_menu() {
     # Menü mit Dialog-Bildschirmmaske für die Ziel-IP-Abfrage
     dialog --title "Netzwerkinformationen" \
@@ -1236,6 +1284,10 @@ function ping_test() {
     echo "### Ping-Test ###"
     ping -c 4 "$ziel_ip"
 }
+
+## * ping_test_menu
+	# Menüversion von ping_test.
+##
 function ping_test_menu() {
     # Dialog-Bildschirmmaske anzeigen
     dialog --title "Ping-Test" \
@@ -1286,6 +1338,10 @@ function netstat_info() {
         fi
     fi
 }
+
+## * netstat_info_menu
+	# Menüversion von netstat_info.
+##
 function netstat_info_menu() {
     # Überprüfe, ob netstat installiert ist
     if command -v netstat >/dev/null 2>&1; then
@@ -1588,6 +1644,10 @@ function osmupgrade() {
         echo "Keine Updates verfügbar. Aktuelle Version: $VERSION"
     fi
 }
+
+## * osmupgrade_menu
+	# Menüversion von osmupgrade.
+##
 function osmupgrade_menu() {
     # Definiert das Repository und die Dateinamen
     repo_url="https://raw.githubusercontent.com/BigManzai/OpenSim-Shell-Script/main/osmtool.sh"
@@ -1621,6 +1681,7 @@ function osmupgrade_menu() {
         dialog --title "OSMTool Upgrade" --msgbox "Keine Updates verfügbar. Aktuelle Version: $current_version" 10 50
     fi
 }
+
 
 ## * vardel
 	# Diese Funktion löscht eine Reihe von Umgebungsvariablen, die möglicherweise aus
@@ -1678,6 +1739,13 @@ function vardel() {
 	#? @return nichts wird zurueckgegeben.
 	# todo: nichts.
 ##
+function vardelall1() {
+	# Letzte Bearbeitung 26.09.2023
+    # Verwende `set` mit `eval` und `unset`, um alle Variablen zu durchlaufen und zu löschen.
+    for var in $(set | awk -F= '{print $1}'); do
+        unset "$var"
+    done
+}
 function vardelall() {
     # Letzte Bearbeitung 14.11.2023
     local prefix="OSM_VAR_"  # Ändere dies zu dem Präfix, das deine Variablen haben
@@ -2491,7 +2559,14 @@ function vornamen() {
 					"DarkAngelDusk" "SilverDragon" "EnigmaCipher" "EchoKnight" "NovaVortex" "PixelPirate" "QuantumQuasar" "CosmicSerpent" "AzureSkywalker" "InfinityGazer" "NeonNebula" "TechnoMage" "LunarLotus"  \
 					"ArcaneOracle" "StormRider" "CelestialChaos" "BlazeStarlight" "VoidVoyager" "OmegaSpecter" "PhoenixPhantom" "DreamWeaver" "NeonNomad" "CyberSphinx" "MysticMarauder" "NovaNinja" "ShadowSorcerer"  \
 					"SeraphicStorm" "ElectricEmpress" "QuantumQuill" "CrimsonCaster" "SilverSilhouette" "EnigmaEclipse" "EchoEnchanter" "NebulaNymph" "TechnoTitan" "LunarLuminance" "ArcaneAcolyte" "StormSylph"  \
-					"CelestialCipher" "BlazeBard" "VoidVigilante" )
+					"CelestialCipher" "BlazeBard" "VoidVigilante" "ShadowKnight" "NeonNinja" "CyberWarrior" "BlazeMaster" "FrostByte" "MysticGamer" "PhoenixRider" "DarkLore" "ThunderFury" "SoulReaper" "SniperGhost"  \
+					"DeathDealer" "SwiftStriker" "VenomousViper" "SilverBullet" "StormBreaker" "CrimsonBlade" "NightWing" "IronClad" "LunarEclipse" "OmegaGamer" "AtomicAssault" "InfernoDragon" "VoidWalker" "FrostFire"  \
+					"ShadowStrike" "NovaHunter" "DoomBringer" "MysticWizard" "CyberPirate" "SkyRaider" "PhantomPharaoh" "ChaosChampion" "ThunderSphinx" "IceWraith" "DarkSorcerer" "PhoenixFury" "NeonBlitz" "StormSaber"  \
+					"VenomVandal" "SilverShade" "DeathBlitz" "SwiftSpecter" "SniperShadow" "SolarSlicer" "CrimsonCobra" "NightRogue" "IronJuggernaut" "LunarLegend" "OmegaOracle" "AtomicAegis" "InfernoImp" "VoidVoyager"  \
+					"FrostFang" "ShadowSpecter" "NovaNemesis" "DoomDynamo" "MysticMarauder" "CyberCenturion" "SkyStalker" "PhantomProwler" "ChaosCrusader" "ThunderTempest" "IceIllusionist" "DarkDoomsayer" "PhoenixPhantom"  \
+					"NeonNemesis" "StormSeeker" "VenomVortex" "SilverShadow" "DeathDagger" "SwiftSlayer" "SniperShade" "SolarSentinel" "CrimsonCyclone" "NightNinja" "IronInferno" "LunarLancer" "OmegaOnslaught" "AtomicAvenger"  \
+					"InfernoIncarnate" "VoidVigilante" "FrostFury" "ShadowSlayer" "NovaNinja" "DoomDestroyer" "MysticMercenary" "CyberCrusader" "SkySpartan" "PhantomPredator" "ChaosConqueror" "ThunderTitan" "IceInstigator"  \
+					"DarkDestroyer" "PhoenixFerocity" "NeonNighthawk" "StormSorcerer" "VenomVendetta" "SilverSurge" "DeathDynamo")
 
 	# Anzahl der Elemente im namensarray.
 	count=${#firstnamensarray[@]}
@@ -2588,7 +2663,6 @@ function createmanual() {
     local file="/$STARTVERZEICHNIS/osmtool.sh"
     
     # Extrahiere den dokumentierten Code-Abschnitt zwischen den Markierungen '##' und '()' aus der Datei.
-	#ergebnisflist=$(sed -ne '/##/,/()/p' $file)
 	ergebnisflist=$(sed -ne '/##/,/()/ {/{/,/}/p}' $file)
 	ergebnisflist=$(echo "$ergebnisflist" | sed '/^function /d')
     
@@ -2758,6 +2832,17 @@ function laeuftos() {
         log info "$PROZESSNAME läuft mit .NET 4.8."
     fi
 }
+
+## * laeuftos_menu
+	# Diese Funktion überprüft, ob ein Prozess mit dem angegebenen Namen läuft.
+	#? Verwendung: laeuftos_menu
+	# Diese Funktion ruft einen Dialog-Bildschirm auf, in dem der Benutzer den Prozessnamen eingeben kann.
+	# Anschließend wird überprüft, ob der Prozess mit .dotnet 6 oder .NET 4.8 läuft.
+	#? Rückgabewerte:
+	#   - "info": Der Prozess läuft bereits (mit .dotnet 6 oder .NET 4.8).
+	#   - "warn": Der Prozess läuft nicht (mit .dotnet 6 oder .NET 4.8).
+	#   - "error": Es gab ein Problem bei der Prozessüberprüfung.
+##
 function laeuftos_menu() {
     # Dialog-Bildschirmmaske für Eingabe
     PROZESSNAME=$(dialog --inputbox "Geben Sie den Prozessnamen ein:" 8 40 3>&1 1>&2 2>&3)
@@ -2874,6 +2959,17 @@ function linuxupgrade() {
 
     echo "Systemupdate und System-Upgrade abgeschlossen."
 }
+
+## * linuxupgrade_menu 
+	# Diese Funktion führt ein Systemupdate und ein System-Upgrade auf Ubuntu durch.
+	#? Verwendung: linuxupgrade_menu
+	# Diese Funktion führt die Befehle "apt update" und "apt upgrade" aus, um das System zu aktualisieren.
+	# Zuerst werden die Paketlisten aktualisiert, und dann werden verfügbare Aktualisierungen installiert.
+	#? Hinweis: Die Ausführung dieses Befehls erfordert Root-Berechtigungen.
+	#? Beispiel:
+	#   linuxupgrade_menu
+	#   Führt ein Systemupdate und System-Upgrade auf dem Ubuntu-System aus.
+##
 function linuxupgrade_menu() {
     # Letzte Bearbeitung 15.01.2024
     # Überprüfen, ob die Funktion mit Root-Berechtigungen ausgeführt wird.
@@ -2931,6 +3027,18 @@ function deladvantagetools() {
 
     echo "Das Paket 'ubuntu-advantage-tools' wurde entfernt."
 }
+
+## * del_advantage_tools_menu 
+	# Diese Funktion entfernt das Paket "ubuntu-advantage-tools" von Ihrem Ubuntu-System.
+	#? Verwendung: del_advantage_tools_menu
+	# Diese Funktion führt den Befehl "sudo apt remove ubuntu-advantage-tools" aus, um das Paket
+	# "ubuntu-advantage-tools" von Ihrem System zu entfernen. Dieses Paket ist ein kommerzielles
+	# Dienstprogramm zur Systemverwaltung und kann bei Bedarf deinstalliert werden.
+	#? Hinweis: Die Ausführung dieses Befehls erfordert Root-Berechtigungen.
+	#? Beispiel:
+	#   del_advantage_tools_menu
+	#   Entfernt das Paket "ubuntu-advantage-tools" von Ihrem Ubuntu-System.
+##
 function del_advantage_tools_menu() {
     # Letzte Bearbeitung 26.09.2023
     # Überprüfen, ob die Funktion mit Root-Berechtigungen ausgeführt wird
@@ -3127,6 +3235,15 @@ function makeregionsliste() {
 	# Erfolgreiche Ausführung
 	return 0
 }
+
+## * makeverzeichnisliste_menu 
+	# Eine Funktion zum Erstellen einer Liste von Verzeichnissen aus einer Datei.
+	#? Verwendung: makeverzeichnisliste_menu
+	# Diese Funktion ruft einen Dialog-Bildschirm auf, in dem der Benutzer den Namen der SIMDATEI eingeben kann.
+	# Anschließend wird die SIMDATEI gelesen und eine Liste von Verzeichnissen erstellt.
+	#? Beispiel:
+	# makeverzeichnisliste_menu
+##
 function make_regionsliste_menu() {
     # Letzte Bearbeitung 27.09.2023
 
@@ -3780,95 +3897,8 @@ function ossettings() {
 	fi
 	return 0
 }
-function ossettings2() {
-    # Letzte Bearbeitung 25.01.2024
-    log line
-    log info "Hier werden alle gewünschten Einstellungen vorgenommen."
 
-    # ulimit
-    log info "Setze die Einstellung: ulimit -s 1048576"
-    ulimit -s 1048576 || {
-        log error "Fehler beim Setzen von ulimit -s 1048576"
-        return 1
-    }
-
-    # MONO_THREADS_PER_CPU
-    log info "Setze die Mono Threads auf $SETMONOTHREADS"
-    export MONO_THREADS_PER_CPU=$SETMONOTHREADS || {
-        log error "Fehler beim Setzen von MONO_THREADS_PER_CPU"
-        return 1
-    }
-
-    # MONO_GC_PARAMS
-    log info "Setze die Einstellung: minor=split,promotion-age=14,nursery-size=64m"
-    export MONO_GC_PARAMS="minor=split,promotion-age=14,nursery-size=64m" || {
-        log error "Fehler beim Setzen von MONO_GC_PARAMS"
-        return 1
-    }
-
-    log info "Setze die Einstellung: promotion-age=14,"
-    log info "minor=split,major=marksweep,no-lazy-sweep,alloc-ratio=50,"
-    log info "nursery-size=64m"
-
-    export MONO_GC_PARAMS="promotion-age=14,minor=split,major=marksweep,no-lazy-sweep,alloc-ratio=50,nursery-size=64m" || {
-        log error "Fehler beim Setzen von MONO_GC_PARAMS"
-        return 1
-    }
-    export MONO_GC_DEBUG="" || {
-        log error "Fehler beim Setzen von MONO_GC_DEBUG"
-        return 1
-    }
-    export MONO_ENV_OPTIONS="--desktop" || {
-        log error "Fehler beim Setzen von MONO_ENV_OPTIONS"
-        return 1
-    }
-
-    return 0
-}
-function ossettings_dotnet1() {
-	# Letzte Bearbeitung 25.01.2024. Dies sind DOTNET6.0 Tests.
-	
-	log line
-
-	log info "Setze die Einstellung fuer DOTNET 6.0 (Testbetrieb)"; echo " ";
-
-	log info "DOTNET_Thread_UseAllCpuGroups=1"
-	export DOTNET_Thread_UseAllCpuGroups=1
-
-	log info "ThreadPoolMinThreads=8"
-	export ThreadPoolMinThreads=8
-
-	log info "ThreadPoolMaxThreads=$SETMONOTHREADS"
-	export ThreadPoolMaxThreads=$SETMONOTHREADS
-
-	log info "AutoreleasePoolSupport=true"
-	export AutoreleasePoolSupport=true
-
-	log info "ulimit -s 1048576"
-	ulimit -s 1048576
-
-	log info "MONO_THREADS_PER_CPU=$SETMONOTHREADS"
-	export MONO_THREADS_PER_CPU=$SETMONOTHREADS
-	
-	# Garbage Collection-Parameter:
-	log info "DOTNET_GC_SERVER=1"
-	export DOTNET_GC_SERVER=1
-
-	log info "DOTNET_GC_CONCURRENT=1"
-	export DOTNET_GC_CONCURRENT=1
-
-	log info "DOTNET_GC_HEAP_COUNT=1"
-	export DOTNET_GC_HEAP_COUNT=1
-
-	log info "DOTNET_GC_GCHANDLE_TYPE=0"
-	export DOTNET_GC_GCHANDLE_TYPE=0
-
-	log info "DOTNET_GC_HEAP_HARDLIMIT=0"
-	export DOTNET_GC_HEAP_HARDLIMIT=0
-
-	return 0
-}
-function ossettings_dotnet() {
+function ossettings_dotnet2() {
     # Letzte Bearbeitung 25.01.2024. Dies sind DOTNET6.0 Tests.
     log line
     log info "Einstellungen für DOTNET 6.0 (Testbetrieb)"
@@ -3950,6 +3980,94 @@ function ossettings_dotnet() {
     return 0
 }
 
+## *  ossettings_dotnet
+	# Beschreibung: Diese Funktion konfiguriert die Einstellungen für DOTNET 6.0 (Testbetrieb).
+	# Die Funktion exportiert verschiedene Umgebungsvariablen und setzt bestimmte Systemparameter.
+	# Parameter: Keine
+	# Rückgabewert: 0 bei erfolgreicher Konfiguration, 1 bei einem Fehler.
+##
+function ossettings_dotnet() {
+	# Letzte Bearbeitung 25.01.2024. Dies sind DOTNET6.0 Tests.
+	log line
+	log info "Einstellungen für DOTNET 6.0 (Testbetrieb)"
+	log info "Exportierte Einstellungen:"
+
+	# DOTNET_Thread_UseAllCpuGroups
+	log info "DOTNET_Thread_UseAllCpuGroups=1: Verwendet alle CPU-Gruppen."
+	export DOTNET_Thread_UseAllCpuGroups=1 || {
+		log error "Fehler beim Setzen von DOTNET_Thread_UseAllCpuGroups"
+		return 1
+	}
+
+	# ThreadPoolMinThreads
+	log info "ThreadPoolMinThreads=8: Minimale Anzahl von Threads im ThreadPool."
+	export ThreadPoolMinThreads=8 || {
+		log error "Fehler beim Setzen von ThreadPoolMinThreads"
+		return 1
+	}
+
+	# ThreadPoolMaxThreads
+	log info "ThreadPoolMaxThreads=$SETMONOTHREADS: Maximale Anzahl von Threads im ThreadPool."
+	export ThreadPoolMaxThreads=$SETMONOTHREADS || {
+		log error "Fehler beim Setzen von ThreadPoolMaxThreads"
+		return 1
+	}
+
+	# AutoreleasePoolSupport
+	log info "AutoreleasePoolSupport=true: Aktiviert den Autorelease Pool Support."
+	export AutoreleasePoolSupport=true || {
+		log error "Fehler beim Setzen von AutoreleasePoolSupport"
+		return 1
+	}
+
+	# ulimit -s 1048576
+	log info "ulimit -s 1048576: Setzt die maximale Stapeltiefe auf 1048576."
+	ulimit -s 1048576 || {
+		log error "Fehler beim Setzen von ulimit -s 1048576"
+		return 1
+	}
+
+	# MONO_THREADS_PER_CPU
+	log info "MONO_THREADS_PER_CPU=$SETMONOTHREADS: Anzahl der Mono-Threads pro CPU."
+	export MONO_THREADS_PER_CPU=$SETMONOTHREADS || {
+		log error "Fehler beim Setzen von MONO_THREADS_PER_CPU"
+		return 1
+	}
+
+	# Garbage Collection-Parameter
+	log info "DOTNET_GC_SERVER=1: Aktiviert DOTNET GarbageCollector im Server-Modus."
+	export DOTNET_GC_SERVER=1 || {
+		log error "Fehler beim Setzen von DOTNET_GC_SERVER"
+		return 1
+	}
+
+	log info "DOTNET_GC_CONCURRENT=1: Aktiviert DOTNET concurrent GarbageCollector."
+	export DOTNET_GC_CONCURRENT=1 || {
+		log error "Fehler beim Setzen von DOTNET_GC_CONCURRENT"
+		return 1
+	}
+
+	log info "DOTNET_GC_HEAP_COUNT=1: Anzahl der verwalteten Heaps."
+	export DOTNET_GC_HEAP_COUNT=1 || {
+		log error "Fehler beim Setzen von DOTNET_GC_HEAP_COUNT"
+		return 1
+	}
+
+	log info "DOTNET_GC_GCHANDLE_TYPE=0: Setzt den Typ der verwalteten Handles."
+	export DOTNET_GC_GCHANDLE_TYPE=0 || {
+		log error "Fehler beim Setzen von DOTNET_GC_GCHANDLE_TYPE"
+		return 1
+	}
+
+	log info "DOTNET_GC_HEAP_HARDLIMIT=0: Setzt das harte Limit für den Heapspeicher."
+	export DOTNET_GC_HEAP_HARDLIMIT=0 || {
+		log error "Fehler beim Setzen von DOTNET_GC_HEAP_HARDLIMIT"
+		return 1
+	}
+
+	return 0
+}
+
 
 #──────────────────────────────────────────────────────────────────────────────────────────
 #* Log und Cache Dateien Funktionsgruppe
@@ -3999,60 +4117,69 @@ function dialogclear() {
 	return 0
 }
 
-## * clearuserlist.
-	# Diese Funktionen löschen die Besucherlisten-Protokolldateien im angegebenen Verzeichnis.
-	#? Argumente: Keine
-	#? Rückgabewerte: Keine
-	#? Beispielaufruf:
-	# clearuserlist
+## * clear_multitool_log.
+	# Funktion zum Löschen von multitool-Logdateien.
+	# Diese Funktion löscht alle Dateien, die mit "_multitool.log" enden, im angegebenen Verzeichnis.
+	# Parameter:
+	#   - Keine
+	# Rückgabewert:
+	#   - Keiner
 ##
 function clear_multitool_log() {
-    # Letzte Bearbeitung 25.01.2024
-    log info "Lösche multitool log Dateien"
-    
-    # Lösche alle Dateien, die mit "_multitool.log" enden, im angegebenen Verzeichnis.
-    rm -r "/$STARTVERZEICHNIS"/*_multitool.log
+	# Letzte Bearbeitung 25.01.2024
+	log info "Lösche multitool log Dateien"
+	
+	# Lösche alle Dateien, die mit "_multitool.log" enden, im angegebenen Verzeichnis.
+	rm -r "/$STARTVERZEICHNIS"/*_multitool.log
 }
 
+## * clear_multitool_log_days.
+	# Funktion zum Löschen von multitool-Logdateien, die älter als eine bestimmte Anzahl von Tagen sind.
+	# Parameter:
+	#   - days: Anzahl der Tage, die älter sein sollen
+##
 function clear_multitool_log_days() {
-    # Parameter: Anzahl der Tage, die älter sein sollen
-    local days=$1
+	local days=$1
 
-    # Letzte Bearbeitung 25.01.2024
-    log info "Lösche multitool log Dateien, die älter als $days Tage sind"
+	# Loggt eine Info-Nachricht mit der Anzahl der Tage, die älter sein sollen
+	log info "Lösche multitool log Dateien, die älter als $days Tage sind"
 
-    # Bestimme das Datum, das $days Tage in der Vergangenheit liegt
-    days_ago=$(date +'%Y-%m-%d' -d "$days days ago")
+	# Bestimmt das Datum, das $days Tage in der Vergangenheit liegt
+	days_ago=$(date +'%Y-%m-%d' -d "$days days ago")
 
-    # Lösche alle Logdateien, die älter als $days Tage sind
-    find "/$STARTVERZEICHNIS" -name "*_multitool.log" -type f ! -newermt "$days_ago" -exec rm {} \; || log error "Fehler beim Löschen der Datei $log_file"
+	# Löscht alle Logdateien, die älter als $days Tage sind
+	find "/$STARTVERZEICHNIS" -name "*_multitool.log" -type f ! -newermt "$days_ago" -exec rm {} \; || log error "Fehler beim Löschen der Datei $log_file"
 }
 
-
-# Löscht alle Logdateien, die älter als der letzte Sonntag sind.
-# Beispiel Datei: 25_01_2024_multitool.log
-#
-# Parameter:
-# Keine
+## * clear_multitool_log_week.
+	# Löscht alle Logdateien, die älter als der letzte Sonntag sind.
+	# Funktion zum Löschen von Multitool-Logdateien, die älter als der letzte Sonntag sind.
+	# Die Funktion verwendet das aktuelle Datum, um den letzten Sonntag zu bestimmen und löscht dann alle Logdateien,
+	# die vor diesem Datum erstellt wurden.
+	# Parameter: Keine
+	# Rückgabewert: Keiner
+##
 function clear_multitool_log_week() {
-    # Letzte Bearbeitung 25.01.2024
-    log info "Lösche multitool log Dateien die älter als letzten Sonntag sind"
+	# Letzte Bearbeitung 25.01.2024
+	log info "Lösche multitool log Dateien die älter als letzten Sonntag sind"
 
-    # Bestimme das Datum des letzten Sonntags
-    last_sunday=$(date +'%Y-%m-%d' -d "last Sunday")
+	# Bestimme das Datum des letzten Sonntags
+	last_sunday=$(date +'%Y-%m-%d' -d "last Sunday")
 
-    # Lösche alle Logdateien, die vor dem letzten Sonntag erstellt wurden
-    find "/$STARTVERZEICHNIS" -name "*_multitool.log" -type f ! -newermt "$last_sunday" -exec rm {} \; || log error "Fehler beim Löschen der Datei $log_file"
+	# Lösche alle Logdateien, die vor dem letzten Sonntag erstellt wurden
+	find "/$STARTVERZEICHNIS" -name "*_multitool.log" -type f ! -newermt "$last_sunday" -exec rm {} \; || log error "Fehler beim Löschen der Datei $log_file"
 }
 
-# Löscht alle Logdateien, die älter als eine bestimmte Anzahl von Wochen sind.
-# Standardmäßig werden alle Logdateien gelöscht, die älter als eine Woche sind.
-# Der Benutzer kann eine benutzerdefinierte Anzahl von Wochen als Parameter übergeben.
-# Beispiel: clear_variable_multitool_log_week 2
-# Löscht alle Logdateien, die älter als 2 Wochen sind.
-#
-# Parameter:
-# $1 (optional): Anzahl der Wochen, die zurückgehen sollen (Standardwert: 1)
+## * clear_variable_multitool_log_week.
+	# Löscht alle Logdateien, die älter als eine bestimmte Anzahl von Wochen sind.
+	# Standardmäßig werden alle Logdateien gelöscht, die älter als eine Woche sind.
+	# Der Benutzer kann eine benutzerdefinierte Anzahl von Wochen als Parameter übergeben.
+	# Beispiel: clear_variable_multitool_log_week 2
+	# Löscht alle Logdateien, die älter als 2 Wochen sind.
+	#
+	# Parameter:
+	# $1 (optional): Anzahl der Wochen, die zurückgehen sollen (Standardwert: 1)
+##
 function clear_variable_multitool_log_week() {
     local WOCHE="${1:-1}"
     local weeks_offset="${WOCHE} week ago"
@@ -4095,13 +4222,16 @@ function historylogclear() {
 	esac
 }
 
-# Alte multitool log Dateien löschen.
+#! Alte multitool log Dateien löschen.
+# Löscht das Multitool-Protokoll der aktuellen Woche, wenn die Variable MULTITOOLLOGDELETE auf "yes" gesetzt ist.
 if [ "$MULTITOOLLOGDELETE" = "yes" ]; then clear_multitool_log_week; fi
-
+# Setzt die Anzahl der Wochen auf 2, wenn die Variable WEEKS nicht gesetzt ist.
 if [ -z "$WEEKS" ]; then WEEKS="2"; fi
+# Löscht das Multitool-Protokoll der angegebenen Anzahl von Wochen, wenn die Variable MULTITOOLLOGDELETEWEEK auf "yes" gesetzt ist.
 if [ "$MULTITOOLLOGDELETEWEEK" = "yes" ]; then clear_variable_multitool_log_week $WEEKS; fi
-
+# Setzt die Anzahl der Tage auf 30, wenn die Variable DAYS nicht gesetzt ist.
 if [ -z "$DAYS" ]; then DAYS="30"; fi
+# Löscht das Multitool-Protokoll der angegebenen Anzahl von Tagen, wenn die Variable MULTITOOLLOGDELETEDAY auf "yes" gesetzt ist.
 if [ "$MULTITOOLLOGDELETEDAY" = "yes" ]; then clear_multitool_log_days $DAYS; fi
 
 #──────────────────────────────────────────────────────────────────────────────────────────
@@ -4781,37 +4911,6 @@ function radiolist() {
 done
 }
 
-## *  mysqlbackup
-	#? Beschreibung: Erstellt ein Backup einer MySQL-Datenbank und kann optional das Backup komprimieren.
-	#? Parameter:
-	#   1. username: Der MySQL-Benutzername für die Datenbank.
-	#   2. password: Das MySQL-Passwort für den angegebenen Benutzer.
-	#   3. databasename: Der Name der zu sichernden MySQL-Datenbank.
-	#   4. dbcompress: Optional, ein Flag zum Aktivieren der Komprimierung (-c) des Backups.
-	#? Rückgabewert: Die Funktion gibt keinen expliziten Rückgabewert zurück.
-	#? Aufgaben:
-	# 1. Erstellt das Verzeichnis '/$STARTVERZEICHNIS/backup', falls es nicht existiert, oder gibt eine Meldung aus, wenn es bereits vorhanden ist.
-	# 2. Wechselt in das Verzeichnis '/$STARTVERZEICHNIS/backup' oder gibt einen Fehler zurück, wenn dies nicht möglich ist.
-	# 3. Überprüft, ob die Option '-c' (Komprimierung) angegeben wurde.
-	# 4. Falls keine Komprimierung angefordert ist, führt die Funktion 'mysqldump' aus, um ein MySQL-Datenbankbackup zu erstellen und speichert es in einer .sql-Datei.
-	# 5. Falls die Komprimierung angefordert ist, führt die Funktion 'mysqldump' aus, leitet die Ausgabe an 'zip' weiter und erstellt eine .zip-Datei für das Backup.
-##
-function mysqlbackup() {
-	# bearbeitung noetig! # Letzte Bearbeitung 29.09.2023
-	local username=$1
-	local password=$2
-	local databasename=$3
-	dbcompress=$4
-	mkdir -p /$STARTVERZEICHNIS/backup || log rohtext "Verzeichnis vorhanden"
-	cd /$STARTVERZEICHNIS/backup || return 1
-
-	if [ "$dbcompress" = "" ]; then 
-	mysqldump -u $username -p$password $databasename --single-transaction --quick > $databasename.sql
-	fi
-	if [ "$dbcompress" = "-c" ]; then 
-	mysqldump -u $username -p$password $databasename --single-transaction --quick | zip >/$STARTVERZEICHNIS/backup/"$databasename".sql.zip;
-	fi
-}
 
 #──────────────────────────────────────────────────────────────────────────────────────────
 #* Sicherheitsfunktionen Funktionsgruppe
@@ -10677,8 +10776,6 @@ function opensimbuilderb() {
     return 0
 }
 
-
-
 ## * createuser.
 	# Erstellen eines neuen Benutzer in der Robust Konsole.
 	# Mit dem Konsolenkomanndo: create user [first] [last] [passw] [RegionX] [RegionY] [Email] - creates a new user and password.
@@ -10801,6 +10898,42 @@ function menucreateuser() {
 	unset VORNAME NACHNAME PASSWORT EMAIL
 
 	hauptmenu
+}
+
+#──────────────────────────────────────────────────────────────────────────────────────────
+#* mySQL MariaDB Datenbank Funktionen
+#──────────────────────────────────────────────────────────────────────────────────────────
+
+## *  mysqlbackup
+	#? Beschreibung: Erstellt ein Backup einer MySQL-Datenbank und kann optional das Backup komprimieren.
+	#? Parameter:
+	#   1. username: Der MySQL-Benutzername für die Datenbank.
+	#   2. password: Das MySQL-Passwort für den angegebenen Benutzer.
+	#   3. databasename: Der Name der zu sichernden MySQL-Datenbank.
+	#   4. dbcompress: Optional, ein Flag zum Aktivieren der Komprimierung (-c) des Backups.
+	#? Rückgabewert: Die Funktion gibt keinen expliziten Rückgabewert zurück.
+	#? Aufgaben:
+	# 1. Erstellt das Verzeichnis '/$STARTVERZEICHNIS/backup', falls es nicht existiert, oder gibt eine Meldung aus, wenn es bereits vorhanden ist.
+	# 2. Wechselt in das Verzeichnis '/$STARTVERZEICHNIS/backup' oder gibt einen Fehler zurück, wenn dies nicht möglich ist.
+	# 3. Überprüft, ob die Option '-c' (Komprimierung) angegeben wurde.
+	# 4. Falls keine Komprimierung angefordert ist, führt die Funktion 'mysqldump' aus, um ein MySQL-Datenbankbackup zu erstellen und speichert es in einer .sql-Datei.
+	# 5. Falls die Komprimierung angefordert ist, führt die Funktion 'mysqldump' aus, leitet die Ausgabe an 'zip' weiter und erstellt eine .zip-Datei für das Backup.
+##
+function mysqlbackup() {
+	# bearbeitung noetig! # Letzte Bearbeitung 29.09.2023
+	local username=$1
+	local password=$2
+	local databasename=$3
+	dbcompress=$4
+	mkdir -p /$STARTVERZEICHNIS/backup || log rohtext "Verzeichnis vorhanden"
+	cd /$STARTVERZEICHNIS/backup || return 1
+
+	if [ "$dbcompress" = "" ]; then 
+	mysqldump -u $username -p$password $databasename --single-transaction --quick > $databasename.sql
+	fi
+	if [ "$dbcompress" = "-c" ]; then 
+	mysqldump -u $username -p$password $databasename --single-transaction --quick | zip >/$STARTVERZEICHNIS/backup/"$databasename".sql.zip;
+	fi
 }
 
 ## * db_friends.
@@ -11021,38 +11154,139 @@ function db_rename_objects1() {
     return 0
 }
 function db_rename_objects() {
-    local username="$1"
-    local password="$2"
-    local databasename="$3"
+	local username="$1"
+	local password="$2"
+	local databasename="$3"
 
 	# Log-Nachricht
-    log rohtext "Es werden namenlose Objekte anhand des assettype umbenannt."
+	log rohtext "Es werden namenlose Objekte anhand des assettype umbenannt."
 
-    # Verbindung zur MySQL-Datenbank und Abfrage der Einträge ohne Namen
-    mysqlrest "$username" "$password" "$databasename" "SELECT assets.name, assetType FROM assets WHERE assets.name IS NULL" | while read -r name assetType; do
-        case $assetType in
-            -2) new_name="Material" ;;
-            0) new_name="Texture" ;;
-            1) new_name="Sound" ;;
-            2) new_name="CallingCard" ;;
-            3) new_name="Landmark" ;;
-            5) new_name="Clothing" ;;
-            6) new_name="Object" ;;
-            7) new_name="Notecard" ;;
-            10) new_name="LSLText" ;;
-            13) new_name="BodyPart" ;;
-            20) new_name="Animation" ;;
-            21) new_name="Gesture" ;;
-            49) new_name="Mesh" ;;
-            56) new_name="Setting" ;;
-            57) new_name="MaterialPBR" ;;
-            *) new_name="Unknown" ;;
-        esac
+	# Verbindung zur MySQL-Datenbank und Abfrage der Einträge ohne Namen
+	mysqlrest "$username" "$password" "$databasename" "SELECT assets.name, assetType FROM assets WHERE assets.name IS NULL" | while read -r name assetType; do
+		case $assetType in
+			-2) new_name="Material" ;;
+			0) new_name="Texture" ;;
+			1) new_name="Sound" ;;
+			2) new_name="CallingCard" ;;
+			3) new_name="Landmark" ;;
+			5) new_name="Clothing" ;;
+			6) new_name="Object" ;;
+			7) new_name="Notecard" ;;
+			10) new_name="LSLText" ;;
+			13) new_name="BodyPart" ;;
+			20) new_name="Animation" ;;
+			21) new_name="Gesture" ;;
+			49) new_name="Mesh" ;;
+			56) new_name="Setting" ;;
+			57) new_name="MaterialPBR" ;;
+			*) new_name="Unknown" ;;
+		esac
 
-        # Aktualisierung des Namens in der Datenbank
-        mysqlrest "$username" "$password" "$databasename" "UPDATE assets SET assets.name='$new_name' WHERE assets.name=$name"
-        log rohtext "Asset mit name $name: Name aktualisiert zu $new_name"
-    done
+		# Aktualisierung des Namens in der Datenbank
+		mysqlrest "$username" "$password" "$databasename" "UPDATE assets SET assets.name='$new_name' WHERE assets.name='$name'"
+		log rohtext "Asset mit name $name: Name aktualisiert zu $new_name"
+	done
+}
+function db_rename_all_objects() {
+	local username="$1"
+	local password="$2"
+	local databasename="$3"
+
+	# Log-Nachricht
+	log rohtext "Es werden alle Objekte umbenannt."
+
+	# Verbindung zur MySQL-Datenbank und Abfrage der Einträge ohne Namen
+	mysqlrest "$username" "$password" "$databasename" "SELECT assets.name, assetType FROM assets" | while read -r name assetType; do
+		case $assetType in
+			-2) new_name="Material" ;;
+			0) new_name="Texture" ;;
+			1) new_name="Sound" ;;
+			2) new_name="CallingCard" ;;
+			3) new_name="Landmark" ;;
+			5) new_name="Clothing" ;;
+			6) new_name="Object" ;;
+			7) new_name="Notecard" ;;
+			10) new_name="LSLText" ;;
+			13) new_name="BodyPart" ;;
+			20) new_name="Animation" ;;
+			21) new_name="Gesture" ;;
+			49) new_name="Mesh" ;;
+			56) new_name="Setting" ;;
+			57) new_name="MaterialPBR" ;;
+			*) new_name="Unknown" ;;
+		esac
+
+		# Aktualisierung des Namens in der Datenbank
+		mysqlrest "$username" "$password" "$databasename" "UPDATE assets SET assets.name='$new_name' WHERE assets.name='$name'"
+		log rohtext "Asset mit name $name: Name aktualisiert zu $new_name"
+	done
+}
+## * db_namen_clean_reparatur 
+	# Funktion zur Bereinigung von Datenbanknamen
+	# Parameter:
+	#   - MySQL User: Benutzername für die MySQL-Datenbankverbindung
+	#   - MySQL Password: Passwort für die MySQL-Datenbankverbindung
+	#   - MySQL Database: Name der MySQL-Datenbank
+	#   - Debug Mode: Debug-Modus aktivieren/deaktivieren (true/false)
+	# Rückgabewert: None
+##
+function db_namen_clean_reparatur() {
+	# Parameter überprüfen
+	if [ "$#" -ne 4 ]; then
+		echo "Usage: $0 <MySQL User> <MySQL Password> <MySQL Database> <Debug Mode (true/false)>"
+		exit 1
+	fi
+
+	# MySQL-Datenbankverbindung
+	MYSQL_USER="$1"
+	MYSQL_PASSWORD="$2"
+	MYSQL_DATABASE="$3"
+	DEBUG="$4"
+
+	# Debug-Funktion
+	debug() {
+		if [ "$DEBUG" = true ]; then
+			echo "Debug: $1"
+		fi
+	}
+
+	# Log-Datei
+	LOG_FILE="bereinigung.log"
+
+	# Verbindung zur MySQL-Datenbank herstellen und SQL-Abfrage ausführen
+	MYSQL_COMMAND="mysql -u$MYSQL_USER -p$MYSQL_PASSWORD -D$MYSQL_DATABASE -e"
+	QUERY="SELECT id, name, assetType FROM omlrobust.assets WHERE name = ''"
+	RESULTS=$($MYSQL_COMMAND "$QUERY")
+
+	# Durch die Ergebnisse iterieren und Aktionen durchführen
+	while IFS=$'\t' read -r id name assetType; do
+		debug "Processing id: $id, name: $name, assetType: $assetType"
+		
+		# Überprüfen, ob die ID in der Tabelle omlrobust.inventoryitems vorhanden ist
+		ID_EXISTS_QUERY="SELECT COUNT(*) FROM omlrobust.inventoryitems WHERE assetID = '$id'"
+		ID_EXISTS_RESULT=$($MYSQL_COMMAND "$ID_EXISTS_QUERY" | tail -n 1)
+		
+		if [ "$ID_EXISTS_RESULT" -eq 0 ]; then
+			debug "Asset with id $id does not exist in omlrobust.inventoryitems. Deleting..."
+			if [ "$DEBUG" != true ]; then
+				DELETE_QUERY="DELETE FROM omlrobust.assets WHERE id = '$id'"
+				$MYSQL_COMMAND "$DELETE_QUERY"
+				echo "Deleted asset with id $id from omlrobust.assets." >> "$LOG_FILE"
+			else
+				echo "DEBUG MODE: Asset with id $id would have been deleted from omlrobust.assets." >> "$LOG_FILE"
+			fi
+		else
+			debug "Asset with id $id exists in omlrobust.inventoryitems. Renaming..."
+			if [ "$DEBUG" != true ]; then
+				NEW_NAME="unknown$assetType"
+				RENAME_QUERY="UPDATE omlrobust.assets SET name = '$NEW_NAME' WHERE id = '$id'"
+				$MYSQL_COMMAND "$RENAME_QUERY"
+				echo "Renamed asset with id $id to '$NEW_NAME' in omlrobust.assets." >> "$LOG_FILE"
+			else
+				echo "DEBUG MODE: Asset with id $id would have been renamed to 'unknown$assetType' in omlrobust.assets." >> "$LOG_FILE"
+			fi
+		fi
+	done <<< "$RESULTS"
 }
 
 ## * db_inv_search 
@@ -11200,7 +11434,7 @@ function db_region_parzelle() {
 }
 
 ## * db_region_parzelle_pakete 
-	# Zählt die Gesamtzahl der Pakete in einer MySQL-Datenbanktabelle.
+	# Zählt die Gesamtzahl der Parcels in einer MySQL-Datenbanktabelle.
 	# Diese Funktion zählt die Gesamtzahl der Pakete in einer MySQL-Datenbanktabelle.
 	#? Parameter:
 	#   $1 - Der Benutzername für die MySQL-Datenbankverbindung.
@@ -22947,11 +23181,10 @@ case $KOMMANDO in
 	default_master_connection) default_master_connection "$2" "$3" ;;
 	delete_db) delete_db "$2" "$3" "$4" ;;
 	dotnetinfo) dotnetinfo ;;
-	autodotnetubu) autodotnetubu ;;
 	dotnetubu18) dotnetubu18 ;;
-	dotnetubu20) dotnetubu20 ;;
 	dotnetubu22) dotnetubu22 ;;
 	dotnetubu24) dotnetubu24 ;;
+	dotnetubuautomatik) dotnetubuautomatik ;;
 	uninstall_mono) uninstall_mono ;;
 	downloados) downloados ;;
 	e | terminator) terminator ;;
