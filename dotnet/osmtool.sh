@@ -20,7 +20,7 @@
 	# ! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 	# ! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#
-	# * Letzte bearbeitung 23.02.2024.
+	# * Letzte bearbeitung 26.02.2024.
 	#
 	# # Installieren sie bitte: #* Visual Studio Code
 	#* dazu die Plugins:
@@ -41,7 +41,7 @@
 #──────────────────────────────────────────────────────────────────────────────────────────
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.1515" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.1526" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 #──────────────────────────────────────────────────────────────────────────────────────────
@@ -2402,7 +2402,7 @@ function dummyvar() {
 	# shellcheck disable=SC2034
 	MONEYVERZEICHNIS="robust"; ROBUSTVERZEICHNIS="robust"; OPENSIMVERZEICHNIS="opensim"; SCRIPTSOURCE="ScriptNeu"; SCRIPTZIP="opensim-ossl-example-scripts-main.zip"; MONEYSOURCE="OpenSimCurrencyServer-2023";
 	BULLETSOURCE="BulletSim"; BULLETZIP="BulletSim-main.zip";
-	MONEYZIP="OpenSimCurrencyServer-2021-master.zip"; REGIONSDATEI="osmregionlist.ini"; SIMDATEI="osmsimlist.ini"; WARTEZEIT=30; STARTWARTEZEIT=10; STOPWARTEZEIT=30; MONEYWARTEZEIT=60; ROBUSTWARTEZEIT=60;
+	MONEYZIP="OpenSimCurrencyServer-2021-master.zip"; REGIONSDATEI="osmregionlist.ini"; WARTEZEIT=30; STARTWARTEZEIT=10; STOPWARTEZEIT=30; MONEYWARTEZEIT=60; ROBUSTWARTEZEIT=60;
 	BACKUPWARTEZEIT=120; AUTOSTOPZEIT=60; SETMONOTHREADS=800; SETMONOTHREADSON="yes"; OPENSIMDOWNLOAD="http://opensimulator.org/dist/"; SEARCHADRES="icanhazip.com"; # AUTOCONFIG="no"
 	CONFIGURESOURCE="opensim-configuration-addon-modul-main"; CONFIGUREZIP="opensim-configuration-addon-modul-main.zip"
 	textfontcolor=7; textbaggroundcolor=0; debugfontcolor=4; debugbaggroundcolor=0	infofontcolor=2	infobaggroundcolor=0; warnfontcolor=3; warnbaggroundcolor=0;
@@ -3186,10 +3186,13 @@ function uncompress() {
 	#   STARTVERZEICHNIS - Das Verzeichnis, in dem sich die SIMDATEI befindet.
 	#   SIMDATEI - Die Datei, aus der die Verzeichnisse gelesen werden sollen.
 	#? Beispielaufruf
-	# makeverzeichnisliste
+	# makeverzeichnisliste "osmsimlist.ini"
 ##
 function makeverzeichnisliste() {
-	# Letzte Bearbeitung 27.09.2023
+	# Letzte Bearbeitung 26.02.2024
+
+	SIMDATEI=$1
+	if [ "$SIMDATEI"="" ]; then SIMDATEI="osmsimlist.ini"; fi
 
     # Initialisieren der Verzeichnisliste
 	VERZEICHNISSLISTE=()
@@ -3236,16 +3239,20 @@ function makeregionsliste() {
 	return 0
 }
 
-## * makeverzeichnisliste_menu 
-	# Eine Funktion zum Erstellen einer Liste von Verzeichnissen aus einer Datei.
-	#? Verwendung: makeverzeichnisliste_menu
-	# Diese Funktion ruft einen Dialog-Bildschirm auf, in dem der Benutzer den Namen der SIMDATEI eingeben kann.
-	# Anschließend wird die SIMDATEI gelesen und eine Liste von Verzeichnissen erstellt.
+## * make_regionsliste_menu
+	# Eine Funktion zum Erstellen einer Liste von Regionen aus einer Datei.
+	#? Verwendung: make_regionsliste_menu
+	# Diese Funktion liest Zeilen aus der angegebenen REGIONSDATEI im STARTVERZEICHNIS und erstellt eine
+	# Liste von Regionen. Die Liste wird in der globalen Variable REGIONSLISTE gespeichert.
+	# Die Anzahl der Einträge in der Liste wird in der globalen Variable ANZAHLREGIONSLISTE gespeichert.
+	#? Argumente:
+	#   STARTVERZEICHNIS - Das Verzeichnis, in dem sich die REGIONSDATEI befindet.
+	#   REGIONSDATEI - Die Datei, aus der die Regionen gelesen werden sollen.
 	#? Beispiel:
-	# makeverzeichnisliste_menu
+	# make_regionsliste_menu
 ##
 function make_regionsliste_menu() {
-    # Letzte Bearbeitung 27.09.2023
+    # Letzte Bearbeitung 26.02.2024
 
     # Dialog-Bildschirmmaske für Auswahl der Regionsdatei
     REGIONSDATEI=$(dialog --inputbox "Geben Sie den Namen der Regionsdatei ein:" 8 40 3>&1 1>&2 2>&3)
@@ -6908,10 +6915,14 @@ function assetcachedel() {
 	# autoassetcachedel
 ##
 function autoassetcachedel() {
-	# Letzte Bearbeitung 01.10.2023
-	#log line
-	makeverzeichnisliste
+	# Letzte Bearbeitung 26.02.2024
+	SIMDATEI=$1
+	if [ "$SIMDATEI"="" ]; then SIMDATEI="osmsimlist.ini"; fi
+
+	makeverzeichnisliste "$SIMDATEI"
+
 	sleep 1
+
 	for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
 		rm -r /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/assetcache 2>/dev/null | log info "OpenSimulator ${VERZEICHNISSLISTE[$i]} assetcache Verzeichnisse geloescht" || log warn "${VERZEICHNISSLISTE[$i]} assetcache Verzeichnis wurde nicht gefunden! "
 		
@@ -7916,7 +7927,7 @@ function oscopyrobust() {
 
 ## * oscopysim
 	# Diese Funktion wechselt in das Hauptverzeichnis ($STARTVERZEICHNIS) und ruft die Funktion
-	# `makeverzeichnisliste` auf, um eine Liste von Verzeichnissen zu erstellen, in die die
+	# makeverzeichnisliste auf, um eine Liste von Verzeichnissen zu erstellen, in die die
 	# OpenSimulator-Instanzen kopiert werden sollen. Anschließend wird in einer Schleife durch die
 	# Verzeichnisliste iteriert und für jede Instanz das OpenSim-Verzeichnis ($OPENSIMVERZEICHNIS/bin)
 	# in das entsprechende Zielverzeichnis kopiert.
@@ -7929,9 +7940,13 @@ function oscopyrobust() {
 	#   oscopysim
 ##
 function oscopysim() {
-	# Letzte Bearbeitung 01.10.2023
+	# Letzte Bearbeitung 26.02.2024
 	cd /$STARTVERZEICHNIS || return 1 # Prüfen ob Verzeichnis vorhanden ist.
-	makeverzeichnisliste
+
+	SIMDATEI=$1
+	if [ "$SIMDATEI"="" ]; then SIMDATEI="osmsimlist.ini"; fi
+	makeverzeichnisliste "$SIMDATEI"
+
 	#log info "Kopiere Simulatoren!"
 	#log line
 	sleep 1
@@ -8079,7 +8094,7 @@ function regionsconfigdateiliste() {
 }
 
 ## * meineregionen
-	# Diese Funktion ruft zuerst die Funktion `makeverzeichnisliste` auf, um eine Liste von Verzeichnissen zu erstellen,
+	# Diese Funktion ruft zuerst die Funktion makeverzeichnisliste auf, um eine Liste von Verzeichnissen zu erstellen,
 	# und gibt dann die Regionsnamen aus den Regionskonfigurationsdateien in jedem Verzeichnis aus. Die Ausgabe wird protokolliert.
 	#? Parameter:
 	#   - Keine
@@ -8089,8 +8104,11 @@ function regionsconfigdateiliste() {
 	#   meineregionen
 ##
 function meineregionen() {
-	# Letzte Bearbeitung 01.10.2023
-	makeverzeichnisliste
+	# Letzte Bearbeitung 26.02.2024
+	SIMDATEI=$1
+	if [ "$SIMDATEI"="" ]; then SIMDATEI="osmsimlist.ini"; fi
+	makeverzeichnisliste "$SIMDATEI"
+
 	log info "MEINEREGIONEN: Regionsliste"
 	sleep 1
 	for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
@@ -8104,7 +8122,7 @@ function meineregionen() {
 }
 
 ## * regionsinisuchen
-	# Diese Funktion ruft zuerst die Funktion `makeverzeichnisliste` auf, um eine Liste von Verzeichnissen zu erstellen,
+	# Diese Funktion ruft zuerst die Funktion makeverzeichnisliste auf, um eine Liste von Verzeichnissen zu erstellen,
 	# und sucht dann nach der Datei "Regions.ini" in jedem Verzeichnis. Die gefundenen Dateien werden analysiert, und die
 	# Namen der darin enthaltenen Regionskonfigurationen werden ausgegeben.
 	#? Parameter:
@@ -8115,8 +8133,10 @@ function meineregionen() {
 	#   regionsinisuchen
 ##
 function regionsinisuchen() {
-	# Letzte Bearbeitung 01.10.2023
-	makeverzeichnisliste
+	# Letzte Bearbeitung 26.02.2024
+	SIMDATEI=$1
+	if [ "$SIMDATEI"="" ]; then SIMDATEI="osmsimlist.ini"; fi
+	makeverzeichnisliste "$SIMDATEI"
 	sleep 1
 
 	for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
@@ -8242,7 +8262,7 @@ function regionsiniteilen() {
 }
 
 ## * autoregionsiniteilen
-	# Diese Funktion ruft zuerst die Funktion `makeverzeichnisliste` auf, um eine Liste von Verzeichnissen zu erstellen,
+	# Diese Funktion ruft zuerst die Funktion makeverzeichnisliste auf, um eine Liste von Verzeichnissen zu erstellen,
 	# und iteriert dann über jedes Verzeichnis in der Liste. Für jedes Verzeichnis wird die Regions.ini-Datei in mehrere
 	# separate INI-Dateien aufgeteilt, eine für jede Region, und die einzelnen Regionsdateien werden umbenannt. Falls die
 	# Regions.ini-Datei in einem Verzeichnis nicht vorhanden ist, wird sie nicht umbenannt.
@@ -8254,8 +8274,10 @@ function regionsiniteilen() {
 	#   autoregionsiniteilen
 ##
 function autoregionsiniteilen() {
-	# Letzte Bearbeitung 01.10.2023
-	makeverzeichnisliste
+	# Letzte Bearbeitung 26.02.2024
+	SIMDATEI=$1
+	if [ "$SIMDATEI"="" ]; then SIMDATEI="osmsimlist.ini"; fi
+	makeverzeichnisliste "$SIMDATEI"
 	sleep 1
 	for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
 		log info "Region.ini ${VERZEICHNISSLISTE[$i]} zerlegen"
@@ -8293,7 +8315,7 @@ function autoregionsiniteilen() {
 	#   createregionlist
 ##  
 function createregionlist() {
-	# Letzte Bearbeitung 01.10.2023
+	# Letzte Bearbeitung 26.02.2024
 	# Alte osmregionlist.ini sichern und in osmregionlist.ini.old umbenennen.
 	if [ -f "/$STARTVERZEICHNIS/osmregionlist.ini" ]; then
 		if [ -f "/$STARTVERZEICHNIS/osmregionlist.ini.old" ]; then
@@ -8303,7 +8325,11 @@ function createregionlist() {
 	fi
 	# Die mit regionsconfigdateiliste erstellte Datei osmregionlist.ini nach sim Verzeichnis und Regionsnamen in die osmregionlist.ini speichern.
 	declare -A Dateien # Array erstellen
-	makeverzeichnisliste
+
+	SIMDATEI=$1
+	if [ "$SIMDATEI"="" ]; then SIMDATEI="osmsimlist.ini"; fi
+	makeverzeichnisliste "$SIMDATEI"
+
 	sleep 1
 	for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
 		log info "Regionnamen ${VERZEICHNISSLISTE[$i]} schreiben"
@@ -8363,8 +8389,11 @@ function makewebmaps() {
 	#   moneydelete
 ##
 function moneydelete() {
-	# Letzte Bearbeitung 01.10.2023
-	makeverzeichnisliste
+	# Letzte Bearbeitung 26.02.2024
+	SIMDATEI=$1
+	if [ "$SIMDATEI"="" ]; then SIMDATEI="osmsimlist.ini"; fi
+	makeverzeichnisliste "$SIMDATEI"
+
 	sleep 1
 	# MoneyServer aus den sims entfernen
 	for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
@@ -8762,10 +8791,14 @@ function menuregionrestore() {
 	#   autosimstart
 ##
 function autosimstart() {
-	# Letzte Bearbeitung 01.10.2023
+	# Letzte Bearbeitung 26.02.2024
 	if ! screen -list | grep -q 'sim'; then
 		# es laeuft kein Simulator - not work
-		makeverzeichnisliste
+
+		SIMDATEI=$1
+		if [ "$SIMDATEI"="" ]; then SIMDATEI="osmsimlist.ini"; fi
+		makeverzeichnisliste "$SIMDATEI"
+
 		sleep 1
 		for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
 			log info "Regionen ${VERZEICHNISSLISTE[$i]} werden gestartet"
@@ -8812,8 +8845,11 @@ function autosimstart() {
 	#   autosimstop
 ##
 function autosimstop() {
-	# Letzte Bearbeitung 01.10.2023
-	makeverzeichnisliste
+	# Letzte Bearbeitung 26.02.2024
+	SIMDATEI=$1
+	if [ "$SIMDATEI"="" ]; then SIMDATEI="osmsimlist.ini"; fi
+	makeverzeichnisliste "$SIMDATEI"
+
 	sleep 1
 	for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
 		if screen -list | grep -q "${VERZEICHNISSLISTE[$i]}"; then
@@ -8838,10 +8874,12 @@ function autosimstop() {
 	#   menuautosimstart
 ##
 function menuautosimstart() {
-	# Letzte Bearbeitung 01.10.2023
+	# Letzte Bearbeitung 26.02.2024
 	if ! screen -list | grep -q 'sim'; then
 		# es laeuft kein Simulator - not work
-		makeverzeichnisliste
+		SIMDATEI=$1
+		if [ "$SIMDATEI"="" ]; then SIMDATEI="osmsimlist.ini"; fi
+		makeverzeichnisliste "$SIMDATEI"
 		sleep 1
 		for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
 			log info "Regionen ${VERZEICHNISSLISTE[$i]} werden gestartet"
@@ -8892,8 +8930,11 @@ function menuautosimstart() {
 	#   menuautosimstop
 ##
 function menuautosimstop() {
-	# Letzte Bearbeitung 01.10.2023
-	makeverzeichnisliste
+	# Letzte Bearbeitung 26.02.2024
+	SIMDATEI=$1
+	if [ "$SIMDATEI"="" ]; then SIMDATEI="osmsimlist.ini"; fi
+	makeverzeichnisliste "$SIMDATEI"
+
 	sleep 1
 	for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
 		if screen -list | grep -q "${VERZEICHNISSLISTE[$i]}"; then
@@ -8922,9 +8963,12 @@ function menuautosimstop() {
 	#   autologdel
 ##
 function autologdel() {
-	# Letzte Bearbeitung 01.10.2023
+	# Letzte Bearbeitung 26.02.2024
 	log line
-	makeverzeichnisliste
+	SIMDATEI=$1
+	if [ "$SIMDATEI"="" ]; then SIMDATEI="osmsimlist.ini"; fi
+	makeverzeichnisliste "$SIMDATEI"
+
 	sleep 1
 	for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
 		
@@ -8954,9 +8998,12 @@ function autologdel() {
 	#   menuautologdel
 ##
 function menuautologdel() {
-	# Letzte Bearbeitung 01.10.2023
+	# Letzte Bearbeitung 26.02.2024
 	log line
-	makeverzeichnisliste
+	SIMDATEI=$1
+	if [ "$SIMDATEI"="" ]; then SIMDATEI="osmsimlist.ini"; fi
+	makeverzeichnisliste "$SIMDATEI"
+
 	sleep 1
 	for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
 		#BERECHNUNG3=$((100 / "$ANZAHLVERZEICHNISSLISTE"))
@@ -8980,9 +9027,13 @@ function menuautologdel() {
 	#   automapdel
 ##
 function automapdel() {
-	# Letzte Bearbeitung 01.10.2023
+	# Letzte Bearbeitung 26.02.2024
 	autorobustmapdel
-	makeverzeichnisliste
+
+	SIMDATEI=$1
+	if [ "$SIMDATEI"="" ]; then SIMDATEI="osmsimlist.ini"; fi
+	makeverzeichnisliste "$SIMDATEI"
+
 	sleep 1
 	for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
 		cd /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin || return 1
@@ -9129,10 +9180,11 @@ function getcachesinglegroesse() {
 	#   getcachegroesse
 ##
 function getcachegroesse() {
-	# Letzte Bearbeitung 01.10.2023
+	# Letzte Bearbeitung 26.02.2024
 	log info "Zeige Cache Dateien und die größe aus dem gesamten Grid an!"
-	makeverzeichnisliste
-	#sleep 1
+	SIMDATEI=$1
+	if [ "$SIMDATEI"="" ]; then SIMDATEI="osmsimlist.ini"; fi
+	makeverzeichnisliste "$SIMDATEI"
 
 	# Simualtoren
 	for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
@@ -9177,10 +9229,12 @@ function tastaturcachedelete() {
 	#   gridcachedelete
 ##
 function gridcachedelete() {
-	# Letzte Bearbeitung 01.10.2023
+	# Letzte Bearbeitung 26.02.2024
 	log line
 	log warn "Lösche Cache Dateien aus dem gesamten Grid!"
-	makeverzeichnisliste
+	SIMDATEI=$1
+	if [ "$SIMDATEI"="" ]; then SIMDATEI="osmsimlist.ini"; fi
+	makeverzeichnisliste "$SIMDATEI"
 	sleep 1
 	# Simualtoren
 	for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do	
@@ -9207,8 +9261,10 @@ function gridcachedelete() {
 	# todo: nichts.
 ##
 function autoallclean() {
-	# Letzte Bearbeitung 01.10.2023
-	makeverzeichnisliste
+	# Letzte Bearbeitung 26.02.2024
+	SIMDATEI=$1
+	if [ "$SIMDATEI"="" ]; then SIMDATEI="osmsimlist.ini"; fi
+	makeverzeichnisliste "$SIMDATEI"
 	sleep 1
 	for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
 		# Dateien
@@ -9441,6 +9497,21 @@ function autostart() {
 	log info "Auto Start abgeschlossen"
 	return 0
 }
+function AutostartConf() {
+	# Letzte Bearbeitung 26.02.2024
+	SIMDATEI=$1
+	if [ "$SIMDATEI" = "" ]; then SIMDATEI="osmsimlist.ini"; fi
+
+	if [[ $ROBUSTVERZEICHNIS == "robust" ]]; then
+		gridstart
+	fi
+	autosimstart "$SIMDATEI"
+	log line
+	screenlist
+	log line
+	log info "Auto Start mit Konfigurationsauswahl abgeschlossen"
+	return 0
+}
 
 ## * gridstop
 	# This function stops the Money Server (MO) and the Robust Server (RO) if they are running.
@@ -9483,6 +9554,44 @@ function autostop() {
 		log info "SIMs OFFLINE!"
 	else
 		autosimstop
+	fi
+
+	if ! screen -list | grep -q "RO"; then
+
+		if [[ $ROBUSTVERZEICHNIS = "no" ]]; then
+			return 0
+		else
+			log info "ROBUST OFFLINE!"
+		fi
+
+	else
+		gridstop
+	fi
+	# schauen ob screens laufen wenn ja warten.
+	# shellcheck disable=SC2022
+	if ! screen -list | grep -q 'sim'; then
+		log line
+	else
+		sleep $AUTOSTOPZEIT
+	fi
+	log info "Alle noch offenen OpenSimulator bestandteile,"
+	log info "die nicht innerhalb von $AUTOSTOPZEIT Sekunden"
+	log info "nach Robust heruntergefahren werden konnten,"
+	log info "werden jetzt zwangsbeendet!"
+	autoscreenstop
+	return 0
+}
+function AutostopConf() {
+	# Letzte Bearbeitung 26.02.2024
+	SIMDATEI=$1
+	if [ "$SIMDATEI" = "" ]; then SIMDATEI="osmsimlist.ini"; fi
+
+	# schauen ob screens laufen wenn ja beenden.
+	# shellcheck disable=SC2022
+	if ! screen -list | grep -q 'sim'; then
+		log info "SIMs OFFLINE!"
+	else
+		autosimstop "$SIMDATEI"
 	fi
 
 	if ! screen -list | grep -q "RO"; then
@@ -9595,6 +9704,26 @@ function autorestart() {
 
 	gridstart
 	autosimstart
+	screenlistrestart
+	
+	log info "Auto Restart abgeschlossen."
+	return 0
+}
+function AutorestartConf() {
+	# Letzte Bearbeitung 26.02.2024
+	SIMDATEI=$1
+	NEUESIMDATEI=$2
+	if [ "$SIMDATEI" = "" ]; then SIMDATEI="osmsimlist.ini"; fi
+	if [ "$NEUESIMDATEI" = "" ]; then NEUESIMDATEI="osmsimlist.ini"; fi
+	log rohtext " Automatischer Restart wird ausgeführt!"
+	log line
+	
+	# Alles stoppen.
+	AutostopConf "$SIMDATEI"
+	if [ "$LOGDELETE" = "yes" ]; then autologdel; fi
+
+	gridstart
+	autosimstart "$NEUESIMDATEI"
 	screenlistrestart
 	
 	log info "Auto Restart abgeschlossen."
@@ -10388,7 +10517,7 @@ function serverinstall22() {
 	# serverinstall
 ##
 function serverinstall() {
-	# Letzte Bearbeitung 01.10.2023
+	# Letzte Bearbeitung 26.09.2023
 	# zuerst schauen ob dialog installiert ist
 	if dpkg-query -s dialog 2>/dev/null | grep -q installed; then
 		dialog --yesno "Moechten Sie wirklich alle noetigen Ubuntu Pakete installieren?" 0 0
@@ -10400,7 +10529,8 @@ function serverinstall() {
 		if [ $siantwort = 0 ]; then
 			serverupgrade
 			installopensimulator
-			monoinstall18
+			#monoinstall18
+			dotnetubuautomatik
 			installfinish
 		fi
 		if [ $siantwort = 1 ]; then
@@ -10415,7 +10545,8 @@ function serverinstall() {
 		if [ "$yesno" = "y" ]; then
 			serverupgrade
 			installopensimulator
-			monoinstall18
+			#monoinstall18
+			dotnetubuautomatik
 			installfinish
 		else
 			log rohtext "Abbruch"
@@ -19161,7 +19292,7 @@ function configabfrage() {
 	# Sie stoppt das Grid, kopiert Dateien und erstellt Master- und Region-Avatare.
 	#? Parameter: Keine
 	#? Funktionsverhalten:
-	#   - Die Funktion stoppt das Grid, falls es läuft, durch Aufruf von `autostop()`.
+	#   - Die Funktion stoppt das Grid, falls es läuft, durch Aufruf von autostop.
 	#   - Sie kopiert Dateien von einer Quelle auf eine Zielposition mit den Funktionen `oscopyrobust()` und `oscopysim()`.
 	#   - Sie erstellt Master- und Region-Avatare mit den Funktionen `createmasteravatar()` und `createregionavatar()`.
 	#? Beispielaufruf:
@@ -19701,8 +19832,9 @@ function AutoInstall() {
             #echo "entdeckt Ubuntu 22"
             linuxupgrade
             installubuntu22
-			monoinstall20 # 22 gibt es nicht.
-			monoinstall22 # Upgrade monoistall20
+			#monoinstall20 # 22 gibt es nicht.
+			#monoinstall22 # Upgrade monoistall20
+			dotnetubuautomatik
             installphpmyadmin
             ufwset
             #installationhttps22
@@ -19711,7 +19843,8 @@ function AutoInstall() {
             #echo "entdeckt Ubuntu 18"
             serverupgrade
             installopensimulator
-            monoinstall18
+            #monoinstall18
+			dotnetubuautomatik
             installfinish
         else
             log rohtext "Ich erkenne das Betriebssystem nicht"
@@ -22057,8 +22190,9 @@ function expertenmenu() {
 
     ServerInstallation=$(menutrans "Server Installation")
     ServerInstallationfuerWordPress=$(menutrans "Server Installation fuer WordPress")
-    ServerInstallationohnemono=$(menutrans "Server Installation ohne mono")
+    ServerInstallationohnemono=$(menutrans "Server Installation ohne mono/Dotnet")
     MonoInstallation=$(menutrans "Mono Installation")
+	DotnetInstallation=$(menutrans "DOTNET Installation")
 
     terminator=$(menutrans "terminator")
     makeaot=$(menutrans "make AOT")
@@ -22085,11 +22219,9 @@ function expertenmenu() {
             "$ServerInstallation" ""
             "$ServerInstallationfuerWordPress" ""
             "$ServerInstallationohnemono" ""
-            "$MonoInstallation" ""
+            "$DotnetInstallation" ""
             "--------------------------" ""
             "$terminator" ""
-            "$makeaot" ""
-            "$cleanaot" ""
             "$Installationenanzeigen" ""
             "--------------------------" ""
             "$KommandoanOpenSimsenden" ""
@@ -22122,6 +22254,7 @@ function expertenmenu() {
             "$ServerInstallationfuerWordPress") installwordpress ;;
             "$ServerInstallationohnemono") installopensimulator ;;
             "$MonoInstallation") monoinstall ;;
+			"$DotnetInstallation") dotnetubuautomatik ;;
             "$Dateimennu") dateimenu ;;
             "$mySQLmenu") mySQLmenu ;;
             "$Hauptmenu") hauptmenu ;;
@@ -23074,6 +23207,9 @@ function ostimestamp() {
 
 case $KOMMANDO in
 	AutoInstall) AutoInstall ;;
+	AutorestartConf) AutorestartConf "$2" "$3" ;;
+	AutostartConf) AutostartConf "$2" ;;
+	AutostopConf) AutostopConf "$2" ;;
 	ConfigSet) ConfigSet "$2" ;;
 	DO_DOMAIN_IDS) DO_DOMAIN_IDS "$2" "$3" "$4" ;;
 	DO_DOMAIN_IDS2_nids) DO_DOMAIN_IDS2_nids "$2" "$3" ;;
@@ -23105,11 +23241,18 @@ case $KOMMANDO in
 	Replica_Backup_nmlp) Replica_Backup_nmlp "$2" "$3" "$4" ;;
 	ReplikatKoordinaten) ReplikatKoordinaten "$2" "$3" "$4" "$5" "$6" "$7" "$8" ;;
 	ScreenLog) ScreenLog ;;
+	VivoxVoiceSetup) VivoxVoiceSetup "$2" "$3" ;;
 	accesslog) accesslog ;;
+	add_column_encryption) add_column_encryption ;;
+	add_entr) add_entr ;;
+	add_user) add_user ;;
+	admin_only_function_menu) admin_only_function_menu ;;
 	ald | autologdel) autologdel ;;
 	allclean) allclean "$2" ;;
 	allrepair_db) allrepair_db "$2" "$3" ;;
+	alter_table_structure) alter_table_structure ;;
 	amd | automapdel) automapdel ;;
+	analyze_database) analyze_database ;;
 	apacheerror) apacheerror ;;
 	arb | autoregionbackup) autoregionbackup ;;
 	arit | autoregionsiniteilen) autoregionsiniteilen ;;
@@ -23122,26 +23265,67 @@ case $KOMMANDO in
 	autoallclean) autoallclean ;;
 	autoassetcachedel) autoassetcachedel ;;
 	autorobustmapdel) autorobustmapdel ;;
+	avatarmenu) avatarmenu ;;
+	backup_all_databases) backup_all_databases ;;
+	backup_database) backup_database ;;
+	backup_tables) backup_tables ;;
 	backupdatum) backupdatum ;;
+	begin_transaction) begin_transaction ;;
+	benutzer) benutzer ;;
+	benutzer_menu) benutzer_menu ;;
+	buildbullet) buildbullet ;;
+	buildmenu) buildmenu ;;
+	bulletconfig) bulletconfig "$2" ;;
+	bulletgitcopy) bulletgitcopy ;;
+	change_user_password) change_user_password ;;
+	check_admin_menu) check_admin_menu ;;
+	check_and_execute) check_and_execute "$2" ;;
+	check_and_repair) check_and_repair ;;
+	check_database_connection) check_database_connection ;;
+	check_database_consistency) check_database_consistency ;;
+	check_error_logs) check_error_logs ;;
+	check_non_admin_menu) check_non_admin_menu ;;
+	check_user_menu) check_user_menu ;;
+	check_user_privileges) check_user_privileges ;;
 	checkfile) checkfile "$2" ;;
+	checkupgrade93) checkupgrade93 ;;
 	chrisoscopy) chrisoscopy ;;
 	cl | configlesen) configlesen "$2" ;;
 	cleanaot) cleanaot ;;
 	cleaninstall) cleaninstall ;;
+	cleanprebuild) cleanprebuild ;;
+	clear_multitool_log) clear_multitool_log ;;
+	clear_multitool_log_days) clear_multitool_log_days "$2" ;;
+	clear_multitool_log_week) clear_multitool_log_week ;;
+	clear_query_cache) clear_query_cache ;;
+	clear_variable_multitool_log_week) clear_variable_multitool_log_week "$2" ;;
 	commandhelp) commandhelp ;;
-    rc | robust | RobustCommands) RobustCommands ;;
-    oc | opensim | OpenSimCommands) OpenSimCommands ;;
-    mc | money | MoneyServerCommands) MoneyServerCommands ;;
-	pCampbotCommands) pCampbotCommands ;;
-    all) all ;;
+	commit_transaction) commit_transaction ;;
 	compi | compilieren) compilieren ;;
 	conf_delete) conf_delete "$2" "$3" "$4" ;;
 	conf_read) conf_read "$2" "$3" "$4" ;;
 	conf_write) conf_write "$2" "$3" "$4" "$5" ;;	
+	config | gridkonfiguration | configabfrage) configabfrage ;;
 	connection_name) connection_name "$2" "$3" ;;
+	create_database) create_database ;;
 	create_db) create_db "$2" "$3" "$4" ;;
 	create_db_user) create_db_user "$2" "$3" "$4" "$5" ;;
+	create_table) create_table ;;
+	createdatabase) createdatabase "$2" "$3" "$4" ;;
+	createdbuser) createdbuser "$2" "$3" "$4" "$5" ;;
+	createmanual) createmanual ;;
+	createmasteravatar) createmasteravatar ;;
+	createregionavatar) createregionavatar ;;
 	createuser) createuser "$2" "$3" "$4" "$5" "$6" ;;
+	dalaiinstall) dalaiinstall "$2" ;;
+	dalaiinstallinfos) dalaiinstallinfos ;;
+	dalaimodelinstall) dalaimodelinstall "$2" ;;
+	dalaiserverinstall) dalaiserverinstall ;;
+	dalaistart) dalaistart ;;
+	dalaistop) dalaistop ;;
+	dalaiuninstall) dalaiuninstall ;;
+	dalaiupgrade) dalaiupgrade "$2" ;;
+	dateimenu) dateimenu ;;
 	db_all_name) db_all_name "$2" "$3" "$4" ;;
 	db_all_user) db_all_user "$2" "$3" "$4" ;;
 	db_all_user_dialog) db_all_user_dialog "$2" "$3" "$4" ;;
@@ -23151,7 +23335,9 @@ case $KOMMANDO in
 	db_anzeigen) db_anzeigen "$2" "$3" "$4" ;;
 	db_anzeigen_dialog) db_anzeigen_dialog "$2" "$3" ;;
 	db_backuptabellen) db_backuptabellen "$2" "$3" "$4" ;;
+	db_backuptabellentypen) db_backuptabellentypen "$2" "$3" "$4" ;;
 	db_benutzer_anzeigen) db_benutzer_anzeigen "$2" "$3" ;;
+	db_besucherliste) db_besucherliste "$2" "$3" "$4" ;;
 	db_create) db_create "$2" "$3" "$4" ;;
 	db_create_new_dbuser) db_create_new_dbuser "$2" "$3" "$4" "$5" ;;
 	db_dbuser) db_dbuser "$2" "$3" ;;
@@ -23162,113 +23348,198 @@ case $KOMMANDO in
 	db_empty) db_empty "$2" "$3" "$4" ;;
 	db_false_email) db_false_email "$2" "$3" "$4" ;;
 	db_foldertyp_user) db_foldertyp_user "$2" "$3" "$4" "$5" "$6" "$7" ;;
+	db_friends) db_friends "$2" "$3" "$4" "$5" ;;
+	db_gridlist) db_gridlist "$2" "$3" "$4" ;;
+	db_griduserlist) db_griduserlist "$2" "$3" "$4" ;;
+	db_inv_search) db_inv_search "$2" "$3" "$4" "$5" ;;
+	db_inventar_no_assets) db_inventar_no_assets "$2" "$3" "$4" ;;
+	db_neueobjekte) db_neueobjekte "$2" "$3" "$4" ;;
+	db_online) db_online "$2" "$3" "$4" ;;
+	db_region) db_region "$2" "$3" "$4" ;;
+	db_region_anzahl_regionsid) db_region_anzahl_regionsid "$2" "$3" "$4" ;;
+	db_region_anzahl_regionsnamen) db_region_anzahl_regionsnamen "$2" "$3" "$4" ;;
+	db_region_parzelle) db_region_parzelle "$2" "$3" "$4" ;;
+	db_region_parzelle_pakete) db_region_parzelle_pakete "$2" "$3" "$4" ;;
 	db_regions) db_regions "$2" "$3" "$4" ;;
 	db_regionsport) db_regionsport "$2" "$3" "$4" ;;
 	db_regionsuri) db_regionsuri "$2" "$3" "$4" ;;
+	db_rename_objects) db_rename_objects "$2" "$3" "$4" ;;
 	db_restorebackuptabellen) db_restorebackuptabellen "$2" "$3" "$4" "$5" ;;
 	db_setuserofline) db_setuserofline "$2" "$3" "$4" "$5" "$6" ;;
 	db_setuseronline) db_setuseronline "$2" "$3" "$4" "$5" "$6" ;;
 	db_sichern) db_sichern "$2" "$3" "$4" ;;
+	db_tabellencopy) db_tabellencopy "$2" "$3" "$4" "$5" "$6" ;;
 	db_tables) db_tables "$2" "$3" "$4" ;;
 	db_tables_dialog) db_tables_dialog "$2" "$3" "$4" ;;
 	db_tablesplitt) db_tablesplitt "$2" ;;
 	db_tablextract) db_tablextract "$2" "$3" ;;
 	db_tablextract_regex) db_tablextract_regex "$2" "$3" "$4" ;;
+	db_ungenutzteobjekte) db_ungenutzteobjekte "$2" "$3" "$4" "$5" "$6" ;;
+	db_user_anzahl) db_user_anzahl "$2" "$3" "$4" ;;
 	db_user_data) db_user_data "$2" "$3" "$4" "$5" "$6" ;;
 	db_user_infos) db_user_infos "$2" "$3" "$4" "$5" "$6" ;;
+	db_user_online) db_user_online "$2" "$3" "$4" ;;
 	db_user_uuid) db_user_uuid "$2" "$3" "$4" "$5" "$6" ;;
 	db_userdate) db_userdate "$2" "$3" "$4" "$5" "$6" ;;
+	dbhilfe) dbhilfe ;;
+	debpaketbuild) debpaketbuild "$2" ;;
 	default_master_connection) default_master_connection "$2" "$3" ;;
+	del_advantage_tools_menu) del_advantage_tools_menu ;;
+	deladvantagetools) deladvantagetools ;;
+	delete_corrupted_entries) delete_corrupted_entries ;;
 	delete_db) delete_db "$2" "$3" "$4" ;;
+	delete_emty_mark) delete_emty_mark "$2" "$3" ;;
+	delete_entry) delete_entry ;;
+	delete_robust_logs) delete_robust_logs ;;
+	delete_user) delete_user ;;
+	depends_installer) depends_installer ;;
+	display_databases) display_databases ;;
+	display_server_info) display_server_info ;;
+	display_table_contents) display_table_contents ;;
+	display_table_schema) display_table_schema ;;
+	display_user_permissions) display_user_permissions ;;
+	divacopy) divacopy ;;
+	divagitcopy) divagitcopy ;;
+	dns_dig_info) dns_dig_info	;;
 	dotnetinfo) dotnetinfo ;;
 	dotnetubu18) dotnetubu18 ;;
 	dotnetubu22) dotnetubu22 ;;
 	dotnetubu24) dotnetubu24 ;;
 	dotnetubuautomatik) dotnetubuautomatik ;;
-	uninstall_mono) uninstall_mono ;;
 	downloados) downloados ;;
 	e | terminator) terminator ;;
 	ende) ende ;; # Test
 	expertenmenu) expertenmenu ;;
+	expertenmenu) expertenmenu ;;
+	export_table_to_csv) export_table_to_csv ;;
+	fail2banset) fail2banset ;;
 	fehler) fehler ;; # Test
 	finstall) finstall "$2" ;;
+	firstinstallation) firstinstallation ;;
 	fortschritsanzeige) fortschritsanzeige ;;
 	fpspeicher) fpspeicher ;;
-	funktionsliste | functionslist) functionslist ;;
 	funktionenmenu) funktionenmenu ;;
+	funktionenmenu) funktionenmenu ;;
+	funktionsliste | functionslist) functionslist ;;
+	generate_report) generate_report ;;
 	get_value_from_Region_key) get_value_from_Region_key ;;
+	getcachegroesse) getcachegroesse ;;
+	getcachesinglegroesse) getcachesinglegroesse "$2" ;;
+	gridcachedelete) gridcachedelete ;;
 	gridcommonini) gridcommonini ;;
 	gsta | gridstart) gridstart ;;
 	gsto | gridstop | gsto93 | gridstop93) gridstop ;;
+	hauptmenu) hauptmenu ;;
+	hda | hilfedirektaufruf | hilfemenudirektaufrufe) hilfemenudirektaufrufe ;;
 	hilfe | help | aider | ayuda) hilfe ;;
+	hilfemenu) hilfemenu ;;
 	historylogclear) historylogclear "$2" ;;
+	icecastconfig) icecastconfig ;;
+	icecastinstall) icecastinstall ;;
+	icecastrestart) icecastrestart ;;
+	icecaststart) icecaststart ;;
+	icecaststop) icecaststop ;;
+	icecastversion) icecastversion ;;
+	import_csv_to_table) import_csv_to_table ;;
 	info) info ;;
 	infodialog) infodialog ;;
+	ini_get) ini_get "$2" "$3" "$4" ;;
+	ini_set) ini_set "$2" "$3" "$4" "$5" ;;
 	installationen) installationen ;;
 	installationhttps22) installationhttps22 "$2" "$3" ;;
-	update | linuxupgrade) linuxupgrade ;;
-	linuxupgrade_menu) linuxupgrade_menu ;;
 	installfinish) installfinish ;;
 	installmariadb18) installmariadb18 ;;
 	installmariadb22) installmariadb22 ;;
 	installphpmyadmin) installphpmyadmin ;;
 	installubuntu22) installubuntu22 ;;
-	deladvantagetools) deladvantagetools ;;
-	del_advantage_tools_menu) del_advantage_tools_menu ;;
+	instdialog) instdialog ;;
 	ipsetzen) ipsetzen ;;
+	iptablesset) iptablesset "$2" ;;
+	isroot) isroot ;;
+	janein) janein "$2" ;;
 	konsolenhilfe) konsolenhilfe ;;
 	l | list | screenlist) screenlist ;;
+	laeuftos) laeuftos "$2" ;;
+	laeuftos_menu) laeuftos_menu "$2" ;;
 	landclear) landclear "$2" "$3" ;;
+	lastrebootdatum) lastrebootdatum ;;
 	ld | logdel) logdel "$2" ;;
 	leere_db) leere_db "$2" "$3" "$4" ;;
+	linuxupgrade_menu) linuxupgrade_menu ;;
 	loadinventar) loadinventar "$2" "$3" "$4" "$5" ;;
+	log_error) log_error "$2" ;;
+	mainMenu) mainMenu ;;
 	makeaot) makeaot ;;
 	makeregionsliste) makeregionsliste ;;
 	makeverzeichnisliste) makeverzeichnisliste ;;
 	makewebmaps) makewebmaps ;;
+	manual_repair) manual_repair ;;
 	mariadberror) mariadberror ;;
+	mariarest) mariarest "$2" "$3" "$4" "$5" ;;
 	mc | moneycopy) moneycopy ;;
 	mc93 | moneycopy93) moneycopy93 ;;
 	md | mapdel) mapdel "$2" ;;
+	menuautosimstart) menuautosimstart ;;
+	menuautosimstop) menuautosimstop ;;
 	menuinfo) menuinfo ;;
+	menumoneyconfig) menumoneyconfig ;;
 	menuosdauerstartstop) menuosdauerstartstop "$2" ;;
 	menuoswriteconfig) menuoswriteconfig "$2" ;;
 	menuworks) menuworks "$2" ;;
+	modify_user_permissions) modify_user_permissions ;;
 	moneydelete) moneydelete ;;
 	moneygitcopy) moneygitcopy ;;
 	moneygitcopy93) moneygitcopy93 ;;
-	bulletgitcopy) bulletgitcopy ;;
 	moneyserverini) moneyserverini ;;
 	monoinstall) monoinstall ;;
 	mr | meineregionen) meineregionen ;;
 	ms | moneystart | mostart) mostart ;;
 	mstop | moneystop | mostop | mstop93 | moneystop93 | mostop93) mostop ;;
 	mutelistcopy) mutelistcopy ;;
+	mySQLmenu) mySQLmenu ;;
 	mysql_neustart) mysql_neustart ;;
 	mysqldberror) mysqldberror ;;
-	mysqleinstellen) mysqleinstellen ;;
 	mysqldump | mysqlbackup) mysqlbackup "$2" "$3" "$4" "$5" ;;
+	mysqleinstellen) mysqleinstellen ;;
+	mysqlrest) mysqlrest "$2" "$3" "$4" "$5" ;;
+	mysqlrestnodb) mysqlrestnodb "$2" "$3" "$4" ;;
+	name | namen) namen "$2" ;;
+	netstat_info) netstat_info	;;
+	netstat_info_menu) netstat_info_menu ;;
+	netz_ss_info) netz_ss_info	;;
 	neuegridconfig) neuegridconfig ;;
 	newregionini) newregionini ;;
+	nmap_scan) nmap_scan	;;
+	non_admin_only_function_menu) non_admin_only_function_menu ;;
 	od | osdelete) osdelete ;;
 	opensimholen) opensimholen ;;
 	opensimini) opensimini ;;
+	optimize_query) optimize_query ;;
+	optimize_tables) optimize_tables ;;
 	os | osstruktur) osstruktur "$2" "$3" ;;
+	osbauen93) osbauen93 ;;
 	osbuilding) osbuilding "$2" ;;
-	buildbullet) buildbullet ;;
+	osbuildingupgrade93) osbuildingupgrade93 "$2" ;;
 	osc | com | oscommand) oscommand "$2" "$3" "$4" ;;
 	osc2 | com2 | oscommand2) oscommand2 "$2" "$3" "$4" "$5" ;;
 	oscompi) oscompi ;;
 	oscopy) oscopy "$2" ;;
+	oscopycompress) oscopycompress "$2" ;;
 	oscopyrobust) oscopyrobust ;;
 	oscopysim) oscopysim ;;
 	osdauerstartstop) osdauerstartstop "$2" ;;
+	osdowngrade) osdowngrade ;;
 	osg | osgitholen) osgitholen ;;
 	osg93 | osgitholen93) osgitholen93 ;;
-	osbauen93) osbauen93 ;;
+	osgitstatus) osgitstatus ;;
 	osgridcopy) osgridcopy ;;
-	setversion) setversion "$2" ;;
-	setversion93) setversion93 "$2" ;;
+	osmtoolconfigabfrage) osmtoolconfigabfrage ;;
+	osmtranslate) osmtranslate "$2" ;;
+	osmtranslateinstall) osmtranslateinstall ;;
+	osmupgrade) osmupgrade ;;
+	osmupgrade_menu) osmupgrade_menu ;;
+	osreparatur) osreparatur ;;
+	ossettings_dotnet) ossettings_dotnet ;;
 	osslEnableConfig) osslEnableConfig ;;
 	osslenableini) osslenableini ;;
 	osstarteintrag) osstarteintrag "$2" ;; # Test
@@ -23279,263 +23550,128 @@ case $KOMMANDO in
 	oswriteconfig) oswriteconfig "$2" ;;
 	ou | osupgrade) osupgrade ;;
 	ou93 | osupgrade93) osupgrade93 ;;
+	pCampbotCommands) pCampbotCommands ;;
 	passgen) passgen "$2" ;;
 	passwdgenerator) passwdgenerator "$2" ;;
+	password_prompt_menu) password_prompt_menu ;;
+	pcampbot) pcampbot "$2" "$3" "$4" "$5" "$6" ;;
+	ping_test) ping_test	;;
+	ping_test_menu) ping_test_menu ;;
+	pruefe_dienst_curl)	pruefe_dienst_curl	;;
+	pruefe_dienst_nc) pruefe_dienst_nc	;;
+	pull) pull ;;
 	pythoncopy) pythoncopy ;;
 	r | restart | autorestart | r93 | restart93 | autorestart93) autorestart ;;
 	radiolist) radiolist ;;
 	ramspeicher) ramspeicher ;;
+	randomname) randomname ;;
 	rb | regionbackup) regionbackup "$2" "$3" ;;
+	reboot) reboot ;;
 	rebootdatum) rebootdatum ;;
+	rebootdatum) rebootdatum ;;
+	regionconfig) regionconfig "$2" "$3" "$4" "$5" "$6" ;;
+	regionconfig_menu) regionconfig_menu ;;
 	regionini) regionini ;;
 	regionsabfrage) regionsabfrage "$2" "$3" "$4" ;;
 	regionsinisuchen) regionsinisuchen ;;
 	regionsport) regionsport "$2" "$3" "$4" ;;
 	regionsuri) regionsuri "$2" "$3" "$4" ;;
+	remarklist) remarklist ;;
+	rename_table) rename_table ;;
+	repair_single_entry) repair_single_entry ;;
+	repair_table) repair_table ;;
+	repair_table_entries) repair_table_entries ;;
+	restore_all_databases) restore_all_databases ;;
+	restore_database) restore_database ;;
+	restore_tables) restore_tables ;;
 	rit | regionsiniteilen) regionsiniteilen "$2" "$3" ;;
 	rl | Regionsdateiliste | regionsconfigdateiliste) regionsconfigdateiliste "$3" "$2" ;;
 	rn | createregionlist | createregionlist) createregionlist ;;
 	robustbackup) robustbackup ;;
 	robustini) robustini ;;
+	rollback_transaction) rollback_transaction ;;
 	rologdel) rologdel ;;
+	rologdel_menu) rologdel_menu ;;
 	rs | robuststart | rostart) rostart ;;
 	rsto | robuststop | rostop | rsto93 | robuststop93 | rostop93) rostop ;;
 	s | settings | ossettings) ossettings ;;
-	ossettings_dotnet) ossettings_dotnet ;;
 	saveinventar) saveinventar "$2" "$3" "$4" "$5" ;;
 	sc | scriptcopy) scriptcopy ;;
 	schreibeinfo) schreibeinfo ;;
+	sckill) sckill "$2" ;;
 	screenlistrestart) screenlistrestart ;;
 	scriptgitcopy) scriptgitcopy ;;
-	sd | screendel) autoscreenstop ;;
-	searchcopy) searchcopy ;;
-	serverinstall) serverinstall ;;
-	serverinstall22) serverinstall22 ;;
-	set_empty_user) set_empty_user "$2" "$3" "$4" "$5" "$6" "$7" ;;
-	setpartner) setpartner "$2" "$3" "$4" "$5" "$6" ;;
-	simstats) simstats "$2" ;;
-	ss | osscreenstop | ss93 | osscreenstop93) osscreenstop "$2" ;;
-	sta | autosimstart | simstart) autosimstart ;;
-	sta93 | autosimstart93 | simstart93) autosimstart ;;
-	menuautosimstart) menuautosimstart ;;
-	sto | autosimstop | simstop | sto93 | autosimstop93 | simstop93) autosimstop ;;
-	menuautosimstop) menuautosimstop ;;
-	systeminformation) systeminformation ;;
-	tabellenabfrage) tabellenabfrage "$2" "$3" "$4" ;;
-	textbox) textbox "$2" ;;
-	ufwlog) ufwlog ;;
-	ufwset) ufwset ;;
-	ufwoff) ufwoff ;;
-	ufwblock) ufwblock ;;
-	ufwport) ufwport "$2" ;;
-	unlockexample) unlockexample ;;
-	w | works) works "$2" ;;
-	warnbox) warnbox "$2" ;;
-	waslauft) waslauft ;;
-	rebootdatum) rebootdatum ;;
-	lastrebootdatum) lastrebootdatum ;;
-	reboot) reboot ;;
-	db_friends) db_friends "$2" "$3" "$4" "$5" ;;
-	db_online) db_online "$2" "$3" "$4" ;;
-	db_region) db_region "$2" "$3" "$4" ;;
-	db_inv_search) db_inv_search "$2" "$3" "$4" "$5" ;;
-	db_user_anzahl) db_user_anzahl "$2" "$3" "$4" ;;
-	db_user_online) db_user_online "$2" "$3" "$4" ;;
-	db_region_parzelle) db_region_parzelle "$2" "$3" "$4" ;;
-	db_region_parzelle_pakete) db_region_parzelle_pakete "$2" "$3" "$4" ;;
-	db_region_anzahl_regionsnamen) db_region_anzahl_regionsnamen "$2" "$3" "$4" ;;
-	db_region_anzahl_regionsid) db_region_anzahl_regionsid "$2" "$3" "$4" ;;
-	db_inventar_no_assets) db_inventar_no_assets "$2" "$3" "$4" ;;
-	mysqlrest) mysqlrest "$2" "$3" "$4" "$5" ;;
-	mariarest) mariarest "$2" "$3" "$4" "$5" ;;
-	mysqlrestnodb) mysqlrestnodb "$2" "$3" "$4" ;;
-	iptablesset) iptablesset "$2" ;;
-	fail2banset) fail2banset ;;
-	db_gridlist) db_gridlist "$2" "$3" "$4" ;;
-	db_griduserlist) db_griduserlist "$2" "$3" "$4" ;;
-	db_besucherliste) db_besucherliste "$2" "$3" "$4" ;;
-	db_neueobjekte) db_neueobjekte "$2" "$3" "$4" ;;
-	db_rename_objects) db_rename_objects "$2" "$3" "$4" ;;
-	db_backuptabellentypen) db_backuptabellentypen "$2" "$3" "$4" ;;
-	db_ungenutzteobjekte) db_ungenutzteobjekte "$2" "$3" "$4" "$5" "$6" ;;
-	senddata) senddata "$2" "$3" "$4" ;;
-	gridcachedelete) gridcachedelete ;;
-	config | gridkonfiguration | configabfrage) configabfrage ;;
-	osmtoolconfigabfrage) osmtoolconfigabfrage ;;
-	osdowngrade) osdowngrade ;;
-	name | namen) namen "$2" ;;
-	vornamen) vornamen "$2" ;;
-	regionconfig) regionconfig "$2" "$3" "$4" "$5" "$6" ;;
-	regionconfig_menu) regionconfig_menu ;;
-	menumoneyconfig) menumoneyconfig ;;
-	createdatabase) createdatabase "$2" "$3" "$4" ;;
-	createdbuser) createdbuser "$2" "$3" "$4" "$5" ;;
-	clear_multitool_log) clear_multitool_log ;;
-	clear_multitool_log_week) clear_multitool_log_week ;;
-	clear_variable_multitool_log_week) clear_variable_multitool_log_week "$2" ;;
-	clear_multitool_log_days) clear_multitool_log_days "$2" ;;
-	instdialog) instdialog ;;
-	createmasteravatar) createmasteravatar ;;
-	createregionavatar) createregionavatar ;;
-	firstinstallation) firstinstallation ;;
-	osgitstatus) osgitstatus ;;
 	scstart) scstart "$2" ;;
 	scstop) scstop "$2" ;;
-	sckill) sckill "$2" ;;
-	dateimenu) dateimenu ;;
-	hauptmenu) hauptmenu ;;
-	hilfemenu) hilfemenu ;;
-	mySQLmenu) mySQLmenu ;;
-	avatarmenu) avatarmenu ;;
-	buildmenu) buildmenu ;;
-	expertenmenu) expertenmenu ;;
-	funktionenmenu) funktionenmenu ;;
-	dbhilfe) dbhilfe ;;
-	divacopy) divacopy ;;
-	cleanprebuild) cleanprebuild ;;
-	divagitcopy) divagitcopy ;;
-	skriptversion) skriptversion "$2" ;;
-	version | versionsausgabe93) versionsausgabe93 ;;
-	osbuildingupgrade93) osbuildingupgrade93 "$2" ;;
-	xhelp) xhelp "$2" ;;
-	checkupgrade93) checkupgrade93 ;;
-	getcachegroesse) getcachegroesse ;;
-	getcachesinglegroesse) getcachesinglegroesse "$2" ;;
-	db_tabellencopy) db_tabellencopy "$2" "$3" "$4" "$5" "$6" ;;
-	remarklist) remarklist ;;
-	ini_get) ini_get "$2" "$3" "$4" ;;
-	ini_set) ini_set "$2" "$3" "$4" "$5" ;;
-	pcampbot) pcampbot "$2" "$3" "$4" "$5" "$6" ;;
-	randomname) randomname ;;
-	icecaststart) icecaststart ;;
-	icecaststop) icecaststop ;;
-	icecastrestart) icecastrestart ;;
-	icecastversion) icecastversion ;;
-	icecastinstall) icecastinstall ;;
-	icecastconfig) icecastconfig ;;
-	osmtranslateinstall) osmtranslateinstall ;;
-	osmtranslate) osmtranslate "$2" ;;
-	janein) janein "$2" ;;
-	dalaiserverinstall) dalaiserverinstall ;;
-	dalaiinstall) dalaiinstall "$2" ;;
-	dalaiinstallinfos) dalaiinstallinfos ;;
-	dalaistart) dalaistart ;;
-	dalaistop) dalaistop ;;
-	dalaiupgrade) dalaiupgrade "$2" ;;
-	dalaimodelinstall) dalaimodelinstall "$2" ;;
-	dalaiuninstall) dalaiuninstall ;;
-	tastaturcachedelete) tastaturcachedelete ;;
-	isroot) isroot ;;
-	vardelall) vardelall ;;
-	vardel) vardel ;;
-	osmupgrade) osmupgrade ;;
-	benutzer) benutzer ;;
-	pull) pull ;;
-	laeuftos) laeuftos "$2" ;;
-	laeuftos_menu) laeuftos_menu "$2" ;;
-	createmanual) createmanual ;;
-	delete_emty_mark) delete_emty_mark "$2" "$3" ;;
-	osreparatur) osreparatur ;;
-	mainMenu) mainMenu ;;
-	check_and_repair) check_and_repair ;;
-	manual_repair) manual_repair ;;
-	repair_table) repair_table ;;
-	repair_table_entries) repair_table_entries ;;
-	repair_single_entry) repair_single_entry ;;
-	delete_corrupted_entries) delete_corrupted_entries ;;
-	backup_tables) backup_tables ;;
-	restore_tables) restore_tables ;;
-	update_entry) update_entry ;;
-	add_entr) add_entr ;;
-	delete_entry) delete_entry ;;
-	generate_report) generate_report ;;
-	begin_transaction) begin_transaction ;;
-	commit_transaction) commit_transaction ;;
-	rollback_transaction) rollback_transaction ;;
-	display_table_schema) display_table_schema ;;
-	display_databases) display_databases ;;
-	optimize_tables) optimize_tables ;;
-	display_server_info) display_server_info ;;
+	sd | screendel) autoscreenstop ;;
 	search_entries) search_entries ;;
 	search_entries_by_date) search_entries_by_date ;;
 	search_entries_by_unix_timestamp) search_entries_by_unix_timestamp ;;
-	display_table_contents) display_table_contents ;;
-	export_table_to_csv) export_table_to_csv ;;
-	import_csv_to_table) import_csv_to_table ;;
-	backup_all_databases) backup_all_databases ;;
-	restore_all_databases) restore_all_databases ;;
-	display_user_permissions) display_user_permissions ;;
-	add_user) add_user ;;
-	modify_user_permissions) modify_user_permissions ;;
-	delete_user) delete_user ;;
-	rename_table) rename_table ;;
-	show_running_processes) show_running_processes ;;
-	clear_query_cache) clear_query_cache ;;
-	show_index_info) show_index_info ;;
-	analyze_database) analyze_database ;;
-	optimize_query) optimize_query ;;
-	create_database) create_database ;;
-	create_table) create_table ;;
-	alter_table_structure) alter_table_structure ;;
-	show_user_activity) show_user_activity ;;
-	show_events) show_events ;;
-	check_database_connection) check_database_connection ;;
-	show_variables) show_variables ;;
-	show_database_engines) show_database_engines ;;
-	show_collations) show_collations ;;
-	show_database_statistics) show_database_statistics ;;
-	show_foreign_keys) show_foreign_keys ;;
-	add_column_encryption) add_column_encryption ;;
-	show_last_table_changes) show_last_table_changes ;;
-	show_database_events) show_database_events ;;
-	check_database_consistency) check_database_consistency ;;
-	backup_database) backup_database ;;
-	restore_database) restore_database ;;
-	show_database_users) show_database_users ;;
-	check_user_privileges) check_user_privileges ;;
-	change_user_password) change_user_password ;;
-	check_error_logs) check_error_logs ;;
-	update_and_restart) update_and_restart	;;
-	update_clean) update_clean	;;
-	zeige_netzwerkinformationen) zeige_netzwerkinformationen	;;
-	ping_test) ping_test	;;
-	netstat_info) netstat_info	;;
-	traceroute_info) traceroute_info	;;
-	pruefe_dienst_nc) pruefe_dienst_nc	;;
-	pruefe_dienst_curl)	pruefe_dienst_curl	;;
-	whois_info)	whois_info	;;
-	netz_ss_info) netz_ss_info	;;
-	ss_info) ss_info	;;
-	dns_dig_info) dns_dig_info	;;
-	nmap_scan) nmap_scan	;;
+	searchcopy) searchcopy ;;
+	senddata) senddata "$2" "$3" "$4" ;;
+	serverinstall) serverinstall ;;
+	serverinstall22) serverinstall22 ;;
 	serverupgrade) serverupgrade ;;
-	ubuntuprowerbung) ubuntuprowerbung ;;
-	bulletconfig) bulletconfig "$2" ;;
-	rologdel_menu) rologdel_menu ;;
-	password_prompt_menu) password_prompt_menu ;;
-	benutzer_menu) benutzer_menu ;;
-	check_admin_menu) check_admin_menu ;;
-	admin_only_function_menu) admin_only_function_menu ;;
-	check_non_admin_menu) check_non_admin_menu ;;
-	non_admin_only_function_menu) non_admin_only_function_menu ;;
-	check_user_menu) check_user_menu ;;
-	update_and_restart_menu) update_and_restart_menu ;;
-	update_clean_menu) update_clean_menu ;;
-	zeige_netzwerkinformationen_menu) zeige_netzwerkinformationen_menu ;;
-	ping_test_menu) ping_test_menu ;;
-	netstat_info_menu) netstat_info_menu ;;
-	hda | hilfedirektaufruf | hilfemenudirektaufrufe) hilfemenudirektaufrufe ;;
-	osmupgrade_menu) osmupgrade_menu ;;
+	set_empty_user) set_empty_user "$2" "$3" "$4" "$5" "$6" "$7" ;;
+	setpartner) setpartner "$2" "$3" "$4" "$5" "$6" ;;
+	setversion) setversion "$2" ;;
+	setversion93) setversion93 "$2" ;;
+	show_collations) show_collations ;;
+	show_database_engines) show_database_engines ;;
+	show_database_events) show_database_events ;;
+	show_database_statistics) show_database_statistics ;;
+	show_database_users) show_database_users ;;
+	show_events) show_events ;;
+	show_foreign_keys) show_foreign_keys ;;
+	show_index_info) show_index_info ;;
+	show_last_table_changes) show_last_table_changes ;;
 	show_progress_menu) show_progress_menu "$2" "$3" "$4" ;;
+	show_running_processes) show_running_processes ;;
+	show_user_activity) show_user_activity ;;
+	show_variables) show_variables ;;
+	simstats) simstats "$2" ;;
+	skriptversion) skriptversion "$2" ;;
+	ss | osscreenstop | ss93 | osscreenstop93) osscreenstop "$2" ;;
+	ss_info) ss_info	;;
+	sta | autosimstart | simstart) autosimstart ;;
+	sta93 | autosimstart93 | simstart93) autosimstart ;;
+	sto | autosimstop | simstop | sto93 | autosimstop93 | simstop93) autosimstop ;;
+	systeminformation) systeminformation ;;
+	tabellenabfrage) tabellenabfrage "$2" "$3" "$4" ;;
+	tastaturcachedelete) tastaturcachedelete ;;
+	textbox) textbox "$2" ;;
+	traceroute_info) traceroute_info	;;
+	ubuntuprowerbung) ubuntuprowerbung ;;
+	ufwblock) ufwblock ;;
+	ufwlog) ufwlog ;;
+	ufwoff) ufwoff ;;
+	ufwport) ufwport "$2" ;;
+	ufwset) ufwset ;;
+	uninstall_mono) uninstall_mono ;;
+	unlockexample) unlockexample ;;
+	update | linuxupgrade) linuxupgrade ;;
+	update_and_restart) update_and_restart	;;
+	update_and_restart_menu) update_and_restart_menu ;;
+	update_clean) update_clean	;;
+	update_clean_menu) update_clean_menu ;;
+	update_entry) update_entry ;;
+	vardel) vardel ;;
+	vardelall) vardelall ;;
+	version | versionsausgabe93) versionsausgabe93 ;;
+	vornamen) vornamen "$2" ;;
+	w | works) works "$2" ;;
+	warnbox) warnbox "$2" ;;
+	waslauft) waslauft ;;
+	whois_info)	whois_info	;;
 	write_visitor_log) write_visitor_log ;;
-	delete_robust_logs) delete_robust_logs ;;
+	xhelp) xhelp "$2" ;;
+	zeige_netzwerkinformationen) zeige_netzwerkinformationen	;;
+	zeige_netzwerkinformationen_menu) zeige_netzwerkinformationen_menu ;;
+    all) all ;;
     delete_money_logs) delete_money_logs ;;
-	check_and_execute) check_and_execute "$2" ;;
-	depends_installer) depends_installer ;;
-	debpaketbuild) debpaketbuild "$2" ;;
-	oscopycompress) oscopycompress "$2" ;;
-	log_error) log_error "$2" ;;
-	VivoxVoiceSetup) VivoxVoiceSetup "$2" "$3" ;;
+    mc | money | MoneyServerCommands) MoneyServerCommands ;;
+    oc | opensim | OpenSimCommands) OpenSimCommands ;;
+    rc | robust | RobustCommands) RobustCommands ;;
 	h) newhelp ;;
 	V | v) echo "$SCRIPTNAME $VERSION" ;;
 	*) hauptmenu ;;
