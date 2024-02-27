@@ -41,7 +41,7 @@
 #──────────────────────────────────────────────────────────────────────────────────────────
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.1527" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.1528" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 #──────────────────────────────────────────────────────────────────────────────────────────
@@ -9543,8 +9543,7 @@ function autostart() {
 	return 0
 }
 ## * AutostartConf
-	# Der ausgewählte Code definiert eine Funktion namens "AutostartConf". Diese Funktion wird verwendet, 
-	# um den automatischen Start des Grids mit einer Konfigurationsauswahl zu ermöglichen.
+	# Diese Funktion wird verwendet, um den automatischen Start des Grids mit einer Konfigurationsauswahl zu ermöglichen.
 	# Die Funktion hat einen Parameter namens "SIMDATEI", der den Dateinamen für die Konfigurationsdatei der SIMs enthält. 
 	# Wenn kein Wert für "SIMDATEI" angegeben wird, wird standardmäßig "osmsimlist.ini" verwendet.
 	# Die Funktion prüft, ob der Wert von "ROBUSTVERZEICHNIS" gleich "robust" ist. 
@@ -9639,7 +9638,6 @@ function autostop() {
 	return 0
 }
 ## * AutostopConf
-	# Der Codeabschnitt, den Sie gepostet haben, definiert eine Funktion namens "AutostopConf". 
 	# Diese Funktion wird verwendet, um die OpenSimulator-Komponenten, einschließlich der SIMs und des Robust Servers, zu stoppen. 
 	# Die Funktion akzeptiert einen optionalen Parameter "SIMDATEI", der den Dateinamen für die SIM-Konfigurationsdatei enthält. 
 	# Wenn kein Wert für "SIMDATEI" angegeben ist, wird der Standardwert "osmsimlist.ini" verwendet.
@@ -9784,7 +9782,6 @@ function autorestart() {
 	return 0
 }
 ## *  AutorestartConf
-	# Die gezeigte Codeauswahl ist Teil einer Shell-Skriptdatei mit dem Namen "osmtool.sh". In diesem Skript befindet sich eine Funktion namens "AutorestartConf()".
 	# Diese Funktion akzeptiert zwei Parameter: "SIMDATEI" und "NEUESIMDATEI". 
 	# Wenn diese Parameter nicht angegeben werden, werden standardmäßig die Werte "osmsimlist.ini" verwendet.
 	# Der Zweck dieser Funktion besteht darin, einen automatischen Neustart mit einer Konfigurationsdatei durchzuführen. 
