@@ -20,7 +20,7 @@
 	# ! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 	# ! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#
-	# * Letzte bearbeitung 26.02.2024.
+	# * Letzte bearbeitung 27.02.2024.
 	#
 	# # Installieren sie bitte: #* Visual Studio Code
 	#* dazu die Plugins:
@@ -41,7 +41,7 @@
 #──────────────────────────────────────────────────────────────────────────────────────────
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.1526" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.1527" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 #──────────────────────────────────────────────────────────────────────────────────────────
@@ -3191,8 +3191,9 @@ function uncompress() {
 function makeverzeichnisliste() {
 	# Letzte Bearbeitung 26.02.2024
 
-	SIMDATEI=$1
-	if [ "$SIMDATEI"="" ]; then SIMDATEI="osmsimlist.ini"; fi
+	MVSIMDATEI=$1
+	if [ -z "$MVSIMDATEI" ]; then MVSIMDATEI="$SIMDATEI"; fi
+	log info "Debug: makeverzeichnisliste $MVSIMDATEI"
 
     # Initialisieren der Verzeichnisliste
 	VERZEICHNISSLISTE=()
@@ -3200,7 +3201,7 @@ function makeverzeichnisliste() {
 	 # Schleife zum Lesen der Zeilen aus der SIMDATEI und Hinzufügen zum Array
 	while IFS= read -r line; do
 		VERZEICHNISSLISTE+=("$line")
-	done </$STARTVERZEICHNIS/$SIMDATEI
+	done </$STARTVERZEICHNIS/$MVSIMDATEI
 
 	# Anzahl der Einträge in der Verzeichnisliste
 	ANZAHLVERZEICHNISSLISTE=${#VERZEICHNISSLISTE[*]}
@@ -6916,10 +6917,9 @@ function assetcachedel() {
 ##
 function autoassetcachedel() {
 	# Letzte Bearbeitung 26.02.2024
-	SIMDATEI=$1
-	if [ "$SIMDATEI"="" ]; then SIMDATEI="osmsimlist.ini"; fi
-
-	makeverzeichnisliste "$SIMDATEI"
+	MVSIMDATEI=$1
+	if [ -z "$MVSIMDATEI" ]; then MVSIMDATEI="$SIMDATEI"; fi
+	makeverzeichnisliste "$MVSIMDATEI"
 
 	sleep 1
 
@@ -7943,9 +7943,9 @@ function oscopysim() {
 	# Letzte Bearbeitung 26.02.2024
 	cd /$STARTVERZEICHNIS || return 1 # Prüfen ob Verzeichnis vorhanden ist.
 
-	SIMDATEI=$1
-	if [ "$SIMDATEI"="" ]; then SIMDATEI="osmsimlist.ini"; fi
-	makeverzeichnisliste "$SIMDATEI"
+	MVSIMDATEI=$1
+	if [ -z "$MVSIMDATEI" ]; then MVSIMDATEI="$SIMDATEI"; fi
+	makeverzeichnisliste "$MVSIMDATEI"
 
 	#log info "Kopiere Simulatoren!"
 	#log line
@@ -8105,9 +8105,9 @@ function regionsconfigdateiliste() {
 ##
 function meineregionen() {
 	# Letzte Bearbeitung 26.02.2024
-	SIMDATEI=$1
-	if [ "$SIMDATEI"="" ]; then SIMDATEI="osmsimlist.ini"; fi
-	makeverzeichnisliste "$SIMDATEI"
+	MVSIMDATEI=$1
+	if [ -z "$MVSIMDATEI" ]; then MVSIMDATEI="$SIMDATEI"; fi
+	makeverzeichnisliste "$MVSIMDATEI"
 
 	log info "MEINEREGIONEN: Regionsliste"
 	sleep 1
@@ -8134,9 +8134,9 @@ function meineregionen() {
 ##
 function regionsinisuchen() {
 	# Letzte Bearbeitung 26.02.2024
-	SIMDATEI=$1
-	if [ "$SIMDATEI"="" ]; then SIMDATEI="osmsimlist.ini"; fi
-	makeverzeichnisliste "$SIMDATEI"
+	MVSIMDATEI=$1
+	if [ -z "$MVSIMDATEI" ]; then MVSIMDATEI="$SIMDATEI"; fi
+	makeverzeichnisliste "$MVSIMDATEI"
 	sleep 1
 
 	for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
@@ -8275,9 +8275,9 @@ function regionsiniteilen() {
 ##
 function autoregionsiniteilen() {
 	# Letzte Bearbeitung 26.02.2024
-	SIMDATEI=$1
-	if [ "$SIMDATEI"="" ]; then SIMDATEI="osmsimlist.ini"; fi
-	makeverzeichnisliste "$SIMDATEI"
+	MVSIMDATEI=$1
+	if [ -z "$MVSIMDATEI" ]; then MVSIMDATEI="$SIMDATEI"; fi
+	makeverzeichnisliste "$MVSIMDATEI"
 	sleep 1
 	for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
 		log info "Region.ini ${VERZEICHNISSLISTE[$i]} zerlegen"
@@ -8326,9 +8326,9 @@ function createregionlist() {
 	# Die mit regionsconfigdateiliste erstellte Datei osmregionlist.ini nach sim Verzeichnis und Regionsnamen in die osmregionlist.ini speichern.
 	declare -A Dateien # Array erstellen
 
-	SIMDATEI=$1
-	if [ "$SIMDATEI"="" ]; then SIMDATEI="osmsimlist.ini"; fi
-	makeverzeichnisliste "$SIMDATEI"
+	MVSIMDATEI=$1
+	if [ -z "$MVSIMDATEI" ]; then MVSIMDATEI="$SIMDATEI"; fi
+	makeverzeichnisliste "$MVSIMDATEI"
 
 	sleep 1
 	for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
@@ -8390,9 +8390,9 @@ function makewebmaps() {
 ##
 function moneydelete() {
 	# Letzte Bearbeitung 26.02.2024
-	SIMDATEI=$1
-	if [ "$SIMDATEI"="" ]; then SIMDATEI="osmsimlist.ini"; fi
-	makeverzeichnisliste "$SIMDATEI"
+	MVSIMDATEI=$1
+	if [ -z "$MVSIMDATEI" ]; then MVSIMDATEI="$SIMDATEI"; fi
+	makeverzeichnisliste "$MVSIMDATEI"
 
 	sleep 1
 	# MoneyServer aus den sims entfernen
@@ -8795,11 +8795,56 @@ function autosimstart() {
 	if ! screen -list | grep -q 'sim'; then
 		# es laeuft kein Simulator - not work
 
-		SIMDATEI=$1
-		if [ "$SIMDATEI"="" ]; then SIMDATEI="osmsimlist.ini"; fi
-		makeverzeichnisliste "$SIMDATEI"
+		MVSIMDATEI=$1
+		if [ -z "$MVSIMDATEI" ]; then MVSIMDATEI="$SIMDATEI"; fi
+		makeverzeichnisliste "$MVSIMDATEI"
 
 		sleep 1
+		for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
+			log info "Regionen ${VERZEICHNISSLISTE[$i]} werden gestartet"
+			cd /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin || return 1
+
+			if [ "$REGIONSANZEIGE" = "yes" ]; then
+				# Zeigt die Regionsnamen aus einer Regions.ini an
+				STARTREGIONSAUSGABE=$(awk -F "[" '/\[/ {print $1 $2 $3}' /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin/Regions/*.ini | sed s/'\]'//g);
+				log info "${VERZEICHNISSLISTE[$i]} hat folgende Regionen:";
+				for regionen in "${STARTREGIONSAUSGABE[@]}"; do log rohtext "$regionen"; done
+			fi
+
+			# AOT Aktiveren oder Deaktivieren.
+			if [[ $SETAOTON = "yes" ]]; then
+				screen -fa -S "${VERZEICHNISSLISTE[$i]}" -d -U -m mono --desktop -O=all OpenSim.exe
+			else
+
+				#screen -fa -S "${VERZEICHNISSLISTE[$i]}" -d -U -m mono OpenSim.exe
+				# DOTNETMODUS="yes"
+				if [[ "${DOTNETMODUS}" == "yes" ]]; then
+					screen -fa -S "${VERZEICHNISSLISTE[$i]}" -d -U -m dotnet OpenSim.dll
+				fi
+				# DOTNETMODUS="no"
+				if [[ "${DOTNETMODUS}" == "no" ]]; then
+					screen -fa -S "${VERZEICHNISSLISTE[$i]}" -d -U -m mono OpenSim.exe
+				fi
+
+			fi
+			sleep $STARTWARTEZEIT
+		done
+	else
+		# es laeuft mindestens ein Simulator - work
+		log text "WORKS:  Regionen laufen bereits!"
+	fi
+	return 0
+}
+function AutoSimstartConf() {
+	# Letzte Bearbeitung 26.02.2024
+	NEWSIMDATEI=$1
+	if [ "$NEWSIMDATEI"="" ]; then SNEWSIMDATEI="osmsimlist.ini"; fi
+	makeverzeichnisliste "$NEWSIMDATEI"
+	sleep 1
+
+	if ! screen -list | grep -q 'sim'; then
+		# es laeuft kein Simulator - not work
+		
 		for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
 			log info "Regionen ${VERZEICHNISSLISTE[$i]} werden gestartet"
 			cd /$STARTVERZEICHNIS/"${VERZEICHNISSLISTE[$i]}"/bin || return 1
@@ -8846,9 +8891,9 @@ function autosimstart() {
 ##
 function autosimstop() {
 	# Letzte Bearbeitung 26.02.2024
-	SIMDATEI=$1
-	if [ "$SIMDATEI"="" ]; then SIMDATEI="osmsimlist.ini"; fi
-	makeverzeichnisliste "$SIMDATEI"
+	MVSIMDATEI=$1
+	if [ -z "$MVSIMDATEI" ]; then MVSIMDATEI="$SIMDATEI"; fi
+	makeverzeichnisliste "$MVSIMDATEI"
 
 	sleep 1
 	for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
@@ -8877,9 +8922,9 @@ function menuautosimstart() {
 	# Letzte Bearbeitung 26.02.2024
 	if ! screen -list | grep -q 'sim'; then
 		# es laeuft kein Simulator - not work
-		SIMDATEI=$1
-		if [ "$SIMDATEI"="" ]; then SIMDATEI="osmsimlist.ini"; fi
-		makeverzeichnisliste "$SIMDATEI"
+		MVSIMDATEI=$1
+		if [ -z "$MVSIMDATEI" ]; then MVSIMDATEI="$SIMDATEI"; fi
+		makeverzeichnisliste "$MVSIMDATEI"
 		sleep 1
 		for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
 			log info "Regionen ${VERZEICHNISSLISTE[$i]} werden gestartet"
@@ -8931,9 +8976,9 @@ function menuautosimstart() {
 ##
 function menuautosimstop() {
 	# Letzte Bearbeitung 26.02.2024
-	SIMDATEI=$1
-	if [ "$SIMDATEI"="" ]; then SIMDATEI="osmsimlist.ini"; fi
-	makeverzeichnisliste "$SIMDATEI"
+	MVSIMDATEI=$1
+	if [ -z "$MVSIMDATEI" ]; then MVSIMDATEI="$SIMDATEI"; fi
+	makeverzeichnisliste "$MVSIMDATEI"
 
 	sleep 1
 	for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
@@ -8965,9 +9010,9 @@ function menuautosimstop() {
 function autologdel() {
 	# Letzte Bearbeitung 26.02.2024
 	log line
-	SIMDATEI=$1
-	if [ "$SIMDATEI"="" ]; then SIMDATEI="osmsimlist.ini"; fi
-	makeverzeichnisliste "$SIMDATEI"
+	MVSIMDATEI=$1
+	if [ -z "$MVSIMDATEI" ]; then MVSIMDATEI="$SIMDATEI"; fi
+	makeverzeichnisliste "$MVSIMDATEI"
 
 	sleep 1
 	for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
@@ -9000,9 +9045,9 @@ function autologdel() {
 function menuautologdel() {
 	# Letzte Bearbeitung 26.02.2024
 	log line
-	SIMDATEI=$1
-	if [ "$SIMDATEI"="" ]; then SIMDATEI="osmsimlist.ini"; fi
-	makeverzeichnisliste "$SIMDATEI"
+	MVSIMDATEI=$1
+	if [ -z "$MVSIMDATEI" ]; then MVSIMDATEI="$SIMDATEI"; fi
+	makeverzeichnisliste "$MVSIMDATEI"
 
 	sleep 1
 	for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
@@ -9030,9 +9075,9 @@ function automapdel() {
 	# Letzte Bearbeitung 26.02.2024
 	autorobustmapdel
 
-	SIMDATEI=$1
-	if [ "$SIMDATEI"="" ]; then SIMDATEI="osmsimlist.ini"; fi
-	makeverzeichnisliste "$SIMDATEI"
+	MVSIMDATEI=$1
+	if [ -z "$MVSIMDATEI" ]; then MVSIMDATEI="$SIMDATEI"; fi
+	makeverzeichnisliste "$MVSIMDATEI"
 
 	sleep 1
 	for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
@@ -9182,9 +9227,9 @@ function getcachesinglegroesse() {
 function getcachegroesse() {
 	# Letzte Bearbeitung 26.02.2024
 	log info "Zeige Cache Dateien und die größe aus dem gesamten Grid an!"
-	SIMDATEI=$1
-	if [ "$SIMDATEI"="" ]; then SIMDATEI="osmsimlist.ini"; fi
-	makeverzeichnisliste "$SIMDATEI"
+	MVSIMDATEI=$1
+	if [ -z "$MVSIMDATEI" ]; then MVSIMDATEI="$SIMDATEI"; fi
+	makeverzeichnisliste "$MVSIMDATEI"
 
 	# Simualtoren
 	for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
@@ -9232,9 +9277,9 @@ function gridcachedelete() {
 	# Letzte Bearbeitung 26.02.2024
 	log line
 	log warn "Lösche Cache Dateien aus dem gesamten Grid!"
-	SIMDATEI=$1
-	if [ "$SIMDATEI"="" ]; then SIMDATEI="osmsimlist.ini"; fi
-	makeverzeichnisliste "$SIMDATEI"
+	MVSIMDATEI=$1
+	if [ -z "$MVSIMDATEI" ]; then MVSIMDATEI="$SIMDATEI"; fi
+	makeverzeichnisliste "$MVSIMDATEI"
 	sleep 1
 	# Simualtoren
 	for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do	
@@ -9262,9 +9307,9 @@ function gridcachedelete() {
 ##
 function autoallclean() {
 	# Letzte Bearbeitung 26.02.2024
-	SIMDATEI=$1
-	if [ "$SIMDATEI"="" ]; then SIMDATEI="osmsimlist.ini"; fi
-	makeverzeichnisliste "$SIMDATEI"
+	MVSIMDATEI=$1
+	if [ -z "$MVSIMDATEI" ]; then MVSIMDATEI="$SIMDATEI"; fi
+	makeverzeichnisliste "$MVSIMDATEI"
 	sleep 1
 	for ((i = 0; i < "$ANZAHLVERZEICHNISSLISTE"; i++)); do
 		# Dateien
@@ -9497,6 +9542,18 @@ function autostart() {
 	log info "Auto Start abgeschlossen"
 	return 0
 }
+## * AutostartConf
+	# Der ausgewählte Code definiert eine Funktion namens "AutostartConf". Diese Funktion wird verwendet, 
+	# um den automatischen Start des Grids mit einer Konfigurationsauswahl zu ermöglichen.
+	# Die Funktion hat einen Parameter namens "SIMDATEI", der den Dateinamen für die Konfigurationsdatei der SIMs enthält. 
+	# Wenn kein Wert für "SIMDATEI" angegeben wird, wird standardmäßig "osmsimlist.ini" verwendet.
+	# Die Funktion prüft, ob der Wert von "ROBUSTVERZEICHNIS" gleich "robust" ist. 
+	# Wenn dies der Fall ist, wird die Funktion "gridstart" aufgerufen, um den Robust Server zu starten.
+	# Anschließend wird die Funktion "autosimstart" mit dem Parameter "SIMDATEI" aufgerufen, um die SIMs gemäß der angegebenen Konfigurationsdatei zu starten.
+	# Danach werden einige Log-Nachrichten ausgegeben, um den Fortschritt anzuzeigen.
+	# Schließlich wird eine Log-Nachricht ausgegeben, um anzuzeigen, dass der automatische Start mit Konfigurationsauswahl abgeschlossen ist.
+	# Die Funktion gibt den Wert 0 zurück, um anzuzeigen, dass sie erfolgreich abgeschlossen wurde.
+##
 function AutostartConf() {
 	# Letzte Bearbeitung 26.02.2024
 	SIMDATEI=$1
@@ -9581,6 +9638,23 @@ function autostop() {
 	autoscreenstop
 	return 0
 }
+## * AutostopConf
+	# Der Codeabschnitt, den Sie gepostet haben, definiert eine Funktion namens "AutostopConf". 
+	# Diese Funktion wird verwendet, um die OpenSimulator-Komponenten, einschließlich der SIMs und des Robust Servers, zu stoppen. 
+	# Die Funktion akzeptiert einen optionalen Parameter "SIMDATEI", der den Dateinamen für die SIM-Konfigurationsdatei enthält. 
+	# Wenn kein Wert für "SIMDATEI" angegeben ist, wird der Standardwert "osmsimlist.ini" verwendet.
+	# Die Funktion überprüft zunächst, ob die SIMs offline sind. Wenn dies der Fall ist, wird eine entsprechende Meldung ausgegeben. 
+	# Andernfalls wird die Funktion "autosimstop" aufgerufen, um die SIMs zu stoppen.
+	# Anschließend wird überprüft, ob der Robust Server läuft. 
+	# Wenn er nicht läuft und das Verzeichnis für den Robust Server nicht konfiguriert ist, 
+	# wird die Funktion beendet. Andernfalls wird die Funktion "gridstop" aufgerufen, um den Robust Server zu stoppen.
+	# Danach wird überprüft, ob die SIMs immer noch laufen. Wenn sie nicht laufen, wird eine leere Zeile ausgegeben. 
+	# Andernfalls wird die Funktion für eine bestimmte Zeit (definiert durch die Variable "AUTOSTOPZEIT") angehalten.
+	# Schließlich werden Informationen darüber ausgegeben, dass alle noch offenen OpenSimulator-Komponenten, 
+	# die nicht innerhalb der angegebenen Zeit heruntergefahren werden konnten, zwangsweise beendet werden. 
+	# Die Funktion "autoscreenstop" wird aufgerufen, um die Bildschirme zu stoppen.
+	# Die Funktion gibt immer den Wert 0 zurück, um anzuzeigen, dass sie erfolgreich abgeschlossen wurde.
+##
 function AutostopConf() {
 	# Letzte Bearbeitung 26.02.2024
 	SIMDATEI=$1
@@ -9709,13 +9783,28 @@ function autorestart() {
 	log info "Auto Restart abgeschlossen."
 	return 0
 }
+## *  AutorestartConf
+	# Die gezeigte Codeauswahl ist Teil einer Shell-Skriptdatei mit dem Namen "osmtool.sh". In diesem Skript befindet sich eine Funktion namens "AutorestartConf()".
+	# Diese Funktion akzeptiert zwei Parameter: "SIMDATEI" und "NEUESIMDATEI". 
+	# Wenn diese Parameter nicht angegeben werden, werden standardmäßig die Werte "osmsimlist.ini" verwendet.
+	# Der Zweck dieser Funktion besteht darin, einen automatischen Neustart mit einer Konfigurationsdatei durchzuführen. 
+	# Zuerst wird eine Log-Nachricht ausgegeben, die den Start des automatischen Neustarts signalisiert.
+	# Dann wird die Funktion "AutostopConf()" aufgerufen, um alle laufenden Prozesse zu stoppen, die in der Konfigurationsdatei "SIMDATEI" definiert sind. 
+	# Wenn die Variable "LOGDELETE" den Wert "yes" hat, wird die Funktion "autologdel()" aufgerufen, um Log-Dateien zu löschen.
+	# Anschließend wird die Funktion "gridstart()" aufgerufen, um einen bestimmten Vorgang zu starten. 
+	# Danach wird die Funktion "AutoSimstartConf()" aufgerufen, um den automatischen Start von Simulationen mit der Konfigurationsdatei "NEUESIMDATEI" durchzuführen.
+	# Zum Schluss wird die Funktion "screenlistrestart()" aufgerufen, um eine Liste von Bildschirmen neu zu starten.
+	# Die Funktion gibt eine Log-Nachricht aus, die den Abschluss des automatischen Neustarts signalisiert, und gibt den Wert 0 zurück.
+	# Dieser Codeausschnitt zeigt also eine Funktion, die den automatischen Neustart einer Anwendung mit einer bestimmten Konfigurationsdatei durchführt 
+	# und dabei verschiedene andere Funktionen aufruft, um die erforderlichen Schritte auszuführen.
+##
 function AutorestartConf() {
 	# Letzte Bearbeitung 26.02.2024
 	SIMDATEI=$1
 	NEUESIMDATEI=$2
 	if [ "$SIMDATEI" = "" ]; then SIMDATEI="osmsimlist.ini"; fi
 	if [ "$NEUESIMDATEI" = "" ]; then NEUESIMDATEI="osmsimlist.ini"; fi
-	log rohtext " Automatischer Restart wird ausgeführt!"
+	log rohtext " Automatischer Neustart mit der Konfigurationsdatei $NEUESIMDATEI wird ausgeführt!"
 	log line
 	
 	# Alles stoppen.
@@ -9723,7 +9812,7 @@ function AutorestartConf() {
 	if [ "$LOGDELETE" = "yes" ]; then autologdel; fi
 
 	gridstart
-	autosimstart "$NEUESIMDATEI"
+	AutoSimstartConf "$NEUESIMDATEI"
 	screenlistrestart
 	
 	log info "Auto Restart abgeschlossen."
@@ -23208,6 +23297,7 @@ function ostimestamp() {
 case $KOMMANDO in
 	AutoInstall) AutoInstall ;;
 	AutorestartConf) AutorestartConf "$2" "$3" ;;
+	AutoSimstartConf) AutoSimstartConf "$2" ;;
 	AutostartConf) AutostartConf "$2" ;;
 	AutostopConf) AutostopConf "$2" ;;
 	ConfigSet) ConfigSet "$2" ;;
@@ -23400,7 +23490,7 @@ case $KOMMANDO in
 	display_user_permissions) display_user_permissions ;;
 	divacopy) divacopy ;;
 	divagitcopy) divagitcopy ;;
-	dns_dig_info) dns_dig_info	;;
+	dns_dig_info) dns_dig_info ;;
 	dotnetinfo) dotnetinfo ;;
 	dotnetubu18) dotnetubu18 ;;
 	dotnetubu22) dotnetubu22 ;;
@@ -23504,12 +23594,12 @@ case $KOMMANDO in
 	mysqlrest) mysqlrest "$2" "$3" "$4" "$5" ;;
 	mysqlrestnodb) mysqlrestnodb "$2" "$3" "$4" ;;
 	name | namen) namen "$2" ;;
-	netstat_info) netstat_info	;;
+	netstat_info) netstat_info ;;
 	netstat_info_menu) netstat_info_menu ;;
-	netz_ss_info) netz_ss_info	;;
+	netz_ss_info) netz_ss_info ;;
 	neuegridconfig) neuegridconfig ;;
 	newregionini) newregionini ;;
-	nmap_scan) nmap_scan	;;
+	nmap_scan) nmap_scan ;;
 	non_admin_only_function_menu) non_admin_only_function_menu ;;
 	od | osdelete) osdelete ;;
 	opensimholen) opensimholen ;;
@@ -23555,10 +23645,10 @@ case $KOMMANDO in
 	passwdgenerator) passwdgenerator "$2" ;;
 	password_prompt_menu) password_prompt_menu ;;
 	pcampbot) pcampbot "$2" "$3" "$4" "$5" "$6" ;;
-	ping_test) ping_test	;;
+	ping_test) ping_test ;;
 	ping_test_menu) ping_test_menu ;;
-	pruefe_dienst_curl)	pruefe_dienst_curl	;;
-	pruefe_dienst_nc) pruefe_dienst_nc	;;
+	pruefe_dienst_curl)	pruefe_dienst_curl ;;
+	pruefe_dienst_nc) pruefe_dienst_nc ;;
 	pull) pull ;;
 	pythoncopy) pythoncopy ;;
 	r | restart | autorestart | r93 | restart93 | autorestart93) autorestart ;;
@@ -23632,15 +23722,15 @@ case $KOMMANDO in
 	simstats) simstats "$2" ;;
 	skriptversion) skriptversion "$2" ;;
 	ss | osscreenstop | ss93 | osscreenstop93) osscreenstop "$2" ;;
-	ss_info) ss_info	;;
-	sta | autosimstart | simstart) autosimstart ;;
-	sta93 | autosimstart93 | simstart93) autosimstart ;;
+	ss_info) ss_info ;;
+	sta | autosimstart | simstart) autosimstart "$2" ;;
+	sta93 | autosimstart93 | simstart93) autosimstart "$2" ;;
 	sto | autosimstop | simstop | sto93 | autosimstop93 | simstop93) autosimstop ;;
 	systeminformation) systeminformation ;;
 	tabellenabfrage) tabellenabfrage "$2" "$3" "$4" ;;
 	tastaturcachedelete) tastaturcachedelete ;;
 	textbox) textbox "$2" ;;
-	traceroute_info) traceroute_info	;;
+	traceroute_info) traceroute_info ;;
 	ubuntuprowerbung) ubuntuprowerbung ;;
 	ufwblock) ufwblock ;;
 	ufwlog) ufwlog ;;
@@ -23650,9 +23740,9 @@ case $KOMMANDO in
 	uninstall_mono) uninstall_mono ;;
 	unlockexample) unlockexample ;;
 	update | linuxupgrade) linuxupgrade ;;
-	update_and_restart) update_and_restart	;;
+	update_and_restart) update_and_restart ;;
 	update_and_restart_menu) update_and_restart_menu ;;
-	update_clean) update_clean	;;
+	update_clean) update_clean ;;
 	update_clean_menu) update_clean_menu ;;
 	update_entry) update_entry ;;
 	vardel) vardel ;;
@@ -23662,10 +23752,10 @@ case $KOMMANDO in
 	w | works) works "$2" ;;
 	warnbox) warnbox "$2" ;;
 	waslauft) waslauft ;;
-	whois_info)	whois_info	;;
+	whois_info)	whois_info ;;
 	write_visitor_log) write_visitor_log ;;
 	xhelp) xhelp "$2" ;;
-	zeige_netzwerkinformationen) zeige_netzwerkinformationen	;;
+	zeige_netzwerkinformationen) zeige_netzwerkinformationen ;;
 	zeige_netzwerkinformationen_menu) zeige_netzwerkinformationen_menu ;;
     all) all ;;
     delete_money_logs) delete_money_logs ;;
