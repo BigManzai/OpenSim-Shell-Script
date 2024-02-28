@@ -26,6 +26,10 @@ und dieser kann dann mit den Virtual Reality Headset Controlern gesteuert werden
 
 scrollen sie mit der Maus die nah Ansicht heran, bis sie sich nicht mehr selber sehen können.
 
+
+![GitHub Logo](https://github.com/BigManzai/OpenSim-Shell-Script/blob/main/Pictures/OpenSimKI4.png)
+
+
 ## Aus opensim.sh wird nun osmtool.sh 
 
 mit einer Automatisch erstellende Konfigurationsdatei nach ein paar abfragen.
