@@ -20,7 +20,7 @@
 	# ! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 	# ! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#
-	# * Letzte bearbeitung 27.02.2024.
+	# * Letzte bearbeitung 24.03.2024.
 	#
 	# # Installieren sie bitte: #* Visual Studio Code
 	#* dazu die Plugins:
@@ -41,7 +41,7 @@
 #──────────────────────────────────────────────────────────────────────────────────────────
 
 SCRIPTNAME="opensimMULTITOOL" # opensimMULTITOOL Versionsausgabe.
-VERSION="V0.9.3.0.1528" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
+VERSION="V0.9.3.0.1533" # opensimMULTITOOL Versionsausgabe angepasst an OpenSim.
 tput reset # Bildschirmausgabe loeschen inklusive dem Scrollbereich.
 
 #──────────────────────────────────────────────────────────────────────────────────────────
@@ -336,6 +336,7 @@ function debpaketbuild() {
     PAKETVERZEICHNIS="/opt" 								# Paket Verzeichnis
     PAKETNAME="opensim_0_9_3_0_Dev-$NUMMER-Extended.amd64" 	# OpenSimulator Version
 	HOME="/home/opensim" 									# apt install Installationsverzeichnis
+	PAKETNAME="opensim-0.9.3.0.$NUMMER"
     log info "SOURCEVERZEICHNIS=$SOURCEVERZEICHNIS" 
     log info "PAKETVERZEICHNIS=$PAKETVERZEICHNIS"
     log info "PAKETNAME=$PAKETNAME"
@@ -422,6 +423,7 @@ EOF
 
     log info "Altes debpkgs Verzeichnis löschen."
     rm -r /$PAKETVERZEICHNIS/debpkgs
+	rm -r /$PAKETVERZEICHNIS/$PAKETNAME
     
     log info "Das fertige Paket befindet sich jetzt in /opt/$PAKETNAME.deb"
     log info "Die installation wir so gestartet: apt install /opt/opensim_0_9_3_0_Dev-$NUMMER-Extended.amd64.deb"
@@ -1795,6 +1797,8 @@ SCRIPTPATH=$(cd "$(dirname "$0")" && pwd)
 
 # Die IP des Servers herausfinden
 #SYSTEMIP='"'$(curl -s ifconfig.me)'"'
+SEARCHADRES="icanhazip.com"
+export SYSTEMIP='"'$(wget -O - -q $SEARCHADRES)'"'; declare -x SYSTEMIP
 #────────────────────────────────────────────────────────────
 
 ## *  osmtranslateinstall
@@ -2140,7 +2144,7 @@ function osmtoolconfig() {
 		echo '    DIVACOPY="no"'
 		echo '    PYTHONCOPY="no"'
 		echo '    CHRISOSCOPY="no"'
-		echo '    AUTOCONFIG="no"'
+		echo '    AUTOCONFIG="no"'		
 		echo "     "
 		echo "#* Die unterschiedlichen wartezeiten bis die Aktion ausgefuehrt wurde."
 		echo "    WARTEZEIT=60 # Ist eine allgemeine Wartezeit."
@@ -2160,6 +2164,7 @@ function osmtoolconfig() {
 		echo "     "
 		echo "#* Divers"
 		echo '    SETAOTON="no"'
+		echo '    REMOTEMODUS="no"'
 		echo "    # opensim-0.9.3.0Dev-4-g5e9b3b4.zip"
 		echo '    OSVERSION="opensim-0.9.3.0Dev-"'
 		echo '    # OSVERSION="opensim-0.9.3.0Dev-"'
@@ -3193,7 +3198,6 @@ function makeverzeichnisliste() {
 
 	MVSIMDATEI=$1
 	if [ -z "$MVSIMDATEI" ]; then MVSIMDATEI="$SIMDATEI"; fi
-	log info "Debug: makeverzeichnisliste $MVSIMDATEI"
 
     # Initialisieren der Verzeichnisliste
 	VERZEICHNISSLISTE=()
@@ -5675,6 +5679,8 @@ function menuloadinventar() {
 function osstart() {
 	# Letzte Bearbeitung 30.09.2023
 	OSSTARTSCREEN=$1 # OpenSimulator, Verzeichnis und Screen Name
+	
+	if [[ "${REMOTEMODUS}" == "yes" ]]; then OSSTARTREMOTE="-console=rest"; else OSSTARTREMOTE=""; fi
 
 	log info "OpenSimulator $OSSTARTSCREEN Starten"
 
@@ -5688,12 +5694,12 @@ function osstart() {
 
 			# DOTNETMODUS="yes"
 			if [[ "${DOTNETMODUS}" == "yes" ]]; then
-				screen -fa -S "$OSSTARTSCREEN" -d -U -m dotnet OpenSim.dll
+				screen -fa -S "$OSSTARTSCREEN" -d -U -m dotnet OpenSim.dll $OSSTARTREMOTE
 			fi
 
 			# DOTNETMODUS="no"
 			if [[ "${DOTNETMODUS}" == "no" ]]; then
-				screen -fa -S "$SCSTARTSCREEN" -d -U -m mono OpenSim.exe				
+				screen -fa -S "$SCSTARTSCREEN" -d -U -m mono OpenSim.exe $OSSTARTREMOTE
 			fi
 
 			sleep 10
@@ -5903,18 +5909,20 @@ function menuosstop() {
 ##
 function rostart() {
 	# Letzte Bearbeitung 30.09.2023
+	if [[ "${REMOTEMODUS}" == "yes" ]]; then OSSTARTREMOTE="-console=rest"; else OSSTARTREMOTE=""; fi
+
 	log line
 	log info "Robust wird gestartet..."
 	cd /$STARTVERZEICHNIS/$ROBUSTVERZEICHNIS/bin || return 1	
 
 	# DOTNETMODUS="yes"
 	if [[ "${DOTNETMODUS}" == "yes" ]]; then
-		screen -fa -S RO -d -U -m dotnet Robust.dll
+		screen -fa -S RO -d -U -m dotnet Robust.dll $OSSTARTREMOTE
 	fi
 	
 	# DOTNETMODUS="no"
 	if [[ "${DOTNETMODUS}" == "no" ]]; then
-		screen -fa -S RO -d -U -m mono Robust.exe
+		screen -fa -S RO -d -U -m mono Robust.exe $OSSTARTREMOTE
 	fi
 
 	sleep $ROBUSTWARTEZEIT
@@ -12566,7 +12574,7 @@ function db_backuptabelle_noassets() {
 }
 
 ## *  db_backuptabellentypen
-	# Datum: 02.10.2023
+	# Datum: 13.03.2024
 	#? Beschreibung:
 	# Diese Funktion ermöglicht es dem Benutzer, verschiedene Arten von Assets aus der MySQL-Datenbank "assets" zu sichern und als ZIP-Archive zu speichern.
 	# Die Funktion erfordert Benutzername, Passwort und den Namen der Datenbank, die gesichert werden soll. Sie kann auch verschiedene Asset-Typen (z.B. Texturen, Klänge, Objekte) aus der Datenbank auswählen und speichern.
@@ -12586,16 +12594,21 @@ function db_backuptabellentypen() {
 	local username=$1
 	local password=$2
 	local databasename=$3
-	local fromtable="assets"
-	local fromtypes="assetType"
-	local dbcompress="ja"
+	# Sind die nachfolgenden angaben leer dann:
+	if [ -z "$fromtable" ]; then local fromtable="assets"; fi
+	if [ -z "$fromtypes" ]; then local fromtypes="assetType"; fi
+	if [ -z "$dbcompress" ]; then local dbcompress="ja"; fi
 
-	log info "Backup, Asset Datenbank Tabelle geteilt in Typen speichern."
+	#local fromtable="assets"
+	#local fromtypes="assetType"
+	#local dbcompress="ja"
+
+	log info "Backup, Asset Datenbank Tabelle wird geteilt in Typennamen gespeichert."
 	# Verzeichnis erstellen:
-	mkdir -p /$STARTVERZEICHNIS/backup/"$databasename" || exit
+	mkdir -p /$STARTVERZEICHNIS/backup/"$databasename"/assettypen || exit
 	# Schreibrechte
 	#chmod -R 777 /$STARTVERZEICHNIS/backup/"$databasename"
-	cd /$STARTVERZEICHNIS/backup/"$databasename" || exit
+	cd /$STARTVERZEICHNIS/backup/"$databasename"/assettypen || exit
 
 	# Tabellen schema aus der Datenbank holen.
 	#mysqldump -u"$username" -p"$password" --no-data "$databasename" "$fromtable" > /$STARTVERZEICHNIS/backup/$databasename/"$databasename".sql
@@ -12606,7 +12619,7 @@ function db_backuptabellentypen() {
 	# Asset Typen aus Datenbank holen.
 	mysqlrest "$username" "$password" "$databasename" "SELECT $fromtypes FROM $fromtable WHERE $fromtypes"
 	# Nächste Zeile löscht doppelte einträge und speichert dies unter $fromtypes.txt
-	log info "$result_mysqlrest" | sort | uniq >/$STARTVERZEICHNIS/backup/"$databasename"/$fromtypes.txt
+	log info "$result_mysqlrest" | sort | uniq >/$STARTVERZEICHNIS/backup/"$databasename"/assettypen/$fromtypes.txt
 
 	tabellenname=()
 	while IFS= read -r tabellenname; do
@@ -12656,10 +12669,10 @@ function db_backuptabellentypen() {
 		if [ "$dbcompress" = "ja" ]
 		then 
 		log info "Exportiere Datei $dateiname.sql.zip";
-		mysqldump -u"$username" -p"$password" "$databasename" --tables assets --where="$fromtypes = '$tabellenname'" | zip >/$STARTVERZEICHNIS/backup/"$databasename"/"$dateiname".sql.zip;
+		mysqldump -u"$username" -p"$password" "$databasename" --tables assets --where="$fromtypes = '$tabellenname'" | zip >/$STARTVERZEICHNIS/backup/"$databasename"/assettypen/"$dateiname".sql.zip;
 		fi
 
-	done </$STARTVERZEICHNIS/backup/"$databasename"/$fromtypes.txt
+	done </$STARTVERZEICHNIS/backup/"$databasename"/assettypen/$fromtypes.txt
 	# Schreibrechte zurücksetzen
 	#chmod -R 755 /$STARTVERZEICHNIS/backup/"$databasename"
 	return 0
